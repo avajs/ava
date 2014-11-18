@@ -1,0 +1,48 @@
+{
+  "name": "ava",
+  "version": "0.0.4",
+  "description": "WIP - Simple concurrent test runner",
+  "license": "MIT",
+  "repository": "sindresorhus/ava",
+  "bin": {
+    "ava": "cli.js"
+  },
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "http://sindresorhus.com"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "tape test/* | faucet"
+  },
+  "files": [
+    "index.js",
+    "cli.js",
+    "lib"
+  ],
+  "keywords": [
+    "cli",
+    "bin",
+    "ava",
+    "test",
+    "runner",
+    "concurrent",
+    "parallel"
+  ],
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "each-async": "^1.0.0",
+    "insist": "^0.2.3",
+    "log-symbols": "^1.0.0",
+    "meow": "^2.0.0"
+  },
+  "devDependencies": {
+    "ava": "0.0.4",
+    "faucet": "0.0.1",
+    "tape": "^3.0.3",
+    "update-notifier": "^0.2.2"
+  }
+}
