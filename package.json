@@ -16,7 +16,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "tape test/* | faucet"
+    "test": "node test/test.js"
   },
   "files": [
     "index.js",
@@ -41,9 +41,6 @@
     "meow": "^2.0.0"
   },
   "devDependencies": {
-    "ava": "0.0.4",
-    "faucet": "0.0.1",
-    "tape": "^3.0.3",
     "update-notifier": "^0.2.2"
   }
 }
