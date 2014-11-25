@@ -12,6 +12,18 @@
     "email": "sindresorhus@gmail.com",
     "url": "http://sindresorhus.com"
   },
+  "maintainers": [
+    {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "sindresorhus.com"
+    },
+    {
+      "email": "kevinmartensson@gmail.com",
+      "name": "Kevin Mårtensson",
+      "url": "github.com/kevva"
+    }
+  ],
   "engines": {
     "node": ">=0.10.0"
   },
