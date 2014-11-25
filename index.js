@@ -17,19 +17,19 @@ setImmediate(function () {
 	});
 
 	runner.run(function (stats, results) {
+		var word;
+
 		if (stats.failCount === 0) {
-			console.log(chalk.green('\n ', stats.passCount, (stats.passCount === 1 ? 'test' : 'tests'), 'passed\n'));
+			word = stats.passCount === 1 ? 'test' : 'tests';
+			console.log(chalk.green('\n ', stats.passCount, word, 'passed\n'));
 		} else {
-			console.log(chalk.red('\n ', stats.failCount, (stats.failCount === 1 ? 'test' : 'tests'), 'failed\n'));
-			// TODO: show detailed fails when at least one test failed
+			word = stats.failCount === 1 ? 'test' : 'tests';
+			console.log(chalk.red('\n ', stats.failCount, word, 'failed\n'));
 		}
 
-		console.log('runner run cb', arguments);
 		process.exit(stats.failCount > 0 ? 1 : 0);
 	});
 });
 
 module.exports = runner.addTest.bind(runner);
-
-// TODO: expose it when more stable
-//module.exports.Runner = Runner;
+module.exports.Runner = Runner;
