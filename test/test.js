@@ -168,3 +168,36 @@ test('handle falsy throws with error', function (t) {
 		t.end();
 	});
 });
+
+test('run functions after last planned assertion', function (t) {
+	var i = 0;
+
+	ava('foo', function (a) {
+		a.plan(1);
+		a.true(true);
+		i++;
+	}).run(function () {
+		t.is(i, 1);
+		t.end();
+	});
+});
+
+test('run async functions after last planned assertion', function (t) {
+	var i = 0;
+
+	ava('foo', function (a) {
+		a.plan(1);
+
+		function foo(cb) {
+			a.true(true);
+			cb();
+		}
+
+		foo(function () {
+			i++;
+		});
+	}).run(function () {
+		t.is(i, 1);
+		t.end();
+	});
+});
