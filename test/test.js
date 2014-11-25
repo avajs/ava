@@ -116,3 +116,55 @@ test('handle falsy testing of objects', function (t) {
 		t.end();
 	});
 });
+
+test('handle throws', function (t) {
+	ava(function (a) {
+		a.throws(function () {
+			throw new Error('foo');
+		});
+
+		a.end();
+	}).run(function (err) {
+		t.false(err);
+		t.end();
+	});
+});
+
+test('handle throws with error', function (t) {
+	ava(function (a) {
+		a.doesNotThrow(function () {
+			throw new Error('foo');
+		});
+
+		a.end();
+	}).run(function (err) {
+		t.true(err);
+		t.end();
+	});
+});
+
+test('handle falsy throws', function (t) {
+	ava(function (a) {
+		a.doesNotThrow(function () {
+			return;
+		});
+
+		a.end();
+	}).run(function (err) {
+		t.false(err);
+		t.end();
+	});
+});
+
+test('handle falsy throws with error', function (t) {
+	ava(function (a) {
+		a.throws(function () {
+			return;
+		});
+
+		a.end();
+	}).run(function (err) {
+		t.true(err);
+		t.end();
+	});
+});
