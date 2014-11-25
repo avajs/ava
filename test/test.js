@@ -87,9 +87,29 @@ test('handle testing of arrays', function (t) {
 	});
 });
 
+test('handle falsy testing of arrays', function (t) {
+	ava(function (a) {
+		a.notSame(['foo', 'bar'], ['foo', 'bar', 'cat']);
+		a.end();
+	}).run(function (err) {
+		t.false(err);
+		t.end();
+	});
+});
+
 test('handle testing of objects', function (t) {
 	ava(function (a) {
 		a.same({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
+		a.end();
+	}).run(function (err) {
+		t.false(err);
+		t.end();
+	});
+});
+
+test('handle falsy testing of objects', function (t) {
+	ava(function (a) {
+		a.notSame({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
 		a.end();
 	}).run(function (err) {
 		t.false(err);
