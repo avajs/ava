@@ -1,7 +1,7 @@
 {
   "name": "ava",
   "version": "0.0.4",
-  "description": "WIP - Simple concurrent test runner",
+  "description": "Simple concurrent test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
   "bin": {
@@ -19,8 +19,8 @@
       "url": "sindresorhus.com"
     },
     {
-      "email": "kevinmartensson@gmail.com",
       "name": "Kevin Mårtensson",
+      "email": "kevinmartensson@gmail.com",
       "url": "github.com/kevva"
     }
   ],
@@ -28,7 +28,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "node cli.js test/test.js"
   },
   "files": [
     "index.js",
@@ -42,7 +42,11 @@
     "test",
     "runner",
     "concurrent",
-    "parallel"
+    "parallel",
+    "tape",
+    "mocha",
+    "qunit",
+    "jasmine"
   ],
   "dependencies": {
     "chalk": "^0.5.1",
@@ -52,9 +56,7 @@
     "insist": "^0.2.3",
     "log-symbols": "^1.0.0",
     "meow": "^2.0.0",
-    "throws": "^0.1.7"
-  },
-  "devDependencies": {
+    "throws": "^0.1.7",
     "update-notifier": "^0.2.2"
   }
 }

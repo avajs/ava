@@ -1,6 +1,6 @@
 # ava [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava)
 
-> WIP - Simple concurrent test runner
+> Simple concurrent test runner
 
 
 ## Install
@@ -17,10 +17,13 @@ $ npm install --save-dev ava
 ```json
 {
 	"scripts": {
-		"test": "ava"
+		"test": "ava test.js"
 	}
 }
 ```
+
+Ava accepts files/folders/globs.
+
 
 ##### Create your test file
 
@@ -28,8 +31,9 @@ $ npm install --save-dev ava
 var test = require('ava');
 
 test('test something', function (t) {
-	t.plan(1);
 	t.assert(true);
+	t.is('unicorn', 'unicorn');
+	t.end();
 });
 ```
 
