@@ -52,6 +52,7 @@
     "chalk": "^0.5.1",
     "deep-equal": "^0.2.1",
     "each-async": "^1.0.0",
+    "fn-name": "^2.0.0",
     "globby": "^1.0.0",
     "insist": "^0.2.3",
     "log-symbols": "^1.0.0",
