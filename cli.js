@@ -9,10 +9,12 @@ var updateNotifier = require('update-notifier');
 var cli = meow({
 	help: [
 		'Usage',
-		'  ava <file> [<file> ...]',
+		'  ava <file|folder|glob> [...]',
 		'',
 		'Example',
-		'  ava test.js test2.js'
+		'  ava test.js test2.js',
+		'  ava test',
+		'  ava test-*.js'
 	].join('\n')
 }, {
 	string: ['_']
