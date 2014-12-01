@@ -172,7 +172,7 @@ test('handle falsy throws with error', function (t) {
 test('run functions after last planned assertion', function (t) {
 	var i = 0;
 
-	ava('foo', function (a) {
+	ava(function (a) {
 		a.plan(1);
 		a.true(true);
 		i++;
@@ -185,7 +185,7 @@ test('run functions after last planned assertion', function (t) {
 test('run async functions after last planned assertion', function (t) {
 	var i = 0;
 
-	ava('foo', function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		function foo(cb) {
@@ -198,6 +198,19 @@ test('run async functions after last planned assertion', function (t) {
 		});
 	}).run(function () {
 		t.is(i, 1);
+		t.end();
+	});
+});
+
+test('planned async assertion', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		setTimeout(function () {
+			a.pass();
+		}, 100);
+	}).run(function (err) {
+		t.error(err);
 		t.end();
 	});
 });
