@@ -1,5 +1,5 @@
 'use strict';
-var test = require('../');
+var test = require('tape');
 var ava = require('../lib/test');
 
 test('run test', function (t) {
