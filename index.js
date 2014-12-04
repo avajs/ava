@@ -1,35 +1,68 @@
 'use strict';
 var chalk = require('chalk');
-var logSymbols = require('log-symbols');
+var figures = require('figures');
+var Squeak = require('squeak');
 var Runner = require('./lib/runner');
+var log = new Squeak({separator: ' '});
 var runner = new Runner();
 
+/**
+ * Add log types
+ */
+
+log.type('success', {
+	color: 'green',
+	prefix: figures.tick
+});
+
+log.type('error', {
+	color: 'red',
+	prefix: figures.cross
+});
+
+/**
+ * Handle test
+ *
+ * @param {Object} err
+ * @param {String} title
+ * @api private
+ */
+
+function test(err, title) {
+	if (err) {
+		log.error(title, chalk.red(err.message));
+		return;
+	}
+
+	log.success(title);
+}
+
+/**
+ * Show summary and exit
+ *
+ * @param {Object} stats
+ * @param {Object} results
+ * @api private
+ */
+
+function exit(stats, results) {
+	var word;
+	log.write();
+
+	if (stats.failCount === 0) {
+		word = stats.passCount === 1 ? 'test' : 'tests';
+		log.writelpad(chalk.green(stats.passCount, word, 'passed'));
+	} else {
+		word = stats.failCount === 1 ? 'test' : 'tests';
+		log.writelpad(chalk.red(stats.failCount, word, 'failed'));
+	}
+
+	process.exit(stats.failCount > 0 ? 1 : 0);
+}
+
 setImmediate(function () {
-	console.log('\n');
-
-	runner.on('test', function (err, title) {
-		if (err) {
-			console.log(' ', logSymbols.error, title, ' ', chalk.red(err.message));
-			return;
-		}
-
-		console.log(' ', logSymbols.success, title);
-	});
-
-	runner.run(function (stats, results) {
-		var word;
-
-		if (stats.failCount === 0) {
-			word = stats.passCount === 1 ? 'test' : 'tests';
-			console.log(chalk.green('\n ', stats.passCount, word, 'passed\n'));
-		} else {
-			word = stats.failCount === 1 ? 'test' : 'tests';
-			console.log(chalk.red('\n ', stats.failCount, word, 'failed\n'));
-		}
-
-		process.exit(stats.failCount > 0 ? 1 : 0);
-	});
+	runner.on('test', test);
+	runner.run(exit);
 });
 
 module.exports = runner.addTest.bind(runner);
-module.exports.Runner = Runner;
