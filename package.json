@@ -54,14 +54,13 @@
     "each-async": "^1.0.0",
     "fn-name": "^2.0.0",
     "globby": "^1.0.0",
-    "insist": "^0.2.3",
     "log-symbols": "^1.0.0",
     "meow": "^2.0.0",
     "throws": "^0.1.7",
     "update-notifier": "^0.2.2"
   },
   "devDependencies": {
-    "faucet": "0.0.1",
+    "faucet": "^0.0.1",
     "tape": "^3.0.3"
   }
 }
