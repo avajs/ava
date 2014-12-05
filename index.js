@@ -38,10 +38,33 @@ function test(err, title) {
 }
 
 /**
+ * Show stack for each failed test
+ *
+ * @param {Array} results
+ * @api private
+ */
+
+function stack(results) {
+	var i = 0;
+
+	results.forEach(function (result) {
+		if (!result.error) {
+			return;
+		}
+
+		i++;
+
+		log.writelpad(chalk.red(i + '.', result.title));
+		log.writelpad(chalk.red(result.error.stack));
+		log.write();
+	});
+}
+
+/**
  * Show summary and exit
  *
  * @param {Object} stats
- * @param {Object} results
+ * @param {Array} results
  * @api private
  */
 
@@ -61,6 +84,11 @@ function exit(stats, results) {
 	}
 
 	log.write();
+
+	if (stats.failCount > 0) {
+		stack(results);
+	}
+
 	process.exit(stats.failCount > 0 ? 1 : 0);
 }
 
