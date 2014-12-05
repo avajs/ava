@@ -49,6 +49,7 @@
     "jasmine"
   ],
   "dependencies": {
+    "async-each-series": "^0.1.1",
     "chalk": "^0.5.1",
     "deep-equal": "^0.2.1",
     "each-async": "^1.0.0",

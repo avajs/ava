@@ -47,7 +47,10 @@ function test(err, title) {
 
 function exit(stats, results) {
 	var word;
-	log.write();
+
+	if (stats.testCount > 0 ) {
+		log.write();
+	}
 
 	if (stats.failCount === 0) {
 		word = stats.passCount === 1 ? 'test' : 'tests';
@@ -57,6 +60,7 @@ function exit(stats, results) {
 		log.writelpad(chalk.red(stats.failCount, word, 'failed'));
 	}
 
+	log.write();
 	process.exit(stats.failCount > 0 ? 1 : 0);
 }
 
@@ -66,3 +70,4 @@ setImmediate(function () {
 });
 
 module.exports = runner.addTest.bind(runner);
+module.exports.serial = runner.addSerialTest.bind(runner);
