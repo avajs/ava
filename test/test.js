@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tape');
 var ava = require('../lib/test');
+var Runner = require('../lib/runner');
 
 test('run test', function (t) {
 	ava('foo', function (a) {
@@ -236,6 +237,31 @@ test('more assertions than planned should emit an assertion error - async', func
 		}, 100);
 	}).run(function (err) {
 		t.true(err, err);
+		t.end();
+	});
+});
+
+test('run serial tests before concurrent ones', function (t) {
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addTest(function (a) {
+		arr.push('c');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a', 'b', 'c']);
 		t.end();
 	});
 });
