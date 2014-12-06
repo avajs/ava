@@ -38,7 +38,7 @@ test('multiple asserts', function (t) {
 		a.true(true);
 		a.end();
 	}).run(function () {
-		t.is(this._assertCount, 3);
+		t.is(this.assertCount, 3);
 		t.end();
 	});
 });
@@ -49,8 +49,8 @@ test('plan assertions', function (t) {
 		a.true(true);
 		a.true(true);
 	}).run(function () {
-		t.is(this._planCount, 2);
-		t.is(this._assertCount, 2);
+		t.is(this.planCount, 2);
+		t.is(this.assertCount, 2);
 		t.end();
 	});
 });
@@ -72,8 +72,8 @@ test('handle non-assertion errors', function (t) {
 	ava(function () {
 		throw new Error();
 	}).run(function (err) {
-		t.is(err.name, 'AssertionError');
-		t.true(err.actual instanceof Error);
+		t.is(err.name, 'Error');
+		t.true(err instanceof Error);
 		t.end();
 	});
 });
