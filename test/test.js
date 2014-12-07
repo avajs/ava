@@ -265,3 +265,12 @@ test('run serial tests before concurrent ones', function (t) {
 		t.end();
 	});
 });
+
+test('throwing in a test should emit the error', function (t) {
+	ava(function (a) {
+		throw new Error('unicorn');
+	}).run(function (err) {
+		t.is(err.message, 'unicornn');
+		t.end();
+	});
+});
