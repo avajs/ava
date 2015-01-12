@@ -57,7 +57,7 @@
     "globby": "^1.0.0",
     "meow": "^2.0.0",
     "squeak": "^1.2.0",
-    "update-notifier": "^0.2.2"
+    "update-notifier": "^0.3.0"
   },
   "devDependencies": {
     "faucet": "^0.0.1",

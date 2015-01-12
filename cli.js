@@ -49,10 +49,7 @@ function init(files) {
 	});
 }
 
-updateNotifier({
-	packageName: cli.pkg.name,
-	packageVersion: cli.pkg.version
-}).notify();
+updateNotifier({pkg: cli.pkg}).notify();
 
 if (cli.input.length === 0) {
 	console.error('Input required');
