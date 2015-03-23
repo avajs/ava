@@ -5,7 +5,7 @@
 
 ## Install
 
-```sh
+```
 $ npm install --save-dev ava
 ```
 
@@ -39,7 +39,7 @@ test('test something', function (t) {
 
 ##### Run it
 
-```sh
+```
 $ npm test
 ```
 
