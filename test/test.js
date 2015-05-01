@@ -216,6 +216,18 @@ test('planned async assertion', function (t) {
 	});
 });
 
+test('async assertion with `.end()`', function (t) {
+	ava(function (a) {
+		setTimeout(function () {
+			a.pass();
+			a.end();
+		}, 100);
+	}).run(function (err) {
+		t.error(err);
+		t.end();
+	});
+});
+
 test('more assertions than planned should emit an assertion error', function (t) {
 	ava(function (a) {
 		a.plan(1);
