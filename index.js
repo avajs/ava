@@ -71,7 +71,7 @@ function stack(results) {
 function exit(stats, results) {
 	var word;
 
-	if (stats.testCount > 0 ) {
+	if (stats.testCount > 0) {
 		log.write();
 	}
 
