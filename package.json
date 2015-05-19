@@ -4,13 +4,11 @@
   "description": "Simple concurrent test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
-  "bin": {
-    "ava": "cli.js"
-  },
+  "bin": "cli.js",
   "author": {
     "name": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
-    "url": "http://sindresorhus.com"
+    "url": "sindresorhus.com"
   },
   "maintainers": [
     {
@@ -36,6 +34,7 @@
     "lib"
   ],
   "keywords": [
+    "cli-app",
     "cli",
     "bin",
     "ava",
@@ -55,14 +54,14 @@
     "each-async": "^1.0.0",
     "figures": "^1.3.5",
     "fn-name": "^2.0.0",
-    "globby": "^1.0.0",
+    "globby": "^2.0.0",
     "meow": "^3.0.0",
     "object-assign": "^2.0.0",
     "squeak": "^1.2.0",
-    "update-notifier": "^0.3.0"
+    "update-notifier": "^0.5.0"
   },
   "devDependencies": {
     "faucet": "^0.0.1",
-    "tape": "^3.0.3"
+    "tape": "^4.0.0"
   }
 }
