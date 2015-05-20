@@ -292,12 +292,3 @@ test.skip('skip test with `.skip()`', function (t) {
 		t.end();
 	});
 });
-
-test.skip('throwing in a test should emit the error', function (t) {
-	ava(function (a) {
-		throw new Error('unicorn');
-	}).run(function (err) {
-		t.is(err.message, 'unicornn');
-		t.end();
-	});
-});
