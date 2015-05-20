@@ -118,7 +118,7 @@ test('handle falsy testing of objects', function (t) {
 	});
 });
 
-test.skip('handle throws', function (t) {
+test('handle throws', function (t) {
 	ava(function (a) {
 		a.throws(function () {
 			throw new Error('foo');
@@ -131,7 +131,7 @@ test.skip('handle throws', function (t) {
 	});
 });
 
-test.skip('handle throws with error', function (t) {
+test('handle throws with error', function (t) {
 	ava(function (a) {
 		a.doesNotThrow(function () {
 			throw new Error('foo');
@@ -144,7 +144,7 @@ test.skip('handle throws with error', function (t) {
 	});
 });
 
-test.skip('handle falsy throws', function (t) {
+test('handle falsy throws', function (t) {
 	ava(function (a) {
 		a.doesNotThrow(function () {
 			return;
