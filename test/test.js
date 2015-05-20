@@ -55,8 +55,7 @@ test('plan assertions', function (t) {
 	});
 });
 
-// TODO: fix how we throw assertion error when plan count doesn't match
-test.skip('run more assertions than planned', function (t) {
+test('run more assertions than planned', function (t) {
 	ava(function (a) {
 		a.plan(2);
 		a.true(true);
@@ -229,17 +228,20 @@ test('async assertion with `.end()`', function (t) {
 	});
 });
 
-test.skip('more assertions than planned should emit an assertion error', function (t) {
+test('more assertions than planned should emit an assertion error', function (t) {
 	ava(function (a) {
 		a.plan(1);
 		a.pass();
 		a.pass();
 	}).run(function (err) {
 		t.true(err, err);
+		t.is(err.name, 'AssertionError');
 		t.end();
 	});
 });
 
+// NOTE(sindresorhus): I don't think this is possible as we won't know when the last assertion will happen, it could be minutes.
+// Might be able to check `process._getActiveHandles().length === 1 && process._getActiveRequests().length === 0` or something.
 test.skip('more assertions than planned should emit an assertion error - async', function (t) {
 	ava(function (a) {
 		a.plan(1);
@@ -250,6 +252,7 @@ test.skip('more assertions than planned should emit an assertion error - async',
 		}, 100);
 	}).run(function (err) {
 		t.true(err, err);
+		t.is(err.name, 'AssertionError');
 		t.end();
 	});
 });
