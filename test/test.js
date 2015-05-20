@@ -282,6 +282,17 @@ test('run serial tests before concurrent ones', function (t) {
 	});
 });
 
+test.skip('skip test with `.skip()`', function (t) {
+	ava(function (a) {
+		a.skip();
+		a.pass();
+		a.end();
+	}).run(function () {
+		t.is(this.assertCount, 0);
+		t.end();
+	});
+});
+
 test.skip('throwing in a test should emit the error', function (t) {
 	ava(function (a) {
 		throw new Error('unicorn');
