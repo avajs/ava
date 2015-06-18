@@ -15,7 +15,7 @@ var cli = meow({
 		'  ava test.js test2.js',
 		'  ava test',
 		'  ava test-*.js'
-	].join('\n')
+	]
 }, {
 	string: ['_']
 });
