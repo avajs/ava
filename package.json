@@ -57,6 +57,7 @@
     "globby": "^2.0.0",
     "meow": "^3.3.0",
     "object-assign": "^2.0.0",
+    "plur": "^1.0.0",
     "squeak": "^1.2.0",
     "update-notifier": "^0.5.0"
   },

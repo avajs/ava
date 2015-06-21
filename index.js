@@ -2,6 +2,7 @@
 var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
+var plur = require('plur');
 var Runner = require('./lib/runner');
 var log = new Squeak({separator: ' '});
 var runner = new Runner();
@@ -69,18 +70,14 @@ function stack(results) {
  */
 
 function exit(stats, results) {
-	var word;
-
 	if (stats.testCount > 0) {
 		log.write();
 	}
 
 	if (stats.failCount === 0) {
-		word = stats.passCount === 1 ? 'test' : 'tests';
-		log.writelpad(chalk.green(stats.passCount, word, 'passed'));
+		log.writelpad(chalk.green(stats.passCount, plur('test', stats.passCount), 'passed'));
 	} else {
-		word = stats.failCount === 1 ? 'test' : 'tests';
-		log.writelpad(chalk.red(stats.failCount, word, 'failed'));
+		log.writelpad(chalk.red(stats.failCount, plur('test', stats.failCount), 'failed'));
 	}
 
 	log.write();
