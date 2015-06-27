@@ -48,7 +48,7 @@
     "jasmine"
   ],
   "dependencies": {
-    "async-each-series": "^0.1.1",
+    "async-each-series": "^1.0.0",
     "chalk": "^1.0.0",
     "claim": "^1.3.0",
     "each-async": "^1.0.0",
@@ -56,8 +56,8 @@
     "fn-name": "^2.0.0",
     "globby": "^2.0.0",
     "meow": "^3.3.0",
-    "object-assign": "^2.0.0",
-    "plur": "^1.0.0",
+    "object-assign": "^3.0.0",
+    "plur": "^2.0.0",
     "squeak": "^1.2.0",
     "update-notifier": "^0.5.0"
   },
