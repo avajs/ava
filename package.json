@@ -26,7 +26,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node cli.js test/test.js | faucet"
+    "test": "xo && node cli.js test/test.js | faucet"
   },
   "files": [
     "index.js",
@@ -36,13 +36,13 @@
   "keywords": [
     "cli-app",
     "cli",
-    "bin",
     "ava",
     "test",
     "runner",
     "concurrent",
     "parallel",
     "tape",
+    "tap",
     "mocha",
     "qunit",
     "jasmine"
@@ -56,13 +56,13 @@
     "fn-name": "^2.0.0",
     "globby": "^2.0.0",
     "meow": "^3.3.0",
-    "object-assign": "^3.0.0",
     "plur": "^2.0.0",
     "squeak": "^1.2.0",
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
     "faucet": "^0.0.1",
-    "tape": "^4.0.0"
+    "tape": "^4.0.0",
+    "xo": "*"
   }
 }
