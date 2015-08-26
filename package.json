@@ -4,7 +4,7 @@
   "description": "Simple concurrent test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
-  "bin": "cli.js",
+  "homepage": "http://ava.li",
   "author": {
     "name": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
@@ -22,11 +22,12 @@
       "url": "github.com/kevva"
     }
   ],
+  "bin": "cli.js",
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && node cli.js test/test.js | faucet"
+    "test": "xo && node test/test.js | tap-dot"
   },
   "files": [
     "index.js",
@@ -41,6 +42,7 @@
     "runner",
     "concurrent",
     "parallel",
+    "fast",
     "tape",
     "tap",
     "mocha",
@@ -61,7 +63,8 @@
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
-    "faucet": "^0.0.1",
+    "pinkie-promise": "^1.0.0",
+    "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
   }

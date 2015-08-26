@@ -1,5 +1,6 @@
 'use strict';
 var test = require('tape');
+var Promise = require('pinkie-promise');
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
@@ -289,6 +290,56 @@ test.skip('skip test with `.skip()`', function (t) {
 		a.end();
 	}).run(function () {
 		t.is(this.assertCount, 0);
+		t.end();
+	});
+});
+
+function promisePass() {
+	return new Promise(function (resolve) {
+		setImmediate(resolve);
+	});
+}
+
+function promiseFail() {
+	return new Promise(function (resolve, reject) {
+		setImmediate(function () {
+			reject(new Error('unicorn'));
+		});
+	});
+}
+
+test('promise support - assert pass', function (t) {
+	ava(function (a) {
+		return promisePass().then(function () {
+			a.pass();
+		});
+	}).run(function () {
+		t.is(this.assertCount, 1);
+		t.end();
+	});
+});
+
+test('promise support - assert fail', function (t) {
+	ava(function (a) {
+		return promisePass().then(function () {
+			// TODO: replace with `a.fail()` when it's available
+			a.true(false);
+		});
+	}).run(function (err) {
+		t.true(err);
+		t.is(err.name, 'AssertionError');
+		t.end();
+	});
+});
+
+test('promise support - reject', function (t) {
+	ava(function (a) {
+		return promiseFail().then(function () {
+			a.pass();
+		});
+	}).run(function (err) {
+		t.true(err);
+		t.is(err.name, 'AssertionError');
 		t.end();
 	});
 });

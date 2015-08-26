@@ -11,10 +11,13 @@ var cli = meow({
 		'Usage',
 		'  ava <file|folder|glob> [...]',
 		'',
-		'Example',
+		'Examples',
+		'  ava',
 		'  ava test.js test2.js',
-		'  ava test',
-		'  ava test-*.js'
+		'  ava test-*.js',
+		'',
+		'Default patterns when no arguments:',
+		'test.js test-*.js test/**'
 	]
 }, {
 	string: ['_']
@@ -37,6 +40,14 @@ function run(file) {
 }
 
 function init(files) {
+	if (files.length === 0) {
+		files = [
+			'test.js',
+			'test-*.js',
+			'test/**'
+		];
+	}
+
 	globby(files, function (err, files) {
 		if (err) {
 			console.error(err.message);
@@ -50,10 +61,5 @@ function init(files) {
 }
 
 updateNotifier({pkg: cli.pkg}).notify();
-
-if (cli.input.length === 0) {
-	console.error('Input required');
-	process.exit(1);
-}
 
 init(cli.input);

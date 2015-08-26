@@ -7,10 +7,6 @@ var Runner = require('./lib/runner');
 var log = new Squeak({separator: ' '});
 var runner = new Runner();
 
-/**
- * Add log types
- */
-
 log.type('success', {
 	color: 'green',
 	prefix: figures.tick
@@ -21,14 +17,6 @@ log.type('error', {
 	prefix: figures.cross
 });
 
-/**
- * Handle test
- *
- * @param {Object} err
- * @param {String} title
- * @api private
- */
-
 function test(err, title) {
 	if (err) {
 		log.error(title, chalk.red(err.message));
@@ -37,13 +25,6 @@ function test(err, title) {
 
 	log.success(title);
 }
-
-/**
- * Show stack for each failed test
- *
- * @param {Array} results
- * @api private
- */
 
 function stack(results) {
 	var i = 0;
@@ -60,14 +41,6 @@ function stack(results) {
 		log.write();
 	});
 }
-
-/**
- * Show summary and exit
- *
- * @param {Object} stats
- * @param {Array} results
- * @api private
- */
 
 function exit(stats, results) {
 	if (stats.testCount > 0) {
