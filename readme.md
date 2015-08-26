@@ -17,7 +17,7 @@ $ npm install --save-dev ava
 ```json
 {
 	"scripts": {
-		"test": "ava test.js"
+		"test": "ava"
 	}
 }
 ```
