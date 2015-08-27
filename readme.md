@@ -1,7 +1,10 @@
-# ava [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava)
+# ![AVA](media/header.png)
 
 > Simple concurrent test runner
 
+[![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava)
+
+<img width="288" align="right" src="screenshot.png">
 
 ## Install
 
@@ -53,3 +56,13 @@ $ npm test
 ## License
 
 MIT © Sindre Sorhus, Kevin Mårtensson
+
+
+<div align="center">
+	<br>
+	<br>
+	<br>
+	<img src="https://cdn.rawgit.com/sindresorhus/ava/2dba39f904b6b771fae390e3c294bd1dccfe1ec2/media/logo.svg" width="200" alt="AVA">
+	<br>
+	<br>
+</div>
