@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "faucet": "^0.0.1",
+    "pinkie-promise": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
   }
