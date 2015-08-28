@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tape');
 var Promise = require('pinkie-promise');
+var execFile = require('child_process').execFile;
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
@@ -341,5 +342,17 @@ test('promise support - reject', function (t) {
 		t.true(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
+	});
+});
+
+test('es2015 support', function (t) {
+	t.plan(3);
+
+	execFile('./cli.js', ['test/es2015.js'], {
+		cwd: __dirname
+	}, function (err, stdout, stderr) {
+		t.assert(!err, err);
+		t.assert(stdout.trim().length);
+		t.assert(!stderr.trim().length);
 	});
 });
