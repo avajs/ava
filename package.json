@@ -1,6 +1,6 @@
 {
   "name": "ava",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Simple concurrent test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
