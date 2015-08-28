@@ -167,7 +167,7 @@ test.serial(function (t) {
 
 ### Custom assertion module
 
-You can use any assertion module instead or in addition to the one that comes with AVA, but can't won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
+You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
 
 ```js
 var assert = require('assert');
