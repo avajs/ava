@@ -14,7 +14,10 @@ var cli = meow({
 		'Examples',
 		'  ava',
 		'  ava test.js test2.js',
-		'  ava test-*.js'
+		'  ava test-*.js',
+		'',
+		'Default patterns when no arguments:',
+		'test.js test-*.js test/**'
 	]
 }, {
 	string: ['_']

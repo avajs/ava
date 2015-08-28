@@ -4,6 +4,7 @@
   "description": "Simple concurrent test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
+  "homepage": "http://ava.li",
   "maintainers": [
     {
       "name": "Sindre Sorhus",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "pinkie-promise": "^1.0.0",
+    "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
   }
