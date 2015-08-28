@@ -5,6 +5,7 @@ var path = require('path');
 var globby = require('globby');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
+require('babel/register');
 
 var cli = meow({
 	help: [

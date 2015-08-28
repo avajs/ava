@@ -46,6 +46,7 @@
   ],
   "dependencies": {
     "async-each-series": "^1.0.0",
+    "babel": "^5.8.23",
     "chalk": "^1.0.0",
     "claim": "^1.3.0",
     "each-async": "^1.0.0",
