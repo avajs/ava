@@ -36,6 +36,13 @@ function stack(results) {
 
 		i++;
 
+
+		// Don't print the full stack but the only useful line showing
+		// the actual test file stack
+		var split = (result.error.stack || '').split('\n');
+		var beautiful = result.error.message + '\n' + (split[2] || '');
+		result.error.stack = beautiful;
+
 		log.writelpad(chalk.red(i + '.', result.title));
 		log.writelpad(chalk.red(result.error.stack));
 		log.write();
