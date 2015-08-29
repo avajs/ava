@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava)
 
-Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
+Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. akes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
 
 
 ## Install
@@ -162,6 +162,40 @@ While concurrency is awesome, there are some things that can't be done concurren
 test.serial(function (t) {
 	t.end();
 });
+```
+
+
+### ES2015 support
+
+You can write your tests in ES2015:
+
+```js
+test(t => {
+	t.ok();
+	t.end();
+});
+```
+
+And run it in any node version.
+
+```sh
+$ ava
+```
+
+Also you can use your local `babel` instead of built-in.
+
+For example, package.json:
+
+```json
+{
+	"devDependencies": {
+		"ava": "^0.1.0",
+		"babel": "^5.8.0"
+	},
+	"scripts": {
+		"test": "ava"
+	}
+}
 ```
 
 
