@@ -36,7 +36,6 @@ function stack(results) {
 
 		i++;
 
-
 		// Don't print the full stack but the only useful line showing
 		// the actual test file stack
 		var split = (result.error.stack || '').split('\n');
