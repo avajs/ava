@@ -22,7 +22,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo test/test.js && node test/test.js | tap-dot"
+    "test": "xo && node test/test.js | tap-dot"
   },
   "files": [
     "index.js",
