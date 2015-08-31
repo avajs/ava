@@ -17,7 +17,7 @@ var cli = meow({
 		'  ava test-*.js',
 		'',
 		'Default patterns when no arguments:',
-		'test.js test-*.js test/**'
+		'test.js test-*.js test/*.js'
 	]
 }, {
 	string: ['_']
@@ -35,6 +35,10 @@ function run(file) {
 			return;
 		}
 
+		if (path.extname(file) !== '.js') {
+			return;
+		}
+
 		require(file);
 	});
 }
@@ -44,7 +48,7 @@ function init(files) {
 		files = [
 			'test.js',
 			'test-*.js',
-			'test/**'
+			'test/*.js'
 		];
 	}
 
