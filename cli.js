@@ -57,6 +57,10 @@ function init(files) {
 		files.forEach(function (file) {
 			run(path.resolve(process.cwd(), file));
 		});
+
+		// TODO: figure out why this needs to be here to
+		// correctly flush the output when multiple test files
+		process.stdout.write('');
 	});
 }
 
