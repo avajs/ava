@@ -1,5 +1,5 @@
 'use strict';
-var hrtime = require('pretty-hrtime');
+var prettyMs = require('pretty-ms');
 var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
@@ -24,7 +24,7 @@ function test(err, title, duration) {
 		return;
 	}
 
-	log.success(title + ' ' + chalk.dim('(' + hrtime(duration) + ')'));
+	log.success(title + ' ' + chalk.dim('(' + prettyMs(duration) + ')'));
 }
 
 function stack(results) {
