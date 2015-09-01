@@ -70,7 +70,7 @@ $ ava --help
     ava test-*.js
 
   Default patterns when no arguments:
-  test.js test-*.js test/**
+  test.js test-*.js test/*.js
 ```
 
 

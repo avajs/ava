@@ -24,7 +24,7 @@ var cli = meow({
 		'  ava test-*.js',
 		'',
 		'Default patterns when no arguments:',
-		'test.js test-*.js test/**'
+		'test.js test-*.js test/*.js'
 	]
 }, {
 	string: ['_']
@@ -42,6 +42,10 @@ function run(file) {
 			return;
 		}
 
+		if (path.extname(file) !== '.js') {
+			return;
+		}
+
 		require(file);
 	});
 }
@@ -51,7 +55,7 @@ function init(files) {
 		files = [
 			'test.js',
 			'test-*.js',
-			'test/**'
+			'test/*.js'
 		];
 	}
 
@@ -64,6 +68,10 @@ function init(files) {
 		files.forEach(function (file) {
 			run(path.resolve(process.cwd(), file));
 		});
+
+		// TODO: figure out why this needs to be here to
+		// correctly flush the output when multiple test files
+		process.stdout.write('');
 	});
 }
 
