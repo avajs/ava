@@ -24,7 +24,17 @@ function test(err, title, duration) {
 		return;
 	}
 
-	log.success(title + ' ' + chalk.dim('(' + prettyMs(duration) + ')'));
+	// format a time spent in the test
+	var timeSpent = '';
+
+	// display duration only over a threshold
+	var threshold = 100;
+
+	if (duration > threshold) {
+		timeSpent = chalk.dim('(' + prettyMs(duration) + ')');
+	}
+
+	log.success(title + ' ' + timeSpent);
 }
 
 function stack(results) {
