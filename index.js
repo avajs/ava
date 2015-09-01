@@ -3,6 +3,7 @@ var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
 var plur = require('plur');
+var path = require('path');
 var Runner = require('./lib/runner');
 var log = new Squeak({separator: ' '});
 var runner = new Runner();
@@ -38,8 +39,14 @@ function stack(results) {
 
 		// Don't print the full stack but the only useful line showing
 		// the actual test file stack
+		var dir = path.dirname(module.parent.filename);
+
 		var split = (result.error.stack || '').split('\n');
-		var beautiful = result.error.message + '\n' + (split[2] || '');
+		var related = split.filter(function (line) {
+			return line.indexOf(dir) > -1;
+		});
+
+		var beautiful = result.error.message + '\n' + related.join('\n');
 		result.error.stack = beautiful;
 
 		log.writelpad(chalk.red(i + '.', result.title));
