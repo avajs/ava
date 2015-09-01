@@ -343,3 +343,21 @@ test('promise support - reject', function (t) {
 		t.end();
 	});
 });
+
+test('record test duration', function (t) {
+	var avaTest;
+
+	ava(function (a) {
+		avaTest = a;
+
+		a.plan(1);
+
+		setTimeout(function () {
+			a.true(true);
+		}, 1234);
+	}).run(function (err) {
+		t.false(err);
+		t.true(avaTest.duration >= 1234);
+		t.end();
+	});
+});
