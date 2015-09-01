@@ -31,10 +31,10 @@ function test(err, title, duration) {
 	var threshold = 100;
 
 	if (duration > threshold) {
-		timeSpent = chalk.dim('(' + prettyMs(duration) + ')');
+		timeSpent = chalk.gray.dim(' (' + prettyMs(duration) + ')');
 	}
 
-	log.success(title + ' ' + timeSpent);
+	log.success(title + timeSpent);
 }
 
 function stack(results) {
