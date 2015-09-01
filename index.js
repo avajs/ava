@@ -1,4 +1,5 @@
 'use strict';
+var hrtime = require('pretty-hrtime');
 var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
@@ -17,13 +18,13 @@ log.type('error', {
 	prefix: figures.cross
 });
 
-function test(err, title) {
+function test(err, title, duration) {
 	if (err) {
 		log.error(title, chalk.red(err.message));
 		return;
 	}
 
-	log.success(title);
+	log.success(title + ' (' + hrtime(duration) + ')');
 }
 
 function stack(results) {
