@@ -59,6 +59,7 @@
     "globby": "^2.0.0",
     "meow": "^3.3.0",
     "plur": "^2.0.0",
+    "pretty-ms": "^2.0.0",
     "squeak": "^1.2.0",
     "update-notifier": "^0.5.0"
   },

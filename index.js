@@ -1,4 +1,5 @@
 'use strict';
+var prettyMs = require('pretty-ms');
 var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
@@ -17,13 +18,17 @@ log.type('error', {
 	prefix: figures.cross
 });
 
-function test(err, title) {
+function test(err, title, duration) {
 	if (err) {
 		log.error(title, chalk.red(err.message));
 		return;
 	}
 
-	log.success(title);
+	// display duration only over a threshold
+	var threshold = 100;
+	var dur = duration > threshold ? chalk.gray.dim(' (' + prettyMs(duration) + ')') : '';
+
+	log.success(title + dur);
 }
 
 function stack(results) {
