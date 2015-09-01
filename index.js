@@ -1,4 +1,5 @@
 'use strict';
+var prettyMs = require('pretty-ms');
 var chalk = require('chalk');
 var figures = require('figures');
 var Squeak = require('squeak');
@@ -17,13 +18,27 @@ log.type('error', {
 	prefix: figures.cross
 });
 
-function test(err, title) {
+function test(err, title, duration) {
 	if (err) {
 		log.error(title, chalk.red(err.message));
 		return;
 	}
 
-	log.success(title);
+	// format a time spent in the test
+	var timeSpent = '';
+
+	// display duration only over a threshold
+	var threshold = 100;
+
+	if (duration > threshold) {
+		var formattedDuration = prettyMs(duration, {
+			secDecimalDigits: 2
+		});
+
+		timeSpent = chalk.gray.dim(' (' + formattedDuration + ')');
+	}
+
+	log.success(title + timeSpent);
 }
 
 function stack(results) {
