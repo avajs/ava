@@ -31,7 +31,9 @@ function test(err, title, duration) {
 	var threshold = 100;
 
 	if (duration > threshold) {
-		timeSpent = chalk.gray.dim(' (' + prettyMs(duration) + ')');
+		var formattedDuration = prettyMs(duration, { secDecimalDigits: 2 });
+
+		timeSpent = chalk.gray.dim(' (' + formattedDuration + ')');
 	}
 
 	log.success(title + timeSpent);
