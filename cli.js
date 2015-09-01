@@ -9,7 +9,7 @@ var updateNotifier = require('update-notifier');
 
 try {
 	require(resolveFrom('.', 'babel-core/register'));
-} catch (e) {
+} catch (err) {
 	require('babel/register');
 }
 
