@@ -24,7 +24,7 @@ function test(err, title, duration) {
 		return;
 	}
 
-	log.success(title + ' (' + hrtime(duration) + ')');
+	log.success(title + ' ' + chalk.dim('(' + hrtime(duration) + ')'));
 }
 
 function stack(results) {
