@@ -185,7 +185,7 @@ You can write your tests in ES2015:
 
 ```js
 test(t => {
-	t.ok();
+	t.pass();
 	t.end();
 });
 ```
