@@ -8,9 +8,9 @@ var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
 
 try {
-	require(resolveFrom('.', 'babel-core/register'));
+	require(resolveFrom('.', 'babel/register'));
 } catch (err) {
-	require('babel/register');
+	require('babel-core/register');
 }
 
 var cli = meow({
