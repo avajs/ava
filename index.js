@@ -1,4 +1,5 @@
 'use strict';
+var setImmediate = require('set-immediate-shim');
 var prettyMs = require('pretty-ms');
 var chalk = require('chalk');
 var figures = require('figures');
