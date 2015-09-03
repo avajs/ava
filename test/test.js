@@ -366,7 +366,7 @@ test('record test duration', function (t) {
 test('ES2015 support', function (t) {
 	t.plan(2);
 
-	execFile('../cli.js', ['test.es6'], {
+	execFile('../cli.js', ['es2015.js'], {
 		cwd: __dirname
 	}, function (err, stdout) {
 		t.assert(!err, err);
