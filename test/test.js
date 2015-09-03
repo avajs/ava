@@ -2,7 +2,6 @@
 var test = require('tape');
 var Promise = require('pinkie-promise');
 var execFile = require('child_process').execFile;
-var path = require('path');
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
