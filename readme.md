@@ -7,27 +7,25 @@
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
 
 
-## Install
-
-```
-$ npm install --save-dev ava
-```
-
-
 ## Usage
 
-##### Add it to package.json
+#### Initialize
+
+Simply install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your package.json or create one.
 
 ```json
 {
+	"name": "awesome-package",
 	"scripts": {
 		"test": "ava"
+	},
+	"devDependencies": {
+		"ava": "^0.2.0"
 	}
 }
 ```
 
-
-##### Create your test file
+#### Create your test file
 
 ```js
 var test = require('ava');
@@ -49,7 +47,7 @@ test('bar', function (t) {
 
 <img src="screenshot.png" width="150" align="right">
 
-##### Run it
+#### Run it
 
 ```
 $ npm test
@@ -64,10 +62,15 @@ $ ava --help
   Usage
     ava <file|folder|glob> [...]
 
+  Options
+    --init  Add AVA to your project
+
   Examples
     ava
     ava test.js test2.js
     ava test-*.js
+    ava --init
+    ava --init foo.js
 
   Default patterns when no arguments:
   test.js test-*.js test/*.js

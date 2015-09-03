@@ -18,10 +18,15 @@ var cli = meow({
 		'Usage',
 		'  ava <file|folder|glob> [...]',
 		'',
+		'Options',
+		'  --init  Add AVA to your project',
+		'',
 		'Examples',
 		'  ava',
 		'  ava test.js test2.js',
 		'  ava test-*.js',
+		'  ava --init',
+		'  ava --init foo.js',
 		'',
 		'Default patterns when no arguments:',
 		'test.js test-*.js test/*.js'
@@ -29,6 +34,11 @@ var cli = meow({
 }, {
 	string: ['_']
 });
+
+function error(err) {
+	console.error(err.stack);
+	process.exit(1);
+}
 
 function run(file) {
 	fs.stat(file, function (err, stats) {
@@ -61,8 +71,7 @@ function init(files) {
 
 	globby(files, function (err, files) {
 		if (err) {
-			console.error(err.message);
-			process.exit(1);
+			error(err);
 		}
 
 		files.forEach(function (file) {
@@ -76,5 +85,10 @@ function init(files) {
 }
 
 updateNotifier({pkg: cli.pkg}).notify();
+
+if (cli.flags.init) {
+	require('ava-init')().catch(error);
+	return;
+}
 
 init(cli.input);
