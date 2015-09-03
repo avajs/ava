@@ -8,7 +8,7 @@ var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
 
 try {
-	require(resolveFrom('.', 'babel/register'));
+	require(resolveFrom('.', 'babel-core/register') || resolveFrom('.', 'babel/register'));
 } catch (err) {
 	require('babel-core/register');
 }
