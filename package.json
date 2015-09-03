@@ -22,7 +22,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && node test/test.js | tap-dot"
+    "test": "xo && xo *.es6 --esnext && node test/test.js | tap-dot"
   },
   "files": [
     "index.js",

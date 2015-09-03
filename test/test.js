@@ -1,6 +1,8 @@
 'use strict';
 var test = require('tape');
 var Promise = require('pinkie-promise');
+var execFile = require('child_process').execFile;
+var path = require('path');
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
@@ -359,5 +361,16 @@ test('record test duration', function (t) {
 		t.false(err);
 		t.true(avaTest.duration >= 1234);
 		t.end();
+	});
+});
+
+test('ES2015 support', function (t) {
+	t.plan(2);
+
+	execFile('../cli.js', ['test.es6'], {
+		cwd: path.resolve(__dirname, '..')
+	}, function (err, stdout) {
+		t.assert(!err, err);
+		t.assert(stdout.trim().length);
 	});
 });
