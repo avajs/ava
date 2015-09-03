@@ -368,7 +368,7 @@ test('ES2015 support', function (t) {
 	t.plan(2);
 
 	execFile('../cli.js', ['test.es6'], {
-		cwd: path.resolve(__dirname, '..')
+		cwd: __dirname
 	}, function (err, stdout) {
 		t.assert(!err, err);
 		t.assert(stdout.trim().length);
