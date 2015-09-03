@@ -199,7 +199,7 @@ And run it in any node version.
 $ ava
 ```
 
-Also you can use your local `babel` instead of built-in.
+Also you can use your local `babel` or `babel-core` instead of built-in.
 
 For example, package.json:
 
