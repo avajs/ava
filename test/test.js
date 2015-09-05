@@ -4,54 +4,6 @@ var Promise = require('pinkie-promise');
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
-test('hooks - before', function (t) {
-	t.plan(1);
-
-	var runner = new Runner();
-	var arr = [];
-
-	runner.addBeforeHook(function (a) {
-		arr.push('a');
-
-		a.end();
-	});
-
-	runner.addTest(function (a) {
-		arr.push('b');
-
-		a.end();
-	});
-
-	runner.run(function () {
-		t.same(arr, ['a', 'b']);
-		t.end();
-	});
-});
-
-test('hooks - after', function (t) {
-	t.plan(1);
-
-	var runner = new Runner();
-	var arr = [];
-
-	runner.addAfterHook(function (a) {
-		arr.push('b');
-
-		a.end();
-	});
-
-	runner.addTest(function (a) {
-		arr.push('a');
-
-		a.end();
-	});
-
-	runner.run(function () {
-		t.same(arr, ['a', 'b']);
-		t.end();
-	});
-});
-
 test('run test', function (t) {
 	ava('foo', function (a) {
 		a.true(false);
@@ -406,6 +358,54 @@ test('record test duration', function (t) {
 	}).run(function (err) {
 		t.false(err);
 		t.true(avaTest.duration >= 1234);
+		t.end();
+	});
+});
+
+test('hooks - before', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeHook(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a', 'b']);
+		t.end();
+	});
+});
+
+test('hooks - after', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addAfterHook(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a', 'b']);
 		t.end();
 	});
 });
