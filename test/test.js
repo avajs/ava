@@ -409,3 +409,31 @@ test('hooks - after', function (t) {
 		t.end();
 	});
 });
+
+test('hooks - stop if before hooks failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeHook(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.addBeforeHook(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.addTest(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a']);
+		t.end();
+	});
+});
