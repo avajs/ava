@@ -170,27 +170,26 @@ test.serial(function (t) {
 
 ### Before/after hooks
 
-There are cases, when you need to run certain functionality to prepare or clean up after tests.
-There are `test.before()` and `test.after()` functions, which are completely the same as `test()`.
-But with their help, tests can be run before or after all tests defined using `test()`.
-Before and after hooks are executed serially.
+When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
+used in the same manner as `test()`.
+The test function given to `test.before()` and `test.after()` is called before/after all tests.
 
 ```js
 // shortcuts for convenience
 var before = test.before;
 var after = test.after;
 
-before (function (t) {
+before(function (t) {
 	// this test runs before all others
 	t.end();
 });
 
-after (function (t) {
+after(function (t) {
 	// this test runs after all others
 	t.end();
 });
 
-test (function (t) {
+test(function (t) {
 	// regular test
 	t.end();
 });
