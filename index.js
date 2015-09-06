@@ -75,3 +75,5 @@ setImmediate(function () {
 
 module.exports = runner.addTest.bind(runner);
 module.exports.serial = runner.addSerialTest.bind(runner);
+module.exports.before = runner.addBeforeHook.bind(runner);
+module.exports.after = runner.addAfterHook.bind(runner);
