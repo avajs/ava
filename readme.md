@@ -168,6 +168,34 @@ test.serial(function (t) {
 ```
 
 
+### Before/after hooks
+
+When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
+used in the same manner as `test()`.
+The test function given to `test.before()` and `test.after()` is called before/after all tests.
+
+```js
+// shortcuts for convenience
+var before = test.before;
+var after = test.after;
+
+before(function (t) {
+	// this test runs before all others
+	t.end();
+});
+
+after(function (t) {
+	// this test runs after all others
+	t.end();
+});
+
+test(function (t) {
+	// regular test
+	t.end();
+});
+```
+
+
 ### Custom assertion module
 
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).

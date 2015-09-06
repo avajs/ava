@@ -363,6 +363,82 @@ test('record test duration', function (t) {
 	});
 });
 
+test('hooks - before', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeHook(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a', 'b']);
+		t.end();
+	});
+});
+
+test('hooks - after', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addAfterHook(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a', 'b']);
+		t.end();
+	});
+});
+
+test('hooks - stop if before hooks failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeHook(function (a) {
+		arr.push('a');
+
+		a.end();
+	});
+
+	runner.addBeforeHook(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.addTest(function (a) {
+		arr.push('b');
+
+		a.end();
+	});
+
+	runner.run(function () {
+		t.same(arr, ['a']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(2);
 
