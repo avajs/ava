@@ -4,7 +4,14 @@ var fs = require('fs');
 var path = require('path');
 var globby = require('globby');
 var meow = require('meow');
+var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
+
+try {
+	require(resolveFrom('.', 'babel-core/register') || resolveFrom('.', 'babel/register'));
+} catch (err) {
+	require('babel-core/register');
+}
 
 var cli = meow({
 	help: [
@@ -62,13 +69,9 @@ function init(files) {
 		];
 	}
 
-	globby(files, function (err, files) {
-		if (err) {
-			error(err);
-		}
-
+	return globby(files).then(function (files) {
 		files.forEach(function (file) {
-			run(path.resolve(process.cwd(), file));
+			run(path.resolve(file));
 		});
 
 		// TODO: figure out why this needs to be here to
@@ -84,4 +87,4 @@ if (cli.flags.init) {
 	return;
 }
 
-init(cli.input);
+init(cli.input).catch(error);

@@ -210,6 +210,31 @@ test(function (t) {
 ```
 
 
+### ES2015 support
+
+AVA comes with builtin support for ES2015 through [Babel](https://babeljs.io).
+
+Just write your tests in ES2015. No extra work needed.
+
+```js
+test(t => {
+	t.pass();
+	t.end();
+});
+```
+
+You can also use your own local Babel version:
+
+```json
+{
+	"devDependencies": {
+		"ava": "^0.1.0",
+		"babel-core": "^5.8.0"
+	}
+}
+```
+
+
 ## API
 
 ### test([name], body)
@@ -256,6 +281,18 @@ Running tests concurrently comes with some challenges, doing IO is one. Usually,
 ### Why not `mocha`, `tape`, `node-tap`?
 
 Mocha requires you to use implicit globals like `describe` and `it`, too unopinionated, bloated, synchronous by default, serial test execution, and slow. Tape and node-tap are pretty good. AVA is highly inspired by their syntax. However, they both execute tests serially and they've made [TAP](https://testanything.org) a first-class citizen which has IMHO made their codebases a bit convoluted and coupled. TAP output is hard to read so you always end up using an external tap reporter. AVA is highly opinionated and concurrent. It comes with a default simple reporter and will in the future support TAP through a reporter.
+
+### How is the name written?
+
+AVA. Not Ava or ava.
+
+### What is the header background?
+
+[Andromeda galaxy.](https://simple.wikipedia.org/wiki/Andromeda_galaxy)
+
+### Concurrency vs. parallelism
+
+Concurrency is not parallelism. It enables parallelism. It's about dealing with, while parallelism is about doing, lots of things at once.
 
 
 ## License

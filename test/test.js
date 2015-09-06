@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tape');
 var Promise = require('pinkie-promise');
+var execFile = require('child_process').execFile;
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');
 
@@ -435,5 +436,16 @@ test('hooks - stop if before hooks failed', function (t) {
 	runner.run(function () {
 		t.same(arr, ['a']);
 		t.end();
+	});
+});
+
+test('ES2015 support', function (t) {
+	t.plan(2);
+
+	execFile('../cli.js', ['es2015.js'], {
+		cwd: __dirname
+	}, function (err, stdout) {
+		t.error(err);
+		t.true(stdout.trim().length > 0);
 	});
 });
