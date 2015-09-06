@@ -70,7 +70,7 @@ function exit(stats, results) {
 
 setImmediate(function () {
 	runner.on('test', test);
-	runner.run(exit);
+	runner.run().then(exit);
 });
 
 module.exports = runner.addTest.bind(runner);
