@@ -278,7 +278,7 @@ test('run serial tests before concurrent ones', function (t) {
 		a.end();
 	});
 
-	runner.run(function () {
+	runner.run().then(function () {
 		t.same(arr, ['a', 'b', 'c']);
 		t.end();
 	});
@@ -381,7 +381,7 @@ test('hooks - before', function (t) {
 		a.end();
 	});
 
-	runner.run(function () {
+	runner.run().then(function () {
 		t.same(arr, ['a', 'b']);
 		t.end();
 	});
@@ -405,7 +405,7 @@ test('hooks - after', function (t) {
 		a.end();
 	});
 
-	runner.run(function () {
+	runner.run().then(function () {
 		t.same(arr, ['a', 'b']);
 		t.end();
 	});
@@ -433,7 +433,7 @@ test('hooks - stop if before hooks failed', function (t) {
 		a.end();
 	});
 
-	runner.run(function () {
+	runner.run().then(function () {
 		t.same(arr, ['a']);
 		t.end();
 	});
