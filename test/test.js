@@ -433,7 +433,7 @@ test('hooks - stop if before hooks failed', function (t) {
 	});
 });
 
-test.skip('ES2015 support', function (t) {
+test('ES2015 support', function (t) {
 	t.plan(2);
 
 	execFile('../cli.js', ['es2015.js'], {
