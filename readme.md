@@ -182,6 +182,40 @@ test(function (t) {
 ```
 
 
+### ES2015 support
+
+You can write your tests in ES2015:
+
+```js
+test(t => {
+	t.pass();
+	t.end();
+});
+```
+
+And run it in any node version.
+
+```sh
+$ ava
+```
+
+Also you can use your local `babel` or `babel-core` instead of built-in.
+
+For example, package.json:
+
+```json
+{
+	"devDependencies": {
+		"ava": "^0.1.0",
+		"babel": "^5.8.0"
+	},
+	"scripts": {
+		"test": "ava"
+	}
+}
+```
+
+
 ## API
 
 ### test([name], body)
