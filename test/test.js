@@ -9,7 +9,7 @@ test('run test', function (t) {
 	ava('foo', function (a) {
 		a.true(false);
 		a.end();
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.end();
 	});
@@ -18,8 +18,8 @@ test('run test', function (t) {
 test('test title is optional', function (t) {
 	ava(function (a) {
 		a.end();
-	}).run(function () {
-		t.is(this.title, '[anonymous]');
+	}).run().then(function (a) {
+		t.is(a.title, '[anonymous]');
 		t.end();
 	});
 });
@@ -27,8 +27,8 @@ test('test title is optional', function (t) {
 test('infer test name from function', function (t) {
 	ava(function foo(a) {
 		a.end();
-	}).run(function () {
-		t.is(this.title, 'foo');
+	}).run().then(function (a) {
+		t.is(a.title, 'foo');
 		t.end();
 	});
 });
@@ -39,8 +39,8 @@ test('multiple asserts', function (t) {
 		a.true(true);
 		a.true(true);
 		a.end();
-	}).run(function () {
-		t.is(this.assertCount, 3);
+	}).run().then(function (a) {
+		t.is(a.assertCount, 3);
 		t.end();
 	});
 });
@@ -50,9 +50,9 @@ test('plan assertions', function (t) {
 		a.plan(2);
 		a.true(true);
 		a.true(true);
-	}).run(function () {
-		t.is(this.planCount, 2);
-		t.is(this.assertCount, 2);
+	}).run().then(function (a) {
+		t.is(a.planCount, 2);
+		t.is(a.assertCount, 2);
 		t.end();
 	});
 });
@@ -63,7 +63,7 @@ test('run more assertions than planned', function (t) {
 		a.true(true);
 		a.true(true);
 		a.true(true);
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
@@ -73,7 +73,7 @@ test('run more assertions than planned', function (t) {
 test('handle non-assertion errors', function (t) {
 	ava(function () {
 		throw new Error();
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.is(err.name, 'Error');
 		t.true(err instanceof Error);
 		t.end();
@@ -84,8 +84,8 @@ test('handle testing of arrays', function (t) {
 	ava(function (a) {
 		a.same(['foo', 'bar'], ['foo', 'bar']);
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -94,8 +94,8 @@ test('handle falsy testing of arrays', function (t) {
 	ava(function (a) {
 		a.notSame(['foo', 'bar'], ['foo', 'bar', 'cat']);
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -104,8 +104,8 @@ test('handle testing of objects', function (t) {
 	ava(function (a) {
 		a.same({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -114,8 +114,8 @@ test('handle falsy testing of objects', function (t) {
 	ava(function (a) {
 		a.notSame({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -127,8 +127,8 @@ test('handle throws', function (t) {
 		});
 
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -140,7 +140,7 @@ test('handle throws with error', function (t) {
 		});
 
 		a.end();
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.end();
 	});
@@ -153,8 +153,8 @@ test('handle falsy throws', function (t) {
 		});
 
 		a.end();
-	}).run(function (err) {
-		t.false(err);
+	}).run().then(function (a) {
+		t.false(a.assertError);
 		t.end();
 	});
 });
@@ -166,7 +166,7 @@ test('handle falsy throws with error', function (t) {
 		});
 
 		a.end();
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.end();
 	});
@@ -179,7 +179,7 @@ test('run functions after last planned assertion', function (t) {
 		a.plan(1);
 		a.true(true);
 		i++;
-	}).run(function () {
+	}).run().then(function () {
 		t.is(i, 1);
 		t.end();
 	});
@@ -199,7 +199,7 @@ test('run async functions after last planned assertion', function (t) {
 		foo(function () {
 			i++;
 		});
-	}).run(function () {
+	}).run().then(function () {
 		t.is(i, 1);
 		t.end();
 	});
@@ -212,8 +212,8 @@ test('planned async assertion', function (t) {
 		setTimeout(function () {
 			a.pass();
 		}, 100);
-	}).run(function (err) {
-		t.error(err);
+	}).run().then(function (a) {
+		t.error(a.assertError);
 		t.end();
 	});
 });
@@ -224,8 +224,8 @@ test('async assertion with `.end()`', function (t) {
 			a.pass();
 			a.end();
 		}, 100);
-	}).run(function (err) {
-		t.error(err);
+	}).run().then(function (a) {
+		t.error(a.assertError);
 		t.end();
 	});
 });
@@ -235,7 +235,7 @@ test('more assertions than planned should emit an assertion error', function (t)
 		a.plan(1);
 		a.pass();
 		a.pass();
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err, err);
 		t.is(err.name, 'AssertionError');
 		t.end();
@@ -289,8 +289,8 @@ test.skip('skip test with `.skip()`', function (t) {
 		a.skip();
 		a.pass();
 		a.end();
-	}).run(function () {
-		t.is(this.assertCount, 0);
+	}).run().then(function (a) {
+		t.is(a.assertCount, 0);
 		t.end();
 	});
 });
@@ -314,8 +314,8 @@ test('promise support - assert pass', function (t) {
 		return promisePass().then(function () {
 			a.pass();
 		});
-	}).run(function () {
-		t.is(this.assertCount, 1);
+	}).run().then(function (a) {
+		t.is(a.assertCount, 1);
 		t.end();
 	});
 });
@@ -326,7 +326,7 @@ test('promise support - assert fail', function (t) {
 			// TODO: replace with `a.fail()` when it's available
 			a.true(false);
 		});
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
@@ -338,7 +338,7 @@ test('promise support - reject', function (t) {
 		return promiseFail().then(function () {
 			a.pass();
 		});
-	}).run(function (err) {
+	}).run().catch(function (err) {
 		t.true(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
@@ -346,19 +346,14 @@ test('promise support - reject', function (t) {
 });
 
 test('record test duration', function (t) {
-	var avaTest;
-
 	ava(function (a) {
-		avaTest = a;
-
 		a.plan(1);
 
 		setTimeout(function () {
 			a.true(true);
 		}, 1234);
-	}).run(function (err) {
-		t.false(err);
-		t.true(avaTest.duration >= 1234);
+	}).run().then(function (a) {
+		t.true(a.duration >= 1234);
 		t.end();
 	});
 });
@@ -383,7 +378,6 @@ test('hooks - before', function (t) {
 
 	runner.run().then(function () {
 		t.same(arr, ['a', 'b']);
-		t.end();
 	});
 });
 
@@ -439,7 +433,7 @@ test('hooks - stop if before hooks failed', function (t) {
 	});
 });
 
-test('ES2015 support', function (t) {
+test.skip('ES2015 support', function (t) {
 	t.plan(2);
 
 	execFile('../cli.js', ['es2015.js'], {
