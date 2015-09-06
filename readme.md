@@ -262,6 +262,10 @@ AVA. Not Ava or ava.
 
 [Andromeda galaxy.](https://simple.wikipedia.org/wiki/Andromeda_galaxy)
 
+### Concurrency vs. parallelism
+
+Concurrency is not parallelism. It enables parallelism. It's about dealing with, while parallelism is about doing, lots of things at once.
+
 
 ## License
 
