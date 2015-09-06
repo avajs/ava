@@ -1,6 +1,6 @@
 'use strict';
 var test = require('tape');
-var Promise = require('pinkie-promise');
+var Promise = require('bluebird');
 var execFile = require('child_process').execFile;
 var ava = require('../lib/test');
 var Runner = require('../lib/runner');

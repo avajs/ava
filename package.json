@@ -62,7 +62,6 @@
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
-    "pinkie-promise": "^1.0.0",
     "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
