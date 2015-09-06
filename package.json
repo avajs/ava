@@ -27,7 +27,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo !es2015.js && xo es2015.js --esnext && node test/test.js | tap-dot"
+    "test": "xo && node test/test.js | tap-dot"
   },
   "files": [
     "index.js",
@@ -72,5 +72,10 @@
     "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
+  },
+  "xo": {
+    "ignores": [
+      "test/es2015.js"
+    ]
   }
 }

@@ -184,7 +184,9 @@ test(function (t) {
 
 ### ES2015 support
 
-You can write your tests in ES2015:
+AVA comes with builtin support for ES2015 through [Babel](https://babeljs.io).
+
+Just write your tests in ES2015. No extra work needed.
 
 ```js
 test(t => {
@@ -193,24 +195,13 @@ test(t => {
 });
 ```
 
-And run it in any node version.
-
-```sh
-$ ava
-```
-
-Also you can use your local `babel` or `babel-core` instead of built-in.
-
-For example, package.json:
+You can also use your own local Babel version:
 
 ```json
 {
 	"devDependencies": {
 		"ava": "^0.1.0",
-		"babel": "^5.8.0"
-	},
-	"scripts": {
-		"test": "ava"
+		"babel-core": "^5.8.0"
 	}
 }
 ```
