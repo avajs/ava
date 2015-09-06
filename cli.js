@@ -69,13 +69,9 @@ function init(files) {
 		];
 	}
 
-	globby(files, function (err, files) {
-		if (err) {
-			error(err);
-		}
-
+	return globby(files).then(function (files) {
 		files.forEach(function (file) {
-			run(path.resolve(process.cwd(), file));
+			run(path.resolve(file));
 		});
 
 		// TODO: figure out why this needs to be here to
@@ -91,4 +87,4 @@ if (cli.flags.init) {
 	return;
 }
 
-init(cli.input);
+init(cli.input).catch(error);
