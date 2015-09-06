@@ -4,7 +4,14 @@ var fs = require('fs');
 var path = require('path');
 var globby = require('globby');
 var meow = require('meow');
+var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
+
+try {
+	require(resolveFrom('.', 'babel-core/register') || resolveFrom('.', 'babel/register'));
+} catch (err) {
+	require('babel-core/register');
+}
 
 var cli = meow({
 	help: [
