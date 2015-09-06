@@ -55,6 +55,8 @@
     "fn-name": "^2.0.0",
     "globby": "^3.0.1",
     "meow": "^3.3.0",
+    "pify": "^2.0.0",
+    "pinkie-promise": "^1.0.0",
     "plur": "^2.0.0",
     "pretty-ms": "^2.0.0",
     "resolve-from": "^1.0.0",
