@@ -438,8 +438,8 @@ test('ES2015 support', function (t) {
 
 	execFile('../cli.js', ['es2015.js'], {
 		cwd: __dirname
-	}, function (err, stdout) {
-		t.error(err);
-		t.true(stdout.trim().length > 0);
+	}, function (err, stdout, stderr) {
+		t.true(err);
+		t.true(stderr.trim().length > 0);
 	});
 });
