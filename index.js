@@ -9,6 +9,8 @@ var Runner = require('./lib/runner');
 var log = new Squeak({separator: ' '});
 var runner = new Runner();
 
+Error.stackTraceLimit = Infinity;
+
 log.type('success', {
 	color: 'green',
 	prefix: figures.tick
@@ -42,8 +44,21 @@ function stack(results) {
 
 		i++;
 
+		// Don't print the full stack but the only useful line showing
+		// the actual test file stack
+		var reg = /(?:^(?! {4}at\b).{6})|(?:\((?:[\\\/](?:(?!node_modules[\\\/]ava[\\\/])[^:\\\/])+)+:\d+:\d+\))/;
+		function beautifulStack(stack) {
+			var found = false;
+			return stack.split('\n').filter(function (line) {
+				var relevant = reg.test(line);
+				found = found || relevant;
+				return !found || relevant;
+			}).join('\n');
+		}
+		var stack = beautifulStack(result.error.stack);
+
 		log.writelpad(chalk.red(i + '.', result.title));
-		log.writelpad(chalk.red(result.error.stack));
+		log.writelpad(chalk.red(stack));
 		log.write();
 	});
 }
