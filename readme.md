@@ -295,6 +295,12 @@ AVA. Not Ava or ava.
 Concurrency is not parallelism. It enables parallelism. It's about dealing with, while parallelism is about doing, lots of things at once.
 
 
+## Related
+
+- [gulp-ava](https://github.com/sindresorhus/gulp-ava) - Run tests with gulp
+- [grunt-ava](https://github.com/sindresorhus/grunt-ava) - Run tests with grunt
+
+
 ## License
 
 MIT © [Sindre Sorhus](http://sindresorhus.com) & [Kevin Mårtensson](https://github.com/kevva)
