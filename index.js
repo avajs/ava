@@ -48,7 +48,10 @@ function stack(results) {
 	});
 }
 
-function exit(stats, results) {
+function exit() {
+	var stats = runner.stats;
+	var results = runner.results;
+
 	if (stats.testCount > 0) {
 		log.write();
 	}
