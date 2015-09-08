@@ -259,6 +259,20 @@ test.skip('more assertions than planned should emit an assertion error - async',
 	});
 });
 
+test('runner have test event', function (t) {
+	var runner = new Runner();
+	runner.addTest(function foo(a) {
+		a.end();
+	});
+	runner.on('test', function (err, title, duration) {
+		t.error(err);
+		t.equal(title, 'foo');
+		t.ok(duration !== undefined);
+		t.end();
+	});
+	runner.run();
+});
+
 test('run serial tests before concurrent ones', function (t) {
 	var runner = new Runner();
 	var arr = [];
