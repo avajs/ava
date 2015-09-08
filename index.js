@@ -38,6 +38,10 @@ function test(err, title, duration) {
 		return;
 	}
 
+	if (runner.stats.testCount === 1) {
+		return;
+	}
+
 	// display duration only over a threshold
 	var threshold = 100;
 	var dur = duration > threshold ? chalk.gray.dim(' (' + prettyMs(duration) + ')') : '';
@@ -65,9 +69,7 @@ function exit() {
 	var stats = runner.stats;
 	var results = runner.results;
 
-	if (stats.testCount > 0) {
-		log.write();
-	}
+	log.write();
 
 	if (stats.failCount === 0) {
 		log.writelpad(chalk.green(stats.passCount, plur('test', stats.passCount), 'passed'));
@@ -85,6 +87,7 @@ function exit() {
 }
 
 setImmediate(function () {
+	log.write();
 	runner.on('test', test);
 	runner.run().then(exit);
 });
