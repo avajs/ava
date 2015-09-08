@@ -102,7 +102,7 @@ $ ava --help
 
 ## Documentation
 
-Test files are just normal Node.js scripts and can be run with `$ node test.js`. However, using the CLI is preferred for simplicity and future [parallelism support](https://github.com/sindresorhus/ava/issues/1).
+Test files are just normal Node.js scripts and can be run with `$ node test.js`. However, using the CLI is preferred for simplicity, ES2015 support, and future [parallelism support](https://github.com/sindresorhus/ava/issues/1).
 
 Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise.
 
@@ -133,6 +133,19 @@ You can also choose to use a named function instead:
 
 ```js
 test(function name(t) {
+	t.end();
+});
+```
+
+### Assertions
+
+AVA supports various assertions through the [`claim` module](https://github.com/kevva/claim#api).
+
+```js
+test(function (t) {
+	t.pass();
+	t.fail();
+	t.is('unicorn', 'unicorn');
 	t.end();
 });
 ```
@@ -194,20 +207,15 @@ test.serial(function (t) {
 ### Before/after hooks
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`.
-The test function given to `test.before()` and `test.after()` is called before/after all tests.
+used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests.
 
 ```js
-// shortcuts for convenience
-var before = test.before;
-var after = test.after;
-
-before(function (t) {
+test.before(function (t) {
 	// this test runs before all others
 	t.end();
 });
 
-after(function (t) {
+test.after(function (t) {
 	// this test runs after all others
 	t.end();
 });
@@ -262,6 +270,8 @@ You can also use your own local Babel version:
 
 ### test([name], body)
 ### test.serial([name], body)
+### test.before(body)
+### test.after(body)
 
 #### name
 
