@@ -7,6 +7,29 @@
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
 
 
+## Why AVA?
+
+- Minimal and fast
+- Simple test syntax
+- Runs tests concurrently
+- Enforces writing atomic tests
+- [Write your test in ES2015](#es2015-support)
+- [Promise support](#promise-support)
+- No implicit globals
+
+
+## Test syntax
+
+```js
+import test from 'ava';
+
+test(t => {
+	t.pass();
+	t.end();
+});
+```
+
+
 ## Usage
 
 #### Initialize
