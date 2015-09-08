@@ -48,7 +48,10 @@ function stack(results) {
 	});
 }
 
-function exit(stats, results) {
+function exit() {
+	var stats = runner.stats;
+	var results = runner.results;
+
 	if (stats.testCount > 0) {
 		log.write();
 	}
@@ -70,7 +73,7 @@ function exit(stats, results) {
 
 setImmediate(function () {
 	runner.on('test', test);
-	runner.run(exit);
+	runner.run().then(exit);
 });
 
 module.exports = runner.addTest.bind(runner);
