@@ -284,17 +284,6 @@ test('run serial tests before concurrent ones', function (t) {
 	});
 });
 
-test.skip('skip test with `.skip()`', function (t) {
-	ava(function (a) {
-		a.skip();
-		a.pass();
-		a.end();
-	}).run().then(function (a) {
-		t.is(a.assertCount, 0);
-		t.end();
-	});
-});
-
 function promisePass() {
 	return new Promise(function (resolve) {
 		setImmediate(resolve);
