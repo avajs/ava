@@ -52,7 +52,10 @@
     "tap",
     "mocha",
     "qunit",
-    "jasmine"
+    "jasmine",
+    "tdd",
+    "assert",
+    "assertion"
   ],
   "dependencies": {
     "ava-init": "^0.1.0",
@@ -77,7 +80,7 @@
   },
   "xo": {
     "ignores": [
-      "test/es2015.js"
+      "test/fixture/**"
     ]
   }
 }

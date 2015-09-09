@@ -1,13 +1,13 @@
 'use strict';
-var test = require('tape');
+var childProcess = require('child_process');
 var Promise = require('bluebird');
-var execFile = require('child_process').execFile;
-var ava = require('../lib/test');
+var test = require('tape');
 var Runner = require('../lib/runner');
+var ava = require('../lib/test');
 
 test('run test', function (t) {
 	ava('foo', function (a) {
-		a.true(false);
+		a.fail();
 		a.end();
 	}).run().catch(function (err) {
 		t.true(err);
@@ -35,9 +35,9 @@ test('infer test name from function', function (t) {
 
 test('multiple asserts', function (t) {
 	ava(function (a) {
-		a.true(true);
-		a.true(true);
-		a.true(true);
+		a.pass();
+		a.pass();
+		a.pass();
 		a.end();
 	}).run().then(function (a) {
 		t.is(a.assertCount, 3);
@@ -48,8 +48,8 @@ test('multiple asserts', function (t) {
 test('plan assertions', function (t) {
 	ava(function (a) {
 		a.plan(2);
-		a.true(true);
-		a.true(true);
+		a.pass();
+		a.pass();
 	}).run().then(function (a) {
 		t.is(a.planCount, 2);
 		t.is(a.assertCount, 2);
@@ -60,9 +60,9 @@ test('plan assertions', function (t) {
 test('run more assertions than planned', function (t) {
 	ava(function (a) {
 		a.plan(2);
-		a.true(true);
-		a.true(true);
-		a.true(true);
+		a.pass();
+		a.pass();
+		a.pass();
 	}).run().catch(function (err) {
 		t.true(err);
 		t.is(err.name, 'AssertionError');
@@ -177,7 +177,7 @@ test('run functions after last planned assertion', function (t) {
 
 	ava(function (a) {
 		a.plan(1);
-		a.true(true);
+		a.pass();
 		i++;
 	}).run().then(function () {
 		t.is(i, 1);
@@ -192,7 +192,7 @@ test('run async functions after last planned assertion', function (t) {
 		a.plan(1);
 
 		function foo(cb) {
-			a.true(true);
+			a.pass();
 			cb();
 		}
 
@@ -261,15 +261,18 @@ test.skip('more assertions than planned should emit an assertion error - async',
 
 test('runner have test event', function (t) {
 	var runner = new Runner();
+
 	runner.addTest(function foo(a) {
 		a.end();
 	});
+
 	runner.on('test', function (err, title, duration) {
 		t.error(err);
 		t.equal(title, 'foo');
 		t.ok(duration !== undefined);
 		t.end();
 	});
+
 	runner.run();
 });
 
@@ -326,8 +329,7 @@ test('promise support - assert pass', function (t) {
 test('promise support - assert fail', function (t) {
 	ava(function (a) {
 		return promisePass().then(function () {
-			// TODO: replace with `a.fail()` when it's available
-			a.true(false);
+			a.fail();
 		});
 	}).run().catch(function (err) {
 		t.true(err);
@@ -369,13 +371,11 @@ test('hooks - before', function (t) {
 
 	runner.addBeforeHook(function (a) {
 		arr.push('a');
-
 		a.end();
 	});
 
 	runner.addTest(function (a) {
 		arr.push('b');
-
 		a.end();
 	});
 
@@ -392,13 +392,11 @@ test('hooks - after', function (t) {
 
 	runner.addAfterHook(function (a) {
 		arr.push('b');
-
 		a.end();
 	});
 
 	runner.addTest(function (a) {
 		arr.push('a');
-
 		a.end();
 	});
 
@@ -416,7 +414,6 @@ test('hooks - stop if before hooks failed', function (t) {
 
 	runner.addBeforeHook(function (a) {
 		arr.push('a');
-
 		a.end();
 	});
 
@@ -426,7 +423,6 @@ test('hooks - stop if before hooks failed', function (t) {
 
 	runner.addTest(function (a) {
 		arr.push('b');
-
 		a.end();
 	});
 
@@ -439,9 +435,9 @@ test('hooks - stop if before hooks failed', function (t) {
 test('ES2015 support', function (t) {
 	t.plan(1);
 
-	execFile('../cli.js', ['fixture/es2015.js'], {
+	childProcess.execFile('../cli.js', ['fixture/es2015.js'], {
 		cwd: __dirname
-	}, function (err, stdout, stderr) {
+	}, function (err) {
 		t.ifError(err);
 	});
 });
