@@ -437,12 +437,11 @@ test('hooks - stop if before hooks failed', function (t) {
 });
 
 test('ES2015 support', function (t) {
-	t.plan(2);
+	t.plan(1);
 
-	execFile('../cli.js', ['es2015.js'], {
+	execFile('../cli.js', ['fixture/es2015.js'], {
 		cwd: __dirname
 	}, function (err, stdout, stderr) {
-		t.true(err);
-		t.true(stderr.trim().length > 0);
+		t.ifError(err);
 	});
 });

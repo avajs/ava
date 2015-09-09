@@ -110,7 +110,7 @@ You have to define all tests synchronously, meaning you can't define a test in t
 
 ### Test anatomy
 
-To create a test, you just call the `test` function you require'd from AVA and pass in an optional test name and a callback function containing the test execution. The passed callback function is given the context as the first argument where you can call the different AVA methods and assertions.
+To create a test, you just call the `test` function you require'd from AVA and pass in an optional test name and a callback function containing the test execution. The passed callback function is given the context as the first argument where you can call the different AVA methods and [assertions](#assertions).
 
 ```js
 test('name', function (t) {
@@ -133,19 +133,6 @@ You can also choose to use a named function instead:
 
 ```js
 test(function name(t) {
-	t.end();
-});
-```
-
-### Assertions
-
-AVA supports various assertions through the [`claim` module](https://github.com/kevva/claim#api).
-
-```js
-test(function (t) {
-	t.pass();
-	t.fail();
-	t.is('unicorn', 'unicorn');
 	t.end();
 });
 ```
@@ -287,19 +274,87 @@ Should contain the actual test.
 
 ##### context
 
-Passed into the test function and contains the different AVA methods and assertions.
+Passed into the test function and contains the different AVA methods and [assertions](#assertions).
 
-See the [`claim` docs](https://github.com/kevva/claim#api) for supported assertions.
-
-###### plan(count)
+###### .plan(count)
 
 Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match planned assertions. When planned assertions are used you don't need to explicitly end the test.
 
 Be aware that this doesn't work with custom assert modules. You must then call `.end()` explicitly.
 
-###### end()
+###### .end()
 
 End the test. Use this when `plan()` is not used.
+
+
+## Assertions
+
+Assertions are mixed into the test [context](#context):
+
+```js
+test(function (t) {
+	t.ok('unicorn'); // assertion
+	t.end();
+});
+```
+
+### .pass([message])
+
+Passing assertion.
+
+### .fail([message])
+
+Failing assertion.
+
+### .ok(value, [message])
+
+Assert that `value` is truthy.
+
+### .notOk(value, [message])
+
+Assert that `value` is falsy.
+
+### .true(value, [message])
+
+Assert that `value` is `true`.
+
+### .false(value, [message])
+
+Assert that `value` is `false`.
+
+### .is(value, expected, [message])
+
+Assert that `value` is equal to `expected`.
+
+### .not(value, expected, [message])
+
+Assert that `value` is not equal to `expected`.
+
+### .same(value, expected, [message])
+
+Assert that `value` is deep equal to `expected`.
+
+### .notSame(value, expected, [message])
+
+Assert that `value` is not deep equal to `expected`.
+
+### .throws(function, error, [message])
+
+Assert that `function` throws an error.
+
+`error` can be a constructor, regex or validation function.
+
+### .doesNotThrow(function, [message])
+
+Assert that `function` doesn't throw an `error`.
+
+### .regexTest(regex, contents, [message])
+
+Assert that `regex` matches `contents`.
+
+### .ifError(error, [message])
+
+Assert that `error` is falsy.
 
 
 ## Tips
