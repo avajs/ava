@@ -1,7 +1,6 @@
 'use strict';
 var setImmediate = require('set-immediate-shim');
 var chalk = require('chalk');
-var plur = require('plur');
 var Runner = require('./lib/runner');
 var runner = new Runner();
 var log = require('./lib/logger');
@@ -25,6 +24,12 @@ function stack(results) {
 }
 
 function exit() {
+	var isForked = process.env.AVA_FORK;
+
+	if (isForked) {
+		return;
+	}
+
 	var stats = runner.stats;
 	var results = runner.results;
 

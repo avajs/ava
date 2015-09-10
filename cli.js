@@ -6,6 +6,10 @@ var globby = require('globby');
 var meow = require('meow');
 var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
+var assign = require('object-assign');
+var chalk = require('chalk');
+var fork = require('child_process').fork;
+var log = require('./lib/logger');
 
 try {
 	require(resolveFrom('.', 'babel-core/register') || resolveFrom('.', 'babel/register'));
@@ -35,9 +39,34 @@ var cli = meow({
 	string: ['_']
 });
 
+var errors = [];
+var failed = 0;
+var passed = 0;
+var files = 0;
+
 function error(err) {
 	console.error(err.stack);
 	process.exit(1);
+}
+
+function test(data) {
+	if (data.toString().trim().length === 0) {
+		return;
+	}
+
+	var test = JSON.parse(data);
+	var isError = test.err.message;
+
+	if (isError) {
+		log.error(test.title, chalk.red(test.err.message));
+
+		errors.push(test);
+		failed++;
+	} else {
+		log.test(null, test.title, test.duration);
+
+		passed++;
+	}
 }
 
 function run(file) {
@@ -56,7 +85,38 @@ function run(file) {
 			return;
 		}
 
-		require(file);
+		var options = {
+			env: assign({}, process.env, {AVA_FORK: 1}),
+			silent: true
+		};
+
+		files++;
+
+		var ps = fork(file, options);
+
+		ps.stdout.on('data', test);
+		ps.stderr.on('data', test);
+		ps.on('close', exit);
+	});
+}
+
+function exit() {
+	if (--files > 0) {
+		return;
+	}
+
+	log.write();
+	log.report(passed, failed);
+	log.write();
+
+	var i = 0;
+
+	errors.forEach(function (test) {
+		i++;
+
+		log.writelpad(chalk.red(i + '.', test.title));
+		log.stack(test.err.stack);
+		log.write();
 	});
 }
 
