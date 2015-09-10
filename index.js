@@ -1,53 +1,12 @@
 'use strict';
 var setImmediate = require('set-immediate-shim');
-var prettyMs = require('pretty-ms');
 var chalk = require('chalk');
-var figures = require('figures');
-var Squeak = require('squeak');
 var plur = require('plur');
 var Runner = require('./lib/runner');
-var log = new Squeak({separator: ' '});
 var runner = new Runner();
+var log = require('./lib/logger');
 
 Error.stackTraceLimit = Infinity;
-
-function beautifyStack(stack) {
-	var re = /(?:^(?! {4}at\b).{6})|(?:\((?:[\\\/](?:(?!node_modules[\\\/]ava[\\\/])[^:\\\/])+)+:\d+:\d+\))/;
-	var found = false;
-
-	return stack.split('\n').filter(function (line) {
-		var relevant = re.test(line);
-		found = found || relevant;
-		return !found || relevant;
-	}).join('\n');
-}
-
-log.type('success', {
-	color: 'green',
-	prefix: figures.tick
-});
-
-log.type('error', {
-	color: 'red',
-	prefix: figures.cross
-});
-
-function test(err, title, duration) {
-	if (err) {
-		log.error(title, chalk.red(err.message));
-		return;
-	}
-
-	if (runner.stats.testCount === 1) {
-		return;
-	}
-
-	// display duration only over a threshold
-	var threshold = 100;
-	var dur = duration > threshold ? chalk.gray.dim(' (' + prettyMs(duration) + ')') : '';
-
-	log.success(title + dur);
-}
 
 function stack(results) {
 	var i = 0;
@@ -60,7 +19,7 @@ function stack(results) {
 		i++;
 
 		log.writelpad(chalk.red(i + '.', result.title));
-		log.writelpad(chalk.red(beautifyStack(result.error.stack)));
+		log.stack(result.error.stack);
 		log.write();
 	});
 }
@@ -88,7 +47,7 @@ function exit() {
 
 setImmediate(function () {
 	log.write();
-	runner.on('test', test);
+	runner.on('test', log.test);
 	runner.run().then(exit);
 });
 
