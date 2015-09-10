@@ -114,6 +114,8 @@ function exit() {
 		log.stack(test.err.stack);
 		log.write();
 	});
+
+	process.exit(failed > 0 ? 1 : 0);
 }
 
 function init(files) {
