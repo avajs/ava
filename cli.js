@@ -4,18 +4,12 @@ var fs = require('fs');
 var path = require('path');
 var globby = require('globby');
 var meow = require('meow');
-var resolveFrom = require('resolve-from');
 var updateNotifier = require('update-notifier');
 var assign = require('object-assign');
 var chalk = require('chalk');
 var fork = require('child_process').fork;
+var join = require('path').join;
 var log = require('./lib/logger');
-
-try {
-	require(resolveFrom('.', 'babel-core/register') || resolveFrom('.', 'babel/register'));
-} catch (err) {
-	require('babel-core/register');
-}
 
 var cli = meow({
 	help: [
@@ -92,7 +86,9 @@ function run(file) {
 
 		files++;
 
-		var ps = fork(file, options);
+		var babel = join(__dirname, 'babel.js');
+
+		var ps = fork(babel, [file], options);
 
 		ps.stdout.on('data', test);
 		ps.stderr.on('data', test);
