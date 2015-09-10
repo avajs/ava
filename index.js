@@ -29,13 +29,7 @@ function exit() {
 	var results = runner.results;
 
 	log.write();
-
-	if (stats.failCount === 0) {
-		log.writelpad(chalk.green(stats.passCount, plur('test', stats.passCount), 'passed'));
-	} else {
-		log.writelpad(chalk.red(stats.failCount, plur('test', stats.failCount), 'failed'));
-	}
-
+	log.report(stats.passCount, stats.failCount);
 	log.write();
 
 	if (stats.failCount > 0) {
