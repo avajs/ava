@@ -44,20 +44,15 @@ function error(err) {
 }
 
 function test(data) {
-	if (data.toString().trim().length === 0) {
-		return;
-	}
-
-	var test = JSON.parse(data);
-	var isError = test.err.message;
+	var isError = data.err.message;
 
 	if (isError) {
-		log.error(test.title, chalk.red(test.err.message));
+		log.error(data.title, chalk.red(data.err.message));
 
-		errors.push(test);
+		errors.push(data);
 		failed++;
 	} else {
-		log.test(null, test.title, test.duration);
+		log.test(null, data.title, data.duration);
 
 		passed++;
 	}
@@ -90,8 +85,7 @@ function run(file) {
 
 		var ps = fork(babel, [file], options);
 
-		ps.stdout.on('data', test);
-		ps.stderr.on('data', test);
+		ps.on('message', test);
 		ps.on('close', exit);
 	});
 }

@@ -5,6 +5,8 @@ var Runner = require('./lib/runner');
 var runner = new Runner();
 var log = require('./lib/logger');
 
+var isForked = process.env.AVA_FORK;
+
 Error.stackTraceLimit = Infinity;
 
 function stack(results) {
@@ -23,9 +25,29 @@ function stack(results) {
 	});
 }
 
-function exit() {
-	var isForked = process.env.AVA_FORK;
+function test(err, title, duration) {
+	if (isForked) {
+		// serialize Error object
+		if (err) {
+			err = {
+				message: err.message,
+				stack: err.stack
+			};
+		}
 
+		process.send({
+			err: err || {},
+			title: title,
+			duration: duration
+		});
+
+		return;
+	}
+
+	log.test(err, title, duration);
+}
+
+function exit() {
 	if (isForked) {
 		return;
 	}
@@ -46,7 +68,7 @@ function exit() {
 
 setImmediate(function () {
 	log.write();
-	runner.on('test', log.test);
+	runner.on('test', test);
 	runner.run().then(exit);
 });
 
