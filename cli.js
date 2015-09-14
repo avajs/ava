@@ -84,7 +84,6 @@ updateNotifier({pkg: cli.pkg}).notify();
 
 if (cli.flags.init) {
 	require('ava-init')().catch(error);
-	return;
+} else {
+	init(cli.input).catch(error);
 }
-
-init(cli.input).catch(error);

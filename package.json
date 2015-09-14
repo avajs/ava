@@ -77,10 +77,5 @@
     "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
-  },
-  "xo": {
-    "ignores": [
-      "test/fixture/**"
-    ]
   }
 }
