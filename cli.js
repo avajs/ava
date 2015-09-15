@@ -34,7 +34,6 @@ var cli = meow({
 var errors = [];
 var failed = 0;
 var passed = 0;
-var files = 0;
 
 function error(err) {
 	console.error(err.stack);
@@ -68,19 +67,10 @@ function run(file) {
 		return;
 	}
 
-	files++;
-
-	var ps = fork(file);
-
-	ps.on('message', test);
-	ps.on('close', exit);
+	return fork(file).on('message', test);
 }
 
 function exit() {
-	if (--files > 0) {
-		return;
-	}
-
 	log.write();
 	log.report(passed, failed);
 	log.write();
@@ -95,6 +85,10 @@ function exit() {
 		log.write();
 	});
 
+	// TODO: figure out why this needs to be here to
+	// correctly flush the output when multiple test files
+	process.stdout.write('');
+
 	process.exit(failed > 0 ? 1 : 0);
 }
 
@@ -107,15 +101,13 @@ function init(files) {
 		];
 	}
 
-	return globby(files).then(function (files) {
-		files.forEach(function (file) {
-			run(path.resolve(file));
-		});
+	return globby(files)
+		.then(function (files) {
+			var tests = files.map(run);
 
-		// TODO: figure out why this needs to be here to
-		// correctly flush the output when multiple test files
-		process.stdout.write('');
-	});
+			return Promise.all(tests);
+		})
+		.then(exit);
 }
 
 updateNotifier({pkg: cli.pkg}).notify();
