@@ -81,7 +81,7 @@ function run(file) {
 
 		files++;
 
-		var babel = join(__dirname, 'babel.js');
+		var babel = join(__dirname, 'lib', 'babel.js');
 
 		var ps = fork(babel, [file], options);
 
