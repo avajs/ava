@@ -5,10 +5,8 @@ var path = require('path');
 var globby = require('globby');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
-var assign = require('object-assign');
 var chalk = require('chalk');
-var fork = require('child_process').fork;
-var join = require('path').join;
+var fork = require('./lib/fork');
 var log = require('./lib/logger');
 
 var cli = meow({
@@ -70,16 +68,9 @@ function run(file) {
 		return;
 	}
 
-	var options = {
-		env: assign({}, process.env, {AVA_FORK: 1}),
-		silent: true
-	};
-
 	files++;
 
-	var babel = join(__dirname, 'lib', 'babel.js');
-
-	var ps = fork(babel, [file], options);
+	var ps = fork(file);
 
 	ps.on('message', test);
 	ps.on('close', exit);
