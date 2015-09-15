@@ -103,6 +103,11 @@ function init(files) {
 
 	return globby(files)
 		.then(function (files) {
+			// convert relative paths to absolute
+			files = files.map(function (file) {
+				return path.join(process.cwd(), file);
+			});
+
 			var tests = files.map(run);
 
 			return Promise.all(tests);
