@@ -59,12 +59,11 @@ function run(file) {
 	var stats = fs.statSync(file);
 
 	if (stats.isDirectory()) {
-		init(path.join(file, '*.js'));
-		return;
+		return init(path.join(file, '*.js'));
 	}
 
 	if (path.extname(file) !== '.js') {
-		return;
+		return Promise.resolve();
 	}
 
 	return fork(file).on('message', test);
@@ -111,8 +110,7 @@ function init(files) {
 			var tests = files.map(run);
 
 			return Promise.all(tests);
-		})
-		.then(exit);
+		});
 }
 
 updateNotifier({pkg: cli.pkg}).notify();
@@ -120,5 +118,5 @@ updateNotifier({pkg: cli.pkg}).notify();
 if (cli.flags.init) {
 	require('ava-init')().catch(error);
 } else {
-	init(cli.input).catch(error);
+	init(cli.input).then(exit).catch(error);
 }
