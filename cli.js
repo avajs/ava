@@ -8,6 +8,7 @@ var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
 var log = require('./lib/logger');
+var Promise = require('bluebird');
 
 var cli = meow({
 	help: [
