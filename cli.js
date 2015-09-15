@@ -59,35 +59,30 @@ function test(data) {
 }
 
 function run(file) {
-	fs.stat(file, function (err, stats) {
-		if (err) {
-			console.error(err.message);
-			process.exit(1);
-		}
+	var stats = fs.statSync(file);
 
-		if (stats.isDirectory()) {
-			init(path.join(file, '*.js'));
-			return;
-		}
+	if (stats.isDirectory()) {
+		init(path.join(file, '*.js'));
+		return;
+	}
 
-		if (path.extname(file) !== '.js') {
-			return;
-		}
+	if (path.extname(file) !== '.js') {
+		return;
+	}
 
-		var options = {
-			env: assign({}, process.env, {AVA_FORK: 1}),
-			silent: true
-		};
+	var options = {
+		env: assign({}, process.env, {AVA_FORK: 1}),
+		silent: true
+	};
 
-		files++;
+	files++;
 
-		var babel = join(__dirname, 'lib', 'babel.js');
+	var babel = join(__dirname, 'lib', 'babel.js');
 
-		var ps = fork(babel, [file], options);
+	var ps = fork(babel, [file], options);
 
-		ps.on('message', test);
-		ps.on('close', exit);
-	});
+	ps.on('message', test);
+	ps.on('close', exit);
 }
 
 function exit() {
