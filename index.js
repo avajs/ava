@@ -6,7 +6,8 @@ var figures = require('figures');
 var Squeak = require('squeak');
 var plur = require('plur');
 var Runner = require('./lib/runner');
-var log = new Squeak({separator: ' '});
+var consoleStream = require('console-stream');
+var log = new Squeak({separator: ' ', stream: process.stderr || consoleStream()});
 var runner = new Runner();
 
 Error.stackTraceLimit = Infinity;
@@ -83,7 +84,9 @@ function exit() {
 		stack(results);
 	}
 
-	process.exit(stats.failCount > 0 ? 1 : 0);
+	if (process.exit) {
+		process.exit(stats.failCount > 0 ? 1 : 0);
+	}
 }
 
 setImmediate(function () {
