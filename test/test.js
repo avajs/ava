@@ -80,6 +80,17 @@ test('handle non-assertion errors', function (t) {
 	});
 });
 
+test('handle non-assertion errors even when planned', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		throw new Error();
+	}).run().catch(function (err) {
+		t.is(err.name, 'Error');
+		t.true(err instanceof Error);
+		t.end();
+	});
+});
+
 test('handle testing of arrays', function (t) {
 	ava(function (a) {
 		a.same(['foo', 'bar'], ['foo', 'bar']);
