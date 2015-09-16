@@ -84,7 +84,9 @@ function exit() {
 		stack(results);
 	}
 
-	process.exit(stats.failCount > 0 ? 1 : 0);
+	if (process.exit) {
+		process.exit(stats.failCount > 0 ? 1 : 0);
+	}
 }
 
 setImmediate(function () {
