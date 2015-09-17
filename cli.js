@@ -58,7 +58,11 @@ function test(data) {
 }
 
 function run(file) {
-	return fork(file).on('message', test);
+	return fork(file)
+		.on('message', test)
+		.on('data', function (data) {
+			process.stdout.write(data);
+		});
 }
 
 function exit() {
