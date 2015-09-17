@@ -34,8 +34,6 @@ var cli = meow({
 });
 
 var errors = [];
-var failed = 0;
-var passed = 0;
 
 function error(err) {
 	console.error(err.stack);
@@ -49,36 +47,45 @@ function test(data) {
 		log.error(data.title, chalk.red(data.err.message));
 
 		errors.push(data);
-		failed++;
 	} else {
 		log.test(null, data.title, data.duration);
-
-		passed++;
 	}
 }
 
 function run(file) {
 	return fork(file)
-		.on('message', test)
+		.on('test', test)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
 }
 
-function exit() {
+function sum (arr, key) {
+	return arr.reduce(function (a, b) {
+		return a[key] + b[key];
+	});
+}
+
+function exit(results) {
+	// assemble stats from all tests
+	var stats = results.map(function (result) {
+		return result.stats;
+	});
+
+	var tests = results.map(function (result) {
+		return result.tests;
+	});
+
+	var passed = sum(stats, 'passCount');
+	var failed = sum(stats, 'failCount');
+
 	log.write();
 	log.report(passed, failed);
 	log.write();
 
-	var i = 0;
-
-	errors.forEach(function (test) {
-		i++;
-
-		log.writelpad(chalk.red(i + '.', test.title));
-		log.stack(test.err.stack);
-		log.write();
-	});
+	if (failed > 0) {
+		log.errors(flatten(tests));
+	}
 
 	// TODO: figure out why this needs to be here to
 	// correctly flush the output when multiple test files

@@ -9,36 +9,28 @@ var isForked = process.env.AVA_FORK;
 
 Error.stackTraceLimit = Infinity;
 
-function stack(results) {
-	var i = 0;
+function serializeError (err) {
+	err = {
+		message: err.message,
+		stack: err.stack
+	};
 
-	results.forEach(function (result) {
-		if (!result.error) {
-			return;
-		}
-
-		i++;
-
-		log.writelpad(chalk.red(i + '.', result.title));
-		log.stack(result.error.stack);
-		log.write();
-	});
+	return err;
 }
 
 function test(err, title, duration) {
 	if (isForked) {
-		// serialize Error object
 		if (err) {
-			err = {
-				message: err.message,
-				stack: err.stack
-			};
+			err = serializeError(err);
 		}
 
 		process.send({
-			err: err || {},
-			title: title,
-			duration: duration
+			name: 'test',
+			data: {
+				err: err || {},
+				title: title,
+				duration: duration
+			}
 		});
 
 		return;
@@ -49,6 +41,23 @@ function test(err, title, duration) {
 
 function exit() {
 	if (isForked) {
+		// serialize errors
+		var results = runner.results.map(function (result) {
+			if (result.error) {
+				result.error = serializeError(result.error);
+			}
+
+			return result;
+		});
+
+		process.send({
+			name: 'results',
+			data: {
+				stats: runner.stats,
+				tests: runner.results
+			}
+		});
+
 		return;
 	}
 
@@ -60,7 +69,7 @@ function exit() {
 	log.write();
 
 	if (stats.failCount > 0) {
-		stack(results);
+		log.errors(results);
 	}
 
 	process.exit(stats.failCount > 0 ? 1 : 0);
