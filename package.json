@@ -58,6 +58,7 @@
     "assertion"
   ],
   "dependencies": {
+    "arr-flatten": "^1.0.1",
     "ava-init": "^0.1.0",
     "babel-core": "^5.8.23",
     "bluebird": "^2.9.34",

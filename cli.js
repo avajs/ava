@@ -2,6 +2,7 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
+var flatten = require('arr-flatten');
 var globby = require('globby');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
@@ -57,16 +58,6 @@ function test(data) {
 }
 
 function run(file) {
-	var stats = fs.statSync(file);
-
-	if (stats.isDirectory()) {
-		return init(path.join(file, '*.js'));
-	}
-
-	if (path.extname(file) !== '.js') {
-		return Promise.resolve();
-	}
-
 	return fork(file).on('message', test);
 }
 
@@ -93,6 +84,18 @@ function exit() {
 }
 
 function init(files) {
+	return handlePaths(files)
+		.map(function (file) {
+			return path.join(process.cwd(), file);
+		})
+		.then(function (files) {
+			var tests = files.map(run);
+
+			return Promise.all(tests);
+		});
+}
+
+function handlePaths(files) {
 	if (files.length === 0) {
 		files = [
 			'test.js',
@@ -101,16 +104,24 @@ function init(files) {
 		];
 	}
 
-	return globby(files)
+	// convert pinkie-promise to Bluebird promise
+	files = Promise.resolve(globby(files));
+
+	return files
+		.map(function (file) {
+			var stats = fs.statSync(path.join(process.cwd(), file));
+
+			if (stats.isDirectory()) {
+				return handlePaths([path.join(file, '*.js')]);
+			}
+
+			return file;
+		})
 		.then(function (files) {
-			// convert relative paths to absolute
-			files = files.map(function (file) {
-				return path.join(process.cwd(), file);
-			});
-
-			var tests = files.map(run);
-
-			return Promise.all(tests);
+			return flatten(files);
+		})
+		.filter(function (file) {
+			return path.extname(file) === '.js';
 		});
 }
 
