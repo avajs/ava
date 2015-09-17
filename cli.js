@@ -60,7 +60,7 @@ function run(file) {
 		});
 }
 
-function sum (arr, key) {
+function sum(arr, key) {
 	return arr.reduce(function (a, b) {
 		return a[key] + b[key];
 	});

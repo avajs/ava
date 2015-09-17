@@ -1,6 +1,5 @@
 'use strict';
 var setImmediate = require('set-immediate-shim');
-var chalk = require('chalk');
 var Runner = require('./lib/runner');
 var runner = new Runner();
 var log = require('./lib/logger');
@@ -9,7 +8,7 @@ var isForked = process.env.AVA_FORK;
 
 Error.stackTraceLimit = Infinity;
 
-function serializeError (err) {
+function serializeError(err) {
 	err = {
 		message: err.message,
 		stack: err.stack
@@ -42,12 +41,10 @@ function test(err, title, duration) {
 function exit() {
 	if (isForked) {
 		// serialize errors
-		var results = runner.results.map(function (result) {
+		runner.results.forEach(function (result) {
 			if (result.error) {
 				result.error = serializeError(result.error);
 			}
-
-			return result;
 		});
 
 		process.send({
