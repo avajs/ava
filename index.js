@@ -67,7 +67,10 @@ function exit() {
 }
 
 setImmediate(function () {
-	log.write();
+	if (!isForked) {
+		log.write();
+	}
+
 	runner.on('test', test);
 	runner.run().then(exit);
 });

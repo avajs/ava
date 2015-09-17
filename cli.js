@@ -88,6 +88,8 @@ function exit() {
 }
 
 function init(files) {
+	log.write();
+
 	return handlePaths(files)
 		.map(function (file) {
 			return path.join(process.cwd(), file);
