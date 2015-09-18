@@ -464,3 +464,15 @@ test('generators support', function (t) {
 		t.ifError(err);
 	});
 });
+
+test('async/await support', function (t) {
+	t.plan(1);
+
+	var options = {
+		cwd: __dirname
+	};
+
+	childProcess.execFile('../cli.js', ['fixture/async-await.js'], options, function (err) {
+		t.ifError(err);
+	});
+});
