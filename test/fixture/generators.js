@@ -2,7 +2,7 @@
 
 const test = require('../../');
 
-test ('generators', function * (t) {
+test(function * (t) {
 	t.plan(1);
 
 	const value = yield Promise.resolve(1);
