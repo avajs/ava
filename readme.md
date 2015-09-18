@@ -181,7 +181,7 @@ test(function (t) {
 });
 ```
 
-### Generators support
+### Generator function support
 
 AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and  out-of-the-box. 
 
@@ -193,12 +193,19 @@ test(function * (t) {
 });
 ```
 
-### async/await support
+### Async function support
 
-AVA also supports [async/await](https://github.com/yortus/asyncawait) with no configuration required.
+AVA also supports [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)* with no configuration required.
 
 ```js
 test(async function (t) {
+	const value = await promiseFn();
+
+	t.end();
+});
+
+// async arrow functions
+test(async t => {
 	const value = await promiseFn();
 
 	t.end();
