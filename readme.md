@@ -181,6 +181,23 @@ test(function (t) {
 });
 ```
 
+### Generators and async/await support
+
+AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and [async/await](https://github.com/yortus/asyncawait) out-of-the-box. 
+
+```js
+test(function * (t) {
+	let value = yield generatorFn();
+	
+	t.end();
+});
+
+test(async function (t) {
+	let value = await promiseFn();
+
+	t.end();
+});
+```
 
 ### Serial test execution
 
@@ -252,25 +269,6 @@ You can also use your own local Babel version:
 		"babel-core": "^5.8.0"
 	}
 }
-```
-
-
-### Generators and async/await support
-
-AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and [async/await](https://github.com/yortus/asyncawait) out-of-the-box. 
-
-```js
-test(function * (t) {
-	let value = yield generatorFn();
-	
-	t.end();
-});
-
-test(async function (t) {
-	let value = await promiseFn();
-
-	t.end();
-});
 ```
 
 
