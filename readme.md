@@ -11,10 +11,13 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 
 - Minimal and fast
 - Simple test syntax
+- Runs test files in parallel
 - Runs tests concurrently
 - Enforces writing atomic tests
 - [Write your tests in ES2015](#es2015-support)
 - [Promise support](#promise-support)
+- [Generator function support](#generator-function-support)
+- [Async function support](#async-function-support)
 - No implicit globals
 
 
@@ -104,7 +107,7 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Test files are just normal Node.js scripts and can be run with `$ node test.js`. However, using the CLI is preferred for simplicity, ES2015 support, and future [parallelism support](https://github.com/sindresorhus/ava/issues/1).
+Test files are just normal Node.js scripts and can be run with `$ node test.js`. However, using the CLI is preferred for simplicity, ES2015 support, parallelism, etc.
 
 Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise.
 
@@ -169,49 +172,6 @@ test(function (t) {
 });
 ```
 
-### Promise support
-
-If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
-
-```js
-test(function (t) {
-	return somePromise().then(function (result) {
-		t.is(result, 'unicorn');
-	});
-});
-```
-
-### Generator function support
-
-AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and  out-of-the-box. 
-
-```js
-test(function * (t) {
-	const value = yield generatorFn();
-	
-	t.end();
-});
-```
-
-### Async function support
-
-AVA also supports [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)* with no configuration required.
-
-```js
-test(async function (t) {
-	const value = await promiseFn();
-
-	t.end();
-});
-
-// async arrow functions
-test(async t => {
-	const value = await promiseFn();
-
-	t.end();
-});
-```
-
 ### Serial test execution
 
 While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
@@ -221,7 +181,6 @@ test.serial(function (t) {
 	t.end();
 });
 ```
-
 
 ### Before/after hooks
 
@@ -245,7 +204,6 @@ test(function (t) {
 });
 ```
 
-
 ### Custom assertion module
 
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
@@ -259,12 +217,11 @@ test(function (t) {
 });
 ```
 
-
 ### ES2015 support
 
 AVA comes with builtin support for ES2015 through [Babel](https://babeljs.io).
 
-Just write your tests in ES2015. No extra work needed.
+Just write your tests in ES2015. No extra setup needed.
 
 ```js
 test(t => {
@@ -278,10 +235,53 @@ You can also use your own local Babel version:
 ```json
 {
 	"devDependencies": {
-		"ava": "^0.1.0",
+		"ava": "^0.2.0",
 		"babel-core": "^5.8.0"
 	}
 }
+```
+
+### Promise support
+
+If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
+
+```js
+test(function (t) {
+	return somePromise().then(function (result) {
+		t.is(result, 'unicorn');
+	});
+});
+```
+
+### Generator function support
+
+AVA comes with builtin support for [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+
+```js
+test(function * (t) {
+	const value = yield generatorFn();
+
+	t.end();
+});
+```
+
+### Async function support
+
+AVA comes with builtin support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
+
+```js
+test(async function (t) {
+	const value = await promiseFn();
+
+	t.end();
+});
+
+// async arrow function
+test(async t => {
+	const value = await promiseFn();
+
+	t.end();
+});
 ```
 
 
