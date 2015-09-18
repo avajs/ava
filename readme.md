@@ -181,19 +181,25 @@ test(function (t) {
 });
 ```
 
-### Generators and async/await support
+### Generators support
 
-AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and [async/await](https://github.com/yortus/asyncawait) out-of-the-box. 
+AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and  out-of-the-box. 
 
 ```js
 test(function * (t) {
-	let value = yield generatorFn();
+	const value = yield generatorFn();
 	
 	t.end();
 });
+```
 
+### async/await support
+
+AVA also supports [async/await](https://github.com/yortus/asyncawait) with no configuration required.
+
+```js
 test(async function (t) {
-	let value = await promiseFn();
+	const value = await promiseFn();
 
 	t.end();
 });
