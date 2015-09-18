@@ -446,9 +446,7 @@ test('hooks - stop if before hooks failed', function (t) {
 test('ES2015 support', function (t) {
 	t.plan(1);
 
-	childProcess.execFile('../cli.js', ['fixture/es2015.js'], {
-		cwd: __dirname
-	}, function (err) {
+	exec('fixture/es2015.js', function (err) {
 		t.ifError(err);
 	});
 });
@@ -456,11 +454,7 @@ test('ES2015 support', function (t) {
 test('generators support', function (t) {
 	t.plan(1);
 
-	var options = {
-		cwd: __dirname
-	};
-
-	childProcess.execFile('../cli.js', ['fixture/generators.js'], options, function (err) {
+	exec('fixture/generators.js', function (err) {
 		t.ifError(err);
 	});
 });
@@ -468,11 +462,11 @@ test('generators support', function (t) {
 test('async/await support', function (t) {
 	t.plan(1);
 
-	var options = {
-		cwd: __dirname
-	};
-
-	childProcess.execFile('../cli.js', ['fixture/async-await.js'], options, function (err) {
+	exec('fixture/async-await.js', function (err) {
 		t.ifError(err);
 	});
 });
+
+function exec(file, cb) {
+	childProcess.execFile('../cli.js', [file], {cwd: __dirname}, cb);
+}
