@@ -61,9 +61,13 @@ function run(file) {
 }
 
 function sum(arr, key) {
-	return arr.reduce(function (a, b) {
-		return a[key] + b[key];
+	var result = 0;
+
+	arr.forEach(function (item) {
+		result += item[key];
 	});
+
+	return result;
 }
 
 function exit(results) {
