@@ -5,6 +5,10 @@ var test = require('tape');
 var Runner = require('../lib/runner');
 var ava = require('../lib/test');
 
+function execCli(file, cb) {
+	childProcess.execFile('../cli.js', [file], {cwd: __dirname}, cb);
+}
+
 test('run test', function (t) {
 	ava('foo', function (a) {
 		a.fail();
@@ -446,9 +450,23 @@ test('hooks - stop if before hooks failed', function (t) {
 test('ES2015 support', function (t) {
 	t.plan(1);
 
-	childProcess.execFile('../cli.js', ['fixture/es2015.js'], {
-		cwd: __dirname
-	}, function (err) {
+	execCli('fixture/es2015.js', function (err) {
+		t.ifError(err);
+	});
+});
+
+test('generators support', function (t) {
+	t.plan(1);
+
+	execCli('fixture/generators.js', function (err) {
+		t.ifError(err);
+	});
+});
+
+test('async/await support', function (t) {
+	t.plan(1);
+
+	execCli('fixture/async-await.js', function (err) {
 		t.ifError(err);
 	});
 });

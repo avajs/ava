@@ -181,6 +181,36 @@ test(function (t) {
 });
 ```
 
+### Generator function support
+
+AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and  out-of-the-box. 
+
+```js
+test(function * (t) {
+	const value = yield generatorFn();
+	
+	t.end();
+});
+```
+
+### Async function support
+
+AVA also supports [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)* with no configuration required.
+
+```js
+test(async function (t) {
+	const value = await promiseFn();
+
+	t.end();
+});
+
+// async arrow functions
+test(async t => {
+	const value = await promiseFn();
+
+	t.end();
+});
+```
 
 ### Serial test execution
 
