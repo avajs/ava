@@ -255,6 +255,19 @@ You can also use your own local Babel version:
 ```
 
 
+### Generators support
+
+AVA supports [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) out-of-the-box. 
+
+```js
+test(function * (t) {
+	let value = yield generatorFn();
+	
+	t.end();
+});
+```
+
+
 ## API
 
 ### test([name], body)
