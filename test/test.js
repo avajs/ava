@@ -452,3 +452,15 @@ test('ES2015 support', function (t) {
 		t.ifError(err);
 	});
 });
+
+test('generators support', function (t) {
+	t.plan(1);
+
+	var options = {
+		cwd: __dirname
+	};
+
+	childProcess.execFile('../cli.js', ['fixture/generators.js'], options, function (err) {
+		t.ifError(err);
+	});
+});
