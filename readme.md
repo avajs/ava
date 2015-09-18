@@ -99,6 +99,8 @@ $ ava --help
   test.js test-*.js test/*.js
 ```
 
+Files starting with `_` are ignored. This can be useful for having helpers in the same directory as your test files.
+
 
 ## Documentation
 

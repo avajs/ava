@@ -134,7 +134,7 @@ function handlePaths(files) {
 			return flatten(files);
 		})
 		.filter(function (file) {
-			return path.extname(file) === '.js';
+			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
 		});
 }
 
