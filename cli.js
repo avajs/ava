@@ -106,6 +106,11 @@ function init(files) {
 			return path.join(process.cwd(), file);
 		})
 		.then(function (files) {
+			if (files.length === 0) {
+				log.error('Couldn\'t find any files to test\n');
+				process.exit(1);
+			}
+
 			var tests = files.map(run);
 
 			return Promise.all(tests);
