@@ -2,7 +2,7 @@
 
 const test = require('../../');
 
-test(async function (t) {
+test('async function', async function (t) {
 	t.plan(1);
 
 	const value = await Promise.resolve(1);
@@ -10,7 +10,7 @@ test(async function (t) {
 	t.is(value, 1);
 });
 
-test(async t => {
+test('arrow async function', async t => {
 	t.plan(1);
 
 	const value = await Promise.resolve(1);

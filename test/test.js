@@ -1,6 +1,7 @@
 'use strict';
 var childProcess = require('child_process');
 var Promise = require('bluebird');
+var figures = require('figures');
 var test = require('tape');
 var Runner = require('../lib/runner');
 var ava = require('../lib/test');
@@ -488,4 +489,44 @@ test('wait for test to end', function (t) {
 	setTimeout(function () {
 		avaTest.pass();
 	}, 1234);
+});
+
+test('display test title prefixes', function (t) {
+	t.plan(6);
+
+	execCli('fixture/*.js', function (err, stdout, stderr) {
+		t.ifError(err);
+
+		// remove everything except test list
+		var output = stderr
+			.replace(/[0-9] tests passed/, '')
+			.replace(new RegExp(figures.tick, 'gm'), '')
+			.replace(/^\s+/gm, '')
+			.trim();
+
+		var separator = ' ' + figures.pointerSmall + ' ';
+
+		// expected output
+		var tests = [
+			['async-await', 'async function'].join(separator),
+			['async-await', 'arrow async function'].join(separator),
+			['generators', 'generator function'].join(separator),
+			['es2015', '[anonymous]'].join(separator)
+		];
+
+		// check if each line in actual output
+		// exists in expected output
+		output.split('\n').forEach(function (line) {
+			var index = tests.indexOf(line);
+
+			t.true(index >= 0);
+
+			// remove line from expected output
+			tests.splice(index, 1);
+		});
+
+		// if all lines were removed from expected output
+		// actual output matches expected output
+		t.is(tests.length, 0);
+	});
 });

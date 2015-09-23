@@ -2,6 +2,7 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
+var figures = require('figures');
 var flatten = require('arr-flatten');
 var globby = require('globby');
 var meow = require('meow');
@@ -33,6 +34,7 @@ var cli = meow({
 	string: ['_']
 });
 
+var fileCount = 0;
 var errors = [];
 
 function error(err) {
@@ -40,15 +42,45 @@ function error(err) {
 	process.exit(1);
 }
 
+function prefixTitle(file) {
+	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
+
+	var base = path.dirname(cli.input[0]);
+
+	if (base === '.') {
+		base = cli.input[0] || 'test';
+	}
+
+	base += path.sep;
+
+	var prefix = path.relative(process.cwd(), file)
+		.replace(/test\-/g, '')
+		.replace(/\.js$/, '')
+		.replace(base, '')
+		.replace(new RegExp(path.sep, 'g'), separator);
+
+	if (prefix.length > 0) {
+		prefix += separator;
+	}
+
+	return prefix;
+}
+
 function test(data) {
 	var isError = data.err.message;
 
+	var prefix = '';
+
+	if (fileCount > 1) {
+		prefix = prefixTitle(data.file);
+	}
+
 	if (isError) {
-		log.error(data.title, chalk.red(data.err.message));
+		log.error(prefix + data.title, chalk.red(data.err.message));
 
 		errors.push(data);
 	} else {
-		log.test(null, data.title, data.duration);
+		log.test(null, prefix + data.title, data.duration);
 	}
 }
 
@@ -110,6 +142,8 @@ function init(files) {
 				log.error('Couldn\'t find any files to test\n');
 				process.exit(1);
 			}
+
+			fileCount = files.length;
 
 			var tests = files.map(run);
 
