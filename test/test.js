@@ -470,3 +470,22 @@ test('async/await support', function (t) {
 		t.ifError(err);
 	});
 });
+
+test('wait for test to end', function (t) {
+	var avaTest;
+
+	ava(function (a) {
+		a.plan(1);
+
+		avaTest = a;
+	}).run().then(function (a) {
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.true(a.duration >= 1234);
+		t.end();
+	});
+
+	setTimeout(function () {
+		avaTest.pass();
+	}, 1234);
+});
