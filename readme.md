@@ -62,7 +62,7 @@ test('foo', function (t) {
 });
 
 test('bar', function (t) {
-	t.plan(2)
+	t.plan(2);
 
 	setTimeout(function () {
 		t.is('bar', 'bar');
