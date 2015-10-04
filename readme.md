@@ -260,10 +260,12 @@ AVA comes with builtin support for [generator functions](https://developer.mozil
 ```js
 test(function * (t) {
 	const value = yield generatorFn();
-
-	t.end();
+	t.true(value);
 });
 ```
+
+*You don't have to manually call `t.end()`.*
+
 
 ### Async function support
 
@@ -272,17 +274,17 @@ AVA comes with builtin support for [async functions](https://tc39.github.io/ecma
 ```js
 test(async function (t) {
 	const value = await promiseFn();
-
-	t.end();
+	t.true(value);
 });
 
 // async arrow function
 test(async t => {
 	const value = await promiseFn();
-
-	t.end();
+	t.true(value);
 });
 ```
+
+*You don't have to manually call `t.end()`.*
 
 
 ## API
