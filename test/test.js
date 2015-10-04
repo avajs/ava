@@ -448,6 +448,70 @@ test('hooks - stop if before hooks failed', function (t) {
 	});
 });
 
+test('hooks - before each', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('c');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, ['a', 'b', 'c', 'a', 'b', 'd']);
+		t.end();
+	});
+});
+
+test('hooks - after each', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addAfterEachHook(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addAfterEachHook(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('c');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
