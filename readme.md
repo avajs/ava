@@ -185,7 +185,7 @@ test.serial(function (t) {
 ### Before/after hooks
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests.
+used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()`, if you need setup/teardown for each test.
 
 ```js
 test.before(function (t) {
@@ -195,6 +195,16 @@ test.before(function (t) {
 
 test.after(function (t) {
 	// this test runs after all others
+	t.end();
+});
+
+test.beforeEach(function (t) {
+	// this test runs before each test
+	t.end();
+});
+
+test.afterEach(function (t) {
+	// this test runs after each test
 	t.end();
 });
 

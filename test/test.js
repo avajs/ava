@@ -448,6 +448,163 @@ test('hooks - stop if before hooks failed', function (t) {
 	});
 });
 
+test('hooks - before each with concurrent tests', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [[], []];
+	var i = 0;
+	var k = 0;
+
+	runner.addBeforeEachHook(function (a) {
+		arr[i++].push('a');
+		a.end();
+	});
+
+	runner.addBeforeEachHook(function (a) {
+		arr[k++].push('b');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr[0].push('c');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr[1].push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, [['a', 'b', 'c'], ['a', 'b', 'd']]);
+		t.end();
+	});
+});
+
+test('hooks - before each with serial tests', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('c');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, ['a', 'b', 'c', 'a', 'b', 'd']);
+		t.end();
+	});
+});
+
+test('hooks - fail if beforeEach hook fails', function (t) {
+	t.plan(2);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('a');
+		a.fail();
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('b');
+		a.pass();
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.failCount, 1);
+		t.same(arr, ['a']);
+		t.end();
+	});
+});
+
+test('hooks - after each with concurrent tests', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [[], []];
+	var i = 0;
+	var k = 0;
+
+	runner.addAfterEachHook(function (a) {
+		arr[i++].push('a');
+		a.end();
+	});
+
+	runner.addAfterEachHook(function (a) {
+		arr[k++].push('b');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr[0].push('c');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr[1].push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, [['c', 'a', 'b'], ['d', 'a', 'b']]);
+		t.end();
+	});
+});
+
+test('hooks - after each with serial tests', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addAfterEachHook(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addAfterEachHook(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('c');
+		a.end();
+	});
+
+	runner.addSerialTest(function (a) {
+		arr.push('d');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
