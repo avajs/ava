@@ -32,7 +32,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && tape test/*.js | tap-dot"
+    "test": "xo && nyc tape test/*.js | tap-dot",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
     "index.js",
@@ -79,6 +80,8 @@
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.4",
+    "nyc": "^3.2.2",
     "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
