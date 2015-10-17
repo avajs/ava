@@ -136,7 +136,7 @@ test('handle falsy testing of objects', function (t) {
 	});
 });
 
-test('handle throws', function (t) {
+test('handle throws with error', function (t) {
 	ava(function (a) {
 		a.throws(function () {
 			throw new Error('foo');
@@ -149,10 +149,10 @@ test('handle throws', function (t) {
 	});
 });
 
-test('handle throws with error', function (t) {
+test('handle throws without error', function (t) {
 	ava(function (a) {
-		a.doesNotThrow(function () {
-			throw new Error('foo');
+		a.throws(function () {
+			return;
 		});
 
 		a.end();
@@ -162,7 +162,46 @@ test('handle throws with error', function (t) {
 	});
 });
 
-test('handle falsy throws', function (t) {
+test('handle throws with rejected promise', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject(new Error());
+		a.throws(promise);
+	}).run().then(function (a) {
+		t.false(a.assertError);
+		t.end();
+	});
+});
+
+test('handle throws with resolved promise', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.resolve();
+		a.throws(promise);
+	}).run().catch(function (err) {
+		t.is(err.name, 'AssertionError');
+		t.true(err);
+		t.end();
+	});
+});
+
+test('handle doesNotThrow with error', function (t) {
+	ava(function (a) {
+		a.doesNotThrow(function () {
+			throw new Error('foo');
+		});
+
+		a.end();
+	}).run().catch(function (err) {
+		t.is(err.name, 'AssertionError');
+		t.true(err);
+		t.end();
+	});
+});
+
+test('handle doesNotThrow without error', function (t) {
 	ava(function (a) {
 		a.doesNotThrow(function () {
 			return;
@@ -175,13 +214,24 @@ test('handle falsy throws', function (t) {
 	});
 });
 
-test('handle falsy throws with error', function (t) {
+test('handle doesNotThrow with resolved promise', function (t) {
 	ava(function (a) {
-		a.throws(function () {
-			return;
-		});
+		a.plan(1);
 
-		a.end();
+		var promise = Promise.resolve();
+		a.doesNotThrow(promise);
+	}).run().then(function (a) {
+		t.false(a.assertError);
+		t.end();
+	});
+});
+
+test('handle doesNotThrow with rejected promise', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject(new Error());
+		a.doesNotThrow(promise);
 	}).run().catch(function (err) {
 		t.true(err);
 		t.end();
