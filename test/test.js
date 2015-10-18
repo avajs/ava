@@ -62,6 +62,25 @@ test('plan assertions', function (t) {
 	});
 });
 
+test('plan assertions with support for promises', function (t) {
+	ava(function (a) {
+		a.plan(2);
+
+		var promise = Promise.resolve();
+
+		setTimeout(function () {
+			a.pass();
+			a.pass();
+		}, 200);
+
+		return promise;
+	}).run().then(function (a) {
+		t.is(a.planCount, 2);
+		t.is(a.assertCount, 2);
+		t.end();
+	});
+});
+
 test('run more assertions than planned', function (t) {
 	ava(function (a) {
 		a.plan(2);
