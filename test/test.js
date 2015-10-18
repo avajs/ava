@@ -6,8 +6,12 @@ var test = require('tape');
 var Runner = require('../lib/runner');
 var ava = require('../lib/test');
 
-function execCli(file, cb) {
-	childProcess.execFile('../cli.js', [file], {cwd: __dirname}, cb);
+function execCli(args, cb) {
+	if (!Array.isArray(args)) {
+		args = [args];
+	}
+
+	childProcess.execFile('../cli.js', args, {cwd: __dirname}, cb);
 }
 
 test('run test', function (t) {
@@ -720,7 +724,7 @@ test('wait for test to end', function (t) {
 test('display test title prefixes', function (t) {
 	t.plan(6);
 
-	execCli('fixture/*.js', function (err, stdout, stderr) {
+	execCli(['fixture/async-await.js', 'fixture/es2015.js', 'fixture/generators.js'], function (err, stdout, stderr) {
 		t.ifError(err);
 
 		// remove everything except test list
@@ -754,5 +758,19 @@ test('display test title prefixes', function (t) {
 		// if all lines were removed from expected output
 		// actual output matches expected output
 		t.is(tests.length, 0);
+	});
+});
+
+test('fail-fast mode', function (t) {
+	t.plan(5);
+
+	execCli(['fixture/fail-fast.js', '--fail-fast'], function (err, stdout, stderr) {
+		t.ok(err);
+		t.is(err.code, 1);
+
+		t.true(stderr.indexOf(figures.cross + ' [anonymous] false fail false') !== -1);
+		t.true(stderr.indexOf(figures.tick + ' [anonymous]') === -1);
+		t.true(stderr.indexOf('1 test failed') !== -1);
+		t.end();
 	});
 });

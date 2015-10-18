@@ -4,7 +4,12 @@ var Runner = require('./lib/runner');
 var runner = new Runner();
 var log = require('./lib/logger');
 
+var isFailFast = process.argv.indexOf('--fail-fast') !== -1;
 var isForked = process.env.AVA_FORK;
+
+// if fail-fast is enabled, use this variable to detect,
+// that no more tests should be logged
+var isFailed = false;
 
 Error.stackTraceLimit = Infinity;
 
@@ -18,6 +23,10 @@ function serializeError(err) {
 }
 
 function test(err, title, duration) {
+	if (isFailed) {
+		return;
+	}
+
 	if (isForked) {
 		if (err) {
 			err = serializeError(err);
@@ -31,6 +40,11 @@ function test(err, title, duration) {
 				duration: duration
 			}
 		});
+
+		if (err && isFailFast) {
+			isFailed = true;
+			exit();
+		}
 
 		return;
 	}

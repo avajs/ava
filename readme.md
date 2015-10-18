@@ -89,7 +89,8 @@ $ ava --help
     ava <file|folder|glob> [...]
 
   Options
-    --init  Add AVA to your project
+    --init       Add AVA to your project
+    --fail-fast  Stop after first test failure
 
   Examples
     ava
