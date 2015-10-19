@@ -21,7 +21,8 @@ var cli = meow({
 		'  ava <file|folder|glob> [...]',
 		'',
 		'Options',
-		'  --init  Add AVA to your project',
+		'  --init       Add AVA to your project',
+		'  --fail-fast  Stop after first test failure',
 		'',
 		'Examples',
 		'  ava',
@@ -34,7 +35,8 @@ var cli = meow({
 		'test.js test-*.js test/*.js'
 	]
 }, {
-	string: ['_']
+	string: ['_'],
+	boolean: ['fail-fast']
 });
 
 var fileCount = 0;
@@ -88,7 +90,13 @@ function test(data) {
 }
 
 function run(file) {
-	return fork(file)
+	var args = [file];
+
+	if (cli.flags.failFast) {
+		args.push('--fail-fast');
+	}
+
+	return fork(args)
 		.on('test', test)
 		.on('data', function (data) {
 			process.stdout.write(data);
