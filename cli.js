@@ -23,6 +23,7 @@ var cli = meow({
 		'Options',
 		'  --init       Add AVA to your project',
 		'  --fail-fast  Stop after first test failure',
+		'  --es-src     Allow testing of ES2015 source files',
 		'',
 		'Examples',
 		'  ava',
@@ -36,7 +37,7 @@ var cli = meow({
 	]
 }, {
 	string: ['_'],
-	boolean: ['fail-fast']
+	boolean: ['fail-fast', 'es-src']
 });
 
 var fileCount = 0;
@@ -94,6 +95,10 @@ function run(file) {
 
 	if (cli.flags.failFast) {
 		args.push('--fail-fast');
+	}
+
+	if (cli.flags.esSrc) {
+		args.push('--es-src');
 	}
 
 	return fork(args)
