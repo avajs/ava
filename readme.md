@@ -91,6 +91,7 @@ $ ava --help
   Options
     --init       Add AVA to your project
     --fail-fast  Stop after first test failure
+    --es-src     Allow testing of ES2015 source files
 
   Examples
     ava

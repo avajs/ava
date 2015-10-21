@@ -774,3 +774,12 @@ test('fail-fast mode', function (t) {
 		t.end();
 	});
 });
+
+test('es-src mode', function (t) {
+	t.plan(2);
+
+	execCli(['fixture/es2015-source.js', '--es-src'], function (err, stdout) {
+		t.ifError(err);
+		t.true(stdout.indexOf('SyntaxError: Unexpected reserved word') === -1);
+	});
+});
