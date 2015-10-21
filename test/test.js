@@ -837,3 +837,12 @@ test('fail-fast mode', function (t) {
 		t.end();
 	});
 });
+
+test('power-assert support', function (t) {
+	t.plan(2);
+
+	execCli('fixture/power-assert.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(stderr.indexOf('t.ok(a === \'bar\')\n') !== -1);
+	});
+});
