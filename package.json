@@ -67,7 +67,7 @@
     "chalk": "^1.0.0",
     "co": "^4.6.0",
     "core-assert": "^0.1.0",
-    "empower": "^1.0.1",
+    "empower": "^1.0.2",
     "figures": "^1.4.0",
     "fn-name": "^2.0.0",
     "globby": "^3.0.1",
