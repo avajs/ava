@@ -678,6 +678,43 @@ test('hooks - after each with serial tests', function (t) {
 	});
 });
 
+test('hooks - ensure hooks run only around tests', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addBeforeEachHook(function (a) {
+		arr.push('beforeEach');
+		a.end();
+	});
+
+	runner.addBeforeHook(function (a) {
+		arr.push('before');
+		a.end();
+	});
+
+	runner.addAfterEachHook(function (a) {
+		arr.push('afterEach');
+		a.end();
+	});
+
+	runner.addAfterHook(function (a) {
+		arr.push('after');
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		arr.push('test');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.same(arr, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
