@@ -32,7 +32,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc tape test/*.js | tap-dot",
+    "test": "xo && xo --esnext true ./test/fixture/*.js && nyc tape test/*.js | tap-dot",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
