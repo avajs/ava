@@ -3,6 +3,7 @@ var childProcess = require('child_process');
 var Promise = require('bluebird');
 var figures = require('figures');
 var test = require('tape');
+var join = require('path').join;
 var Runner = require('../lib/runner');
 var ava = require('../lib/test');
 
@@ -848,5 +849,13 @@ test('power-assert support', function (t) {
 		//      |
 		//      "foo"
 		t.true((/t\.ok\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m).test(stderr));
+	});
+});
+
+test('change process.cwd() to a test\'s directory', function (t) {
+	execCli('fixture/process-cwd.js', function (err, stdout) {
+		t.ifError(err);
+		t.is(stdout.trim(), join(__dirname, 'fixture'));
+		t.end();
 	});
 });
