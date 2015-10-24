@@ -1,7 +1,7 @@
 import test from '../../';
 
 test(t => {
-  const a = 'foo';
+	const a = 'foo';
 
 	t.ok(a === 'bar');
 	t.end();
