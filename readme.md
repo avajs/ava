@@ -14,11 +14,12 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 - Runs test files in parallel
 - Runs tests concurrently
 - Enforces writing atomic tests
+- No implicit globals
 - [Write your tests in ES2015](#es2015-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
-- No implicit globals
+- [Enhanced asserts](#enhanced-asserts)
 
 
 ## Test syntax
@@ -400,6 +401,62 @@ Assert that `regex` matches `contents`.
 ### .ifError(error, [message])
 
 Assert that `error` is falsy.
+
+
+## Enhanced asserts
+
+AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) builtin, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
+
+The following test:
+
+```js
+test(t => {
+	const foo = 'foo';
+	t.ok(foo === 'bar');
+	t.end();
+});
+```
+
+Would normally give the unhelpful output:
+
+```
+false === true
+```
+
+With the enhanced asserts, you'll get:
+
+```
+t.ok(foo === 'bar')
+       |
+       "foo"
+```
+
+True, you could use `t.is()` in this case, and probably should, but this is just a simple example.
+
+Let try a more advanced example:
+
+```js
+test(t => {
+	const a = /foo/;
+	const b = 'bar';
+	const c = 'baz';
+	t.ok(a.test(b) || b === c);
+	t.end();
+});
+```
+
+And there you go:
+
+```
+t.ok(a.test(b) || b === c)
+       |    |     |     |
+       |    "bar" "bar" "baz"
+       false
+```
+
+All the assert methods are enhanced.
+
+Have fun!
 
 
 ## Tips
