@@ -859,3 +859,11 @@ test('change process.cwd() to a test\'s directory', function (t) {
 		t.end();
 	});
 });
+
+test('Babel require hook only applies to the test file', function (t) {
+	execCli('fixture/babel-hook.js', function (err) {
+		t.ok(err);
+		t.is(err.code, 1);
+		t.end();
+	});
+});
