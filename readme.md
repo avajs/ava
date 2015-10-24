@@ -92,6 +92,7 @@ $ ava --help
   Options
     --init       Add AVA to your project
     --fail-fast  Stop after first test failure
+    --serial     Run tests serially
 
   Examples
     ava
@@ -467,6 +468,14 @@ Have fun!
 ### Temp files
 
 Running tests concurrently comes with some challenges, doing IO is one. Usually, serial tests just create temp directories in the current test directory and cleans it up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
+
+### Debugging
+
+AVA runs tests concurrently by default, which is suboptimal when you need to debug something. Instead, run tests serially with the `--serial` option:
+
+```
+$ ava --serial
+```
 
 
 ## FAQ
