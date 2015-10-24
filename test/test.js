@@ -843,6 +843,10 @@ test('power-assert support', function (t) {
 
 	execCli('fixture/power-assert.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.not(stderr.indexOf('t.ok(a === \'bar\')\n'), -1);
+
+		// t.ok(a === 'bar')
+		//      |
+		//      "foo"
+		t.true((/t\.ok\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m).test(stderr));
 	});
 });
