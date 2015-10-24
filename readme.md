@@ -55,17 +55,17 @@ Simply install AVA globally `$ npm install --global ava` and run `$ ava --init` 
 #### Create your test file
 
 ```js
-var test = require('ava');
+import test from 'ava';
 
-test('foo', function (t) {
+test('foo', t => {
 	t.pass();
 	t.end();
 });
 
-test('bar', function (t) {
+test('bar', t => {
 	t.plan(2);
 
-	setTimeout(function () {
+	setTimeout(() => {
 		t.is('bar', 'bar');
 		t.same(['a', 'b'], ['a', 'b']);
 	}, 100);
@@ -120,7 +120,7 @@ You have to define all tests synchronously, meaning you can't define a test in t
 To create a test, you just call the `test` function you require'd from AVA and pass in an optional test name and a callback function containing the test execution. The passed callback function is given the context as the first argument where you can call the different AVA methods and [assertions](#assertions).
 
 ```js
-test('name', function (t) {
+test('name', t => {
 	t.pass();
 	t.end();
 });
@@ -131,7 +131,7 @@ test('name', function (t) {
 Naming a test is optional, but you're recommended to use one if you have more than one test.
 
 ```js
-test(function (t) {
+test(t => {
 	t.end();
 });
 ```
@@ -151,10 +151,10 @@ Planned assertions are useful for being able to assert that all async actions ha
 This will result in a passed test:
 
 ```js
-test(function (t) {
+test(t => {
 	t.plan(1);
 
-	setTimeout(function () {
+	setTimeout(() => {
 		t.pass();
 	}, 100);
 });
@@ -163,12 +163,12 @@ test(function (t) {
 And this will result in an error because the code called more assertions than planned:
 
 ```js
-test(function (t) {
+test(t => {
 	t.plan(1);
 
 	t.pass();
 
-	setTimeout(function () {
+	setTimeout(() => {
 		t.pass();
 	}, 100);
 });
@@ -179,7 +179,7 @@ test(function (t) {
 While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
 
 ```js
-test.serial(function (t) {
+test.serial(t => {
 	t.end();
 });
 ```
@@ -190,32 +190,32 @@ When setup and/or teardown is required, you can use `test.before()` and `test.af
 used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want.
 
 ```js
-test.before(function (t) {
+test.before(t => {
 	// this runs before all tests
 	t.end();
 });
 
-test.before(function (t) {
+test.before(t => {
 	// this runs after the above, but before tests
 	t.end();
 });
 
-test.after(function (t) {
+test.after(t => {
 	// this runs after all tests
 	t.end();
 });
 
-test.beforeEach(function (t) {
+test.beforeEach(t => {
 	// this runs before each test
 	t.end();
 });
 
-test.afterEach(function (t) {
+test.afterEach(t => {
 	// this runs after each test
 	t.end();
 });
 
-test(function (t) {
+test(t => {
 	// regular test
 	t.end();
 });
@@ -226,9 +226,9 @@ test(function (t) {
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
 
 ```js
-var assert = require('assert');
+import assert from 'assert';
 
-test(function (t) {
+test(t => {
 	assert(true);
 	t.end();
 });
@@ -263,8 +263,8 @@ You can also use your own local Babel version:
 If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
 
 ```js
-test(function (t) {
-	return somePromise().then(function (result) {
+test(t => {
+	return somePromise().then(result => {
 		t.is(result, 'unicorn');
 	});
 });
@@ -343,7 +343,7 @@ End the test. Use this when `plan()` is not used.
 Assertions are mixed into the test [context](#context):
 
 ```js
-test(function (t) {
+test(t => {
 	t.ok('unicorn'); // assertion
 	t.end();
 });
