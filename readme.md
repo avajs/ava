@@ -1,6 +1,6 @@
 # ![AVA](media/header.png)
 
-> Simple concurrent test runner
+> Futuristic test runner
 
 [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master)
 

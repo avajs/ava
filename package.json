@@ -1,7 +1,7 @@
 {
   "name": "ava",
   "version": "0.2.0",
-  "description": "Simple concurrent test runner",
+  "description": "Futuristic test runner",
   "license": "MIT",
   "repository": "sindresorhus/ava",
   "homepage": "http://ava.li",
@@ -56,7 +56,8 @@
     "jasmine",
     "tdd",
     "assert",
-    "assertion"
+    "assertion",
+    "futuristic"
   ],
   "dependencies": {
     "arr-flatten": "^1.0.1",
