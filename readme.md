@@ -109,8 +109,6 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Test files are just normal Node.js scripts and can be run with `$ node test.js`. However, using the CLI is preferred for simplicity, ES2015 support, parallelism, etc.
-
 Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise.
 
 You have to define all tests synchronously, meaning you can't define a test in the next tick, e.g. inside a `setTimeout`.
