@@ -184,29 +184,34 @@ test.serial(function (t) {
 });
 ```
 
-### Before/after hooks
+### Before & after hooks
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()`, if you need setup/teardown for each test.
+used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want.
 
 ```js
 test.before(function (t) {
-	// this test runs before all others
+	// this runs before all tests
+	t.end();
+});
+
+test.before(function (t) {
+	// this runs after the above, but before tests
 	t.end();
 });
 
 test.after(function (t) {
-	// this test runs after all others
+	// this runs after all tests
 	t.end();
 });
 
 test.beforeEach(function (t) {
-	// this test runs before each test
+	// this runs before each test
 	t.end();
 });
 
 test.afterEach(function (t) {
-	// this test runs after each test
+	// this runs after each test
 	t.end();
 });
 
