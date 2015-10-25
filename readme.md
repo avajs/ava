@@ -223,6 +223,20 @@ test(t => {
 });
 ```
 
+The `beforeEach` & `afterEach` hooks can share context with the test:
+
+```js
+test.beforeEach(t => {
+	t.context.data = generateUniqueData();
+	t.end();
+});
+
+test(t => {
+	t.is(t.context.data + 'bar', 'foobar');
+	t.end();
+});
+```
+
 ### Custom assertion module
 
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
