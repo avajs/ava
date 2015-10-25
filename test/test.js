@@ -742,6 +742,45 @@ test('hooks - ensure hooks run only around tests', function (t) {
 	});
 });
 
+test('hooks - shared context', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	runner.addBeforeHook(function (a) {
+		a.is(this.arr, undefined);
+		this.arr = [];
+		a.end();
+	});
+
+	runner.addAfterHook(function (a) {
+		a.is(this.arr, undefined);
+		a.end();
+	});
+
+	runner.addBeforeEachHook(function (a) {
+		this.arr = ['a'];
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		this.arr.push('b');
+		a.same(this.arr, ['a', 'b']);
+		a.end();
+	});
+
+	runner.addAfterEachHook(function (a) {
+		this.arr.push('c');
+		a.same(this.arr, ['a', 'b', 'c']);
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.failCount, 0);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
