@@ -839,6 +839,15 @@ test('fail-fast mode', function (t) {
 	});
 });
 
+test('serial execution mode', function (t) {
+	t.plan(1);
+
+	execCli(['fixture/serial.js', '--serial'], function (err) {
+		t.ifError(err);
+		t.end();
+	});
+});
+
 test('power-assert support', function (t) {
 	t.plan(2);
 
@@ -853,6 +862,8 @@ test('power-assert support', function (t) {
 });
 
 test('change process.cwd() to a test\'s directory', function (t) {
+	t.plan(2);
+
 	execCli('fixture/process-cwd.js', function (err, stdout) {
 		t.ifError(err);
 		t.is(stdout.trim(), join(__dirname, 'fixture'));

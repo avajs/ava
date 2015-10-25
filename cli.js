@@ -23,6 +23,7 @@ var cli = meow({
 		'Options',
 		'  --init       Add AVA to your project',
 		'  --fail-fast  Stop after first test failure',
+		'  --serial     Run tests serially',
 		'',
 		'Examples',
 		'  ava',
@@ -36,7 +37,7 @@ var cli = meow({
 	]
 }, {
 	string: ['_'],
-	boolean: ['fail-fast']
+	boolean: ['fail-fast', 'serial']
 });
 
 var fileCount = 0;
@@ -94,6 +95,10 @@ function run(file) {
 
 	if (cli.flags.failFast) {
 		args.push('--fail-fast');
+	}
+
+	if (cli.flags.serial) {
+		args.push('--serial');
 	}
 
 	return fork(args)
