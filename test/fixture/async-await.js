@@ -1,5 +1,4 @@
 'use strict';
-
 const test = require('../../');
 
 test('async function', async function (t) {

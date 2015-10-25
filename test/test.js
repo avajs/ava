@@ -3,7 +3,7 @@ var childProcess = require('child_process');
 var Promise = require('bluebird');
 var figures = require('figures');
 var test = require('tape');
-var join = require('path').join;
+var path = require('path');
 var Runner = require('../lib/runner');
 var ava = require('../lib/test');
 
@@ -866,7 +866,7 @@ test('change process.cwd() to a test\'s directory', function (t) {
 
 	execCli('fixture/process-cwd.js', function (err, stdout) {
 		t.ifError(err);
-		t.is(stdout.trim(), join(__dirname, 'fixture'));
+		t.is(stdout.trim(), path.join(__dirname, 'fixture'));
 		t.end();
 	});
 });

@@ -1,10 +1,10 @@
 'use strict';
 var test = require('tape');
-var join = require('path').join;
+var path = require('path');
 var fork = require('../lib/fork.js');
 
 function fixture(name) {
-	return join(__dirname, 'fixture', name);
+	return path.join(__dirname, 'fixture', name);
 }
 
 test('emits test event', function (t) {

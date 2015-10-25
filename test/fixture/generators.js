@@ -1,5 +1,4 @@
 'use strict';
-
 const test = require('../../');
 
 test('generator function', function * (t) {

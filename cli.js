@@ -8,9 +8,9 @@ var globby = require('globby');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
+var Promise = require('bluebird');
 var fork = require('./lib/fork');
 var log = require('./lib/logger');
-var Promise = require('bluebird');
 
 // Bluebird specific
 Promise.longStackTraces();
@@ -37,7 +37,10 @@ var cli = meow({
 	]
 }, {
 	string: ['_'],
-	boolean: ['fail-fast', 'serial']
+	boolean: [
+		'fail-fast',
+		'serial'
+	]
 });
 
 var fileCount = 0;
@@ -151,7 +154,7 @@ function init(files) {
 
 	return handlePaths(files)
 		.map(function (file) {
-			return path.join(process.cwd(), file);
+			return path.resolve('.', file);
 		})
 		.then(function (files) {
 			if (files.length === 0) {
@@ -189,9 +192,7 @@ function handlePaths(files) {
 
 			return file;
 		})
-		.then(function (files) {
-			return flatten(files);
-		})
+		.then(flatten)
 		.filter(function (file) {
 			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
 		});
