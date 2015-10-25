@@ -18,7 +18,7 @@ Promise.longStackTraces();
 var cli = meow({
 	help: [
 		'Usage',
-		'  ava <file|folder|glob> [...]',
+		'  ava [<file|folder|glob> ...]',
 		'',
 		'Options',
 		'  --init       Add AVA to your project',

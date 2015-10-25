@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master)
 
-Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
+Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and a isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
 
 
 ## Why AVA?
@@ -15,6 +15,7 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
+- [Isolated environment for each test file](#isolated-environment)
 - [Write your tests in ES2015](#es2015-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
@@ -38,7 +39,7 @@ test(t => {
 
 #### Initialize
 
-Simply install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your package.json or create one.
+Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your package.json or create one.
 
 ```json
 {
@@ -47,7 +48,7 @@ Simply install AVA globally `$ npm install --global ava` and run `$ ava --init` 
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.2.0"
+		"ava": "^0.3.0"
 	}
 }
 ```
@@ -87,7 +88,7 @@ $ npm test
 $ ava --help
 
   Usage
-    ava <file|folder|glob> [...]
+    ava [<file|folder|glob> ...]
 
   Options
     --init       Add AVA to your project
@@ -110,13 +111,15 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise.
+Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise. [Async functions](#async-function-support) already returns a promise implicitly, so no need for you to explicitly return a promise in that case.
 
 You have to define all tests synchronously, meaning you can't define a test in the next tick, e.g. inside a `setTimeout`.
 
+Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
+
 ### Test anatomy
 
-To create a test, you just call the `test` function you require'd from AVA and pass in an optional test name and a callback function containing the test execution. The passed callback function is given the context as the first argument where you can call the different AVA methods and [assertions](#assertions).
+To create a test, you call the `test` function you require'd from AVA and pass in an optional test name and a function containing the test execution. The passed function is given the context as the first argument, where you can call the different AVA methods and [assertions](#assertions).
 
 ```js
 test('name', t => {
@@ -251,7 +254,7 @@ You can also use your own local Babel version:
 ```json
 {
 	"devDependencies": {
-		"ava": "^0.2.0",
+		"ava": "^0.3.0",
 		"babel-core": "^5.8.0"
 	}
 }
@@ -461,6 +464,11 @@ t.ok(a.test(b) || b === c)
 All the assert methods are enhanced.
 
 Have fun!
+
+
+## Isolated environment
+
+Each test file is run in a separate Node.js process. This comes with a lot of benefits. Different test files can no longer affect each other. Like test files mocking with the global environment, overriding builtins, etc. However, it's mainly done for performance reasons. Even though Node.js can run async IO concurrently, that doesn't help much when tests are heavy on synchronous operations, which blocks the main thread. By running tests concurrently and test files in parallel we take full advantage of modern systems.
 
 
 ## Tips
