@@ -64,6 +64,7 @@
     "ava-init": "^0.1.0",
     "babel-core": "^5.8.23",
     "babel-plugin-espower": "^1.0.0",
+    "babel-runtime": "^5.8.29",
     "bluebird": "^3.0.0",
     "chalk": "^1.0.0",
     "co": "^4.6.0",
