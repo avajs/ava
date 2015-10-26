@@ -1,9 +1,8 @@
 'use strict';
 var setImmediate = require('set-immediate-shim');
+var hasFlag = require('has-flag');
 var Runner = require('./lib/runner');
 var runner = new Runner();
-
-var isFailFast = process.argv.indexOf('--fail-fast') !== -1;
 
 // if fail-fast is enabled, use this variable to detect,
 // that no more tests should be logged
@@ -38,7 +37,7 @@ function test(err, title, duration) {
 		}
 	});
 
-	if (err && isFailFast) {
+	if (err && hasFlag('fail-fast')) {
 		isFailed = true;
 		exit();
 	}
