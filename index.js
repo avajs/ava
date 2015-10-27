@@ -1,6 +1,7 @@
 'use strict';
 var setImmediate = require('set-immediate-shim');
 var hasFlag = require('has-flag');
+var serializeError = require('serialize-error');
 var Runner = require('./lib/runner');
 var runner = new Runner();
 
@@ -10,28 +11,15 @@ var isFailed = false;
 
 Error.stackTraceLimit = Infinity;
 
-function serializeError(err) {
-	err = {
-		message: err.message,
-		stack: err.stack
-	};
-
-	return err;
-}
-
 function test(err, title, duration) {
 	if (isFailed) {
 		return;
 	}
 
-	if (err) {
-		err = serializeError(err);
-	}
-
 	process.send({
 		name: 'test',
 		data: {
-			err: err || {},
+			err: err ? serializeError(err) : {},
 			title: title,
 			duration: duration
 		}

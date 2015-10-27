@@ -80,6 +80,7 @@
     "power-assert-renderers": "^0.1.0",
     "pretty-ms": "^2.0.0",
     "resolve-from": "^1.0.0",
+    "serialize-error": "^1.0.0",
     "set-immediate-shim": "^1.0.1",
     "squeak": "^1.2.0",
     "update-notifier": "^0.5.0"
