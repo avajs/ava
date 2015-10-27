@@ -75,7 +75,6 @@
     "has-flag": "^1.0.0",
     "is-generator": "^1.0.2",
     "meow": "^3.3.0",
-    "object-assign": "^4.0.1",
     "plur": "^2.0.0",
     "power-assert-formatter": "^1.1.0",
     "power-assert-renderers": "^0.1.0",
