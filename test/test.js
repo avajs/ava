@@ -748,30 +748,51 @@ test('hooks - shared context', function (t) {
 	var runner = new Runner();
 
 	runner.addBeforeHook(function (a) {
-		a.is(this.arr, undefined);
-		this.arr = [];
+		a.is(a.context.arr, undefined);
+		a.context.arr = [];
 		a.end();
 	});
 
 	runner.addAfterHook(function (a) {
-		a.is(this.arr, undefined);
+		a.is(a.context.arr, undefined);
 		a.end();
 	});
 
 	runner.addBeforeEachHook(function (a) {
-		this.arr = ['a'];
+		a.context.arr = ['a'];
 		a.end();
 	});
 
 	runner.addTest(function (a) {
-		this.arr.push('b');
-		a.same(this.arr, ['a', 'b']);
+		a.context.arr.push('b');
+		a.same(a.context.arr, ['a', 'b']);
 		a.end();
 	});
 
 	runner.addAfterEachHook(function (a) {
-		this.arr.push('c');
-		a.same(this.arr, ['a', 'b', 'c']);
+		a.context.arr.push('c');
+		a.same(a.context.arr, ['a', 'b', 'c']);
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.failCount, 0);
+		t.end();
+	});
+});
+
+test('hooks - shared context of any type', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	runner.addBeforeEachHook(function (a) {
+		a.context = 'foo';
+		a.end();
+	});
+
+	runner.addTest(function (a) {
+		a.is(a.context, 'foo');
 		a.end();
 	});
 
