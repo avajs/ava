@@ -237,6 +237,20 @@ test(t => {
 });
 ```
 
+The context is by default an object, but it can also be directly assigned:
+
+```js
+test.beforeEach(t => {
+	t.context = 'unicorn';
+	t.end();
+});
+
+test(t => {
+	t.is(t.context, 'unicorn');
+	t.end();
+});
+```
+
 ### Custom assertion module
 
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
