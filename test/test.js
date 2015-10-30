@@ -358,23 +358,6 @@ test('more assertions than planned should emit an assertion error', function (t)
 	});
 });
 
-// NOTE(sindresorhus): I don't think this is possible as we won't know when the last assertion will happen, it could be minutes.
-// Might be able to check `process._getActiveHandles().length === 1 && process._getActiveRequests().length === 0` or something.
-test.skip('more assertions than planned should emit an assertion error - async', function (t) {
-	ava(function (a) {
-		a.plan(1);
-		a.pass();
-
-		setTimeout(function () {
-			a.pass();
-		}, 100);
-	}).run(function (err) {
-		t.true(err, err);
-		t.is(err.name, 'AssertionError');
-		t.end();
-	});
-});
-
 test('runner have test event', function (t) {
 	var runner = new Runner();
 
