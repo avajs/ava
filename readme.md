@@ -513,6 +513,10 @@ AVA runs tests concurrently by default, which is suboptimal when you need to deb
 $ ava --serial
 ```
 
+### Code coverage
+
+You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#isloated-environment), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
+
 
 ## FAQ
 
