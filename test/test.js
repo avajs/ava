@@ -868,6 +868,17 @@ test('display test title prefixes', function (t) {
 	});
 });
 
+test('don\'t display test title, if there is only one anonymous test', function (t) {
+	t.plan(2);
+
+	execCli(['fixture/es2015.js'], function (err, stdout, stderr) {
+		t.ifError(err);
+
+		t.is(stderr.trim(), '1 test passed');
+		t.end();
+	});
+});
+
 test('fail-fast mode', function (t) {
 	t.plan(5);
 

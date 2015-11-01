@@ -43,6 +43,7 @@ var cli = meow({
 	]
 });
 
+var testCount = 0;
 var fileCount = 0;
 var errors = [];
 
@@ -75,6 +76,10 @@ function prefixTitle(file) {
 	return prefix;
 }
 
+function stats(stats) {
+	testCount += stats.testCount;
+}
+
 function test(data) {
 	var isError = data.err.message;
 
@@ -89,6 +94,12 @@ function test(data) {
 
 		errors.push(data);
 	} else {
+		// if there's only one file and one anonymous test
+		// don't log it
+		if (fileCount === 1 && testCount === 1 && data.title === '[anonymous]') {
+			return;
+		}
+
 		log.test(null, prefix + data.title, data.duration);
 	}
 }
@@ -105,6 +116,7 @@ function run(file) {
 	}
 
 	return fork(args)
+		.on('stats', stats)
 		.on('test', test)
 		.on('data', function (data) {
 			process.stdout.write(data);
