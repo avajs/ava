@@ -446,8 +446,8 @@ The following test:
 
 ```js
 test(t => {
-	const foo = 'foo';
-	t.ok(foo === 'bar');
+	const x = 'foo';
+	t.ok(x === 'bar');
 	t.end();
 });
 ```
@@ -461,9 +461,9 @@ false === true
 With the enhanced asserts, you'll get:
 
 ```
-t.ok(foo === 'bar')
-       |
-       "foo"
+t.ok(x === 'bar')
+     |
+     "foo"
 ```
 
 True, you could use `t.is()` in this case, and probably should, but this is just a simple example.
