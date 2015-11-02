@@ -158,7 +158,12 @@ function exit(results) {
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
 
-	process.exit(failed > 0 ? 1 : 0);
+	// Individually kill each child process.
+	Promise.map(results, function (result) {
+		return result.kill();
+	}).finally(function () {
+		process.exit(failed > 0 ? 1 : 0);
+	});
 }
 
 function init(files) {

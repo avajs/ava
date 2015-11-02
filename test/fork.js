@@ -39,3 +39,15 @@ test('rejects on error and streams output', function (t) {
 			t.end();
 		});
 });
+
+test('result.kill forcibly kills process', function (t) {
+	t.plan(1);
+	var start = Date.now();
+	fork(fixture('long-running.js'))
+		.on('exit', function () {
+			t.ok(Date.now() - start < 10000);
+		})
+		.then(function (result) {
+			result.kill();
+		});
+});
