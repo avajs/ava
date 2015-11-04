@@ -198,6 +198,23 @@ test('handle throws with rejected promise', function (t) {
 	});
 });
 
+test('handle throws with long running rejected promise', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = new Promise(function (resolve, reject) {
+			setTimeout(function () {
+				reject(new Error('abc'));
+			}, 2000);
+		});
+
+		a.throws(promise, /abc/);
+	}).run().then(function (a) {
+		t.false(a.assertError);
+		t.end();
+	});
+});
+
 test('handle throws with resolved promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
