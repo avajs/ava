@@ -423,7 +423,7 @@ Assert that `value` is not deep equal to `expected`.
 
 Assert that `function` throws an error or `promise` rejects.
 
-`error` can be a constructor, regex or validation function.
+`error` can be a constructor, regex, error message or validation function.
 
 ### .doesNotThrow(function|promise, [message])
 

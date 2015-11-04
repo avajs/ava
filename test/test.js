@@ -223,6 +223,18 @@ test('handle throws with regex', function (t) {
 	});
 });
 
+test('handle throws with string', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject(new Error('abc'));
+		a.throws(promise, 'abc');
+	}).run().then(function (a) {
+		t.false(a.assertionError);
+		t.end();
+	});
+});
+
 test('handle throws with false-positive promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
