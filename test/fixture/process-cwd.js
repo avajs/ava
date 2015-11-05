@@ -1,1 +1,7 @@
-console.log(process.cwd());
+'use strict';
+const test = require('../../');
+
+test(t => {
+	t.is(process.cwd(), __dirname);
+	t.end();
+});
