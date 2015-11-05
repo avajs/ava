@@ -43,11 +43,13 @@ test('rejects on error and streams output', function (t) {
 test('result.kill forcibly kills process', function (t) {
 	t.plan(1);
 	var start = Date.now();
-	fork(fixture('long-running.js'))
+	var promise = fork(fixture('long-running.js'))
 		.on('exit', function () {
 			t.ok(Date.now() - start < 10000);
-		})
-		.then(function (result) {
-			result.kill();
+		});
+
+	promise
+		.then(function () {
+			promise.kill();
 		});
 });
