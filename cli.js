@@ -133,7 +133,8 @@ function sum(arr, key) {
 	return result;
 }
 
-function exit(results) {
+function exit(testRun) {
+	var results = testRun.results;
 	// assemble stats from all tests
 	var stats = results.map(function (result) {
 		return result.stats;
@@ -158,7 +159,10 @@ function exit(results) {
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
 
-	process.exit(failed > 0 ? 1 : 0);
+	// wait for the child processes to exit
+	testRun.childProcesses.finally(function () {
+		process.exit(failed > 0 ? 1 : 0);
+	});
 }
 
 function init(files) {
@@ -178,7 +182,14 @@ function init(files) {
 
 			var tests = files.map(run);
 
-			return Promise.all(tests);
+			return Promise.all(tests).then(function (results) {
+				return {
+					results: results,
+					childProcesses: Promise.map(tests, function (test) {
+						return test.kill();
+					})
+				};
+			});
 		});
 }
 
