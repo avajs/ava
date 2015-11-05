@@ -40,16 +40,13 @@ test('rejects on error and streams output', function (t) {
 		});
 });
 
-test('result.kill forcibly kills process', function (t) {
+test('exit after tests are finished', function (t) {
 	t.plan(1);
+
 	var start = Date.now();
-	var promise = fork(fixture('long-running.js'))
+
+	fork(fixture('long-running.js'))
 		.on('exit', function () {
 			t.ok(Date.now() - start < 10000);
-		});
-
-	promise
-		.then(function () {
-			promise.kill();
 		});
 });
