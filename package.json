@@ -90,6 +90,7 @@
   "devDependencies": {
     "coveralls": "^2.11.4",
     "nyc": "^3.2.2",
+    "signal-exit": "^2.1.2",
     "tap-dot": "^1.0.0",
     "tape": "^4.0.0",
     "xo": "*"
