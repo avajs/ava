@@ -41,12 +41,17 @@ test('rejects on error and streams output', function (t) {
 });
 
 test('exit after tests are finished', function (t) {
-	t.plan(1);
+	t.plan(2);
 
 	var start = Date.now();
+	var cleanupCompleted = false;
 
 	fork(fixture('long-running.js'))
 		.on('exit', function () {
-			t.ok(Date.now() - start < 10000);
+			t.ok(Date.now() - start < 10000, 'did NOT wait for setTimeout(fn, 15000');
+			t.ok(cleanupCompleted, 'did wait for onExit(fn) to complete');
+		})
+		.on('cleanup-completed', function (event) {
+			cleanupCompleted = event.completed;
 		});
 });
