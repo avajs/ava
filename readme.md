@@ -148,27 +148,13 @@ test(function name(t) {
 
 ### Planned assertions
 
-Planned assertions are useful for being able to assert that all async actions happened and catch bugs where too many assertions happen. It also comes with the benefit of not having to manually end the test.
+Planned assertions are useful for being able to assert that all async actions happened. It also comes with the benefit of not having to manually end the test.
 
 This will result in a passed test:
 
 ```js
 test(t => {
 	t.plan(1);
-
-	setTimeout(() => {
-		t.pass();
-	}, 100);
-});
-```
-
-And this will result in an error because the code called more assertions than planned:
-
-```js
-test(t => {
-	t.plan(1);
-
-	t.pass();
 
 	setTimeout(() => {
 		t.pass();
