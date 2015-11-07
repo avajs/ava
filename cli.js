@@ -196,9 +196,7 @@ function handlePaths(files) {
 
 	return files
 		.map(function (file) {
-			var stats = fs.statSync(path.join(process.cwd(), file));
-
-			if (stats.isDirectory()) {
+			if (fs.statSync(file).isDirectory()) {
 				return handlePaths([path.join(file, '*.js')]);
 			}
 

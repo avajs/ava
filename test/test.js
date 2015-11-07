@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path');
 var childProcess = require('child_process');
 var Promise = require('bluebird');
 var figures = require('figures');
@@ -956,6 +957,16 @@ test('Babel require hook only applies to the test file', function (t) {
 	execCli('fixture/babel-hook.js', function (err) {
 		t.ok(err);
 		t.is(err.code, 1);
+		t.end();
+	});
+});
+
+test('absolute paths in CLI', function (t) {
+	t.plan(2);
+
+	execCli([path.resolve('.', 'test/fixture/es2015.js')], function (err, stdout, stderr) {
+		t.ifError(err);
+		t.is(stderr.trim(), '1 test passed');
 		t.end();
 	});
 });
