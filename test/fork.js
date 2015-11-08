@@ -48,8 +48,8 @@ test('exit after tests are finished', function (t) {
 
 	fork(fixture('long-running.js'))
 		.on('exit', function () {
-			t.ok(Date.now() - start < 10000, 'did NOT wait for setTimeout(fn, 15000');
-			t.ok(cleanupCompleted, 'did wait for onExit(fn) to complete');
+			t.ok(Date.now() - start < 10000, 'should NOT wait for setTimeout(fn, 15000)');
+			t.ok(cleanupCompleted, 'should wait for onExit(fn) to complete');
 		})
 		.on('cleanup-completed', function (event) {
 			cleanupCompleted = event.completed;

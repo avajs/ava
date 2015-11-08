@@ -12,7 +12,7 @@ function execCli(args, cb) {
 		args = [args];
 	}
 
-	childProcess.execFile('../cli.js', args, {cwd: __dirname}, cb);
+	childProcess.execFile(process.execPath, ['../cli.js'].concat(args), {cwd: __dirname}, cb);
 }
 
 test('run test', function (t) {
