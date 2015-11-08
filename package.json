@@ -68,7 +68,7 @@
     "babel-runtime": "^5.8.29",
     "bluebird": "^3.0.0",
     "chalk": "^1.0.0",
-    "co": "floatdrop/co#e6c2a50",
+    "co-with-promise": "^4.6.0",
     "core-assert": "^0.1.0",
     "empower": "^1.1.0",
     "figures": "^1.4.0",
