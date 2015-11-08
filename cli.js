@@ -67,7 +67,7 @@ function prefixTitle(file) {
 		.replace(/test\-/g, '')
 		.replace(/\.js$/, '')
 		.replace(base, '')
-		.replace(new RegExp(path.sep, 'g'), separator);
+		.split(path.sep).join(separator);
 
 	if (prefix.length > 0) {
 		prefix += separator;
