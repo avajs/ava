@@ -1,5 +1,7 @@
 # ![AVA](media/header.png)
 
+[![Join the chat at https://gitter.im/sindresorhus/ava](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sindresorhus/ava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > Futuristic test runner
 
 [![Build Status](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master)
