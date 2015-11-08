@@ -523,6 +523,12 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 Concurrency is not parallelism. It enables parallelism. It's about dealing with, while parallelism is about doing, lots of things at once.
 
 
+## Support
+
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
+- [Gitter chat](https://gitter.im/sindresorhus/ava)
+
+
 ## Related
 
 - [gulp-ava](https://github.com/sindresorhus/gulp-ava) - Run tests with gulp
