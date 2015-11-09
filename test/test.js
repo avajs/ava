@@ -34,6 +34,16 @@ test('test title is optional', function (t) {
 	});
 });
 
+test('test callback is required', function (t) {
+	t.throws(function () {
+		ava();
+	}, /you must provide a callback/);
+	t.throws(function () {
+		ava('title');
+	}, /you must provide a callback/);
+	t.end();
+});
+
 test('infer test name from function', function (t) {
 	ava(function foo(a) {
 		a.end();
