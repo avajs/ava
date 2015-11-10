@@ -520,7 +520,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### Concurrency vs. parallelism
 
-Concurrency is not parallelism. It enables parallelism. To learn more about the difference, see [this](http://stackoverflow.com/a/1050257) Stack Overflow answer. 
+Concurrency is not parallelism. It enables parallelism. To learn more about the difference, see [this](http://stackoverflow.com/q/1050222) Stack Overflow answer. 
 
 
 ## Support
