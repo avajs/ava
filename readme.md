@@ -4,14 +4,13 @@
 
 [![Build Status: Linux](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master) [![Join the chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sindresorhus/ava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and a isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests that don't depend on global state or the state of other tests, which is a great thing!
+Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
 
 ## Why AVA?
 
 - Minimal and fast
 - Simple test syntax
-- Runs test files in parallel
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
@@ -111,7 +110,7 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Tests are run async and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise. [Async functions](#async-function-support) already returns a promise implicitly, so no need for you to explicitly return a promise in that case.
+Tests are run asynchronously and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise. [Async functions](#async-function-support) already returns a promise implicitly, so no need for you to explicitly return a promise in that case.
 
 You have to define all tests synchronously, meaning you can't define a test in the next tick, e.g. inside a `setTimeout`.
 
@@ -119,7 +118,7 @@ Test files are run from their current directory, so [`process.cwd()`](https://no
 
 ### Test anatomy
 
-To create a test, you call the `test` function you require'd from AVA and pass in an optional test name and a function containing the test execution. The passed function is given the context as the first argument, where you can call the different AVA methods and [assertions](#assertions).
+To create a test, you call the `test` function you `require`d from AVA and pass in an optional test name and a function containing the test execution. The passed function is given the context as the first argument, where you can call the different AVA methods and [assertions](#assertions).
 
 ```js
 test('name', t => {
