@@ -158,7 +158,10 @@ function exit(results) {
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
 
-	process.exit(failed > 0 ? 1 : 0);
+	// timeout required to correctly flush stderr on Node 0.10 Windows
+	setTimeout(function () {
+		process.exit(failed > 0 ? 1 : 0);
+	}, 0);
 }
 
 function init(files) {
