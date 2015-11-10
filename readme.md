@@ -520,13 +520,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### Concurrency vs. parallelism
 
-Concurrency is not parallelism. It enables parallelism.
-
-**Concurrency** is when two or more tasks can start, run, and complete in overlapping time periods. It doesn't necessarily mean they'll ever both be running at the same instant. (e.g. multitasking on a single-core machine.) 
-
-**Parallelism** is when tasks literally run at the same time. (e.g. on a multicore processor.)
-
-[(Source)](http://stackoverflow.com/a/1050257)
+Concurrency is not parallelism. It enables parallelism. To learn more about the difference, see [this](http://stackoverflow.com/a/1050257) Stack Overflow answer. 
 
 
 ## Support
