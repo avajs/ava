@@ -140,6 +140,24 @@ test('handle non-assertion errors', function (t) {
 	});
 });
 
+test('end can be used as callback without maintaining thisArg', function (t) {
+	ava(function (a) {
+		setTimeout(a.end);
+	}).run().then(function (a) {
+		t.false(a.assertError);
+		t.end();
+	});
+});
+
+test('end can be used as callback with error', function (t) {
+	ava(function (a) {
+		a.end(new Error('failed'));
+	}).run().catch(function (err) {
+		t.true(err instanceof Error);
+		t.end();
+	});
+});
+
 test('handle non-assertion errors even when planned', function (t) {
 	ava(function (a) {
 		a.plan(1);
