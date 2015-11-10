@@ -7,6 +7,16 @@
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
 
+## Table of Contents
+
+- [Usage](#usage)
+- [CLI Usage](#cli)
+- [Documentation](#documentation)
+- [API](#api)
+- [Assertions](#assertions)
+- [FAQ](#faq)
+
+
 ## Why AVA?
 
 - Minimal and fast
