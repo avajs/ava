@@ -963,10 +963,27 @@ test('change process.cwd() to a test\'s directory', function (t) {
 	});
 });
 
-test('Babel require hook only applies to the test file', function (t) {
-	execCli('fixture/babel-hook.js', function (err) {
+test('Babel require hook does apply to helpers ("_" prefix)', function (t) {
+	t.plan(1);
+
+	execCli('fixture/uses-es6-helper.js', function (err) {
+		t.ifError(err);
+		t.end();
+	});
+});
+
+test('Babel require does not apply to non-helper (no "_" prefix)', function (t) {
+	execCli('fixture/babel-hook.js', function (err, stdout) {
+		// TODO: This test was passing for the wrong reasons. Make sure this gets fixed in master regardless.
 		t.ok(err);
 		t.is(err.code, 1);
+
+		// module.exports = async () => {};
+		//                            ^
+		// SyntaxError: Unexpected reserved word
+
+		// TODO: Why standard error?
+		t.true(/module.exports = async \(\) => \{\};\s*\n.*?\n.*?Unexpected token >/.test(stdout));
 		t.end();
 	});
 });

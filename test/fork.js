@@ -35,7 +35,7 @@ test('rejects on error and streams output', function (t) {
 			buffer += data;
 		})
 		.catch(function () {
-			t.ok(/no such file or directory/.test(buffer));
+			t.ok(/Cannot find module/.test(buffer));
 			t.end();
 		});
 });

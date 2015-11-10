@@ -1,1 +1,1 @@
-module.export = async () => {};
+module.exports = async () => {};
