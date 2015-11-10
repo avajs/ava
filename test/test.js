@@ -982,8 +982,8 @@ test('Babel require does not apply to non-helper (no "_" prefix)', function (t) 
 		//                            ^
 		// SyntaxError: Unexpected reserved word
 
-		// TODO: Why standard error?
-		t.true(/module.exports = async \(\) => \{\};\s*\n.*?\n.*?Unexpected token >/.test(stdout));
+		// TODO: Why stdout?
+		t.true(/module\.exports = async \(\) => \{\};(?:.|\s)*?Unexpected token/.test(stdout));
 		t.end();
 	});
 });
