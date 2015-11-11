@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var figures = require('figures');
 var test = require('tape');
 var Runner = require('../lib/runner');
+var fork = require('../lib/fork');
 var ava = require('../lib/test');
 
 function execCli(args, cb) {
@@ -824,6 +825,38 @@ test('hooks - shared context of any type', function (t) {
 	});
 });
 
+test('test types and titles', function (t) {
+	t.plan(10);
+
+	var runner = new Runner();
+	runner.addBeforeHook(pass);
+	runner.addBeforeEachHook(pass);
+	runner.addAfterHook(pass);
+	runner.addAfterEachHook(pass);
+	runner.addTest('test', pass);
+
+	function pass(a) {
+		a.end();
+	}
+
+	var tests = [
+		{type: 'hook', title: 'pass'},
+		{type: 'eachHook', title: 'beforeEach for "test"'},
+		{type: 'test', title: 'test'},
+		{type: 'eachHook', title: 'afterEach for "test"'},
+		{type: 'hook', title: 'pass'}
+	];
+
+	runner.on('test', function (err, title, duration, type) {
+		var test = tests.shift();
+
+		t.is(test.title, title);
+		t.is(test.type, type);
+	});
+
+	runner.run().then(t.end);
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
@@ -916,6 +949,32 @@ test('don\'t display test title, if there is only one anonymous test', function 
 		t.is(stderr.trim(), '1 test passed');
 		t.end();
 	});
+});
+
+test('don\'t display hook title if it did not fail', function (t) {
+	t.plan(2);
+
+	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
+		.on('test', function (test) {
+			t.deepEqual(test.err, {});
+			t.is(test.title, 'pass');
+		})
+		.then(function () {
+			t.end();
+		});
+});
+
+test('display hook title if it failed', function (t) {
+	t.plan(2);
+
+	fork(path.join(__dirname, 'fixture', 'hooks-failing.js'))
+		.on('test', function (test) {
+			t.is(test.err.name, 'AssertionError');
+			t.is(test.title, 'beforeEach for "pass"');
+		})
+		.then(function () {
+			t.end();
+		});
 });
 
 test('fail-fast mode', function (t) {
