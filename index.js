@@ -11,8 +11,13 @@ var isFailed = false;
 
 Error.stackTraceLimit = Infinity;
 
-function test(err, title, duration) {
+function test(err, title, duration, type) {
 	if (isFailed) {
+		return;
+	}
+
+	// don't display anything, if it's a passed hook
+	if (!err && type !== 'test') {
 		return;
 	}
 
