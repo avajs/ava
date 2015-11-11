@@ -81,16 +81,14 @@ function stats(stats) {
 }
 
 function test(data) {
-	var isError = data.err.message;
-
-	var prefix = '';
+	var isError = data.error.message;
 
 	if (fileCount > 1) {
-		prefix = prefixTitle(data.file);
+		data.title = prefixTitle(data.file) + data.title;
 	}
 
 	if (isError) {
-		log.error(prefix + data.title, chalk.red(data.err.message));
+		log.error(data.title, chalk.red(data.error.message));
 
 		errors.push(data);
 	} else {
@@ -100,7 +98,7 @@ function test(data) {
 			return;
 		}
 
-		log.test(null, prefix + data.title, data.duration);
+		log.test(data);
 	}
 }
 

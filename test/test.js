@@ -405,10 +405,10 @@ test('runner have test event', function (t) {
 		a.end();
 	});
 
-	runner.on('test', function (err, title, duration) {
-		t.error(err);
-		t.equal(title, 'foo');
-		t.ok(duration !== undefined);
+	runner.on('test', function (props) {
+		t.error(props.error);
+		t.equal(props.title, 'foo');
+		t.notEqual(props.duration, undefined);
 		t.end();
 	});
 
@@ -847,11 +847,11 @@ test('test types and titles', function (t) {
 		{type: 'hook', title: 'pass'}
 	];
 
-	runner.on('test', function (err, title, duration, type) {
+	runner.on('test', function (props) {
 		var test = tests.shift();
 
-		t.is(test.title, title);
-		t.is(test.type, type);
+		t.is(test.title, props.title);
+		t.is(test.type, props.type);
 	});
 
 	runner.run().then(t.end);
@@ -956,7 +956,7 @@ test('don\'t display hook title if it did not fail', function (t) {
 
 	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
 		.on('test', function (test) {
-			t.deepEqual(test.err, {});
+			t.deepEqual(test.error, {});
 			t.is(test.title, 'pass');
 		})
 		.then(function () {
@@ -969,7 +969,7 @@ test('display hook title if it failed', function (t) {
 
 	fork(path.join(__dirname, 'fixture', 'hooks-failing.js'))
 		.on('test', function (test) {
-			t.is(test.err.name, 'AssertionError');
+			t.is(test.error.name, 'AssertionError');
 			t.is(test.title, 'beforeEach for "pass"');
 		})
 		.then(function () {

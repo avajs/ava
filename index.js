@@ -26,26 +26,24 @@ var isFailed = false;
 
 Error.stackTraceLimit = Infinity;
 
-function test(err, title, duration, type) {
+function test(props) {
 	if (isFailed) {
 		return;
 	}
 
 	// don't display anything, if it's a passed hook
-	if (!err && type !== 'test') {
+	if (!props.error && props.type !== 'test') {
 		return;
 	}
 
+	props.error = props.error ? serializeError(props.error) : {};
+
 	process.send({
 		name: 'test',
-		data: {
-			err: err ? serializeError(err) : {},
-			title: title,
-			duration: duration
-		}
+		data: props
 	});
 
-	if (err && hasFlag('fail-fast')) {
+	if (props.error && hasFlag('fail-fast')) {
 		isFailed = true;
 		exit();
 	}
