@@ -857,6 +857,30 @@ test('test types and titles', function (t) {
 	runner.run().then(t.end);
 });
 
+test('skip test', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addTest(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addSkippedTest(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
+		t.same(arr, ['a']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
