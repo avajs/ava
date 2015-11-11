@@ -1037,6 +1037,16 @@ test('power-assert support', function (t) {
 	});
 });
 
+test('circular references on assertions do not break process.send', function (t) {
+	t.plan(2);
+
+	execCli('fixture/circular-reference-on-assertion.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/'c'.*?'d'/.test(stderr));
+		t.end();
+	});
+});
+
 test('change process.cwd() to a test\'s directory', function (t) {
 	t.plan(1);
 

@@ -135,6 +135,16 @@ test('.same()', function (t) {
 		assert.same(['a', 'b'], ['a', 'a']);
 	});
 
+	t.throws(function () {
+		assert.same([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+	}, / 'c' ].*? 'd' ]/);
+
+	t.throws(function () {
+		var circular = ['a', 'b'];
+		circular.push(circular);
+		assert.same([circular, 'c'], [circular, 'd']);
+	}, / 'c' ].*? 'd' ]/);
+
 	t.end();
 });
 
