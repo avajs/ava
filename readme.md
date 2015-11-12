@@ -181,10 +181,21 @@ test.serial(t => {
 });
 ```
 
+### Skipped tests
+
+Skipped tests are shown in the output as skipped, but never run.
+
+```js
+test.skip('unicorn', t => {
+	t.end();
+});
+```
+
 ### Before & after hooks
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want.
+used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
+
 
 ```js
 test.before(t => {
@@ -197,7 +208,7 @@ test.before(t => {
 	t.end();
 });
 
-test.after(t => {
+test.after('cleanup', t => {
 	// this runs after all tests
 	t.end();
 });
@@ -331,16 +342,19 @@ test(async t => {
 
 ## API
 
-### test([name], body)
-### test.serial([name], body)
-### test.before(body)
-### test.after(body)
+### test([title], body)
+### test.serial([title], body)
+### test.skip([title], body)
+### test.before([title], body)
+### test.after([title], body)
+### test.beforeEach([title], body)
+### test.afterEach([title], body)
 
-#### name
+#### title
 
 Type: `string`
 
-Test name.
+Test title.
 
 #### body(context)
 
