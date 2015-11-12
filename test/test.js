@@ -1034,6 +1034,30 @@ test('skip test', function (t) {
 	});
 });
 
+test('only test', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.addTest(function (a) {
+		arr.push('a');
+		a.end();
+	});
+
+	runner.addOnlyTest(function (a) {
+		arr.push('b');
+		a.end();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
+		t.same(arr, ['b']);
+		t.end();
+	});
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
