@@ -32,8 +32,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc tape test/*.js | tap-dot",
-    "test-win": "tape test/*.js | tap-dot",
+    "test": "xo && nyc tape test/*.js | tap-spec",
+    "test-win": "tape test/*.js | tap-spec",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
@@ -92,7 +92,7 @@
     "coveralls": "^2.11.4",
     "nyc": "^3.2.2",
     "signal-exit": "^2.1.2",
-    "tap-dot": "^1.0.0",
+    "tap-spec": "^4.1.0",
     "tape": "^4.0.0",
     "xo": "*"
   }
