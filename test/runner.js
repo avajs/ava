@@ -28,3 +28,12 @@ t.equal(runner.tests.serial.length, 1);
 t.ok(runner.tests.serial[0] instanceof Test);
 t.end();
 });
+
+test('runner.addBeforeHook adds a new before hook', function (t) {
+var runner = new Runner();
+runner.addBeforeHook(mockTitle, noop);
+t.equal(runner.tests.before.length, 1);
+t.ok(runner.tests.before[0] instanceof Test);
+t.equal(runner.tests.before[0].type, 'hook');
+t.end();
+});
