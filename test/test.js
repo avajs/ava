@@ -1057,7 +1057,9 @@ test('change process.cwd() to a test\'s directory', function (t) {
 });
 
 test('Babel require hook only applies to the test file', function (t) {
-	execCli('fixture/babel-hook.js', function (err) {
+	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
+		t.ok(/exited with a non-zero exit code/.test(stderr));
+		t.ok(/Unexpected token/.test(stdout));
 		t.ok(err);
 		t.is(err.code, 1);
 		t.end();
