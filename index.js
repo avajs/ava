@@ -79,3 +79,4 @@ module.exports.after = runner.addAfterHook.bind(runner);
 module.exports.beforeEach = runner.addBeforeEachHook.bind(runner);
 module.exports.afterEach = runner.addAfterEachHook.bind(runner);
 module.exports.skip = runner.addSkippedTest.bind(runner);
+module.exports.only = runner.addOnlyTest.bind(runner);
