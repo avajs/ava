@@ -64,3 +64,12 @@ test('runner.addAfterEachHook adds a new after hook', function (t) {
 	t.equal(runner.tests.afterEach[0].fn, noop);
 	t.end();
 });
+
+test('runner.addSkippedTest adds a new skipped test', function (t) {
+	var runner = new Runner();
+	runner.addSkippedTest(mockTitle, noop);
+	t.equal(runner.tests.concurrent.length, 1);
+	t.ok(runner.tests.concurrent[0] instanceof Test);
+	t.equal(runner.tests.concurrent[0].skip, true);
+	t.end();
+});
