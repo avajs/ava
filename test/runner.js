@@ -19,3 +19,12 @@ test('runner.addTest adds a new test', function (t) {
 	t.ok(runner.tests.concurrent[0] instanceof Test);
 	t.end();
 });
+
+test('runner.addSerialTest adds a new serial test', function (t) {
+var runner = new Runner();
+runner.addSerialTest(mockTitle, noop);
+t.equal(runner.stats.testCount, 1);
+t.equal(runner.tests.serial.length, 1);
+t.ok(runner.tests.serial[0] instanceof Test);
+t.end();
+});
