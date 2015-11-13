@@ -45,6 +45,7 @@ var cli = meow({
 
 var testCount = 0;
 var fileCount = 0;
+var unhandledRejectionCount = 0;
 var errors = [];
 
 function error(err) {
@@ -116,9 +117,16 @@ function run(file) {
 	return fork(args)
 		.on('stats', stats)
 		.on('test', test)
+		.on('unhandledRejections', rejections)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
+}
+
+function rejections(data) {
+	var r = data.unhandledRejections;
+	log.unhandledRejections(data.file, r);
+	unhandledRejectionCount += r.length;
 }
 
 function sum(arr, key) {
@@ -145,7 +153,7 @@ function exit(results) {
 	var failed = sum(stats, 'failCount');
 
 	log.write();
-	log.report(passed, failed);
+	log.report(passed, failed, unhandledRejectionCount);
 	log.write();
 
 	if (failed > 0) {
