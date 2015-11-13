@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "xo && nyc tape test/*.js | tap-spec",
+    "debug": "tape test/*.js | tap-spec",
     "test-win": "tape test/*.js | tap-spec",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -77,6 +78,7 @@
     "globby": "^3.0.1",
     "has-flag": "^1.0.0",
     "is-generator": "^1.0.2",
+    "loud-rejection": "^1.2.0",
     "meow": "^3.3.0",
     "plur": "^2.0.0",
     "power-assert-formatter": "^1.3.0",
