@@ -166,7 +166,7 @@ function exit(results) {
 
 	// timeout required to correctly flush stderr on Node 0.10 Windows
 	setTimeout(function () {
-		process.exit(failed > 0 ? 1 : 0);
+		process.exit(failed > 0 || unhandledRejectionCount > 0 ? 1 : 0);
 	}, 0);
 }
 

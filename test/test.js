@@ -1068,7 +1068,7 @@ test('Babel require hook only applies to the test file', function (t) {
 
 test('Unhandled promises will be reported to console', function (t) {
 	execCli('fixture/loud-rejection.js', function (err, stdout, stderr) {
-		t.ifError(err);
+		t.ok(err);
 		t.ok(/You can't handle this/.test(stderr));
 		t.ok(/1 unhandled rejection[^s]/.test(stderr));
 		t.end();
