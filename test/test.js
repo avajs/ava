@@ -1075,3 +1075,15 @@ test('absolute paths in CLI', function (t) {
 		t.end();
 	});
 });
+
+test('titles of both passing and failing tests and AssertionErrors are displayed', function (t) {
+	t.plan(4);
+
+	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/this is a passing test/.test(stderr));
+		t.ok(/this is a failing test/.test(stderr));
+		t.ok(/AssertionError/.test(stderr));
+		t.end();
+	});
+});
