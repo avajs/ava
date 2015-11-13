@@ -132,6 +132,10 @@ function sum(arr, key) {
 }
 
 function exit(results) {
+	// in case of non-test files, the result will be undefined so we remove them
+	results = results.filter(function (result) {
+		return result !== undefined;
+	});
 	// assemble stats from all tests
 	var stats = results.map(function (result) {
 		return result.stats;

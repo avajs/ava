@@ -66,6 +66,11 @@ function exit() {
 	});
 }
 
+process.send({
+	name: 'started',
+	data: {}
+});
+
 setImmediate(function () {
 	runner.on('test', test);
 	runner.run().then(exit);
