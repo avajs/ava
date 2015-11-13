@@ -1087,3 +1087,13 @@ test('titles of both passing and failing tests and AssertionErrors are displayed
 		t.end();
 	});
 });
+
+test('ignore non-test files', function (t) {
+	t.plan(2);
+
+	execCli([path.resolve('.', 'test/fixture/non-test-file.js')], function (err, stdout, stderr) {
+		t.ifError(err);
+		t.is(stderr.trim(), '0 tests passed');
+		t.end();
+	});
+});
