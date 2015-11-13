@@ -20,3 +20,6 @@ test_script:
   - node --version
   - npm --version
   - npm run test-win
+artifacts:
+  - path: npm-debug.log
+    name: NPM debug log
