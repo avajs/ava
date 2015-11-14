@@ -49,8 +49,13 @@ var unhandledRejectionCount = 0;
 var uncaughtExceptionCount = 0;
 var errors = [];
 
-function error(err) {
-	console.error(err.stack);
+function error(error) {
+	log.unexpectedExit(error);
+
+	// TODO: figure out why this needs to be here to
+	// correctly flush the output when multiple test files
+	process.stdout.write('');
+
 	setTimeout(function () {
 		process.exit(1);
 	}, 0);
