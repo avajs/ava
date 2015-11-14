@@ -11,7 +11,7 @@ install:
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
 matrix:
-  fast_finish: false
+  fast_finish: true
 build: off
 version: '{build}'
 shallow_clone: true
@@ -20,6 +20,3 @@ test_script:
   - node --version
   - npm --version
   - npm run test-win
-artifacts:
-  - path: npm-debug.log
-    name: NPM debug log

@@ -28,14 +28,9 @@ test('resolves promise with tests info', function (t) {
 });
 
 test('rejects on error and streams output', function (t) {
-	var buffer = '';
-
 	t.plan(2);
 
 	fork(fixture('broken.js'))
-		.on('data', function (data) {
-			buffer += data;
-		})
 		.on('uncaughtException', function (data) {
 			var error = data.uncaughtException;
 			t.ok(/no such file or directory/.test(error.message));
