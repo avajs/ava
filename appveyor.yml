@@ -19,4 +19,4 @@ clone_depth: 1
 test_script:
   - node --version
   - npm --version
-  - npm run test-win
+  - npm run test-win || (timeout 30 && npm run test-win)
