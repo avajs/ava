@@ -51,7 +51,9 @@ var errors = [];
 
 function error(err) {
 	console.error(err.stack);
-	process.exit(1);
+	setTimeout(function () {
+		process.exit(1);
+	}, 0);
 }
 
 function prefixTitle(file) {
