@@ -46,6 +46,7 @@ var cli = meow({
 var testCount = 0;
 var fileCount = 0;
 var unhandledRejectionCount = 0;
+var uncaughtExceptionCount = 0;
 var errors = [];
 
 function error(err) {
@@ -118,6 +119,7 @@ function run(file) {
 		.on('stats', stats)
 		.on('test', test)
 		.on('unhandledRejections', rejections)
+		.on('uncaughtException', uncaughtException)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
@@ -125,8 +127,13 @@ function run(file) {
 
 function rejections(data) {
 	var r = data.unhandledRejections;
-	log.unhandledRejections(data.file, r);
 	unhandledRejectionCount += r.length;
+	log.unhandledRejections(data.file, r);
+}
+
+function uncaughtException(data) {
+	uncaughtExceptionCount++;
+	log.uncaughtException(data.file, data.uncaughtException);
 }
 
 function sum(arr, key) {
@@ -153,7 +160,7 @@ function exit(results) {
 	var failed = sum(stats, 'failCount');
 
 	log.write();
-	log.report(passed, failed, unhandledRejectionCount);
+	log.report(passed, failed, unhandledRejectionCount, uncaughtExceptionCount);
 	log.write();
 
 	if (failed > 0) {
@@ -166,7 +173,7 @@ function exit(results) {
 
 	// timeout required to correctly flush stderr on Node 0.10 Windows
 	setTimeout(function () {
-		process.exit(failed > 0 || unhandledRejectionCount > 0 ? 1 : 0);
+		process.exit(failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0);
 	}, 0);
 }
 
