@@ -1,4 +1,5 @@
 'use strict';
+require('./lib/babel').avaRequired();
 var setImmediate = require('set-immediate-shim');
 var hasFlag = require('has-flag');
 var chalk = require('chalk');

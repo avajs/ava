@@ -1087,3 +1087,33 @@ test('titles of both passing and failing tests and AssertionErrors are displayed
 		t.end();
 	});
 });
+
+test('empty test files creates a failure with a helpful warning', function (t) {
+	t.plan(2);
+
+	execCli('fixture/empty.js', function (err, stdout) {
+		t.ok(err);
+		t.ok(/No tests found.*?import "ava"/.test(stdout));
+		t.end();
+	});
+});
+
+test('test file with no tests creates a failure with a helpful warning', function (t) {
+	t.plan(2);
+
+	execCli('fixture/no-tests.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/No tests/.test(stderr));
+		t.end();
+	});
+});
+
+test('test file that immediately exits with 0 exit code ', function (t) {
+	t.plan(2);
+
+	execCli('fixture/immediate-0-exit.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/Never got test results/.test(stderr));
+		t.end();
+	});
+});
