@@ -33,7 +33,6 @@
   },
   "scripts": {
     "test": "xo && nyc tape test/*.js | tap-spec",
-    "debug": "tape test/*.js | tap-spec",
     "test-win": "tape test/*.js | tap-spec",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },

@@ -10,8 +10,7 @@ var log = require('./lib/logger');
 var runner = new Runner();
 
 // check if the test is being run without AVA cli
-// var isForked = typeof process.send === 'function';
-var isForked = true;
+var isForked = typeof process.send === 'function';
 
 if (!isForked) {
 	var path = relative('.', process.argv[1]);
@@ -40,15 +39,10 @@ function test(props) {
 
 	props.error = props.error ? serializeError(props.error) : {};
 
-	if (process.send) {
-		process.send({
-			name: 'test',
-			data: props
-		});
-	} else {
-		console.warn({name: 'test', data: props});
-	}
-
+	process.send({
+		name: 'test',
+		data: props
+	});
 
 	if (props.error && hasFlag('fail-fast')) {
 		isFailed = true;
@@ -64,17 +58,13 @@ function exit() {
 		}
 	});
 
-	if (process.send) {
-		process.send({
-			name: 'results',
-			data: {
-				stats: runner.stats,
-				tests: runner.results
-			}
-		});
-	} else {
-		console.warn({name: 'results', data: {stats: runner.stats, tests: runner.results}});
-	}
+	process.send({
+		name: 'results',
+		data: {
+			stats: runner.stats,
+			tests: runner.results
+		}
+	});
 }
 
 setImmediate(function () {
