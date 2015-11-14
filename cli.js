@@ -11,6 +11,11 @@ var chalk = require('chalk');
 var Promise = require('bluebird');
 var fork = require('./lib/fork');
 var log = require('./lib/logger');
+var delayBeforeExit = 0;
+
+if (process.env.APPVEYOR && !(parseInt(process.version.slice(1), 10) > 0)) {
+	delayBeforeExit = 500;
+}
 
 // Bluebird specific
 Promise.longStackTraces();
@@ -58,7 +63,7 @@ function error(error) {
 
 	setTimeout(function () {
 		process.exit(1);
-	}, 0);
+	}, delayBeforeExit);
 }
 
 function prefixTitle(file) {
@@ -181,7 +186,7 @@ function exit(results) {
 	// timeout required to correctly flush stderr on Node 0.10 Windows
 	setTimeout(function () {
 		process.exit(failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0);
-	}, 0);
+	}, delayBeforeExit);
 }
 
 function init(files) {
