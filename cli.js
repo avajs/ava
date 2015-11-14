@@ -13,7 +13,7 @@ var fork = require('./lib/fork');
 var log = require('./lib/logger');
 var delayBeforeExit = 0;
 
-if (process.env.APPVEYOR && !(parseInt(process.version.slice(1), 10) > 0)) {
+if (process.env.APPVEYOR) {
 	delayBeforeExit = 500;
 }
 
