@@ -11,6 +11,11 @@ var chalk = require('chalk');
 var Promise = require('bluebird');
 var fork = require('./lib/fork');
 var log = require('./lib/logger');
+var delayBeforeExit = 0;
+
+if (process.env.APPVEYOR) {
+	delayBeforeExit = 500;
+}
 
 // Bluebird specific
 Promise.longStackTraces();
@@ -45,11 +50,20 @@ var cli = meow({
 
 var testCount = 0;
 var fileCount = 0;
+var unhandledRejectionCount = 0;
+var uncaughtExceptionCount = 0;
 var errors = [];
 
-function error(err) {
-	console.error(err.stack);
-	process.exit(1);
+function error(error) {
+	log.unexpectedExit(error);
+
+	// TODO: figure out why this needs to be here to
+	// correctly flush the output when multiple test files
+	process.stdout.write('');
+
+	setTimeout(function () {
+		process.exit(1);
+	}, delayBeforeExit);
 }
 
 function prefixTitle(file) {
@@ -116,9 +130,22 @@ function run(file) {
 	return fork(args)
 		.on('stats', stats)
 		.on('test', test)
+		.on('unhandledRejections', rejections)
+		.on('uncaughtException', uncaughtException)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
+}
+
+function rejections(data) {
+	var r = data.unhandledRejections;
+	unhandledRejectionCount += r.length;
+	log.unhandledRejections(data.file, r);
+}
+
+function uncaughtException(data) {
+	uncaughtExceptionCount++;
+	log.uncaughtException(data.file, data.uncaughtException);
 }
 
 function sum(arr, key) {
@@ -145,7 +172,7 @@ function exit(results) {
 	var failed = sum(stats, 'failCount');
 
 	log.write();
-	log.report(passed, failed);
+	log.report(passed, failed, unhandledRejectionCount, uncaughtExceptionCount);
 	log.write();
 
 	if (failed > 0) {
@@ -158,8 +185,8 @@ function exit(results) {
 
 	// timeout required to correctly flush stderr on Node 0.10 Windows
 	setTimeout(function () {
-		process.exit(failed > 0 ? 1 : 0);
-	}, 0);
+		process.exit(failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0);
+	}, delayBeforeExit);
 }
 
 function init(files) {
