@@ -183,7 +183,7 @@ function flushIoAndExit(code) {
 	// timeout required to correctly flush io on Node 0.10 Windows
 	setTimeout(function () {
 		process.exit(code);
-	}, 0);
+	}, process.env.APPVEYOR ? 500 : 0);
 }
 
 function init(files) {
