@@ -51,7 +51,7 @@ var errors = [];
 
 function error(err) {
 	console.error(err.stack);
-	process.exit(1);
+	flushIoAndExit(1);
 }
 
 function prefixTitle(file) {
@@ -167,13 +167,22 @@ function exit(results) {
 		log.errors(flatten(tests));
 	}
 
+	process.stdout.write('');
+
+	flushIoAndExit(
+		failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0
+	);
+}
+
+function flushIoAndExit(code) {
 	// TODO: figure out why this needs to be here to
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
+	process.stderr.write('');
 
-	// timeout required to correctly flush stderr on Node 0.10 Windows
+	// timeout required to correctly flush io on Node 0.10 Windows
 	setTimeout(function () {
-		process.exit(failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0);
+		process.exit(code);
 	}, 0);
 }
 
