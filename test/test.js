@@ -1127,9 +1127,9 @@ test('titles of both passing and failing tests and AssertionErrors are displayed
 test('empty test files creates a failure with a helpful warning', function (t) {
 	t.plan(2);
 
-	execCli('fixture/empty.js', function (err, stdout) {
+	execCli('fixture/empty.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/No tests found.*?import "ava"/.test(stdout));
+		t.ok(/No tests found.*?import "ava"/.test(stderr));
 		t.end();
 	});
 });

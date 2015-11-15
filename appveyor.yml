@@ -7,6 +7,7 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
+  - set AVA_APPVEYOR=true
   - npm -g install npm@latest || (timeout 30 && npm -g install npm@latest)
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install || (timeout 30 && npm install)
