@@ -183,7 +183,7 @@ test.serial(t => {
 
 ### Skipped tests
 
-Skipped tests are shown in the output as skipped, but never run.
+Skipped tests are shown in the output as skipped but never run.
 
 ```js
 test.skip('unicorn', t => {
@@ -543,7 +543,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### Concurrency vs. parallelism
 
-Concurrency is not parallelism. It enables parallelism. To learn more about the difference, see [this](http://stackoverflow.com/q/1050222) Stack Overflow answer. 
+Concurrency is not parallelism. It enables parallelism. [Learn more.](http://stackoverflow.com/q/1050222)
 
 
 ## Support
