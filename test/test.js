@@ -1058,10 +1058,28 @@ test('change process.cwd() to a test\'s directory', function (t) {
 
 test('Babel require hook only applies to the test file', function (t) {
 	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
-		t.ok(/exited with a non-zero exit code/.test(stderr));
-		t.ok(/Unexpected token/.test(stdout));
+		t.ok(/Unexpected token/.test(stderr));
 		t.ok(err);
 		t.is(err.code, 1);
+		t.end();
+	});
+});
+
+test('Unhandled promises will be reported to console', function (t) {
+	execCli('fixture/loud-rejection.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/You can't handle this/.test(stderr));
+		t.ok(/1 unhandled rejection[^s]/.test(stderr));
+		t.end();
+	});
+});
+
+test('uncaught exception will be reported to console', function (t) {
+	execCli('fixture/uncaught-exception.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/Can't catch me!/.test(stderr));
+		// TODO: The promise ends up rejected, so we need to track this differently
+		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
 	});
 });
@@ -1091,9 +1109,9 @@ test('titles of both passing and failing tests and AssertionErrors are displayed
 test('empty test files creates a failure with a helpful warning', function (t) {
 	t.plan(2);
 
-	execCli('fixture/empty.js', function (err, stdout) {
+	execCli('fixture/empty.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/No tests found.*?import "ava"/.test(stdout));
+		t.ok(/No tests found.*?import "ava"/.test(stderr));
 		t.end();
 	});
 });
