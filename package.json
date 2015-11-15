@@ -4,7 +4,7 @@
   "description": "Futuristic test runner 🚀",
   "license": "MIT",
   "repository": "sindresorhus/ava",
-  "homepage": "http://ava.li",
+  "homepage": "https://ava.li",
   "author": {
     "name": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
@@ -33,7 +33,6 @@
   },
   "scripts": {
     "test": "xo && nyc tape test/*.js | tap-spec",
-    "debug": "tape test/*.js | tap-spec",
     "test-win": "tape test/*.js | tap-spec",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -77,7 +76,8 @@
     "fn-name": "^2.0.0",
     "globby": "^3.0.1",
     "has-flag": "^1.0.0",
-    "is-generator": "^1.0.2",
+    "is-generator-fn": "^1.0.0",
+    "max-timeout": "^1.0.0",
     "loud-rejection": "^1.2.0",
     "meow": "^3.3.0",
     "plur": "^2.0.0",
