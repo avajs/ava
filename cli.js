@@ -66,10 +66,12 @@ function prefixTitle(file) {
 	base += path.sep;
 
 	var prefix = path.relative(process.cwd(), file)
+		.replace(base, '')
+		.replace(/\.spec/, '')
 		.replace(/test\-/g, '')
 		.replace(/\.js$/, '')
-		.replace(base, '')
-		.split(path.sep).join(separator);
+		.split(path.sep)
+		.join(separator);
 
 	if (prefix.length > 0) {
 		prefix += separator;
