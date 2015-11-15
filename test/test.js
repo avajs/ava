@@ -1058,8 +1058,7 @@ test('change process.cwd() to a test\'s directory', function (t) {
 
 test('Babel require hook only applies to the test file', function (t) {
 	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
-		t.ok(/exited with a non-zero exit code/.test(stderr));
-		t.ok(/Unexpected token/.test(stdout));
+		t.ok(/Unexpected token/.test(stderr));
 		t.ok(err);
 		t.is(err.code, 1);
 		t.end();
@@ -1071,6 +1070,34 @@ test('Unhandled promises will be reported to console', function (t) {
 		t.ok(err);
 		t.ok(/You can't handle this/.test(stderr));
 		t.ok(/1 unhandled rejection[^s]/.test(stderr));
+		t.end();
+	});
+});
+
+test('uncaught exception will be reported to console', function (t) {
+	execCli('fixture/uncaught-exception.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/Can't catch me!/.test(stderr));
+		// TODO: This should get printed, but we reject the promise (ending all tests) instead of just ending that one test and reporting.
+		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.end();
+	});
+});
+
+test('throwing a named function will report the to the console', function (t) {
+	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/\[Function: fooFn]/.test(stderr));
+		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.end();
+	});
+});
+
+test('throwing a anonymous function will report the function to the console', function (t) {
+	execCli('fixture/throw-anonymous-function.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.ok(/\[Function: anonymous]/.test(stderr));
+		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
 	});
 });
