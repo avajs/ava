@@ -339,6 +339,19 @@ test(async t => {
 
 *You don't have to manually call `t.end()`.*
 
+### Callback support
+
+AVA supports using `t.end` as the final callback when using node-style
+error-first callback APIs. AVA will consider any truthy value passed as
+the first argument to `t.end` to be an error.
+
+```js
+test(t => {
+	// t.end automatically checks for error as first argument
+	fs.readFile('data.txt', t.end);
+});
+```
+
 
 ## API
 
