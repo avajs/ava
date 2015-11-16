@@ -29,6 +29,7 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
+- [Observable support](#observable-support)
 - [Enhanced asserts](#enhanced-asserts)
 
 
@@ -319,7 +320,6 @@ test(function * (t) {
 
 *You don't have to manually call `t.end()`.*
 
-
 ### Async function support
 
 AVA comes with builtin support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
@@ -334,6 +334,21 @@ test(async function (t) {
 test(async t => {
 	const value = await promiseFn();
 	t.true(value);
+});
+```
+
+*You don't have to manually call `t.end()`.*
+
+### Observable support
+
+AVA comes with builtin support for [observables](https://github.com/zenparsing/es-observable).
+
+```js
+test(t => {
+	return Observable.of(1, 2, 3).map(n => {
+		t.true(n > 0);
+		return n * n;
+	});
 });
 ```
 

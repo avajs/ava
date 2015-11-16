@@ -58,7 +58,17 @@
     "tdd",
     "assert",
     "assertion",
-    "futuristic"
+    "futuristic",
+    "promise",
+    "promises",
+    "async",
+    "function",
+    "await",
+    "generator",
+    "generators",
+    "yield",
+    "observable",
+    "observables"
   ],
   "dependencies": {
     "arr-flatten": "^1.0.1",
