@@ -1190,6 +1190,18 @@ test('power-assert support', function (t) {
 	});
 });
 
+test('displays first assertion error', function (t) {
+	t.plan(3);
+
+	execCli('fixture/multiple-assert-errors.js', function (err, stdout, stderr) {
+		t.ok(err);
+
+		t.true((/t\.ok\(a === 'bar'\)/m).test(stderr));
+		// do not show the second by default
+		t.false((/t\.ok\(b === 'foo'\)/m).test(stderr));
+	});
+});
+
 test('circular references on assertions do not break process.send', function (t) {
 	t.plan(2);
 
