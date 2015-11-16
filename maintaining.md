@@ -1,5 +1,26 @@
 # Maintaining
 
+## IPC Debugging
+
+AVA makes heavy use of forked processes and Node [IPC](https://nodejs.org/api/process.html#process_process_send_message_sendhandle_callback).
+ This can create some difficulty tracking down bugs that occur in a different process from your test code.
+ The script `debug.js` will launch a single test fixture without forking the process and will log the IPC messages 
+ that would normally be sent parent process.
+
+```sh
+$ debug.js test/fixture/async-await.js
+....
+{
+    "name": "test",
+    "data": {
+        "duration": 5,
+        "title": "async function",
+        "error": {},
+        "type": "test"
+    }
+}
+....
+```
 
 ## Release process
 
