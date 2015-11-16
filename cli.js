@@ -45,11 +45,13 @@ var cli = meow({
 
 var testCount = 0;
 var fileCount = 0;
+var unhandledRejectionCount = 0;
+var uncaughtExceptionCount = 0;
 var errors = [];
 
 function error(err) {
 	console.error(err.stack);
-	process.exit(1);
+	flushIoAndExit(1);
 }
 
 function prefixTitle(file) {
@@ -116,9 +118,22 @@ function run(file) {
 	return fork(args)
 		.on('stats', stats)
 		.on('test', test)
+		.on('unhandledRejections', rejections)
+		.on('uncaughtException', uncaughtException)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
+}
+
+function rejections(data) {
+	var unhandled = data.unhandledRejections;
+	log.unhandledRejections(data.file, unhandled);
+	unhandledRejectionCount += unhandled.length;
+}
+
+function uncaughtException(data) {
+	uncaughtExceptionCount++;
+	log.uncaughtException(data.file, data.uncaughtException);
 }
 
 function sum(arr, key) {
@@ -145,21 +160,30 @@ function exit(results) {
 	var failed = sum(stats, 'failCount');
 
 	log.write();
-	log.report(passed, failed);
+	log.report(passed, failed, unhandledRejectionCount, uncaughtExceptionCount);
 	log.write();
 
 	if (failed > 0) {
 		log.errors(flatten(tests));
 	}
 
+	process.stdout.write('');
+
+	flushIoAndExit(
+		failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0
+	);
+}
+
+function flushIoAndExit(code) {
 	// TODO: figure out why this needs to be here to
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
+	process.stderr.write('');
 
-	// timeout required to correctly flush stderr on Node 0.10 Windows
+	// timeout required to correctly flush io on Node 0.10 Windows
 	setTimeout(function () {
-		process.exit(failed > 0 ? 1 : 0);
-	}, 0);
+		process.exit(code);
+	}, process.env.AVA_APPVEYOR ? 500 : 0);
 }
 
 function init(files) {

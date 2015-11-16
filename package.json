@@ -77,6 +77,7 @@
     "globby": "^3.0.1",
     "has-flag": "^1.0.0",
     "is-generator-fn": "^1.0.0",
+    "loud-rejection": "^1.2.0",
     "max-timeout": "^1.0.0",
     "meow": "^3.3.0",
     "plur": "^2.0.0",
