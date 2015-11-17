@@ -32,8 +32,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc tape test/*.js | tap-spec",
-    "test-win": "tape test/*.js | tap-spec",
+    "test": "xo && nyc tape test/*.js | tap-spec; test ${PIPESTATUS[0]} -eq 0",
+    "test-win": "tape test/*.js | tap-spec; test ${PIPESTATUS[0]} -eq 0",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
