@@ -31,7 +31,7 @@ test('rejects on error and streams output', function (t) {
 	t.plan(2);
 	fork(fixture('broken.js'))
 		.on('uncaughtException', function (data) {
-			var exception = data.uncaughtException;
+			var exception = data.exception;
 			t.ok(/no such file or directory/.test(exception.message));
 		})
 		.catch(function () {

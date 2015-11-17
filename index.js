@@ -1,13 +1,17 @@
 'use strict';
-require('./lib/babel').avaRequired();
 var setImmediate = require('set-immediate-shim');
+var relative = require('path').relative;
 var hasFlag = require('has-flag');
 var chalk = require('chalk');
-var relative = require('path').relative;
 var serializeError = require('./lib/serialize-value');
 var Runner = require('./lib/runner');
+var send = require('./lib/send');
 var log = require('./lib/logger');
+
 var runner = new Runner();
+
+// note that test files have require('ava')
+require('./lib/babel').avaRequired = true;
 
 // check if the test is being run without AVA cli
 var isForked = typeof process.send === 'function';
@@ -39,10 +43,7 @@ function test(props) {
 
 	props.error = props.error ? serializeError(props.error) : {};
 
-	process.send({
-		name: 'test',
-		data: props
-	});
+	send('test', props);
 
 	if (props.error && hasFlag('fail-fast')) {
 		isFailed = true;
@@ -58,12 +59,9 @@ function exit() {
 		}
 	});
 
-	process.send({
-		name: 'results',
-		data: {
-			stats: runner.stats,
-			tests: runner.results
-		}
+	send('results', {
+		stats: runner.stats,
+		tests: runner.results
 	});
 }
 

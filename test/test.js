@@ -1326,7 +1326,7 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 
 	execCli('fixture/immediate-0-exit.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/Never got test results/.test(stderr));
+		t.ok(/Test results were not received from/.test(stderr));
 		t.end();
 	});
 });
