@@ -32,8 +32,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc tap --timeout=150 test/*.js | tap-spec",
-    "test-win": "tap --timeout=150 test/*.js | tap-spec",
+    "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js",
+    "test-win": "tap --coverage --reporter=spec --timeout=150 test/*.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
@@ -105,7 +105,6 @@
     "nyc": "^3.2.2",
     "signal-exit": "^2.1.2",
     "tap": "^2.2.1",
-    "tap-spec": "^4.1.0",
     "xo": "*",
     "zen-observable": "^0.1.6"
   }
