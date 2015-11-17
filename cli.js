@@ -43,10 +43,10 @@ var cli = meow({
 	]
 });
 
+var rejectionCount = 0;
+var exceptionCount = 0;
 var testCount = 0;
 var fileCount = 0;
-var unhandledRejectionCount = 0;
-var uncaughtExceptionCount = 0;
 var errors = [];
 
 function error(err) {
@@ -120,22 +120,23 @@ function run(file) {
 	return fork(args)
 		.on('stats', stats)
 		.on('test', test)
-		.on('unhandledRejections', rejections)
-		.on('uncaughtException', uncaughtException)
+		.on('unhandledRejections', handleRejections)
+		.on('uncaughtException', handleExceptions)
 		.on('data', function (data) {
 			process.stdout.write(data);
 		});
 }
 
-function rejections(data) {
-	var unhandled = data.unhandledRejections;
-	log.unhandledRejections(data.file, unhandled);
-	unhandledRejectionCount += unhandled.length;
+function handleRejections(data) {
+	log.unhandledRejections(data.file, data.rejections);
+
+	rejectionCount += data.rejections.length;
 }
 
-function uncaughtException(data) {
-	uncaughtExceptionCount++;
-	log.uncaughtException(data.file, data.uncaughtException);
+function handleExceptions(data) {
+	log.uncaughtException(data.file, data.exception);
+
+	exceptionCount++;
 }
 
 function sum(arr, key) {
@@ -162,7 +163,7 @@ function exit(results) {
 	var failed = sum(stats, 'failCount');
 
 	log.write();
-	log.report(passed, failed, unhandledRejectionCount, uncaughtExceptionCount);
+	log.report(passed, failed, rejectionCount, exceptionCount);
 	log.write();
 
 	if (failed > 0) {
@@ -172,7 +173,7 @@ function exit(results) {
 	process.stdout.write('');
 
 	flushIoAndExit(
-		failed > 0 || unhandledRejectionCount > 0 || uncaughtExceptionCount > 0 ? 1 : 0
+		failed > 0 || rejectionCount > 0 || exceptionCount > 0 ? 1 : 0
 	);
 }
 

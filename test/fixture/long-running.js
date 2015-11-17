@@ -11,7 +11,11 @@ test('long running', function (t) {
 		while(Date.now() - start < 2000) {
 			//synchronously wait for 2 seconds
 		}
-		process.send({name:'cleanup-completed', data: {completed: true}});
+		process.send({
+			name: 'cleanup-completed',
+			data: {completed: true},
+			ava: true
+		});
 	}, {alwaysLast: true});
 
 	setTimeout(function () {
