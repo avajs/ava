@@ -1,6 +1,6 @@
 'use strict';
 var path = require('path');
-var test = require('tape');
+var test = require('tap').test;
 var fork = require('../lib/fork.js');
 
 function fixture(name) {
