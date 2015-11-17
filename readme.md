@@ -172,7 +172,7 @@ test(t => {
 });
 ```
 
-### Serial test execution
+### Serial-tests
 
 While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
 
@@ -182,9 +182,25 @@ test.serial(t => {
 });
 ```
 
-### Skipped tests
+### Only-tests
 
-Skipped tests are shown in the output as skipped but never run.
+Only-tests enforces only those tests to be run. This can be useful for running only a few of tests during development.
+
+```js
+test('will not be run', t => {
+	t.fail();
+	t.end();
+})
+
+test.only('will be run', t => {
+	t.pass();
+	t.end();
+});
+```
+
+### Skip-tests
+
+Skip-tests are shown in the output as skipped but never run.
 
 ```js
 test.skip('unicorn', t => {
@@ -372,6 +388,7 @@ test(t => {
 
 ### test([title], body)
 ### test.serial([title], body)
+### test.only([title], body)
 ### test.skip([title], body)
 ### test.before([title], body)
 ### test.after([title], body)
