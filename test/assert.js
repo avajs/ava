@@ -1,5 +1,5 @@
 'use strict';
-var test = require('tape');
+var test = require('tap').test;
 var assert = require('../lib/assert');
 
 test('.pass()', function (t) {

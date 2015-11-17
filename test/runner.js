@@ -1,5 +1,5 @@
 'use strict';
-var test = require('tape');
+var test = require('tap').test;
 var runner = require('../lib/runner');
 var Test = require('../lib/test');
 var Runner = runner;
