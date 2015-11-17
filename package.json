@@ -103,6 +103,7 @@
   "devDependencies": {
     "coveralls": "^2.11.4",
     "nyc": "^3.2.2",
+    "pinkie": "^2.0.1",
     "signal-exit": "^2.1.2",
     "tap": "^2.2.1",
     "tap-spec": "^4.1.0",
