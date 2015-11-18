@@ -184,7 +184,7 @@ test.serial(t => {
 
 ### Only-tests
 
-Only-tests enforces only those tests to be run. This can be useful for running only a few of tests during development.
+Only-tests enforces only those tests to be run. This can be useful for running only a few tests during development.
 
 ```js
 test('will not be run', t => {
