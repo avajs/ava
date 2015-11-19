@@ -8,6 +8,8 @@ function fixture(name) {
 }
 
 test('emits test event', function (t) {
+	t.plan(1);
+
 	fork(fixture('generators.js'))
 		.on('test', function (tt) {
 			t.equal(tt.title, 'generator function');
@@ -16,6 +18,8 @@ test('emits test event', function (t) {
 });
 
 test('resolves promise with tests info', function (t) {
+	t.plan(3);
+
 	var file = fixture('generators.js');
 
 	fork(file)

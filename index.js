@@ -25,7 +25,7 @@ if (!isForked) {
 	process.exit(1);
 }
 
-// if fail-fast is enabled, use this variable to detect,
+// if fail-fast is enabled, use this variable to detect
 // that no more tests should be logged
 var isFailed = false;
 
@@ -36,7 +36,7 @@ function test(props) {
 		return;
 	}
 
-	// don't display anything, if it's a passed hook
+	// don't display anything if it's a passed hook
 	if (!props.error && props.type !== 'test') {
 		return;
 	}
