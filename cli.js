@@ -15,27 +15,25 @@ var log = require('./lib/logger');
 // Bluebird specific
 Promise.longStackTraces();
 
-var cli = meow({
-	help: [
-		'Usage',
-		'  ava [<file|folder|glob> ...]',
-		'',
-		'Options',
-		'  --init       Add AVA to your project',
-		'  --fail-fast  Stop after first test failure',
-		'  --serial     Run tests serially',
-		'',
-		'Examples',
-		'  ava',
-		'  ava test.js test2.js',
-		'  ava test-*.js',
-		'  ava --init',
-		'  ava --init foo.js',
-		'',
-		'Default patterns when no arguments:',
-		'test.js test-*.js test/*.js'
-	]
-}, {
+var cli = meow([
+	'Usage',
+	'  ava [<file|folder|glob> ...]',
+	'',
+	'Options',
+	'  --init       Add AVA to your project',
+	'  --fail-fast  Stop after first test failure',
+	'  --serial     Run tests serially',
+	'',
+	'Examples',
+	'  ava',
+	'  ava test.js test2.js',
+	'  ava test-*.js',
+	'  ava --init',
+	'  ava --init foo.js',
+	'',
+	'Default patterns when no arguments:',
+	'test.js test-*.js test/*.js'
+], {
 	string: ['_'],
 	boolean: [
 		'fail-fast',
@@ -49,11 +47,6 @@ var testCount = 0;
 var fileCount = 0;
 var errors = [];
 
-function error(err) {
-	console.error(err.stack);
-	flushIoAndExit(1);
-}
-
 function prefixTitle(file) {
 	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
 
@@ -65,7 +58,7 @@ function prefixTitle(file) {
 
 	base += path.sep;
 
-	var prefix = path.relative(process.cwd(), file)
+	var prefix = path.relative('.', file)
 		.replace(base, '')
 		.replace(/\.spec/, '')
 		.replace(/test\-/g, '')
@@ -96,8 +89,7 @@ function test(data) {
 
 		errors.push(data);
 	} else {
-		// if there's only one file and one anonymous test
-		// don't log it
+		// don't log it if there's only one file and one anonymous test
 		if (fileCount === 1 && testCount === 1 && data.title === '[anonymous]') {
 			return;
 		}
@@ -129,13 +121,11 @@ function run(file) {
 
 function handleRejections(data) {
 	log.unhandledRejections(data.file, data.rejections);
-
 	rejectionCount += data.rejections.length;
 }
 
 function handleExceptions(data) {
 	log.uncaughtException(data.file, data.exception);
-
 	exceptionCount++;
 }
 
@@ -172,9 +162,7 @@ function exit(results) {
 
 	process.stdout.write('');
 
-	flushIoAndExit(
-		failed > 0 || rejectionCount > 0 || exceptionCount > 0 ? 1 : 0
-	);
+	flushIoAndExit(failed > 0 || rejectionCount > 0 || exceptionCount > 0 ? 1 : 0);
 }
 
 function flushIoAndExit(code) {
@@ -183,7 +171,7 @@ function flushIoAndExit(code) {
 	process.stdout.write('');
 	process.stderr.write('');
 
-	// timeout required to correctly flush io on Node 0.10 Windows
+	// timeout required to correctly flush IO on Node.js 0.10 on Windows
 	setTimeout(function () {
 		process.exit(code);
 	}, process.env.AVA_APPVEYOR ? 500 : 0);
@@ -239,7 +227,10 @@ function handlePaths(files) {
 updateNotifier({pkg: cli.pkg}).notify();
 
 if (cli.flags.init) {
-	require('ava-init')().catch(error);
+	require('ava-init')();
 } else {
-	init(cli.input).then(exit).catch(error);
+	init(cli.input).then(exit).catch(function (err) {
+		console.error(err.stack);
+		flushIoAndExit(1);
+	});
 }
