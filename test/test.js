@@ -7,7 +7,7 @@ test('run test', function (t) {
 		a.fail();
 		a.end();
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.end();
 	});
 });
@@ -25,9 +25,11 @@ test('callback is required', function (t) {
 	t.throws(function () {
 		ava();
 	}, /you must provide a callback/);
+
 	t.throws(function () {
 		ava('title');
 	}, /you must provide a callback/);
+
 	t.end();
 });
 
@@ -71,7 +73,7 @@ test('run more assertions than planned', function (t) {
 		a.pass();
 		a.pass();
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});
@@ -91,7 +93,7 @@ test('end can be used as callback without maintaining thisArg', function (t) {
 	ava(function (a) {
 		setTimeout(a.end);
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -121,7 +123,7 @@ test('handle testing of arrays', function (t) {
 		a.same(['foo', 'bar'], ['foo', 'bar']);
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -131,7 +133,7 @@ test('handle falsy testing of arrays', function (t) {
 		a.notSame(['foo', 'bar'], ['foo', 'bar', 'cat']);
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -141,7 +143,7 @@ test('handle testing of objects', function (t) {
 		a.same({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -151,7 +153,7 @@ test('handle falsy testing of objects', function (t) {
 		a.notSame({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -164,7 +166,7 @@ test('handle throws with error', function (t) {
 
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -177,7 +179,7 @@ test('handle throws without error', function (t) {
 
 		a.end();
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.end();
 	});
 });
@@ -190,7 +192,7 @@ test('handle doesNotThrow with error', function (t) {
 
 		a.end();
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});
@@ -204,7 +206,7 @@ test('handle doesNotThrow without error', function (t) {
 
 		a.end();
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -250,7 +252,7 @@ test('planned async assertion', function (t) {
 			a.pass();
 		}, 100);
 	}).run().then(function (a) {
-		t.error(a.assertError);
+		t.ifError(a.assertError);
 		t.end();
 	});
 });
@@ -262,7 +264,7 @@ test('async assertion with `.end()`', function (t) {
 			a.end();
 		}, 100);
 	}).run().then(function (a) {
-		t.error(a.assertError);
+		t.ifError(a.assertError);
 		t.end();
 	});
 });
@@ -273,7 +275,7 @@ test('more assertions than planned should emit an assertion error', function (t)
 		a.pass();
 		a.pass();
 	}).run().catch(function (err) {
-		t.true(err, err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});

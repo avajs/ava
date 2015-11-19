@@ -130,7 +130,7 @@ test('circular references on assertions do not break process.send', function (t)
 
 	execCli('fixture/circular-reference-on-assertion.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/'c'.*?'d'/.test(stderr));
+		t.true(/'c'.*?'d'/.test(stderr));
 		t.end();
 	});
 });
@@ -146,7 +146,7 @@ test('change process.cwd() to a test\'s directory', function (t) {
 
 test('babel require hook only applies to the test file', function (t) {
 	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
-		t.ok(/Unexpected token/.test(stderr));
+		t.true(/Unexpected token/.test(stderr));
 		t.ok(err);
 		t.is(err.code, 1);
 		t.end();
@@ -156,8 +156,8 @@ test('babel require hook only applies to the test file', function (t) {
 test('unhandled promises will be reported to console', function (t) {
 	execCli('fixture/loud-rejection.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/You can't handle this/.test(stderr));
-		t.ok(/1 unhandled rejection[^s]/.test(stderr));
+		t.true(/You can't handle this/.test(stderr));
+		t.true(/1 unhandled rejection[^s]/.test(stderr));
 		t.end();
 	});
 });
@@ -165,7 +165,7 @@ test('unhandled promises will be reported to console', function (t) {
 test('uncaught exception will be reported to console', function (t) {
 	execCli('fixture/uncaught-exception.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/Can't catch me!/.test(stderr));
+		t.true(/Can't catch me!/.test(stderr));
 		// TODO(jamestalmage): This should get printed, but we reject the promise (ending all tests) instead of just ending that one test and reporting.
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
@@ -175,7 +175,7 @@ test('uncaught exception will be reported to console', function (t) {
 test('throwing a named function will report the to the console', function (t) {
 	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/\[Function: fooFn]/.test(stderr));
+		t.true(/\[Function: fooFn]/.test(stderr));
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
@@ -185,7 +185,7 @@ test('throwing a named function will report the to the console', function (t) {
 test('throwing a anonymous function will report the function to the console', function (t) {
 	execCli('fixture/throw-anonymous-function.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/\[Function: anonymous]/.test(stderr));
+		t.true(/\[Function: anonymous]/.test(stderr));
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
@@ -207,9 +207,9 @@ test('titles of both passing and failing tests and AssertionErrors are displayed
 
 	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/this is a passing test/.test(stderr));
-		t.ok(/this is a failing test/.test(stderr));
-		t.ok(/AssertionError/.test(stderr));
+		t.true(/this is a passing test/.test(stderr));
+		t.true(/this is a failing test/.test(stderr));
+		t.true(/AssertionError/.test(stderr));
 		t.end();
 	});
 });
@@ -219,7 +219,7 @@ test('empty test files creates a failure with a helpful warning', function (t) {
 
 	execCli('fixture/empty.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/No tests found.*?import "ava"/.test(stderr));
+		t.true(/No tests found.*?import "ava"/.test(stderr));
 		t.end();
 	});
 });
@@ -229,7 +229,7 @@ test('test file with no tests creates a failure with a helpful warning', functio
 
 	execCli('fixture/no-tests.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/No tests/.test(stderr));
+		t.true(/No tests/.test(stderr));
 		t.end();
 	});
 });
@@ -239,7 +239,7 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 
 	execCli('fixture/immediate-0-exit.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.ok(/Test results were not received from/.test(stderr));
+		t.true(/Test results were not received from/.test(stderr));
 		t.end();
 	});
 });

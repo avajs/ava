@@ -32,7 +32,7 @@ test('handle throws with thrown observable', function (t) {
 
 		a.throws(observable);
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -49,7 +49,7 @@ test('handle throws with long running thrown observable', function (t) {
 
 		a.throws(observable, /abc/);
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -61,7 +61,7 @@ test('handle throws with completed observable', function (t) {
 		var observable = Observable.of();
 		a.throws(observable);
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});
@@ -77,7 +77,7 @@ test('handle throws with regex', function (t) {
 
 		a.throws(observable, /abc/);
 	}).run().then(function (a) {
-		t.false(a.assertionError);
+		t.notOk(a.assertionError);
 		t.end();
 	});
 });
@@ -92,7 +92,7 @@ test('handle throws with string', function (t) {
 
 		a.throws(observable, 'abc');
 	}).run().then(function (a) {
-		t.false(a.assertionError);
+		t.notOk(a.assertionError);
 		t.end();
 	});
 });
@@ -108,7 +108,7 @@ test('handle throws with false-positive observable', function (t) {
 
 		a.throws(observable);
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});
@@ -121,7 +121,7 @@ test('handle doesNotThrow with completed observable', function (t) {
 		var observable = Observable.of();
 		a.doesNotThrow(observable);
 	}).run().then(function (a) {
-		t.false(a.assertError);
+		t.notOk(a.assertError);
 		t.end();
 	});
 });
@@ -136,7 +136,7 @@ test('handle doesNotThrow with thrown observable', function (t) {
 
 		a.doesNotThrow(observable);
 	}).run().catch(function (err) {
-		t.true(err);
+		t.ok(err);
 		t.is(err.name, 'AssertionError');
 		t.end();
 	});
