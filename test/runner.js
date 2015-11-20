@@ -14,63 +14,65 @@ test('returns new instance of runner without "new"', function (t) {
 test('runner.addTest adds a new test', function (t) {
 	var runner = new Runner();
 	runner.addTest(mockTitle, noop);
-	t.is(runner.stats.testCount, 1);
-	t.is(runner.tests.concurrent.length, 1);
-	t.true(runner.tests.concurrent[0] instanceof Test);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.false(runner.tests[0].serial);
 	t.end();
 });
 
 test('runner.addSerialTest adds a new serial test', function (t) {
 	var runner = new Runner();
 	runner.addSerialTest(mockTitle, noop);
-	t.is(runner.stats.testCount, 1);
-	t.is(runner.tests.serial.length, 1);
-	t.true(runner.tests.serial[0] instanceof Test);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.true(runner.tests[0].serial);
 	t.end();
 });
 
 test('runner.addBeforeHook adds a new before hook', function (t) {
 	var runner = new Runner();
 	runner.addBeforeHook(mockTitle, noop);
-	t.is(runner.tests.before.length, 1);
-	t.true(runner.tests.before[0] instanceof Test);
-	t.is(runner.tests.before[0].type, 'hook');
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].type, 'before');
 	t.end();
 });
 
 test('runner.addAfterHook adds a new after hook', function (t) {
 	var runner = new Runner();
 	runner.addAfterHook(mockTitle, noop);
-	t.is(runner.tests.after.length, 1);
-	t.true(runner.tests.after[0] instanceof Test);
-	t.is(runner.tests.after[0].type, 'hook');
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].type, 'after');
 	t.end();
 });
 
 test('runner.addBeforeEachHook adds a new before hook', function (t) {
 	var runner = new Runner();
 	runner.addBeforeEachHook(mockTitle, noop);
-	t.is(runner.tests.beforeEach.length, 1);
-	t.is(runner.tests.beforeEach[0].title, mockTitle);
-	t.is(runner.tests.beforeEach[0].fn, noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].title, mockTitle);
+	t.is(runner.tests[0].fn, noop);
+	t.is(runner.tests[0].type, 'beforeEach');
 	t.end();
 });
 
 test('runner.addAfterEachHook adds a new after hook', function (t) {
 	var runner = new Runner();
 	runner.addAfterEachHook(mockTitle, noop);
-	t.is(runner.tests.afterEach.length, 1);
-	t.is(runner.tests.afterEach[0].title, mockTitle);
-	t.is(runner.tests.afterEach[0].fn, noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].title, mockTitle);
+	t.is(runner.tests[0].fn, noop);
+	t.is(runner.tests[0].type, 'afterEach');
 	t.end();
 });
 
 test('runner.addSkippedTest adds a new skipped test', function (t) {
 	var runner = new Runner();
 	runner.addSkippedTest(mockTitle, noop);
-	t.is(runner.tests.concurrent.length, 1);
-	t.true(runner.tests.concurrent[0] instanceof Test);
-	t.is(runner.tests.concurrent[0].skip, true);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].skipped, true);
 	t.end();
 });
 
@@ -131,11 +133,11 @@ test('test types and titles', function (t) {
 	}
 
 	var tests = [
-		{type: 'hook', title: 'pass'},
-		{type: 'eachHook', title: 'beforeEach for "test"'},
+		{type: 'before', title: 'pass'},
+		{type: 'beforeEach', title: 'beforeEach for "test"'},
 		{type: 'test', title: 'test'},
-		{type: 'eachHook', title: 'afterEach for "test"'},
-		{type: 'hook', title: 'pass'}
+		{type: 'afterEach', title: 'afterEach for "test"'},
+		{type: 'after', title: 'pass'}
 	];
 
 	runner.on('test', function (props) {
