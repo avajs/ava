@@ -91,6 +91,7 @@
     "is-generator-fn": "^1.0.0",
     "is-promise": "^2.1.0",
     "loud-rejection": "^1.2.0",
+    "map-obj": "jamestalmage/map-obj#b8ed5d356",
     "max-timeout": "^1.0.0",
     "meow": "^3.6.0",
     "object-assign": "^4.0.1",

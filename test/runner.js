@@ -57,6 +57,18 @@ test('runner.addBeforeEachHook adds a new before hook', function (t) {
 	t.end();
 });
 
+test('runner.chain().beforeEach adds a new before hook', function (t) {
+	function doThisFirst() {}
+	var runner = new Runner();
+	runner.chain().beforeEach(doThisFirst);
+	t.is(runner.tests.length, 1);
+	// TODO(jamestalmage): Make `title` logic common between Hook and Test
+	t.is(runner.tests[0].title, null);
+	t.is(runner.tests[0].fn, doThisFirst);
+	t.is(runner.tests[0].type, 'beforeEach');
+	t.end();
+});
+
 test('runner.addAfterEachHook adds a new after hook', function (t) {
 	var runner = new Runner();
 	runner.addAfterEachHook(mockTitle, noop);
@@ -70,6 +82,15 @@ test('runner.addAfterEachHook adds a new after hook', function (t) {
 test('runner.addSkippedTest adds a new skipped test', function (t) {
 	var runner = new Runner();
 	runner.addSkippedTest(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].skipped, true);
+	t.end();
+});
+
+test('runner.chain().skip adds a new skipped test', function (t) {
+	var runner = new Runner();
+	runner.chain().skip(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
 	t.is(runner.tests[0].skipped, true);
