@@ -84,6 +84,7 @@ test('runner.skip adds a new skipped test', function (t) {
 	runner.skip(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].title, mockTitle);
 	t.is(runner.tests[0].skipped, true);
 	t.end();
 });
@@ -91,9 +92,9 @@ test('runner.skip adds a new skipped test', function (t) {
 test('runner.skip - title is optional', function (t) {
 	var runner = new Runner();
 	runner.skip(noop);
-	// TODO(jamestalmage): Actually test the title
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].title, '[anonymous]');
 	t.is(runner.tests[0].skipped, true);
 	t.end();
 });
