@@ -173,6 +173,51 @@ test('run serial tests before concurrent ones', function (t) {
 	});
 });
 
+test('anything can be skipped', function (t) {
+	var runner = new Runner();
+	var arr = [];
+
+	function pusher(title) {
+		return function (a) {
+			arr.push(title);
+			a.end();
+		};
+	}
+
+	runner.after(pusher('after'));
+	runner.after.skip(pusher('after.skip'));
+
+	runner.afterEach(pusher('afterEach'));
+	runner.afterEach.skip(pusher('afterEach.skip'));
+
+	runner.before(pusher('before'));
+	runner.before.skip(pusher('before.skip'));
+
+	runner.beforeEach(pusher('beforeEach'));
+	runner.beforeEach.skip(pusher('beforeEach.skip'));
+
+	runner.test(pusher('concurrent'));
+	runner.test.skip(pusher('concurrent.skip'));
+
+	runner.serial(pusher('serial'));
+	runner.serial.skip(pusher('serial.skip'));
+
+	runner.run().then(function () {
+		// Note that afterEach and beforeEach run twice because their are two actual tests - "serial" and "concurrent"
+		t.same(arr, [
+			'before',
+			'beforeEach',
+			'serial',
+			'afterEach',
+			'beforeEach',
+			'concurrent',
+			'afterEach',
+			'after'
+		]);
+		t.end();
+	});
+});
+
 test('test types and titles', function (t) {
 	t.plan(10);
 
