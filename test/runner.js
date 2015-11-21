@@ -16,7 +16,7 @@ test('runner.test adds a new test', function (t) {
 	runner.test(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
-	t.false(runner.tests[0].serial);
+	t.false(runner.tests[0].metadata.serial);
 	t.end();
 });
 
@@ -25,7 +25,7 @@ test('runner.serial adds a new serial test', function (t) {
 	runner.serial(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
-	t.true(runner.tests[0].serial);
+	t.true(runner.tests[0].metadata.serial);
 	t.end();
 });
 
@@ -34,7 +34,7 @@ test('runner.before adds a new before hook', function (t) {
 	runner.before(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
-	t.is(runner.tests[0].type, 'before');
+	t.is(runner.tests[0].metadata.type, 'before');
 	t.end();
 });
 
@@ -43,7 +43,7 @@ test('runner.after adds a new after hook', function (t) {
 	runner.after(mockTitle, noop);
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
-	t.is(runner.tests[0].type, 'after');
+	t.is(runner.tests[0].metadata.type, 'after');
 	t.end();
 });
 
@@ -53,7 +53,7 @@ test('runner.beforeEach adds a new beforeEach hook', function (t) {
 	t.is(runner.tests.length, 1);
 	t.is(runner.tests[0].title, mockTitle);
 	t.is(runner.tests[0].fn, noop);
-	t.is(runner.tests[0].type, 'beforeEach');
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
 	t.end();
 });
 
@@ -65,7 +65,7 @@ test('runner.beforeEach title is optional', function (t) {
 	// TODO(jamestalmage): Make `title` logic common between Hook and Test
 	t.is(runner.tests[0].title, null);
 	t.is(runner.tests[0].fn, doThisFirst);
-	t.is(runner.tests[0].type, 'beforeEach');
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
 	t.end();
 });
 
@@ -75,7 +75,7 @@ test('runner.afterEach adds a new afterEach hook', function (t) {
 	t.is(runner.tests.length, 1);
 	t.is(runner.tests[0].title, mockTitle);
 	t.is(runner.tests[0].fn, noop);
-	t.is(runner.tests[0].type, 'afterEach');
+	t.is(runner.tests[0].metadata.type, 'afterEach');
 	t.end();
 });
 
@@ -85,7 +85,7 @@ test('runner.skip adds a new skipped test', function (t) {
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
 	t.is(runner.tests[0].title, mockTitle);
-	t.is(runner.tests[0].skipped, true);
+	t.is(runner.tests[0].metadata.skipped, true);
 	t.end();
 });
 
@@ -95,7 +95,7 @@ test('runner.skip - title is optional', function (t) {
 	t.is(runner.tests.length, 1);
 	t.true(runner.tests[0] instanceof Test);
 	t.is(runner.tests[0].title, '[anonymous]');
-	t.is(runner.tests[0].skipped, true);
+	t.is(runner.tests[0].metadata.skipped, true);
 	t.end();
 });
 
@@ -103,10 +103,10 @@ test('methods are chainable: serial.skip', function (t) {
 	var runner = new Runner();
 	runner.serial.skip(noop);
 	t.is(runner.tests.length, 1);
-	t.is(runner.tests[0].type, 'test');
-	t.true(runner.tests[0].serial);
-	t.false(runner.tests[0].exclusive);
-	t.true(runner.tests[0].skipped);
+	t.is(runner.tests[0].metadata.type, 'test');
+	t.true(runner.tests[0].metadata.serial);
+	t.false(runner.tests[0].metadata.exclusive);
+	t.true(runner.tests[0].metadata.skipped);
 	t.end();
 });
 
@@ -114,10 +114,10 @@ test('methods are chainable: beforeEach.skip', function (t) {
 	var runner = new Runner();
 	runner.beforeEach.skip(noop);
 	t.is(runner.tests.length, 1);
-	t.is(runner.tests[0].type, 'beforeEach');
-	t.false(runner.tests[0].serial);
-	t.false(runner.tests[0].exclusive);
-	t.true(runner.tests[0].skipped);
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
+	t.false(runner.tests[0].metadata.serial);
+	t.false(runner.tests[0].metadata.exclusive);
+	t.true(runner.tests[0].metadata.skipped);
 	t.end();
 });
 
@@ -125,10 +125,10 @@ test('methods are chainable: serial.only', function (t) {
 	var runner = new Runner();
 	runner.serial.only(noop);
 	t.is(runner.tests.length, 1);
-	t.is(runner.tests[0].type, 'test');
-	t.true(runner.tests[0].serial);
-	t.true(runner.tests[0].exclusive);
-	t.false(runner.tests[0].skipped);
+	t.is(runner.tests[0].metadata.type, 'test');
+	t.true(runner.tests[0].metadata.serial);
+	t.true(runner.tests[0].metadata.exclusive);
+	t.false(runner.tests[0].metadata.skipped);
 	t.end();
 });
 
