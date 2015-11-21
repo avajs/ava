@@ -98,6 +98,39 @@ test('runner.skip - title is optional', function (t) {
 	t.end();
 });
 
+test('methods are chainable: serial.skip', function (t) {
+	var runner = new Runner();
+	runner.serial.skip(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].type, 'test');
+	t.true(runner.tests[0].serial);
+	t.false(runner.tests[0].exclusive);
+	t.true(runner.tests[0].skipped);
+	t.end();
+});
+
+test('methods are chainable: beforeEach.skip', function (t) {
+	var runner = new Runner();
+	runner.beforeEach.skip(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].type, 'beforeEach');
+	t.false(runner.tests[0].serial);
+	t.false(runner.tests[0].exclusive);
+	t.true(runner.tests[0].skipped);
+	t.end();
+});
+
+test('methods are chainable: serial.only', function (t) {
+	var runner = new Runner();
+	runner.serial.only(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].type, 'test');
+	t.true(runner.tests[0].serial);
+	t.true(runner.tests[0].exclusive);
+	t.false(runner.tests[0].skipped);
+	t.end();
+});
+
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
