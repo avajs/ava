@@ -70,4 +70,4 @@ setImmediate(function () {
 	runner.run().then(exit);
 });
 
-module.exports = runner.chain();
+module.exports = runner.test;
