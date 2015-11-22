@@ -4,5 +4,4 @@ test(t => {
 	const a = 'foo';
 
 	t.ok(a === 'bar');
-	t.end();
 });

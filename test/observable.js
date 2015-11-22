@@ -1,10 +1,22 @@
 'use strict';
 var test = require('tap').test;
-var ava = require('../lib/test');
+var _ava = require('../lib/test');
 var Observable = require('./fixture/observable');
 
+function ava(fn) {
+	var a = _ava(fn);
+	a.metadata = {async: false};
+	return a;
+}
+
+ava.async = function (fn) {
+	var a = _ava(fn);
+	a.metadata = {async: true};
+	return a;
+};
+
 test('plan assertions', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(2);
 
 		var observable = Observable.of();
@@ -23,7 +35,7 @@ test('plan assertions', function (t) {
 });
 
 test('handle throws with thrown observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {
@@ -38,7 +50,7 @@ test('handle throws with thrown observable', function (t) {
 });
 
 test('handle throws with long running thrown observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {
@@ -55,7 +67,7 @@ test('handle throws with long running thrown observable', function (t) {
 });
 
 test('handle throws with completed observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = Observable.of();
@@ -68,7 +80,7 @@ test('handle throws with completed observable', function (t) {
 });
 
 test('handle throws with regex', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {
@@ -83,7 +95,7 @@ test('handle throws with regex', function (t) {
 });
 
 test('handle throws with string', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {
@@ -98,7 +110,7 @@ test('handle throws with string', function (t) {
 });
 
 test('handle throws with false-positive observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {
@@ -115,7 +127,7 @@ test('handle throws with false-positive observable', function (t) {
 });
 
 test('handle doesNotThrow with completed observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = Observable.of();
@@ -127,7 +139,7 @@ test('handle doesNotThrow with completed observable', function (t) {
 });
 
 test('handle doesNotThrow with thrown observable', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		var observable = new Observable(function (observer) {

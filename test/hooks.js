@@ -10,14 +10,12 @@ test('before', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.before(function (a) {
+	runner.before(function () {
 		arr.push('a');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr.push('b');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -26,22 +24,22 @@ test('before', function (t) {
 });
 
 test('after', function (t) {
-	t.plan(1);
+	t.plan(3);
 
 	var runner = new Runner();
 	var arr = [];
 
-	runner.after(function (a) {
+	runner.after(function () {
 		arr.push('b');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr.push('a');
-		a.end();
 	});
 
 	runner.run().then(function () {
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.failCount, 0);
 		t.same(arr, ['a', 'b']);
 		t.end();
 	});
@@ -53,9 +51,8 @@ test('stop if before hooks failed', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.before(function (a) {
+	runner.before(function () {
 		arr.push('a');
-		a.end();
 	});
 
 	runner.before(function () {
@@ -81,24 +78,20 @@ test('before each with concurrent tests', function (t) {
 	var i = 0;
 	var k = 0;
 
-	runner.beforeEach(function (a) {
+	runner.beforeEach(function () {
 		arr[i++].push('a');
-		a.end();
 	});
 
-	runner.beforeEach(function (a) {
+	runner.beforeEach(function () {
 		arr[k++].push('b');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr[0].push('c');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr[1].push('d');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -113,24 +106,20 @@ test('before each with serial tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.beforeEach(function (a) {
+	runner.beforeEach(function () {
 		arr.push('a');
-		a.end();
 	});
 
-	runner.beforeEach(function (a) {
+	runner.beforeEach(function () {
 		arr.push('b');
-		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(function () {
 		arr.push('c');
-		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(function () {
 		arr.push('d');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -148,13 +137,11 @@ test('fail if beforeEach hook fails', function (t) {
 	runner.beforeEach(function (a) {
 		arr.push('a');
 		a.fail();
-		a.end();
 	});
 
 	runner.test(function (a) {
 		arr.push('b');
 		a.pass();
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -172,24 +159,20 @@ test('after each with concurrent tests', function (t) {
 	var i = 0;
 	var k = 0;
 
-	runner.afterEach(function (a) {
+	runner.afterEach(function () {
 		arr[i++].push('a');
-		a.end();
 	});
 
-	runner.afterEach(function (a) {
+	runner.afterEach(function () {
 		arr[k++].push('b');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr[0].push('c');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr[1].push('d');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -204,24 +187,20 @@ test('after each with serial tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.afterEach(function (a) {
+	runner.afterEach(function () {
 		arr.push('a');
-		a.end();
 	});
 
-	runner.afterEach(function (a) {
+	runner.afterEach(function () {
 		arr.push('b');
-		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(function () {
 		arr.push('c');
-		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(function () {
 		arr.push('d');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -236,29 +215,24 @@ test('ensure hooks run only around tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.beforeEach(function (a) {
+	runner.beforeEach(function () {
 		arr.push('beforeEach');
-		a.end();
 	});
 
-	runner.before(function (a) {
+	runner.before(function () {
 		arr.push('before');
-		a.end();
 	});
 
-	runner.afterEach(function (a) {
+	runner.afterEach(function () {
 		arr.push('afterEach');
-		a.end();
 	});
 
-	runner.after(function (a) {
+	runner.after(function () {
 		arr.push('after');
-		a.end();
 	});
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr.push('test');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -275,29 +249,24 @@ test('shared context', function (t) {
 	runner.before(function (a) {
 		a.is(a.context, undefined);
 		a.context = {arr: []};
-		a.end();
 	});
 
 	runner.after(function (a) {
 		a.is(a.context, undefined);
-		a.end();
 	});
 
 	runner.beforeEach(function (a) {
 		a.context.arr = ['a'];
-		a.end();
 	});
 
 	runner.test(function (a) {
 		a.context.arr.push('b');
 		a.same(a.context.arr, ['a', 'b']);
-		a.end();
 	});
 
 	runner.afterEach(function (a) {
 		a.context.arr.push('c');
 		a.same(a.context.arr, ['a', 'b', 'c']);
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -313,12 +282,10 @@ test('shared context of any type', function (t) {
 
 	runner.beforeEach(function (a) {
 		a.context = 'foo';
-		a.end();
 	});
 
 	runner.test(function (a) {
 		a.is(a.context, 'foo');
-		a.end();
 	});
 
 	runner.run().then(function () {

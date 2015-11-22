@@ -7,5 +7,4 @@ test.afterEach(pass);
 test(pass);
 
 function pass(t) {
-	t.end();
 }

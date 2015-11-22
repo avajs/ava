@@ -1,6 +1,18 @@
 'use strict';
 var test = require('tap').test;
-var ava = require('../lib/test');
+var _ava = require('../lib/test');
+
+function ava() {
+	var t = _ava.apply(null, arguments);
+	t.metadata = {async: false};
+	return t;
+}
+
+ava.async = function () {
+	var t = _ava.apply(null, arguments);
+	t.metadata = {async: true};
+	return t;
+};
 
 test('run test', function (t) {
 	ava('foo', function (a) {
@@ -14,7 +26,7 @@ test('run test', function (t) {
 
 test('title is optional', function (t) {
 	ava(function (a) {
-		a.end();
+		a.pass();
 	}).run().then(function (a) {
 		t.is(a.title, '[anonymous]');
 		t.end();
@@ -35,7 +47,7 @@ test('callback is required', function (t) {
 
 test('infer name from function', function (t) {
 	ava(function foo(a) {
-		a.end();
+		a.pass();
 	}).run().then(function (a) {
 		t.is(a.title, 'foo');
 		t.end();
@@ -47,7 +59,6 @@ test('multiple asserts', function (t) {
 		a.pass();
 		a.pass();
 		a.pass();
-		a.end();
 	}).run().then(function (a) {
 		t.is(a.assertCount, 3);
 		t.end();
@@ -90,7 +101,7 @@ test('handle non-assertion errors', function (t) {
 });
 
 test('end can be used as callback without maintaining thisArg', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		setTimeout(a.end);
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
@@ -121,7 +132,6 @@ test('handle non-assertion errors even when planned', function (t) {
 test('handle testing of arrays', function (t) {
 	ava(function (a) {
 		a.same(['foo', 'bar'], ['foo', 'bar']);
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -131,7 +141,6 @@ test('handle testing of arrays', function (t) {
 test('handle falsy testing of arrays', function (t) {
 	ava(function (a) {
 		a.notSame(['foo', 'bar'], ['foo', 'bar', 'cat']);
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -141,7 +150,6 @@ test('handle falsy testing of arrays', function (t) {
 test('handle testing of objects', function (t) {
 	ava(function (a) {
 		a.same({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -151,7 +159,6 @@ test('handle testing of objects', function (t) {
 test('handle falsy testing of objects', function (t) {
 	ava(function (a) {
 		a.notSame({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -163,8 +170,6 @@ test('handle throws with error', function (t) {
 		a.throws(function () {
 			throw new Error('foo');
 		});
-
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -176,8 +181,6 @@ test('handle throws without error', function (t) {
 		a.throws(function () {
 			return;
 		});
-
-		a.end();
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.end();
@@ -189,8 +192,6 @@ test('handle doesNotThrow with error', function (t) {
 		a.doesNotThrow(function () {
 			throw new Error('foo');
 		});
-
-		a.end();
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.is(err.name, 'AssertionError');
@@ -203,8 +204,6 @@ test('handle doesNotThrow without error', function (t) {
 		a.doesNotThrow(function () {
 			return;
 		});
-
-		a.end();
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -227,7 +226,7 @@ test('run functions after last planned assertion', function (t) {
 test('run async functions after last planned assertion', function (t) {
 	var i = 0;
 
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		function foo(cb) {
@@ -245,7 +244,7 @@ test('run async functions after last planned assertion', function (t) {
 });
 
 test('planned async assertion', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		setTimeout(function () {
@@ -258,7 +257,7 @@ test('planned async assertion', function (t) {
 });
 
 test('async assertion with `.end()`', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		setTimeout(function () {
 			a.pass();
 			a.end();
@@ -282,7 +281,7 @@ test('more assertions than planned should emit an assertion error', function (t)
 });
 
 test('record test duration', function (t) {
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		setTimeout(function () {
@@ -297,7 +296,7 @@ test('record test duration', function (t) {
 test('wait for test to end', function (t) {
 	var avaTest;
 
-	ava(function (a) {
+	ava.async(function (a) {
 		a.plan(1);
 
 		avaTest = a;
