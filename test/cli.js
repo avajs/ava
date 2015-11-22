@@ -166,6 +166,8 @@ test('uncaught exception will be reported to console', function (t) {
 	execCli('fixture/uncaught-exception.js', function (err, stdout, stderr) {
 		t.ok(err);
 		t.true(/Can't catch me!/.test(stderr));
+		t.match(stderr, /^.*?at.*?bar\b.*uncaught-exception.js:12.*$/m);
+		t.match(stderr, /^.*?at.*?foo\b.*uncaught-exception.js:8.*$/m);
 		// TODO(jamestalmage): This should get printed, but we reject the promise (ending all tests) instead of just ending that one test and reporting.
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
