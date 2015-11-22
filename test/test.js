@@ -338,3 +338,16 @@ test('throwing undefined will be converted to string "undefined"', function (t) 
 		t.end();
 	});
 });
+
+test('skipped assertions count towards the plan', function (t) {
+	ava(function (a) {
+		a.plan(2);
+		a.pass();
+		a.skip.fail();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 2);
+		t.is(a.assertCount, 2);
+		t.end();
+	});
+});
