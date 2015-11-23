@@ -312,3 +312,33 @@ test('wait for test to end', function (t) {
 		avaTest.pass();
 	}, 1234);
 });
+
+test('fails with the first assertError', function (t) {
+	ava(function (a) {
+		a.plan(2);
+		a.is(1, 2);
+		a.is(3, 4);
+	}).run().catch(function (err) {
+		t.is(err.actual, 1);
+		t.is(err.expected, 2);
+		t.end();
+	});
+});
+
+test('fails with thrown falsy value', function (t) {
+	ava(function () {
+		throw 0; // eslint-disable-line no-throw-literal
+	}).run().catch(function (err) {
+		t.equal(err, 0);
+		t.end();
+	});
+});
+
+test('throwing undefined will be converted to string "undefined"', function (t) {
+	ava(function () {
+		throw undefined; // eslint-disable-line no-throw-literal
+	}).run().catch(function (err) {
+		t.equal(err, 'undefined');
+		t.end();
+	});
+});
