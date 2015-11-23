@@ -273,13 +273,13 @@ test('shared context', function (t) {
 	var runner = new Runner();
 
 	runner.addBeforeHook(function (a) {
-		a.is(a.context.arr, undefined);
-		a.context.arr = [];
+		a.is(a.context, undefined);
+		a.context = {arr: []};
 		a.end();
 	});
 
 	runner.addAfterHook(function (a) {
-		a.is(a.context.arr, undefined);
+		a.is(a.context, undefined);
 		a.end();
 	});
 
