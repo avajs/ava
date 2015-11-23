@@ -201,12 +201,13 @@ function init(files) {
 function handlePaths(files) {
 	if (files.length === 0) {
 		files = [
-			'!node_modules',
 			'test.js',
 			'test-*.js',
 			'test/*.js'
 		];
 	}
+
+	files.push('!**/node_modules/**');
 
 	// convert pinkie-promise to Bluebird promise
 	files = Promise.resolve(globby(files));
@@ -221,7 +222,7 @@ function handlePaths(files) {
 		})
 		.then(flatten)
 		.filter(function (file) {
-			return file.indexOf('node_modules') === -1 && path.extname(file) === '.js' && path.basename(file)[0] !== '_';
+			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
 		});
 }
 
