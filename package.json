@@ -25,6 +25,11 @@
       "name": "Vadim Demedes",
       "email": "vdemedes@gmail.com",
       "url": "github.com/vdemedes"
+    },
+    {
+      "name": "James Talmage",
+      "email": "james@talmage.io",
+      "url": "github.com/jamestalmage"
     }
   ],
   "bin": "cli.js",
