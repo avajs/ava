@@ -433,6 +433,8 @@ test(t => {
 });
 ```
 
+If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
+
 ### .pass([message])
 
 Passing assertion.
