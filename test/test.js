@@ -313,7 +313,7 @@ test('wait for test to end', function (t) {
 	}, 1234);
 });
 
-test('promise is rejected with the first assertError', function (t) {
+test('fails with the first assertError', function (t) {
 	ava(function (a) {
 		a.plan(2);
 		a.is(1, 2);
@@ -325,7 +325,7 @@ test('promise is rejected with the first assertError', function (t) {
 	});
 });
 
-test('promise is rejected with thrown falsie value', function (t) {
+test('fails with thrown falsie value', function (t) {
 	ava(function () {
 		throw 0; // eslint-disable-line no-throw-literal
 	}).run().catch(function (err) {
