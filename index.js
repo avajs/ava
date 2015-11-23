@@ -3,12 +3,25 @@ var setImmediate = require('set-immediate-shim');
 var relative = require('path').relative;
 var hasFlag = require('has-flag');
 var chalk = require('chalk');
+var join = require('path').join;
 var serializeError = require('./lib/serialize-value');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
 var log = require('./lib/logger');
 
 var runner = new Runner();
+var xdgBasedir = require('xdg-basedir');
+var cache = require('cacha')(join(xdgBasedir.cache, 'ava'));
+var Configstore = require('configstore');
+var config = new Configstore('ava', {
+	lastCacheClean: Date.now()
+});
+var WEEK = 7 * 24 * 60 * 60 * 1000;
+
+if (Date.now() - config.get('lastCacheClean') > WEEK) {
+	config.set('lastCacheClean', Date.now());
+	cache.clean();
+}
 
 // note that test files have require('ava')
 require('./lib/babel').avaRequired = true;
