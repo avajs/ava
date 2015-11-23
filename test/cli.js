@@ -202,6 +202,16 @@ test('stack traces for exceptions are corrected using a source map', function (t
 	});
 });
 
+test('stack traces for exceptions are corrected using a source map, found via a pragma', function (t) {
+	execCli('fixture/source-map-pragma-exception.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Can't catch me!/.test(stderr));
+		t.match(stderr, /^.*?at.*?bar\b.*source-with-source-map-pragma.js:8.*$/m);
+		t.match(stderr, /^.*?at.*?foo\b.*source-with-source-map-pragma.js:4.*$/m);
+		t.end();
+	});
+});
+
 test('absolute paths in CLI', function (t) {
 	t.plan(2);
 
