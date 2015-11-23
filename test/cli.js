@@ -166,8 +166,6 @@ test('uncaught exception will be reported to console', function (t) {
 	execCli('fixture/uncaught-exception.js', function (err, stdout, stderr) {
 		t.ok(err);
 		t.true(/Can't catch me!/.test(stderr));
-		t.match(stderr, /^.*?at.*?bar\b.*uncaught-exception.js:12.*$/m);
-		t.match(stderr, /^.*?at.*?foo\b.*uncaught-exception.js:8.*$/m);
 		// TODO(jamestalmage): This should get printed, but we reject the promise (ending all tests) instead of just ending that one test and reporting.
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
@@ -190,6 +188,16 @@ test('throwing a anonymous function will report the function to the console', fu
 		t.true(/\[Function: anonymous]/.test(stderr));
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.end();
+	});
+});
+
+test('stack traces for exceptions are corrected using a source map', function (t) {
+	execCli('fixture/source-map-exception.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Can't catch me!/.test(stderr));
+		t.match(stderr, /^.*?at.*?bar\b.*source-map-exception.js:12.*$/m);
+		t.match(stderr, /^.*?at.*?foo\b.*source-map-exception.js:8.*$/m);
 		t.end();
 	});
 });
