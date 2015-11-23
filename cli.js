@@ -208,11 +208,6 @@ function handlePaths(files) {
 		];
 	}
 
-	// ignore all possible test files in node_modules folder
-	files = files.filter(function (file) {
-		return (file.indexOf('node_modules') === -1);
-	});
-
 	// convert pinkie-promise to Bluebird promise
 	files = Promise.resolve(globby(files));
 
@@ -226,7 +221,7 @@ function handlePaths(files) {
 		})
 		.then(flatten)
 		.filter(function (file) {
-			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
+			return file.indexOf('node_modules') === -1 && path.extname(file) === '.js' && path.basename(file)[0] !== '_';
 		});
 }
 
