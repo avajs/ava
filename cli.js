@@ -201,11 +201,17 @@ function init(files) {
 function handlePaths(files) {
 	if (files.length === 0) {
 		files = [
+			'!node_modules',
 			'test.js',
 			'test-*.js',
 			'test/*.js'
 		];
 	}
+
+	// ignore all possible test files in node_modules folder
+	files = files.filter(function (file) {
+		return (file.indexOf('node_modules') === -1);
+	});
 
 	// convert pinkie-promise to Bluebird promise
 	files = Promise.resolve(globby(files));
