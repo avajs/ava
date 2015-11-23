@@ -38,8 +38,9 @@
   },
   "scripts": {
     "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js",
-    "test-win": "tap --coverage --reporter=spec --timeout=150 test/*.js",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "test-win": "tap --reporter=spec --timeout=150 test/*.js",
+    "coveralls": "tap --coverage-report=text-lcov | coveralls",
+    "coverage": "tap --coverage-report=lcov"
   },
   "files": [
     "index.js",
@@ -75,6 +76,14 @@
     "observable",
     "observables"
   ],
+  "config": {
+    "nyc": {
+      "exclude": [
+        "node_modules[/\\\\]",
+        "test[/\\\\]"
+      ]
+    }
+  },
   "dependencies": {
     "arr-flatten": "^1.0.1",
     "ava-init": "^0.1.0",
@@ -112,7 +121,6 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
-    "nyc": "^3.2.2",
     "signal-exit": "^2.1.2",
     "tap": "^2.2.1",
     "xo": "*",
