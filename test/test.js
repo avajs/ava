@@ -325,7 +325,7 @@ test('fails with the first assertError', function (t) {
 	});
 });
 
-test('fails with thrown falsie value', function (t) {
+test('fails with thrown falsy value', function (t) {
 	ava(function () {
 		throw 0; // eslint-disable-line no-throw-literal
 	}).run().catch(function (err) {
