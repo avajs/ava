@@ -39,7 +39,6 @@
   "scripts": {
     "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js",
     "test-win": "tap --reporter=spec --timeout=150 test/*.js",
-    "coveralls": "tap --coverage-report=text-lcov | coveralls",
     "coverage": "tap --coverage-report=lcov"
   },
   "files": [
