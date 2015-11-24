@@ -274,6 +274,20 @@ test(t => {
 });
 ```
 
+### Chaining test modifiers
+
+You can chain test modifiers together in the following ways:
+  
+```js
+test.before.skip([title], testFn);
+test.skip.after(....);
+test.serial.only(...);
+test.only.serial(...);
+```
+
+This is especially helpful temporarily using `skip` or `only` on a test, without losing the information
+ and behavior the other modifiers provide.
+
 ### Custom assertion module
 
 You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
