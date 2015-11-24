@@ -9,7 +9,10 @@ function execCli(args, cb) {
 		args = [args];
 	}
 
-	childProcess.execFile(process.execPath, ['../cli.js'].concat(args), {cwd: __dirname}, cb);
+	childProcess.execFile(process.execPath, ['../cli.js'].concat(args), {
+		cwd: __dirname,
+		env: {}
+	}, cb);
 }
 
 test('ES2015 support', function (t) {
