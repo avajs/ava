@@ -313,7 +313,7 @@ You can also use your own local Babel version:
 
 #### Transpiling Dependent Modules
 
-AVA currently only transpiles the tests that you ask it to run.  *It will not transpile modules that you ```import``` from outside of the test (that also may happen to be written in ES2015 and/or use the ES2015 module syntax).*  While there are valid reasons for taking this approach, it may not be what you expect!
+AVA currently only transpiles the tests that you ask it to run.  *It will not transpile modules that you ```import``` from outside of the test.*  While there are valid reasons for taking this approach, it may not be what you expect!
 
 As a simple workaround, you can use [Babel's require hook](https://babeljs.io/docs/usage/require/) in order to do on-the-fly transpiling of modules that are subsequently required.  Because AVA supports ES6 module syntax, you can use it to import the require hook itself:
 
