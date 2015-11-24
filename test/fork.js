@@ -59,3 +59,10 @@ test('exit after tests are finished', function (t) {
 			cleanupCompleted = event.completed;
 		});
 });
+
+test('WIP: forked tests support all ES2015 polyfills', function (t) {
+	fork(fixture('es2015-polyfills.js')).then(function (info) {
+		t.is(info.stats.failCount, 0);
+		t.end();
+	});
+});
