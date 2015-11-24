@@ -245,3 +245,11 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 		t.end();
 	});
 });
+
+test('test file in node_modules is ignored', function (t) {
+	execCli('fixture/node_modules/test.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Couldn't find any files to test/.test(stderr));
+		t.end();
+	});
+});

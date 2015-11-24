@@ -1,3 +1,4 @@
 node_modules
+!test/fixture/node_modules
 .nyc_output
 coverage
