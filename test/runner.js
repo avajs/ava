@@ -204,7 +204,7 @@ test('anything can be skipped', function (t) {
 	runner.serial.skip(pusher('serial.skip'));
 
 	runner.run().then(function () {
-		// Note that afterEach and beforeEach run twice because their are two actual tests - "serial" and "concurrent"
+		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
 		t.same(arr, [
 			'before',
 			'beforeEach',
