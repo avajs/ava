@@ -10,12 +10,12 @@ test('before', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addBeforeHook(function (a) {
+	runner.before(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('b');
 		a.end();
 	});
@@ -31,12 +31,12 @@ test('after', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addAfterHook(function (a) {
+	runner.after(function (a) {
 		arr.push('b');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('a');
 		a.end();
 	});
@@ -53,16 +53,16 @@ test('stop if before hooks failed', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addBeforeHook(function (a) {
+	runner.before(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addBeforeHook(function () {
+	runner.before(function () {
 		throw new Error('something went wrong');
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('b');
 		a.end();
 	});
@@ -81,22 +81,22 @@ test('before each with concurrent tests', function (t) {
 	var i = 0;
 	var k = 0;
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr[i++].push('a');
 		a.end();
 	});
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr[k++].push('b');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr[0].push('c');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr[1].push('d');
 		a.end();
 	});
@@ -113,22 +113,22 @@ test('before each with serial tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr.push('b');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('c');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('d');
 		a.end();
 	});
@@ -145,13 +145,13 @@ test('fail if beforeEach hook fails', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr.push('a');
 		a.fail();
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('b');
 		a.pass();
 		a.end();
@@ -172,22 +172,22 @@ test('after each with concurrent tests', function (t) {
 	var i = 0;
 	var k = 0;
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		arr[i++].push('a');
 		a.end();
 	});
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		arr[k++].push('b');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr[0].push('c');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr[1].push('d');
 		a.end();
 	});
@@ -204,22 +204,22 @@ test('after each with serial tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		arr.push('b');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('c');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('d');
 		a.end();
 	});
@@ -236,27 +236,27 @@ test('ensure hooks run only around tests', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		arr.push('beforeEach');
 		a.end();
 	});
 
-	runner.addBeforeHook(function (a) {
+	runner.before(function (a) {
 		arr.push('before');
 		a.end();
 	});
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		arr.push('afterEach');
 		a.end();
 	});
 
-	runner.addAfterHook(function (a) {
+	runner.after(function (a) {
 		arr.push('after');
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('test');
 		a.end();
 	});
@@ -272,29 +272,29 @@ test('shared context', function (t) {
 
 	var runner = new Runner();
 
-	runner.addBeforeHook(function (a) {
+	runner.before(function (a) {
 		a.is(a.context, undefined);
 		a.context = {arr: []};
 		a.end();
 	});
 
-	runner.addAfterHook(function (a) {
+	runner.after(function (a) {
 		a.is(a.context, undefined);
 		a.end();
 	});
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		a.context.arr = ['a'];
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		a.context.arr.push('b');
 		a.same(a.context.arr, ['a', 'b']);
 		a.end();
 	});
 
-	runner.addAfterEachHook(function (a) {
+	runner.afterEach(function (a) {
 		a.context.arr.push('c');
 		a.same(a.context.arr, ['a', 'b', 'c']);
 		a.end();
@@ -311,12 +311,12 @@ test('shared context of any type', function (t) {
 
 	var runner = new Runner();
 
-	runner.addBeforeEachHook(function (a) {
+	runner.beforeEach(function (a) {
 		a.context = 'foo';
 		a.end();
 	});
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		a.is(a.context, 'foo');
 		a.end();
 	});

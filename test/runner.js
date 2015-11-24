@@ -11,73 +11,131 @@ test('returns new instance of runner without "new"', function (t) {
 	t.end();
 });
 
-test('runner.addTest adds a new test', function (t) {
+test('runner.test adds a new test', function (t) {
 	var runner = new Runner();
-	runner.addTest(mockTitle, noop);
-	t.is(runner.stats.testCount, 1);
-	t.is(runner.tests.concurrent.length, 1);
-	t.true(runner.tests.concurrent[0] instanceof Test);
+	runner.test(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.false(runner.tests[0].metadata.serial);
 	t.end();
 });
 
-test('runner.addSerialTest adds a new serial test', function (t) {
+test('runner.serial adds a new serial test', function (t) {
 	var runner = new Runner();
-	runner.addSerialTest(mockTitle, noop);
-	t.is(runner.stats.testCount, 1);
-	t.is(runner.tests.serial.length, 1);
-	t.true(runner.tests.serial[0] instanceof Test);
+	runner.serial(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.true(runner.tests[0].metadata.serial);
 	t.end();
 });
 
-test('runner.addBeforeHook adds a new before hook', function (t) {
+test('runner.before adds a new before hook', function (t) {
 	var runner = new Runner();
-	runner.addBeforeHook(mockTitle, noop);
-	t.is(runner.tests.before.length, 1);
-	t.true(runner.tests.before[0] instanceof Test);
-	t.is(runner.tests.before[0].type, 'hook');
+	runner.before(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].metadata.type, 'before');
 	t.end();
 });
 
-test('runner.addAfterHook adds a new after hook', function (t) {
+test('runner.after adds a new after hook', function (t) {
 	var runner = new Runner();
-	runner.addAfterHook(mockTitle, noop);
-	t.is(runner.tests.after.length, 1);
-	t.true(runner.tests.after[0] instanceof Test);
-	t.is(runner.tests.after[0].type, 'hook');
+	runner.after(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].metadata.type, 'after');
 	t.end();
 });
 
-test('runner.addBeforeEachHook adds a new before hook', function (t) {
+test('runner.beforeEach adds a new beforeEach hook', function (t) {
 	var runner = new Runner();
-	runner.addBeforeEachHook(mockTitle, noop);
-	t.is(runner.tests.beforeEach.length, 1);
-	t.is(runner.tests.beforeEach[0].title, mockTitle);
-	t.is(runner.tests.beforeEach[0].fn, noop);
+	runner.beforeEach(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].title, mockTitle);
+	t.is(runner.tests[0].fn, noop);
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
 	t.end();
 });
 
-test('runner.addAfterEachHook adds a new after hook', function (t) {
+test('runner.beforeEach title is optional', function (t) {
+	function doThisFirst() {}
 	var runner = new Runner();
-	runner.addAfterEachHook(mockTitle, noop);
-	t.is(runner.tests.afterEach.length, 1);
-	t.is(runner.tests.afterEach[0].title, mockTitle);
-	t.is(runner.tests.afterEach[0].fn, noop);
+	runner.beforeEach(doThisFirst);
+	t.is(runner.tests.length, 1);
+	// TODO(jamestalmage): Make `title` logic common between Hook and Test
+	t.is(runner.tests[0].title, null);
+	t.is(runner.tests[0].fn, doThisFirst);
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
 	t.end();
 });
 
-test('runner.addSkippedTest adds a new skipped test', function (t) {
+test('runner.afterEach adds a new afterEach hook', function (t) {
 	var runner = new Runner();
-	runner.addSkippedTest(mockTitle, noop);
-	t.is(runner.tests.concurrent.length, 1);
-	t.true(runner.tests.concurrent[0] instanceof Test);
-	t.is(runner.tests.concurrent[0].skip, true);
+	runner.afterEach(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].title, mockTitle);
+	t.is(runner.tests[0].fn, noop);
+	t.is(runner.tests[0].metadata.type, 'afterEach');
 	t.end();
 });
 
-test('runner have test event', function (t) {
+test('runner.skip adds a new skipped test', function (t) {
+	var runner = new Runner();
+	runner.skip(mockTitle, noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].title, mockTitle);
+	t.is(runner.tests[0].metadata.skipped, true);
+	t.end();
+});
+
+test('runner.skip - title is optional', function (t) {
+	var runner = new Runner();
+	runner.skip(noop);
+	t.is(runner.tests.length, 1);
+	t.true(runner.tests[0] instanceof Test);
+	t.is(runner.tests[0].title, '[anonymous]');
+	t.is(runner.tests[0].metadata.skipped, true);
+	t.end();
+});
+
+test('methods are chainable: serial.skip', function (t) {
+	var runner = new Runner();
+	runner.serial.skip(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].metadata.type, 'test');
+	t.true(runner.tests[0].metadata.serial);
+	t.false(runner.tests[0].metadata.exclusive);
+	t.true(runner.tests[0].metadata.skipped);
+	t.end();
+});
+
+test('methods are chainable: beforeEach.skip', function (t) {
+	var runner = new Runner();
+	runner.beforeEach.skip(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].metadata.type, 'beforeEach');
+	t.false(runner.tests[0].metadata.serial);
+	t.false(runner.tests[0].metadata.exclusive);
+	t.true(runner.tests[0].metadata.skipped);
+	t.end();
+});
+
+test('methods are chainable: serial.only', function (t) {
+	var runner = new Runner();
+	runner.serial.only(noop);
+	t.is(runner.tests.length, 1);
+	t.is(runner.tests[0].metadata.type, 'test');
+	t.true(runner.tests[0].metadata.serial);
+	t.true(runner.tests[0].metadata.exclusive);
+	t.false(runner.tests[0].metadata.skipped);
+	t.end();
+});
+
+test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
-	runner.addTest(function foo(a) {
+	runner.test(function foo(a) {
 		a.end();
 	});
 
@@ -95,17 +153,17 @@ test('run serial tests before concurrent ones', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('c');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addSerialTest(function (a) {
+	runner.serial(function (a) {
 		arr.push('b');
 		a.end();
 	});
@@ -116,26 +174,71 @@ test('run serial tests before concurrent ones', function (t) {
 	});
 });
 
+test('anything can be skipped', function (t) {
+	var runner = new Runner();
+	var arr = [];
+
+	function pusher(title) {
+		return function (a) {
+			arr.push(title);
+			a.end();
+		};
+	}
+
+	runner.after(pusher('after'));
+	runner.after.skip(pusher('after.skip'));
+
+	runner.afterEach(pusher('afterEach'));
+	runner.afterEach.skip(pusher('afterEach.skip'));
+
+	runner.before(pusher('before'));
+	runner.before.skip(pusher('before.skip'));
+
+	runner.beforeEach(pusher('beforeEach'));
+	runner.beforeEach.skip(pusher('beforeEach.skip'));
+
+	runner.test(pusher('concurrent'));
+	runner.test.skip(pusher('concurrent.skip'));
+
+	runner.serial(pusher('serial'));
+	runner.serial.skip(pusher('serial.skip'));
+
+	runner.run().then(function () {
+		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
+		t.same(arr, [
+			'before',
+			'beforeEach',
+			'serial',
+			'afterEach',
+			'beforeEach',
+			'concurrent',
+			'afterEach',
+			'after'
+		]);
+		t.end();
+	});
+});
+
 test('test types and titles', function (t) {
 	t.plan(10);
 
 	var runner = new Runner();
-	runner.addBeforeHook(pass);
-	runner.addBeforeEachHook(pass);
-	runner.addAfterHook(pass);
-	runner.addAfterEachHook(pass);
-	runner.addTest('test', pass);
+	runner.before(pass);
+	runner.beforeEach(pass);
+	runner.after(pass);
+	runner.afterEach(pass);
+	runner.test('test', pass);
 
 	function pass(a) {
 		a.end();
 	}
 
 	var tests = [
-		{type: 'hook', title: 'pass'},
-		{type: 'eachHook', title: 'beforeEach for "test"'},
+		{type: 'before', title: 'pass'},
+		{type: 'beforeEach', title: 'beforeEach for "test"'},
 		{type: 'test', title: 'test'},
-		{type: 'eachHook', title: 'afterEach for "test"'},
-		{type: 'hook', title: 'pass'}
+		{type: 'afterEach', title: 'afterEach for "test"'},
+		{type: 'after', title: 'pass'}
 	];
 
 	runner.on('test', function (props) {
@@ -154,12 +257,12 @@ test('skip test', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addSkippedTest(function (a) {
+	runner.skip(function (a) {
 		arr.push('b');
 		a.end();
 	});
@@ -178,12 +281,12 @@ test('only test', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.addTest(function (a) {
+	runner.test(function (a) {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.addOnlyTest(function (a) {
+	runner.only(function (a) {
 		arr.push('b');
 		a.end();
 	});
