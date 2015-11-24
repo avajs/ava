@@ -29,48 +29,39 @@ function fail() {
 	});
 }
 
-// TODO(jamestalmage): auto-ending in declared-async is still up for debate.
-test('assertion plans auto end the test (declared async mode only)', function (t) {
-	var start = Date.now();
-	var timeout;
+test('returning a promise from a legacy async fn is an error', function (t) {
 	ava.async(function (a) {
-		a.plan(2);
+		a.plan(1);
 
-		var defer = Promise.defer();
-
-		timeout = setTimeout(function () {
-			defer.resolve();
-		}, 10000);
-
-		a.pass();
-		a.pass();
-
-		return defer.promise;
-	}).run().then(function (a) {
-		t.is(a.planCount, 2);
-		t.is(a.assertCount, 2);
-		t.true(Date.now() - start < 9000);
-		clearTimeout(timeout);
+		return Promise.resolve(true).then(function () {
+			a.pass();
+			a.end();
+		});
+	}).run().catch(function (err) {
+		t.match(err.message, /Do not return promises/);
 		t.end();
 	});
 });
 
 test('assertion plan is tested after returned promise resolves', function (t) {
+	var start = Date.now();
 	ava(function (a) {
 		a.plan(2);
 
 		var defer = Promise.defer();
 
 		setTimeout(function () {
-			a.pass();
-			a.pass();
 			defer.resolve();
-		}, 200);
+		}, 500);
+
+		a.pass();
+		a.pass();
 
 		return defer.promise;
 	}).run().then(function (a) {
 		t.is(a.planCount, 2);
 		t.is(a.assertCount, 2);
+		t.true(Date.now() - start > 500);
 		t.end();
 	});
 });
@@ -121,11 +112,11 @@ test('extra assertion will fail the test', function (t) {
 });
 
 test('handle throws with rejected promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error());
-		a.throws(promise);
+		return a.throws(promise);
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -133,7 +124,7 @@ test('handle throws with rejected promise', function (t) {
 });
 
 test('handle throws with long running rejected promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = new Promise(function (resolve, reject) {
@@ -142,7 +133,7 @@ test('handle throws with long running rejected promise', function (t) {
 			}, 2000);
 		});
 
-		a.throws(promise, /abc/);
+		return a.throws(promise, /abc/);
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -150,11 +141,11 @@ test('handle throws with long running rejected promise', function (t) {
 });
 
 test('handle throws with resolved promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.resolve();
-		a.throws(promise);
+		return a.throws(promise);
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.is(err.name, 'AssertionError');
@@ -163,11 +154,11 @@ test('handle throws with resolved promise', function (t) {
 });
 
 test('handle throws with regex', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error('abc'));
-		a.throws(promise, /abc/);
+		return a.throws(promise, /abc/);
 	}).run().then(function (a) {
 		t.notOk(a.assertionError);
 		t.end();
@@ -175,11 +166,11 @@ test('handle throws with regex', function (t) {
 });
 
 test('handle throws with string', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error('abc'));
-		a.throws(promise, 'abc');
+		return a.throws(promise, 'abc');
 	}).run().then(function (a) {
 		t.notOk(a.assertionError);
 		t.end();
@@ -187,11 +178,11 @@ test('handle throws with string', function (t) {
 });
 
 test('handle throws with false-positive promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.resolve(new Error());
-		a.throws(promise);
+		return a.throws(promise);
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.is(err.name, 'AssertionError');
@@ -200,11 +191,11 @@ test('handle throws with false-positive promise', function (t) {
 });
 
 test('handle doesNotThrow with resolved promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.resolve();
-		a.doesNotThrow(promise);
+		return a.doesNotThrow(promise);
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
 		t.end();
@@ -212,11 +203,11 @@ test('handle doesNotThrow with resolved promise', function (t) {
 });
 
 test('handle doesNotThrow with rejected promise', function (t) {
-	ava.async(function (a) {
+	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error());
-		a.doesNotThrow(promise);
+		return a.doesNotThrow(promise);
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.is(err.name, 'AssertionError');

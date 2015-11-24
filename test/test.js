@@ -228,15 +228,9 @@ test('run async functions after last planned assertion', function (t) {
 
 	ava.async(function (a) {
 		a.plan(1);
-
-		function foo(cb) {
-			a.pass();
-			cb();
-		}
-
-		foo(function () {
-			i++;
-		});
+		a.pass();
+		a.end();
+		i++;
 	}).run().then(function () {
 		t.is(i, 1);
 		t.end();
@@ -249,6 +243,7 @@ test('planned async assertion', function (t) {
 
 		setTimeout(function () {
 			a.pass();
+			a.end();
 		}, 100);
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -286,6 +281,7 @@ test('record test duration', function (t) {
 
 		setTimeout(function () {
 			a.true(true);
+			a.end();
 		}, 1234);
 	}).run().then(function (a) {
 		t.true(a.duration >= 1234);
@@ -309,6 +305,7 @@ test('wait for test to end', function (t) {
 
 	setTimeout(function () {
 		avaTest.pass();
+		avaTest.end();
 	}, 1234);
 });
 

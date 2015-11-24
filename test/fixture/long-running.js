@@ -20,6 +20,7 @@ test.async('long running', function (t) {
 
 	setTimeout(function () {
 		t.ok(true);
+		t.end();
 	});
 
 	setTimeout(function () {

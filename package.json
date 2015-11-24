@@ -93,6 +93,7 @@
     "has-flag": "^1.0.0",
     "has-generator": "^1.0.0",
     "is-generator-fn": "^1.0.0",
+    "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
     "loud-rejection": "^1.2.0",
     "max-timeout": "^1.0.0",
