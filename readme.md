@@ -67,19 +67,18 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 
 ```js
 import test from 'ava';
+import delay from 'delay';
 
 test('foo', t => {
 	t.pass();
-	t.end();
 });
 
-test('bar', t => {
-	t.plan(2);
+const bar = Promise.resolve('bar').then(delay(200));
 
-	setTimeout(() => {
-		t.is('bar', 'bar');
-		t.same(['a', 'b'], ['a', 'b']);
-	}, 100);
+test('bar', async t => {
+	t.plan(2);
+	
+  t.is(await bar, 'bar');
 });
 ```
 
@@ -121,9 +120,13 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Tests are run asynchronously and require you to either set planned assertions `t.plan(1)`, explicitly end the test when done `t.end()`, or return a promise. [Async functions](#async-function-support) already returns a promise implicitly, so no need for you to explicitly return a promise in that case.
+Tests are run asynchronously and require you to return a supported async object (a promise, or [observable](https://github.com/zenparsing/zen-observable)). We *highly* recommend the use of [async functions](#async-function-support); They make async code concise and readable, and they implicitly return a promise, so you don't need to. 
 
-You have to define all tests synchronously, meaning you can't define a test in the next tick, e.g. inside a `setTimeout`.
+If you do not return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately. 
+
+If you are unable to use promises or other supported async objects, you may enable legacy async support by defining your test with `test.async([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`.
+
+You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
 Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
 
@@ -134,7 +137,6 @@ To create a test, you call the `test` function you `require`d from AVA and pass 
 ```js
 test('name', t => {
 	t.pass();
-	t.end();
 });
 ```
 
@@ -144,7 +146,7 @@ Naming a test is optional, but you're recommended to use one if you have more th
 
 ```js
 test(t => {
-	t.end();
+	t.pass();
 });
 ```
 
@@ -152,13 +154,15 @@ You can also choose to use a named function instead:
 
 ```js
 test(function name(t) {
-	t.end();
+	t.pass();
 });
 ```
 
-### Planned assertions
+### Assertion plan
 
-Planned assertions are useful for being able to assert that all async actions happened. It also comes with the benefit of not having to manually end the test.
+An assertion plan can be used to ensure a specific number of assertions are made.
+ In the most common scenario, it validates that the test did not exit before executing the expected number of assertions.
+ It also fails the test if too many assertions are executed (Useful if you have assertions inside callbacks or loops). 
 
 This will result in a passed test:
 
@@ -166,9 +170,52 @@ This will result in a passed test:
 test(t => {
 	t.plan(1);
 
+	return Promise.resolve(3).then(n => {
+		t.is(n, 3);
+	});
+});
+
+test.async(t => {
 	setTimeout(() => {
 		t.pass();
+		t.end();
 	}, 100);
+});
+```
+
+#### WARNING: Recent breaking change.
+
+AVA no longer supports automatically ending tests via `t.plan(...)`. 
+ This helps prevent false positives if you add assertions, but forget to increase your plan count.
+
+```js
+// This no longer works
+
+test('auto ending is dangerous', t => {
+	t.plan(2);
+	
+	t.pass();
+	t.pass();
+	
+	// auto-ending after reaching the planned two assertions will miss this final one
+	setTimeout(() => t.fail(), 10000);
+});
+```
+
+For this to work, you now must use the legacy `async` test mode, and explicitly call `t.end()`.
+  
+```js
+test('explicitly end your tests', t => {
+	t.plan(2);
+	
+	t.pass();
+	t.pass();
+	
+	setTimeout(() => {
+		// This failure is now reliably caught.
+		t.fail();
+		t.end();
+	}, 1000);
 });
 ```
 
@@ -178,7 +225,7 @@ While concurrency is awesome, there are some things that can't be done concurren
 
 ```js
 test.serial(t => {
-	t.end();
+	t.pass();
 });
 ```
 
@@ -189,12 +236,10 @@ Only-tests enforces only those tests to be run. This can be useful for running o
 ```js
 test('will not be run', t => {
 	t.fail();
-	t.end();
 })
 
 test.only('will be run', t => {
 	t.pass();
-	t.end();
 });
 ```
 
@@ -203,8 +248,8 @@ test.only('will be run', t => {
 Skip-tests are shown in the output as skipped but never run.
 
 ```js
-test.skip('unicorn', t => {
-	t.end();
+test.skip('will not be run', t => {
+  t.fail();
 });
 ```
 
@@ -217,32 +262,42 @@ used in the same manner as `test()`. The test function given to `test.before()` 
 ```js
 test.before(t => {
 	// this runs before all tests
-	t.end();
 });
 
 test.before(t => {
 	// this runs after the above, but before tests
-	t.end();
 });
 
 test.after('cleanup', t => {
 	// this runs after all tests
-	t.end();
 });
 
 test.beforeEach(t => {
 	// this runs before each test
-	t.end();
 });
 
 test.afterEach(t => {
 	// this runs after each test
-	t.end();
 });
 
 test(t => {
 	// regular test
-	t.end();
+});
+```
+
+Both modern and legacy async support are available for hooks
+
+```js
+test.before(async t => {
+  await promiseFn();
+});
+
+test.async.beforeEach(t => {
+  setTimeout(t.end);
+});
+
+test.afterEach.async(t => {
+  setTimeout(t.end);
 });
 ```
 
@@ -251,12 +306,10 @@ The `beforeEach` & `afterEach` hooks can share context with the test:
 ```js
 test.beforeEach(t => {
 	t.context.data = generateUniqueData();
-	t.end();
 });
 
 test(t => {
 	t.is(t.context.data + 'bar', 'foobar');
-	t.end();
 });
 ```
 
@@ -265,12 +318,10 @@ The context is by default an object, but it can also be directly assigned:
 ```js
 test.beforeEach(t => {
 	t.context = 'unicorn';
-	t.end();
 });
 
 test(t => {
 	t.is(t.context, 'unicorn');
-	t.end();
 });
 ```
 
@@ -296,7 +347,6 @@ import assert from 'assert';
 
 test(t => {
 	assert(true);
-	t.end();
 });
 ```
 
@@ -309,7 +359,6 @@ Just write your tests in ES2015. No extra setup needed.
 ```js
 test(t => {
 	t.pass();
-	t.end();
 });
 ```
 
@@ -337,7 +386,6 @@ import foo from './foo'; // <-- foo can be written in ES2015!
 
 test('foo bar', t => {
 	t.same('baz', foo('bar'));
-	t.end();
 });
 ```
 
@@ -385,31 +433,32 @@ test(async t => {
 });
 ```
 
-*You don't have to manually call `t.end()`.*
-
 ### Observable support
 
 AVA comes with builtin support for [observables](https://github.com/zenparsing/es-observable).
+If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
+*You don't have to use legacy `test.async` mode or `t.end()`.*
 
 ```js
 test(t => {
-	return Observable.of(1, 2, 3).map(n => {
-		t.true(n > 0);
-		return n * n;
-	});
+	t.plan(3);
+	return Observable.of(1, 2, 3, 4, 5, 6)
+		.filter(n => {
+			// only even numbers
+			return n % 2 === 0;
+		})
+		.map(() => t.pass());
 });
 ```
-
-*You don't have to manually call `t.end()`.*
 
 ### Callback support
 
 AVA supports using `t.end` as the final callback when using node-style
 error-first callback APIs. AVA will consider any truthy value passed as
-the first argument to `t.end` to be an error.
+the first argument to `t.end` to be an error. Note that `t.end` requires legacy `test.async` mode. 
 
 ```js
-test(t => {
+test.async(t => {
 	// t.end automatically checks for error as first argument
 	fs.readFile('data.txt', t.end);
 });
@@ -461,7 +510,6 @@ Assertions are mixed into the test [context](#context):
 ```js
 test(t => {
 	t.ok('unicorn'); // assertion
-	t.end();
 });
 ```
 
@@ -536,7 +584,6 @@ The following test:
 test(t => {
 	const x = 'foo';
 	t.ok(x === 'bar');
-	t.end();
 });
 ```
 
@@ -564,7 +611,6 @@ test(t => {
 	const b = 'bar';
 	const c = 'baz';
 	t.ok(a.test(b) || b === c);
-	t.end();
 });
 ```
 
