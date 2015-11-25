@@ -59,3 +59,12 @@ test('exit after tests are finished', function (t) {
 			cleanupCompleted = event.completed;
 		});
 });
+
+test('fake timers do not break duration', function (t) {
+	fork(fixture('fake-timers.js'))
+		.then(function (info) {
+			var duration = info.tests[0].duration;
+			t.true(duration < 1000, duration + ' < 1000');
+			t.end();
+		});
+});
