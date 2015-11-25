@@ -1,9 +1,9 @@
 'use strict';
-var setImmediate = require('set-immediate-shim');
 var relative = require('path').relative;
 var hasFlag = require('has-flag');
 var chalk = require('chalk');
 var serializeError = require('serialize-error');
+var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
 var log = require('./lib/logger');
@@ -65,7 +65,7 @@ function exit() {
 	});
 }
 
-setImmediate(function () {
+globals.setImmediate(function () {
 	runner.on('test', test);
 	runner.run().then(exit);
 });
