@@ -205,6 +205,16 @@ test('stack traces for exceptions are corrected using a source map', function (t
 	});
 });
 
+test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account', function (t) {
+	execCli('fixture/initial-source-map-exception.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Can't catch me!/.test(stderr));
+		t.match(stderr, /^.*?at.*?bar\b.*initial-source-map-exception.js:12.*$/m);
+		t.match(stderr, /^.*?at.*?foo\b.*initial-source-map-exception.js:8.*$/m);
+		t.end();
+	});
+});
+
 test('stack traces for exceptions are corrected using a source map, found via a pragma', function (t) {
 	execCli('fixture/source-map-pragma-exception.js', function (err, stdout, stderr) {
 		t.ok(err);
