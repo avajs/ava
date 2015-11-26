@@ -182,7 +182,7 @@ function init(files) {
 
 	return handlePaths(files)
 		.map(function (file) {
-			return path.resolve('.', file);
+			return path.resolve(file);
 		})
 		.then(function (files) {
 			if (files.length === 0) {

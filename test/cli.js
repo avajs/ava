@@ -228,7 +228,7 @@ test('stack traces for exceptions are corrected using a source map, found via a 
 test('absolute paths in CLI', function (t) {
 	t.plan(2);
 
-	execCli([path.resolve('.', 'test/fixture/es2015.js')], function (err, stdout, stderr) {
+	execCli([path.resolve('test/fixture/es2015.js')], function (err, stdout, stderr) {
 		t.ifError(err);
 		t.is(stderr.trim(), '1 test passed');
 		t.end();
