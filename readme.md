@@ -40,7 +40,6 @@ import test from 'ava';
 
 test(t => {
 	t.same([1, 2], [1, 2]);
-	t.end();
 });
 ```
 
@@ -58,7 +57,7 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.3.0"
+		"ava": "^0.6.0"
 	}
 }
 ```
@@ -73,12 +72,12 @@ test('foo', t => {
 	t.pass();
 });
 
-const bar = Promise.resolve('bar').then(delay(200));
-
 test('bar', async t => {
 	t.plan(2);
-	
-  t.is(await bar, 'bar');
+
+	const bar = Promise.resolve('bar').then(delay(200));
+
+	t.is(await bar, 'bar');
 });
 ```
 
@@ -120,11 +119,11 @@ Files starting with `_` are ignored. This can be useful for having helpers in th
 
 ## Documentation
 
-Tests are run asynchronously and require you to return a supported async object (a promise, or [observable](https://github.com/zenparsing/zen-observable)). We *highly* recommend the use of [async functions](#async-function-support); They make async code concise and readable, and they implicitly return a promise, so you don't need to. 
+Tests are run asynchronously and require you to return a supported async object (a promise, or [observable](https://github.com/zenparsing/zen-observable)). We *highly* recommend the use of [async functions](#async-function-support); They make async code concise and readable, and they implicitly return a promise, so you don't have to.
 
-If you do not return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately. 
+If you don't return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately.
 
-If you are unable to use promises or other supported async objects, you may enable legacy async support by defining your test with `test.async([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`.
+If you're unable to use promises or other supported async objects, you may enable legacy async support by defining your test with `test.async([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
@@ -160,9 +159,7 @@ test(function name(t) {
 
 ### Assertion plan
 
-An assertion plan can be used to ensure a specific number of assertions are made.
- In the most common scenario, it validates that the test did not exit before executing the expected number of assertions.
- It also fails the test if too many assertions are executed (Useful if you have assertions inside callbacks or loops). 
+An assertion plan can be used to ensure a specific number of assertions are made. In the most common scenario, it validates that the test didn't exit before executing the expected number of assertions. It also fails the test if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
 
 This will result in a passed test:
 
@@ -185,32 +182,31 @@ test.async(t => {
 
 #### WARNING: Recent breaking change.
 
-AVA no longer supports automatically ending tests via `t.plan(...)`. 
- This helps prevent false positives if you add assertions, but forget to increase your plan count.
+AVA no longer supports automatically ending tests via `t.plan(...)`. This helps prevent false positives if you add assertions, but forget to increase your plan count.
 
 ```js
 // This no longer works
 
 test('auto ending is dangerous', t => {
 	t.plan(2);
-	
+
 	t.pass();
 	t.pass();
-	
+
 	// auto-ending after reaching the planned two assertions will miss this final one
 	setTimeout(() => t.fail(), 10000);
 });
 ```
 
-For this to work, you now must use the legacy `async` test mode, and explicitly call `t.end()`.
-  
+For this to work, you must now use the legacy `async` test mode, and explicitly call `t.end()`.
+
 ```js
 test('explicitly end your tests', t => {
 	t.plan(2);
-	
+
 	t.pass();
 	t.pass();
-	
+
 	setTimeout(() => {
 		// This failure is now reliably caught.
 		t.fail();
@@ -249,7 +245,7 @@ Skip-tests are shown in the output as skipped but never run.
 
 ```js
 test.skip('will not be run', t => {
-  t.fail();
+	t.fail();
 });
 ```
 
@@ -289,15 +285,15 @@ Both modern and legacy async support are available for hooks
 
 ```js
 test.before(async t => {
-  await promiseFn();
+	await promiseFn();
 });
 
 test.async.beforeEach(t => {
-  setTimeout(t.end);
+	setTimeout(t.end);
 });
 
 test.afterEach.async(t => {
-  setTimeout(t.end);
+	setTimeout(t.end);
 });
 ```
 
@@ -367,7 +363,7 @@ You can also use your own local Babel version:
 ```json
 {
 	"devDependencies": {
-		"ava": "^0.3.0",
+		"ava": "^0.6.0",
 		"babel-core": "^5.8.0"
 	}
 }
@@ -414,8 +410,6 @@ test(function * (t) {
 });
 ```
 
-*You don't have to manually call `t.end()`.*
-
 ### Async function support
 
 AVA comes with builtin support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
@@ -437,6 +431,7 @@ test(async t => {
 
 AVA comes with builtin support for [observables](https://github.com/zenparsing/es-observable).
 If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
+
 *You don't have to use legacy `test.async` mode or `t.end()`.*
 
 ```js
@@ -453,9 +448,7 @@ test(t => {
 
 ### Callback support
 
-AVA supports using `t.end` as the final callback when using node-style
-error-first callback APIs. AVA will consider any truthy value passed as
-the first argument to `t.end` to be an error. Note that `t.end` requires legacy `test.async` mode. 
+AVA supports using `t.end` as the final callback when using node-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires legacy `test.async` mode.
 
 ```js
 test.async(t => {
@@ -469,6 +462,7 @@ test.async(t => {
 
 ### test([title], body)
 ### test.serial([title], body)
+### test.async([title], body)
 ### test.only([title], body)
 ### test.skip([title], body)
 ### test.before([title], body)
@@ -494,13 +488,11 @@ Passed into the test function and contains the different AVA methods and [assert
 
 ###### .plan(count)
 
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match planned assertions. When planned assertions are used you don't need to explicitly end the test.
-
-Be aware that this doesn't work with custom assert modules. You must then call `.end()` explicitly.
+Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match planned assertions.
 
 ###### .end()
 
-End the test. Use this when `plan()` is not used.
+End the test. Only works with `test.async()`.
 
 
 ## Assertions
