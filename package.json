@@ -109,6 +109,7 @@
     "set-immediate-shim": "^1.0.1",
     "source-map-support": "^0.3.3",
     "squeak": "^1.2.0",
+    "time-require": "^0.1.2",
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
