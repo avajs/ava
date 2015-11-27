@@ -113,10 +113,7 @@ function run(file) {
 		.on('stats', stats)
 		.on('test', test)
 		.on('unhandledRejections', handleRejections)
-		.on('uncaughtException', handleExceptions)
-		.on('data', function (data) {
-			process.stdout.write(data);
-		});
+		.on('uncaughtException', handleExceptions);
 }
 
 function handleRejections(data) {
