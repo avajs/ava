@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 'use strict';
+
+var debug = require('debug')('ava');
+
+if (debug.enabled) {
+	require('time-require');
+}
+
 var fs = require('fs');
 var path = require('path');
 var figures = require('figures');
@@ -107,6 +114,12 @@ function run(file) {
 
 	if (cli.flags.serial) {
 		args.push('--serial');
+	}
+
+	// Forward the `time-require` `--sorted` flag.
+	// Intended for internal optimization tests only.
+	if (cli.flags.sorted) {
+		args.push('--sorted');
 	}
 
 	return fork(args)
