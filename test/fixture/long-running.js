@@ -2,7 +2,7 @@
 const test = require('../../');
 var onExit = require('signal-exit');
 
-test('long running', function (t) {
+test.async('long running', function (t) {
 	t.plan(1);
 
 	onExit(function () {
@@ -20,6 +20,7 @@ test('long running', function (t) {
 
 	setTimeout(function () {
 		t.ok(true);
+		t.end();
 	});
 
 	setTimeout(function () {

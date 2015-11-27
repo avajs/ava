@@ -6,14 +6,14 @@ function randomDelay() {
 
 const tests = [];
 
-test('first', t => {
+test.async('first', t => {
 	setTimeout(() => {
 		tests.push('first');
 		t.end();
 	}, randomDelay());
 });
 
-test('second', t => {
+test.async('second', t => {
 	setTimeout(() => {
 		tests.push('second');
 		t.end();
@@ -22,5 +22,4 @@ test('second', t => {
 
 test(t => {
 	t.same(tests, ['first', 'second']);
-	t.end();
 });

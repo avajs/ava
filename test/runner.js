@@ -136,7 +136,7 @@ test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
 	runner.test(function foo(a) {
-		a.end();
+		a.pass();
 	});
 
 	runner.on('test', function (props) {
@@ -179,9 +179,8 @@ test('anything can be skipped', function (t) {
 	var arr = [];
 
 	function pusher(title) {
-		return function (a) {
+		return function () {
 			arr.push(title);
-			a.end();
 		};
 	}
 
@@ -230,7 +229,7 @@ test('test types and titles', function (t) {
 	runner.test('test', pass);
 
 	function pass(a) {
-		a.end();
+		a.pass();
 	}
 
 	var tests = [
@@ -257,14 +256,12 @@ test('skip test', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr.push('a');
-		a.end();
 	});
 
-	runner.skip(function (a) {
+	runner.skip(function () {
 		arr.push('b');
-		a.end();
 	});
 
 	runner.run().then(function () {
@@ -281,14 +278,12 @@ test('only test', function (t) {
 	var runner = new Runner();
 	var arr = [];
 
-	runner.test(function (a) {
+	runner.test(function () {
 		arr.push('a');
-		a.end();
 	});
 
-	runner.only(function (a) {
+	runner.only(function () {
 		arr.push('b');
-		a.end();
 	});
 
 	runner.run().then(function () {
