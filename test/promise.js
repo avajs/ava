@@ -61,7 +61,7 @@ test('assertion plan is tested after returned promise resolves', function (t) {
 	}).run().then(function (a) {
 		t.is(a.planCount, 2);
 		t.is(a.assertCount, 2);
-		t.true(Date.now() - start > 500);
+		t.true(Date.now() - start >= 500);
 		t.end();
 	});
 });
