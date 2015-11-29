@@ -4,13 +4,13 @@ var _ava = require('../lib/test');
 
 function ava() {
 	var t = _ava.apply(null, arguments);
-	t.metadata = {async: false};
+	t.metadata = {callback: false};
 	return t;
 }
 
-ava.async = function () {
+ava.cb = function () {
 	var t = _ava.apply(null, arguments);
-	t.metadata = {async: true};
+	t.metadata = {callback: true};
 	return t;
 };
 
@@ -101,7 +101,7 @@ test('handle non-assertion errors', function (t) {
 });
 
 test('end can be used as callback without maintaining thisArg', function (t) {
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		setTimeout(a.end);
 	}).run().then(function (a) {
 		t.notOk(a.assertError);
@@ -226,7 +226,7 @@ test('run functions after last planned assertion', function (t) {
 test('run async functions after last planned assertion', function (t) {
 	var i = 0;
 
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		a.plan(1);
 		a.pass();
 		a.end();
@@ -238,7 +238,7 @@ test('run async functions after last planned assertion', function (t) {
 });
 
 test('planned async assertion', function (t) {
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		a.plan(1);
 
 		setTimeout(function () {
@@ -252,7 +252,7 @@ test('planned async assertion', function (t) {
 });
 
 test('async assertion with `.end()`', function (t) {
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		setTimeout(function () {
 			a.pass();
 			a.end();
@@ -276,7 +276,7 @@ test('more assertions than planned should emit an assertion error', function (t)
 });
 
 test('record test duration', function (t) {
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		a.plan(1);
 
 		setTimeout(function () {
@@ -292,7 +292,7 @@ test('record test duration', function (t) {
 test('wait for test to end', function (t) {
 	var avaTest;
 
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		a.plan(1);
 
 		avaTest = a;
