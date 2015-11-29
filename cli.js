@@ -212,8 +212,8 @@ function init(files) {
 
 			fileCount = files.length;
 
-            return cli.flags.serial ? Promise.mapSeries(files, run)
-                : Promise.all(files.map(run));
+			return cli.flags.serial ? Promise.mapSeries(files, run)
+				: Promise.all(files.map(run));
 		});
 }
 
