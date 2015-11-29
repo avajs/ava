@@ -5,18 +5,18 @@ var Observable = require('./fixture/observable');
 
 function ava(fn) {
 	var a = _ava(fn);
-	a.metadata = {async: false};
+	a.metadata = {callback: false};
 	return a;
 }
 
-ava.async = function (fn) {
+ava.cb = function (fn) {
 	var a = _ava(fn);
-	a.metadata = {async: true};
+	a.metadata = {callback: true};
 	return a;
 };
 
 test('returning an observable from a legacy async fn is an error', function (t) {
-	ava.async(function (a) {
+	ava.cb(function (a) {
 		a.plan(2);
 
 		var observable = Observable.of();

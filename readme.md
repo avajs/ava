@@ -124,7 +124,7 @@ Tests are run asynchronously and require you to return a supported async object 
 
 If you don't return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately.
 
-If you're unable to use promises or other supported async objects, you may enable legacy async support by defining your test with `test.async([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
+If you're unable to use promises or other supported async objects, you may enable "callback mode" by defining your test with `test.cb([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
@@ -173,7 +173,7 @@ test(t => {
 	});
 });
 
-test.async(t => {
+test.cb(t => {
 	setTimeout(() => {
 		t.pass();
 		t.end();
@@ -199,10 +199,10 @@ test('auto ending is dangerous', t => {
 });
 ```
 
-For this to work, you must now use the legacy `async` test mode, and explicitly call `t.end()`.
+For this to work, you must now use "callback mode", and explicitly call `t.end()`.
 
 ```js
-test('explicitly end your tests', t => {
+test.cb('explicitly end your tests', t => {
 	t.plan(2);
 
 	t.pass();
@@ -282,19 +282,23 @@ test(t => {
 });
 ```
 
-Both modern and legacy async support are available for hooks
+You may use async functions, return async objects, or enable "callback mode" in any of the hooks.
 
 ```js
 test.before(async t => {
 	await promiseFn();
 });
 
-test.async.beforeEach(t => {
+test.cb.beforeEach(t => {
 	setTimeout(t.end);
 });
 
-test.afterEach.async(t => {
+test.afterEach.cb(t => {
 	setTimeout(t.end);
+});
+
+test.after(t => {
+   return new Promise(/* ... */);
 });
 ```
 
@@ -433,7 +437,7 @@ test(async t => {
 AVA comes with builtin support for [observables](https://github.com/zenparsing/es-observable).
 If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
 
-*You don't have to use legacy `test.async` mode or `t.end()`.*
+*You do not need to use "callback mode" or call `t.end()`.*
 
 ```js
 test(t => {
@@ -449,10 +453,10 @@ test(t => {
 
 ### Callback support
 
-AVA supports using `t.end` as the final callback when using node-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires legacy `test.async` mode.
+AVA supports using `t.end` as the final callback when using node-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
 
 ```js
-test.async(t => {
+test.cb(t => {
 	// t.end automatically checks for error as first argument
 	fs.readFile('data.txt', t.end);
 });
@@ -463,7 +467,7 @@ test.async(t => {
 
 ### test([title], body)
 ### test.serial([title], body)
-### test.async([title], body)
+### test.cb([title], body)
 ### test.only([title], body)
 ### test.skip([title], body)
 ### test.before([title], body)
@@ -493,7 +497,7 @@ Plan how many assertion there are in the test. The test will fail if the actual 
 
 ###### .end()
 
-End the test. Only works with `test.async()`.
+End the test. Only works with `test.cb()`.
 
 
 ## Assertions

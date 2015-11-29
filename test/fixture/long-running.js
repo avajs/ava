@@ -2,7 +2,7 @@
 const test = require('../../');
 var onExit = require('signal-exit');
 
-test.async('long running', function (t) {
+test.cb('long running', function (t) {
 	t.plan(1);
 
 	onExit(function () {
