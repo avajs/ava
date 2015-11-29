@@ -3,6 +3,16 @@
 
 var debug = require('debug')('ava');
 
+// Prefer the local installation of AVA.
+var resolveFrom = require('resolve-from');
+var localCLI = resolveFrom('.', 'ava/cli');
+
+if (localCLI && localCLI !== __filename) {
+	debug('Using local install of AVA.');
+	require(localCLI);
+	return;
+}
+
 if (debug.enabled) {
 	require('time-require');
 }
