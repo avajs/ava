@@ -9,9 +9,15 @@ function execCli(args, cb) {
 		args = [args];
 	}
 
+	var env = {};
+
+	if (process.env.AVA_APPVEYOR) {
+		env.AVA_APPVEYOR = 1;
+	}
+
 	childProcess.execFile(process.execPath, ['../cli.js'].concat(args), {
 		cwd: __dirname,
-		env: {}
+		env: env
 	}, cb);
 }
 
