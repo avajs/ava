@@ -44,6 +44,7 @@
   "files": [
     "index.js",
     "cli.js",
+    "api.js",
     "lib"
   ],
   "keywords": [
