@@ -17,17 +17,12 @@ if (debug.enabled) {
 	require('time-require');
 }
 
-var fs = require('fs');
-var path = require('path');
-var figures = require('figures');
-var flatten = require('arr-flatten');
-var globby = require('globby');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
 var Promise = require('bluebird');
-var fork = require('./lib/fork');
 var log = require('./lib/logger');
+var Api = require('./api');
 
 // Bluebird specific
 Promise.longStackTraces();
@@ -58,132 +53,54 @@ var cli = meow([
 	]
 });
 
-var rejectionCount = 0;
-var exceptionCount = 0;
-var testCount = 0;
-var fileCount = 0;
-var errors = [];
+updateNotifier({pkg: cli.pkg}).notify();
 
-function prefixTitle(file) {
-	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
-
-	var base = path.dirname(cli.input[0]);
-
-	if (base === '.') {
-		base = cli.input[0] || 'test';
-	}
-
-	base += path.sep;
-
-	var prefix = path.relative('.', file)
-		.replace(base, '')
-		.replace(/\.spec/, '')
-		.replace(/test\-/g, '')
-		.replace(/\.js$/, '')
-		.split(path.sep)
-		.join(separator);
-
-	if (prefix.length > 0) {
-		prefix += separator;
-	}
-
-	return prefix;
+if (cli.flags.init) {
+	require('ava-init')();
+	return;
 }
 
-function stats(stats) {
-	testCount += stats.testCount;
-}
+log.write();
 
-function test(data) {
-	var isError = data.error.message;
+var api = new Api(cli.input, {
+	failFast: cli.flags.failFast,
+	serial: cli.flags.serial
+});
 
-	if (fileCount > 1) {
-		data.title = prefixTitle(data.file) + data.title;
-	}
-
-	if (isError) {
-		log.error(data.title, chalk.red(data.error.message));
-
-		errors.push(data);
+api.on('test', function (test) {
+	if (test.error) {
+		log.error(test.title, chalk.red(test.error.message));
 	} else {
 		// don't log it if there's only one file and one anonymous test
-		if (fileCount === 1 && testCount === 1 && data.title === '[anonymous]') {
+		if (api.fileCount === 1 && api.testCount === 1 && test.title === '[anonymous]') {
 			return;
 		}
 
-		log.test(data);
+		log.test(test);
 	}
-}
+});
 
-function run(file) {
-	var args = [file];
+api.on('error', function (data) {
+	log.unhandledError(data.type, data.file, data);
+});
 
-	if (cli.flags.failFast) {
-		args.push('--fail-fast');
-	}
+api.run()
+	.then(function () {
+		log.write();
+		log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount);
+		log.write();
 
-	if (cli.flags.serial) {
-		args.push('--serial');
-	}
+		if (api.failCount > 0) {
+			log.errors(api.tests);
+		}
 
-	// Forward the `time-require` `--sorted` flag.
-	// Intended for internal optimization tests only.
-	if (cli.flags.sorted) {
-		args.push('--sorted');
-	}
-
-	return fork(args)
-		.on('stats', stats)
-		.on('test', test)
-		.on('unhandledRejections', handleRejections)
-		.on('uncaughtException', handleExceptions);
-}
-
-function handleRejections(data) {
-	log.unhandledRejections(data.file, data.rejections);
-	rejectionCount += data.rejections.length;
-}
-
-function handleExceptions(data) {
-	log.uncaughtException(data.file, data.exception);
-	exceptionCount++;
-}
-
-function sum(arr, key) {
-	var result = 0;
-
-	arr.forEach(function (item) {
-		result += item[key];
+		process.stdout.write('');
+		flushIoAndExit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
+	})
+	.catch(function (err) {
+		log.error(err.message);
+		flushIoAndExit(1);
 	});
-
-	return result;
-}
-
-function exit(results) {
-	// assemble stats from all tests
-	var stats = results.map(function (result) {
-		return result.stats;
-	});
-
-	var tests = results.map(function (result) {
-		return result.tests;
-	});
-
-	var passed = sum(stats, 'passCount');
-	var failed = sum(stats, 'failCount');
-
-	log.write();
-	log.report(passed, failed, rejectionCount, exceptionCount);
-	log.write();
-
-	if (failed > 0) {
-		log.errors(flatten(tests));
-	}
-
-	process.stdout.write('');
-
-	flushIoAndExit(failed > 0 || rejectionCount > 0 || exceptionCount > 0 ? 1 : 0);
-}
 
 function flushIoAndExit(code) {
 	// TODO: figure out why this needs to be here to
@@ -195,63 +112,4 @@ function flushIoAndExit(code) {
 	setTimeout(function () {
 		process.exit(code);
 	}, process.env.AVA_APPVEYOR ? 500 : 0);
-}
-
-function init(files) {
-	log.write();
-
-	return handlePaths(files)
-		.map(function (file) {
-			return path.resolve(file);
-		})
-		.then(function (files) {
-			if (files.length === 0) {
-				log.error('Couldn\'t find any files to test\n');
-				process.exit(1);
-			}
-
-			fileCount = files.length;
-
-			return cli.flags.serial ? Promise.mapSeries(files, run)
-				: Promise.all(files.map(run));
-		});
-}
-
-function handlePaths(files) {
-	if (files.length === 0) {
-		files = [
-			'test.js',
-			'test-*.js',
-			'test/*.js'
-		];
-	}
-
-	files.push('!**/node_modules/**');
-
-	// convert pinkie-promise to Bluebird promise
-	files = Promise.resolve(globby(files));
-
-	return files
-		.map(function (file) {
-			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '*.js')]);
-			}
-
-			return file;
-		})
-		.then(flatten)
-		.filter(function (file) {
-			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
-		});
-}
-
-updateNotifier({pkg: cli.pkg}).notify();
-
-if (cli.flags.init) {
-	require('ava-init')();
-} else {
-	init(cli.input).then(exit).catch(function (err) {
-		console.error(err.stack);
-		flushIoAndExit(1);
-	});
 }
