@@ -298,6 +298,7 @@ test('don\'t display hook title if it did not fail', function (t) {
 	t.plan(2);
 
 	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
+		.run()
 		.on('test', function (test) {
 			t.same(test.error, {});
 			t.is(test.title, 'pass');
@@ -311,6 +312,7 @@ test('display hook title if it failed', function (t) {
 	t.plan(2);
 
 	fork(path.join(__dirname, 'fixture', 'hooks-failing.js'))
+		.run()
 		.on('test', function (test) {
 			t.is(test.error.name, 'AssertionError');
 			t.is(test.title, 'beforeEach for "pass"');

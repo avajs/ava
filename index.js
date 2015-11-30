@@ -66,8 +66,15 @@ function exit() {
 }
 
 globals.setImmediate(function () {
+	send('stats', {
+		testCount: runner.select({type: 'test'}).length
+	});
+
 	runner.on('test', test);
-	runner.run().then(exit);
+
+	process.on('ava-run', function () {
+		runner.run().then(exit);
+	});
 });
 
 module.exports = runner.test;
