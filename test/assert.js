@@ -70,6 +70,30 @@ test('.true()', function (t) {
 	t.end();
 });
 
+test('.isTrue()', function (t) {
+	t.throws(function () {
+		assert.isTrue(1);
+	});
+
+	t.throws(function () {
+		assert.isTrue(0);
+	});
+
+	t.throws(function () {
+		assert.isTrue(false);
+	});
+
+	t.throws(function () {
+		assert.isTrue('foo');
+	});
+
+	t.doesNotThrow(function () {
+		assert.isTrue(true);
+	});
+
+	t.end();
+});
+
 test('.false()', function (t) {
 	t.throws(function () {
 		assert.false(0);
@@ -89,6 +113,30 @@ test('.false()', function (t) {
 
 	t.doesNotThrow(function () {
 		assert.false(false);
+	});
+
+	t.end();
+});
+
+test('.isFalse()', function (t) {
+	t.throws(function () {
+		assert.isFalse(0);
+	});
+
+	t.throws(function () {
+		assert.isFalse(1);
+	});
+
+	t.throws(function () {
+		assert.isFalse(true);
+	});
+
+	t.throws(function () {
+		assert.isFalse('foo');
+	});
+
+	t.doesNotThrow(function () {
+		assert.isFalse(false);
 	});
 
 	t.end();
