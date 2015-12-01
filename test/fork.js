@@ -70,6 +70,8 @@ test('fake timers do not break duration', function (t) {
 		.then(function (info) {
 			var duration = info.tests[0].duration;
 			t.true(duration < 1000, duration + ' < 1000');
+			t.is(info.stats.failCount, 0);
+			t.is(info.stats.passCount, 1);
 			t.end();
 		});
 });
