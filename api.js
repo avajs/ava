@@ -74,9 +74,11 @@ Api.prototype._handleRejections = function (data) {
 	}, this);
 };
 
-Api.prototype._handleExceptions = function (err) {
+Api.prototype._handleExceptions = function (data) {
 	this.exceptionCount++;
+	var err = data.exception;
 	err.type = 'exception';
+	err.file = data.file;
 	this.emit('error', err);
 	this.errors.push(err);
 };
