@@ -62,10 +62,27 @@ if (cli.flags.init) {
 
 log.write();
 
-var api = new Api(cli.input, {
+var apiOpts = {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial
-});
+};
+
+if (cli.flags.compilers) {
+	var compilers = cli.flags.compilers;
+	if (!Array.isArray(compilers)) {
+		compilers = [compilers];
+	}
+	apiOpts.compilers = {};
+	compilers.forEach(function (compilerDef) {
+		var colonIdx = compilerDef.indexOf(':');
+		if (colonIdx === -1) {
+			throw new Error('compilers must be specified with: --compilers=<ext>:<require-path>');
+		}
+		apiOpts.compilers[compilerDef.substring(0, colonIdx)] = compilerDef.substring(colonIdx + 1);
+	});
+}
+
+var api = new Api(cli.input, apiOpts);
 
 api.on('test', function (test) {
 	if (test.error) {

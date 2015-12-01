@@ -115,7 +115,9 @@
     "update-notifier": "^0.5.0"
   },
   "devDependencies": {
+    "coffee-script": "^1.10.0",
     "coveralls": "^2.11.4",
+    "delay": "^1.1.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "tap": "^2.2.1",
