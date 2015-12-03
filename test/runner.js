@@ -218,6 +218,46 @@ test('anything can be skipped', function (t) {
 	});
 });
 
+test('include skipped tests in results', function (t) {
+	var runner = new Runner();
+
+	runner.before('before', noop);
+	runner.before.skip('before.skip', noop);
+
+	runner.beforeEach('beforeEach', noop);
+	runner.beforeEach.skip('beforeEach.skip', noop);
+
+	runner.test.serial('test', noop);
+	runner.test.serial.skip('test.skip', noop);
+
+	runner.after('after', noop);
+	runner.after.skip('after.skip', noop);
+
+	runner.afterEach('afterEach', noop);
+	runner.afterEach.skip('afterEach.skip', noop);
+
+	runner.run().then(function () {
+		var titles = runner.results.map(function (result) {
+			return result.title;
+		});
+
+		t.same(titles, [
+			'before',
+			'before.skip',
+			'beforeEach',
+			'beforeEach.skip',
+			'test',
+			'afterEach',
+			'afterEach.skip',
+			'test.skip',
+			'after',
+			'after.skip'
+		]);
+
+		t.end();
+	});
+});
+
 test('test types and titles', function (t) {
 	t.plan(10);
 
