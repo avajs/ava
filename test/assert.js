@@ -219,3 +219,22 @@ test('.ifError()', function (t) {
 
 	t.end();
 });
+
+test('.same() should not mask RangeError from underlying assert', function (t) {
+	var Circular = function () {
+		this.test = this;
+	};
+
+	var a = new Circular();
+	var b = new Circular();
+
+	t.throws(function () {
+		assert.notSame(a, b);
+	});
+
+	t.doesNotThrow(function () {
+		assert.same(a, b);
+	});
+
+	t.end();
+});
