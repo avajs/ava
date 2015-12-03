@@ -17,6 +17,7 @@ if (debug.enabled) {
 	require('time-require');
 }
 
+var arrify = require('arrify');
 var meow = require('meow');
 var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
@@ -35,6 +36,7 @@ var cli = meow([
 	'  --init       Add AVA to your project',
 	'  --fail-fast  Stop after first test failure',
 	'  --serial     Run tests serially',
+	'  --require    Module to preload (Can be repeated)',
 	'',
 	'Examples',
 	'  ava',
@@ -46,7 +48,10 @@ var cli = meow([
 	'Default patterns when no arguments:',
 	'test.js test-*.js test/*.js'
 ], {
-	string: ['_'],
+	string: [
+		'_',
+		'require'
+	],
 	boolean: [
 		'fail-fast',
 		'serial'
@@ -64,7 +69,8 @@ log.write();
 
 var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
-	serial: cli.flags.serial
+	serial: cli.flags.serial,
+	require: arrify(cli.flags.require)
 });
 
 api.on('test', function (test) {

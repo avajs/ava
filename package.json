@@ -78,6 +78,7 @@
   ],
   "dependencies": {
     "arr-flatten": "^1.0.1",
+    "arrify": "^1.0.0",
     "ava-init": "^0.1.0",
     "babel-core": "^5.8.23",
     "babel-plugin-espower": "^1.1.0",
