@@ -39,7 +39,7 @@ test('rejects on error and streams output', function (t) {
 	fork(fixture('broken.js'))
 		.run()
 		.on('uncaughtException', function (data) {
-			t.true(/no such file or directory/.test(data.exception.message));
+			t.match(data.exception.message, /Cannot find module /);
 		})
 		.catch(function () {
 			t.pass();

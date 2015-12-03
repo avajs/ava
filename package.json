@@ -96,6 +96,7 @@
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
+    "istanbul-lib-hook": "^1.0.0-alpha.3",
     "loud-rejection": "^1.2.0",
     "max-timeout": "^1.0.0",
     "meow": "^3.6.0",
