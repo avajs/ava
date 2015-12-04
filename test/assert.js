@@ -219,3 +219,29 @@ test('.ifError()', function (t) {
 
 	t.end();
 });
+
+var Circular = function () {
+	this.test = this;
+};
+
+test('.same() should not mask RangeError from underlying assert', function (t) {
+	try {
+		var a = new Circular();
+		var b = new Circular();
+		assert.same(a, b);
+	} catch (e) {
+		t.is(e.name, 'RangeError');
+		t.end();
+	}
+});
+
+test('.notSame() should not mask RangeError from underlying assert', function (t) {
+	try {
+		var a = new Circular();
+		var b = new Circular();
+		assert.notSame(a, b);
+	} catch (e) {
+		t.is(e.name, 'RangeError');
+		t.end();
+	}
+});
