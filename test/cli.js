@@ -94,7 +94,7 @@ test('display filename prefixes for failed test stack traces', function (t) {
 
 	execCli(['fixture/es2015.js', 'fixture/one-pass-one-fail.js'], function (err, stdout, stderr) {
 		t.ok(err);
-		t.match(stderr, /^.*1\. one-pass-one-fail › this is a failing test.*$/m);
+		t.match(stderr, /^.*1\. one-pass-one-fail.*this is a failing test.*$/m);
 		t.end();
 	});
 });
