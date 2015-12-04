@@ -89,6 +89,16 @@ test('display test title prefixes', function (t) {
 	});
 });
 
+test('display filename prefixes for failed test stack traces', function (t) {
+	t.plan(2);
+
+	execCli(['fixture/es2015.js', 'fixture/one-pass-one-fail.js'], function (err, stdout, stderr) {
+		t.ok(err);
+		t.match(stderr, /1. one-pass-one-fail › this is a failing test/);
+		t.end();
+	});
+});
+
 test('don\'t display test title if there is only one anonymous test', function (t) {
 	t.plan(2);
 
