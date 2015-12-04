@@ -91,7 +91,7 @@ api.run()
 		log.write();
 
 		if (api.failCount > 0) {
-			log.errors(api.tests);
+			log.errors(api.errors);
 		}
 
 		process.stdout.write('');
