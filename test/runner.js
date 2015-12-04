@@ -333,3 +333,18 @@ test('only test', function (t) {
 		t.end();
 	});
 });
+
+test('context is passed as second param', function (t) {
+	var runner = new Runner();
+
+	runner.beforeEach(function (a, context) {
+		context.foo = 'bar';
+	});
+
+	runner.test(function (a, context) {
+		t.is(context.foo, 'bar');
+		t.end();
+	});
+
+	runner.run();
+});
