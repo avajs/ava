@@ -75,3 +75,13 @@ test('fake timers do not break duration', function (t) {
 			t.end();
 		});
 });
+
+test('destructuring of `t` is allowed', function (t) {
+	fork(fixture('destructuring-public-api.js'))
+		.run()
+		.then(function (info) {
+			t.is(info.stats.failCount, 0);
+			t.is(info.stats.passCount, 3);
+			t.end();
+		});
+});
