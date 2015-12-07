@@ -50,6 +50,12 @@ Api.prototype._runFile = function (file) {
 		args.push('--serial');
 	}
 
+	if (this.compilers) {
+		Object.keys(this.compilers).forEach(function (ext) {
+			args.push('--compilers=' + ext + ':' + this.compilers[ext]);
+		}, this);
+	}
+
 	// Forward the `time-require` `--sorted` flag.
 	// Intended for internal optimization tests only.
 	if (this._sorted) {
@@ -217,7 +223,7 @@ function handlePaths(files) {
 		})
 		.then(flatten)
 		.filter(function (file) {
-			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
+			return path.extname(file) === '.coffee' || path.extname(file) === '.js' && path.basename(file)[0] !== '_';
 		});
 }
 
