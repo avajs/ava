@@ -110,7 +110,7 @@
     "resolve-cwd": "^1.0.0",
     "serialize-error": "^1.1.0",
     "set-immediate-shim": "^1.0.1",
-    "source-map-support": "^0.3.3",
+    "source-map-support": "^0.4.0",
     "squeak": "^1.2.0",
     "time-require": "^0.1.2",
     "update-notifier": "^0.5.0"
