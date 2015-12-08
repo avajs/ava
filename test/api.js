@@ -50,7 +50,7 @@ test('display filename prefixes for failed test stack traces', function (t) {
 		.then(function () {
 			t.same(api.passCount, 2);
 			t.same(api.failCount, 1);
-			t.match(api.errors[0].title, /test › fixture › one-pass-one-fail › this is a failing test/);
+			t.match(api.errors[0].title, /test (›|») fixture (›|») one-pass-one-fail (›|») this is a failing test/);
 		});
 });
 
