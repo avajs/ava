@@ -211,32 +211,22 @@ test('throwing a anonymous function will report the function to the console', fu
 	});
 });
 
-test('stack traces for exceptions are corrected using a source map', function (t) {
-	execCli('fixture/source-map-exception.js', function (err, stdout, stderr) {
+test('stack traces for exceptions are corrected using a source map file', function (t) {
+	execCli('fixture/source-map-file.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.true(/Can't catch me!/.test(stderr));
-		t.match(stderr, /^.*?at.*?bar\b.*source-map-exception.js:12.*$/m);
-		t.match(stderr, /^.*?at.*?foo\b.*source-map-exception.js:8.*$/m);
+		t.true(/Thrown by source-map-fixtures/.test(stderr));
+		t.match(stderr, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(stderr, /^.*?at\b.*source-map-file.js:11.*$/m);
 		t.end();
 	});
 });
 
 test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account', function (t) {
-	execCli('fixture/initial-source-map-exception.js', function (err, stdout, stderr) {
+	execCli('fixture/source-map-initial.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.true(/Can't catch me!/.test(stderr));
-		t.match(stderr, /^.*?at.*?bar\b.*initial-source-map-exception.js:12.*$/m);
-		t.match(stderr, /^.*?at.*?foo\b.*initial-source-map-exception.js:8.*$/m);
-		t.end();
-	});
-});
-
-test('stack traces for exceptions are corrected using a source map, found via a pragma', function (t) {
-	execCli('fixture/source-map-pragma-exception.js', function (err, stdout, stderr) {
-		t.ok(err);
-		t.true(/Can't catch me!/.test(stderr));
-		t.match(stderr, /^.*?at.*?bar\b.*source-with-source-map-pragma.js:8.*$/m);
-		t.match(stderr, /^.*?at.*?foo\b.*source-with-source-map-pragma.js:4.*$/m);
+		t.true(/Thrown by source-map-fixtures/.test(stderr));
+		t.match(stderr, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(stderr, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
 		t.end();
 	});
 });
