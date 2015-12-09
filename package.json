@@ -92,7 +92,6 @@
     "figures": "^1.4.0",
     "fn-name": "^2.0.0",
     "globby": "^4.0.0",
-    "has-flag": "^1.0.0",
     "has-generator": "^1.0.0",
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",

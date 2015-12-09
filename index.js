@@ -1,6 +1,5 @@
 'use strict';
 var relative = require('path').relative;
-var hasFlag = require('has-flag');
 var chalk = require('chalk');
 var serializeError = require('serialize-error');
 var globals = require('./lib/globals');
@@ -8,10 +7,12 @@ var Runner = require('./lib/runner');
 var send = require('./lib/send');
 var log = require('./lib/logger');
 
-var runner = new Runner();
-
 // note that test files have require('ava')
 require('./lib/babel').avaRequired = true;
+
+var opts = JSON.parse(process.argv[2]);
+
+var runner = new Runner(opts);
 
 // check if the test is being run without AVA cli
 var isForked = typeof process.send === 'function';
@@ -45,7 +46,7 @@ function test(props) {
 
 	send('test', props);
 
-	if (props.error && hasFlag('fail-fast')) {
+	if (props.error && opts.failFast) {
 		isFailed = true;
 		exit();
 	}
