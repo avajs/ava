@@ -200,7 +200,7 @@ test('absolute paths', function (t) {
 		});
 });
 
-test('titles of both passing and failing tests and AssertionErrors are displayed', function (t) {
+test('titles of both passing and failing tests and AssertionErrors are returned', function (t) {
 	t.plan(3);
 
 	var api = new Api([path.join(__dirname, 'fixture/one-pass-one-fail.js')]);
