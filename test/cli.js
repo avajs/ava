@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path');
 var childProcess = require('child_process');
 var figures = require('figures');
 var test = require('tap').test;
@@ -90,6 +91,86 @@ test('throwing a anonymous function will report the function to the console', fu
 		t.true(/\[Function: anonymous]/.test(stderr));
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.end();
+	});
+});
+
+test('stack traces for exceptions are corrected using a source map file', function (t) {
+	execCli('fixture/source-map-file.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Thrown by source-map-fixtures/.test(stderr));
+		t.match(stderr, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(stderr, /^.*?at\b.*source-map-file.js:11.*$/m);
+		t.end();
+	});
+});
+
+test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account', function (t) {
+	execCli('fixture/source-map-initial.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Thrown by source-map-fixtures/.test(stderr));
+		t.match(stderr, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(stderr, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
+		t.end();
+	});
+});
+
+test('absolute paths in CLI', function (t) {
+	t.plan(2);
+
+	execCli([path.resolve('test/fixture/es2015.js')], function (err, stdout, stderr) {
+		t.ifError(err);
+		t.is(stderr.trim(), '1 test passed');
+		t.end();
+	});
+});
+
+test('titles of both passing and failing tests and AssertionErrors are displayed', function (t) {
+	t.plan(4);
+
+	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/this is a passing test/.test(stderr));
+		t.true(/this is a failing test/.test(stderr));
+		t.true(/AssertionError/.test(stderr));
+		t.end();
+	});
+});
+
+test('empty test files creates a failure with a helpful warning', function (t) {
+	t.plan(2);
+
+	execCli('fixture/empty.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/No tests found.*?import "ava"/.test(stderr));
+		t.end();
+	});
+});
+
+test('test file with no tests creates a failure with a helpful warning', function (t) {
+	t.plan(2);
+
+	execCli('fixture/no-tests.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/No tests/.test(stderr));
+		t.end();
+	});
+});
+
+test('test file that immediately exits with 0 exit code ', function (t) {
+	t.plan(2);
+
+	execCli('fixture/immediate-0-exit.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Test results were not received from/.test(stderr));
+		t.end();
+	});
+});
+
+test('test file in node_modules is ignored', function (t) {
+	execCli('fixture/node_modules/test.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.true(/Couldn't find any files to test/.test(stderr));
 		t.end();
 	});
 });
