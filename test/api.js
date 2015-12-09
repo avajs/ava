@@ -158,12 +158,29 @@ test('uncaught exception will throw an error', function (t) {
 test('stack traces for exceptions are corrected using a source map', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-exception.js')]);
+	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')]);
 
 	api.on('error', function (data) {
-		t.true(/Can't catch me!/.test(data.message));
-		t.match(data.stack, /^.*?at.*?bar\b.*source-map-exception.js:12.*$/m);
-		t.match(data.stack, /^.*?at.*?foo\b.*source-map-exception.js:8.*$/m);
+		t.true(/Thrown by source-map-fixtures/.test(data.message));
+		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?at\b.*source-map-file.js:11.*$/m);
+	});
+
+	api.run()
+		.then(function () {
+			t.same(api.passCount, 1);
+		});
+});
+
+test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account', function (t) {
+	t.plan(4);
+
+	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')]);
+
+	api.on('error', function (data) {
+		t.true(/Thrown by source-map-fixtures/.test(data.message));
+		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
 	});
 
 	api.run()
