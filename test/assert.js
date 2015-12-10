@@ -238,3 +238,19 @@ test('.same() should not mask RangeError from underlying assert', function (t) {
 
 	t.end();
 });
+
+test('.contains()', function (t) {
+	t.doesNotThrow(function () {
+		assert.contains('Hello World!', 'Hello');
+	});
+
+	t.doesNotThrow(function () {
+		assert.contains('Hello World!', 'lo Wor');
+	});
+
+	t.throws(function () {
+		assert.contains('Hello World!', 'Planet');
+	});
+
+	t.end();
+});

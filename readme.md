@@ -570,6 +570,10 @@ Assert that `regex` matches `contents`.
 
 Assert that `error` is falsy.
 
+### .contains(value, expected, [message])
+
+Assert that `value` contains `expected`.
+
 
 ## Enhanced asserts
 
@@ -695,4 +699,3 @@ Concurrency is not parallelism. It enables parallelism. [Learn more.](http://sta
 	<br>
 	<br>
 </div>
-
