@@ -6,7 +6,6 @@ var fs = require('fs');
 var flatten = require('arr-flatten');
 var Promise = require('bluebird');
 var figures = require('figures');
-var objectAssign = require('object-assign');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
@@ -18,9 +17,7 @@ function Api(files, options) {
 
 	EventEmitter.call(this);
 
-	objectAssign(this, options);
-	this.options = options;
-
+	this.options = options || {};
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;

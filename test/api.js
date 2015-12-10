@@ -63,7 +63,7 @@ test('fail-fast mode', function (t) {
 
 	api.run()
 		.then(function () {
-			t.ok(api.failFast);
+			t.ok(api.options.failFast);
 			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
 			t.true(/false fail false/.test(api.errors[0].error.message));
@@ -79,7 +79,7 @@ test('serial execution mode', function (t) {
 
 	api.run()
 		.then(function () {
-			t.ok(api.serial);
+			t.ok(api.options.serial);
 			t.is(api.passCount, 2);
 		});
 });
