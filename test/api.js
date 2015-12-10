@@ -10,7 +10,7 @@ test('ES2015 support', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -21,7 +21,7 @@ test('generators support', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -32,7 +32,7 @@ test('async/await support', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 2);
+			t.is(api.passCount, 2);
 		});
 });
 
@@ -48,8 +48,8 @@ test('display filename prefixes for failed test stack traces', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 2);
-			t.same(api.failCount, 1);
+			t.is(api.passCount, 2);
+			t.is(api.failCount, 1);
 			t.match(api.errors[0].title, /test \S fixture \S one-pass-one-fail \S this is a failing test/);
 		});
 });
@@ -64,8 +64,8 @@ test('fail-fast mode', function (t) {
 	api.run()
 		.then(function () {
 			t.ok(api.failFast);
-			t.same(api.passCount, 1);
-			t.same(api.failCount, 1);
+			t.is(api.passCount, 1);
+			t.is(api.failCount, 1);
 			t.true(/false fail false/.test(api.errors[0].error.message));
 		});
 });
@@ -80,7 +80,7 @@ test('serial execution mode', function (t) {
 	api.run()
 		.then(function () {
 			t.ok(api.serial);
-			t.same(api.passCount, 2);
+			t.is(api.passCount, 2);
 		});
 });
 
@@ -91,7 +91,7 @@ test('circular references on assertions do not break process.send', function (t)
 
 	api.run()
 		.then(function () {
-			t.same(api.failCount, 1);
+			t.is(api.failCount, 1);
 			t.true(/'c'.*?'d'/.test(api.errors[0].error.message));
 		});
 });
@@ -103,7 +103,7 @@ test('change process.cwd() to a test\'s directory', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -113,7 +113,7 @@ test('babel require hook only applies to the test file', function (t) {
 	var api = new Api([path.join(__dirname, 'fixture/babel-hook.js')]);
 
 	api.on('error', function (data) {
-		t.same(data.name, 'SyntaxError');
+		t.is(data.name, 'SyntaxError');
 		t.true(/Unexpected token/.test(data.message));
 	});
 
@@ -129,13 +129,13 @@ test('unhandled promises will throw an error', function (t) {
 	var api = new Api([path.join(__dirname, 'fixture/loud-rejection.js')]);
 
 	api.on('error', function (data) {
-		t.same(data.name, 'Error');
+		t.is(data.name, 'Error');
 		t.true(/You can\'t handle this!/.test(data.message));
 	});
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -145,13 +145,13 @@ test('uncaught exception will throw an error', function (t) {
 	var api = new Api([path.join(__dirname, 'fixture/uncaught-exception.js')]);
 
 	api.on('error', function (data) {
-		t.same(data.name, 'Error');
+		t.is(data.name, 'Error');
 		t.true(/Can\'t catch me!/.test(data.message));
 	});
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -168,7 +168,7 @@ test('stack traces for exceptions are corrected using a source map file', functi
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -185,7 +185,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
@@ -196,7 +196,7 @@ test('absolute paths', function (t) {
 
 	api.run()
 		.then(function () {
-			t.same(api.passCount, 1);
+			t.is(api.passCount, 1);
 		});
 });
 
