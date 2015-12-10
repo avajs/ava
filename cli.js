@@ -86,8 +86,10 @@ api.on('error', function (data) {
 
 api.run()
 	.then(function () {
+		var duration = new Date() - api.startTime;
+
 		log.write();
-		log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount, api.startTime);
+		log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount, duration);
 		log.write();
 
 		if (api.failCount > 0) {
