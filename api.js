@@ -6,7 +6,7 @@ var fs = require('fs');
 var flatten = require('arr-flatten');
 var Promise = require('bluebird');
 var figures = require('figures');
-var assign = require('object-assign');
+var objectAssign = require('object-assign');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
@@ -18,7 +18,8 @@ function Api(files, options) {
 
 	EventEmitter.call(this);
 
-	assign(this, options);
+	objectAssign(this, options);
+	this.options = options;
 
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
@@ -40,23 +41,7 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file) {
-	var args = [file];
-
-	if (this.failFast) {
-		args.push('--fail-fast');
-	}
-
-	if (this.serial) {
-		args.push('--serial');
-	}
-
-	// Forward the `time-require` `--sorted` flag.
-	// Intended for internal optimization tests only.
-	if (this._sorted) {
-		args.push('--sorted');
-	}
-
-	return fork(args)
+	return fork(file, this.options)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -162,7 +147,7 @@ Api.prototype.run = function () {
 					if (++statsCount === self.fileCount) {
 						self.emit('ready');
 
-						var method = self.serial ? 'mapSeries' : 'map';
+						var method = self.options.serial ? 'mapSeries' : 'map';
 
 						deferred.resolve(Promise[method](files, function (file, index) {
 							return tests[index].run();
