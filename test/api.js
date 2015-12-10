@@ -155,7 +155,7 @@ test('uncaught exception will throw an error', function (t) {
 		});
 });
 
-test('stack traces for exceptions are corrected using a source map', function (t) {
+test('stack traces for exceptions are corrected using a source map file', function (t) {
 	t.plan(4);
 
 	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')]);
@@ -181,23 +181,6 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		t.true(/Thrown by source-map-fixtures/.test(data.message));
 		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
-	});
-
-	api.run()
-		.then(function () {
-			t.same(api.passCount, 1);
-		});
-});
-
-test('stack traces for exceptions are corrected using a source map, found via a pragma', function (t) {
-	t.plan(4);
-
-	var api = new Api([path.join(__dirname, 'fixture/source-map-pragma-exception.js')]);
-
-	api.on('error', function (data) {
-		t.true(/Can't catch me!/.test(data.message));
-		t.match(data.stack, /^.*?at.*?bar\b.*source-with-source-map-pragma.js:8.*$/m);
-		t.match(data.stack, /^.*?at.*?foo\b.*source-with-source-map-pragma.js:4.*$/m);
 	});
 
 	api.run()
