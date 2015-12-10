@@ -24,6 +24,7 @@ function Api(files, options) {
 	this.failCount = 0;
 	this.fileCount = 0;
 	this.testCount = 0;
+	this.startTime = new Date();
 	this.errors = [];
 	this.stats = [];
 	this.tests = [];
