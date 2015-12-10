@@ -9,6 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
+var globals = require('./lib/globals');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -24,6 +25,7 @@ function Api(files, options) {
 	this.failCount = 0;
 	this.fileCount = 0;
 	this.testCount = 0;
+	this.startTime = globals.now();
 	this.errors = [];
 	this.stats = [];
 	this.tests = [];

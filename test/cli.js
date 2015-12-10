@@ -35,6 +35,7 @@ test('display test title prefixes', function (t) {
 			.replace(/[0-9] tests passed/, '')
 			.replace(new RegExp(figures.tick, 'gm'), '')
 			.replace(/^\s+/gm, '')
+			.replace(/\(\w+\)/, '')
 			.trim();
 
 		var separator = ' ' + figures.pointerSmall + ' ';
@@ -69,7 +70,7 @@ test('don\'t display test title if there is only one anonymous test', function (
 
 	execCli(['fixture/es2015.js'], function (err, stdout, stderr) {
 		t.ifError(err);
-		t.is(stderr.trim(), '1 test passed');
+		t.true(stderr.trim().includes('1 test passed'));
 		t.end();
 	});
 });
