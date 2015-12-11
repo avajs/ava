@@ -66,7 +66,7 @@ test('fail-fast mode', function (t) {
 			t.ok(api.options.failFast);
 			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
-			t.true(/false fail false/.test(api.errors[0].error.message));
+			t.true(/Test failed via t.fail()/.test(api.errors[0].error.message));
 		});
 });
 
