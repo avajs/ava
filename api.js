@@ -18,6 +18,7 @@ function Api(files, options) {
 	EventEmitter.call(this);
 
 	this.options = options || {};
+
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;

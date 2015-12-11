@@ -260,3 +260,17 @@ test('test file in node_modules is ignored', function (t) {
 			t.true(/Couldn't find any files to test/.test(err.message));
 		});
 });
+
+test('Node.js-style --require CLI argument', function (t) {
+	t.plan(1);
+
+	var api = new Api(
+		[path.join(__dirname, 'fixture/validate-installed-global.js')],
+		{require: [path.join(__dirname, 'fixture', 'install-global.js')]}
+	);
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});

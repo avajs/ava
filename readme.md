@@ -102,6 +102,7 @@ $ ava --help
     --init       Add AVA to your project
     --fail-fast  Stop after first test failure
     --serial     Run tests serially
+    --require    Module to preload (Can be repeated)
 
   Examples
     ava
