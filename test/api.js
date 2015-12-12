@@ -241,7 +241,7 @@ test('testing nonexistent files rejects', function (t) {
 	api.run()
 		.catch(function (err) {
 			t.ok(err);
-			t.true(/Couldn't find any files to test/.test(err.message));
+			t.match(err.message, /Couldn't find any files to test/);
 		});
 });
 
