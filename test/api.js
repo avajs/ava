@@ -233,7 +233,7 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 		});
 });
 
-test('testing nonexisting files rejects', function (t) {
+test('testing nonexistent files rejects', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/broken.js')]);
