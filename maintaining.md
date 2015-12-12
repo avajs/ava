@@ -20,6 +20,6 @@
 ## Pull requests
 
 - New features should come with tests and documentation.
-- Ensure the contributing guidelines are followed.
+- Ensure the [contributing guidelines](contributing.md) are followed.
 - At least two team members must `LGTM` a pull request before it's merged.
 - Squash commits when merging.
