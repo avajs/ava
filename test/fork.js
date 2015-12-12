@@ -33,7 +33,7 @@ test('resolves promise with tests info', function (t) {
 		});
 });
 
-test('rejects on nonexisting file', function (t) {
+test('rejects on error and streams output', function (t) {
 	t.plan(2);
 
 	fork(fixture('broken.js'))
