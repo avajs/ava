@@ -95,16 +95,6 @@ test('babel require hook only applies to the test file', function (t) {
 	});
 });
 
-test('rejects on error and streams output', function (t) {
-	t.plan(2);
-
-	execCli('fixture/broken.js', function (err, stdout, stderr) {
-		t.ok(err);
-		t.true(/Couldn't find any files to test/.test(stderr));
-		t.end();
-	});
-});
-
 test('throwing a anonymous function will report the function to the console', function (t) {
 	execCli('fixture/throw-anonymous-function.js', function (err, stdout, stderr) {
 		t.ok(err);
