@@ -33,16 +33,14 @@ test('resolves promise with tests info', function (t) {
 		});
 });
 
-test('rejects on error and streams output', function (t) {
+test('rejects on nonexisting file', function (t) {
 	t.plan(2);
 
 	fork(fixture('broken.js'))
 		.run()
-		.on('uncaughtException', function (data) {
-			t.true(/no such file or directory/.test(data.exception.message));
-		})
-		.catch(function () {
-			t.pass();
+		.catch(function (err) {
+			t.true(/exited with a non-zero exit code: 1/.test(err.message));
+			t.ok(err);
 			t.end();
 		});
 });
