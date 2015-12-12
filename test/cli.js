@@ -89,8 +89,8 @@ test('babel require hook only applies to the test file', function (t) {
 
 	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.match(stderr, /Unexpected token/);
 		t.is(err.code, 1);
+		t.match(stderr, /Unexpected token/);
 		t.end();
 	});
 });

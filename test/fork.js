@@ -39,8 +39,8 @@ test('rejects on error and streams output', function (t) {
 	fork(fixture('broken.js'))
 		.run()
 		.catch(function (err) {
-			t.match(err.message, /exited with a non-zero exit code: \d/);
 			t.ok(err);
+			t.match(err.message, /exited with a non-zero exit code: \d/);
 			t.end();
 		});
 });
