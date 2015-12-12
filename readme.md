@@ -364,16 +364,7 @@ test(t => {
 });
 ```
 
-You can also use your own local Babel version:
-
-```json
-{
-	"devDependencies": {
-		"ava": "^0.6.0",
-		"babel-core": "^5.8.0"
-	}
-}
-```
+We don't yet [support Babel 6](https://github.com/sindresorhus/ava/pull/221), but you can use any Babel version in your project. We use our own bundled one.
 
 #### Transpiling Imported Modules
 
