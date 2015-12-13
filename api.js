@@ -70,12 +70,21 @@ Api.prototype._handleStats = function (stats) {
 	this.testCount += stats.testCount;
 };
 
+var formatter = require('./lib/enhance-assert').formatter();
+
 Api.prototype._handleTest = function (test) {
 	test.title = this._prefixTitle(test.file) + test.title;
 
 	var isError = test.error.message;
 
 	if (isError) {
+		if (test.error.powerAssertContext) {
+			var message = formatter(test.error.powerAssertContext);
+			if (test.error.originalMessage) {
+				message = test.error.originalMessage + ' ' + message;
+			}
+			test.error.message = message;
+		}
 		this.errors.push(test);
 	} else {
 		test.error = null;

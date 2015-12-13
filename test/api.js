@@ -270,3 +270,24 @@ test('Node.js-style --require CLI argument', function (t) {
 			t.is(api.passCount, 1);
 		});
 });
+
+test('power-assert support', function (t) {
+	t.plan(3);
+
+	var api = new Api([path.join(__dirname, 'fixture/power-assert.js')]);
+
+	api.run()
+		.then(function () {
+			t.ok(api.errors[0].error.powerAssertContext);
+
+			t.match(
+				api.errors[0].error.message,
+				/t\.ok\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
+			);
+
+			t.match(
+				api.errors[1].error.message,
+				/with message\s+t\.ok\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
+			);
+		});
+});
