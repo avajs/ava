@@ -9,6 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
+var formatter = require('./lib/enhance-assert').formatter();
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -69,8 +70,6 @@ Api.prototype._handleExceptions = function (data) {
 Api.prototype._handleStats = function (stats) {
 	this.testCount += stats.testCount;
 };
-
-var formatter = require('./lib/enhance-assert').formatter();
 
 Api.prototype._handleTest = function (test) {
 	test.title = this._prefixTitle(test.file) + test.title;
