@@ -178,7 +178,7 @@ test('logger.report', function (t) {
 });
 
 test('logger.unhandledError with exception with stack', function (t) {
-	t.plan(2);
+	t.plan(3);
 
 	var lines = [];
 
@@ -189,7 +189,8 @@ test('logger.unhandledError with exception with stack', function (t) {
 	logger.unhandledError('exception', 'test.js', new Error('Unexpected token'));
 
 	t.is(lines[0], 'Uncaught Exception: test.js\n');
-	t.match(lines[1], /Error: Unexpected token\n\s+at Test.test/);
+	t.match(lines[1], /Error: Unexpected token\n/);
+	t.match(lines[1], /at Test.test/);
 });
 
 test('logger.unhandledError with exception without stack', function (t) {
@@ -211,7 +212,7 @@ test('logger.unhandledError with exception without stack', function (t) {
 });
 
 test('logger.unhandledError rejection with stack', function (t) {
-	t.plan(2);
+	t.plan(3);
 
 	var lines = [];
 
@@ -222,7 +223,8 @@ test('logger.unhandledError rejection with stack', function (t) {
 	logger.unhandledError('rejection', 'test.js', new Error('I have been rejected'));
 
 	t.is(lines[0], 'Unhandled Rejection: test.js\n');
-	t.match(lines[1], /Error: I have been rejected\s+at Test.test/);
+	t.match(lines[1], /Error: I have been rejected\n/);
+	t.match(lines[1], /at Test.test/);
 });
 
 test('logger.unhandledError rejection without stack', function (t) {
