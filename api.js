@@ -9,6 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
+var formatter = require('./lib/enhance-assert').formatter();
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -76,6 +77,13 @@ Api.prototype._handleTest = function (test) {
 	var isError = test.error.message;
 
 	if (isError) {
+		if (test.error.powerAssertContext) {
+			var message = formatter(test.error.powerAssertContext);
+			if (test.error.originalMessage) {
+				message = test.error.originalMessage + ' ' + message;
+			}
+			test.error.message = message;
+		}
 		this.errors.push(test);
 	} else {
 		test.error = null;

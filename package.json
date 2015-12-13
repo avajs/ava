@@ -90,6 +90,7 @@
     "debug": "^2.2.0",
     "deeper": "^2.1.0",
     "empower": "^1.1.0",
+    "empower-core": "^0.2.0",
     "figures": "^1.4.0",
     "fn-name": "^2.0.0",
     "globby": "^4.0.0",
