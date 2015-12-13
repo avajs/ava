@@ -107,22 +107,6 @@ test('change process.cwd() to a test\'s directory', function (t) {
 		});
 });
 
-test('babel require hook only applies to the test file', function (t) {
-	t.plan(3);
-
-	var api = new Api([path.join(__dirname, 'fixture/babel-hook.js')]);
-
-	api.on('error', function (data) {
-		t.is(data.name, 'SyntaxError');
-		t.true(/Unexpected token/.test(data.message));
-	});
-
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-		});
-});
-
 test('unhandled promises will throw an error', function (t) {
 	t.plan(3);
 
@@ -246,6 +230,18 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 		.catch(function (err) {
 			t.ok(err);
 			t.true(/Test results were not received from/.test(err.message));
+		});
+});
+
+test('testing nonexistent files rejects', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.join(__dirname, 'fixture/broken.js')]);
+
+	api.run()
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
 		});
 });
 

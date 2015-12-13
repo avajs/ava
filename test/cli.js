@@ -84,6 +84,17 @@ test('throwing a named function will report the to the console', function (t) {
 	});
 });
 
+test('babel require hook only applies to the test file', function (t) {
+	t.plan(3);
+
+	execCli('fixture/babel-hook.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.is(err.code, 1);
+		t.match(stderr, /Unexpected token/);
+		t.end();
+	});
+});
+
 test('throwing a anonymous function will report the function to the console', function (t) {
 	execCli('fixture/throw-anonymous-function.js', function (err, stdout, stderr) {
 		t.ok(err);

@@ -38,11 +38,9 @@ test('rejects on error and streams output', function (t) {
 
 	fork(fixture('broken.js'))
 		.run()
-		.on('uncaughtException', function (data) {
-			t.true(/no such file or directory/.test(data.exception.message));
-		})
-		.catch(function () {
-			t.pass();
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /exited with a non-zero exit code: \d/);
 			t.end();
 		});
 });
