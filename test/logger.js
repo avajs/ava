@@ -20,7 +20,7 @@ test('beautify stack - removes uninteresting lines', function (t) {
 test('logger.write', function (t) {
 	t.plan(1);
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), 'Test');
@@ -33,7 +33,7 @@ test('logger.write', function (t) {
 test('logger.writelpad', function (t) {
 	t.plan(1);
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  Test');
@@ -46,7 +46,7 @@ test('logger.writelpad', function (t) {
 test('logger.success', function (t) {
 	t.plan(1);
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.tick + ' Test');
@@ -59,7 +59,7 @@ test('logger.success', function (t) {
 test('logger.error', function (t) {
 	t.plan(1);
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.cross + ' Test');
@@ -77,7 +77,7 @@ test('logger.test with passing test and duration less than threshold', function 
 		duration: 90
 	};
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.tick + ' Passed');
@@ -95,7 +95,7 @@ test('logger.test with passing test and duration greater than threshold', functi
 		duration: 150
 	};
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.tick + ' Passed (150ms)');
@@ -115,7 +115,7 @@ test('logger.test with failing test', function (t) {
 		}
 	};
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.cross + ' Failed Assertion failed');
@@ -133,7 +133,7 @@ test('logger.test with skipped test', function (t) {
 		skipped: true
 	};
 
-	var unhook = hookStd.stderr({silent: true}, output => {
+	var unhook = hookStd.stderr({silent: true}, function (output) {
 		unhook();
 
 		t.is(output.toString(), '  ' + figures.tick + ' Skipped');
