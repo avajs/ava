@@ -66,7 +66,7 @@ test('fail-fast mode', function (t) {
 			t.ok(api.options.failFast);
 			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
-			t.true(/Test failed via t.fail()/.test(api.errors[0].error.message));
+			t.match(api.errors[0].error.message, /Test failed via t.fail()/);
 		});
 });
 
@@ -92,7 +92,7 @@ test('circular references on assertions do not break process.send', function (t)
 	api.run()
 		.then(function () {
 			t.is(api.failCount, 1);
-			t.true(/'c'.*?'d'/.test(api.errors[0].error.message));
+			t.match(api.errors[0].error.message, /'c'.*?'d'/);
 		});
 });
 
@@ -114,7 +114,7 @@ test('unhandled promises will throw an error', function (t) {
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
-		t.true(/You can\'t handle this!/.test(data.message));
+		t.match(data.message, /You can\'t handle this!/);
 	});
 
 	api.run()
@@ -130,7 +130,7 @@ test('uncaught exception will throw an error', function (t) {
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
-		t.true(/Can\'t catch me!/.test(data.message));
+		t.match(data.message, /Can\'t catch me!/);
 	});
 
 	api.run()
@@ -145,7 +145,7 @@ test('stack traces for exceptions are corrected using a source map file', functi
 	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')]);
 
 	api.on('error', function (data) {
-		t.true(/Thrown by source-map-fixtures/.test(data.message));
+		t.match(data.message, /Thrown by source-map-fixtures/);
 		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 		t.match(data.stack, /^.*?at\b.*source-map-file.js:11.*$/m);
 	});
@@ -162,7 +162,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')]);
 
 	api.on('error', function (data) {
-		t.true(/Thrown by source-map-fixtures/.test(data.message));
+		t.match(data.message, /Thrown by source-map-fixtures/);
 		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
 	});
@@ -191,9 +191,9 @@ test('titles of both passing and failing tests and AssertionErrors are returned'
 
 	api.run()
 		.then(function () {
-			t.true(/this is a failing test/.test(api.errors[0].title));
-			t.true(/this is a passing test/.test(api.tests[0].title));
-			t.true(/AssertionError/.test(api.errors[0].error.name));
+			t.match(api.errors[0].title, /this is a failing test/);
+			t.match(api.tests[0].title, /this is a passing test/);
+			t.match(api.errors[0].error.name, /AssertionError/);
 		});
 });
 
@@ -205,7 +205,7 @@ test('empty test files creates a failure with a helpful warning', function (t) {
 	api.run()
 		.catch(function (err) {
 			t.ok(err);
-			t.true(/No tests found.*?import "ava"/.test(err.message));
+			t.match(err.message, /No tests found.*?import "ava"/);
 		});
 });
 
@@ -217,7 +217,7 @@ test('test file with no tests creates a failure with a helpful warning', functio
 	api.run()
 		.catch(function (err) {
 			t.ok(err);
-			t.true(/No tests/.test(err.message));
+			t.match(err.message, /No tests/);
 		});
 });
 
@@ -229,7 +229,7 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 	api.run()
 		.catch(function (err) {
 			t.ok(err);
-			t.true(/Test results were not received from/.test(err.message));
+			t.match(err.message, /Test results were not received from/);
 		});
 });
 
@@ -253,7 +253,7 @@ test('test file in node_modules is ignored', function (t) {
 	api.run()
 		.catch(function (err) {
 			t.ok(err);
-			t.true(/Couldn't find any files to test/.test(err.message));
+			t.match(err.message, /Couldn't find any files to test/);
 		});
 });
 
