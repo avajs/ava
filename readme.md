@@ -127,7 +127,7 @@ Tests are run asynchronously and require you to return a supported async object 
 
 If you don't return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately.
 
-If you're unable to use promises or other supported async objects, you may enable "callback mode" by defining your test with `test.cb([title', fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
+If you're unable to use promises or other supported async objects, you may enable "callback mode" by defining your test with `test.cb([title], fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
@@ -691,4 +691,3 @@ Concurrency is not parallelism. It enables parallelism. [Learn more.](http://sta
 	<br>
 	<br>
 </div>
-
