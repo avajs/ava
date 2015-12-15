@@ -36,6 +36,41 @@ test('async/await support', function (t) {
 		});
 });
 
+test('test title prefixes', function (t) {
+	t.plan(5);
+
+	var files = [
+		path.join(__dirname, 'fixture/async-await.js'),
+		path.join(__dirname, 'fixture/es2015.js'),
+		path.join(__dirname, 'fixture/generators.js')
+	];
+	var expected = [
+		'async function',
+		'arrow async function',
+		'[anonymous]',
+		'generator function'
+	];
+	var index;
+
+	var api = new Api(files);
+
+	api.run()
+		.then(function () {
+			api.tests.forEach(function (test) {
+				index = expected.indexOf(test.title);
+
+				t.true(index >= 0);
+
+				// remove line from expected output
+				expected.splice(index, 1);
+			});
+
+			// if all lines were removed from expected output
+			// actual output matches expected output
+			t.is(expected.length, 0);
+		});
+});
+
 test('display filename prefixes for failed test stack traces', function (t) {
 	t.plan(3);
 
