@@ -45,19 +45,30 @@ test('test title prefixes', function (t) {
 		path.join(__dirname, 'fixture/generators.js')
 	];
 	var expected = [
-		'async function',
-		'arrow async function',
-		'[anonymous]',
-		'generator function'
+		'async-await async function',
+		'async-await arrow async function',
+		'es2015 [anonymous]',
+		'generators generator function'
 	];
 	var index;
+	var file;
 
 	var api = new Api(files);
 
 	api.run()
 		.then(function () {
-			api.tests.forEach(function (test) {
-				index = expected.indexOf(test.title);
+			api.tests.forEach(function (test, i) {
+				// the first two tests are from async-await.js
+				if (i === 0 || i === 1) {
+					file = api.files[0];
+				} else {
+					file = files[i - 1];
+				}
+
+				// path/to/file.js -> file
+				file = file.replace(/^.*[\\\/]/, '').slice(0, -3);
+
+				index = expected.indexOf(file + ' ' + test.title);
 
 				t.true(index >= 0);
 
