@@ -140,32 +140,31 @@ Api.prototype.run = function () {
 
 			// receive test count from all files and then run the tests
 			var statsCount = 0;
-			var deferred = Promise.pending();
 
-			tests.forEach(function (test) {
-				var counted = false;
+			return new Promise(function (resolve) {
+				tests.forEach(function (test) {
+					var counted = false;
 
-				function tryRun() {
-					if (counted) {
-						return;
+					function tryRun() {
+						if (counted) {
+							return;
+						}
+
+						if (++statsCount === self.fileCount) {
+							self.emit('ready');
+
+							var method = self.options.serial ? 'mapSeries' : 'map';
+
+							resolve(Promise[method](files, function (file, index) {
+								return tests[index].run();
+							}));
+						}
 					}
 
-					if (++statsCount === self.fileCount) {
-						self.emit('ready');
-
-						var method = self.options.serial ? 'mapSeries' : 'map';
-
-						deferred.resolve(Promise[method](files, function (file, index) {
-							return tests[index].run();
-						}));
-					}
-				}
-
-				test.on('stats', tryRun);
-				test.catch(tryRun);
+					test.on('stats', tryRun);
+					test.catch(tryRun);
+				});
 			});
-
-			return deferred.promise;
 		})
 		.then(function (results) {
 			// assemble stats from all tests
