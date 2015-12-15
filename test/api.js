@@ -64,7 +64,8 @@ test('test title prefixes', function (t) {
 		});
 
 	api.on('test', function (a) {
-		index = expected.indexOf(a.title.replace('test › fixture › ', ''));
+		var unnecessaryString = 'test' + separator + 'fixture' + separator;
+		index = expected.indexOf(a.title.replace(unnecessaryString, ''));
 
 		t.true(index >= 0);
 
