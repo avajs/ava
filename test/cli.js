@@ -1,6 +1,5 @@
 'use strict';
 var childProcess = require('child_process');
-var figures = require('figures');
 var test = require('tap').test;
 
 function execCli(args, cb) {
@@ -19,50 +18,6 @@ function execCli(args, cb) {
 		env: env
 	}, cb);
 }
-
-test('display test title prefixes', function (t) {
-	t.plan(6);
-
-	execCli([
-		'fixture/async-await.js',
-		'fixture/es2015.js',
-		'fixture/generators.js'
-	], function (err, stdout, stderr) {
-		t.ifError(err);
-
-		// remove everything except test list
-		var output = stderr
-			.replace(/[0-9] tests passed/, '')
-			.replace(new RegExp(figures.tick, 'gm'), '')
-			.replace(/^\s+/gm, '')
-			.trim();
-
-		var separator = ' ' + figures.pointerSmall + ' ';
-
-		// expected output
-		var tests = [
-			['async-await', 'async function'].join(separator),
-			['async-await', 'arrow async function'].join(separator),
-			['generators', 'generator function'].join(separator),
-			['es2015', '[anonymous]'].join(separator)
-		];
-
-		// check if each line in actual output
-		// exists in expected output
-		output.split('\n').forEach(function (line) {
-			var index = tests.indexOf(line);
-
-			t.true(index >= 0);
-
-			// remove line from expected output
-			tests.splice(index, 1);
-		});
-
-		// if all lines were removed from expected output
-		// actual output matches expected output
-		t.is(tests.length, 0);
-	});
-});
 
 test('don\'t display test title if there is only one anonymous test', function (t) {
 	t.plan(2);

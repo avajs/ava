@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path');
+var figures = require('figures');
 var test = require('tap').test;
 var Api = require('../api');
 
@@ -34,6 +35,43 @@ test('async/await support', function (t) {
 		.then(function () {
 			t.is(api.passCount, 2);
 		});
+});
+
+test('test title prefixes', function (t) {
+	t.plan(5);
+
+	var separator = ' ' + figures.pointerSmall + ' ';
+	var files = [
+		path.join(__dirname, 'fixture/async-await.js'),
+		path.join(__dirname, 'fixture/es2015.js'),
+		path.join(__dirname, 'fixture/generators.js')
+	];
+	var expected = [
+		['async-await', 'async function'].join(separator),
+		['async-await', 'arrow async function'].join(separator),
+		['es2015', '[anonymous]'].join(separator),
+		['generators', 'generator function'].join(separator)
+	];
+	var index;
+
+	var api = new Api(files);
+
+	api.run()
+		.then(function () {
+			// if all lines were removed from expected output
+			// actual output matches expected output
+			t.is(expected.length, 0);
+		});
+
+	api.on('test', function (a) {
+		var unnecessaryString = 'test' + separator + 'fixture' + separator;
+		index = expected.indexOf(a.title.replace(unnecessaryString, ''));
+
+		t.true(index >= 0);
+
+		// remove line from expected output
+		expected.splice(index, 1);
+	});
 });
 
 test('display filename prefixes for failed test stack traces', function (t) {
