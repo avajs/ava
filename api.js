@@ -9,8 +9,10 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var resolveCwd = require('resolve-cwd');
+var assign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
+var precompileTest = require('./lib/test-transformer');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -42,7 +44,15 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file) {
-	return fork(file, this.options)
+	var precompiled = {};
+	precompiled[file.testPath] = {
+		sourcePath: file.tempPath,
+		mapPath: file.mapPath
+	};
+	var options = assign({}, this.options, {
+		precompiled: precompiled
+	});
+	return fork(file.testPath, options)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -131,6 +141,7 @@ Api.prototype.run = function () {
 		.map(function (file) {
 			return path.resolve(file);
 		})
+		.map(precompileTest)
 		.then(function (files) {
 			if (files.length === 0) {
 				return Promise.reject(new Error('Couldn\'t find any files to test'));
