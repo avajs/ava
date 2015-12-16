@@ -2,7 +2,18 @@
 var path = require('path');
 var test = require('tap').test;
 var Runner = require('../lib/runner');
-var fork = require('../lib/fork');
+var _fork = require('../lib/fork');
+var precompile = require('../lib/test-transformer');
+
+function fork(testPath) {
+	var result = precompile.sync(testPath);
+	var precompiled = {};
+	precompiled[testPath] = {
+		sourcePath: result.tempPath,
+		mapPath: result.mapPath
+	};
+	return _fork(testPath, {precompiled: precompiled});
+}
 
 test('before', function (t) {
 	t.plan(1);
