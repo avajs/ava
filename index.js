@@ -37,16 +37,18 @@ function test(props) {
 		return;
 	}
 
+	var hasError = typeof props.error !== 'undefined';
+
 	// don't display anything if it's a passed hook
-	if (!props.error && props.type !== 'test') {
+	if (!hasError && props.type !== 'test') {
 		return;
 	}
 
-	props.error = props.error ? serializeError(props.error) : {};
+	props.error = hasError ? serializeError(props.error) : {};
 
 	send('test', props);
 
-	if (props.error && opts.failFast) {
+	if (hasError && opts.failFast) {
 		isFailed = true;
 		exit();
 	}
