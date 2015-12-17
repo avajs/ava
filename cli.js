@@ -23,6 +23,7 @@ var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
 var Promise = require('bluebird');
 var log = require('./lib/logger');
+var tap = require('./lib/tap');
 var Api = require('./api');
 
 // Bluebird specific
@@ -37,6 +38,7 @@ var cli = meow([
 	'  --fail-fast  Stop after first test failure',
 	'  --serial     Run tests serially',
 	'  --require    Module to preload (Can be repeated)',
+	'  --tap        Generate TAP output',
 	'',
 	'Examples',
 	'  ava',
@@ -54,7 +56,8 @@ var cli = meow([
 	],
 	boolean: [
 		'fail-fast',
-		'serial'
+		'serial',
+		'tap'
 	]
 });
 
@@ -65,7 +68,11 @@ if (cli.flags.init) {
 	return;
 }
 
-log.write();
+if (cli.flags.tap) {
+	console.log(tap.start());
+} else {
+	log.write();
+}
 
 var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
@@ -74,6 +81,11 @@ var api = new Api(cli.input, {
 });
 
 api.on('test', function (test) {
+	if (cli.flags.tap) {
+		console.log(tap.test(test));
+		return;
+	}
+
 	if (test.error) {
 		log.error(test.title, chalk.red(test.error.message));
 	} else {
@@ -87,17 +99,26 @@ api.on('test', function (test) {
 });
 
 api.on('error', function (data) {
+	if (cli.flags.tap) {
+		console.log(tap.unhandledError(data));
+		return;
+	}
+
 	log.unhandledError(data.type, data.file, data);
 });
 
 api.run()
 	.then(function () {
-		log.write();
-		log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount);
-		log.write();
+		if (cli.flags.tap) {
+			console.log(tap.finish(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount));
+		} else {
+			log.write();
+			log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount);
+			log.write();
 
-		if (api.failCount > 0) {
-			log.errors(api.errors);
+			if (api.failCount > 0) {
+				log.errors(api.errors);
+			}
 		}
 
 		process.stdout.write('');
