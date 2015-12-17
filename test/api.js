@@ -93,16 +93,32 @@ test('display filename prefixes for failed test stack traces', function (t) {
 });
 
 test('fail-fast mode', function (t) {
-	t.plan(4);
+	t.plan(5);
 
 	var api = new Api([path.join(__dirname, 'fixture/fail-fast.js')], {
 		failFast: true
 	});
 
+	var tests = [];
+
+	api.on('test', function (test) {
+		tests.push({
+			ok: !test.error,
+			title: test.title
+		});
+	});
+
 	api.run()
 		.then(function () {
 			t.ok(api.options.failFast);
-			t.is(api.passCount, 1);
+			t.same(tests, [{
+				ok: true,
+				title: 'first pass'
+			}, {
+				ok: false,
+				title: 'second fail'
+			}]);
+			t.is(api.passCount, 2);
 			t.is(api.failCount, 1);
 			t.match(api.errors[0].error.message, /Test failed via t.fail()/);
 		});

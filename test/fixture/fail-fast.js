@@ -1,9 +1,13 @@
 import test from '../../';
 
-test(t => {
+test('first pass', t => {
+	t.pass();
+});
+
+test('second fail', t => {
 	t.fail();
 });
 
-test(t => {
+test('third pass', t => {
 	t.pass();
 });
