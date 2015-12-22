@@ -37,9 +37,9 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "pretest": "rm -rf ./node_modules/.cache",
-    "test": "xo && nyc --reporter=lcov tap --no-cov --timeout=150 test/*.js",
-    "test-win": "tap --no-cov --timeout=150 test/*.js"
+    "pretest": "rimraf ./node_modules/.cache",
+    "test": "xo && nyc --reporter=lcov ./node_modules/.bin/tap --no-cov --timeout=150 test/*.js",
+    "test-win": "npm run pretest && tap --no-cov --timeout=150 test/*.js"
   },
   "files": [
     "index.js",
@@ -127,6 +127,7 @@
     "hook-std": "^0.1.0",
     "nyc": "^5.0.1",
     "promise-delegates": "^0.1.0",
+    "rimraf": "^2.4.5",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^0.3.0",
