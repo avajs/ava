@@ -9,6 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var fork = require('./lib/fork');
+var resolveCwd = require('resolve-cwd');
 var formatter = require('./lib/enhance-assert').formatter();
 
 function Api(files, options) {
@@ -19,6 +20,8 @@ function Api(files, options) {
 	EventEmitter.call(this);
 
 	this.options = options || {};
+
+	this.options.require = (this.options.require || []).map(resolveCwd);
 
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
