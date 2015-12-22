@@ -59,3 +59,10 @@ test('throwing a anonymous function will report the function to the console', fu
 		t.end();
 	});
 });
+
+test('log failed tests', function (t) {
+	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
+		t.match(stderr, /AssertionError: false == true/);
+		t.end();
+	});
+});
