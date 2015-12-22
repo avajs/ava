@@ -37,9 +37,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc tap --no-cov --timeout=150 test/*.js",
-    "test-win": "tap --reporter=spec --timeout=150 test/*.js",
-    "coverage": "tap --coverage-report=lcov"
+    "test": "xo && nyc --reporter=lcov tap --no-cov --timeout=150 test/*.js",
+    "test-win": "tap --no-cov --timeout=150 test/*.js"
   },
   "files": [
     "index.js",
@@ -124,6 +123,7 @@
   "devDependencies": {
     "coveralls": "^2.11.4",
     "hook-std": "^0.1.0",
+    "nyc": "^5.0.1",
     "promise-delegates": "^0.1.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
