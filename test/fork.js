@@ -9,12 +9,8 @@ function fixture(name) {
 }
 
 function fork(testPath) {
-	var result = precompile.sync(testPath);
 	var precompiled = {};
-	precompiled[testPath] = {
-		sourcePath: result.tempPath,
-		mapPath: result.mapPath
-	};
+	precompiled[testPath] = precompile(testPath);
 	return _fork(testPath, {precompiled: precompiled});
 }
 

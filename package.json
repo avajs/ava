@@ -37,6 +37,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "pretest": "rm -rf ./node_modules/.cache",
     "test": "xo && nyc --reporter=lcov tap --no-cov --timeout=150 test/*.js",
     "test-win": "tap --no-cov --timeout=150 test/*.js"
   },
@@ -87,8 +88,10 @@
     "babel-preset-stage-2": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "bluebird": "^3.0.0",
+    "caching-transform": "0.0.3",
     "chalk": "^1.0.0",
     "co-with-promise": "^4.6.0",
+    "convert-source-map": "^1.1.2",
     "core-assert": "^0.1.0",
     "debug": "^2.2.0",
     "deeper": "^2.1.0",
@@ -116,7 +119,6 @@
     "set-immediate-shim": "^1.0.1",
     "source-map-support": "^0.4.0",
     "squeak": "^1.2.0",
-    "temp-write": "^2.1.0",
     "time-require": "^0.1.2",
     "update-notifier": "^0.5.0"
   },

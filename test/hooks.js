@@ -6,12 +6,8 @@ var _fork = require('../lib/fork');
 var precompile = require('../lib/test-transformer');
 
 function fork(testPath) {
-	var result = precompile.sync(testPath);
 	var precompiled = {};
-	precompiled[testPath] = {
-		sourcePath: result.tempPath,
-		mapPath: result.mapPath
-	};
+	precompiled[testPath] = precompile(testPath);
 	return _fork(testPath, {precompiled: precompiled});
 }
 
