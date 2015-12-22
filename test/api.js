@@ -315,9 +315,7 @@ test('Node.js-style --require CLI argument', function (t) {
 	t.plan(1);
 
 	var requirePath = path.relative(process.cwd(), path.join(__dirname, 'fixture', 'install-global.js'));
-	// `path` will use \\ to seperate paths on windows, but require doesn't.
-	requirePath = requirePath.split(path.sep).join('/');
-	requirePath = './' + requirePath;
+	requirePath = '.' + path.sep + requirePath;
 
 	var api = new Api(
 		[path.join(__dirname, 'fixture/validate-installed-global.js')],
