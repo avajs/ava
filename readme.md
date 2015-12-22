@@ -33,6 +33,7 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced asserts](#enhanced-asserts)
+- [Optional TAP output](#optional-tap-output)
 
 
 ## Test syntax
@@ -105,6 +106,7 @@ $ ava --help
     --fail-fast  Stop after first test failure
     --serial     Run tests serially
     --require    Module to preload (Can be repeated)
+    --tap        Generate TAP output
 
   Examples
     ava
@@ -455,6 +457,16 @@ test.cb(t => {
 	fs.readFile('data.txt', t.end);
 });
 ```
+
+### Optional TAP output
+
+AVA can generate TAP output via `--tap` option for use with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+
+```
+$ ava --tap | tap-nyan
+```
+
+<img src="media/tap-output.png" width="398">
 
 
 ## API

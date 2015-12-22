@@ -74,7 +74,8 @@
     "generators",
     "yield",
     "observable",
-    "observables"
+    "observables",
+    "tap"
   ],
   "dependencies": {
     "arr-flatten": "^1.0.1",
