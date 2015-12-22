@@ -245,7 +245,8 @@ test('reject', function (t) {
 		});
 	}).run().catch(function (err) {
 		t.ok(err);
-		t.is(err.name, 'AssertionError');
+		t.is(err.name, 'Error');
+		t.is(err.message, 'unicorn');
 		t.end();
 	});
 });

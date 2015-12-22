@@ -84,8 +84,14 @@ Api.prototype._handleTest = function (test) {
 			if (test.error.originalMessage) {
 				message = test.error.originalMessage + ' ' + message;
 			}
+
 			test.error.message = message;
 		}
+
+		if (test.error.name !== 'AssertionError') {
+			test.error.message = 'failed with "' + test.error.message + '"';
+		}
+
 		this.errors.push(test);
 	} else {
 		test.error = null;
