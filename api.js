@@ -9,7 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var resolveCwd = require('resolve-cwd');
-var assign = require('object-assign');
+var objectAssign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 var precompile = require('./lib/test-transformer');
@@ -46,7 +46,7 @@ module.exports = Api;
 Api.prototype._runFile = function (file) {
 	var precompiled = {};
 	precompiled[file] = precompile(file);
-	var options = assign({}, this.options, {
+	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
 	});
 	return fork(file, options)
