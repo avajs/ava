@@ -314,9 +314,11 @@ test('test file in node_modules is ignored', function (t) {
 test('Node.js-style --require CLI argument', function (t) {
 	t.plan(1);
 
+	var requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
+
 	var api = new Api(
 		[path.join(__dirname, 'fixture/validate-installed-global.js')],
-		{require: [path.join(__dirname, 'fixture', 'install-global.js')]}
+		{require: [requirePath]}
 	);
 
 	api.run()

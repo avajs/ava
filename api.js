@@ -8,6 +8,7 @@ var Promise = require('bluebird');
 var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
+var resolveCwd = require('resolve-cwd');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 
@@ -19,6 +20,7 @@ function Api(files, options) {
 	EventEmitter.call(this);
 
 	this.options = options || {};
+	this.options.require = (this.options.require || []).map(resolveCwd);
 
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
