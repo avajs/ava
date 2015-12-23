@@ -402,3 +402,29 @@ test('t.end is called when a promise passed to t.throws hasn\'t rejected yet', f
 		t.end();
 	});
 });
+
+test('test returns a promise that resolves before a promise passed to t.throws resolves', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		return Promise.resolve();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('test returns a promise that resolves before a promise passed to t.throws rejects', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		return Promise.resolve();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
