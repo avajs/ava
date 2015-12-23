@@ -40,18 +40,6 @@ test('resolves promise with tests info', function (t) {
 		});
 });
 
-/* test('rejects on error and streams output', function (t) {
-	t.plan(2);
-
-	fork(fixture('broken.js'))
-		.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /exited with a non-zero exit code: \d/);
-			t.end();
-		});
-}); */
-
 test('exit after tests are finished', function (t) {
 	t.plan(2);
 
