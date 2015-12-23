@@ -452,12 +452,12 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
-	}).run().catch(function(err) {
+	}).run().catch(function (err) {
 		t.is(err.operator, 'plan');
 		t.is(err.actual, 3);
 		t.is(err.expected, 2);
 		t.end();
-	})
+	});
 });
 
 test('number of assertions doesn\'t t.plan when the test exits, but before all promises resolve another is added', function (t) {
@@ -468,7 +468,7 @@ test('number of assertions doesn\'t t.plan when the test exits, but before all p
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
-	}).run().catch(function(err) {
+	}).run().catch(function (err) {
 		t.is(err.operator, 'plan');
 		t.is(err.actual, 2);
 		t.is(err.expected, 3);
