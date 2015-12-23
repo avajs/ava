@@ -12,7 +12,7 @@ var resolveCwd = require('resolve-cwd');
 var objectAssign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
-var Precompiler = require('./lib/test-transformer');
+var CachingPrecompiler = require('./lib/caching-precompiler');
 var commonDir = require('commondir');
 var pkgDir = require('pkg-dir');
 
@@ -46,10 +46,8 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file) {
-	var precompiled = {};
-	precompiled[file] = this.precompiler(file);
 	var options = objectAssign({}, this.options, {
-		precompiled: precompiled
+		precompiled: this.precompiler.generateHashForFile(file)
 	});
 	return fork(file, options)
 		.on('stats', this._handleStats)
@@ -146,7 +144,7 @@ Api.prototype.run = function () {
 			}
 			var d = pkgDir.sync(commonDir(files));
 			var cacheDir = self.options.cacheDir = path.join(d, 'node_modules', '.cache', 'ava');
-			self.precompiler = new Precompiler(cacheDir);
+			self.precompiler = new CachingPrecompiler(cacheDir);
 
 			self.fileCount = files.length;
 
