@@ -3,10 +3,15 @@ environment:
     - nodejs_version: '5'
     - nodejs_version: '4'
     - nodejs_version: '0.12'
+cache:
+  - node_modules                      # local npm modules
+  - '%APPDATA%\npm-cache'             # npm cache
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - set AVA_APPVEYOR=true
+  - npm config set progress false
+  - npm config set spinner false
   - npm -g install npm@latest || (timeout 30 && npm -g install npm@latest)
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install || (timeout 30 && npm install)
