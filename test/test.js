@@ -428,3 +428,34 @@ test('test returns a promise that resolves before a promise passed to t.throws r
 		t.end();
 	});
 });
+
+test('multiple resolving and rejecting promises passed to t.throws/t.doesNotThrow', function (t) {
+	ava(function (a) {
+		a.plan(6);
+		for (var i = 0; i < 3; ++i) {
+			a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+			a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		}
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 6);
+		t.is(a.assertCount, 6);
+		t.end();
+	});
+});
+
+test('number of assertions matches t.plan when the test exits, but before all promises resolve another is added', function (t) {
+	ava(function (a) {
+		a.plan(2);
+		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		setTimeout(function () {
+			a.throws(Promise.reject(new Error('foo')), 'foo');
+		}, 5);
+	}).run().catch(function(err) {
+		t.is(err.operator, 'plan');
+		t.is(err.actual, 3);
+		t.is(err.expected, 2);
+		t.end();
+	})
+});
