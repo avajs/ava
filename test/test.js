@@ -2,6 +2,14 @@
 var test = require('tap').test;
 var _ava = require('../lib/test');
 
+function delay(val, time) {
+	return new Promise(function (resolve) {
+		setTimeout(function () {
+			resolve(val);
+		}, time);
+	});
+}
+
 function ava() {
 	var t = _ava.apply(null, arguments);
 	t.metadata = {callback: false};
@@ -348,6 +356,23 @@ test('skipped assertions count towards the plan', function (t) {
 		t.ifError(a.assertError);
 		t.is(a.planCount, 2);
 		t.is(a.assertCount, 2);
+		t.end();
+	});
+});
+
+test('throws and doesNotThrow work with promises', function (t) {
+	var asyncCalled = false;
+	ava(function (a) {
+		a.plan(2);
+		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		a.doesNotThrow(delay(Promise.resolve().then(function () {
+			asyncCalled = true;
+		}), 20));
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 2);
+		t.is(a.assertCount, 2);
+		t.is(asyncCalled, true);
 		t.end();
 	});
 });
