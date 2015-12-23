@@ -7,3 +7,6 @@ before_install:
   - 'npm i -g npm@latest'
 after_success:
   - '[ -z "$COVERALLS_REPO_TOKEN" ] && tap --coverage-report=text-lcov | ./node_modules/.bin/coveralls'
+cache:
+  directories:
+    - node_modules
