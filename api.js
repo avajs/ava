@@ -195,6 +195,8 @@ function handlePaths(files) {
 	}
 
 	files.push('!**/node_modules/**');
+	files.push('!**/fixtures/**');
+	files.push('!**/helpers/**');
 
 	// convert pinkie-promise to Bluebird promise
 	files = Promise.resolve(globby(files));
