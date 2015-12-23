@@ -376,3 +376,29 @@ test('throws and doesNotThrow work with promises', function (t) {
 		t.end();
 	});
 });
+
+test('t.end is called when a promise passed to t.throws hasn\'t resolved yet', function (t) {
+	ava.cb(function (a) {
+		a.plan(1);
+		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		a.end();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('t.end is called when a promise passed to t.throws hasn\'t rejected yet', function (t) {
+	ava.cb(function (a) {
+		a.plan(1);
+		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		a.end();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
