@@ -37,7 +37,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "pretest": "rimraf ./node_modules/.cache",
+    "pretest": "de ./node_modules/.cache",
     "test": "xo && nyc --reporter=lcov ./node_modules/.bin/tap --no-cov --timeout=150 test/*.js",
     "test-win": "npm run pretest && tap --no-cov --timeout=150 test/*.js"
   },
@@ -124,10 +124,10 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
+    "del-cli": "^0.1.2",
     "hook-std": "^0.1.0",
     "nyc": "^5.0.1",
     "promise-delegates": "^0.1.0",
-    "rimraf": "^2.4.5",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^0.3.0",
