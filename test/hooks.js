@@ -3,12 +3,13 @@ var path = require('path');
 var test = require('tap').test;
 var Runner = require('../lib/runner');
 var _fork = require('../lib/fork');
-var precompile = require('../lib/test-transformer');
+var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
+var precompile = require('../lib/test-transformer')(cacheDir);
 
 function fork(testPath) {
 	var precompiled = {};
 	precompiled[testPath] = precompile(testPath);
-	return _fork(testPath, {precompiled: precompiled});
+	return _fork(testPath, {precompiled: precompiled, cacheDir: cacheDir});
 }
 
 test('before', function (t) {

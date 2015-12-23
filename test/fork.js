@@ -2,7 +2,8 @@
 var path = require('path');
 var test = require('tap').test;
 var _fork = require('../lib/fork.js');
-var precompile = require('../lib/test-transformer');
+var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
+var precompile = require('../lib/test-transformer')(cacheDir);
 
 function fixture(name) {
 	return path.join(__dirname, 'fixture', name);
@@ -11,7 +12,7 @@ function fixture(name) {
 function fork(testPath) {
 	var precompiled = {};
 	precompiled[testPath] = precompile(testPath);
-	return _fork(testPath, {precompiled: precompiled});
+	return _fork(testPath, {precompiled: precompiled, cacheDir: cacheDir});
 }
 
 test('emits test event', function (t) {

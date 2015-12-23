@@ -12,7 +12,9 @@ var resolveCwd = require('resolve-cwd');
 var objectAssign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
-var precompile = require('./lib/test-transformer');
+var Precompiler = require('./lib/test-transformer');
+var commonDir = require('commondir');
+var pkgDir = require('pkg-dir');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -45,7 +47,7 @@ module.exports = Api;
 
 Api.prototype._runFile = function (file) {
 	var precompiled = {};
-	precompiled[file] = precompile(file);
+	precompiled[file] = this.precompiler(file);
 	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
 	});
@@ -142,6 +144,9 @@ Api.prototype.run = function () {
 			if (files.length === 0) {
 				return Promise.reject(new Error('Couldn\'t find any files to test'));
 			}
+			var d = pkgDir.sync(commonDir(files));
+			var cacheDir = self.options.cacheDir = path.join(d, 'node_modules', '.cache', 'ava');
+			self.precompiler = new Precompiler(cacheDir);
 
 			self.fileCount = files.length;
 
