@@ -13,8 +13,6 @@ var objectAssign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 var CachingPrecompiler = require('./lib/caching-precompiler');
-var commonDir = require('commondir');
-var pkgDir = require('pkg-dir');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -142,8 +140,8 @@ Api.prototype.run = function () {
 			if (files.length === 0) {
 				return Promise.reject(new Error('Couldn\'t find any files to test'));
 			}
-			var d = pkgDir.sync(commonDir(files));
-			var cacheDir = self.options.cacheDir = path.join(d, 'node_modules', '.cache', 'ava');
+			var cacheDir = CachingPrecompiler.findCacheDir(files) || CachingPrecompiler.findUniqueTempDir();
+			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
 
 			self.fileCount = files.length;
