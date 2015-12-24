@@ -39,7 +39,7 @@
   "scripts": {
     "pretest": "de ./node_modules/.cache",
     "test": "xo && nyc --reporter=lcov ./node_modules/.bin/tap --no-cov --timeout=150 test/*.js",
-    "test-win": "npm run pretest && tap -b --no-cov --timeout=150 test/*.js"
+    "test-win": "npm run pretest && tap -b --no-cov --timeout=150 --reporter=classic test/*.js"
   },
   "files": [
     "index.js",
