@@ -1,12 +1,13 @@
 'use strict';
 var test = require('tap').test;
+var Promise = global.Promise = require('bluebird');
+var delay = require('delay');
 var _ava = require('../lib/test');
 
-function delay(val, time) {
-	return new Promise(function (resolve) {
-		setTimeout(function () {
-			resolve(val);
-		}, time);
+// This is a helper some boilerplate for testing `t.throws`
+function delayReject(ms, message) {
+	return delay(ms).then(function () {
+		throw new Error(message);
 	});
 }
 
@@ -364,10 +365,10 @@ test('throws and doesNotThrow work with promises', function (t) {
 	var asyncCalled = false;
 	ava(function (a) {
 		a.plan(2);
-		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
-		a.doesNotThrow(delay(Promise.resolve().then(function () {
+		a.throws(delayReject(10, 'foo'), 'foo');
+		a.doesNotThrow(delay(20).then(function () {
 			asyncCalled = true;
-		}), 20));
+		}));
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
 		t.is(a.planCount, 2);
@@ -377,10 +378,10 @@ test('throws and doesNotThrow work with promises', function (t) {
 	});
 });
 
-test('t.end is called when a promise passed to t.throws hasn\'t resolved yet', function (t) {
+test('waits for t.throws to resolve after t.end is called', function (t) {
 	ava.cb(function (a) {
 		a.plan(1);
-		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
 		a.end();
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -390,10 +391,10 @@ test('t.end is called when a promise passed to t.throws hasn\'t resolved yet', f
 	});
 });
 
-test('t.end is called when a promise passed to t.throws hasn\'t rejected yet', function (t) {
+test('waits for t.throws to reject after t.end is called', function (t) {
 	ava.cb(function (a) {
 		a.plan(1);
-		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		a.throws(delayReject(10, 'foo'), 'foo');
 		a.end();
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -403,10 +404,10 @@ test('t.end is called when a promise passed to t.throws hasn\'t rejected yet', f
 	});
 });
 
-test('test returns a promise that resolves before a promise passed to t.throws resolves', function (t) {
+test('waits for t.throws to resolve after the promise returned from the test resolves', function (t) {
 	ava(function (a) {
 		a.plan(1);
-		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
 		return Promise.resolve();
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -416,10 +417,10 @@ test('test returns a promise that resolves before a promise passed to t.throws r
 	});
 });
 
-test('test returns a promise that resolves before a promise passed to t.throws rejects', function (t) {
+test('waits for t.throws to reject after the promise returned from the test resolves', function (t) {
 	ava(function (a) {
 		a.plan(1);
-		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
+		a.throws(delayReject(10, 'foo'), 'foo');
 		return Promise.resolve();
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -433,8 +434,8 @@ test('multiple resolving and rejecting promises passed to t.throws/t.doesNotThro
 	ava(function (a) {
 		a.plan(6);
 		for (var i = 0; i < 3; ++i) {
-			a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
-			a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+			a.throws(delayReject(10, 'foo'), 'foo');
+			a.doesNotThrow(delay(10), 'foo');
 		}
 	}).run().then(function (a) {
 		t.ifError(a.assertError);
@@ -447,8 +448,8 @@ test('multiple resolving and rejecting promises passed to t.throws/t.doesNotThro
 test('number of assertions matches t.plan when the test exits, but before all promises resolve another is added', function (t) {
 	ava(function (a) {
 		a.plan(2);
-		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
-		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		a.throws(delayReject(10, 'foo'), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
@@ -460,11 +461,11 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 	});
 });
 
-test('number of assertions doesn\'t t.plan when the test exits, but before all promises resolve another is added', function (t) {
+test('number of assertions doesn\'t match plan when the test exits, but before all promises resolve another is added', function (t) {
 	ava(function (a) {
 		a.plan(3);
-		a.throws(delay(Promise.reject(new Error('foo')), 10), 'foo');
-		a.doesNotThrow(delay(Promise.resolve(), 10), 'foo');
+		a.throws(delayReject(10, 'foo'), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
