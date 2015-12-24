@@ -79,7 +79,7 @@ var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
-	noCache: cli.flags.cache === false
+	cache: cli.flags.cache !== false
 });
 
 api.on('test', function (test) {

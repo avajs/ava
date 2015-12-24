@@ -140,8 +140,8 @@ Api.prototype.run = function () {
 			if (files.length === 0) {
 				return Promise.reject(new Error('Couldn\'t find any files to test'));
 			}
-			var noCache = self.options.noCache;
-			var cacheDir = (!noCache && CachingPrecompiler.findCacheDir(files)) || CachingPrecompiler.findUniqueTempDir();
+			var cache = self.options.cache !== false;
+			var cacheDir = (cache && CachingPrecompiler.findCacheDir(files)) || CachingPrecompiler.findUniqueTempDir();
 			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
 
