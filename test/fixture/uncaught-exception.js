@@ -1,7 +1,7 @@
-const test = require('../../');
+import test from '../../';
 
-test('throw an uncaught exception', t => {
+test('throw an uncaught exception', () => {
 	setImmediate(() => {
-		throw new Error(`Can't catch me!`)
+		throw new Error(`Can't catch me!`);
 	});
 });

@@ -1,5 +1,4 @@
-'use strict';
-const test = require('../../');
+import test from '../../';
 
 test(t => {
 	t.is(process.cwd(), __dirname);

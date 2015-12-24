@@ -1,4 +1,4 @@
-const test = require('../../');
+import test from '../../';
 
 test('this is a passing test', t => {
 	t.ok(true);

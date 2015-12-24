@@ -1,16 +1,17 @@
-'use strict';
-const test = require('../../');
-var onExit = require('signal-exit');
+import test from '../../';
+import signalExit from 'signal-exit';
 
-test.cb('long running', function (t) {
+test.cb('long running', t => {
 	t.plan(1);
 
-	onExit(function () {
+	signalExit(() => {
 		// simulate an exit hook that lasts a short while
-		var start = Date.now();
-		while(Date.now() - start < 2000) {
-			//synchronously wait for 2 seconds
+		const start = Date.now();
+
+		while (Date.now() - start < 2000) {
+			// synchronously wait for 2 seconds
 		}
+
 		process.send({
 			name: 'cleanup-completed',
 			data: {completed: true},
@@ -18,13 +19,13 @@ test.cb('long running', function (t) {
 		});
 	}, {alwaysLast: true});
 
-	setTimeout(function () {
+	setTimeout(() => {
 		t.ok(true);
 		t.end();
 	});
 
-	setTimeout(function () {
-		// this would keep the process running for a long time.
+	setTimeout(() => {
+		// this would keep the process running for a long time
 		console.log('I\'m gonna live forever!!');
 	}, 15000);
 });

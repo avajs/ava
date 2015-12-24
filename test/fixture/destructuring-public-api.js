@@ -7,7 +7,7 @@ test.cb('callback mode', ({context: foo, ... t}) => {
 	t.end();
 });
 
-test.cb('callback mode', ({context: foo, end, ... t}) => {
+test.cb('callback mode #2', ({context: foo, end, ... t}) => {
 	t.is(foo, 'bar');
 	end();
 });

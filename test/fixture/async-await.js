@@ -1,5 +1,4 @@
-'use strict';
-const test = require('../../');
+import test from '../../';
 
 test('async function', async function (t) {
 	t.plan(1);

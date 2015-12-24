@@ -1,9 +1,9 @@
-const test = require('../../');
+import test from '../../';
 
 test.cb('creates an unhandled rejection', t => {
 	Promise.reject(new Error(`You can't handle this!`));
 
-	setTimeout(function () {
+	setTimeout(() => {
 		t.end();
 	});
 });

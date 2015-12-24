@@ -1,5 +1,4 @@
-'use strict';
-const test = require('../../');
+import test from '../../';
 
 test('generator function', function * (t) {
 	t.plan(1);

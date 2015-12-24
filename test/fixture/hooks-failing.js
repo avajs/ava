@@ -1,10 +1,9 @@
-const test = require('../../');
+import test from '../../';
 
 test.beforeEach(fail);
 test(pass);
 
-function pass(t) {
-}
+function pass() {}
 
 function fail(t) {
 	t.fail();
