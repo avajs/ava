@@ -302,7 +302,31 @@ test('testing nonexistent files rejects', function (t) {
 test('test file in node_modules is ignored', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/node_modules/test.js')]);
+	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
+
+	api.run()
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
+		});
+});
+
+test('test file in fixtures is ignored', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
+
+	api.run()
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
+		});
+});
+
+test('test file in helpers is ignored', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 
 	api.run()
 		.catch(function (err) {
