@@ -42,10 +42,8 @@
     "coverage": "tap --coverage-report=lcov"
   },
   "files": [
-    "index.js",
-    "cli.js",
-    "api.js",
-    "lib"
+    "lib",
+    "*.js"
   ],
   "keywords": [
     "cli-app",
