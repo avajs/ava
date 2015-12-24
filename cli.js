@@ -17,13 +17,15 @@ if (debug.enabled) {
 	require('time-require');
 }
 
+var updateNotifier = require('update-notifier');
+var figures = require('figures');
 var arrify = require('arrify');
 var meow = require('meow');
-var updateNotifier = require('update-notifier');
 var chalk = require('chalk');
 var Promise = require('bluebird');
-var log = require('./lib/logger');
-var tap = require('./lib/tap');
+var verboseReporter = require('./lib/reporters/verbose');
+var tapReporter = require('./lib/reporters/tap');
+var Logger = require('./lib/logger');
 var Api = require('./api');
 
 // Bluebird specific
@@ -68,75 +70,37 @@ if (cli.flags.init) {
 	return;
 }
 
-if (cli.flags.tap) {
-	console.log(tap.start());
-} else {
-	log.write();
-}
-
 var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require)
 });
 
-api.on('test', function (test) {
-	if (cli.flags.tap) {
-		console.log(tap.test(test));
-		return;
-	}
+var logger = new Logger();
+logger.api = api;
 
-	if (test.error) {
-		log.error(test.title, chalk.red(test.error.message));
-	} else {
-		// don't log it if there's only one file and one anonymous test
-		if (api.fileCount === 1 && api.testCount === 1 && test.title === '[anonymous]') {
-			return;
-		}
+if (cli.flags.tap) {
+	logger.use(tapReporter());
+} else {
+	logger.use(verboseReporter());
+}
 
-		log.test(test);
-	}
-});
+logger.start();
 
-api.on('error', function (data) {
-	if (cli.flags.tap) {
-		console.log(tap.unhandledError(data));
-		return;
-	}
-
-	log.unhandledError(data.type, data.file, data);
-});
+api.on('test', logger.test);
+api.on('error', logger.unhandledError);
 
 api.run()
 	.then(function () {
-		if (cli.flags.tap) {
-			console.log(tap.finish(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount));
-		} else {
-			log.write();
-			log.report(api.passCount, api.failCount, api.rejectionCount, api.exceptionCount);
-			log.write();
-
-			if (api.failCount > 0) {
-				log.errors(api.errors);
-			}
-		}
-
-		process.stdout.write('');
-		flushIoAndExit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
+		logger.finish();
+		logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
 	})
 	.catch(function (err) {
-		log.error(err.message);
-		flushIoAndExit(1);
+		if (err instanceof Error) {
+			console.log('  ' + chalk.red(figures.cross) + ' ' + err.message);
+		} else {
+			console.error(err.stack);
+		}
+
+		logger.exit(1);
 	});
-
-function flushIoAndExit(code) {
-	// TODO: figure out why this needs to be here to
-	// correctly flush the output when multiple test files
-	process.stdout.write('');
-	process.stderr.write('');
-
-	// timeout required to correctly flush IO on Node.js 0.10 on Windows
-	setTimeout(function () {
-		process.exit(code);
-	}, process.env.AVA_APPVEYOR ? 500 : 0);
-}

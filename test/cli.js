@@ -19,16 +19,6 @@ function execCli(args, cb) {
 	}, cb);
 }
 
-test('don\'t display test title if there is only one anonymous test', function (t) {
-	t.plan(2);
-
-	execCli(['fixture/es2015.js'], function (err, stdout, stderr) {
-		t.ifError(err);
-		t.is(stderr.trim(), '1 test passed');
-		t.end();
-	});
-});
-
 test('throwing a named function will report the to the console', function (t) {
 	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
 		t.ok(err);

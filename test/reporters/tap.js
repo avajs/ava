@@ -1,14 +1,18 @@
 'use strict';
 var test = require('tap').test;
-var tap = require('../lib/tap');
+var tapReporter = require('../../lib/reporters/tap');
 
 test('start', function (t) {
-	t.is(tap.start(), 'TAP version 13');
+	var reporter = tapReporter();
+
+	t.is(reporter.start(), 'TAP version 13');
 	t.end();
 });
 
 test('passing test', function (t) {
-	var actualOutput = tap.test({
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.test({
 		title: 'passing'
 	});
 
@@ -22,7 +26,9 @@ test('passing test', function (t) {
 });
 
 test('failing test', function (t) {
-	var actualOutput = tap.test({
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.test({
 		title: 'failing',
 		error: {
 			message: 'false == true',
@@ -35,7 +41,7 @@ test('failing test', function (t) {
 
 	var expectedOutput = [
 		'# failing',
-		'not ok 2 - false == true',
+		'not ok 1 - false == true',
 		'  ---',
 		'    operator: ==',
 		'    expected: true',
@@ -49,7 +55,9 @@ test('failing test', function (t) {
 });
 
 test('unhandled error', function (t) {
-	var actualOutput = tap.unhandledError({
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.unhandledError({
 		message: 'unhandled',
 		name: 'TypeError',
 		stack: ['', ' at Test.fn (test.js:1:2)'].join('\n')
@@ -57,7 +65,7 @@ test('unhandled error', function (t) {
 
 	var expectedOutput = [
 		'# unhandled',
-		'not ok 3 - unhandled',
+		'not ok 1 - unhandled',
 		'  ---',
 		'    name: TypeError',
 		'    at: Test.fn (test.js:1:2)',
@@ -69,18 +77,23 @@ test('unhandled error', function (t) {
 });
 
 test('results', function (t) {
-	var passCount = 1;
-	var failCount = 2;
-	var rejectionCount = 3;
-	var exceptionCount = 4;
+	var reporter = tapReporter();
+	var api = {
+		passCount: 1,
+		failCount: 2,
+		rejectionCount: 3,
+		exceptionCount: 4
+	};
 
-	var actualOutput = tap.finish(passCount, failCount, rejectionCount, exceptionCount);
+	reporter.api = api;
+
+	var actualOutput = reporter.finish();
 	var expectedOutput = [
 		'',
-		'1..' + (passCount + failCount),
-		'# tests ' + (passCount + failCount),
-		'# pass ' + passCount,
-		'# fail ' + (failCount + rejectionCount + exceptionCount),
+		'1..' + (api.passCount + api.failCount),
+		'# tests ' + (api.passCount + api.failCount),
+		'# pass ' + api.passCount,
+		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),
 		''
 	].join('\n');
 
