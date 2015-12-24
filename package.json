@@ -88,7 +88,7 @@
     "babel-preset-stage-2": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "bluebird": "^3.0.0",
-    "caching-transform": "0.0.3",
+    "caching-transform": "0.0.4",
     "chalk": "^1.0.0",
     "co-with-promise": "^4.6.0",
     "commondir": "^1.0.1",
