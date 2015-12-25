@@ -120,11 +120,11 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
+    "delay": "^1.3.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^0.4.0",
     "tap": "^2.2.1",
-    "delay": "^1.2.0",
     "xo": "*",
     "zen-observable": "^0.1.6"
   },
