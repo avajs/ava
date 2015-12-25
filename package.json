@@ -37,8 +37,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js",
-    "test-win": "tap --reporter=spec --timeout=150 test/*.js",
+    "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js test/reporters/*.js",
+    "test-win": "tap --reporter=spec --timeout=150 test/*.js test/reporters/*.js",
     "coverage": "tap --coverage-report=lcov"
   },
   "files": [
@@ -98,6 +98,7 @@
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
+    "log-update": "^1.0.2",
     "loud-rejection": "^1.2.0",
     "max-timeout": "^1.0.0",
     "meow": "^3.6.0",

@@ -2,6 +2,7 @@
 var figures = require('figures');
 var chalk = require('chalk');
 var test = require('tap').test;
+var beautifyStack = require('../../lib/beautify-stack');
 var verboseReporter = require('../../lib/reporters/verbose');
 
 function createReporter() {
@@ -18,7 +19,7 @@ test('beautify stack - removes uninteresting lines', function (t) {
 	try {
 		fooFunc();
 	} catch (err) {
-		var stack = verboseReporter._beautifyStack(err.stack);
+		var stack = beautifyStack(err.stack);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
 		t.match(err.stack, /Module._compile/);
@@ -69,7 +70,7 @@ test('don\'t display test title if there is only one anonymous test', function (
 		title: '[anonymous]'
 	});
 
-	t.is(output, undefined);
+	t.is(output, null);
 	t.end();
 });
 
@@ -78,7 +79,7 @@ test('failing test', function (t) {
 
 	var actualOutput = reporter.test({
 		title: 'failed',
-		err: {
+		error: {
 			message: 'assertion failed'
 		}
 	});

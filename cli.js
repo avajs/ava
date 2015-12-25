@@ -24,6 +24,7 @@ var meow = require('meow');
 var chalk = require('chalk');
 var Promise = require('bluebird');
 var verboseReporter = require('./lib/reporters/verbose');
+var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
 var Api = require('./api');
@@ -41,6 +42,7 @@ var cli = meow([
 	'  --serial     Run tests serially',
 	'  --require    Module to preload (Can be repeated)',
 	'  --tap        Generate TAP output',
+	'  --verbose    Enable verbose output',
 	'',
 	'Examples',
 	'  ava',
@@ -58,6 +60,7 @@ var cli = meow([
 	],
 	boolean: [
 		'fail-fast',
+		'verbose',
 		'serial',
 		'tap'
 	]
@@ -79,9 +82,13 @@ var api = new Api(cli.input, {
 var logger = new Logger();
 logger.api = api;
 
+logger.use(miniReporter());
+
 if (cli.flags.tap) {
 	logger.use(tapReporter());
-} else {
+}
+
+if (cli.flags.verbose) {
 	logger.use(verboseReporter());
 }
 
@@ -96,7 +103,7 @@ api.run()
 		logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
 	})
 	.catch(function (err) {
-		if (err instanceof Error) {
+		if (err.name === 'Error') {
 			console.log('  ' + chalk.red(figures.cross) + ' ' + err.message);
 		} else {
 			console.error(err.stack);
