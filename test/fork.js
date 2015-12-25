@@ -28,7 +28,7 @@ test('resolves promise with tests info', function (t) {
 		.then(function (info) {
 			t.is(info.stats.passCount, 1);
 			t.is(info.tests.length, 1);
-			t.is(info.file, file);
+			t.is(info.file, path.relative('.', file));
 			t.end();
 		});
 });
