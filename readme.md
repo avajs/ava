@@ -107,6 +107,7 @@ $ ava --help
     --serial     Run tests serially
     --require    Module to preload (Can be repeated)
     --tap        Generate TAP output
+    --verbose    Enable verbose output
 
   Examples
     ava
