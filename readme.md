@@ -76,7 +76,7 @@ test('foo', t => {
 });
 
 test('bar', async t => {
-	t.plan(2);
+	t.plan(1);
 
 	const bar = Promise.resolve('bar').then(delay(200));
 
