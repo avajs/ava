@@ -1,5 +1,7 @@
 'use strict';
 var test = require('tap').test;
+var Promise = global.Promise = require('bluebird');
+var delay = require('delay');
 var _ava = require('../lib/test');
 
 function ava() {
@@ -348,6 +350,122 @@ test('skipped assertions count towards the plan', function (t) {
 		t.ifError(a.assertError);
 		t.is(a.planCount, 2);
 		t.is(a.assertCount, 2);
+		t.end();
+	});
+});
+
+test('throws and doesNotThrow work with promises', function (t) {
+	var asyncCalled = false;
+	ava(function (a) {
+		a.plan(2);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		a.doesNotThrow(delay(20).then(function () {
+			asyncCalled = true;
+		}));
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 2);
+		t.is(a.assertCount, 2);
+		t.is(asyncCalled, true);
+		t.end();
+	});
+});
+
+test('waits for t.throws to resolve after t.end is called', function (t) {
+	ava.cb(function (a) {
+		a.plan(1);
+		a.doesNotThrow(delay(10), 'foo');
+		a.end();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('waits for t.throws to reject after t.end is called', function (t) {
+	ava.cb(function (a) {
+		a.plan(1);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		a.end();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('waits for t.throws to resolve after the promise returned from the test resolves', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		a.doesNotThrow(delay(10), 'foo');
+		return Promise.resolve();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('waits for t.throws to reject after the promise returned from the test resolves', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		return Promise.resolve();
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 1);
+		t.is(a.assertCount, 1);
+		t.end();
+	});
+});
+
+test('multiple resolving and rejecting promises passed to t.throws/t.doesNotThrow', function (t) {
+	ava(function (a) {
+		a.plan(6);
+		for (var i = 0; i < 3; ++i) {
+			a.throws(delay.reject(10, new Error('foo')), 'foo');
+			a.doesNotThrow(delay(10), 'foo');
+		}
+	}).run().then(function (a) {
+		t.ifError(a.assertError);
+		t.is(a.planCount, 6);
+		t.is(a.assertCount, 6);
+		t.end();
+	});
+});
+
+test('number of assertions matches t.plan when the test exits, but before all promises resolve another is added', function (t) {
+	ava(function (a) {
+		a.plan(2);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
+		setTimeout(function () {
+			a.throws(Promise.reject(new Error('foo')), 'foo');
+		}, 5);
+	}).run().catch(function (err) {
+		t.is(err.operator, 'plan');
+		t.is(err.actual, 3);
+		t.is(err.expected, 2);
+		t.end();
+	});
+});
+
+test('number of assertions doesn\'t match plan when the test exits, but before all promises resolve another is added', function (t) {
+	ava(function (a) {
+		a.plan(3);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		a.doesNotThrow(delay(10), 'foo');
+		setTimeout(function () {
+			a.throws(Promise.reject(new Error('foo')), 'foo');
+		}, 5);
+	}).run().catch(function (err) {
+		t.is(err.operator, 'plan');
+		t.is(err.actual, 2);
+		t.is(err.expected, 3);
 		t.end();
 	});
 });
