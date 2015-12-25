@@ -21,7 +21,6 @@ function Api(files, options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
-
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;

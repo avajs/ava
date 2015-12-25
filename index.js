@@ -1,5 +1,5 @@
 'use strict';
-var relative = require('path').relative;
+var path = require('path');
 var chalk = require('chalk');
 var serializeError = require('serialize-error');
 var globals = require('./lib/globals');
@@ -11,17 +11,16 @@ var log = require('./lib/logger');
 require('./lib/babel').avaRequired = true;
 
 var opts = JSON.parse(process.argv[2]);
-
 var runner = new Runner(opts);
 
 // check if the test is being run without AVA cli
 var isForked = typeof process.send === 'function';
 
 if (!isForked) {
-	var path = relative('.', process.argv[1]);
+	var fp = path.relative('.', process.argv[1]);
 
 	log.write();
-	log.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + path) + '\n');
+	log.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
 
 	process.exit(1);
 }

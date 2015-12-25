@@ -46,11 +46,9 @@
     "*.js"
   ],
   "keywords": [
-    "cli-app",
-    "cli",
-    "ava",
     "test",
     "runner",
+    "ava",
     "concurrent",
     "parallel",
     "fast",
@@ -60,6 +58,8 @@
     "qunit",
     "jasmine",
     "tdd",
+    "cli-app",
+    "cli",
     "assert",
     "assertion",
     "futuristic",
@@ -115,16 +115,14 @@
     "serialize-error": "^1.1.0",
     "set-immediate-shim": "^1.0.1",
     "source-map-support": "^0.4.0",
-    "squeak": "^1.2.0",
     "time-require": "^0.1.2",
-    "update-notifier": "^0.5.0"
+    "update-notifier": "^0.6.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
-    "hook-std": "^0.1.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
-    "source-map-fixtures": "^0.3.0",
+    "source-map-fixtures": "^0.4.0",
     "tap": "^2.2.1",
     "xo": "*",
     "zen-observable": "^0.1.6"
