@@ -9,8 +9,10 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var resolveCwd = require('resolve-cwd');
+var objectAssign = require('object-assign');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
+var CachingPrecompiler = require('./lib/caching-precompiler');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -42,7 +44,10 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file) {
-	return fork(file, this.options)
+	var options = objectAssign({}, this.options, {
+		precompiled: this.precompiler.generateHashForFile(file)
+	});
+	return fork(file, options)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -135,6 +140,10 @@ Api.prototype.run = function () {
 			if (files.length === 0) {
 				return Promise.reject(new Error('Couldn\'t find any files to test'));
 			}
+			var cache = self.options.cache !== false;
+			var cacheDir = (cache && CachingPrecompiler.findCacheDir(files)) || CachingPrecompiler.findUniqueTempDir();
+			self.options.cacheDir = cacheDir;
+			self.precompiler = new CachingPrecompiler(cacheDir);
 
 			self.fileCount = files.length;
 

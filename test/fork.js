@@ -1,10 +1,20 @@
 'use strict';
 var path = require('path');
 var test = require('tap').test;
-var fork = require('../lib/fork.js');
+var _fork = require('../lib/fork.js');
+var CachingPrecompiler = require('../lib/caching-precompiler');
+var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
+var precompiler = new CachingPrecompiler(cacheDir);
 
 function fixture(name) {
 	return path.join(__dirname, 'fixture', name);
+}
+
+function fork(testPath) {
+	return _fork(testPath, {
+		cacheDir: cacheDir,
+		precompiled: precompiler.generateHashForFile(testPath)
+	});
 }
 
 test('emits test event', function (t) {
@@ -29,18 +39,6 @@ test('resolves promise with tests info', function (t) {
 			t.is(info.stats.passCount, 1);
 			t.is(info.tests.length, 1);
 			t.is(info.file, file);
-			t.end();
-		});
-});
-
-test('rejects on error and streams output', function (t) {
-	t.plan(2);
-
-	fork(fixture('broken.js'))
-		.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /exited with a non-zero exit code: \d/);
 			t.end();
 		});
 });

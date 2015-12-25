@@ -39,6 +39,7 @@ var cli = meow([
 	'  --init       Add AVA to your project',
 	'  --fail-fast  Stop after first test failure',
 	'  --serial     Run tests serially',
+	'  --no-cache   Disable the transpiler cache',
 	'  --require    Module to preload (Can be repeated)',
 	'  --tap        Generate TAP output',
 	'',
@@ -73,7 +74,8 @@ if (cli.flags.init) {
 var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
-	require: arrify(cli.flags.require)
+	require: arrify(cli.flags.require),
+	cache: cli.flags.cache !== false
 });
 
 var logger = new Logger();
