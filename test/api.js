@@ -26,6 +26,17 @@ test('generators support', function (t) {
 		});
 });
 
+test('babel is only applied when needed', function (t) {
+	t.plan(1);
+
+	var api = new Api([path.join(__dirname, 'fixture/only-babel-when-needed.js')]);
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
+
 test('async/await support', function (t) {
 	t.plan(1);
 
