@@ -88,7 +88,7 @@
     "babel-preset-stage-2": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "bluebird": "^3.0.0",
-    "caching-transform": "0.0.4",
+    "caching-transform": "^1.0.0",
     "chalk": "^1.0.0",
     "co-with-promise": "^4.6.0",
     "commondir": "^1.0.1",
@@ -121,6 +121,7 @@
     "set-immediate-shim": "^1.0.1",
     "source-map-support": "^0.4.0",
     "squeak": "^1.2.0",
+    "strip-bom": "^2.0.0",
     "time-require": "^0.1.2",
     "update-notifier": "^0.5.0"
   },
