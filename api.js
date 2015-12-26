@@ -194,8 +194,10 @@ function handlePaths(files) {
 	if (files.length === 0) {
 		files = [
 			'test.js',
+			'**/test.js',
 			'test-*.js',
-			'test/*.js'
+			'**/test-*.js',
+			'test'
 		];
 	}
 
@@ -209,7 +211,7 @@ function handlePaths(files) {
 	return files
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '*.js')]);
+				return handlePaths([path.join(file, '**', '*.js')]);
 			}
 
 			return file;

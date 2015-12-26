@@ -238,6 +238,17 @@ test('absolute paths', function (t) {
 		});
 });
 
+test('recursive for directory', function (t) {
+	t.plan(1);
+
+	var api = new Api([path.join(__dirname, 'fixture/subdir/in-a-subdir.js')]);
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
+
 test('titles of both passing and failing tests and AssertionErrors are returned', function (t) {
 	t.plan(3);
 
