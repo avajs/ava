@@ -31,6 +31,7 @@ function Api(files, options) {
 	this.stats = [];
 	this.tests = [];
 	this.files = files || [];
+	this.base = '';
 
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
@@ -99,6 +100,23 @@ Api.prototype._handleTest = function (test) {
 	this.emit('test', test);
 };
 
+Api.prototype._findBase = function (files) {
+	this.base = files.reduce(function (base, file) {
+		file = path.relative('.', file);
+		file = file.split(path.sep);
+		if (base === false) return file;
+		return base.filter(function (part, i) {
+			return file[i].toLowerCase() === part.toLowerCase();
+		});
+	}, false).join(path.sep);
+
+	if (this.base === '' || this.base === '.') {
+		this.base = this.files[0] || 'test';
+	}
+
+	this.base += path.sep;
+};
+
 Api.prototype._prefixTitle = function (file) {
 	if (this.fileCount === 1) {
 		return '';
@@ -106,17 +124,10 @@ Api.prototype._prefixTitle = function (file) {
 
 	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
 
-	var base = path.dirname(this.files[0]);
-
-	if (base === '.') {
-		base = this.files[0] || 'test';
-	}
-
-	base += path.sep;
-
 	var prefix = path.relative('.', file)
-		.replace(base, '')
+		.replace(this.base, '')
 		.replace(/\.spec/, '')
+		.replace(/\.test/, '')
 		.replace(/test\-/g, '')
 		.replace(/\.js$/, '')
 		.split(path.sep)
@@ -142,6 +153,8 @@ Api.prototype.run = function () {
 			}
 
 			self.fileCount = files.length;
+
+			self._findBase(files);
 
 			var tests = files.map(self._runFile);
 
