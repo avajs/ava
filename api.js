@@ -104,7 +104,9 @@ Api.prototype._findBase = function (files) {
 	this.base = files.reduce(function (base, file) {
 		file = path.relative('.', file);
 		file = file.split(path.sep);
-		if (base === false) return file;
+		if (base === false) {
+			return file;
+		}
 		return base.filter(function (part, i) {
 			return file[i].toLowerCase() === part.toLowerCase();
 		});
