@@ -9,6 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var resolveCwd = require('resolve-cwd');
+var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 
@@ -138,7 +139,7 @@ Api.prototype.run = function () {
 		})
 		.then(function (files) {
 			if (files.length === 0) {
-				return Promise.reject(new Error('Couldn\'t find any files to test'));
+				return Promise.reject(new AvaError('Couldn\'t find any files to test'));
 			}
 
 			self.fileCount = files.length;

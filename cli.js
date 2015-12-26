@@ -103,7 +103,7 @@ api.run()
 		logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
 	})
 	.catch(function (err) {
-		if (err.name === 'Error') {
+		if (err.name === 'AvaError') {
 			console.log('  ' + chalk.red(figures.cross) + ' ' + err.message);
 		} else {
 			console.error(err.stack);
