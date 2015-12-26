@@ -8,6 +8,8 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 
 *Read our [contributing guide](contributing.md) if you're looking to contribute (issues/PRs/etc).*
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/readme.md)
+
 
 ## Table of Contents
 

@@ -2,6 +2,8 @@
 
 ✨ Thanks for contributing to AVA! ✨
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/contributing.md)
+
 ## How can I contribute?
 
 ### Improve documentation
