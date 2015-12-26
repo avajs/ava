@@ -1,8 +1,5 @@
-var test = require('../../../');
+import test from '../../../';
 
-test('subdir fail', function (t) {
+test('subdir fail', t => {
 	t.fail();
 });
-
-
-

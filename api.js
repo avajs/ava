@@ -8,6 +8,7 @@ var Promise = require('bluebird');
 var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
+var commondir = require('commondir');
 var resolveCwd = require('resolve-cwd');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
@@ -100,25 +101,6 @@ Api.prototype._handleTest = function (test) {
 	this.emit('test', test);
 };
 
-Api.prototype._findBase = function (files) {
-	this.base = files.reduce(function (base, file) {
-		file = path.relative('.', file);
-		file = file.split(path.sep);
-		if (base === false) {
-			return file;
-		}
-		return base.filter(function (part, i) {
-			return file[i].toLowerCase() === part.toLowerCase();
-		});
-	}, false).join(path.sep);
-
-	if (this.base === '' || this.base === '.') {
-		this.base = this.files[0] || 'test';
-	}
-
-	this.base += path.sep;
-};
-
 Api.prototype._prefixTitle = function (file) {
 	if (this.fileCount === 1) {
 		return '';
@@ -156,7 +138,7 @@ Api.prototype.run = function () {
 
 			self.fileCount = files.length;
 
-			self._findBase(files);
+			self.base = path.relative('.', commondir('.', files)) + path.sep;
 
 			var tests = files.map(self._runFile);
 
@@ -209,9 +191,7 @@ function handlePaths(files) {
 	if (files.length === 0) {
 		files = [
 			'test.js',
-			'**/test.js',
 			'test-*.js',
-			'**/test-*.js',
 			'test'
 		];
 	}

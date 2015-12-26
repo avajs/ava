@@ -259,14 +259,15 @@ test('absolute paths', function (t) {
 		});
 });
 
-test('recursive for directory', function (t) {
+test('search directories recursivly for files', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.join(__dirname, 'fixture/subdir/in-a-subdir.js')]);
+	var api = new Api([path.join(__dirname, 'fixture/subdir')]);
 
 	api.run()
 		.then(function () {
-			t.is(api.passCount, 1);
+			t.is(api.passCount, 2);
+			t.is(api.failCount, 1);
 		});
 });
 
