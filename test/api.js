@@ -38,19 +38,21 @@ test('async/await support', function (t) {
 });
 
 test('test title prefixes', function (t) {
-	t.plan(5);
+	t.plan(6);
 
 	var separator = ' ' + figures.pointerSmall + ' ';
 	var files = [
 		path.join(__dirname, 'fixture/async-await.js'),
 		path.join(__dirname, 'fixture/es2015.js'),
-		path.join(__dirname, 'fixture/generators.js')
+		path.join(__dirname, 'fixture/generators.js'),
+		path.join(__dirname, 'fixture/subdir/in-a-subdir.js')
 	];
 	var expected = [
 		['async-await', 'async function'].join(separator),
 		['async-await', 'arrow async function'].join(separator),
 		['es2015', '[anonymous]'].join(separator),
-		['generators', 'generator function'].join(separator)
+		['generators', 'generator function'].join(separator),
+		['subdir', 'in-a-subdir', 'subdir'].join(separator)
 	];
 	var index;
 
@@ -64,8 +66,7 @@ test('test title prefixes', function (t) {
 		});
 
 	api.on('test', function (a) {
-		var unnecessaryString = 'test' + separator + 'fixture' + separator;
-		index = expected.indexOf(a.title.replace(unnecessaryString, ''));
+		index = expected.indexOf(a.title);
 
 		t.true(index >= 0);
 
@@ -88,7 +89,27 @@ test('display filename prefixes for failed test stack traces', function (t) {
 		.then(function () {
 			t.is(api.passCount, 2);
 			t.is(api.failCount, 1);
-			t.match(api.errors[0].title, /test \S fixture \S one-pass-one-fail \S this is a failing test/);
+			t.match(api.errors[0].title, /one-pass-one-fail \S this is a failing test/);
+		});
+});
+
+// This is a seperate test because we can't ensure the order of the errors (to match them), and this is easier than
+// sorting.
+test('display filename prefixes for failed test stack traces in subdirs', function (t) {
+	t.plan(3);
+
+	var files = [
+		path.join(__dirname, 'fixture/es2015.js'),
+		path.join(__dirname, 'fixture/subdir/failing-subdir.js')
+	];
+
+	var api = new Api(files);
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+			t.is(api.failCount, 1);
+			t.match(api.errors[0].title, /subdir \S failing-subdir \S subdir fail/);
 		});
 });
 

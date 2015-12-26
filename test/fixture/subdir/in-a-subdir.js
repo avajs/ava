@@ -1,5 +1,5 @@
 var test = require('../../../');
 
-test(function (t) {
+test('subdir', function (t) {
 	t.pass();
 });
