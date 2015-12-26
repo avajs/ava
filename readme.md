@@ -115,11 +115,12 @@ $ ava --help
     ava
     ava test.js test2.js
     ava test-*.js
+    ava test
     ava --init
     ava --init foo.js
 
   Default patterns when no arguments:
-  test.js test-*.js test/*.js
+  test.js test-*.js test/**/*.js
 ```
 
 Directories are recursive by default. Files in directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
