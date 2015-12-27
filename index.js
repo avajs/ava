@@ -8,7 +8,7 @@ var send = require('./lib/send');
 var log = require('./lib/logger');
 
 // note that test files have require('ava')
-require('./lib/babel').avaRequired = true;
+require('./lib/test-worker').avaRequired = true;
 
 var opts = JSON.parse(process.argv[2]);
 var runner = new Runner(opts);
