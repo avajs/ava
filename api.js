@@ -8,6 +8,7 @@ var Promise = require('bluebird');
 var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
+var commondir = require('commondir');
 var resolveCwd = require('resolve-cwd');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
@@ -32,6 +33,7 @@ function Api(files, options) {
 	this.stats = [];
 	this.tests = [];
 	this.files = files || [];
+	this.base = '';
 
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
@@ -107,17 +109,10 @@ Api.prototype._prefixTitle = function (file) {
 
 	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
 
-	var base = path.dirname(this.files[0]);
-
-	if (base === '.') {
-		base = this.files[0] || 'test';
-	}
-
-	base += path.sep;
-
 	var prefix = path.relative('.', file)
-		.replace(base, '')
+		.replace(this.base, '')
 		.replace(/\.spec/, '')
+		.replace(/\.test/, '')
 		.replace(/test\-/g, '')
 		.replace(/\.js$/, '')
 		.split(path.sep)
@@ -143,6 +138,8 @@ Api.prototype.run = function () {
 			}
 
 			self.fileCount = files.length;
+
+			self.base = path.relative('.', commondir('.', files)) + path.sep;
 
 			var tests = files.map(self._runFile);
 
@@ -196,7 +193,7 @@ function handlePaths(files) {
 		files = [
 			'test.js',
 			'test-*.js',
-			'test/*.js'
+			'test'
 		];
 	}
 
@@ -210,7 +207,7 @@ function handlePaths(files) {
 	return files
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '*.js')]);
+				return handlePaths([path.join(file, '**', '*.js')]);
 			}
 
 			return file;

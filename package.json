@@ -89,6 +89,7 @@
     "cacha": "^1.0.3",
     "chalk": "^1.0.0",
     "co-with-promise": "^4.6.0",
+    "commondir": "^1.0.1",
     "core-assert": "^0.1.0",
     "debug": "^2.2.0",
     "deeper": "^2.1.0",
