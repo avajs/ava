@@ -137,7 +137,7 @@ test('results with errors', function (t) {
 	reporter.failCount = 1;
 
 	reporter.api = {
-		tests: [{
+		errors: [{
 			title: 'failed',
 			error: new Error('failure')
 		}]
@@ -149,7 +149,8 @@ test('results with errors', function (t) {
 	t.is(output[1], '  ' + chalk.red('1 failed'));
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. failed'));
-	t.match(output[4], /Error: failure/);
-	t.match(output[5], /Test\.test/);
+	t.match(output[4], /failure/);
+	t.match(output[5], /Error: failure/);
+	t.match(output[6], /Test\.test/);
 	t.end();
 });
