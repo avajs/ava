@@ -259,6 +259,18 @@ test('absolute paths', function (t) {
 		});
 });
 
+test('search directories recursivly for files', function (t) {
+	t.plan(1);
+
+	var api = new Api([path.join(__dirname, 'fixture/subdir')]);
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 2);
+			t.is(api.failCount, 1);
+		});
+});
+
 test('titles of both passing and failing tests and AssertionErrors are returned', function (t) {
 	t.plan(3);
 
