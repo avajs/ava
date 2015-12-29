@@ -1,6 +1,8 @@
 'use strict';
 var childProcess = require('child_process');
 var test = require('tap').test;
+global.Promise = require('bluebird');
+var getStream = require('get-stream');
 
 function execCli(args, cb) {
 	if (!Array.isArray(args)) {
@@ -13,10 +15,34 @@ function execCli(args, cb) {
 		env.AVA_APPVEYOR = 1;
 	}
 
-	childProcess.execFile(process.execPath, ['../cli.js'].concat(args), {
-		cwd: __dirname,
-		env: env
-	}, cb);
+	var stdout;
+	var stderr;
+
+	var processPromise = new Promise(function (resolve) {
+		var child = childProcess.spawn(process.execPath, ['../cli.js'].concat(args), {
+			cwd: __dirname,
+			env: env,
+			stdio: [null, 'pipe', 'pipe']
+		});
+
+		child.on('close', function (code, signal) {
+			if (code) {
+				var err = new Error('test-worker exited with a non-zero exit code: ' + code);
+				err.code = code;
+				err.signal = signal;
+				resolve(err);
+				return;
+			}
+			resolve(code);
+		});
+
+		stdout = getStream(child.stdout);
+		stderr = getStream(child.stderr);
+	});
+
+	Promise.all([processPromise, stdout, stderr]).then(function (args) {
+		cb.apply(null, args);
+	});
 }
 
 test('throwing a named function will report the to the console', function (t) {
