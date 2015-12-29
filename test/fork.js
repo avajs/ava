@@ -36,7 +36,7 @@ test('resolves promise with tests info', function (t) {
 test('rejects on error and streams output', function (t) {
 	t.plan(2);
 
-	fork(fixture('broken.js'))
+	fork(fixture('broken.js'), {silent: true})
 		.run()
 		.catch(function (err) {
 			t.ok(err);
