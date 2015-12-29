@@ -250,3 +250,14 @@ test('reject', function (t) {
 		t.end();
 	});
 });
+
+test('reject with non-Error', function (t) {
+	ava(function () {
+		return Promise.reject('failure');
+	}).run().catch(function (err) {
+		t.ok(err);
+		t.is(err.name, 'AssertionError');
+		t.is(err.message, 'Promise rejected with "failure"');
+		t.end();
+	});
+});
