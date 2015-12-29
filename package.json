@@ -37,9 +37,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && tap --coverage --reporter=spec --timeout=150 test/*.js test/reporters/*.js",
-    "test-win": "tap --reporter=spec --timeout=150 test/*.js test/reporters/*.js",
-    "coverage": "tap --coverage-report=lcov"
+    "test": "xo && nyc --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
+    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js"
   },
   "files": [
     "lib",
@@ -129,14 +128,6 @@
     "tap": "^2.2.1",
     "xo": "*",
     "zen-observable": "^0.1.6"
-  },
-  "config": {
-    "nyc": {
-      "exclude": [
-        "node_modules[/\\\\]",
-        "test[/\\\\]"
-      ]
-    }
   },
   "xo": {
     "ignore": [
