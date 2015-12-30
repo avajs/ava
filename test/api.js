@@ -1,6 +1,8 @@
 'use strict';
 var path = require('path');
 var figures = require('figures');
+var rimraf = require('rimraf');
+var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
 
@@ -217,7 +219,7 @@ test('uncaught exception will throw an error', function (t) {
 test('stack traces for exceptions are corrected using a source map file', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')]);
+	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')], {cacheEnabled: true});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -231,10 +233,44 @@ test('stack traces for exceptions are corrected using a source map file', functi
 		});
 });
 
-test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account', function (t) {
+test('stack traces for exceptions are corrected using a source map file (cache off)', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')]);
+	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')], {cacheEnabled: false});
+
+	api.on('error', function (data) {
+		t.match(data.message, /Thrown by source-map-fixtures/);
+		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?at\b.*source-map-file.js:11.*$/m);
+	});
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
+
+test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on)', function (t) {
+	t.plan(4);
+
+	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')], {cacheEnabled: true});
+
+	api.on('error', function (data) {
+		t.match(data.message, /Thrown by source-map-fixtures/);
+		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
+	});
+
+	api.run()
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
+
+test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off)', function (t) {
+	t.plan(4);
+
+	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')], {cacheEnabled: false});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -402,5 +438,40 @@ test('power-assert support', function (t) {
 				api.errors[1].error.message,
 				/with message\s+t\.ok\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
 			);
+		});
+});
+
+test('caching is enabled by default', function (t) {
+	t.plan(3);
+	rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+	var api = new Api([path.join(__dirname, 'fixture/caching/test.js')]);
+
+	api.run()
+		.then(function () {
+			var files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
+			t.is(files.length, 2);
+			t.is(files.filter(endsWithJs).length, 1);
+			t.is(files.filter(endsWithMap).length, 1);
+			t.end();
+		});
+
+	function endsWithJs(filename) {
+		return /\.js$/.test(filename);
+	}
+
+	function endsWithMap(filename) {
+		return /\.js$/.test(filename);
+	}
+});
+
+test('caching can be disabled', function (t) {
+	t.plan(1);
+	rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+	var api = new Api([path.join(__dirname, 'fixture/caching/test.js')], {cacheEnabled: false});
+
+	api.run()
+		.then(function () {
+			t.false(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
+			t.end();
 		});
 });

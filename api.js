@@ -8,11 +8,15 @@ var Promise = require('bluebird');
 var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
+var objectAssign = require('object-assign');
 var commondir = require('commondir');
 var resolveCwd = require('resolve-cwd');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
+var CachingPrecompiler = require('./lib/caching-precompiler');
+var uniqueTempDir = require('unique-temp-dir');
+var findCacheDir = require('find-cache-dir');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -44,7 +48,10 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file) {
-	return fork(file, this.options)
+	var options = objectAssign({}, this.options, {
+		precompiled: this.precompiler.generateHashForFile(file)
+	});
+	return fork(file, options)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -136,6 +143,12 @@ Api.prototype.run = function () {
 			if (files.length === 0) {
 				return Promise.reject(new AvaError('Couldn\'t find any files to test'));
 			}
+
+			var cacheEnabled = self.options.cacheEnabled !== false;
+			var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
+				uniqueTempDir();
+			self.options.cacheDir = cacheDir;
+			self.precompiler = new CachingPrecompiler(cacheDir);
 
 			self.fileCount = files.length;
 
