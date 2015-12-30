@@ -37,7 +37,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
+    "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js"
   },
   "files": [
@@ -123,6 +123,7 @@
     "coveralls": "^2.11.4",
     "delay": "^1.3.0",
     "get-stream": "^1.1.0",
+    "nyc": "^5.1.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^0.4.0",
