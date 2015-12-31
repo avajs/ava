@@ -2,6 +2,7 @@
 var test = require('tap').test;
 var Promise = global.Promise = require('bluebird');
 var delay = require('delay');
+var isPromise = require('is-promise');
 var _ava = require('../lib/test');
 
 function ava() {
@@ -466,6 +467,21 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 		t.is(err.operator, 'plan');
 		t.is(err.actual, 2);
 		t.is(err.expected, 3);
+		t.end();
+	});
+});
+
+test('assertions return promises', function (t) {
+	t.plan(4);
+	ava(function (a) {
+		a.plan(4);
+		t.ok(isPromise(a.throws(Promise.reject(new Error('foo')))));
+		t.ok(isPromise(a.throws(function () {
+			throw new Error('bar');
+		})));
+		t.ok(isPromise(a.doesNotThrow(Promise.resolve(true))));
+		t.ok(isPromise(a.true(true)));
+	}).run().then(function () {
 		t.end();
 	});
 });
