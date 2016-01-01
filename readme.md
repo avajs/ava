@@ -566,6 +566,17 @@ Assert that `function` doesn't throw an `error` or `promise` resolves.
 
 Assert that `error` is falsy.
 
+## Skipping Assertions
+
+Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
+
+```js
+test(t => {
+  t.plan(2);
+  t.skip.is(foo(), 5); // no need to change your plan count when skipping.
+  t.is(1, 1);
+});
+```
 
 ## Enhanced asserts
 
