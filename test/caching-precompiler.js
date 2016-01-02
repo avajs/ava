@@ -96,11 +96,13 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	var tempDir = uniqueTempDir();
 	var customPlugin = sinon.stub().returns({visitor: {}});
 	var powerAssert = sinon.stub().returns({visitor: {}});
+	var rewrite = sinon.stub().returns({visitor: {}});
 	var precompiler = new CachingPrecompiler(tempDir, {
 		presets: ['stage-2', 'es2015'],
 		plugins: [customPlugin]
 	});
 	sinon.stub(precompiler, '_createEspowerPlugin').returns(powerAssert);
+	sinon.stub(precompiler, '_createRewritePlugin').returns(rewrite);
 	babel.transform.reset();
 
 	precompiler.precompileFile(fixture('es2015.js'));
@@ -114,6 +116,6 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.same(options.presets, ['stage-2', 'es2015']);
-	t.same(options.plugins, [customPlugin, powerAssert, transformRuntime]);
+	t.same(options.plugins, [customPlugin, powerAssert, transformRuntime, rewrite]);
 	t.end();
 });
