@@ -2,7 +2,17 @@
 var path = require('path');
 var test = require('tap').test;
 var Runner = require('../lib/runner');
-var fork = require('../lib/fork');
+var _fork = require('../lib/fork.js');
+var CachingPrecompiler = require('../lib/caching-precompiler');
+var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
+var precompiler = new CachingPrecompiler(cacheDir);
+
+function fork(testPath) {
+	return _fork(testPath, {
+		cacheDir: cacheDir,
+		precompiled: precompiler.generateHashForFile(testPath)
+	});
+}
 
 test('before', function (t) {
 	t.plan(1);

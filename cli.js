@@ -43,6 +43,7 @@ var cli = meow([
 	'  --require    Module to preload (Can be repeated)',
 	'  --tap        Generate TAP output',
 	'  --verbose    Enable verbose output',
+	'  --no-cache   Disable the transpiler cache',
 	'',
 	'Examples',
 	'  ava',
@@ -77,7 +78,8 @@ if (cli.flags.init) {
 var api = new Api(cli.input, {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
-	require: arrify(cli.flags.require)
+	require: arrify(cli.flags.require),
+	cacheEnabled: cli.flags.cache !== false
 });
 
 var logger = new Logger();
