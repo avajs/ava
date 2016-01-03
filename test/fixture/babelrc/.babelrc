@@ -1,0 +1,3 @@
+{
+  "plugins": ["this-plugin-does-not-exist"]
+}
