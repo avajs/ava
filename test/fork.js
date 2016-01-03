@@ -81,3 +81,12 @@ test('destructuring of `t` is allowed', function (t) {
 			t.end();
 		});
 });
+
+test('babelrc is ignored', function (t) {
+	fork(fixture('babelrc/test.js'))
+	.run()
+	.then(function (info) {
+		t.is(info.stats.passCount, 1);
+		t.end();
+	});
+});
