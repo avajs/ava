@@ -23,6 +23,7 @@ var arrify = require('arrify');
 var meow = require('meow');
 var chalk = require('chalk');
 var Promise = require('bluebird');
+var pkgConf = require('pkg-conf');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
@@ -31,6 +32,8 @@ var Api = require('./api');
 
 // Bluebird specific
 Promise.longStackTraces();
+
+var conf = pkgConf.sync('ava');
 
 var cli = meow([
 	'Usage',
@@ -65,7 +68,8 @@ var cli = meow([
 		'verbose',
 		'serial',
 		'tap'
-	]
+	],
+	default: conf
 });
 
 updateNotifier({pkg: cli.pkg}).notify();
@@ -75,7 +79,7 @@ if (cli.flags.init) {
 	return;
 }
 
-var api = new Api(cli.input, {
+var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),

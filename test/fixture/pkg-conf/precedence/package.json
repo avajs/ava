@@ -1,0 +1,11 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "ava": {
+    "files": ["a.js", "b.js"],
+    "serial": true,
+    "failFast": true,
+    "cache": false,
+    "require": "./default-required.js"
+  }
+}

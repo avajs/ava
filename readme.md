@@ -15,6 +15,7 @@ Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/f
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Configuration](#configuration)
 - [Documentation](#documentation)
 - [API](#api)
 - [Assertions](#assertions)
@@ -126,6 +127,28 @@ $ ava --help
 Directories are recursive by default. Files in directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
 
 *WARNING: NON-STANDARD BEHAVIOR:* The AVA CLI will always try to find and use your projects local install of AVA. This is true even when you run the global `ava` command. This non-standard behavior solves an important [issue](https://github.com/sindresorhus/ava/issues/157), and should have no impact on everyday use.
+
+## Configuration
+
+All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
+
+```json
+{
+  "ava": {
+    "files": [
+      "my-test-folder/*.js",
+      "!**/not-this-file.js"
+    ],
+    "failFast": true,
+    "serial": true,
+    "tap": true,
+    "verbose": true,
+    "require": ["babel-core/register", "coffee-script/register"]
+  }
+}
+```
+
+Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
 ## Documentation
 
