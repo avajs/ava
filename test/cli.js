@@ -1,12 +1,18 @@
 'use strict';
+var path = require('path');
 var childProcess = require('child_process');
 var test = require('tap').test;
 global.Promise = require('bluebird');
 var getStream = require('get-stream');
+var arrify = require('arrify');
+var cliPath = path.join(__dirname, '../cli.js');
 
-function execCli(args, cb) {
-	if (!Array.isArray(args)) {
-		args = [args];
+function execCli(args, dirname, cb) {
+	if (typeof dirname === 'function') {
+		cb = dirname;
+		dirname = __dirname;
+	} else {
+		dirname = path.join(__dirname, dirname);
 	}
 
 	var env = {};
@@ -19,8 +25,8 @@ function execCli(args, cb) {
 	var stderr;
 
 	var processPromise = new Promise(function (resolve) {
-		var child = childProcess.spawn(process.execPath, ['../cli.js'].concat(args), {
-			cwd: __dirname,
+		var child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(arrify(args)), {
+			cwd: dirname,
 			env: env,
 			stdio: [null, 'pipe', 'pipe']
 		});
@@ -79,6 +85,27 @@ test('throwing a anonymous function will report the function to the console', fu
 test('log failed tests', function (t) {
 	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
 		t.match(stderr, /AssertionError: false == true/);
+		t.end();
+	});
+});
+
+test('pkg-conf: defaults', function (t) {
+	execCli([], 'fixture/pkg-conf/defaults', function (err) {
+		t.ifError(err);
+		t.end();
+	});
+});
+
+test('pkg-conf: pkg-overrides', function (t) {
+	execCli([], 'fixture/pkg-conf/pkg-overrides', function (err) {
+		t.ifError(err);
+		t.end();
+	});
+});
+
+test('pkg-conf: cli takes precedence', function (t) {
+	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], 'fixture/pkg-conf/precedence', function (err) {
+		t.ifError(err);
 		t.end();
 	});
 });
