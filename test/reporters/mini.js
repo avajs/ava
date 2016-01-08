@@ -59,7 +59,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		'',
-		'  ' + chalk.cyan('- skipped'),
+		'  ' + chalk.yellow('- skipped'),
 		'',
 		''
 	].join('\n');
