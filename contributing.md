@@ -2,7 +2,7 @@
 
 ✨ Thanks for contributing to AVA! ✨
 
-Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/contributing.md)
+Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/contributing.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/contributing.md)
 
 ## How can I contribute?
 
