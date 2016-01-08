@@ -59,7 +59,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		'',
-		'  ' + chalk.cyan('- skipped'),
+		'  ' + chalk.yellow('- skipped'),
 		'',
 		''
 	].join('\n');
@@ -81,6 +81,36 @@ test('results with passing tests', function (t) {
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with skipped tests', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.skipCount = 1;
+	reporter.failCount = 0;
+
+	var actualOutput = reporter.finish();
+	var expectedOutput = [
+		'',
+		'  ' + chalk.yellow('1 skipped'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with passing skipped tests', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 1;
+	reporter.skipCount = 1;
+
+	var output = reporter.finish().split('\n');
+
+	t.is(output[0], '');
+	t.is(output[1], '  ' + chalk.green('1 passed') + '  ' + chalk.yellow('1 skipped'));
+	t.is(output[2], '');
 	t.end();
 });
 

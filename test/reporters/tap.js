@@ -81,6 +81,7 @@ test('results', function (t) {
 	var api = {
 		passCount: 1,
 		failCount: 2,
+		skipCount: 1,
 		rejectionCount: 3,
 		exceptionCount: 4
 	};
@@ -93,6 +94,7 @@ test('results', function (t) {
 		'1..' + (api.passCount + api.failCount),
 		'# tests ' + (api.passCount + api.failCount),
 		'# pass ' + api.passCount,
+		'# skip ' + api.skipCount,
 		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),
 		''
 	].join('\n');

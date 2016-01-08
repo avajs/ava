@@ -165,6 +165,23 @@ test('results with passing tests', function (t) {
 	t.end();
 });
 
+test('results with skipped tests', function (t) {
+	var reporter = createReporter();
+	reporter.api.passCount = 1;
+	reporter.api.skipCount = 1;
+
+	var actualOutput = reporter.finish();
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.yellow('1 test skipped'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('results with passing tests and rejections', function (t) {
 	var reporter = createReporter();
 	reporter.api.passCount = 1;
