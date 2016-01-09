@@ -55,7 +55,13 @@ Api.prototype._runFile = function (file) {
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
-		.on('uncaughtException', this._handleExceptions);
+		.on('uncaughtException', this._handleExceptions)
+		.on('stdout', this._handleOutput.bind(this, 'stdout'))
+		.on('stderr', this._handleOutput.bind(this, 'stderr'));
+};
+
+Api.prototype._handleOutput = function (channel, data) {
+	this.emit(channel, data);
 };
 
 Api.prototype._handleRejections = function (data) {

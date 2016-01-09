@@ -38,7 +38,8 @@
   },
   "scripts": {
     "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
-    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js"
+    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
+    "visual": "node test/visual/run-visual-tests.js"
   },
   "files": [
     "lib",
@@ -87,6 +88,7 @@
     "bluebird": "^3.0.0",
     "caching-transform": "^1.0.0",
     "chalk": "^1.0.0",
+    "cli-cursor": "^1.0.2",
     "co-with-promise": "^4.6.0",
     "commondir": "^1.0.1",
     "convert-source-map": "^1.1.2",
@@ -101,7 +103,7 @@
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
-    "log-update": "^1.0.2",
+    "last-line-stream": "^1.0.0",
     "loud-rejection": "^1.2.0",
     "max-timeout": "^1.0.0",
     "md5-hex": "^1.2.0",
@@ -127,8 +129,10 @@
     "coveralls": "^2.11.4",
     "delay": "^1.3.0",
     "get-stream": "^1.1.0",
-    "rimraf": "^2.5.0",
+    "inquirer": "^0.11.1",
     "nyc": "^5.1.0",
+    "pify": "^2.3.0",
+    "rimraf": "^2.5.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^0.4.0",
