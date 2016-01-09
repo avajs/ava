@@ -21,9 +21,9 @@ var updateNotifier = require('update-notifier');
 var figures = require('figures');
 var arrify = require('arrify');
 var meow = require('meow');
-var chalk = require('chalk');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
+var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
@@ -111,9 +111,9 @@ api.run()
 	})
 	.catch(function (err) {
 		if (err.name === 'AvaError') {
-			console.log('  ' + chalk.red(figures.cross) + ' ' + err.message);
+			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
 		} else {
-			console.error(err.stack);
+			console.error(colors.stack(err.stack));
 		}
 
 		logger.exit(1);
