@@ -700,9 +700,10 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 Concurrency is not parallelism. It enables parallelism. [Learn more.](http://stackoverflow.com/q/1050222)
 
+
 ## Recipes
 
-- [Endpoint testing](/docs/recipes/endpoint-testing.md)
+- [Endpoint testing](docs/recipes/endpoint-testing.md)
 
 
 ## Support
