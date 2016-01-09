@@ -20,6 +20,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [API](#api)
 - [Assertions](#assertions)
 - [FAQ](#faq)
+- [Recipes](#recipes)
 
 
 ## Why AVA?
@@ -698,6 +699,10 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 ### Concurrency vs. parallelism
 
 Concurrency is not parallelism. It enables parallelism. [Learn more.](http://stackoverflow.com/q/1050222)
+
+## Recipes
+
+- [Endpoint testing](/docs/recipes/endpoint-testing.md)
 
 
 ## Support
