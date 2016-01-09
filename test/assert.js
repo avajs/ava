@@ -127,6 +127,14 @@ test('.same()', function (t) {
 		assert.same(['a', 'b'], ['a', 'b']);
 	});
 
+	t.doesNotThrow(function () {
+		assert.same(new Set([1, 2, 3]), new Set([1, 2, 3]));
+	});
+
+	t.doesNotThrow(function () {
+		assert.same(new Map([[1, 'one'], [2, 'two']]), new Map([[1, 'one'], [2, 'two']]));
+	});
+
 	t.throws(function () {
 		assert.same({a: 'a'}, {a: 'b'});
 	});
@@ -144,6 +152,14 @@ test('.same()', function (t) {
 		circular.push(circular);
 		assert.same([circular, 'c'], [circular, 'd']);
 	}, / 'c' ].*? 'd' ]/);
+
+	t.throws(function () {
+		assert.same(new Set([1, 2, 3]), new Set([1, 2]));
+	});
+
+	t.throws(function () {
+		assert.same(new Map([[1, 'one'], [2, 'two']]), new Map([[1, 'one'], [3, 'three']]));
+	});
 
 	t.end();
 });
