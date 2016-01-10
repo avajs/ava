@@ -177,6 +177,30 @@ test('handle throws with string', function (t) {
 	});
 });
 
+test('handle throws with regex with string reject', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject('abc');
+		return a.throws(promise, /abc/);
+	}).run().then(function (a) {
+		t.notOk(a.assertionError);
+		t.end();
+	});
+});
+
+test('handle throws with string with string reject', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject('abc');
+		return a.throws(promise, 'abc');
+	}).run().then(function (a) {
+		t.notOk(a.assertionError);
+		t.end();
+	});
+});
+
 test('handle throws with false-positive promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
