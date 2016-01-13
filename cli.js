@@ -104,6 +104,9 @@ logger.start();
 api.on('test', logger.test);
 api.on('error', logger.unhandledError);
 
+api.on('stdout', logger.stdout);
+api.on('stderr', logger.stderr);
+
 api.run()
 	.then(function () {
 		logger.finish();
