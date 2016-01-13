@@ -115,7 +115,7 @@ test('uncaught exception', function (t) {
 
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
-	t.match(output[2], /at Test\.test/);
+	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
 });
 
@@ -130,7 +130,7 @@ test('unhandled rejection', function (t) {
 
 	t.is(output[0], chalk.red('Unhandled Rejection: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
-	t.match(output[2], /at Test\.test/);
+	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
 });
 
@@ -248,7 +248,7 @@ test('results with errors', function (t) {
 	t.is(output[1], '  ' + chalk.red('1 test failed'));
 	t.is(output[3], '  ' + chalk.red('1. fail'));
 	t.match(output[4], /Error: error message/);
-	t.match(output[5], /Test\.test/);
+	t.match(output[5], /test\/reporters\/verbose\.js/);
 	t.end();
 });
 
