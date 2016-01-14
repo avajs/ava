@@ -2,6 +2,8 @@
 
 ✨ Thanks for contributing to AVA! ✨
 
+Please note that this project is released with a [Contributor Code of Conduct](code-of-conduct.md). By participating in this project you agree to abide by its terms.
+
 Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/contributing.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/contributing.md)
 
 ## How can I contribute?
