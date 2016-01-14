@@ -38,6 +38,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Observable support](#observable-support)
 - [Enhanced asserts](#enhanced-asserts)
 - [Optional TAP output](#optional-tap-output)
+- [Clean stack traces](#clean-stack-traces)
 
 
 ## Test syntax
@@ -485,6 +486,13 @@ $ ava --tap | tap-nyan
 ```
 
 <img src="media/tap-output.png" width="398">
+
+
+### Clean stack traces
+
+AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
+
+<img src="media/stack-traces.png" width="300">
 
 
 ## API
