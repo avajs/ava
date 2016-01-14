@@ -129,7 +129,7 @@ test('results with passing tests and rejections', function (t) {
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. Unhandled Rejection'));
 	t.match(output[4], /Error: failure/);
-	t.match(output[5], /Test\.test/);
+	t.match(output[5], /test\/reporters\/mini\.js/);
 	t.end();
 });
 
@@ -152,7 +152,7 @@ test('results with passing tests and exceptions', function (t) {
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. Uncaught Exception'));
 	t.match(output[4], /Error: failure/);
-	t.match(output[5], /Test\.test/);
+	t.match(output[5], /test\/reporters\/mini\.js/);
 	t.end();
 });
 
@@ -174,6 +174,6 @@ test('results with errors', function (t) {
 	t.is(output[2], '  ' + chalk.red('1. failed'));
 	t.match(output[3], /failure/);
 	t.match(output[4], /Error: failure/);
-	t.match(output[5], /Test\.test/);
+	t.match(output[5], /test\/reporters\/mini\.js/);
 	t.end();
 });
