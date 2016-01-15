@@ -89,6 +89,13 @@ test('log failed tests', function (t) {
 	});
 });
 
+test('use a custom logger', function (t) {
+	execCli(['--reporter=./fixture/custom-reporter.js', 'fixture/one-pass-one-fail.js'], function (err, stdout, stderr) {
+		t.match(stderr, /custom output/);
+		t.end();
+	});
+});
+
 test('pkg-conf: defaults', function (t) {
 	execCli([], 'fixture/pkg-conf/defaults', function (err) {
 		t.ifError(err);

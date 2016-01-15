@@ -46,6 +46,7 @@ var cli = meow([
 	'  --require    Module to preload (Can be repeated)',
 	'  --tap        Generate TAP output',
 	'  --verbose    Enable verbose output',
+	'  --reporter   Use custom output',
 	'  --no-cache   Disable the transpiler cache',
 	'',
 	'Examples',
@@ -61,7 +62,8 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require'
+		'require',
+		'reporter'
 	],
 	boolean: [
 		'fail-fast',
@@ -97,6 +99,14 @@ if (cli.flags.tap) {
 
 if (cli.flags.verbose) {
 	logger.use(verboseReporter());
+}
+
+if (cli.flags.reporter) {
+	var reporterPath = resolveCwd(
+		arrify(cli.flags.reporter).pop()
+	);
+	var reporter = require(reporterPath);
+	logger.use(reporter());
 }
 
 logger.start();
