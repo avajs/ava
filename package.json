@@ -137,8 +137,8 @@
     "rimraf": "^2.5.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
-    "source-map-fixtures": "^0.4.0",
-    "tap": "^2.2.1",
+    "source-map-fixtures": "^1.0.0",
+    "tap": "^5.0.1",
     "xo": "*",
     "zen-observable": "^0.1.6"
   },
