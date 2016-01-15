@@ -23,6 +23,7 @@ var arrify = require('arrify');
 var meow = require('meow');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
+var isCi = require('is-ci');
 var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
@@ -89,14 +90,12 @@ var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 var logger = new Logger();
 logger.api = api;
 
-logger.use(miniReporter());
-
 if (cli.flags.tap) {
 	logger.use(tapReporter());
-}
-
-if (cli.flags.verbose) {
+} else if (cli.flags.verbose || isCi) {
 	logger.use(verboseReporter());
+} else {
+	logger.use(miniReporter());
 }
 
 logger.start();

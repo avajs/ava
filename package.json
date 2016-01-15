@@ -101,6 +101,7 @@
     "find-cache-dir": "^0.1.1",
     "fn-name": "^2.0.0",
     "globby": "^4.0.0",
+    "is-ci": "^1.0.7",
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
