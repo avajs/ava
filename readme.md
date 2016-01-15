@@ -113,6 +113,7 @@ $ ava --help
     --require    Module to preload (Can be repeated)
     --tap        Generate TAP output
     --verbose    Enable verbose output
+    --reporter   Use custom output
 
   Examples
     ava
@@ -145,7 +146,8 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "serial": true,
     "tap": true,
     "verbose": true,
-    "require": ["babel-core/register", "coffee-script/register"]
+    "require": ["babel-core/register", "coffee-script/register"],
+    "reporter": "my-custom-reporter.js"
   }
 }
 ```
