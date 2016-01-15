@@ -475,3 +475,15 @@ test('caching can be disabled', function (t) {
 			t.end();
 		});
 });
+
+test('test file with only skipped tests does not create a failure', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.join(__dirname, 'fixture/skip-only.js')]);
+
+	api.run()
+		.then(function () {
+			t.is(api.tests.length, 1);
+			t.true(api.tests[0].skip);
+		});
+});

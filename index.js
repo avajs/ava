@@ -69,8 +69,9 @@ function exit() {
 
 globals.setImmediate(function () {
 	var numberOfTests = runner.select({type: 'test', skipped: false}).length;
+	var numberOfSkippedTests = runner.select({type: 'test', skipped: true}).length;
 
-	if (numberOfTests === 0) {
+	if (numberOfTests === 0 && numberOfSkippedTests === 0) {
 		send('no-tests', {avaRequired: true});
 		return;
 	}
