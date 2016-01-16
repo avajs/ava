@@ -41,13 +41,13 @@ var cli = meow([
 	'  ava [<file|folder|glob> ...]',
 	'',
 	'Options',
-	'  --init       Add AVA to your project',
-	'  --fail-fast  Stop after first test failure',
-	'  --serial     Run tests serially',
-	'  --require    Module to preload (Can be repeated)',
-	'  --tap        Generate TAP output',
-	'  --verbose    Enable verbose output',
-	'  --no-cache   Disable the transpiler cache',
+	'  --init           Add AVA to your project',
+	'  --fail-fast      Stop after first test failure',
+	'  --serial, -s     Run tests serially',
+	'  --require, -r    Module to preload (Can be repeated)',
+	'  --tap, -t        Generate TAP output',
+	'  --verbose, -v    Enable verbose output',
+	'  --no-cache       Disable the transpiler cache',
 	'',
 	'Examples',
 	'  ava',
@@ -70,7 +70,13 @@ var cli = meow([
 		'serial',
 		'tap'
 	],
-	default: conf
+	default: conf,
+	alias: {
+		t: 'tap',
+		v: 'verbose',
+		r: 'require',
+		s: 'serial'
+	}
 });
 
 updateNotifier({pkg: cli.pkg}).notify();
