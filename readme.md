@@ -107,12 +107,12 @@ $ ava --help
     ava [<file|folder|glob> ...]
 
   Options
-    --init       Add AVA to your project
-    --fail-fast  Stop after first test failure
-    --serial     Run tests serially
-    --require    Module to preload (Can be repeated)
-    --tap        Generate TAP output
-    --verbose    Enable verbose output
+    --init           Add AVA to your project
+    --fail-fast      Stop after first test failure
+    -s, --serial     Run tests serially
+    -r, --require    Module to preload (Can be repeated)
+    -t, --tap        Generate TAP output
+    -v --verbose     Enable verbose output
 
   Examples
     ava
