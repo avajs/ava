@@ -715,6 +715,7 @@ Concurrency is not parallelism. It enables parallelism. [Learn more.](http://sta
 
 ## Recipes
 
+- [Code coverage](docs/recipes/code-coverage.md)
 - [Endpoint testing](docs/recipes/endpoint-testing.md)
 
 
