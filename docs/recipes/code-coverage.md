@@ -1,17 +1,28 @@
 # Code coverage
 
-As AVA [spawns the test files][isolated-env], you can't use [`istanbul`] for code coverage; instead, you can achieve this with [`nyc`] which is basically [`istanbul`] with sub-process support. So, firstly we'll need to install it:
+As AVA [spawns the test files][isolated-env], you can't use [`istanbul`] for code coverage; instead, you can achieve this with [`nyc`] which is basically [`istanbul`] with sub-process support. 
+
+## Setup
+
+First install NYC:
 
 ```
-npm install nyc --save-dev
+$ npm install nyc --save-dev
 ```
 
-For both ES2015 and ES5 environments, don't forget to add `.nyc_output` & `coverage` to your `.gitignore`.
+Then add both the `.nyc_output` and `coverage` directories to your `.gitignore` file.
 
+`.gitignore`:
+
+```
+node_modules
+coverage
+.nyc_output
+```
 
 ## ES5 coverage
 
-To cover ES5, simply prepend your test script with `nyc`. This npm script will then handle our code coverage and testing:
+Using NYC to provide coverage for production code written in ES5 is simple. Just prepend your test script with `nyc`:
 
 ```json
 {
@@ -21,11 +32,19 @@ To cover ES5, simply prepend your test script with `nyc`. This npm script will t
 }
 ```
 
+That's it!
+ 
+If you want to create HTML coverage reports, or upload coverage data to Coveralls, you should skip down to those sections below. 
 
 ## ES2015 coverage
 
-First, we'll need a babel configuration. This will vary from developer to developer but you can use this `package.json` configuration for babel as a starting point:
+Using Babel to transpile your production code is a bit more involved. Here we've broken it down into multiple steps.
 
+### Configure Babel
+
+First, we need a Babel configuration. The following is just an example. You will need to modify it to fit your needs. 
+
+`package.json`:
 ```json
 {
 	"babel": {
@@ -41,24 +60,67 @@ First, we'll need a babel configuration. This will vary from developer to develo
 }
 ```
 
-Note that in development mode, we need to specify a sourcemap when we transpile our code, and in production this is unnecessary. So for your production script, use an environment other than development; for example:
+There are two important things to note from the example above.
+
+  1. We ignore test files because AVA already handles transpiling tests for you.
+
+  2. We specify `inline` source maps for development. This is important for properly generating coverage. Using the `env` section of the Babel configuration allows us to disable source maps for production builds.
+
+
+### Create a build script
+
+Since it is unlikely you want `inline` source maps in your production code. You should specify an alternate environment variable in your build scripts:
+
+`package.json`
 
 ```json
 {
-	"scripts": {
-		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
+  "scripts": {
+    "build": "BABEL_ENV=production babel --out-dir=dist index.js"
+  }
+}
+```
+
+> WARNING: `BABEL_ENV=production` does not work on Windows, you must use the `set` keyword  (`set BABEL_ENV=production`).  For cross platform builds, check out [`cross-env`].
+
+Note that the build script really has very little to do with AVA, and is just a demonstration of how to use Babel's `env` configuration to manipulate your config so it is compatible with AVA.
+
+### Use the Babel require hook
+
+To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`. 
+
+```json
+{
+	"ava": {
+		"require": ["babel-core/register"]
 	}
 }
 ```
 
-> WARNING: Windows will choke when you set environment variables with BABEL_ENV=production like that. We recommend using [`cross-env`] to eliminate this problem under Windows. Note, the use of [`cross-env`] in the other OS runs as well. If you want your project to work cross-platform, use it.
+*Note*: You can also set the require hook from the command line: `ava --require=babel-core/register`. However, configuring it in `package.json` saves you from repeatedly typing that flag.
 
-To cover ES6, simply prepend your test script with `nyc` and the `--babel` flag. This npm script will then handle our code coverage and testing:
+### Putting it all together
+
+Combining the above steps, your complete `package.json` should look something like this:
 
 ```json
-{
+{    
 	"scripts": {
-		"test": "nyc --babel --reporter=text ava"
+		"test": "nyc ava",
+		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
+	},
+	"babel": {
+		"presets": ["es2015"],
+		"plugins": ["transform-runtime"],
+		"ignore": "test.js",
+		"env": {
+			"development": {
+				"sourceMaps": "inline"
+			}
+		}
+	},
+	"ava": {
+		"require": ["babel-core/register"]
 	}
 }
 ```
@@ -66,13 +128,15 @@ To cover ES6, simply prepend your test script with `nyc` and the `--babel` flag.
 
 ## HTML reports
 
-To see a HTML report for either the ES6 or ES5 coverage strategies we have outlined, do:
+NYC creates a `json` coverage file for each forked process in the `.nyc_ouput` directory.
+
+To combine those into a human readable HTML report, do the following:
 
 ```
-nyc report --reporter=html
+$ ./node_modules/.bin/nyc report --reporter=html
 ```
 
-Or, convert it into an npm script for less typing:
+Or, use an npm script to save on typing:
 
 ```json
 {
@@ -89,22 +153,25 @@ This will output a HTML file to the `coverage` directory.
 
 ### Travis CI & Coveralls
 
-Firstly, you will need to activate your repository in the coveralls user interface. Once that is done, add [`coveralls`] as a development dependency:
+First, you must login to [coveralls.io] and activate your repository.
+ 
+Once that is done, add [`coveralls`] as a development dependency:
 
 ```
-npm install coveralls --save-dev
+$ npm install coveralls --save-dev
 ```
 
 Then add the following to your `.travis.yml`:
 
-```
+```yaml
 after_success:
-	- './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
+    - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
 ```
 
-Your coverage report will then appear on coveralls shortly after the CI service completes.
+Your coverage report will then appear on coveralls shortly after Travis completes.
 
 [`babel`]:      https://github.com/babel/babel
+[coveralls.io]: https://coveralls.io
 [`coveralls`]:  https://github.com/nickmerwin/node-coveralls
 [`cross-env`]:  https://github.com/kentcdodds/cross-env
 [isolated-env]: https://github.com/sindresorhus/ava#isolated-environment
