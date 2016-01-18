@@ -51,6 +51,8 @@ Note that in development mode, we need to specify a sourcemap when we transpile 
 }
 ```
 
+> WARNING: Windows will choke when you set environment variables with BABEL_ENV=production like that. We recommend using [`cross-env`] to eliminate this problem under Windows. Note, the use of [`cross-env`] in the other OS runs as well. If you want your project to work cross-platform, use it.
+
 To cover ES6, simply prepend your test script with `nyc` and the `--babel` flag. This npm script will then handle our code coverage and testing:
 
 ```json
@@ -104,6 +106,7 @@ Your coverage report will then appear on coveralls shortly after the CI service 
 
 [`babel`]:      https://github.com/babel/babel
 [`coveralls`]:  https://github.com/nickmerwin/node-coveralls
+[`cross-env`]:  https://github.com/kentcdodds/cross-env
 [isolated-env]: https://github.com/sindresorhus/ava#isolated-environment
 [`istanbul`]:   https://github.com/gotwarlost/istanbul
 [`nyc`]:        https://github.com/bcoe/nyc
