@@ -1,6 +1,21 @@
 var test = require('tap').test;
 var TestCollection = require('../lib/test-collection');
 var Test = require('../lib/test');
+var objectAssign = require('object-assign');
+
+function defaults() {
+	return {
+		type: 'test',
+		serial: false,
+		exclusive: false,
+		skipped: false,
+		callback: false
+	};
+}
+
+function metadata(opts) {
+	return objectAssign(defaults(), opts);
+}
 
 test('requires new', function (t) {
 	var withoutNew = TestCollection;
@@ -81,3 +96,41 @@ test('testFor creates a list of tests', function (t) {
 
 	t.end();
 });
+
+test('buildPhases', function (t) {
+	var collection = new TestCollection();
+
+	collection.add(metadata({type: 'before'}), function before1() {});
+	collection.add(metadata({type: 'before'}), function before2() {});
+	collection.add(metadata({type: 'beforeEach'}), function () {});
+	collection.add(metadata({type: 'afterEach'}), function () {});
+	collection.add(metadata({type: 'after'}), function after1() {});
+	collection.add(metadata({type: 'after'}), function after2() {});
+	collection.add(metadata({type: 'test'}), function foo() {});
+	collection.add(metadata({type: 'test'}), function bar() {});
+
+	t.deepEqual(serialize(collection.buildPhases()), [
+		[['before1']],
+		[['before2']],
+		[
+			['foo.beforeEach', 'foo', 'foo.afterEach'],
+			['bar.beforeEach', 'bar', 'bar.afterEach']
+		],
+		[['after1']],
+		[['after2']]
+	]);
+	t.end();
+});
+
+function serialize(phase) {
+	return phase.map(function (testEntry) {
+		if (Array.isArray(testEntry)) {
+			return serialize(testEntry);
+		}
+		var match = /^(.+?) for "(.+?)"$/.exec(testEntry.title);
+		if (match) {
+			return match[2] + '.' + match[1];
+		}
+		return testEntry.title;
+	});
+}
