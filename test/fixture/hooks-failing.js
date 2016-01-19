@@ -1,10 +1,4 @@
 import test from '../../';
 
-test.beforeEach(fail);
-test(pass);
-
-function pass() {}
-
-function fail(t) {
-	t.fail();
-}
+test.beforeEach(t => t.fail());
+test('pass', t => t.pass());

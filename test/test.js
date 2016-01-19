@@ -27,34 +27,16 @@ test('run test', function (t) {
 	});
 });
 
-test('title is optional', function (t) {
-	ava(function (a) {
-		a.pass();
-	}).run().then(function (a) {
-		t.is(a.title, '[anonymous]');
-		t.end();
-	});
-});
-
 test('callback is required', function (t) {
 	t.throws(function () {
 		ava();
-	}, /you must provide a callback/);
+	}, {message: /you must provide a callback/});
 
 	t.throws(function () {
 		ava('title');
-	}, /you must provide a callback/);
+	}, {message: /you must provide a callback/});
 
 	t.end();
-});
-
-test('infer name from function', function (t) {
-	ava(function foo(a) {
-		a.pass();
-	}).run().then(function (a) {
-		t.is(a.title, 'foo');
-		t.end();
-	});
 });
 
 test('multiple asserts', function (t) {
