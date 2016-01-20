@@ -108,13 +108,19 @@ test('buildPhases', function (t) {
 	collection.add(metadata({type: 'after'}), function after2() {});
 	collection.add(metadata({type: 'test'}), function foo() {});
 	collection.add(metadata({type: 'test'}), function bar() {});
+	collection.add(metadata({type: 'test', serial:true}), function serial1() {});
+	collection.add(metadata({type: 'test', serial:true}), function serial2() {});
+	collection.add(metadata({type: 'test', skipped:true}), function skipped() {});
 
 	t.deepEqual(serialize(collection.buildPhases()), [
 		[['before1']],
 		[['before2']],
+		[['serial1.beforeEach', 'serial1', 'serial1.afterEach']],
+		[['serial2.beforeEach', 'serial2', 'serial2.afterEach']],
 		[
 			['foo.beforeEach', 'foo', 'foo.afterEach'],
-			['bar.beforeEach', 'bar', 'bar.afterEach']
+			['bar.beforeEach', 'bar', 'bar.afterEach'],
+			['skipped']
 		],
 		[['after1']],
 		[['after2']]
