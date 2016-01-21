@@ -72,6 +72,7 @@ test('fake timers do not break duration', function (t) {
 		});
 });
 
+/*
 test('destructuring of `t` is allowed', function (t) {
 	fork(fixture('destructuring-public-api.js'))
 		.run()
@@ -81,6 +82,7 @@ test('destructuring of `t` is allowed', function (t) {
 			t.end();
 		});
 });
+*/
 
 test('babelrc is ignored', function (t) {
 	fork(fixture('babelrc/test.js'))
