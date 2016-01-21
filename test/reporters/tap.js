@@ -102,3 +102,29 @@ test('results', function (t) {
 	t.is(actualOutput, expectedOutput);
 	t.end();
 });
+
+test('results does not show skipped tests if there are none', function (t) {
+	var reporter = tapReporter();
+	var api = {
+		passCount: 1,
+		failCount: 2,
+		skipCount: 0,
+		rejectionCount: 3,
+		exceptionCount: 4
+	};
+
+	reporter.api = api;
+
+	var actualOutput = reporter.finish();
+	var expectedOutput = [
+		'',
+		'1..' + (api.passCount + api.failCount),
+		'# tests ' + (api.passCount + api.failCount),
+		'# pass ' + api.passCount,
+		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
