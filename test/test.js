@@ -472,15 +472,10 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 });
 
 test('assertions return promises', function (t) {
-	t.plan(4);
 	ava(function (a) {
-		a.plan(4);
+		a.plan(2);
 		t.ok(isPromise(a.throws(Promise.reject(new Error('foo')))));
-		t.ok(isPromise(a.throws(function () {
-			throw new Error('bar');
-		})));
 		t.ok(isPromise(a.doesNotThrow(Promise.resolve(true))));
-		t.ok(isPromise(a.true(true)));
 	}).run().then(function () {
 		t.end();
 	});
