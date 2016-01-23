@@ -511,3 +511,13 @@ test('assertions return promises', function (t) {
 		t.end();
 	});
 });
+
+test('contextRef', function (t) {
+	new _ava('foo',
+		function (a) {
+			t.same(a.context, {foo: 'bar'});
+			t.end();
+		},
+		{context: {foo: 'bar'}}
+	).run();
+});
