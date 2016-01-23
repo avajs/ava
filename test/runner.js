@@ -1,16 +1,16 @@
 'use strict';
 var test = require('tap').test;
 var runner = require('../lib/runner');
-var Test = require('../lib/test');
+// var Test = require('../lib/test');
 var Runner = runner;
-var mockTitle = 'mock title';
+// var mockTitle = 'mock title';
 var noop = function () {};
 
 test('returns new instance of runner without "new"', function (t) {
 	t.ok(runner({}) instanceof runner);
 	t.end();
 });
-
+  /*
 test('runner.test adds a new test', function (t) {
 	var runner = new Runner();
 	runner.test(mockTitle, noop);
@@ -130,7 +130,7 @@ test('methods are chainable: serial.only', function (t) {
 	t.true(runner.tests[0].metadata.exclusive);
 	t.false(runner.tests[0].metadata.skipped);
 	t.end();
-});
+});   */
 
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
@@ -244,11 +244,11 @@ test('include skipped tests in results', function (t) {
 		t.same(titles, [
 			'before',
 			'before.skip',
-			'beforeEach',
-			'beforeEach.skip',
+			'beforeEach for test',
+			'beforeEach.skip for test',
 			'test',
-			'afterEach',
-			'afterEach.skip',
+			'afterEach for test',
+			'afterEach.skip for test',
 			'test.skip',
 			'after',
 			'after.skip'
@@ -261,30 +261,34 @@ test('include skipped tests in results', function (t) {
 test('test types and titles', function (t) {
 	t.plan(10);
 
-	var runner = new Runner();
-	runner.before(pass);
-	runner.beforeEach(pass);
-	runner.after(pass);
-	runner.afterEach(pass);
-	runner.test('test', pass);
+	var fn = function (a) {
+		a.pass();
+	};
 
-	function pass(a) {
+	function named(a) {
 		a.pass();
 	}
 
+	var runner = new Runner();
+	runner.before(named);
+	runner.beforeEach(fn);
+	runner.after(fn);
+	runner.afterEach(named);
+	runner.test('test', fn);
+
 	var tests = [
-		{type: 'before', title: 'pass'},
-		{type: 'beforeEach', title: 'beforeEach for "test"'},
+		{type: 'before', title: 'named'},
+		{type: 'beforeEach', title: 'beforeEach for test'},
 		{type: 'test', title: 'test'},
-		{type: 'afterEach', title: 'afterEach for "test"'},
-		{type: 'after', title: 'pass'}
+		{type: 'afterEach', title: 'named for test'},
+		{type: 'after', title: 'after'}
 	];
 
 	runner.on('test', function (props) {
 		var test = tests.shift();
 
-		t.is(test.title, props.title);
-		t.is(test.type, props.type);
+		t.is(props.title, test.title);
+		t.is(props.type, test.type);
 	});
 
 	runner.run().then(t.end);
@@ -305,7 +309,7 @@ test('skip test', function (t) {
 	});
 
 	runner.run().then(function () {
-		t.is(runner.stats.testCount, 1);
+		t.is(runner.stats.testCount, 2);
 		t.is(runner.stats.passCount, 1);
 		t.same(arr, ['a']);
 		t.end();
