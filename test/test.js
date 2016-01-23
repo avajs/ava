@@ -89,6 +89,8 @@ test('run more assertions than planned', function (t) {
 	}).run().catch(function (err) {
 		t.ok(err);
 		t.is(err.name, 'AssertionError');
+		t.match(err.message, / 2( |\,|\.|\!)/, 'includes the expected number of assertions');
+		t.match(err.message, / 3( |\,|\.|\!)/, 'includes the actual number of assertions');
 		t.end();
 	});
 });
