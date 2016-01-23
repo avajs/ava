@@ -1,8 +1,8 @@
 # Code coverage
 
-Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/docs/recipes/code-coverage.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/code-coverage.md)
+Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/docs/recipes/code-coverage.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/code-coverage.md), [日本語](https://github.com/sindresorhus/ava-docs/blob/master/ja_JP/docs/recipes/code-coverage.md)
 
-As AVA [spawns the test files][isolated-env], you can't use [`istanbul`] for code coverage; instead, you can achieve this with [`nyc`] which is basically [`istanbul`] with sub-process support. 
+As AVA [spawns the test files][isolated-env], you can't use [`istanbul`] for code coverage; instead, you can achieve this with [`nyc`] which is basically [`istanbul`] with sub-process support.
 
 ## Setup
 
@@ -35,8 +35,8 @@ Using NYC to provide coverage for production code written in ES5 is simple. Just
 ```
 
 That's it!
- 
-If you want to create HTML coverage reports, or upload coverage data to Coveralls, you should skip down to those sections below. 
+
+If you want to create HTML coverage reports, or upload coverage data to Coveralls, you should skip down to those sections below.
 
 ## ES2015 coverage
 
@@ -44,7 +44,7 @@ Using Babel to transpile your production code is a bit more involved. Here we've
 
 ### Configure Babel
 
-First, we need a Babel configuration. The following is just an example. You will need to modify it to fit your needs. 
+First, we need a Babel configuration. The following is just an example. You will need to modify it to fit your needs.
 
 `package.json`:
 ```json
@@ -89,7 +89,7 @@ Note that the build script really has very little to do with AVA, and is just a 
 
 ### Use the Babel require hook
 
-To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`. 
+To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
 
 ```json
 {
@@ -106,7 +106,7 @@ To use the Babel require hook, add `babel-core/register` to the `require` sectio
 Combining the above steps, your complete `package.json` should look something like this:
 
 ```json
-{    
+{
 	"scripts": {
 		"test": "nyc ava",
 		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
@@ -156,7 +156,7 @@ This will output a HTML file to the `coverage` directory.
 ### Travis CI & Coveralls
 
 First, you must login to [coveralls.io] and activate your repository.
- 
+
 Once that is done, add [`coveralls`] as a development dependency:
 
 ```
