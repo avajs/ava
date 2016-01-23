@@ -64,9 +64,9 @@ First, we need a Babel configuration. The following is just an example. You will
 
 There are two important things to note from the example above.
 
-  1. We ignore test files because AVA already handles transpiling tests for you.
+1. We ignore test files because AVA already handles transpiling tests for you.
 
-  2. We specify `inline` source maps for development. This is important for properly generating coverage. Using the `env` section of the Babel configuration allows us to disable source maps for production builds.
+2. We specify `inline` source maps for development. This is important for properly generating coverage. Using the `env` section of the Babel configuration allows us to disable source maps for production builds.
 
 
 ### Create a build script
@@ -77,15 +77,15 @@ Since it is unlikely you want `inline` source maps in your production code. You 
 
 ```json
 {
-  "scripts": {
-    "build": "BABEL_ENV=production babel --out-dir=dist index.js"
-  }
+	"scripts": {
+		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
+	}
 }
 ```
 
 > WARNING: `BABEL_ENV=production` does not work on Windows, you must use the `set` keyword  (`set BABEL_ENV=production`).  For cross platform builds, check out [`cross-env`].
 
-Note that the build script really has very little to do with AVA, and is just a demonstration of how to use Babel's `env` configuration to manipulate your config so it is compatible with AVA.
+Note that the build script really has very little to do with AVA, and is just a demonstration of how to use Babel's `env` configuration to manipulate your config so it's compatible with AVA.
 
 ### Use the Babel require hook
 
@@ -167,7 +167,7 @@ Then add the following to your `.travis.yml`:
 
 ```yaml
 after_success:
-    - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
+	- './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
 ```
 
 Your coverage report will then appear on coveralls shortly after Travis completes.

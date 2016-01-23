@@ -14,7 +14,7 @@ function makeApp() {
 }
 ```
 
-Next, just inject your server instance into supertest. The only gotcha is to use a promise or async/await syntax instead of supertest's `end` method:
+Next, just inject your server instance into supertest. The only gotcha is to use a promise or async/await syntax instead of the supertest `end` method:
 
 ```js
 test('signup:Success', async t => {

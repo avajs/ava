@@ -8,7 +8,7 @@ var resolveCwd = require('resolve-cwd');
 var localCLI = resolveCwd('ava/cli');
 
 if (localCLI && localCLI !== __filename) {
-	debug('Using local install of AVA.');
+	debug('Using local install of AVA');
 	require(localCLI);
 	return;
 }

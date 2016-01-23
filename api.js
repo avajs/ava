@@ -11,12 +11,12 @@ var chalk = require('chalk');
 var objectAssign = require('object-assign');
 var commondir = require('commondir');
 var resolveCwd = require('resolve-cwd');
+var uniqueTempDir = require('unique-temp-dir');
+var findCacheDir = require('find-cache-dir');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 var CachingPrecompiler = require('./lib/caching-precompiler');
-var uniqueTempDir = require('unique-temp-dir');
-var findCacheDir = require('find-cache-dir');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
@@ -96,6 +96,7 @@ Api.prototype._handleTest = function (test) {
 	if (isError) {
 		if (test.error.powerAssertContext) {
 			var message = formatter(test.error.powerAssertContext);
+
 			if (test.error.originalMessage) {
 				message = test.error.originalMessage + ' ' + message;
 			}
@@ -153,11 +154,10 @@ Api.prototype.run = function () {
 			var cacheEnabled = self.options.cacheEnabled !== false;
 			var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
 				uniqueTempDir();
+
 			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
-
 			self.fileCount = files.length;
-
 			self.base = path.relative('.', commondir('.', files)) + path.sep;
 
 			var tests = files.map(self._runFile);

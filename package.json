@@ -12,11 +12,6 @@
   },
   "maintainers": [
     {
-      "name": "Sindre Sorhus",
-      "email": "sindresorhus@gmail.com",
-      "url": "sindresorhus.com"
-    },
-    {
       "name": "Kevin Mårtensson",
       "email": "kevinmartensson@gmail.com",
       "url": "github.com/kevva"
