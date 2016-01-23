@@ -257,12 +257,12 @@ test('shared context', function (t) {
 	var runner = new Runner();
 
 	runner.before(function (a) {
-		a.is(a.context, undefined);
-		a.context = {arr: []};
+		a.is(a.context, null);
+		// a.context = {arr: []};
 	});
 
 	runner.after(function (a) {
-		a.is(a.context, undefined);
+		a.is(a.context, null);
 	});
 
 	runner.beforeEach(function (a) {
@@ -325,7 +325,7 @@ test('display hook title if it failed', function (t) {
 		.run()
 		.on('test', function (test) {
 			t.is(test.error.name, 'AssertionError');
-			t.is(test.title, 'beforeEach for "pass"');
+			t.is(test.title, 'fail for pass');
 		})
 		.then(function () {
 			t.end();
