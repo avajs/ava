@@ -136,8 +136,13 @@ function run() {
 
 run();
 
-var watcher = chokidar.watch(cli.input, {persistent: cli.flags.watch});
+var cwd = process.cwd();
+var watcher = chokidar.watch(cwd, {
+	persistent: cli.flags.watch,
+	ignored: [cwd + '/node_modules', cwd + '/.git'],
+	followSymlinks: false
+});
+
 watcher.on('change', function (filepath) {
 	run();
 });
-
