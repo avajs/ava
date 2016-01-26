@@ -258,7 +258,6 @@ test('shared context', function (t) {
 
 	runner.before(function (a) {
 		a.is(a.context, null);
-		// a.context = {arr: []};
 	});
 
 	runner.after(function (a) {

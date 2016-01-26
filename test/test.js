@@ -521,3 +521,15 @@ test('contextRef', function (t) {
 		{context: {foo: 'bar'}}
 	).run();
 });
+
+test('it is an error to set context in a hook', function (t) {
+	var avaTest = ava(function (a) {
+		a.context = 'foo';
+	});
+	avaTest.metadata.type = 'foo';
+
+	var result = avaTest.run();
+	t.is(result.passed, false);
+	t.match(result.reason.message, /t\.context is not available in foo tests/);
+	t.end();
+});

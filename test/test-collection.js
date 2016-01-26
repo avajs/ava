@@ -65,7 +65,7 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add(mockTest({type: 'beforeEach', exclusive: true}));
-	}, {message: 'you can\'t use only with a beforeEach test'});
+	}, {message: 'you can\'t use "only" with a beforeEach test'});
 	t.end();
 });
 
