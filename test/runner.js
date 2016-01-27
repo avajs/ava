@@ -216,3 +216,29 @@ test('only test', function (t) {
 		t.end();
 	});
 });
+
+test('skip test based on match option', function (t) {
+	t.plan(3);
+
+	var runner = new Runner({
+		match: 'dont skip me'
+	});
+
+	runner.test('skip me1', function () {
+		t.fail();
+	});
+
+	runner.skip('skip me2', function () {
+		t.fail();
+	});
+
+	runner.test('dont skip me', function () {
+		t.pass();
+	});
+
+	runner.run().then(function () {
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.failCount, 0);
+		t.end();
+	});
+});
