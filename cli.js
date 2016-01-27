@@ -48,6 +48,7 @@ var cli = meow([
 	'  --tap, -t        Generate TAP output',
 	'  --verbose, -v    Enable verbose output',
 	'  --no-cache       Disable the transpiler cache',
+	'  --match, -m      Only run tests with titles matching',
 	'',
 	'Examples',
 	'  ava',
@@ -62,7 +63,8 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require'
+		'require',
+		'match'
 	],
 	boolean: [
 		'fail-fast',
@@ -75,7 +77,8 @@ var cli = meow([
 		t: 'tap',
 		v: 'verbose',
 		r: 'require',
-		s: 'serial'
+		s: 'serial',
+		m: 'match'
 	}
 });
 
@@ -90,6 +93,7 @@ var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
+	match: cli.flags.match,
 	cacheEnabled: cli.flags.cache !== false
 });
 
