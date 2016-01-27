@@ -28,8 +28,9 @@ test('returning an observable from a legacy async fn is an error', function (t) 
 		}, 200);
 
 		return observable;
-	}).run().catch(function (err) {
-		t.match(err.message, /Do not return observables/);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.match(result.reason.message, /Do not return observables/);
 		t.end();
 	});
 });
@@ -43,8 +44,9 @@ test('handle throws with thrown observable', function (t) {
 		});
 
 		return a.throws(observable);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -60,8 +62,9 @@ test('handle throws with long running thrown observable', function (t) {
 		});
 
 		return a.throws(observable, /abc/);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -72,9 +75,9 @@ test('handle throws with completed observable', function (t) {
 
 		var observable = Observable.of();
 		return a.throws(observable);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -88,8 +91,9 @@ test('handle throws with regex', function (t) {
 		});
 
 		return a.throws(observable, /abc/);
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -103,8 +107,9 @@ test('handle throws with string', function (t) {
 		});
 
 		return a.throws(observable, 'abc');
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -119,9 +124,9 @@ test('handle throws with false-positive observable', function (t) {
 		});
 
 		return a.throws(observable);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -132,8 +137,9 @@ test('handle doesNotThrow with completed observable', function (t) {
 
 		var observable = Observable.of();
 		return a.doesNotThrow(observable);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -147,9 +153,9 @@ test('handle doesNotThrow with thrown observable', function (t) {
 		});
 
 		return a.doesNotThrow(observable);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });

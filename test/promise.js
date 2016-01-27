@@ -37,8 +37,9 @@ test('returning a promise from a legacy async fn is an error', function (t) {
 			a.pass();
 			a.end();
 		});
-	}).run().catch(function (err) {
-		t.match(err.message, /Do not return promises/);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.match(result.reason.message, /Do not return promises/);
 		t.end();
 	});
 });
@@ -58,9 +59,10 @@ test('assertion plan is tested after returned promise resolves', function (t) {
 		a.pass();
 
 		return defer.promise;
-	}).run().then(function (a) {
-		t.is(a.planCount, 2);
-		t.is(a.assertCount, 2);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.planCount, 2);
+		t.is(result.result.assertCount, 2);
 		t.true(Date.now() - start >= 500);
 		t.end();
 	});
@@ -78,10 +80,10 @@ test('missing assertion will fail the test', function (t) {
 		}, 200);
 
 		return defer.promise;
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.expected, 2);
-		t.is(err.actual, 1);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.expected, 2);
+		t.is(result.reason.actual, 1);
 		t.end();
 	});
 });
@@ -103,10 +105,10 @@ test('extra assertion will fail the test', function (t) {
 		}, 500);
 
 		return defer.promise;
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.expected, 2);
-		t.is(err.actual, 3);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.expected, 2);
+		t.is(result.reason.actual, 3);
 		t.end();
 	});
 });
@@ -117,12 +119,14 @@ test('handle throws with rejected promise', function (t) {
 
 		var promise = Promise.reject(new Error());
 		return a.throws(promise);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
+// TODO(team): This is a very slow test, and I can't figure out why we need it - James
 test('handle throws with long running rejected promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
@@ -134,8 +138,9 @@ test('handle throws with long running rejected promise', function (t) {
 		});
 
 		return a.throws(promise, /abc/);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -146,9 +151,9 @@ test('handle throws with resolved promise', function (t) {
 
 		var promise = Promise.resolve();
 		return a.throws(promise);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -159,8 +164,22 @@ test('handle throws with regex', function (t) {
 
 		var promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, /abc/);
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
+test('throws with regex will fail if error message does not match', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject(new Error('abc'));
+		return a.throws(promise, /def/);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -171,8 +190,22 @@ test('handle throws with string', function (t) {
 
 		var promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, 'abc');
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
+test('throws with string argument will reject if message does not match', function (t) {
+	ava(function (a) {
+		a.plan(1);
+
+		var promise = Promise.reject(new Error('abc'));
+		return a.throws(promise, 'def');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -183,8 +216,9 @@ test('handle throws with regex with string reject', function (t) {
 
 		var promise = Promise.reject('abc');
 		return a.throws(promise, /abc/);
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -195,8 +229,9 @@ test('handle throws with string with string reject', function (t) {
 
 		var promise = Promise.reject('abc');
 		return a.throws(promise, 'abc');
-	}).run().then(function (a) {
-		t.notOk(a.assertionError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -207,9 +242,9 @@ test('handle throws with false-positive promise', function (t) {
 
 		var promise = Promise.resolve(new Error());
 		return a.throws(promise);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -220,8 +255,9 @@ test('handle doesNotThrow with resolved promise', function (t) {
 
 		var promise = Promise.resolve();
 		return a.doesNotThrow(promise);
-	}).run().then(function (a) {
-		t.notOk(a.assertError);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -232,9 +268,9 @@ test('handle doesNotThrow with rejected promise', function (t) {
 
 		var promise = Promise.reject(new Error());
 		return a.doesNotThrow(promise);
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -244,8 +280,9 @@ test('assert pass', function (t) {
 		return pass().then(function () {
 			a.pass();
 		});
-	}).run().then(function (a) {
-		t.is(a.assertCount, 1);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
@@ -255,9 +292,9 @@ test('assert fail', function (t) {
 		return pass().then(function () {
 			a.fail();
 		});
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
@@ -267,10 +304,10 @@ test('reject', function (t) {
 		return fail().then(function () {
 			a.pass();
 		});
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'Error');
-		t.is(err.message, 'unicorn');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'Error');
+		t.is(result.reason.message, 'unicorn');
 		t.end();
 	});
 });
@@ -278,10 +315,10 @@ test('reject', function (t) {
 test('reject with non-Error', function (t) {
 	ava(function () {
 		return Promise.reject('failure');
-	}).run().catch(function (err) {
-		t.ok(err);
-		t.is(err.name, 'AssertionError');
-		t.is(err.message, 'Promise rejected with "failure"');
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
+		t.is(result.reason.message, 'Promise rejected with "failure"');
 		t.end();
 	});
 });
