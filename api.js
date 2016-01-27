@@ -51,6 +51,7 @@ Api.prototype._runFile = function (file) {
 	var options = objectAssign({}, this.options, {
 		precompiled: this.precompiler.generateHashForFile(file)
 	});
+
 	return fork(file, options)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
