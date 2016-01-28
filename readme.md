@@ -65,7 +65,7 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.6.0"
+		"ava": "^0.11.0"
 	}
 }
 ```
