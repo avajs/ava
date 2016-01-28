@@ -20,7 +20,7 @@ var CachingPrecompiler = require('./lib/caching-precompiler');
 
 function Api(files, options) {
 	if (!(this instanceof Api)) {
-		return new Api(files, options);
+		throw new TypeError('Class constructor Api cannot be invoked without \'new\'');
 	}
 
 	EventEmitter.call(this);

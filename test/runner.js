@@ -1,15 +1,8 @@
 'use strict';
 var test = require('tap').test;
-var runner = require('../lib/runner');
-// var Test = require('../lib/test');
-var Runner = runner;
-// var mockTitle = 'mock title';
-var noop = function () {};
+var Runner = require('../lib/runner');
 
-test('returns new instance of runner without "new"', function (t) {
-	t.ok(runner({}) instanceof runner);
-	t.end();
-});
+var noop = function () {};
 
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();

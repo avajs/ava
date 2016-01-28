@@ -1,16 +1,16 @@
 'use strict';
 var Promise = require('bluebird');
 var test = require('tap').test;
-var _ava = require('../lib/test');
+var Test = require('../lib/test');
 
 function ava(fn) {
-	var a = _ava(fn);
+	var a = new Test(fn);
 	a.metadata = {callback: false};
 	return a;
 }
 
 ava.cb = function (fn) {
-	var a = _ava(fn);
+	var a = new Test(fn);
 	a.metadata = {callback: true};
 	return a;
 };

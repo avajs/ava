@@ -3,16 +3,16 @@ var test = require('tap').test;
 var Promise = global.Promise = require('bluebird');
 var delay = require('delay');
 var isPromise = require('is-promise');
-var _ava = require('../lib/test');
+var Test = require('../lib/test');
 
-function ava() {
-	var t = _ava.apply(null, arguments);
+function ava(title, fn, contextRef, report) {
+	var t = new Test(title, fn, contextRef, report);
 	t.metadata = {callback: false};
 	return t;
 }
 
-ava.cb = function () {
-	var t = _ava.apply(null, arguments);
+ava.cb = function (title, fn, contextRef, report) {
+	var t = new Test(title, fn, contextRef, report);
 	t.metadata = {callback: true};
 	return t;
 };
@@ -513,7 +513,7 @@ test('assertions return promises', function (t) {
 });
 
 test('contextRef', function (t) {
-	new _ava('foo',
+	new Test('foo',
 		function (a) {
 			t.same(a.context, {foo: 'bar'});
 			t.end();
