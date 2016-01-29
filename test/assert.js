@@ -196,13 +196,13 @@ test('.doesNotThrow()', function (t) {
 	t.end();
 });
 
-test('.regexTest()', function (t) {
+test('.regex()', function (t) {
 	t.doesNotThrow(function () {
-		assert.regexTest(/^abc$/, 'abc');
+		assert.regex('abc', /^abc$/);
 	});
 
 	t.throws(function () {
-		assert.regexTest(/^abc$/, 'foo');
+		assert.regex('foo', /^abc$/);
 	});
 
 	t.end();
