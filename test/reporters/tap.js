@@ -91,8 +91,8 @@ test('results', function (t) {
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
 		'',
-		'1..' + (api.passCount + api.failCount),
-		'# tests ' + (api.passCount + api.failCount),
+		'1..' + (api.passCount + api.failCount + api.skipCount),
+		'# tests ' + (api.passCount + api.failCount + api.skipCount),
 		'# pass ' + api.passCount,
 		'# skip ' + api.skipCount,
 		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),

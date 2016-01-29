@@ -30,6 +30,7 @@ function Api(files, options) {
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;
+	this.skipCount = 0;
 	this.failCount = 0;
 	this.fileCount = 0;
 	this.testCount = 0;
@@ -204,6 +205,7 @@ Api.prototype.run = function () {
 			self.tests = flatten(self.tests);
 
 			self.passCount = sum(self.stats, 'passCount');
+			self.skipCount = sum(self.stats, 'skipCount');
 			self.failCount = sum(self.stats, 'failCount');
 		});
 };
