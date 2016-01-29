@@ -23,3 +23,14 @@
 - Ensure the [contributing guidelines](contributing.md) are followed.
 - At least two team members must `LGTM` a pull request before it's merged.
 - Squash commits when merging.
+
+
+## Profiling
+
+In the root of a project using AVA, run:
+
+```
+$ iron-node node_modules/ava/profile.js <test-file>
+```
+
+After `iron-node` has loaded, activate the Dev Tools profiling, and then hit <kbd>Cmd</kbd> <kbd>R</kbd> to rerun the tests.
