@@ -594,6 +594,10 @@ Assert that `function` throws an error or `promise` rejects.
 
 Assert that `function` doesn't throw an `error` or `promise` resolves.
 
+### .regex(contents, regex, [message])
+
+Assert that `contents` matches `regex`.
+
 ### .ifError(error, [message])
 
 Assert that `error` is falsy.
