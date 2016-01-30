@@ -27,10 +27,28 @@
 
 ## Profiling
 
+You should first install [`iron-node`](https://github.com/s-a/iron-node) and / or [`devtool`](https://github.com/Jam3/devtool) globally:
+
+```
+$ npm install --global iron-node
+$ npm install --global devtool
+```
+
 In the root of a project using AVA, run:
 
 ```
 $ iron-node node_modules/ava/profile.js <test-file>
+# or
+$ devtool node_modules/ava/profile.js <test-file>
 ```
 
-After `iron-node` has loaded, activate the Dev Tools profiling, and then hit <kbd>Cmd</kbd> <kbd>R</kbd> to rerun the tests.
+Once the Dev Tools window has loaded, activate Memory or CPU profiling, and then hit <kbd>Cmd</kbd> <kbd>R</kbd> to rerun the tests.
+
+As soon as the tests finish, stop the recording and inspect the profiler results. The flame chart can be displayed by choosing `Chart` from the drop down on the `Profiles` tab (other views include `Tree (top down)` and `Heavy (bottom up)`).
+
+You may also want to check out the Settings page in Dev Tools and enable one or more options in the Profiling section.
+
+Helpful Resources:
+
+ - [An introduction to Node.js debugging with `devtool`](http://mattdesl.svbtle.com/debugging-nodejs-in-chrome-devtools).
+ - [A video introduction to Chrome DevTools CPU and Memory profiling](https://www.youtube.com/watch?v=KKwmdTByxLk).
