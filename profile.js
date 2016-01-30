@@ -90,6 +90,7 @@ events.on('test', function (data) {
 });
 
 events.on('results', function (data) {
+	console.profileEnd();
 	console.log('RESULTS:', data.stats);
 });
 
@@ -103,4 +104,8 @@ events.on('stats', function () {
 process.argv[2] = JSON.stringify(opts);
 process.argv.length = 3;
 
-require('./lib/test-worker');
+console.profile('AVA test-worker process');
+
+setImmediate(function () {
+	require('./lib/test-worker');
+});
