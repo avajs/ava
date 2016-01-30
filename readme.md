@@ -584,7 +584,7 @@ Assert that `value` is deep equal to `expected`.
 
 Assert that `value` is not deep equal to `expected`.
 
-### .throws(function|promise, error, [message])
+### .throws(function|promise, [error, [message]])
 
 Assert that `function` throws an error or `promise` rejects.
 
