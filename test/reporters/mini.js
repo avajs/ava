@@ -2,6 +2,7 @@
 var chalk = require('chalk');
 var test = require('tap').test;
 var miniReporter = require('../../lib/reporters/mini');
+var beautifyStack = require('../../lib/beautify-stack');
 
 process.stderr.setMaxListeners(50);
 
@@ -117,6 +118,7 @@ test('results with passing tests and rejections', function (t) {
 
 	var err = new Error('failure');
 	err.type = 'rejection';
+	err.stack = beautifyStack(err.stack);
 
 	reporter.api = {
 		errors: [err]
@@ -140,6 +142,7 @@ test('results with passing tests and exceptions', function (t) {
 
 	var err = new Error('failure');
 	err.type = 'exception';
+	err.stack = beautifyStack(err.stack);
 
 	reporter.api = {
 		errors: [err]
@@ -160,10 +163,13 @@ test('results with errors', function (t) {
 	var reporter = miniReporter();
 	reporter.failCount = 1;
 
+	var err = new Error('failure');
+	err.stack = beautifyStack(err.stack);
+
 	reporter.api = {
 		errors: [{
 			title: 'failed',
-			error: new Error('failure')
+			error: err
 		}]
 	};
 
