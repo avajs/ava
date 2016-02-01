@@ -16,7 +16,7 @@ function runTests(_args) {
 		var start = Date.now();
 		childProcess.execFile(process.execPath, args, {
 			cwd: __dirname,
-			maxBuffer: 10000 * 200
+			maxBuffer: 100000 * 200
 		}, function (err, stdout, stderr) {
 			var end = Date.now();
 			resolve({
@@ -38,8 +38,9 @@ var list = [
 	'concurrent/alternating-sync-async.js',
 	'concurrent/async-immediate.js',
 	'concurrent/async-timeout.js',
-	'concurrent/sync.js'
-].map(function (files) {
+	'concurrent/sync.js',
+	['concurrent/*.js', 'serial/*.js']
+].reverse().map(function (files) {
 	return ['--verbose'].concat(files);
 });
 
@@ -56,6 +57,10 @@ Promise.each(combined, function (args) {
 		var passedOrFaild = result.err ? 'failed' : 'passed';
 		var seconds = result.time / 1000;
     console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
+		if (result.err) {
+			console.log(result.stdout);
+			console.log(result.stderr);
+		}
 		results[key] = results[key] || [];
 		results[key].push({passed: !results.err, time: seconds});
 	});
