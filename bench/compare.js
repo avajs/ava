@@ -65,9 +65,9 @@ table.push(
 	[''].concat(stats.map(function (stat) {
 		return {
 			content: stat,
-		  colSpan: fileNames.length,
+			colSpan: fileNames.length,
 			hAlign: 'center'
-		}
+		};
 	})),
 	stats.reduce(function (arr) {
 		return arr.concat(fileNames);
@@ -89,13 +89,13 @@ Object.keys(results)
 					return result;
 				}
 				return '';
-      });
-      return arr.concat(statGroup.map(function (stat) {
+			});
+			return arr.concat(statGroup.map(function (stat) {
 				if (stat === min) {
 					return chalk.green(stat);
 				}
 				if (stat === max) {
-					return chalk.red(stat)
+					return chalk.red(stat);
 				}
 				return stat;
 			}));
@@ -103,7 +103,3 @@ Object.keys(results)
 	});
 
 console.log(table.toString());
-//console.log(files.map(function (file) {return file['.file']}));
-
-
-

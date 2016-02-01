@@ -32,7 +32,7 @@ function runTests(_args) {
 
 var list;
 
-if (process.argv.length == 2) {
+if (process.argv.length === 2) {
 	list = [
 		{args: 'other/failures.js', shouldFail: true},
 		'serial/alternating-sync-async.js',
@@ -86,7 +86,7 @@ list.forEach(function (definition) {
 });
 
 var combined = [];
-for (var i = 0; i < 11; i ++) {
+for (var i = 0; i < 11; i++) {
 	combined = combined.concat(list);
 }
 
@@ -98,7 +98,7 @@ Promise.each(combined, function (definition) {
 		var key = result.args.join(' ');
 		var passedOrFaild = result.err ? 'failed' : 'passed';
 		var seconds = result.time / 1000;
-    console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
+		console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
 		if (result.err && !definition.shouldFail) {
 			console.log(result.stdout);
 			console.log(result.stderr);
