@@ -30,26 +30,59 @@ function runTests(_args) {
 	});
 }
 
-var list = [
-	{args: 'other/failures.js', shouldFail: true},
-	'serial/alternating-sync-async.js',
-	'serial/async-immediate.js',
-	'serial/async-timeout.js',
-	'serial/sync.js',
-	'concurrent/alternating-sync-async.js',
-	'concurrent/async-immediate.js',
-	'concurrent/async-timeout.js',
-	'concurrent/sync.js',
-	['concurrent/*.js', 'serial/*.js']
-].map(function (definition) {
-	if (Array.isArray(definition) || typeof definition === 'string') {
-		definition = {
-			shouldFail: false,
-			args: definition
-		};
+var list;
+
+if (process.argv.length == 2) {
+	list = [
+		{args: 'other/failures.js', shouldFail: true},
+		'serial/alternating-sync-async.js',
+		'serial/async-immediate.js',
+		'serial/async-timeout.js',
+		'serial/sync.js',
+		'concurrent/alternating-sync-async.js',
+		'concurrent/async-immediate.js',
+		'concurrent/async-timeout.js',
+		'concurrent/sync.js',
+		['concurrent/*.js', 'serial/*.js']
+	].map(function (definition) {
+		if (Array.isArray(definition) || typeof definition === 'string') {
+			definition = {
+				shouldFail: false,
+				args: definition
+			};
+		}
+		return definition;
+	});
+} else {
+	list = [];
+	var currentArgs = [];
+	var shouldFail = false;
+	process.argv.slice(2).forEach(function (arg) {
+		if (arg === '--') {
+			list.push({
+				args: currentArgs,
+				shouldFail: shouldFail
+			});
+			currentArgs = [];
+			shouldFail = false;
+			return;
+		}
+		if (arg === '--should-fail') {
+			shouldFail = true;
+			return;
+		}
+		currentArgs.push(arg);
+	});
+	if (currentArgs.length) {
+		list.push({
+			args: currentArgs,
+			shouldFail: shouldFail
+		});
 	}
+}
+
+list.forEach(function (definition) {
 	definition.args = ['--verbose'].concat(definition.args);
-	return definition;
 });
 
 var combined = [];
