@@ -31,6 +31,7 @@ function runTests(_args) {
 }
 
 var list = [
+	{args: 'other/failures.js', shouldFail: true},
 	'serial/alternating-sync-async.js',
 	'serial/async-immediate.js',
 	'serial/async-timeout.js',
@@ -40,29 +41,38 @@ var list = [
 	'concurrent/async-timeout.js',
 	'concurrent/sync.js',
 	['concurrent/*.js', 'serial/*.js']
-].reverse().map(function (files) {
-	return ['--verbose'].concat(files);
+].map(function (definition) {
+	if (Array.isArray(definition) || typeof definition === 'string') {
+		definition = {
+			shouldFail: false,
+			args: definition
+		};
+	}
+	definition.args = ['--verbose'].concat(definition.args);
+	return definition;
 });
 
 var combined = [];
-for (var i = 0; i < 10; i ++) {
+for (var i = 0; i < 11; i ++) {
 	combined = combined.concat(list);
 }
 
 var results = {};
 
-Promise.each(combined, function (args) {
+Promise.each(combined, function (definition) {
+	var args = definition.args;
 	return runTests(args).then(function (result) {
 		var key = result.args.join(' ');
 		var passedOrFaild = result.err ? 'failed' : 'passed';
 		var seconds = result.time / 1000;
     console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
-		if (result.err) {
+		if (result.err && !definition.shouldFail) {
 			console.log(result.stdout);
 			console.log(result.stderr);
+			throw (result.err);
 		}
 		results[key] = results[key] || [];
-		results[key].push({passed: !results.err, time: seconds});
+		results[key].push({passed: !results.err, shouldFail: definition.shouldFail, time: seconds});
 	});
 }).then(function () {
 	mkdirp.sync(path.join(__dirname, '.results'));
