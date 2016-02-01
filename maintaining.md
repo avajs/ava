@@ -55,3 +55,44 @@ You may also want to check out the Settings page in Dev Tools and enable one or 
 
  - [An introduction to Node.js debugging with `devtool`](http://mattdesl.svbtle.com/debugging-nodejs-in-chrome-devtools).
  - [A video introduction to Chrome DevTools CPU and Memory profiling](https://www.youtube.com/watch?v=KKwmdTByxLk).
+
+
+## Benchmarking
+
+First collect benchmark data for a branch/commit:
+
+```
+$ node bench/run
+```
+
+Once you have collected data from two/three branches/commits:
+
+```
+$ node bench/compare
+```
+
+*You could for example gather benchmark data from the working tree and the last commit.*
+
+![](https://cloud.githubusercontent.com/assets/4082216/12700805/bf18f730-c7bf-11e5-8a4f-fec0993c053f.png)
+
+You can now launch a subset of the suite:
+
+```
+$ node bench/run.js concurrent/sync.js serial/sync.js -- concurrent/sync.js -- serial/sync.js
+```
+
+Note the `--` separator. The above would be the same as benchmarking all three of the following commands.
+
+```
+$ ava concurrent/sync.js serial/sync.js
+$ ava concurrent/sync.js
+$ ava serial/sync.js
+```
+
+Also if you are benchmarking a suite that should fail, you must add the `--should-fail` flag in that group:
+
+```
+$ node bench/run.js concurrent/sync.js -- --should-fail other/failures.js
+```
+
+The above benchmarks two commands, but expects the second one to fail.
