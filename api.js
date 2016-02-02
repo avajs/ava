@@ -27,7 +27,22 @@ function Api(files, options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
-	this.files = files || [];
+
+	if (!files || files.length === 0) {
+		this.files = [
+			'test.js',
+			'test-*.js',
+			'test'
+		];
+	} else {
+		this.files = files;
+	}
+
+	this.excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
 
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
@@ -146,11 +161,11 @@ Api.prototype._prefixTitle = function (file) {
 	return prefix;
 };
 
-Api.prototype.run = function () {
+Api.prototype.run = function (files) {
 	var self = this;
 
 	this._reset();
-	return handlePaths(this.files.slice())
+	return handlePaths(files || this.files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
 		})
@@ -216,26 +231,14 @@ Api.prototype.run = function () {
 		});
 };
 
-function handlePaths(files) {
-	if (files.length === 0) {
-		files = [
-			'test.js',
-			'test-*.js',
-			'test'
-		];
-	}
-
-	files.push('!**/node_modules/**');
-	files.push('!**/fixtures/**');
-	files.push('!**/helpers/**');
-
+function handlePaths(files, excludePatterns) {
 	// convert pinkie-promise to Bluebird promise
-	files = Promise.resolve(globby(files));
+	files = Promise.resolve(globby(files.concat(excludePatterns)));
 
 	return files
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '**', '*.js')]);
+				return handlePaths([path.join(file, '**', '*.js')], excludePatterns);
 			}
 
 			return file;

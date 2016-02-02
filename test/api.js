@@ -381,6 +381,18 @@ test('test file in node_modules is ignored', function (t) {
 		});
 });
 
+test('test file in node_modules is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')])
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
+		});
+});
+
 test('test file in fixtures is ignored', function (t) {
 	t.plan(2);
 
@@ -393,12 +405,36 @@ test('test file in fixtures is ignored', function (t) {
 		});
 });
 
+test('test file in fixtures is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')])
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
+		});
+});
+
 test('test file in helpers is ignored', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 
 	api.run()
+		.catch(function (err) {
+			t.ok(err);
+			t.match(err.message, /Couldn't find any files to test/);
+		});
+});
+
+test('test file in helpers is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')])
 		.catch(function (err) {
 			t.ok(err);
 			t.match(err.message, /Couldn't find any files to test/);
