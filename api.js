@@ -183,7 +183,11 @@ Api.prototype.run = function (files) {
 			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
 			self.fileCount = files.length;
-			self.base = path.relative('.', commondir('.', files)) + path.sep;
+			if (self.fileCount === 1) {
+				self.base = path.relative('.', path.dirname(files[0])) + path.sep;
+			} else {
+				self.base = path.relative('.', commondir('.', files)) + path.sep;
+			}
 
 			var tests = files.map(self._runFile);
 
