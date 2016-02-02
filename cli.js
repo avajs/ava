@@ -29,6 +29,7 @@ var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
+var watcher = require('./lib/watcher');
 var Api = require('./api');
 
 // Bluebird specific
@@ -48,6 +49,8 @@ var cli = meow([
 	'  --tap, -t        Generate TAP output',
 	'  --verbose, -v    Enable verbose output',
 	'  --no-cache       Disable the transpiler cache',
+	// Leave --watch undocumented until it's stable enough
+	// '  --watch, -w      Re-run tests when files change',
 	'',
 	'Examples',
 	'  ava',
@@ -68,14 +71,16 @@ var cli = meow([
 		'fail-fast',
 		'verbose',
 		'serial',
-		'tap'
+		'tap',
+		'watch'
 	],
 	default: conf,
 	alias: {
 		t: 'tap',
 		v: 'verbose',
 		r: 'require',
-		s: 'serial'
+		s: 'serial',
+		w: 'watch'
 	}
 });
 
@@ -112,17 +117,27 @@ api.on('error', logger.unhandledError);
 api.on('stdout', logger.stdout);
 api.on('stderr', logger.stderr);
 
-api.run()
-	.then(function () {
-		logger.finish();
-		logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
-	})
-	.catch(function (err) {
+if (cli.flags.watch) {
+	watcher.start(logger, api, function (err) {
 		if (err.name === 'AvaError') {
 			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
 		} else {
 			console.error(colors.stack(err.stack));
 		}
-
-		logger.exit(1);
 	});
+} else {
+	api.run()
+		.then(function () {
+			logger.finish();
+			logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
+		})
+		.catch(function (err) {
+			if (err.name === 'AvaError') {
+				console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			} else {
+				console.error(colors.stack(err.stack));
+			}
+
+			logger.exit(1);
+		});
+}
