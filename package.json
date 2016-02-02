@@ -83,7 +83,6 @@
     "bluebird": "^3.0.0",
     "caching-transform": "^1.0.0",
     "chalk": "^1.0.0",
-    "chokidar": "^1.4.2",
     "cli-cursor": "^1.0.2",
     "co-with-promise": "^4.6.0",
     "common-path-prefix": "^1.0.0",
@@ -142,6 +141,9 @@
     "tap": "^5.0.1",
     "xo": "*",
     "zen-observable": "^0.1.6"
+  },
+  "optionalDependencies": {
+    "chokidar": "^1.4.2"
   },
   "xo": {
     "ignore": [

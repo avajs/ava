@@ -118,13 +118,24 @@ api.on('stdout', logger.stdout);
 api.on('stderr', logger.stderr);
 
 if (cli.flags.watch) {
-	watcher.start(logger, api, function (err) {
+	try {
+		watcher.start(logger, api, function (err) {
+			if (err.name === 'AvaError') {
+				console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			} else {
+				console.error(colors.stack(err.stack));
+			}
+		});
+	} catch (err) {
 		if (err.name === 'AvaError') {
+			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
 			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			logger.exit(1);
 		} else {
-			console.error(colors.stack(err.stack));
+			// Rethrow so it becomes an uncaught exception.
+			throw err;
 		}
-	});
+	}
 } else {
 	api.run()
 		.then(function () {
