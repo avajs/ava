@@ -9,7 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var objectAssign = require('object-assign');
-var commondir = require('commondir');
+var commonPathPrefix = require('common-path-prefix');
 var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
@@ -183,11 +183,7 @@ Api.prototype.run = function (files) {
 			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
 			self.fileCount = files.length;
-			if (self.fileCount === 1) {
-				self.base = path.relative('.', path.dirname(files[0])) + path.sep;
-			} else {
-				self.base = path.relative('.', commondir('.', files)) + path.sep;
-			}
+			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
 			var tests = files.map(self._runFile);
 

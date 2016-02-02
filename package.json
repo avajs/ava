@@ -86,7 +86,7 @@
     "chokidar": "^1.4.2",
     "cli-cursor": "^1.0.2",
     "co-with-promise": "^4.6.0",
-    "commondir": "^1.0.1",
+    "common-path-prefix": "^1.0.0",
     "convert-source-map": "^1.1.2",
     "core-assert": "^0.1.0",
     "debug": "^2.2.0",
