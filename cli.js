@@ -119,7 +119,7 @@ api.on('stderr', logger.stderr);
 
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api);
+		watcher.start(logger, api, process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
