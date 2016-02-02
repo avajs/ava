@@ -488,3 +488,16 @@ test('test file with only skipped tests does not create a failure', function (t)
 			t.true(api.tests[0].skip);
 		});
 });
+
+test('resets state before running', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.resolve('test/fixture/es2015.js')]);
+
+	api.run().then(function () {
+		t.is(api.passCount, 1);
+		return api.run();
+	}).then(function () {
+		t.is(api.passCount, 1);
+	});
+});

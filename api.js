@@ -27,6 +27,19 @@ function Api(files, options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
+	this.files = files || [];
+
+	Object.keys(Api.prototype).forEach(function (key) {
+		this[key] = this[key].bind(this);
+	}, this);
+
+	this._reset();
+}
+
+util.inherits(Api, EventEmitter);
+module.exports = Api;
+
+Api.prototype._reset = function () {
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;
@@ -37,16 +50,8 @@ function Api(files, options) {
 	this.errors = [];
 	this.stats = [];
 	this.tests = [];
-	this.files = files || [];
 	this.base = '';
-
-	Object.keys(Api.prototype).forEach(function (key) {
-		this[key] = this[key].bind(this);
-	}, this);
-}
-
-util.inherits(Api, EventEmitter);
-module.exports = Api;
+};
 
 Api.prototype._runFile = function (file) {
 	var options = objectAssign({}, this.options, {
@@ -144,7 +149,8 @@ Api.prototype._prefixTitle = function (file) {
 Api.prototype.run = function () {
 	var self = this;
 
-	return handlePaths(this.files)
+	this._reset();
+	return handlePaths(this.files.slice())
 		.map(function (file) {
 			return path.resolve(file);
 		})
