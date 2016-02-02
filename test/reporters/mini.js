@@ -187,3 +187,14 @@ test('results with errors', function (t) {
 	t.match(output[6], /test\/reporters\/mini\.js/);
 	t.end();
 });
+
+test('empty results after reset', function (t) {
+	var reporter = miniReporter();
+
+	reporter.failCount = 1;
+	reporter.reset();
+
+	var output = reporter.finish();
+	t.is(output, '\n');
+	t.end();
+});
