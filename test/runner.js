@@ -1,5 +1,6 @@
 'use strict';
 var test = require('tap').test;
+var delay = require('delay');
 var Runner = require('../lib/runner');
 
 var noop = function () {};
@@ -208,4 +209,29 @@ test('only test', function (t) {
 		t.same(arr, ['b']);
 		t.end();
 	});
+});
+
+test('options.serial forces all tests to be serial', function (t) {
+	t.plan(1);
+	var runner = new Runner({serial: true});
+	var arr = [];
+
+	runner.test(function () {
+		return delay(200).then(function () {
+			arr.push(1);
+		});
+	});
+
+	runner.test(function () {
+		return delay(100).then(function () {
+			arr.push(2);
+		});
+	});
+
+	runner.test(function () {
+		t.same(arr, [1, 2]);
+		t.end();
+	});
+
+	runner.run();
 });
