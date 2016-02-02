@@ -66,6 +66,7 @@ Api.prototype._reset = function () {
 	this.stats = [];
 	this.tests = [];
 	this.base = '';
+	this.explicitTitles = false;
 };
 
 Api.prototype._runFile = function (file) {
@@ -139,7 +140,7 @@ Api.prototype._handleTest = function (test) {
 };
 
 Api.prototype._prefixTitle = function (file) {
-	if (this.fileCount === 1) {
+	if (this.fileCount === 1 && !this.explicitTitles) {
 		return '';
 	}
 
@@ -165,6 +166,7 @@ Api.prototype.run = function (files) {
 	var self = this;
 
 	this._reset();
+	this.explicitTitles = Boolean(files);
 	return handlePaths(files || this.files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
