@@ -11,7 +11,10 @@ var log = require('./lib/logger');
 require('./lib/test-worker').avaRequired = true;
 
 var opts = globals.options;
-var runner = new Runner(opts);
+var runner = new Runner({
+	serial: Boolean(opts.serial),
+	bail: Boolean(opts.failFast)
+});
 
 // check if the test is being run without AVA cli
 var isForked = typeof process.send === 'function';

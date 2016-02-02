@@ -235,3 +235,84 @@ test('options.serial forces all tests to be serial', function (t) {
 
 	runner.run();
 });
+
+test('options.bail will bail out', function (t) {
+	t.plan(1);
+
+	var runner = new Runner({bail: true});
+
+	runner.test(function (a) {
+		t.pass();
+		a.fail();
+	});
+
+	runner.test(function () {
+		t.fail();
+	});
+
+	runner.run().then(function () {
+		t.end();
+	});
+});
+
+test('options.bail will bail out (async)', function (t) {
+	t.plan(2);
+
+	var runner = new Runner({bail: true});
+	var tests = [];
+
+	runner.cb(function (a) {
+		setTimeout(function () {
+			tests.push(1);
+			a.fail();
+			a.end();
+		}, 100);
+	});
+
+	runner.cb(function (a) {
+		setTimeout(function () {
+			tests.push(2);
+			a.end();
+		}, 300);
+	});
+
+	runner.run().then(function () {
+		t.same(tests, [1]);
+		// With concurrent tests there is no stopping the second `setTimeout` callback from happening.
+		// See the `bail + serial` test below for comparison
+		setTimeout(function () {
+			t.same(tests, [1, 2]);
+			t.end();
+		}, 250);
+	});
+});
+
+test('options.bail + serial - tests will never happen (async)', function (t) {
+	t.plan(2);
+
+	var runner = new Runner({bail: true, serial: true});
+	var tests = [];
+
+	runner.cb(function (a) {
+		setTimeout(function () {
+			tests.push(1);
+			a.fail();
+			a.end();
+		}, 100);
+	});
+
+	runner.cb(function (a) {
+		setTimeout(function () {
+			tests.push(2);
+			a.end();
+		}, 300);
+	});
+
+	runner.run().then(function () {
+		t.same(tests, [1]);
+		setTimeout(function () {
+			t.same(tests, [1]);
+			t.end();
+		}, 250);
+	});
+});

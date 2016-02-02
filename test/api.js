@@ -141,7 +141,7 @@ test('fail-fast mode', function (t) {
 				ok: false,
 				title: 'second fail'
 			}]);
-			t.is(api.passCount, 2);
+			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
 			t.match(api.errors[0].error.message, /Test failed via t.fail()/);
 		});
