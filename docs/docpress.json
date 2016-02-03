@@ -1,0 +1,12 @@
+{
+  "github": "sindresorhus/ava",
+  "css": [
+    "http://ricostacruz.com/docpress-rsc/style.css"
+  ],
+  "markdown": {
+    "typographer": true,
+    "plugins": {
+      "decorate": {}
+    }
+  }
+}

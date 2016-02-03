@@ -1,4 +1,4 @@
-# ![AVA](media/header.png)
+# ![AVA](docs/media/header.png)
 
 > Futuristic test runner
 
@@ -89,7 +89,7 @@ test('bar', async t => {
 });
 ```
 
-<img src="screenshot.png" width="150" align="right">
+<img src="docs/media/screenshot.png" width="150" align="right">
 
 #### Run it
 
@@ -485,14 +485,14 @@ AVA can generate TAP output via `--tap` option for use with any [TAP reporter](h
 $ ava --tap | tap-nyan
 ```
 
-<img src="media/tap-output.png" width="398">
+<img src="docs/media/tap-output.png" width="398">
 
 
 ### Clean stack traces
 
 AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
 
-<img src="media/stack-traces.png" width="300">
+<img src="docs/media/stack-traces.png" width="300">
 
 
 ## API
@@ -706,7 +706,7 @@ Use the [`--tap` flag](#optional-tap-output) with any [TAP reporter](https://git
 
 ### How is the name written and pronounced?
 
-AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?raw=true).
+AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](docs/media/pronunciation.m4a).
 
 ### What is the header background?
 
