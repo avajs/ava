@@ -1,23 +1,19 @@
 import test from '../../';
 
-function randomDelay() {
-	return parseInt(Math.random() * 1000, 10);
-}
-
-const tests = [];
+var tests = [];
 
 test.cb('first', t => {
 	setTimeout(() => {
 		tests.push('first');
 		t.end();
-	}, randomDelay());
+	}, 300);
 });
 
 test.cb('second', t => {
 	setTimeout(() => {
 		tests.push('second');
 		t.end();
-	}, randomDelay());
+	}, 100);
 });
 
 test(t => {

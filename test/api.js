@@ -141,23 +141,24 @@ test('fail-fast mode', function (t) {
 				ok: false,
 				title: 'second fail'
 			}]);
-			t.is(api.passCount, 2);
+			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
 			t.match(api.errors[0].error.message, /Test failed via t.fail()/);
 		});
 });
 
 test('serial execution mode', function (t) {
-	t.plan(2);
+	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/async-await.js')], {
+	var api = new Api([path.join(__dirname, 'fixture/serial.js')], {
 		serial: true
 	});
 
 	api.run()
 		.then(function () {
 			t.ok(api.options.serial);
-			t.is(api.passCount, 2);
+			t.is(api.passCount, 3);
+			t.is(api.failCount, 0);
 		});
 });
 
