@@ -212,6 +212,7 @@ test('only test', function (t) {
 
 test('options.serial forces all tests to be serial', function (t) {
 	t.plan(1);
+
 	var runner = new Runner({serial: true});
 	var arr = [];
 
