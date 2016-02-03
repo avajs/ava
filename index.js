@@ -2,6 +2,7 @@
 var path = require('path');
 var chalk = require('chalk');
 var serializeError = require('serialize-error');
+var beautifyStack = require('./lib/beautify-stack');
 var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
@@ -48,6 +49,10 @@ function test(props) {
 
 	props.error = hasError ? serializeError(props.error) : {};
 
+	if (props.error.stack) {
+		props.error.stack = beautifyStack(props.error.stack);
+	}
+
 	send('test', props);
 
 	if (hasError && opts.failFast) {
@@ -57,16 +62,8 @@ function test(props) {
 }
 
 function exit() {
-	// serialize errors
-	runner.results.forEach(function (result) {
-		if (result.error) {
-			result.error = serializeError(result.error);
-		}
-	});
-
 	send('results', {
-		stats: runner.stats,
-		tests: runner.results
+		stats: runner.stats
 	});
 }
 

@@ -224,8 +224,8 @@ test('stack traces for exceptions are corrected using a source map file', functi
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?at\b.*source-map-file.js:11.*$/m);
+		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
 	});
 
 	api.run()
@@ -241,8 +241,8 @@ test('stack traces for exceptions are corrected using a source map file (cache o
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?at\b.*source-map-file.js:11.*$/m);
+		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
 	});
 
 	api.run()
@@ -258,8 +258,8 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
+		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
 	});
 
 	api.run()
@@ -275,8 +275,8 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?at.*?run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?at\b.*source-map-initial-input.js:7.*$/m);
+		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
 	});
 
 	api.run()

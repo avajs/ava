@@ -108,11 +108,13 @@ test('include skipped tests in results', function (t) {
 	runner.afterEach('afterEach', noop);
 	runner.afterEach.skip('afterEach.skip', noop);
 
-	runner.run().then(function () {
-		var titles = runner.results.map(function (result) {
-			return result.title;
-		});
+	var titles = [];
 
+	runner.on('test', function (test) {
+		titles.push(test.title);
+	});
+
+	runner.run().then(function () {
 		t.same(titles, [
 			'before',
 			'before.skip',

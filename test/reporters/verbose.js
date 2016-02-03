@@ -107,10 +107,12 @@ test('skipped test', function (t) {
 test('uncaught exception', function (t) {
 	var reporter = createReporter();
 
+	var error = new Error('Unexpected token');
+
 	var output = reporter.unhandledError({
 		type: 'exception',
 		file: 'test.js',
-		stack: new Error('Unexpected token').stack
+		stack: beautifyStack(error.stack)
 	}).split('\n');
 
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
@@ -122,10 +124,12 @@ test('uncaught exception', function (t) {
 test('unhandled rejection', function (t) {
 	var reporter = createReporter();
 
+	var error = new Error('Unexpected token');
+
 	var output = reporter.unhandledError({
 		type: 'rejection',
 		file: 'test.js',
-		stack: new Error('Unexpected token').stack
+		stack: beautifyStack(error.stack)
 	}).split('\n');
 
 	t.is(output[0], chalk.red('Unhandled Rejection: test.js'));
@@ -236,11 +240,14 @@ test('results with passing tests, rejections and exceptions', function (t) {
 });
 
 test('results with errors', function (t) {
+	var error = new Error('error message');
+	error.stack = beautifyStack(error.stack);
+
 	var reporter = createReporter();
 	reporter.api.failCount = 1;
 	reporter.api.tests = [{
 		title: 'fail',
-		error: new Error('error message')
+		error: error
 	}];
 
 	var output = reporter.finish().split('\n');
