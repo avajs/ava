@@ -358,7 +358,7 @@ test('absolute paths', function (t) {
 		});
 });
 
-test('search directories recursivly for files', function (t) {
+test('search directories recursively for files', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/subdir')]);
