@@ -119,13 +119,7 @@ api.on('stderr', logger.stderr);
 
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, function (err) {
-			if (err.name === 'AvaError') {
-				console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
-			} else {
-				console.error(colors.stack(err.stack));
-			}
-		});
+		watcher.start(logger, api);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
@@ -143,12 +137,10 @@ if (cli.flags.watch) {
 			logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
 		})
 		.catch(function (err) {
-			if (err.name === 'AvaError') {
-				console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
-			} else {
-				console.error(colors.stack(err.stack));
-			}
-
-			logger.exit(1);
+			// Don't swallow exceptions. Note that any expected error should already
+			// have been logged.
+			setImmediate(function () {
+				throw err;
+			});
 		});
 }

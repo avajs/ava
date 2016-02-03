@@ -121,6 +121,20 @@ test('uncaught exception', function (t) {
 	t.end();
 });
 
+test('ava error', function (t) {
+	var reporter = createReporter();
+
+	var output = reporter.unhandledError({
+		type: 'exception',
+		file: 'test.js',
+		name: 'AvaError',
+		message: 'A futuristic test runner'
+	}).split('\n');
+
+	t.is(output[0], chalk.red('  ' + figures.cross + ' A futuristic test runner'));
+	t.end();
+});
+
 test('unhandled rejection', function (t) {
 	var reporter = createReporter();
 

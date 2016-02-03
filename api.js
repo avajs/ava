@@ -173,7 +173,12 @@ Api.prototype.run = function (files) {
 		})
 		.then(function (files) {
 			if (files.length === 0) {
-				return Promise.reject(new AvaError('Couldn\'t find any files to test'));
+				self._handleExceptions({
+					exception: new AvaError('Couldn\'t find any files to test'),
+					file: undefined
+				});
+
+				return [];
 			}
 
 			var cacheEnabled = self.options.cacheEnabled !== false;
@@ -205,7 +210,20 @@ Api.prototype.run = function (files) {
 							var method = self.options.serial ? 'mapSeries' : 'map';
 
 							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run();
+								return tests[index].run().catch(function (err) {
+									// The test failed catastrophically. Flag it up as an
+									// exception, then return an empty result. Other tests may
+									// continue to run.
+									self._handleExceptions({
+										exception: err,
+										file: file
+									});
+
+									return {
+										stats: {passCount: 0, skipCount: 0, failCount: 0},
+										tests: []
+									};
+								});
 							}));
 						}
 					}

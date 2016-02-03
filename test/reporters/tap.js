@@ -76,6 +76,24 @@ test('unhandled error', function (t) {
 	t.end();
 });
 
+test('ava error', function (t) {
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.unhandledError({
+		type: 'exception',
+		name: 'AvaError',
+		message: 'A futuristic test runner'
+	});
+
+	var expectedOutput = [
+		'# A futuristic test runner',
+		'not ok 1 - A futuristic test runner'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('results', function (t) {
 	var reporter = tapReporter();
 	var api = {
