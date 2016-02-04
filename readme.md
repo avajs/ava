@@ -590,7 +590,7 @@ Assert that `function` throws an error or `promise` rejects.
 
 `error` can be a constructor, regex, error message or validation function.
 
-### .doesNotThrow(function|promise, [message])
+### .notThrows(function|promise, [message])
 
 Assert that `function` doesn't throw an `error` or `promise` resolves.
 

@@ -182,7 +182,21 @@ test('.throws()', function (t) {
 	t.end();
 });
 
-test('.doesNotThrow()', function (t) {
+test('.notThrows()', function (t) {
+	t.doesNotThrow(function () {
+		assert.notThrows(function () {});
+	});
+
+	t.throws(function () {
+		assert.notThrows(function () {
+			throw new Error('foo');
+		});
+	});
+
+	t.end();
+});
+
+test('.doesNotThrow() alias for .notThrows()', function (t) {
 	t.doesNotThrow(function () {
 		assert.doesNotThrow(function () {});
 	});
