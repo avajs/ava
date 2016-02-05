@@ -19,7 +19,7 @@ test('chokidar is not installed', function (t) {
 	});
 
 	try {
-		subject.start({}, {files: [], excludePatterns: []});
+		subject.start({}, {files: [], excludePatterns: []}, []);
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -90,8 +90,8 @@ test('chokidar is installed', function (_t) {
 		done();
 	});
 
-	var start = function () {
-		subject.start(logger, api, stdin);
+	var start = function (sources) {
+		subject.start(logger, api, sources || [], stdin);
 	};
 
 	var add = function (path) {
@@ -127,13 +127,41 @@ test('chokidar is installed', function (_t) {
 		pending.push(_t.test(name, fn));
 	};
 
-	test('watches for file changes', function (t) {
+	test('watches for default source file changes, as well as test files', function (t) {
 		t.plan(2);
 		start();
 
 		t.ok(chokidar.watch.calledOnce);
 		t.same(chokidar.watch.firstCall.args, [
-			['package.json', '**/*.js'],
+			['package.json', '**/*.js'].concat(api.files),
+			{
+				ignored: ['.git', 'node_modules', 'bower_components', '.sass-cache'],
+				ignoreInitial: true
+			}
+		]);
+	});
+
+	test('watched source files are configurable', function (t) {
+		t.plan(2);
+		start(['foo.js', '!bar.js', 'baz.js', '!qux.js']);
+
+		t.ok(chokidar.watch.calledOnce);
+		t.same(chokidar.watch.firstCall.args, [
+			['foo.js', 'baz.js'].concat(api.files),
+			{
+				ignored: ['bar.js', 'qux.js'],
+				ignoreInitial: true
+			}
+		]);
+	});
+
+	test('default set of ignored files if configured sources does not contain exclusion patterns', function (t) {
+		t.plan(2);
+		start(['foo.js', 'baz.js']);
+
+		t.ok(chokidar.watch.calledOnce);
+		t.same(chokidar.watch.firstCall.args, [
+			['foo.js', 'baz.js'].concat(api.files),
 			{
 				ignored: ['.git', 'node_modules', 'bower_components', '.sass-cache'],
 				ignoreInitial: true

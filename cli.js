@@ -49,8 +49,9 @@ var cli = meow([
 	'  --tap, -t        Generate TAP output',
 	'  --verbose, -v    Enable verbose output',
 	'  --no-cache       Disable the transpiler cache',
-	// Leave --watch undocumented until it's stable enough
-	// '  --watch, -w      Re-run tests when files change',
+	// Leave --watch and --sources undocumented until they're stable enough
+	// '  --watch, -w      Re-run tests when tests and source files change',
+	// '  --source         Pattern to match source files so tests can be re-run (Can be repeated)',
 	'',
 	'Examples',
 	'  ava',
@@ -65,7 +66,8 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require'
+		'require',
+		'source'
 	],
 	boolean: [
 		'fail-fast',
@@ -119,7 +121,7 @@ api.on('stderr', logger.stderr);
 
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, process.stdin);
+		watcher.start(logger, api, arrify(cli.flags.source), process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
