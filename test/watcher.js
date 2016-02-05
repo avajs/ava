@@ -2,6 +2,7 @@
 
 var Promise = require('bluebird');
 var EventEmitter = require('events').EventEmitter;
+var defaultIgnore = require('ignore-by-default').directories();
 var lolex = require('lolex');
 var path = require('path');
 var proxyquire = require('proxyquire');
@@ -135,7 +136,7 @@ test('chokidar is installed', function (_t) {
 		t.same(chokidar.watch.firstCall.args, [
 			['package.json', '**/*.js'].concat(api.files),
 			{
-				ignored: ['.git', 'node_modules', 'bower_components', '.sass-cache'],
+				ignored: defaultIgnore,
 				ignoreInitial: true
 			}
 		]);
@@ -163,7 +164,7 @@ test('chokidar is installed', function (_t) {
 		t.same(chokidar.watch.firstCall.args, [
 			['foo.js', 'baz.js'].concat(api.files),
 			{
-				ignored: ['.git', 'node_modules', 'bower_components', '.sass-cache'],
+				ignored: defaultIgnore,
 				ignoreInitial: true
 			}
 		]);
