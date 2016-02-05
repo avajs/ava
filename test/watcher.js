@@ -27,11 +27,11 @@ test('chokidar is not installed', function (t) {
 });
 
 test('chokidar is installed', function (_t) {
-	var clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
-
 	var chokidar = {
 		watch: sinon.stub()
 	};
+
+	var debug = sinon.spy();
 
 	var logger = {
 		finish: sinon.spy(),
@@ -43,15 +43,30 @@ test('chokidar is installed', function (_t) {
 	};
 
 	var subject = proxyquire.noCallThru().load('../lib/watcher', {
-		chokidar: chokidar
+		chokidar: chokidar,
+		debug: function (name) {
+			return function () {
+				var args = [name];
+				args.push.apply(args, arguments);
+				debug.apply(null, args);
+			};
+		}
 	});
 
+	var clock;
 	var emitter;
 	var stdin;
 	_t.beforeEach(function (done) {
+		if (clock) {
+			clock.uninstall();
+		}
+		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
+
 		emitter = new EventEmitter();
 		chokidar.watch.reset();
 		chokidar.watch.returns(emitter);
+
+		debug.reset();
 
 		logger.finish.reset();
 		logger.reset.reset();
@@ -143,6 +158,21 @@ test('chokidar is installed', function (_t) {
 		done();
 		return delay().then(function () {
 			t.ok(logger.finish.calledOnce);
+		});
+	});
+
+	[
+		{label: 'is added', fire: add, event: 'add'},
+		{label: 'changes', fire: change, event: 'change'},
+		{label: 'is removed', fire: unlink, event: 'unlink'}
+	].forEach(function (variant) {
+		test('logs a debug message when a file is ' + variant.label, function (t) {
+			t.plan(2);
+			start();
+
+			variant.fire('file.js');
+			t.ok(debug.calledOnce);
+			t.same(debug.firstCall.args, ['ava:watcher', 'Detected %s of %s', variant.event, 'file.js']);
 		});
 	});
 
