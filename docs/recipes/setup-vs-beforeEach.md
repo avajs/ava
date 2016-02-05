@@ -1,10 +1,10 @@
 # Setup Functions vs. beforeEach Functions
 
-It can be stylistically beneficial to have individual setup functions called from within the test scenario, instead of a single `beforeEach` function.
+In some cases, using plain setup functions is preferred to using `beforeEach` for your tests. Since the `beforeEach` function is called for every test, using independent functions allows for easier modifications between test scenarios.
 
 ## Complex test setup
 
-In this example, we have both test setup and modifications within each test.
+In this example, we have both a `beforeEach` function, and then more modifications within each test.
 
 ```js
 test.beforeEach(t => {
@@ -26,21 +26,21 @@ test('second scenario', t => {
 });
 ```
 
-We can make this more readable, at the cost of repetitiveness, by omitting the `beforeEach` function and performing our setup steps within the tests themselves.
+If too many variables are changing between test scenarios, consider omitting the `beforeEach` function and performing setup steps within the tests themselves.
 
 ```js
 test('first scenario', t => {
 	setupConditionA();
-	setupConditionB(options);
+	setupConditionB({/* options */});
 	setupConditionC();
 	const someCondition = thingUnderTest();
 	t.true(someCondition);
 });
 
+// In this test, setupConditionB() is never called.
 test('second scenario', t => {
 	setupConditionA();
-	setupConditionB();
-	setupConditionC(options);
+	setupConditionC();
 	const someOtherCondition = thingUnderTest();
 	t.true(someOtherCondition);
 });
@@ -104,12 +104,22 @@ function setup(opts) {
 }
 ```
 
-## Advantages of using setup functions
+## Using both beforeEach and setup functions
 
-1. Setup functions allow for easier modifications between test runs.
-2. The test can be easier to read. Since the entire test is configured within the test, your eyes do not need to jump between `beforeEach` and `test` functions.
-3. Since the `test` function is isolated there is no need to worry about test context (`t.context`).
+Both `beforeEach` and plain setup functions can be used together.
 
-## Disadvantages of using setup functions
+```js
+test.beforeEach(t => {
+	t.context = setupAllTests();
+});
 
-1. Tests can be more repetitive. Your setup function(s) need to be called for each test.
+test('first scenario', t => {
+	firstSetup();
+	const someCondition = thingUnderTest();
+	t.true(someCondition);
+});
+```
+
+## Readability advantages
+
+Stylistically, some prefer the readability of plain functions, at the cost of repetitiveness. It is clearer exactly what each test is doing.
