@@ -131,12 +131,12 @@ test('handle throws with false-positive observable', function (t) {
 	});
 });
 
-test('handle doesNotThrow with completed observable', function (t) {
+test('handle notThrows with completed observable', function (t) {
 	ava(function (a) {
 		a.plan(1);
 
 		var observable = Observable.of();
-		return a.doesNotThrow(observable);
+		return a.notThrows(observable);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
@@ -144,7 +144,7 @@ test('handle doesNotThrow with completed observable', function (t) {
 	});
 });
 
-test('handle doesNotThrow with thrown observable', function (t) {
+test('handle notThrows with thrown observable', function (t) {
 	ava(function (a) {
 		a.plan(1);
 
@@ -152,7 +152,7 @@ test('handle doesNotThrow with thrown observable', function (t) {
 			observer.error(new Error());
 		});
 
-		return a.doesNotThrow(observable);
+		return a.notThrows(observable);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');

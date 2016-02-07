@@ -249,12 +249,12 @@ test('handle throws with false-positive promise', function (t) {
 	});
 });
 
-test('handle doesNotThrow with resolved promise', function (t) {
+test('handle notThrows with resolved promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.resolve();
-		return a.doesNotThrow(promise);
+		return a.notThrows(promise);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
@@ -262,12 +262,12 @@ test('handle doesNotThrow with resolved promise', function (t) {
 	});
 });
 
-test('handle doesNotThrow with rejected promise', function (t) {
+test('handle notThrows with rejected promise', function (t) {
 	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error());
-		return a.doesNotThrow(promise);
+		return a.notThrows(promise);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
