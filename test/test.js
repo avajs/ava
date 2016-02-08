@@ -209,7 +209,7 @@ test('handle throws without error', function (t) {
 
 test('handle notThrows with error', function (t) {
 	var result = ava(function (a) {
-		a.notThrows(function () {
+		a.notThrow(function () {
 			throw new Error('foo');
 		});
 	}).run();
@@ -222,7 +222,7 @@ test('handle notThrows with error', function (t) {
 
 test('handle notThrows without error', function (t) {
 	var result = ava(function (a) {
-		a.notThrows(function () {
+		a.notThrow(function () {
 			return;
 		});
 	}).run();
@@ -388,7 +388,7 @@ test('throws and notThrows work with promises', function (t) {
 	ava(function (a) {
 		a.plan(2);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(20).then(function () {
+		a.notThrow(delay(20).then(function () {
 			asyncCalled = true;
 		}));
 	}).run().then(function (result) {
@@ -403,7 +403,7 @@ test('throws and notThrows work with promises', function (t) {
 test('waits for t.throws to resolve after t.end is called', function (t) {
 	ava.cb(function (a) {
 		a.plan(1);
-		a.notThrows(delay(10), 'foo');
+		a.notThrow(delay(10), 'foo');
 		a.end();
 	}).run().then(function (result) {
 		t.is(result.passed, true);
@@ -429,7 +429,7 @@ test('waits for t.throws to reject after t.end is called', function (t) {
 test('waits for t.throws to resolve after the promise returned from the test resolves', function (t) {
 	ava(function (a) {
 		a.plan(1);
-		a.notThrows(delay(10), 'foo');
+		a.notThrow(delay(10), 'foo');
 		return Promise.resolve();
 	}).run().then(function (result) {
 		t.is(result.passed, true);
@@ -452,12 +452,12 @@ test('waits for t.throws to reject after the promise returned from the test reso
 	});
 });
 
-test('multiple resolving and rejecting promises passed to t.throws/t.notThrows', function (t) {
+test('multiple resolving and rejecting promises passed to t.throws/t.notThrow', function (t) {
 	ava(function (a) {
 		a.plan(6);
 		for (var i = 0; i < 3; ++i) {
 			a.throws(delay.reject(10, new Error('foo')), 'foo');
-			a.notThrows(delay(10), 'foo');
+			a.notThrow(delay(10), 'foo');
 		}
 	}).run().then(function (result) {
 		t.is(result.passed, true);
@@ -471,7 +471,7 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 	ava(function (a) {
 		a.plan(2);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(10), 'foo');
+		a.notThrow(delay(10), 'foo');
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
@@ -488,7 +488,7 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 	ava(function (a) {
 		a.plan(3);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(10), 'foo');
+		a.notThrow(delay(10), 'foo');
 		setTimeout(function () {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
@@ -505,7 +505,7 @@ test('assertions return promises', function (t) {
 	ava(function (a) {
 		a.plan(2);
 		t.ok(isPromise(a.throws(Promise.reject(new Error('foo')))));
-		t.ok(isPromise(a.notThrows(Promise.resolve(true))));
+		t.ok(isPromise(a.notThrow(Promise.resolve(true))));
 	}).run().then(function (result) {
 		t.is(result.passed, true);
 		t.end();

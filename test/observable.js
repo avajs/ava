@@ -136,7 +136,7 @@ test('handle notThrows with completed observable', function (t) {
 		a.plan(1);
 
 		var observable = Observable.of();
-		return a.notThrows(observable);
+		return a.notThrow(observable);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
@@ -152,7 +152,7 @@ test('handle notThrows with thrown observable', function (t) {
 			observer.error(new Error());
 		});
 
-		return a.notThrows(observable);
+		return a.notThrow(observable);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');

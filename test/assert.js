@@ -3,7 +3,7 @@ var test = require('tap').test;
 var assert = require('../lib/assert');
 
 test('.pass()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.pass();
 	});
 
@@ -24,7 +24,7 @@ test('.ok()', function (t) {
 		assert.ok(false);
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.ok(1);
 		assert.ok(true);
 	});
@@ -38,7 +38,7 @@ test('.notOk()', function (t) {
 		assert.notOk(true);
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.notOk(0);
 		assert.notOk(false);
 	});
@@ -63,7 +63,7 @@ test('.true()', function (t) {
 		assert.true('foo');
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.true(true);
 	});
 
@@ -87,7 +87,7 @@ test('.false()', function (t) {
 		assert.false('foo');
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.false(false);
 	});
 
@@ -95,7 +95,7 @@ test('.false()', function (t) {
 });
 
 test('.is()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.is('foo', 'foo');
 	});
 
@@ -107,7 +107,7 @@ test('.is()', function (t) {
 });
 
 test('.not()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.not('foo', 'bar');
 	});
 
@@ -119,11 +119,11 @@ test('.not()', function (t) {
 });
 
 test('.same()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.same({a: 'a'}, {a: 'a'});
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.same(['a', 'b'], ['a', 'b']);
 	});
 
@@ -149,11 +149,11 @@ test('.same()', function (t) {
 });
 
 test('.notSame()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.notSame({a: 'a'}, {a: 'b'});
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.notSame(['a', 'b'], ['c', 'd']);
 	});
 
@@ -173,7 +173,7 @@ test('.throws()', function (t) {
 		assert.throws(function () {});
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.throws(function () {
 			throw new Error('foo');
 		});
@@ -182,27 +182,13 @@ test('.throws()', function (t) {
 	t.end();
 });
 
-test('.notThrows()', function (t) {
-	t.doesNotThrow(function () {
-		assert.notThrows(function () {});
+test('.notThrow()', function (t) {
+	t.notThrow(function () {
+		assert.notThrow(function () {});
 	});
 
 	t.throws(function () {
-		assert.notThrows(function () {
-			throw new Error('foo');
-		});
-	});
-
-	t.end();
-});
-
-test('.doesNotThrow() alias for .notThrows()', function (t) {
-	t.doesNotThrow(function () {
-		assert.doesNotThrow(function () {});
-	});
-
-	t.throws(function () {
-		assert.doesNotThrow(function () {
+		assert.notThrow(function () {
 			throw new Error('foo');
 		});
 	});
@@ -211,7 +197,7 @@ test('.doesNotThrow() alias for .notThrows()', function (t) {
 });
 
 test('.regex()', function (t) {
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.regex('abc', /^abc$/);
 	});
 
@@ -227,7 +213,7 @@ test('.ifError()', function (t) {
 		assert.ifError(new Error());
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.ifError(null);
 	});
 
@@ -246,7 +232,7 @@ test('.same() should not mask RangeError from underlying assert', function (t) {
 		assert.notSame(a, b);
 	});
 
-	t.doesNotThrow(function () {
+	t.notThrow(function () {
 		assert.same(a, b);
 	});
 
