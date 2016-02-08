@@ -743,6 +743,7 @@ Concurrency is not parallelism. It enables parallelism. [Learn more.](http://sta
 - [gulp-ava](https://github.com/sindresorhus/gulp-ava) - Run tests with gulp
 - [grunt-ava](https://github.com/sindresorhus/grunt-ava) - Run tests with grunt
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
+- [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
 
 ## Created by
