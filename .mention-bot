@@ -4,5 +4,8 @@
 		"kevva",
 		"vdemedes",
 		"jamestalmage"
+	],
+	"fileBlacklist": [
+		"*.md"
 	]
 }
