@@ -254,7 +254,7 @@ test('handle notThrows with resolved promise', function (t) {
 		a.plan(1);
 
 		var promise = Promise.resolve();
-		return a.notThrows(promise);
+		return a.notThrow(promise);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
@@ -267,7 +267,7 @@ test('handle notThrows with rejected promise', function (t) {
 		a.plan(1);
 
 		var promise = Promise.reject(new Error());
-		return a.notThrows(promise);
+		return a.notThrow(promise);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
