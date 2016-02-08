@@ -8,3 +8,10 @@ before_install:
   - 'npm install -g npm@latest'
 after_success:
   - '[ -z "$COVERALLS_REPO_TOKEN" ] && tap --coverage-report=text-lcov | ./node_modules/.bin/coveralls'
+  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ] && [[ ${TRAVIS_JOB_NUMBER} == *".1" ]]; then ./node_modules/.bin/docpress build; npm install git-update-ghpages; ./node_modules/.bin/git-update-ghpages -e; fi
+env:
+  global:
+  - GIT_NAME: Travis CI
+  - GIT_EMAIL: nobody@nobody.org
+  - GITHUB_REPO: sindresorhus/ava
+  - GIT_SOURCE: _docpress
