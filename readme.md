@@ -72,6 +72,8 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 
 #### Create your test file
 
+*Note:* This example uses `delay`, a useful library for resolving promises after a given timeout. To run this exmaple install with `$ npm install --save-dev delay`.
+
 ```js
 import test from 'ava';
 import delay from 'delay';
