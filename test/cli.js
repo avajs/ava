@@ -17,7 +17,7 @@ function execCli(args, dirname, cb) {
 
 	var env = {
 		// This probably should be set only for the corresponding test
-		NODE_PATH: 'node-paths/modules'
+		NODE_PATH: 'node-paths/modules;node-paths/deep/nested'
 	};
 
 	if (process.env.AVA_APPVEYOR) {
