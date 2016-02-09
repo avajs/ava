@@ -67,27 +67,24 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.6.0"
+		"ava": "^0.11.0"
 	}
 }
 ```
 
 #### Create your test file
 
-Create a file named `test.js` in the project root directory.
+Create a file named `test.js` in the project root directory:
 
 ```js
 import test from 'ava';
-import delay from 'delay';
 
 test('foo', t => {
 	t.pass();
 });
 
 test('bar', async t => {
-	t.plan(1);
-
-	const bar = Promise.resolve('bar').then(delay(200));
+	const bar = Promise.resolve('bar');
 
 	t.is(await bar, 'bar');
 });
@@ -116,7 +113,8 @@ $ ava --help
     --serial, -s     Run tests serially
     --require, -r    Module to preload (Can be repeated)
     --tap, -t        Generate TAP output
-    --verbose, -v     Enable verbose output
+    --verbose, -v    Enable verbose output
+    --no-cache       Disable the transpiler cache
 
   Examples
     ava
@@ -130,9 +128,11 @@ $ ava --help
   test.js test-*.js test/**/*.js
 ```
 
-Directories are recursive by default. Files in directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
+Directories are recursive by default. Directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
 
-*WARNING: NON-STANDARD BEHAVIOR:* The AVA CLI will always try to find and use your projects local install of AVA. This is true even when you run the global `ava` command. This non-standard behavior solves an important [issue](https://github.com/sindresorhus/ava/issues/157), and should have no impact on everyday use.
+When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+*WARNING - Non-standard behavior:* The AVA CLI will always try to use your projects local install of AVA. This is true even when you run the global `ava` command. This non-standard behavior solves an important [issue](https://github.com/sindresorhus/ava/issues/157), and should have no impact on everyday use.
 
 ## Configuration
 
@@ -149,7 +149,9 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "serial": true,
     "tap": true,
     "verbose": true,
-    "require": ["babel-core/register", "coffee-script/register"]
+    "require": [
+      "babel-core/register"
+    ]
   }
 }
 ```
@@ -612,9 +614,9 @@ Any assertion can be skipped using the `skip` modifier. Skipped assertions are s
 
 ```js
 test(t => {
-  t.plan(2);
-  t.skip.is(foo(), 5); // no need to change your plan count when skipping.
-  t.is(1, 1);
+	t.plan(2);
+	t.skip.is(foo(), 5); // no need to change your plan count when skipping
+	t.is(1, 1);
 });
 ```
 
@@ -702,7 +704,7 @@ As of version `5.0.0` it uses source maps to report coverage for your actual cod
 
 ### Why not `mocha`, `tape`, `node-tap`?
 
-Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use), too unopinionated, bloated, synchronous by default, serial test execution, and slow. Tape and node-tap are pretty good. AVA is highly inspired by their syntax. However, they both execute tests serially and they've made [TAP](https://testanything.org) a first-class citizen which has IMHO made their codebases a bit convoluted and coupled. TAP output is hard to read so you always end up using an external tap reporter. AVA is highly opinionated and concurrent. It comes with a default simple reporter and supports TAP through a CLI flag.
+Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use), too unopinionated, bloated, synchronous by default, unusable programmatic API, serial test execution, and slow. Tape and node-tap are pretty good. AVA is highly inspired by their syntax. However, they both execute tests serially and they've made [TAP](https://testanything.org) a first-class citizen which has IMHO made their codebases a bit convoluted and coupled. TAP output is hard to read so you always end up using an external tap reporter. AVA is highly opinionated and concurrent. It comes with a default simple reporter and supports TAP through a CLI flag.
 
 ### How can I use custom reporters?
 
@@ -718,7 +720,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### Concurrency vs. parallelism
 
-Concurrency is not parallelism. It enables parallelism. [Learn more.](http://stackoverflow.com/q/1050222)
+[Concurrency is not parallelism. It enables parallelism.](http://stackoverflow.com/q/1050222)
 
 
 ## Recipes
@@ -748,11 +750,16 @@ Concurrency is not parallelism. It enables parallelism. [Learn more.](http://sta
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
 
-## Created by
+## Team
 
-[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Kevin Mårtensson](https://avatars.githubusercontent.com/u/709159?s=130)](https://github.com/kevva) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage)
+[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage)
 ---|---|---|---
-[Sindre Sorhus](http://sindresorhus.com) | [Kevin Mårtensson](https://github.com/kevva) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage)
+[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage)
+
+#### Former
+
+- [Kevin Mårtensson](https://github.com/kevva)
+
 
 
 <div align="center">
