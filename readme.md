@@ -72,6 +72,8 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 
 #### Create your test file
 
+Create a file named `test.js` in the project root directory.
+
 ```js
 import test from 'ava';
 import delay from 'delay';
@@ -94,9 +96,8 @@ test('bar', async t => {
 #### Run it
 
 ```
-$ npm test
+$ npm test 
 ```
-
 
 ## CLI
 
