@@ -17,6 +17,7 @@ if (debug.enabled) {
 	require('time-require');
 }
 
+var path = require('path');
 var updateNotifier = require('update-notifier');
 var figures = require('figures');
 var arrify = require('arrify');
@@ -93,12 +94,14 @@ if (cli.flags.init) {
 	return;
 }
 
-var additionalPaths = [];
+var nodePaths;
 if (process.env.NODE_PATH) {
-	var osSplitChar = process.platform === 'win32' ? ';' : ':';
-	process.env.NODE_PATH.split(osSplitChar).forEach(function (additionalPath) {
-		additionalPaths.push(path.resolve(opts.projectRoot, additionalPath));
-	});
+    var osSplitChar = process.platform === 'win32' ? ';' : ':';
+    nodePaths = process.env.NODE_PATH.split(osSplitChar).map(function (p) {
+        return path.resolve(process.cwd(), p)
+    });
+} else {
+    nodePaths = []
 }
 
 var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
@@ -106,7 +109,7 @@ var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
 	cacheEnabled: cli.flags.cache !== false,
-	additionalPaths: additionalPaths
+	nodePaths: nodePaths
 });
 
 var logger = new Logger();

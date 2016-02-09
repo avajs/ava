@@ -15,7 +15,10 @@ function execCli(args, dirname, cb) {
 		dirname = path.join(__dirname, dirname);
 	}
 
-	var env = {};
+	var env = {
+		// This probably should be set only for the corresponding test
+		NODE_PATH: 'node-paths/modules'
+	};
 
 	if (process.env.AVA_APPVEYOR) {
 		env.AVA_APPVEYOR = 1;
@@ -107,6 +110,13 @@ test('pkg-conf: pkg-overrides', function (t) {
 test('pkg-conf: cli takes precedence', function (t) {
 	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], 'fixture/pkg-conf/precedence', function (err) {
 		t.ifError(err);
+		t.end();
+	});
+});
+
+test('handles NODE_PATH', function (t) {
+	execCli('fixture/node-paths.js', function (err) {
+		t.notOk(err);
 		t.end();
 	});
 });
