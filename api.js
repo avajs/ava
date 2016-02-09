@@ -49,10 +49,6 @@ function Api(files, options) {
 	}, this);
 
 	this._reset();
-
-	if (process.env.NODE_PATH) {
-		process.env.NODE_PATH = path.join(process.cwd(), process.env.NODE_PATH);
-	}
 }
 
 util.inherits(Api, EventEmitter);
