@@ -18,7 +18,7 @@ var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 var CachingPrecompiler = require('./lib/caching-precompiler');
 
-function Api(files, options) {
+function Api(options) {
 	if (!(this instanceof Api)) {
 		throw new TypeError('Class constructor Api cannot be invoked without \'new\'');
 	}
@@ -27,22 +27,6 @@ function Api(files, options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
-
-	if (!files || files.length === 0) {
-		this.files = [
-			'test.js',
-			'test-*.js',
-			'test'
-		];
-	} else {
-		this.files = files;
-	}
-
-	this.excludePatterns = [
-		'!**/node_modules/**',
-		'!**/fixtures/**',
-		'!**/helpers/**'
-	];
 
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
@@ -165,9 +149,25 @@ Api.prototype._prefixTitle = function (file) {
 Api.prototype.run = function (files) {
 	var self = this;
 
+	if (!files || files.length === 0) {
+		this.files = [
+			'test.js',
+			'test-*.js',
+			'test'
+		];
+	} else {
+		this.files = files;
+	}
+
+	this.excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
+
 	this._reset();
-	this.explicitTitles = Boolean(files);
-	return handlePaths(files || this.files, this.excludePatterns)
+	this.explicitTitles = Boolean(this.files);
+	return handlePaths(this.files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
 		})
