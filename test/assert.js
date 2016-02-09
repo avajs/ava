@@ -197,6 +197,8 @@ test('.notThrows()', function (t) {
 });
 
 test('.doesNotThrow() alias for .notThrows()', function (t) {
+	process.noDeprecation = true;
+
 	t.doesNotThrow(function () {
 		assert.doesNotThrow(function () {});
 	});
@@ -206,6 +208,8 @@ test('.doesNotThrow() alias for .notThrows()', function (t) {
 			throw new Error('foo');
 		});
 	});
+
+	process.noDeprecation = false;
 
 	t.end();
 });
