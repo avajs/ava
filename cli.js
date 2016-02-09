@@ -29,6 +29,7 @@ var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
+var watcher = require('./lib/watcher');
 var Api = require('./api');
 
 // Bluebird specific
@@ -48,6 +49,9 @@ var cli = meow([
 	'  --tap, -t        Generate TAP output',
 	'  --verbose, -v    Enable verbose output',
 	'  --no-cache       Disable the transpiler cache',
+	// Leave --watch and --sources undocumented until they're stable enough
+	// '  --watch, -w      Re-run tests when tests and source files change',
+	// '  --source         Pattern to match source files so tests can be re-run (Can be repeated)',
 	'',
 	'Examples',
 	'  ava',
@@ -62,20 +66,23 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require'
+		'require',
+		'source'
 	],
 	boolean: [
 		'fail-fast',
 		'verbose',
 		'serial',
-		'tap'
+		'tap',
+		'watch'
 	],
 	default: conf,
 	alias: {
 		t: 'tap',
 		v: 'verbose',
 		r: 'require',
-		s: 'serial'
+		s: 'serial',
+		w: 'watch'
 	}
 });
 
@@ -112,17 +119,30 @@ api.on('error', logger.unhandledError);
 api.on('stdout', logger.stdout);
 api.on('stderr', logger.stderr);
 
-api.run()
-	.then(function () {
-		logger.finish();
-		logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
-	})
-	.catch(function (err) {
+if (cli.flags.watch) {
+	try {
+		watcher.start(logger, api, arrify(cli.flags.source), process.stdin);
+	} catch (err) {
 		if (err.name === 'AvaError') {
+			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
 			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			logger.exit(1);
 		} else {
-			console.error(colors.stack(err.stack));
+			// Rethrow so it becomes an uncaught exception.
+			throw err;
 		}
-
-		logger.exit(1);
-	});
+	}
+} else {
+	api.run()
+		.then(function () {
+			logger.finish();
+			logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
+		})
+		.catch(function (err) {
+			// Don't swallow exceptions. Note that any expected error should already
+			// have been logged.
+			setImmediate(function () {
+				throw err;
+			});
+		});
+}

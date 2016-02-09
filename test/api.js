@@ -39,7 +39,7 @@ test('async/await support', function (t) {
 		});
 });
 
-test('test title prefixes', function (t) {
+test('test title prefixes — multiple files', function (t) {
 	t.plan(6);
 
 	var separator = ' ' + figures.pointerSmall + ' ';
@@ -61,6 +61,68 @@ test('test title prefixes', function (t) {
 	var api = new Api(files);
 
 	api.run()
+		.then(function () {
+			// if all lines were removed from expected output
+			// actual output matches expected output
+			t.is(expected.length, 0);
+		});
+
+	api.on('test', function (a) {
+		index = expected.indexOf(a.title);
+
+		t.true(index >= 0);
+
+		// remove line from expected output
+		expected.splice(index, 1);
+	});
+});
+
+test('test title prefixes — single file', function (t) {
+	t.plan(2);
+
+	var separator = ' ' + figures.pointerSmall + ' ';
+	var files = [
+		path.join(__dirname, 'fixture/generators.js')
+	];
+	var expected = [
+		['generator function'].join(separator)
+	];
+	var index;
+
+	var api = new Api(files);
+
+	api.run()
+		.then(function () {
+			// if all lines were removed from expected output
+			// actual output matches expected output
+			t.is(expected.length, 0);
+		});
+
+	api.on('test', function (a) {
+		index = expected.indexOf(a.title);
+
+		t.true(index >= 0);
+
+		// remove line from expected output
+		expected.splice(index, 1);
+	});
+});
+
+test('test title prefixes — single file (explicit)', function (t) {
+	t.plan(2);
+
+	var separator = ' ' + figures.pointerSmall + ' ';
+	var files = [
+		path.join(__dirname, 'fixture/generators.js')
+	];
+	var expected = [
+		['generators', 'generator function'].join(separator)
+	];
+	var index;
+
+	var api = new Api();
+
+	api.run(files)
 		.then(function () {
 			// if all lines were removed from expected output
 			// actual output matches expected output
@@ -296,7 +358,7 @@ test('absolute paths', function (t) {
 		});
 });
 
-test('search directories recursivly for files', function (t) {
+test('search directories recursively for files', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/subdir')]);
@@ -321,28 +383,30 @@ test('titles of both passing and failing tests and AssertionErrors are returned'
 		});
 });
 
-test('empty test files creates a failure with a helpful warning', function (t) {
+test('empty test files cause an AvaError to be emitted', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/empty.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /No tests found.*?import "ava"/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /No tests found.*?import "ava"/);
+	});
+
+	return api.run();
 });
 
-test('test file with no tests creates a failure with a helpful warning', function (t) {
+test('test file with no tests causes an AvaError to be emitted', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/no-tests.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /No tests/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /No tests/);
+	});
+
+	return api.run();
 });
 
 test('test file that immediately exits with 0 exit code ', function (t) {
@@ -350,23 +414,25 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 
 	var api = new Api([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /Test results were not received from/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Test results were not received from/);
+	});
+
+	return api.run();
 });
 
-test('testing nonexistent files rejects', function (t) {
+test('testing nonexistent files causes an AvaError to be emitted', function (t) {
 	t.plan(2);
 
 	var api = new Api([path.join(__dirname, 'fixture/broken.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /Couldn't find any files to test/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run();
 });
 
 test('test file in node_modules is ignored', function (t) {
@@ -374,11 +440,25 @@ test('test file in node_modules is ignored', function (t) {
 
 	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /Couldn't find any files to test/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run();
+});
+
+test('test file in node_modules is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
 });
 
 test('test file in fixtures is ignored', function (t) {
@@ -386,11 +466,25 @@ test('test file in fixtures is ignored', function (t) {
 
 	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /Couldn't find any files to test/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run();
+});
+
+test('test file in fixtures is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
 });
 
 test('test file in helpers is ignored', function (t) {
@@ -398,11 +492,25 @@ test('test file in helpers is ignored', function (t) {
 
 	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 
-	api.run()
-		.catch(function (err) {
-			t.ok(err);
-			t.match(err.message, /Couldn't find any files to test/);
-		});
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run();
+});
+
+test('test file in helpers is ignored (explicit)', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any files to test/);
+	});
+
+	return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 });
 
 test('Node.js-style --require CLI argument', function (t) {
@@ -487,4 +595,17 @@ test('test file with only skipped tests does not create a failure', function (t)
 			t.is(api.tests.length, 1);
 			t.true(api.tests[0].skip);
 		});
+});
+
+test('resets state before running', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.resolve('test/fixture/es2015.js')]);
+
+	api.run().then(function () {
+		t.is(api.passCount, 1);
+		return api.run();
+	}).then(function () {
+		t.is(api.passCount, 1);
+	});
 });

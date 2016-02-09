@@ -9,7 +9,7 @@ var figures = require('figures');
 var globby = require('globby');
 var chalk = require('chalk');
 var objectAssign = require('object-assign');
-var commondir = require('commondir');
+var commonPathPrefix = require('common-path-prefix');
 var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
@@ -27,6 +27,34 @@ function Api(files, options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
+
+	if (!files || files.length === 0) {
+		this.files = [
+			'test.js',
+			'test-*.js',
+			'test'
+		];
+	} else {
+		this.files = files;
+	}
+
+	this.excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
+
+	Object.keys(Api.prototype).forEach(function (key) {
+		this[key] = this[key].bind(this);
+	}, this);
+
+	this._reset();
+}
+
+util.inherits(Api, EventEmitter);
+module.exports = Api;
+
+Api.prototype._reset = function () {
 	this.rejectionCount = 0;
 	this.exceptionCount = 0;
 	this.passCount = 0;
@@ -37,16 +65,9 @@ function Api(files, options) {
 	this.errors = [];
 	this.stats = [];
 	this.tests = [];
-	this.files = files || [];
 	this.base = '';
-
-	Object.keys(Api.prototype).forEach(function (key) {
-		this[key] = this[key].bind(this);
-	}, this);
-}
-
-util.inherits(Api, EventEmitter);
-module.exports = Api;
+	this.explicitTitles = false;
+};
 
 Api.prototype._runFile = function (file) {
 	var options = objectAssign({}, this.options, {
@@ -119,7 +140,7 @@ Api.prototype._handleTest = function (test) {
 };
 
 Api.prototype._prefixTitle = function (file) {
-	if (this.fileCount === 1) {
+	if (this.fileCount === 1 && !this.explicitTitles) {
 		return '';
 	}
 
@@ -141,16 +162,23 @@ Api.prototype._prefixTitle = function (file) {
 	return prefix;
 };
 
-Api.prototype.run = function () {
+Api.prototype.run = function (files) {
 	var self = this;
 
-	return handlePaths(this.files)
+	this._reset();
+	this.explicitTitles = Boolean(files);
+	return handlePaths(files || this.files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
 		})
 		.then(function (files) {
 			if (files.length === 0) {
-				return Promise.reject(new AvaError('Couldn\'t find any files to test'));
+				self._handleExceptions({
+					exception: new AvaError('Couldn\'t find any files to test'),
+					file: undefined
+				});
+
+				return [];
 			}
 
 			var cacheEnabled = self.options.cacheEnabled !== false;
@@ -160,7 +188,7 @@ Api.prototype.run = function () {
 			self.options.cacheDir = cacheDir;
 			self.precompiler = new CachingPrecompiler(cacheDir);
 			self.fileCount = files.length;
-			self.base = path.relative('.', commondir('.', files)) + path.sep;
+			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
 			var tests = files.map(self._runFile);
 
@@ -182,7 +210,20 @@ Api.prototype.run = function () {
 							var method = self.options.serial ? 'mapSeries' : 'map';
 
 							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run();
+								return tests[index].run().catch(function (err) {
+									// The test failed catastrophically. Flag it up as an
+									// exception, then return an empty result. Other tests may
+									// continue to run.
+									self._handleExceptions({
+										exception: err,
+										file: file
+									});
+
+									return {
+										stats: {passCount: 0, skipCount: 0, failCount: 0},
+										tests: []
+									};
+								});
 							}));
 						}
 					}
@@ -210,26 +251,14 @@ Api.prototype.run = function () {
 		});
 };
 
-function handlePaths(files) {
-	if (files.length === 0) {
-		files = [
-			'test.js',
-			'test-*.js',
-			'test'
-		];
-	}
-
-	files.push('!**/node_modules/**');
-	files.push('!**/fixtures/**');
-	files.push('!**/helpers/**');
-
+function handlePaths(files, excludePatterns) {
 	// convert pinkie-promise to Bluebird promise
-	files = Promise.resolve(globby(files));
+	files = Promise.resolve(globby(files.concat(excludePatterns)));
 
 	return files
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '**', '*.js')]);
+				return handlePaths([path.join(file, '**', '*.js')], excludePatterns);
 			}
 
 			return file;

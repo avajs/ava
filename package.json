@@ -80,7 +80,7 @@
     "chalk": "^1.0.0",
     "cli-cursor": "^1.0.2",
     "co-with-promise": "^4.6.0",
-    "commondir": "^1.0.1",
+    "common-path-prefix": "^1.0.0",
     "convert-source-map": "^1.1.2",
     "core-assert": "^0.1.0",
     "debug": "^2.2.0",
@@ -90,6 +90,7 @@
     "find-cache-dir": "^0.1.1",
     "fn-name": "^2.0.0",
     "globby": "^4.0.0",
+    "ignore-by-default": "^1.0.0",
     "is-ci": "^1.0.7",
     "is-generator-fn": "^1.0.0",
     "is-observable": "^0.1.0",
@@ -99,6 +100,7 @@
     "max-timeout": "^1.0.0",
     "md5-hex": "^1.2.0",
     "meow": "^3.7.0",
+    "multimatch": "^2.1.0",
     "object-assign": "^4.0.1",
     "observable-to-promise": "^0.3.0",
     "option-chain": "^0.1.0",
@@ -125,16 +127,21 @@
     "get-stream": "^1.1.0",
     "git-branch": "^0.3.0",
     "inquirer": "^0.11.1",
+    "lolex": "^1.4.0",
     "mkdirp": "^0.5.1",
     "nyc": "^5.1.0",
     "pify": "^2.3.0",
+    "proxyquire": "^1.7.4",
     "rimraf": "^2.5.0",
     "signal-exit": "^2.1.2",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^1.0.0",
-    "tap": "^5.0.1",
+    "tap": "^5.4.2",
     "xo": "*",
     "zen-observable": "^0.1.6"
+  },
+  "optionalDependencies": {
+    "chokidar": "^1.4.2"
   },
   "xo": {
     "ignore": [
