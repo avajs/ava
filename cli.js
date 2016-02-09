@@ -93,11 +93,20 @@ if (cli.flags.init) {
 	return;
 }
 
+var additionalPaths = [];
+if (process.env.NODE_PATH) {
+	var osSplitChar = process.platform === 'win32' ? ';' : ':';
+	process.env.NODE_PATH.split(osSplitChar).forEach(function (additionalPath) {
+		additionalPaths.push(path.resolve(opts.projectRoot, additionalPath));
+	});
+}
+
 var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
-	cacheEnabled: cli.flags.cache !== false
+	cacheEnabled: cli.flags.cache !== false,
+	additionalPaths: additionalPaths
 });
 
 var logger = new Logger();
