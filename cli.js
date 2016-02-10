@@ -121,9 +121,23 @@ api.on('stderr', logger.stderr);
 
 var files = cli.input.length ? cli.input : arrify(conf.files);
 
+if (files.length === 0) {
+	files = [
+			'test.js',
+			'test-*.js',
+			'test'
+		];
+}
+
+var excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
+
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, arrify(cli.flags.source), process.stdin);
+		watcher.start(logger, api, files, excludePatterns, arrify(cli.flags.source), process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
