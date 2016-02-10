@@ -68,7 +68,7 @@ function exit() {
 }
 
 globals.setImmediate(function () {
-	var numberOfTests = runner.tests.concurrent.length + runner.tests.serial.length;
+	var numberOfTests = runner.tests.tests.concurrent.length + runner.tests.tests.serial.length;
 
 	if (numberOfTests === 0) {
 		send('no-tests', {avaRequired: true});
