@@ -20,7 +20,7 @@ test('chokidar is not installed', function (t) {
 	});
 
 	try {
-		subject.start({}, {files: [], excludePatterns: []}, []);
+		subject.start({}, {}, [], [], []);
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -74,12 +74,12 @@ test('chokidar is installed', function (_t) {
 
 		api.run.reset();
 		api.run.returns(new Promise(function () {}));
-		api.files = [
+		files = [
 			'test.js',
 			'test-*.js',
 			'test'
 		];
-		api.excludePatterns = [
+		excludePatterns = [
 			'!**/node_modules/**',
 			'!**/fixtures/**',
 			'!**/helpers/**'
@@ -92,7 +92,7 @@ test('chokidar is installed', function (_t) {
 	});
 
 	var start = function (sources) {
-		subject.start(logger, api, sources || [], stdin);
+		subject.start(logger, api, files, excludePatterns, sources || [], stdin);
 	};
 
 	var add = function (path) {
@@ -134,7 +134,7 @@ test('chokidar is installed', function (_t) {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.same(chokidar.watch.firstCall.args, [
-			['package.json', '**/*.js'].concat(api.files),
+			['package.json', '**/*.js'].concat(files),
 			{
 				ignored: defaultIgnore,
 				ignoreInitial: true
@@ -148,7 +148,7 @@ test('chokidar is installed', function (_t) {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.same(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(api.files),
+			['foo.js', 'baz.js'].concat(files),
 			{
 				ignored: ['bar.js', 'qux.js'],
 				ignoreInitial: true
