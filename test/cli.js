@@ -7,7 +7,7 @@ var getStream = require('get-stream');
 var arrify = require('arrify');
 var cliPath = path.join(__dirname, '../cli.js');
 
-function execCli(args, dirname, cb) {
+function execCli(args, dirname, env, cb) {
 	if (typeof dirname === 'function') {
 		cb = dirname;
 		dirname = __dirname;
@@ -15,10 +15,12 @@ function execCli(args, dirname, cb) {
 		dirname = path.join(__dirname, dirname);
 	}
 
-	var env = {
-		// This probably should be set only for the corresponding test
-		NODE_PATH: 'node-paths/modules;node-paths/deep/nested'
-	};
+	if (typeof env === 'function') {
+		cb = env;
+		env = {};
+	}
+
+	env = env || {};
 
 	if (process.env.AVA_APPVEYOR) {
 		env.AVA_APPVEYOR = 1;
@@ -115,8 +117,9 @@ test('pkg-conf: cli takes precedence', function (t) {
 });
 
 test('handles NODE_PATH', function (t) {
-	execCli('fixture/node-paths.js', function (err) {
+	execCli('fixture/node-paths.js', '', { NODE_PATH: 'node-paths/modules;node-paths/deep/nested' }, function (err, stdout, stderr) {
 		t.notOk(err);
 		t.end();
 	});
 });
+
