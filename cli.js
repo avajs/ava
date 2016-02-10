@@ -96,12 +96,11 @@ if (cli.flags.init) {
 
 var nodePaths;
 if (process.env.NODE_PATH) {
-    var osSplitChar = process.platform === 'win32' ? ';' : ':';
-    nodePaths = process.env.NODE_PATH.split(osSplitChar).map(function (p) {
-        return path.resolve(process.cwd(), p)
+    nodePaths = process.env.NODE_PATH.split(path.delimiter).map(function (p) {
+        return path.resolve(process.cwd(), p);
     });
 } else {
-    nodePaths = []
+    nodePaths = [];
 }
 
 var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
