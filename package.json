@@ -137,6 +137,7 @@
     "sinon": "^1.17.2",
     "source-map-fixtures": "^1.0.0",
     "tap": "^5.4.2",
+    "touch": "^1.0.0",
     "xo": "*",
     "zen-observable": "^0.1.6"
   },
