@@ -97,7 +97,7 @@ if (cli.flags.init) {
 var nodePaths;
 if (process.env.NODE_PATH) {
     nodePaths = process.env.NODE_PATH.split(path.delimiter).map(function (p) {
-        return path.resolve(process.cwd(), p);
+        return path.resolve(p);
     });
 } else {
     nodePaths = [];
