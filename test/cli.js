@@ -117,7 +117,9 @@ test('pkg-conf: cli takes precedence', function (t) {
 });
 
 test('handles NODE_PATH', function (t) {
-	execCli('fixture/node-paths.js', '', { NODE_PATH: 'node-paths/modules;node-paths/deep/nested' }, function (err, stdout, stderr) {
+	var separator = process.platform === 'win32' ? ';' : ':';
+	var nodePaths = 'node-paths/modules' + separator + 'node-paths/deep/nested';
+	execCli('fixture/node-paths.js', '', {NODE_PATH: nodePaths}, function (err) {
 		t.notOk(err);
 		t.end();
 	});
