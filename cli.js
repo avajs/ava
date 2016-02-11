@@ -129,15 +129,9 @@ if (files.length === 0) {
 		];
 }
 
-var excludePatterns = [
-		'!**/node_modules/**',
-		'!**/fixtures/**',
-		'!**/helpers/**'
-	];
-
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, files, excludePatterns, arrify(cli.flags.source), process.stdin);
+		watcher.start(logger, api, files, arrify(cli.flags.source), process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.

@@ -33,6 +33,12 @@ function Api(options) {
 	}, this);
 
 	this._reset();
+
+	this.excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
 }
 
 util.inherits(Api, EventEmitter);
