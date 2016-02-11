@@ -5,6 +5,7 @@ var test = require('tap').test;
 global.Promise = require('bluebird');
 var getStream = require('get-stream');
 var arrify = require('arrify');
+var touch = require('touch');
 var cliPath = path.join(__dirname, '../cli.js');
 
 function execCli(args, dirname, cb) {
@@ -21,11 +22,12 @@ function execCli(args, dirname, cb) {
 		env.AVA_APPVEYOR = 1;
 	}
 
+	var child;
 	var stdout;
 	var stderr;
 
 	var processPromise = new Promise(function (resolve) {
-		var child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(arrify(args)), {
+		child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(arrify(args)), {
 			cwd: dirname,
 			env: env,
 			stdio: [null, 'pipe', 'pipe']
@@ -49,6 +51,8 @@ function execCli(args, dirname, cb) {
 	Promise.all([processPromise, stdout, stderr]).then(function (args) {
 		cb.apply(null, args);
 	});
+
+	return child;
 }
 
 test('throwing a named function will report the to the console', function (t) {
@@ -108,5 +112,46 @@ test('pkg-conf: cli takes precedence', function (t) {
 	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], 'fixture/pkg-conf/precedence', function (err) {
 		t.ifError(err);
 		t.end();
+	});
+});
+
+test('watcher works', function (t) {
+	var killed = false;
+
+	var hasChokidar = false;
+	try {
+		require('chokidar');
+		hasChokidar = true;
+	} catch (err) {}
+
+	var child = execCli(['--verbose', '--watch', 'test.js'], 'fixture/watcher', function (err, stdout) {
+		if (err && err.code === 1 && !hasChokidar) {
+			t.comment('chokidar dependency is missing, cannot test watcher');
+			t.match(stdout, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
+			t.end();
+		} else {
+			t.ok(killed);
+			t.ifError(err);
+			t.end();
+		}
+	});
+
+	var buffer = '';
+	var passedFirst = false;
+	// Pause the stream before attaching the 'data' listener. execCli() uses
+	// get-stream which read()s from the stream. The test just needs to piggyback
+	// on that without switching the stream to flowing mode.
+	child.stderr.pause().on('data', function (str) {
+		buffer += str;
+		if (/1 test passed/.test(str)) {
+			if (!passedFirst) {
+				touch.sync(path.join(__dirname, 'fixture/watcher/test.js'));
+				buffer = '';
+				passedFirst = true;
+			} else if (!killed) {
+				child.kill();
+				killed = true;
+			}
+		}
 	});
 });
