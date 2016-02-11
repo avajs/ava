@@ -20,7 +20,7 @@ test('chokidar is not installed', function (t) {
 	});
 
 	try {
-		subject.start({}, {}, [], [], []);
+		subject.start({}, {}, [], []);
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -57,6 +57,7 @@ test('chokidar is installed', function (_t) {
 	var clock;
 	var emitter;
 	var stdin;
+	var files;
 	_t.beforeEach(function (done) {
 		if (clock) {
 			clock.uninstall();
@@ -79,11 +80,6 @@ test('chokidar is installed', function (_t) {
 			'test-*.js',
 			'test'
 		];
-		excludePatterns = [
-			'!**/node_modules/**',
-			'!**/fixtures/**',
-			'!**/helpers/**'
-		];
 
 		stdin = new PassThrough();
 		stdin.pause();
@@ -91,8 +87,14 @@ test('chokidar is installed', function (_t) {
 		done();
 	});
 
+	api.excludePatterns = [
+		'!**/node_modules/**',
+		'!**/fixtures/**',
+		'!**/helpers/**'
+	];
+
 	var start = function (sources) {
-		subject.start(logger, api, files, excludePatterns, sources || [], stdin);
+		subject.start(logger, api, files, sources || [], stdin);
 	};
 
 	var add = function (path) {
@@ -162,7 +164,7 @@ test('chokidar is installed', function (_t) {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.same(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(api.files),
+			['foo.js', 'baz.js'].concat(files),
 			{
 				ignored: defaultIgnore,
 				ignoreInitial: true
@@ -207,8 +209,8 @@ test('chokidar is installed', function (_t) {
 
 	[
 		{label: 'is added', fire: add},
-		{label: 'changes', fire: change},
-		{label: 'is removed', fire: unlink}
+		{label: 'changes', fire: change, event: 'change'},
+		{label: 'is removed', fire: unlink, event: 'unlink'}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
 			t.plan(6);
@@ -397,7 +399,7 @@ test('chokidar is installed', function (_t) {
 	test('determines whether changed files are tests based on the initial files patterns', function (t) {
 		t.plan(2);
 
-		api.files = ['foo-{bar,baz}.js'];
+		files = ['foo-{bar,baz}.js'];
 		api.run.returns(Promise.resolve());
 		start();
 
@@ -412,7 +414,7 @@ test('chokidar is installed', function (_t) {
 	test('initial exclude patterns override whether something is a test file', function (t) {
 		t.plan(2);
 
-		api.files = ['foo-{bar,baz}.js'];
+		files = ['foo-{bar,baz}.js'];
 		api.excludePatterns = ['!*bar*'];
 		api.run.returns(Promise.resolve());
 		start();
@@ -430,7 +432,7 @@ test('chokidar is installed', function (_t) {
 	test('test files must end in .js', function (t) {
 		t.plan(2);
 
-		api.files = ['foo.bar'];
+		files = ['foo.bar'];
 		api.run.returns(Promise.resolve());
 		start();
 
@@ -460,7 +462,7 @@ test('chokidar is installed', function (_t) {
 	test('files patterns may match directories', function (t) {
 		t.plan(2);
 
-		api.files = ['dir', 'dir2/*/dir3'];
+		files = ['dir', 'dir2/*/dir3'];
 		api.run.returns(Promise.resolve());
 		start();
 
@@ -475,7 +477,7 @@ test('chokidar is installed', function (_t) {
 	test('exclude patterns override directory matches', function (t) {
 		t.plan(2);
 
-		api.files = ['dir'];
+		files = ['dir'];
 		api.excludePatterns = ['!**/exclude/**'];
 		api.run.returns(Promise.resolve());
 		start();
