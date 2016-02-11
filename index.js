@@ -6,7 +6,6 @@ var beautifyStack = require('./lib/beautify-stack');
 var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
-var log = require('./lib/logger');
 
 // note that test files have require('ava')
 require('./lib/test-worker').avaRequired = true;
@@ -23,8 +22,8 @@ var isForked = typeof process.send === 'function';
 if (!isForked) {
 	var fp = path.relative('.', process.argv[1]);
 
-	log.write();
-	log.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
+	console.log();
+	console.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
 
 	process.exit(1);
 }
