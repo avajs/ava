@@ -94,21 +94,11 @@ if (cli.flags.init) {
 	return;
 }
 
-var nodePaths;
-if (process.env.NODE_PATH) {
-    nodePaths = process.env.NODE_PATH.split(path.delimiter).map(function (p) {
-        return path.resolve(p);
-    });
-} else {
-    nodePaths = [];
-}
-
 var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
-	cacheEnabled: cli.flags.cache !== false,
-	nodePaths: nodePaths
+	cacheEnabled: cli.flags.cache !== false
 });
 
 var logger = new Logger();

@@ -7,20 +7,18 @@ var getStream = require('get-stream');
 var arrify = require('arrify');
 var cliPath = path.join(__dirname, '../cli.js');
 
-function execCli(args, dirname, env, cb) {
-	if (typeof dirname === 'function') {
-		cb = dirname;
+function execCli(args, opts, cb) {
+	var dirname;
+	var env;
+
+	if (typeof opts === 'function') {
+		cb = opts;
 		dirname = __dirname;
-	} else {
-		dirname = path.join(__dirname, dirname);
-	}
-
-	if (typeof env === 'function') {
-		cb = env;
 		env = {};
+	} else {
+		dirname = path.join(__dirname, opts.dirname ? opts.dirname : '');
+		env = opts.env;
 	}
-
-	env = env || {};
 
 	if (process.env.AVA_APPVEYOR) {
 		env.AVA_APPVEYOR = 1;
@@ -96,21 +94,21 @@ test('log failed tests', function (t) {
 });
 
 test('pkg-conf: defaults', function (t) {
-	execCli([], 'fixture/pkg-conf/defaults', function (err) {
+	execCli([], {dirname:'fixture/pkg-conf/defaults'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
 });
 
 test('pkg-conf: pkg-overrides', function (t) {
-	execCli([], 'fixture/pkg-conf/pkg-overrides', function (err) {
+	execCli([], {dirname:'fixture/pkg-conf/pkg-overrides'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
 });
 
 test('pkg-conf: cli takes precedence', function (t) {
-	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], 'fixture/pkg-conf/precedence', function (err) {
+	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname:'fixture/pkg-conf/precedence'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
@@ -118,9 +116,8 @@ test('pkg-conf: cli takes precedence', function (t) {
 
 test('handles NODE_PATH', function (t) {
 	var nodePaths = 'node-paths/modules' + path.delimiter + 'node-paths/deep/nested';
-	execCli('fixture/node-paths.js', '', {NODE_PATH: nodePaths}, function (err) {
+	execCli('fixture/node-paths.js', {env:{NODE_PATH: nodePaths}}, function (err, stdout, stderr) {
 		t.notOk(err);
 		t.end();
 	});
 });
-
