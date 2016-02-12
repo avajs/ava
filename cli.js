@@ -17,7 +17,6 @@ if (debug.enabled) {
 	require('time-require');
 }
 
-var path = require('path');
 var updateNotifier = require('update-notifier');
 var figures = require('figures');
 var arrify = require('arrify');
