@@ -70,7 +70,7 @@ test('don\'t display test title if there is only one anonymous test', function (
 		title: '[anonymous]'
 	});
 
-	t.is(output, null);
+	t.is(output, undefined);
 	t.end();
 });
 
