@@ -2,7 +2,7 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master) [![Gitter](https://img.shields.io/badge/Gitter-Join_the_AVA_chat_%E2%86%92-00d06f.svg)](https://gitter.im/sindresorhus/ava)
+[![Build Status: Linux](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master) [![Gitter](https://badges.gitter.im/join chat.svg)](https://gitter.im/sindresorhus/ava)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
@@ -128,11 +128,11 @@ $ ava --help
   test.js test-*.js test/**/*.js
 ```
 
+*Note that the CLI will use your local install of AVA when available, even when run globally.*
+
 Directories are recursive by default. Directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
-
-*WARNING - Non-standard behavior:* The AVA CLI will always try to use your projects local install of AVA. This is true even when you run the global `ava` command. This non-standard behavior solves an important [issue](https://github.com/sindresorhus/ava/issues/157), and should have no impact on everyday use.
 
 ## Configuration
 
@@ -146,9 +146,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
       "!**/not-this-file.js"
     ],
     "failFast": true,
-    "serial": true,
     "tap": true,
-    "verbose": true,
     "require": [
       "babel-core/register"
     ]
@@ -200,7 +198,7 @@ test(function name(t) {
 
 ### Assertion plan
 
-An assertion plan can be used to ensure a specific number of assertions are made. In the most common scenario, it validates that the test didn't exit before executing the expected number of assertions. It also fails the test if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
+An assertion plan can be used to ensure a specific number of assertions are made. In the most common scenario, it validates that the test didn't exit before executing the expected number of assertions. It also fails the test if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops. Be aware that, unlike node-tap & tape, AVA does *not* auto-end a test when the planned assertion count is reached.
 
 This will result in a passed test:
 
@@ -214,47 +212,15 @@ test(t => {
 });
 
 test.cb(t => {
-	setTimeout(() => {
+	t.plan(1);
+
+	someAsyncFunction(() => {
 		t.pass();
 		t.end();
-	}, 100);
+	});
 });
 ```
 
-#### WARNING: Recent breaking change.
-
-AVA no longer supports automatically ending tests via `t.plan(...)`. This helps prevent false positives if you add assertions, but forget to increase your plan count.
-
-```js
-// This no longer works
-
-test('auto ending is dangerous', t => {
-	t.plan(2);
-
-	t.pass();
-	t.pass();
-
-	// auto-ending after reaching the planned two assertions will miss this final one
-	setTimeout(() => t.fail(), 10000);
-});
-```
-
-For this to work, you must now use "callback mode", and explicitly call `t.end()`.
-
-```js
-test.cb('explicitly end your tests', t => {
-	t.plan(2);
-
-	t.pass();
-	t.pass();
-
-	setTimeout(() => {
-		// This failure is now reliably caught.
-		t.fail();
-		t.end();
-	}, 1000);
-});
-```
 
 ### Serial-tests
 
@@ -737,17 +703,17 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [Twitter](https://twitter.com/ava__js)
 
 
-## Other
-
-- [AVA logo stickers](https://www.stickermule.com/user/1070705604/stickers)
-
-
 ## Related
 
 - [gulp-ava](https://github.com/sindresorhus/gulp-ava) - Run tests with gulp
 - [grunt-ava](https://github.com/sindresorhus/grunt-ava) - Run tests with grunt
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
+
+
+## Links
+
+- [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 
 
 ## Team
