@@ -98,21 +98,21 @@ test('log failed tests', function (t) {
 });
 
 test('pkg-conf: defaults', function (t) {
-	execCli([], {dirname:'fixture/pkg-conf/defaults'}, function (err) {
+	execCli([], {dirname: 'fixture/pkg-conf/defaults'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
 });
 
 test('pkg-conf: pkg-overrides', function (t) {
-	execCli([], {dirname:'fixture/pkg-conf/pkg-overrides'}, function (err) {
+	execCli([], {dirname: 'fixture/pkg-conf/pkg-overrides'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
 });
 
 test('pkg-conf: cli takes precedence', function (t) {
-	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname:'fixture/pkg-conf/precedence'}, function (err) {
+	execCli(['--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
@@ -127,7 +127,7 @@ test('watcher works', function (t) {
 		hasChokidar = true;
 	} catch (err) {}
 
-	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname:'fixture/watcher'}, function (err, stdout) {
+	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout) {
 		if (err && err.code === 1 && !hasChokidar) {
 			t.comment('chokidar dependency is missing, cannot test watcher');
 			t.match(stdout, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -161,7 +161,7 @@ test('watcher works', function (t) {
 
 test('handles NODE_PATH', function (t) {
 	var nodePaths = 'node-paths/modules' + path.delimiter + 'node-paths/deep/nested';
-	execCli('fixture/node-paths.js', {env:{NODE_PATH: nodePaths}}, function (err, stdout, stderr) {
+	execCli('fixture/node-paths.js', {env: {NODE_PATH: nodePaths}}, function (err) {
 		t.notOk(err);
 		t.end();
 	});
