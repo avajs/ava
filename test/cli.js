@@ -18,7 +18,7 @@ function execCli(args, opts, cb) {
 		env = {};
 	} else {
 		dirname = path.join(__dirname, opts.dirname ? opts.dirname : '');
-		env = opts.env;
+		env = opts.env || {};
 	}
 
 	if (process.env.AVA_APPVEYOR) {
