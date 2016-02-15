@@ -53,6 +53,7 @@ Api.prototype._reset = function () {
 	this.failCount = 0;
 	this.fileCount = 0;
 	this.testCount = 0;
+	this.hasExclusive = false;
 	this.errors = [];
 	this.stats = [];
 	this.tests = [];
@@ -103,6 +104,15 @@ Api.prototype._handleTeardown = function (data) {
 };
 
 Api.prototype._handleStats = function (stats) {
+	if (this.hasExclusive && !stats.hasExclusive) {
+		return;
+	}
+
+	if (!this.hasExclusive && stats.hasExclusive) {
+		this.hasExclusive = true;
+		this.testCount = 0;
+	}
+
 	this.testCount += stats.testCount;
 };
 
@@ -198,9 +208,12 @@ Api.prototype.run = function (files) {
 							self.emit('ready');
 
 							var method = self.options.serial ? 'mapSeries' : 'map';
+							var options = {
+								runOnlyExclusive: self.hasExclusive
+							};
 
 							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run().catch(function (err) {
+								return tests[index].run(options).catch(function (err) {
 									// The test failed catastrophically. Flag it up as an
 									// exception, then return an empty result. Other tests may
 									// continue to run.

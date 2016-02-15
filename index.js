@@ -70,6 +70,7 @@ function exit() {
 }
 
 globals.setImmediate(function () {
+	var hasExclusive = runner.tests.hasExclusive;
 	var numberOfTests = runner.tests.tests.concurrent.length + runner.tests.tests.serial.length;
 
 	if (numberOfTests === 0) {
@@ -78,13 +79,14 @@ globals.setImmediate(function () {
 	}
 
 	send('stats', {
-		testCount: numberOfTests
+		testCount: numberOfTests,
+		hasExclusive: hasExclusive
 	});
 
 	runner.on('test', test);
 
-	process.on('ava-run', function () {
-		runner.run().then(exit);
+	process.on('ava-run', function (options) {
+		runner.run(options).then(exit);
 	});
 });
 
