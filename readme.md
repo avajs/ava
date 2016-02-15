@@ -709,6 +709,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [grunt-ava](https://github.com/sindresorhus/grunt-ava) - Run tests with grunt
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
+- [eslint-plugin-ava](https://github.com/sindresorhus/eslint-plugin-ava) - Lint rules for AVA tests
 
 
 ## Links
