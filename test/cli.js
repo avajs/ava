@@ -160,10 +160,10 @@ test('watcher works', function (t) {
 });
 
 test('handles NODE_PATH', function (t) {
-	var nodePaths = 'node-paths/modules' + path.delimiter + 'node-paths/deep/nested';
+	var nodePaths = 'fixture/node-paths/modules' + path.delimiter + 'fixture/node-paths/deep/nested';
 
 	execCli('fixture/node-paths.js', {env: {NODE_PATH: nodePaths}}, function (err) {
-		t.ifError(err);
+		t.ifErr(err);
 		t.end();
 	});
 });
