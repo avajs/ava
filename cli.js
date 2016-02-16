@@ -97,7 +97,8 @@ var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
-	cacheEnabled: cli.flags.cache !== false
+	cacheEnabled: cli.flags.cache !== false,
+	explicitTitles: cli.flags.watch
 });
 
 var logger = new Logger();
