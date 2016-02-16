@@ -613,6 +613,13 @@ test('must be called with new', function (t) {
 	t.end();
 });
 
+test('needs at least one sequence item', function (t) {
+  t.throws(function () {
+    new Sequence();
+  }, {message: 'Sequence items can\'t be undefined'});
+  t.end();
+});
+
 test('sequences of sequences', function (t) {
 	var result = new Sequence([
 		new Sequence([pass('a'), pass('b')]),
