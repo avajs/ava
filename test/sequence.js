@@ -609,7 +609,7 @@ test('must be called with new', function (t) {
 	t.throws(function () {
 		var sequence = Sequence;
 		sequence([pass('a')]);
-	});
+	}, {message: 'Class constructor Sequence cannot be invoked without \'new\''});
 	t.end();
 });
 
