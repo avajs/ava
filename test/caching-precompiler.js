@@ -5,7 +5,6 @@ var test = require('tap').test;
 var uniqueTempDir = require('unique-temp-dir');
 
 var CachingPrecompiler = require('../lib/caching-precompiler');
-var createCachingPrecompiler = CachingPrecompiler;
 
 function fixture(name) {
 	return path.join(__dirname, 'fixture', name);
@@ -26,10 +25,11 @@ test('creation with new', function (t) {
 	t.end();
 });
 
-test('creation without new throws', function (t) {
+test('must be called with new', function (t) {
 	t.throws(function () {
-		createCachingPrecompiler(uniqueTempDir());
-	});
+		var cachingPrecompiler = CachingPrecompiler;
+		cachingPrecompiler(uniqueTempDir());
+	}, {message: 'Class constructor CachingPrecompiler cannot be invoked without \'new\''});
 	t.end();
 });
 

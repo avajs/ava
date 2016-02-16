@@ -17,6 +17,14 @@ ava.cb = function (title, fn, contextRef, report) {
 	return t;
 };
 
+test('must be called with new', function (t) {
+	t.throws(function () {
+		var test = Test;
+		test();
+	}, {message: 'Class constructor Test cannot be invoked without \'new\''});
+	t.end();
+});
+
 test('run test', function (t) {
 	var result = ava('foo', function (a) {
 		a.fail();

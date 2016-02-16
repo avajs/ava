@@ -1,4 +1,1 @@
-module.exports = function () {
-	return 'bar';
-};
-
+module.exports = 'bar';

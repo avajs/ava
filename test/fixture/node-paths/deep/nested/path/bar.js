@@ -1,4 +1,1 @@
-module.exports = function () {
-	return 'baz';
-};
-
+module.exports = 'baz';
