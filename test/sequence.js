@@ -609,7 +609,14 @@ test('must be called with new', function (t) {
 	t.throws(function () {
 		var sequence = Sequence;
 		sequence([pass('a')]);
-	});
+	}, {message: 'Class constructor Sequence cannot be invoked without \'new\''});
+	t.end();
+});
+
+test('needs at least one sequence item', function (t) {
+	t.throws(function () {
+		new Sequence().run();
+	}, {message: 'Sequence items can\'t be undefined'});
 	t.end();
 });
 

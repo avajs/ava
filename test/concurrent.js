@@ -610,9 +610,9 @@ test('rejections are just passed through - bail', function (t) {
 
 test('must be called with new', function (t) {
 	t.throws(function () {
-		var c = Concurrent;
-		c([pass('a')]);
-	});
+		var concurrent = Concurrent;
+		concurrent([pass('a')]);
+	}, {message: 'Class constructor Concurrent cannot be invoked without \'new\''});
 	t.end();
 });
 

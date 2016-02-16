@@ -6,6 +6,14 @@ var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
 
+test('must be called with new', function (t) {
+	t.throws(function () {
+		var api = Api;
+		api([path.join(__dirname, 'fixture/es2015.js')]);
+	}, {message: 'Class constructor Api cannot be invoked without \'new\''});
+	t.end();
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
