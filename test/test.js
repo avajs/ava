@@ -120,13 +120,26 @@ test('end can be used as callback without maintaining thisArg', function (t) {
 });
 
 test('end can be used as callback with error', function (t) {
+	var err = new Error('failed');
 	ava.cb(function (a) {
-		a.end(new Error('failed'));
+		a.end(err);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
-		t.true(result.reason instanceof Error);
-		// TODO: Question - why not just set the reason to the error?
-		t.match(result.reason.message, /Callback called with an error/);
+		t.is(result.reason, err);
+		t.end();
+	});
+});
+
+test('end can be used as callback with a non-error as its error argument', function (t) {
+	var nonError = {foo: 'bar'};
+	ava.cb(function (a) {
+		a.end(nonError);
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.ok(result.reason);
+		t.is(result.reason.name, 'AssertionError');
+		t.is(result.reason.actual, nonError);
+		t.is(result.reason.message, 'Callback called with an error: { foo: \'bar\' }');
 		t.end();
 	});
 });
