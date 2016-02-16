@@ -4,6 +4,14 @@ var Runner = require('../lib/runner');
 
 var noop = function () {};
 
+test('must be called with new', function (t) {
+	t.throws(function () {
+		var runner = Runner;
+		runner();
+	}, {message: 'Class constructor Runner cannot be invoked without \'new\''});
+	t.end();
+});
+
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
