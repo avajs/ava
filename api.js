@@ -28,17 +28,17 @@ function Api(options) {
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
 
-	Object.keys(Api.prototype).forEach(function (key) {
-		this[key] = this[key].bind(this);
-	}, this);
-
-	this._reset();
-
 	this.excludePatterns = [
 		'!**/node_modules/**',
 		'!**/fixtures/**',
 		'!**/helpers/**'
 	];
+
+	Object.keys(Api.prototype).forEach(function (key) {
+		this[key] = this[key].bind(this);
+	}, this);
+
+	this._reset();
 }
 
 util.inherits(Api, EventEmitter);
@@ -56,7 +56,6 @@ Api.prototype._reset = function () {
 	this.stats = [];
 	this.tests = [];
 	this.base = '';
-	this.options.explicitTitles = false;
 };
 
 Api.prototype._runFile = function (file) {
@@ -155,25 +154,8 @@ Api.prototype._prefixTitle = function (file) {
 Api.prototype.run = function (files) {
 	var self = this;
 
-	if (!files || files.length === 0) {
-		this.files = [
-			'test.js',
-			'test-*.js',
-			'test'
-		];
-	} else {
-		this.files = files;
-	}
-
-	this.excludePatterns = [
-		'!**/node_modules/**',
-		'!**/fixtures/**',
-		'!**/helpers/**'
-	];
-
 	this._reset();
-	this.options.explicitTitles = Boolean(files);
-	return handlePaths(this.files, this.excludePatterns)
+	return handlePaths(files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
 		})
