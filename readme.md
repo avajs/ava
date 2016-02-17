@@ -260,6 +260,7 @@ test.skip('will not be run', t => {
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
 used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
+If you need to setup some global state between tests using `test.beforeEach()` and `test.afterEach()` (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are run serially (using either [test.serial](#serial-tests) or [`--serial`](#cli)).
 
 
 ```js
