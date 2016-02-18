@@ -1,7 +1,7 @@
 'use strict';
 var test = require('tap').test;
 var Logger = require('../lib/logger');
-var Tap = require('../lib/reporters/tap');
+var tap = require('../lib/reporters/tap');
 
 test('must be called with new', function (t) {
 	t.throws(function () {
@@ -12,7 +12,7 @@ test('must be called with new', function (t) {
 });
 
 test('only call start if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.start = undefined;
 	logger.start();
@@ -20,7 +20,7 @@ test('only call start if supported by reporter', function (t) {
 });
 
 test('only write if start is supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.start = undefined;
 	logger.write = t.fail;
@@ -29,7 +29,7 @@ test('only write if start is supported by reporter', function (t) {
 });
 
 test('only call reset if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.reset = undefined;
 	logger.reset();
@@ -37,7 +37,7 @@ test('only call reset if supported by reporter', function (t) {
 });
 
 test('only write if reset is supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.reset = undefined;
 	logger.write = t.fail;
@@ -46,7 +46,7 @@ test('only write if reset is supported by reporter', function (t) {
 });
 
 test('writes the reporter reset result', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.reset = function () {
 		return 'test reset';
@@ -59,7 +59,7 @@ test('writes the reporter reset result', function (t) {
 });
 
 test('only call unhandledError if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.unhandledError = undefined;
 	logger.unhandledError();
@@ -67,7 +67,7 @@ test('only call unhandledError if supported by reporter', function (t) {
 });
 
 test('only write if unhandledError is supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.unhandledError = undefined;
 	logger.write = t.fail;
@@ -76,7 +76,7 @@ test('only write if unhandledError is supported by reporter', function (t) {
 });
 
 test('only call finish if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.finish = undefined;
 	logger.finish();
@@ -84,7 +84,7 @@ test('only call finish if supported by reporter', function (t) {
 });
 
 test('only write if finish is supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.finish = undefined;
 	logger.write = t.fail;
@@ -93,7 +93,7 @@ test('only write if finish is supported by reporter', function (t) {
 });
 
 test('only call write if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.write = undefined;
 	logger.write();
@@ -101,7 +101,7 @@ test('only call write if supported by reporter', function (t) {
 });
 
 test('only call stdout if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.stdout = undefined;
 	logger.stdout();
@@ -109,7 +109,7 @@ test('only call stdout if supported by reporter', function (t) {
 });
 
 test('don\'t alter data when calling stdout', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.stdout = function (data) {
 		t.equal(data, 'test data');
@@ -119,7 +119,7 @@ test('don\'t alter data when calling stdout', function (t) {
 });
 
 test('only call stderr if supported by reporter', function (t) {
-	var tapReporter = Tap();
+	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
 	tapReporter.stderr = undefined;
 	logger.stderr();

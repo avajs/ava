@@ -125,8 +125,6 @@ test('results with passing tests and rejections', function (t) {
 	reporter.passCount = 1;
 	reporter.rejectionCount = 1;
 
-
-
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
