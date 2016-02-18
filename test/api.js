@@ -6,38 +6,38 @@ var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
 
-// test('ES2015 support', function (t) {
-// 	t.plan(1);
+test('ES2015 support', function (t) {
+	t.plan(1);
 
-// 	var api = new Api();
+	var api = new Api();
 
-// 	api.run([path.join(__dirname, 'fixture/es2015.js')])
-// 		.then(function () {
-// 			t.is(api.passCount, 1);
-// 		});
-// });
+	api.run([path.join(__dirname, 'fixture/es2015.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
 
-// test('generators support', function (t) {
-// 	t.plan(1);
+test('generators support', function (t) {
+	t.plan(1);
 
-// 	var api = new Api();
+	var api = new Api();
 
-// 	api.run([path.join(__dirname, 'fixture/generators.js')])
-// 		.then(function () {
-// 			t.is(api.passCount, 1);
-// 		});
-// });
+	api.run([path.join(__dirname, 'fixture/generators.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
 
-// test('async/await support', function (t) {
-// 	t.plan(1);
+test('async/await support', function (t) {
+	t.plan(1);
 
-// 	var api = new Api();
+	var api = new Api();
 
-// 	api.run([path.join(__dirname, 'fixture/async-await.js')])
-// 		.then(function () {
-// 			t.is(api.passCount, 2);
-// 		});
-// });
+	api.run([path.join(__dirname, 'fixture/async-await.js')])
+		.then(function () {
+			t.is(api.passCount, 2);
+		});
+});
 
 test('test title prefixes — multiple files', function (t) {
 	t.plan(6);
