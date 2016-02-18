@@ -100,15 +100,17 @@ var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 	cacheEnabled: cli.flags.cache !== false
 });
 
-var logger;
+var reporter;
 
 if (cli.flags.tap) {
-	logger = new Logger(tapReporter(api));
+	reporter = tapReporter(api);
 } else if (cli.flags.verbose || isCi) {
-	logger = new Logger(verboseReporter(api));
+	reporter = verboseReporter(api);
 } else {
-	logger = new Logger(miniReporter(api));
+	reporter = miniReporter(api);
 }
+
+var logger = new Logger(reporter);
 
 logger.start();
 
