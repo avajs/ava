@@ -114,17 +114,18 @@ test('results with passing skipped tests', function (t) {
 });
 
 test('results with passing tests and rejections', function (t) {
-	var reporter = miniReporter();
-	reporter.passCount = 1;
-	reporter.rejectionCount = 1;
-
+	var reporter;
 	var err = new Error('failure');
 	err.type = 'rejection';
 	err.stack = beautifyStack(err.stack);
 
-	reporter.api = {
+	reporter = miniReporter({
 		errors: [err]
-	};
+	});
+	reporter.passCount = 1;
+	reporter.rejectionCount = 1;
+
+
 
 	var output = reporter.finish().split('\n');
 
@@ -139,10 +140,7 @@ test('results with passing tests and rejections', function (t) {
 });
 
 test('results with passing tests and exceptions', function (t) {
-	var reporter = miniReporter();
-	reporter.passCount = 1;
-	reporter.exceptionCount = 2;
-
+	var reporter;
 	var err = new Error('failure');
 	err.type = 'exception';
 	err.stack = beautifyStack(err.stack);
@@ -150,9 +148,11 @@ test('results with passing tests and exceptions', function (t) {
 	var avaErr = new AvaError('A futuristic test runner');
 	avaErr.type = 'exception';
 
-	reporter.api = {
+	reporter = miniReporter({
 		errors: [err, avaErr]
-	};
+	});
+	reporter.passCount = 1;
+	reporter.exceptionCount = 2;
 
 	var output = reporter.finish().split('\n');
 
@@ -169,18 +169,17 @@ test('results with passing tests and exceptions', function (t) {
 });
 
 test('results with errors', function (t) {
-	var reporter = miniReporter();
-	reporter.failCount = 1;
-
+	var reporter;
 	var err = new Error('failure');
 	err.stack = beautifyStack(err.stack);
 
-	reporter.api = {
+	reporter = miniReporter({
 		errors: [{
 			title: 'failed',
 			error: err
 		}]
-	};
+	});
+	reporter.failCount = 1;
 
 	var output = reporter.finish().split('\n');
 

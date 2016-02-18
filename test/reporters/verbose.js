@@ -6,11 +6,10 @@ var beautifyStack = require('../../lib/beautify-stack');
 var verboseReporter = require('../../lib/reporters/verbose');
 
 function createReporter() {
-	var reporter = verboseReporter();
-	reporter.api = {
+	var reporter = verboseReporter({
 		fileCount: 1,
 		testCount: 1
-	};
+	});
 
 	return reporter;
 }

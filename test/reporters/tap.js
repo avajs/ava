@@ -95,7 +95,6 @@ test('ava error', function (t) {
 });
 
 test('results', function (t) {
-	var reporter = tapReporter();
 	var api = {
 		passCount: 1,
 		failCount: 2,
@@ -103,8 +102,7 @@ test('results', function (t) {
 		rejectionCount: 3,
 		exceptionCount: 4
 	};
-
-	reporter.api = api;
+	var reporter = tapReporter(api);
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
@@ -122,7 +120,6 @@ test('results', function (t) {
 });
 
 test('results does not show skipped tests if there are none', function (t) {
-	var reporter = tapReporter();
 	var api = {
 		passCount: 1,
 		failCount: 2,
@@ -130,8 +127,7 @@ test('results does not show skipped tests if there are none', function (t) {
 		rejectionCount: 3,
 		exceptionCount: 4
 	};
-
-	reporter.api = api;
+	var reporter = tapReporter(api);
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
