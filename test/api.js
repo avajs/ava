@@ -183,8 +183,7 @@ test('fail-fast mode', function (t) {
 	t.plan(5);
 
 	var api = new Api({
-		failFast: true,
-		explicitTitles: true
+		failFast: true
 	});
 
 	var tests = [];
@@ -201,10 +200,10 @@ test('fail-fast mode', function (t) {
 			t.ok(api.options.failFast);
 			t.same(tests, [{
 				ok: true,
-				title: 'fail-fast › first pass'
+				title: 'first pass'
 			}, {
 				ok: false,
-				title: 'fail-fast › second fail'
+				title: 'second fail'
 			}]);
 			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
