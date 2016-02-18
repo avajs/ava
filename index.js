@@ -46,10 +46,13 @@ function test(props) {
 		return;
 	}
 
-	props.error = hasError ? serializeError(props.error) : {};
-
-	if (props.error.stack) {
-		props.error.stack = beautifyStack(props.error.stack);
+	if (hasError) {
+		props.error = serializeError(props.error);
+		if (props.error.stack) {
+			props.error.stack = beautifyStack(props.error.stack);
+		}
+	} else {
+		props.error = null;
 	}
 
 	send('test', props);
