@@ -77,6 +77,37 @@ test('test title prefixes — multiple files', function (t) {
 	});
 });
 
+test('test title prefixes — single file', function (t) {
+	t.plan(2);
+
+	var separator = ' ' + figures.pointerSmall + ' ';
+	var files = [
+		path.join(__dirname, 'fixture/generators.js')
+	];
+	var expected = [
+		['generator function'].join(separator)
+	];
+	var index;
+
+	var api = new Api();
+
+	api.run(files)
+		.then(function () {
+			// if all lines were removed from expected output
+			// actual output matches expected output
+			t.is(expected.length, 0);
+		});
+
+	api.on('test', function (a) {
+		index = expected.indexOf(a.title);
+
+		t.true(index >= 0);
+
+		// remove line from expected output
+		expected.splice(index, 1);
+	});
+});
+
 test('test title prefixes — single file (explicit)', function (t) {
 	t.plan(2);
 
