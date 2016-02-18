@@ -20,7 +20,7 @@ test('chokidar is not installed', function (t) {
 	});
 
 	try {
-		subject.start({}, {}, [], []);
+		subject.start({}, {excludePatterns: []}, [], []);
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -40,7 +40,12 @@ test('chokidar is installed', function (_t) {
 	};
 
 	var api = {
-		run: sinon.stub()
+		run: sinon.stub(),
+		excludePatterns: [
+			'!**/node_modules/**',
+			'!**/fixtures/**',
+			'!**/helpers/**'
+		]
 	};
 
 	var subject = proxyquire.noCallThru().load('../lib/watcher', {
