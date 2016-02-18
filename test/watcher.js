@@ -209,8 +209,8 @@ test('chokidar is installed', function (_t) {
 
 	[
 		{label: 'is added', fire: add},
-		{label: 'changes', fire: change, event: 'change'},
-		{label: 'is removed', fire: unlink, event: 'unlink'}
+		{label: 'changes', fire: change},
+		{label: 'is removed', fire: unlink}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
 			t.plan(6);
