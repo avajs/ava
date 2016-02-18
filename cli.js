@@ -103,13 +103,14 @@ var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
 var reporter;
 
 if (cli.flags.tap) {
-	reporter = tapReporter(api);
+	reporter = tapReporter();
 } else if (cli.flags.verbose || isCi) {
-	reporter = verboseReporter(api);
+	reporter = verboseReporter();
 } else {
-	reporter = miniReporter(api);
+	reporter = miniReporter();
 }
 
+reporter.api = api;
 var logger = new Logger(reporter);
 
 logger.start();
