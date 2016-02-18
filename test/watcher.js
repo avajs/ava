@@ -92,12 +92,6 @@ test('chokidar is installed', function (_t) {
 		done();
 	});
 
-	api.excludePatterns = [
-		'!**/node_modules/**',
-		'!**/fixtures/**',
-		'!**/helpers/**'
-	];
-
 	var start = function (sources) {
 		subject.start(logger, api, files, sources || [], stdin);
 	};
