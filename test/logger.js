@@ -49,6 +49,20 @@ test('only write if reset is supported by reporter', function (t) {
 	t.end();
 });
 
+test('writes the reporter reset result', function (t) {
+	var logger = new Logger();
+	var tapReporter = Tap();
+	tapReporter.reset = function () {
+		return 'test reset';
+	};
+	logger.use(tapReporter);
+	logger.write = function (str) {
+		t.equal(str, 'test reset');
+		t.end();
+	};
+	logger.reset();
+});
+
 test('only call unhandledError if supported by reporter', function (t) {
 	var logger = new Logger();
 	var tapReporter = Tap();
@@ -103,6 +117,17 @@ test('only call stdout if supported by reporter', function (t) {
 	logger.use(tapReporter);
 	logger.stdout();
 	t.end();
+});
+
+test('don\'t alter data when calling stdout', function (t) {
+	var logger = new Logger();
+	var tapReporter = Tap();
+	tapReporter.stdout = function (data) {
+		t.equal(data, 'test data');
+		t.end();
+	};
+	logger.use(tapReporter);
+	logger.stdout('test data');
 });
 
 test('only call stderr if supported by reporter', function (t) {
