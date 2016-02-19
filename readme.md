@@ -148,7 +148,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "failFast": true,
     "tap": true,
     "require": [
-      "babel-core/register"
+      "babel-register"
     ]
   }
 }
@@ -371,7 +371,7 @@ As a simple workaround, you can use [Babel's require hook](https://babeljs.io/do
 
 ```js
 import test from 'ava';
-import 'babel-core/register';
+import 'babel-register';
 import foo from './foo'; // <-- foo can be written in ES2015!
 
 test('foo bar', t => {
@@ -665,7 +665,7 @@ $ ava --serial
 
 You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#isolated-environment), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
 
-As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel/register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
+As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
 
 
 ## FAQ
