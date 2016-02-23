@@ -35,7 +35,7 @@ test('failing test', function (t) {
 			operator: '==',
 			expected: true,
 			actual: false,
-			stack: ['', '', '', ' at Test.fn (test.js:1:2)'].join('\n')
+			stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
 		}
 	});
 
@@ -60,7 +60,7 @@ test('unhandled error', function (t) {
 	var actualOutput = reporter.unhandledError({
 		message: 'unhandled',
 		name: 'TypeError',
-		stack: ['', ' at Test.fn (test.js:1:2)'].join('\n')
+		stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
 	});
 
 	var expectedOutput = [
