@@ -437,11 +437,10 @@ test('all async - begin failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'a'
-			/* ,
+			reason: 'a',
 			result: [
 				{passed: false, reason: 'a'}
-			]  */
+			]
 		});
 		t.end();
 	});
@@ -458,12 +457,11 @@ test('all async - mid failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'b'
-			/* ,
+			reason: 'b',
 			result: [
 				{passed: true, result: 'a'},
 				{passed: false, reason: 'b'}
-			] */
+			]
 		});
 		t.end();
 	});
@@ -480,13 +478,12 @@ test('all async - end failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'c'
-			/* ,
+			reason: 'c',
 			result: [
 				{passed: true, result: 'a'},
 				{passed: true, result: 'b'},
 				{passed: false, reason: 'c'}
-			] */
+			]
 		});
 		t.end();
 	});
