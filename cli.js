@@ -29,7 +29,7 @@ var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
-var watcher = require('./lib/watcher');
+var Watcher = require('./lib/watcher');
 var Api = require('./api');
 
 // Bluebird specific
@@ -133,7 +133,8 @@ if (files.length === 0) {
 
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, files, arrify(cli.flags.source), process.stdin);
+		var watcher = new Watcher(logger, api, files, arrify(cli.flags.source));
+		watcher.observeStdin(process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.

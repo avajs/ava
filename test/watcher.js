@@ -15,12 +15,12 @@ var setImmediate = require('../lib/globals').setImmediate;
 test('chokidar is not installed', function (t) {
 	t.plan(2);
 
-	var subject = proxyquire.noCallThru().load('../lib/watcher', {
+	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
 		chokidar: null
 	});
 
 	try {
-		subject.start({}, {excludePatterns: []}, [], []);
+		new Subject({}, {excludePatterns: []}, [], []); // eslint-disable-line
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
@@ -48,7 +48,7 @@ test('chokidar is installed', function (_t) {
 		]
 	};
 
-	var subject = proxyquire.noCallThru().load('../lib/watcher', {
+	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
 		chokidar: chokidar,
 		debug: function (name) {
 			return function () {
@@ -93,7 +93,7 @@ test('chokidar is installed', function (_t) {
 	});
 
 	var start = function (sources) {
-		subject.start(logger, api, files, sources || [], stdin);
+		return new Subject(logger, api, files, sources || []);
 	};
 
 	var add = function (path) {
@@ -221,14 +221,12 @@ test('chokidar is installed', function (_t) {
 				done = resolve;
 			}));
 
-			// reset isn't called in the initial run.
-			t.ok(logger.reset.notCalled);
-
 			variant.fire();
 			return debounce().then(function () {
+				t.ok(logger.reset.calledTwice);
 				t.ok(api.run.calledTwice);
 				// reset is called before the second run.
-				t.ok(logger.reset.calledBefore(api.run.secondCall));
+				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
 				// no explicit files are provided.
 				t.same(api.run.secondCall.args, [files]);
 
@@ -334,14 +332,12 @@ test('chokidar is installed', function (_t) {
 				done = resolve;
 			}));
 
-			// reset isn't called in the initial run.
-			t.ok(logger.reset.notCalled);
-
 			variant.fire('test.js');
 			return debounce().then(function () {
+				t.ok(logger.reset.calledTwice);
 				t.ok(api.run.calledTwice);
 				// reset is called before the second run.
-				t.ok(logger.reset.calledBefore(api.run.secondCall));
+				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
 				// the test.js file is provided
 				t.same(api.run.secondCall.args, [['test.js']]);
 
@@ -390,7 +386,7 @@ test('chokidar is installed', function (_t) {
 
 		unlink('test.js');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -493,7 +489,7 @@ test('chokidar is installed', function (_t) {
 	test('reruns initial tests when "rs" is entered on stdin', function (t) {
 		t.plan(2);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		stdin.write('rs\n');
 		return delay().then(function () {
@@ -509,7 +505,7 @@ test('chokidar is installed', function (_t) {
 	test('entering "rs" on stdin cancels any debouncing', function (t) {
 		t.plan(7);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		var before = clock.now;
 		var done;
@@ -581,11 +577,11 @@ test('chokidar is installed', function (_t) {
 	test('does nothing if anything other than "rs" is entered on stdin', function (t) {
 		t.plan(2);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		stdin.write('foo\n');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -597,7 +593,7 @@ test('chokidar is installed', function (_t) {
 
 		emitter.emit('all', 'foo');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
