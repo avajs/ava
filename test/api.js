@@ -292,8 +292,9 @@ test('uncaught exception will throw an error', function (t) {
 test('errors can occur without messages', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/error-without-message.js')]);
-	api.run()
+	var api = new Api();
+
+	api.run([path.join(__dirname, 'fixture/error-without-message.js')])
 		.then(function () {
 			t.is(api.failCount, 1);
 			t.is(api.errors.length, 1);
