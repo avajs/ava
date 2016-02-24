@@ -181,7 +181,7 @@ test('chokidar is installed', function (_t) {
 
 		start();
 		t.ok(api.run.calledOnce);
-		t.same(api.run.firstCall.args, []);
+		t.same(api.run.firstCall.args, [files]);
 
 		// finish is only called after the run promise fulfils.
 		t.ok(logger.finish.notCalled);
@@ -230,7 +230,7 @@ test('chokidar is installed', function (_t) {
 				// reset is called before the second run.
 				t.ok(logger.reset.calledBefore(api.run.secondCall));
 				// no explicit files are provided.
-				t.same(api.run.secondCall.args, []);
+				t.same(api.run.secondCall.args, [files]);
 
 				// finish is only called after the run promise fulfils.
 				t.ok(logger.finish.calledOnce);
@@ -379,7 +379,7 @@ test('chokidar is installed', function (_t) {
 		return debounce(2).then(function () {
 			t.ok(api.run.calledTwice);
 			// no explicit files are provided.
-			t.same(api.run.secondCall.args, []);
+			t.same(api.run.secondCall.args, [files]);
 		});
 	});
 
@@ -424,7 +424,7 @@ test('chokidar is installed', function (_t) {
 			t.ok(api.run.calledTwice);
 			// foo-bar.js is excluded from being a test file, thus the initial tests
 			// are run.
-			t.same(api.run.secondCall.args, []);
+			t.same(api.run.secondCall.args, [files]);
 		});
 	});
 
@@ -439,7 +439,7 @@ test('chokidar is installed', function (_t) {
 		return debounce(2).then(function () {
 			t.ok(api.run.calledTwice);
 			// foo.bar cannot be a test file, thus the initial tests are run.
-			t.same(api.run.secondCall.args, []);
+			t.same(api.run.secondCall.args, [files]);
 		});
 	});
 
@@ -454,7 +454,7 @@ test('chokidar is installed', function (_t) {
 		return debounce(2).then(function () {
 			t.ok(api.run.calledTwice);
 			// _foo.bar cannot be a test file, thus the initial tests are run.
-			t.same(api.run.secondCall.args, []);
+			t.same(api.run.secondCall.args, [files]);
 		});
 	});
 
@@ -486,7 +486,7 @@ test('chokidar is installed', function (_t) {
 			t.ok(api.run.calledTwice);
 			// dir/exclude/foo.js is excluded from being a test file, thus the initial
 			// tests are run.
-			t.same(api.run.secondCall.args, []);
+			t.same(api.run.secondCall.args, [files]);
 		});
 	});
 
