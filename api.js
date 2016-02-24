@@ -64,6 +64,7 @@ Api.prototype._runFile = function (file) {
 	});
 
 	return fork(file, options)
+		.on('teardown', this._handleTeardown)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -94,6 +95,10 @@ Api.prototype._handleExceptions = function (data) {
 	err.file = data.file;
 	this.emit('error', err);
 	this.errors.push(err);
+};
+
+Api.prototype._handleTeardown = function (data) {
+	this.emit('dependencies', data.file, data.dependencies);
 };
 
 Api.prototype._handleStats = function (stats) {
