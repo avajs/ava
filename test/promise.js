@@ -318,7 +318,7 @@ test('reject with non-Error', function (t) {
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
-		t.is(result.reason.message, 'Promise rejected with "failure"');
+		t.is(result.reason.message, 'Promise rejected with: \'failure\'');
 		t.end();
 	});
 });

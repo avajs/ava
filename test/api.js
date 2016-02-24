@@ -6,6 +6,14 @@ var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
 
+test('must be called with new', function (t) {
+	t.throws(function () {
+		var api = Api;
+		api([path.join(__dirname, 'fixture/es2015.js')]);
+	}, {message: 'Class constructor Api cannot be invoked without \'new\''});
+	t.end();
+});
+
 test('ES2015 support', function (t) {
 	t.plan(1);
 
@@ -278,6 +286,17 @@ test('uncaught exception will throw an error', function (t) {
 	api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
+		});
+});
+
+test('errors can occur without messages', function (t) {
+	t.plan(2);
+
+	var api = new Api([path.join(__dirname, 'fixture/error-without-message.js')]);
+	api.run()
+		.then(function () {
+			t.is(api.failCount, 1);
+			t.is(api.errors.length, 1);
 		});
 });
 

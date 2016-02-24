@@ -103,9 +103,7 @@ Api.prototype._handleStats = function (stats) {
 Api.prototype._handleTest = function (test) {
 	test.title = this._prefixTitle(test.file) + test.title;
 
-	var isError = test.error.message;
-
-	if (isError) {
+	if (test.error) {
 		if (test.error.powerAssertContext) {
 			var message = formatter(test.error.powerAssertContext);
 
@@ -121,8 +119,6 @@ Api.prototype._handleTest = function (test) {
 		}
 
 		this.errors.push(test);
-	} else {
-		test.error = null;
 	}
 
 	this.emit('test', test);

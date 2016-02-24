@@ -437,11 +437,10 @@ test('all async - begin failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'a'
-			/* ,
+			reason: 'a',
 			result: [
 				{passed: false, reason: 'a'}
-			]  */
+			]
 		});
 		t.end();
 	});
@@ -458,12 +457,11 @@ test('all async - mid failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'b'
-			/* ,
+			reason: 'b',
 			result: [
 				{passed: true, result: 'a'},
 				{passed: false, reason: 'b'}
-			] */
+			]
 		});
 		t.end();
 	});
@@ -480,13 +478,12 @@ test('all async - end failure - bail', function (t) {
 	).run().then(function (result) {
 		t.same(result, {
 			passed: false,
-			reason: 'c'
-			/* ,
+			reason: 'c',
 			result: [
 				{passed: true, result: 'a'},
 				{passed: true, result: 'b'},
 				{passed: false, reason: 'c'}
-			] */
+			]
 		});
 		t.end();
 	});
@@ -610,9 +607,9 @@ test('rejections are just passed through - bail', function (t) {
 
 test('must be called with new', function (t) {
 	t.throws(function () {
-		var c = Concurrent;
-		c([pass('a')]);
-	});
+		var concurrent = Concurrent;
+		concurrent([pass('a')]);
+	}, {message: 'Class constructor Concurrent cannot be invoked without \'new\''});
 	t.end();
 });
 

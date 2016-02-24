@@ -309,7 +309,7 @@ test('don\'t display hook title if it did not fail', function (t) {
 	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
 		.run()
 		.on('test', function (test) {
-			t.same(test.error, {});
+			t.same(test.error, null);
 			t.is(test.title, 'pass');
 		})
 		.then(function () {

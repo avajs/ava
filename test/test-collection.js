@@ -45,11 +45,11 @@ function serialize(collection) {
 	return ret;
 }
 
-test('requires new', function (t) {
-	var withoutNew = TestCollection;
+test('must be called with new', function (t) {
+	var testCollection = TestCollection;
 	t.throws(function () {
-		withoutNew();
-	});
+		testCollection();
+	}, {message: 'Class constructor TestCollection cannot be invoked without \'new\''});
 	t.end();
 });
 
