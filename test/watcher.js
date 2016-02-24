@@ -12,6 +12,27 @@ var test = require('tap').test;
 
 var setImmediate = require('../lib/globals').setImmediate;
 
+// Helper to make using beforeEach less arduous.
+function group(desc, fn) {
+	test(desc, function (t) {
+		var beforeEach = function (fn) {
+			t.beforeEach(function (done) {
+				fn();
+				done();
+			});
+		};
+
+		var pending = [];
+		var test = function (name, fn) {
+			pending.push(t.test(name, fn));
+		};
+
+		fn(beforeEach, test);
+
+		return Promise.all(pending);
+	});
+}
+
 test('chokidar is not installed', function (t) {
 	t.plan(2);
 
@@ -27,7 +48,7 @@ test('chokidar is not installed', function (t) {
 	}
 });
 
-test('chokidar is installed', function (_t) {
+group('chokidar is installed', function (beforeEach, test) {
 	var chokidar = {
 		watch: sinon.stub()
 	};
@@ -63,7 +84,7 @@ test('chokidar is installed', function (_t) {
 	var emitter;
 	var stdin;
 	var files;
-	_t.beforeEach(function (done) {
+	beforeEach(function () {
 		if (clock) {
 			clock.uninstall();
 		}
@@ -88,8 +109,6 @@ test('chokidar is installed', function (_t) {
 
 		stdin = new PassThrough();
 		stdin.pause();
-
-		done();
 	});
 
 	var start = function (sources) {
@@ -122,11 +141,6 @@ test('chokidar is installed', function (_t) {
 				return debounce(times - 1);
 			}
 		});
-	};
-
-	var pending = [];
-	var test = function (name, fn) {
-		pending.push(_t.test(name, fn));
 	};
 
 	test('watches for default source file changes, as well as test files', function (t) {
@@ -636,6 +650,4 @@ test('chokidar is installed', function (_t) {
 			}
 		});
 	});
-
-	return Promise.all(pending);
 });
