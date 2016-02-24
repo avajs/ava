@@ -89,3 +89,6 @@ globals.setImmediate(function () {
 });
 
 module.exports = runner.test;
+// TypeScript imports the `default` property for
+// an ES6 default import (`import test from 'ava'`)
+module.exports.default = runner.test;
