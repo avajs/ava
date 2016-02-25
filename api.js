@@ -187,7 +187,7 @@ Api.prototype.run = function (files) {
 				uniqueTempDir();
 
 			self.options.cacheDir = cacheDir;
-			self.precompiler = new CachingPrecompiler(cacheDir);
+			self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
 			self.fileCount = files.length;
 			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 

@@ -63,7 +63,7 @@ var opts = {
 	require: arrify(cli.flags.require),
 	tty: false,
 	cacheDir: cacheDir,
-	precompiled: new CachingPrecompiler(cacheDir).generateHashForFile(file)
+	precompiled: new CachingPrecompiler(cacheDir, conf.babel).generateHashForFile(file)
 };
 
 var events = new EventEmitter();
