@@ -620,21 +620,22 @@ test('emits dependencies for test files', function (t) {
 		require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
 	});
 
+	var testFiles = [
+		path.normalize('test/fixture/with-dependencies/no-tests.js'),
+		path.normalize('test/fixture/with-dependencies/test.js'),
+		path.normalize('test/fixture/with-dependencies/test-failure.js'),
+		path.normalize('test/fixture/with-dependencies/test-uncaught-exception.js')
+	];
+
+	var sourceFiles = [
+		path.resolve('test/fixture/with-dependencies/dep-1.js'),
+		path.resolve('test/fixture/with-dependencies/dep-2.js'),
+		path.resolve('test/fixture/with-dependencies/dep-3.custom')
+	];
+
 	api.on('dependencies', function (file, dependencies) {
-		t.notEqual([
-			'test/fixture/with-dependencies/no-tests.js',
-			'test/fixture/with-dependencies/test.js',
-			'test/fixture/with-dependencies/test-failure.js',
-			'test/fixture/with-dependencies/test-uncaught-exception.js'
-		].indexOf(file), -1);
-		t.same(
-			dependencies.slice(-3),
-			[
-				path.resolve('test/fixture/with-dependencies/dep-1.js'),
-				path.resolve('test/fixture/with-dependencies/dep-2.js'),
-				path.resolve('test/fixture/with-dependencies/dep-3.custom')
-			]
-		);
+		t.notEqual(testFiles.indexOf(file), -1);
+		t.same(dependencies.slice(-3), sourceFiles);
 	});
 
 	var result = api.run(['test/fixture/with-dependencies/*test*.js']);

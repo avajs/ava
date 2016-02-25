@@ -679,8 +679,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			}));
 
 			var watcher = start(sources);
-			emitDependencies('test/1.js', [path.resolve('dep-1.js'), path.resolve('dep-3.js')]);
-			emitDependencies('test/2.js', [path.resolve('dep-2.js'), path.resolve('dep-3.js')]);
+			emitDependencies(path.join('test', '1.js'), [path.resolve('dep-1.js'), path.resolve('dep-3.js')]);
+			emitDependencies(path.join('test', '2.js'), [path.resolve('dep-2.js'), path.resolve('dep-3.js')]);
 
 			done();
 			api.run.returns(new Promise(function () {}));
@@ -694,7 +694,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			change('dep-1.js');
 			return debounce().then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/1.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
 			});
 		});
 
@@ -714,10 +714,10 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			seed();
 
 			change('dep-1.js');
-			change('test/2.js');
+			change(path.join('test', '2.js'));
 			return debounce(2).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/2.js', 'test/1.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '2.js'), path.join('test', '1.js')]]);
 			});
 		});
 
@@ -725,11 +725,11 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(2);
 			seed();
 
-			change('test/1.js');
+			change(path.join('test', '1.js'));
 			change('dep-1.js');
 			return debounce(2).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/1.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
 			});
 		});
 
@@ -737,11 +737,11 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(2);
 			seed();
 
-			unlink('test/1.js');
+			unlink(path.join('test', '1.js'));
 			change('dep-3.js');
 			return debounce(2).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/2.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '2.js')]]);
 			});
 		});
 
@@ -749,11 +749,11 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(2);
 			seed();
 
-			emitDependencies('test/1.js', [path.resolve('dep-4.js')]);
+			emitDependencies(path.join('test', '1.js'), [path.resolve('dep-4.js')]);
 			change('dep-4.js');
 			return debounce().then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/1.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
 			});
 		});
 
@@ -788,16 +788,16 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(4);
 			seed();
 
-			emitDependencies('test/1.js', [path.resolve('package.json'), path.resolve('index.js'), path.resolve('lib/util.js')]);
-			emitDependencies('test/2.js', [path.resolve('foo.bar')]);
+			emitDependencies(path.join('test', '1.js'), [path.resolve('package.json'), path.resolve('index.js'), path.resolve('lib/util.js')]);
+			emitDependencies(path.join('test', '2.js'), [path.resolve('foo.bar')]);
 			change('package.json');
 			change('index.js');
-			change('lib/util.js');
+			change(path.join('lib', 'util.js'));
 
 			api.run.returns(Promise.resolve());
 			return debounce(3).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [['test/1.js']]);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
 
 				change('foo.bar');
 				return debounce();
@@ -831,7 +831,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 
 			// Ensure test/1.js also depends on the excluded files.
-			emitDependencies('test/1.js', excludedFiles.map(function (relPath) {
+			emitDependencies(path.join('test', '1.js'), excludedFiles.map(function (relPath) {
 				return path.resolve(relPath);
 			}).concat('dep-1.js'));
 
@@ -850,10 +850,10 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(2);
 			seed();
 
-			emitDependencies('test/1.js', [path.resolve('../outside.js')]);
+			emitDependencies(path.join('test', '1.js'), [path.resolve('../outside.js')]);
 			// Pretend Chokidar detected a change to verify (normally Chokidar would
 			// also be ignoring this file but hey).
-			change('../outside.js');
+			change(path.join('..', 'outside.js'));
 			return debounce().then(function () {
 				t.ok(api.run.calledTwice);
 				t.same(api.run.secondCall.args, [files]);
@@ -867,7 +867,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			change('dep-1.js');
 			return debounce().then(function () {
 				t.ok(debug.calledTwice);
-				t.same(debug.secondCall.args, ['ava:watcher', '%s is a dependency of %s', 'dep-1.js', 'test/1.js']);
+				t.same(debug.secondCall.args, ['ava:watcher', '%s is a dependency of %s', 'dep-1.js', path.join('test', '1.js')]);
 			});
 		});
 

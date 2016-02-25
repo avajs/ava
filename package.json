@@ -121,6 +121,7 @@
     "resolve-cwd": "^1.0.0",
     "serialize-error": "^1.1.0",
     "set-immediate-shim": "^1.0.1",
+    "slash": "^1.0.0",
     "source-map-support": "^0.4.0",
     "stack-utils": "^0.4.0",
     "strip-bom": "^2.0.0",
