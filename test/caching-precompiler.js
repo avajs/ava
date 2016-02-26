@@ -20,7 +20,7 @@ function endsWithMap(filename) {
 	return /\.js$/.test(filename);
 }
 
-test('before', t => {
+test('before', function (t) {
 	sinon.spy(babel, 'transform');
 	t.end();
 });
@@ -137,7 +137,7 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.end();
 });
 
-test('after', t => {
+test('after', function (t) {
 	babel.transform.restore();
 	t.end();
 });
