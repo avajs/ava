@@ -365,7 +365,7 @@ AVA comes with builtin support for ES2015 through [Babel 6](https://babeljs.io).
 
 ### TypeScript support
 
-AVA includes typings for TypeScript. You have to setup transpilation yourself. When you set `module` to `commonjs`, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use Promises and async functions.
+AVA includes typings for TypeScript. You have to setup transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use Promises and async functions.
 
 #### Transpiling Imported Modules
 
