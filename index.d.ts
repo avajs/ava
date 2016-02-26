@@ -131,7 +131,7 @@ export interface TestContext extends AssertContext {
 	 */
 	plan(count: number): void;
 
-	skip: TestContext;
+	skip: AssertContext;
 }
 export interface CallbackTestContext extends TestContext {
 	/**
