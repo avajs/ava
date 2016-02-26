@@ -93,11 +93,12 @@ if (cli.flags.init) {
 	return;
 }
 
-var api = new Api(cli.input.length ? cli.input : arrify(conf.files), {
+var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	require: arrify(cli.flags.require),
-	cacheEnabled: cli.flags.cache !== false
+	cacheEnabled: cli.flags.cache !== false,
+	explicitTitles: cli.flags.watch
 });
 
 var reporter;
@@ -121,9 +122,18 @@ api.on('error', logger.unhandledError);
 api.on('stdout', logger.stdout);
 api.on('stderr', logger.stderr);
 
+var files = cli.input.length ? cli.input : arrify(conf.files);
+if (files.length === 0) {
+	files = [
+			'test.js',
+			'test-*.js',
+			'test'
+		];
+}
+
 if (cli.flags.watch) {
 	try {
-		watcher.start(logger, api, arrify(cli.flags.source), process.stdin);
+		watcher.start(logger, api, files, arrify(cli.flags.source), process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
@@ -135,7 +145,7 @@ if (cli.flags.watch) {
 		}
 	}
 } else {
-	api.run()
+	api.run(files)
 		.then(function () {
 			logger.finish();
 			logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
