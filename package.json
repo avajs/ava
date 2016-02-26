@@ -38,7 +38,8 @@
   },
   "files": [
     "lib",
-    "*.js"
+    "*.js",
+    "index.d.ts"
   ],
   "keywords": [
     "test",
