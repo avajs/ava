@@ -34,7 +34,7 @@
   "files": [
     "lib",
     "*.js",
-	"index.d.ts"
+    "index.d.ts"
   ],
   "keywords": [
     "test",
