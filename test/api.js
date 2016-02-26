@@ -17,9 +17,9 @@ test('must be called with new', function (t) {
 test('ES2015 support', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.join(__dirname, 'fixture/es2015.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/es2015.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -28,9 +28,9 @@ test('ES2015 support', function (t) {
 test('generators support', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.join(__dirname, 'fixture/generators.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/generators.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -39,9 +39,9 @@ test('generators support', function (t) {
 test('async/await support', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.join(__dirname, 'fixture/async-await.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/async-await.js')])
 		.then(function () {
 			t.is(api.passCount, 2);
 		});
@@ -66,9 +66,9 @@ test('test title prefixes — multiple files', function (t) {
 	];
 	var index;
 
-	var api = new Api(files);
+	var api = new Api();
 
-	api.run()
+	api.run(files)
 		.then(function () {
 			// if all lines were removed from expected output
 			// actual output matches expected output
@@ -97,9 +97,9 @@ test('test title prefixes — single file', function (t) {
 	];
 	var index;
 
-	var api = new Api(files);
+	var api = new Api();
 
-	api.run()
+	api.run(files)
 		.then(function () {
 			// if all lines were removed from expected output
 			// actual output matches expected output
@@ -128,7 +128,9 @@ test('test title prefixes — single file (explicit)', function (t) {
 	];
 	var index;
 
-	var api = new Api();
+	var api = new Api({
+		explicitTitles: true
+	});
 
 	api.run(files)
 		.then(function () {
@@ -155,9 +157,9 @@ test('display filename prefixes for failed test stack traces', function (t) {
 		path.join(__dirname, 'fixture/one-pass-one-fail.js')
 	];
 
-	var api = new Api(files);
+	var api = new Api();
 
-	api.run()
+	api.run(files)
 		.then(function () {
 			t.is(api.passCount, 2);
 			t.is(api.failCount, 1);
@@ -175,9 +177,9 @@ test('display filename prefixes for failed test stack traces in subdirs', functi
 		path.join(__dirname, 'fixture/subdir/failing-subdir.js')
 	];
 
-	var api = new Api(files);
+	var api = new Api();
 
-	api.run()
+	api.run(files)
 		.then(function () {
 			t.is(api.passCount, 1);
 			t.is(api.failCount, 1);
@@ -188,7 +190,7 @@ test('display filename prefixes for failed test stack traces in subdirs', functi
 test('fail-fast mode', function (t) {
 	t.plan(5);
 
-	var api = new Api([path.join(__dirname, 'fixture/fail-fast.js')], {
+	var api = new Api({
 		failFast: true
 	});
 
@@ -201,7 +203,7 @@ test('fail-fast mode', function (t) {
 		});
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/fail-fast.js')])
 		.then(function () {
 			t.ok(api.options.failFast);
 			t.same(tests, [{
@@ -220,11 +222,11 @@ test('fail-fast mode', function (t) {
 test('serial execution mode', function (t) {
 	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/serial.js')], {
+	var api = new Api({
 		serial: true
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/serial.js')])
 		.then(function () {
 			t.ok(api.options.serial);
 			t.is(api.passCount, 3);
@@ -235,9 +237,9 @@ test('serial execution mode', function (t) {
 test('circular references on assertions do not break process.send', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
 		.then(function () {
 			t.is(api.failCount, 1);
 			t.match(api.errors[0].error.message, /'c'.*?'d'/);
@@ -247,9 +249,9 @@ test('circular references on assertions do not break process.send', function (t)
 test('change process.cwd() to a test\'s directory', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.join(__dirname, 'fixture/process-cwd.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/process-cwd.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -258,14 +260,14 @@ test('change process.cwd() to a test\'s directory', function (t) {
 test('unhandled promises will throw an error', function (t) {
 	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/loud-rejection.js')]);
+	var api = new Api();
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
 		t.match(data.message, /You can\'t handle this!/);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/loud-rejection.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -274,14 +276,14 @@ test('unhandled promises will throw an error', function (t) {
 test('uncaught exception will throw an error', function (t) {
 	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/uncaught-exception.js')]);
+	var api = new Api();
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
 		t.match(data.message, /Can\'t catch me!/);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -290,8 +292,9 @@ test('uncaught exception will throw an error', function (t) {
 test('errors can occur without messages', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/error-without-message.js')]);
-	api.run()
+	var api = new Api();
+
+	api.run([path.join(__dirname, 'fixture/error-without-message.js')])
 		.then(function () {
 			t.is(api.failCount, 1);
 			t.is(api.errors.length, 1);
@@ -301,7 +304,9 @@ test('errors can occur without messages', function (t) {
 test('stack traces for exceptions are corrected using a source map file', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')], {cacheEnabled: true});
+	var api = new Api({
+		cacheEnabled: true
+	});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -309,7 +314,7 @@ test('stack traces for exceptions are corrected using a source map file', functi
 		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/source-map-file.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -318,7 +323,9 @@ test('stack traces for exceptions are corrected using a source map file', functi
 test('stack traces for exceptions are corrected using a source map file (cache off)', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-file.js')], {cacheEnabled: false});
+	var api = new Api({
+		cacheEnabled: false
+	});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -326,7 +333,7 @@ test('stack traces for exceptions are corrected using a source map file (cache o
 		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/source-map-file.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -335,7 +342,9 @@ test('stack traces for exceptions are corrected using a source map file (cache o
 test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on)', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')], {cacheEnabled: true});
+	var api = new Api({
+		cacheEnabled: true
+	});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -343,7 +352,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -352,7 +361,9 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 test('stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off)', function (t) {
 	t.plan(4);
 
-	var api = new Api([path.join(__dirname, 'fixture/source-map-initial.js')], {cacheEnabled: false});
+	var api = new Api({
+		cacheEnabled: false
+	});
 
 	api.on('error', function (data) {
 		t.match(data.message, /Thrown by source-map-fixtures/);
@@ -360,7 +371,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
 	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -369,9 +380,9 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 test('absolute paths', function (t) {
 	t.plan(1);
 
-	var api = new Api([path.resolve('test/fixture/es2015.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.resolve('test/fixture/es2015.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -380,9 +391,9 @@ test('absolute paths', function (t) {
 test('search directories recursively for files', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/subdir')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/subdir')])
 		.then(function () {
 			t.is(api.passCount, 2);
 			t.is(api.failCount, 1);
@@ -392,9 +403,9 @@ test('search directories recursively for files', function (t) {
 test('titles of both passing and failing tests and AssertionErrors are returned', function (t) {
 	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/one-pass-one-fail.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
 		.then(function () {
 			t.match(api.errors[0].title, /this is a failing test/);
 			t.match(api.tests[0].title, /this is a passing test/);
@@ -405,69 +416,69 @@ test('titles of both passing and failing tests and AssertionErrors are returned'
 test('empty test files cause an AvaError to be emitted', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/empty.js')]);
+	var api = new Api();
 
 	api.on('error', function (err) {
 		t.is(err.name, 'AvaError');
 		t.match(err.message, /No tests found.*?import "ava"/);
 	});
 
-	return api.run();
+	return api.run([path.join(__dirname, 'fixture/empty.js')]);
 });
 
 test('test file with no tests causes an AvaError to be emitted', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/no-tests.js')]);
+	var api = new Api();
 
 	api.on('error', function (err) {
 		t.is(err.name, 'AvaError');
 		t.match(err.message, /No tests/);
 	});
 
-	return api.run();
+	return api.run([path.join(__dirname, 'fixture/no-tests.js')]);
 });
 
 test('test file that immediately exits with 0 exit code ', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
+	var api = new Api();
 
 	api.on('error', function (err) {
 		t.is(err.name, 'AvaError');
 		t.match(err.message, /Test results were not received from/);
 	});
 
-	return api.run();
+	return api.run([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
 });
 
 test('testing nonexistent files causes an AvaError to be emitted', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/broken.js')]);
+	var api = new Api();
 
 	api.on('error', function (err) {
 		t.is(err.name, 'AvaError');
 		t.match(err.message, /Couldn't find any files to test/);
 	});
 
-	return api.run();
+	return api.run([path.join(__dirname, 'fixture/broken.js')]);
 });
 
 test('test file in node_modules is ignored', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
+	var api = new Api();
 
 	api.on('error', function (err) {
 		t.is(err.name, 'AvaError');
 		t.match(err.message, /Couldn't find any files to test/);
 	});
 
-	return api.run();
+	return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
 });
 
-test('test file in node_modules is ignored (explicit)', function (t) {
+test('test file in node_modules is ignored', function (t) {
 	t.plan(2);
 
 	var api = new Api();
@@ -483,19 +494,6 @@ test('test file in node_modules is ignored (explicit)', function (t) {
 test('test file in fixtures is ignored', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
-
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
-	});
-
-	return api.run();
-});
-
-test('test file in fixtures is ignored (explicit)', function (t) {
-	t.plan(2);
-
 	var api = new Api();
 
 	api.on('error', function (err) {
@@ -507,19 +505,6 @@ test('test file in fixtures is ignored (explicit)', function (t) {
 });
 
 test('test file in helpers is ignored', function (t) {
-	t.plan(2);
-
-	var api = new Api([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
-
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
-	});
-
-	return api.run();
-});
-
-test('test file in helpers is ignored (explicit)', function (t) {
 	t.plan(2);
 
 	var api = new Api();
@@ -537,12 +522,11 @@ test('Node.js-style --require CLI argument', function (t) {
 
 	var requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
 
-	var api = new Api(
-		[path.join(__dirname, 'fixture/validate-installed-global.js')],
-		{require: [requirePath]}
-	);
+	var api = new Api({
+		require: [requirePath]
+	});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/validate-installed-global.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
 		});
@@ -551,9 +535,9 @@ test('Node.js-style --require CLI argument', function (t) {
 test('power-assert support', function (t) {
 	t.plan(3);
 
-	var api = new Api([path.join(__dirname, 'fixture/power-assert.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/power-assert.js')])
 		.then(function () {
 			t.ok(api.errors[0].error.powerAssertContext);
 
@@ -572,9 +556,9 @@ test('power-assert support', function (t) {
 test('caching is enabled by default', function (t) {
 	t.plan(3);
 	rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
-	var api = new Api([path.join(__dirname, 'fixture/caching/test.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/caching/test.js')])
 		.then(function () {
 			var files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
 			t.is(files.length, 2);
@@ -595,9 +579,9 @@ test('caching is enabled by default', function (t) {
 test('caching can be disabled', function (t) {
 	t.plan(1);
 	rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
-	var api = new Api([path.join(__dirname, 'fixture/caching/test.js')], {cacheEnabled: false});
+	var api = new Api({cacheEnabled: false});
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/caching/test.js')])
 		.then(function () {
 			t.false(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
 			t.end();
@@ -607,9 +591,9 @@ test('caching can be disabled', function (t) {
 test('test file with only skipped tests does not create a failure', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.join(__dirname, 'fixture/skip-only.js')]);
+	var api = new Api();
 
-	api.run()
+	api.run([path.join(__dirname, 'fixture/skip-only.js')])
 		.then(function () {
 			t.is(api.tests.length, 1);
 			t.true(api.tests[0].skip);
@@ -619,11 +603,11 @@ test('test file with only skipped tests does not create a failure', function (t)
 test('resets state before running', function (t) {
 	t.plan(2);
 
-	var api = new Api([path.resolve('test/fixture/es2015.js')]);
+	var api = new Api();
 
-	api.run().then(function () {
+	api.run([path.resolve('test/fixture/es2015.js')]).then(function () {
 		t.is(api.passCount, 1);
-		return api.run();
+		return api.run([path.resolve('test/fixture/es2015.js')]);
 	}).then(function () {
 		t.is(api.passCount, 1);
 	});
