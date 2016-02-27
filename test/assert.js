@@ -1,5 +1,6 @@
 'use strict';
 var test = require('tap').test;
+var Promise = require('bluebird');
 var assert = require('../lib/assert');
 
 test('.pass()', function (t) {
@@ -180,6 +181,26 @@ test('.throws()', function (t) {
 	});
 
 	t.end();
+});
+
+test('.throws() returns the thrown error', function (t) {
+	var expected = new Error();
+	var actual = assert.throws(function () {
+		throw expected;
+	});
+
+	t.is(actual, expected);
+
+	t.end();
+});
+
+test('.throws() returns the rejection reason of promise', function (t) {
+	var expected = new Error();
+
+	assert.throws(Promise.reject(expected)).then(function (actual) {
+		t.is(actual, expected);
+		t.end();
+	});
 });
 
 test('.notThrows()', function (t) {
