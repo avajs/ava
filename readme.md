@@ -724,6 +724,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
+- [Awesome list](https://github.com/sindresorhus/awesome-ava)
 
 
 ## Team
