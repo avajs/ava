@@ -3,7 +3,8 @@
 		"sindresorhus",
 		"kevva",
 		"vdemedes",
-		"jamestalmage"
+		"jamestalmage",
+		"novemberborn"
 	],
 	"fileBlacklist": [
 		"*.md"

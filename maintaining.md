@@ -1,6 +1,12 @@
 # Maintaining [![Dependency Status](https://david-dm.org/sindresorhus/ava.svg)](https://david-dm.org/sindresorhus/ava) [![devDependency Status](https://david-dm.org/sindresorhus/ava/dev-status.svg)](https://david-dm.org/sindresorhus/ava#info=devDependencies)
 
 
+## Conduct
+
+**Be kind to everyone.**
+Read and adhere to the [Code of Conduct](code-of-conduct.md).
+
+
 ## Testing
 
  - `npm test`: Lint the code and run the entire test suite with coverage.
@@ -21,8 +27,8 @@
 
 - New features should come with tests and documentation.
 - Ensure the [contributing guidelines](contributing.md) are followed.
-- At least two team members must `LGTM` a pull request before it's merged.
-- Squash commits when merging.
+- At least one team member must `LGTM` a pull request before it's merged.
+- Squash commits when merging. *[Example](https://github.com/sindresorhus/ava/commit/0675d3444da6958b54c7e5eada91034e516bc97c)*
 
 
 ## Profiling
@@ -96,3 +102,10 @@ $ node bench/run.js concurrent/sync.js -- --should-fail other/failures.js
 ```
 
 The above benchmarks two commands, but expects the second one to fail.
+
+
+## Onboarding new core members
+
+- Add the user to the `readme.md` and `package.json`.
+- Add the user as a collaborator to all AVA related repos and npm packages.
+- Share the Twitter account login info and that he user is free to tweet/retweet relevant stuff.

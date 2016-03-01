@@ -70,7 +70,7 @@ function exit() {
 }
 
 globals.setImmediate(function () {
-	var numberOfTests = runner.tests.concurrent.length + runner.tests.serial.length;
+	var numberOfTests = runner.tests.tests.concurrent.length + runner.tests.tests.serial.length;
 
 	if (numberOfTests === 0) {
 		send('no-tests', {avaRequired: true});
@@ -89,3 +89,7 @@ globals.setImmediate(function () {
 });
 
 module.exports = runner.test;
+// TypeScript imports the `default` property for
+// an ES2015 default import (`import test from 'ava'`)
+// See: https://github.com/Microsoft/TypeScript/issues/2242#issuecomment-83694181
+module.exports.default = runner.test;

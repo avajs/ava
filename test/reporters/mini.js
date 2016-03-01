@@ -189,8 +189,7 @@ test('results with errors', function (t) {
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. failed'));
 	t.match(output[4], /failure/);
-	t.match(output[5], /Error: failure/);
-	t.match(output[6], /test\/reporters\/mini\.js/);
+	t.match(output[5], /test\/reporters\/mini\.js/);
 	t.end();
 });
 

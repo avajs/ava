@@ -20,6 +20,11 @@
       "name": "James Talmage",
       "email": "james@talmage.io",
       "url": "github.com/jamestalmage"
+    },
+    {
+      "name": "Mark Wubben",
+      "email": "mark@novemberborn.net",
+      "url": "novemberborn.net"
     }
   ],
   "bin": "cli.js",
@@ -33,7 +38,8 @@
   },
   "files": [
     "lib",
-    "*.js"
+    "*.js",
+    "index.d.ts"
   ],
   "keywords": [
     "test",

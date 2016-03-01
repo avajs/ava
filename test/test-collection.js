@@ -24,25 +24,56 @@ function mockTest(opts, title) {
 }
 
 function titles(tests) {
+	if (!tests) {
+		tests = [];
+	}
+
 	return tests.map(function (test) {
 		return test.title;
 	});
 }
 
-function serialize(collection) {
-	var ret = {};
-	function addTitles(name, source) {
-		if (source[name] && source[name].length) {
-			ret[name] = titles(source[name]);
-		}
+function removeEmptyProps(obj) {
+	if (Array.isArray(obj) && obj.length === 0) {
+		return null;
 	}
-	addTitles('serial', collection);
-	addTitles('concurrent', collection);
-	addTitles('before', collection.tests);
-	addTitles('beforeEach', collection.tests);
-	addTitles('after', collection.tests);
-	addTitles('afterEach', collection.tests);
-	return ret;
+
+	if (obj.constructor !== Object) {
+		return obj;
+	}
+
+	var cleanObj = null;
+
+	Object.keys(obj).forEach(function (key) {
+		var value = removeEmptyProps(obj[key]);
+
+		if (value) {
+			if (!cleanObj) {
+				cleanObj = {};
+			}
+
+			cleanObj[key] = value;
+		}
+	});
+
+	return cleanObj;
+}
+
+function serialize(collection) {
+	var serialized = {
+		tests: {
+			concurrent: titles(collection.tests.concurrent),
+			serial: titles(collection.tests.serial)
+		},
+		hooks: {
+			before: titles(collection.hooks.before),
+			beforeEach: titles(collection.hooks.beforeEach),
+			after: titles(collection.hooks.after),
+			afterEach: titles(collection.hooks.afterEach)
+		}
+	};
+
+	return removeEmptyProps(serialized);
 }
 
 test('must be called with new', function (t) {
@@ -57,7 +88,7 @@ test('throws if no type is supplied', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add({title: 'someTitle', metadata: {}});
-	}, {message: 'test type must be specified'});
+	}, {message: 'Test type must be specified'});
 	t.end();
 });
 
@@ -65,7 +96,7 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add(mockTest({type: 'beforeEach', exclusive: true}));
-	}, {message: 'you can\'t use "only" with a beforeEach test'});
+	}, {message: '"only" cannot be used with a beforeEach test'});
 	t.end();
 });
 
@@ -80,42 +111,66 @@ test('hasExclusive is set when an exclusive test is added', function (t) {
 test('adding a concurrent test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({}, 'foo'));
-	t.same(serialize(collection), {concurrent: ['foo']});
+	t.same(serialize(collection), {
+		tests: {
+			concurrent: ['foo']
+		}
+	});
 	t.end();
 });
 
 test('adding a serial test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({serial: true}, 'bar'));
-	t.same(serialize(collection), {serial: ['bar']});
+	t.same(serialize(collection), {
+		tests: {
+			serial: ['bar']
+		}
+	});
 	t.end();
 });
 
 test('adding a before test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'before'}, 'baz'));
-	t.same(serialize(collection), {before: ['baz']});
+	t.same(serialize(collection), {
+		hooks: {
+			before: ['baz']
+		}
+	});
 	t.end();
 });
 
 test('adding a beforeEach test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'beforeEach'}, 'foo'));
-	t.same(serialize(collection), {beforeEach: ['foo']});
+	t.same(serialize(collection), {
+		hooks: {
+			beforeEach: ['foo']
+		}
+	});
 	t.end();
 });
 
 test('adding a after test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'after'}, 'bar'));
-	t.same(serialize(collection), {after: ['bar']});
+	t.same(serialize(collection), {
+		hooks: {
+			after: ['bar']
+		}
+	});
 	t.end();
 });
 
 test('adding a afterEach test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'afterEach'}, 'baz'));
-	t.same(serialize(collection), {afterEach: ['baz']});
+	t.same(serialize(collection), {
+		hooks: {
+			afterEach: ['baz']
+		}
+	});
 	t.end();
 });
 
@@ -127,9 +182,13 @@ test('adding a bunch of different types', function (t) {
 	collection.add(mockTest({serial: true}, 'd'));
 	collection.add(mockTest({type: 'before'}, 'e'));
 	t.same(serialize(collection), {
-		concurrent: ['a', 'b'],
-		serial: ['c', 'd'],
-		before: ['e']
+		tests: {
+			concurrent: ['a', 'b'],
+			serial: ['c', 'd']
+		},
+		hooks: {
+			before: ['e']
+		}
 	});
 	t.end();
 });
@@ -162,7 +221,7 @@ test('foo', function (t) {
 	add('after2', {type: 'after'});
 	add('before2', {type: 'before'});
 
-	var result = collection.buildPhases().run();
+	var result = collection.build().run();
 
 	t.is(result.passed, true);
 
@@ -217,7 +276,9 @@ test('foo', function (t) {
 	add('after2', {type: 'after'});
 	add('before2', {type: 'before'});
 
-	var result = collection.buildPhases(logger).run();
+	collection.on('test', logger);
+
+	var result = collection.build().run();
 
 	t.is(result.passed, true);
 
