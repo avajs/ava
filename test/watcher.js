@@ -12,22 +12,46 @@ var test = require('tap').test;
 
 var setImmediate = require('../lib/globals').setImmediate;
 
+// Helper to make using beforeEach less arduous.
+function makeGroup(test) {
+	return function group(desc, fn) {
+		test(desc, function (t) {
+			var beforeEach = function (fn) {
+				t.beforeEach(function (done) {
+					fn();
+					done();
+				});
+			};
+
+			var pending = [];
+			var test = function (name, fn) {
+				pending.push(t.test(name, fn));
+			};
+
+			fn(beforeEach, test, makeGroup(test));
+
+			return Promise.all(pending);
+		});
+	};
+}
+var group = makeGroup(test);
+
 test('chokidar is not installed', function (t) {
 	t.plan(2);
 
-	var subject = proxyquire.noCallThru().load('../lib/watcher', {
+	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
 		chokidar: null
 	});
 
 	try {
-		subject.start({}, {excludePatterns: []}, [], []);
+		new Subject({}, {excludePatterns: [], on: function () {}}, [], []); // eslint-disable-line
 	} catch (err) {
 		t.is(err.name, 'AvaError');
 		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
 	}
 });
 
-test('chokidar is installed', function (_t) {
+group('chokidar is installed', function (beforeEach, test, group) {
 	var chokidar = {
 		watch: sinon.stub()
 	};
@@ -40,15 +64,16 @@ test('chokidar is installed', function (_t) {
 	};
 
 	var api = {
-		run: sinon.stub(),
 		excludePatterns: [
 			'!**/node_modules/**',
 			'!**/fixtures/**',
 			'!**/helpers/**'
-		]
+		],
+		on: function () {},
+		run: sinon.stub()
 	};
 
-	var subject = proxyquire.noCallThru().load('../lib/watcher', {
+	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
 		chokidar: chokidar,
 		debug: function (name) {
 			return function () {
@@ -60,18 +85,18 @@ test('chokidar is installed', function (_t) {
 	});
 
 	var clock;
-	var emitter;
+	var chokidarEmitter;
 	var stdin;
 	var files;
-	_t.beforeEach(function (done) {
+	beforeEach(function () {
 		if (clock) {
 			clock.uninstall();
 		}
 		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
 
-		emitter = new EventEmitter();
+		chokidarEmitter = new EventEmitter();
 		chokidar.watch.reset();
-		chokidar.watch.returns(emitter);
+		chokidar.watch.returns(chokidarEmitter);
 
 		debug.reset();
 
@@ -88,22 +113,24 @@ test('chokidar is installed', function (_t) {
 
 		stdin = new PassThrough();
 		stdin.pause();
-
-		done();
 	});
 
 	var start = function (sources) {
-		subject.start(logger, api, files, sources || [], stdin);
+		return new Subject(logger, api, files, sources || []);
+	};
+
+	var emitChokidar = function (event, path) {
+		chokidarEmitter.emit('all', event, path);
 	};
 
 	var add = function (path) {
-		emitter.emit('all', 'add', path || 'source.js');
+		emitChokidar('add', path || 'source.js');
 	};
 	var change = function (path) {
-		emitter.emit('all', 'change', path || 'source.js');
+		emitChokidar('change', path || 'source.js');
 	};
 	var unlink = function (path) {
-		emitter.emit('all', 'unlink', path || 'source.js');
+		emitChokidar('unlink', path || 'source.js');
 	};
 
 	var delay = function () {
@@ -122,11 +149,6 @@ test('chokidar is installed', function (_t) {
 				return debounce(times - 1);
 			}
 		});
-	};
-
-	var pending = [];
-	var test = function (name, fn) {
-		pending.push(_t.test(name, fn));
 	};
 
 	test('watches for default source file changes, as well as test files', function (t) {
@@ -221,14 +243,12 @@ test('chokidar is installed', function (_t) {
 				done = resolve;
 			}));
 
-			// reset isn't called in the initial run.
-			t.ok(logger.reset.notCalled);
-
 			variant.fire();
 			return debounce().then(function () {
+				t.ok(logger.reset.calledTwice);
 				t.ok(api.run.calledTwice);
 				// reset is called before the second run.
-				t.ok(logger.reset.calledBefore(api.run.secondCall));
+				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
 				// no explicit files are provided.
 				t.same(api.run.secondCall.args, [files]);
 
@@ -334,14 +354,12 @@ test('chokidar is installed', function (_t) {
 				done = resolve;
 			}));
 
-			// reset isn't called in the initial run.
-			t.ok(logger.reset.notCalled);
-
 			variant.fire('test.js');
 			return debounce().then(function () {
+				t.ok(logger.reset.calledTwice);
 				t.ok(api.run.calledTwice);
 				// reset is called before the second run.
-				t.ok(logger.reset.calledBefore(api.run.secondCall));
+				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
 				// the test.js file is provided
 				t.same(api.run.secondCall.args, [['test.js']]);
 
@@ -390,7 +408,7 @@ test('chokidar is installed', function (_t) {
 
 		unlink('test.js');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -493,7 +511,7 @@ test('chokidar is installed', function (_t) {
 	test('reruns initial tests when "rs" is entered on stdin', function (t) {
 		t.plan(2);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		stdin.write('rs\n');
 		return delay().then(function () {
@@ -509,7 +527,7 @@ test('chokidar is installed', function (_t) {
 	test('entering "rs" on stdin cancels any debouncing', function (t) {
 		t.plan(7);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		var before = clock.now;
 		var done;
@@ -581,11 +599,11 @@ test('chokidar is installed', function (_t) {
 	test('does nothing if anything other than "rs" is entered on stdin', function (t) {
 		t.plan(2);
 		api.run.returns(Promise.resolve());
-		start();
+		start().observeStdin(stdin);
 
 		stdin.write('foo\n');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -595,9 +613,9 @@ test('chokidar is installed', function (_t) {
 		api.run.returns(Promise.resolve());
 		start();
 
-		emitter.emit('all', 'foo');
+		emitChokidar('foo');
 		return debounce().then(function () {
-			t.ok(logger.reset.notCalled);
+			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -641,5 +659,227 @@ test('chokidar is installed', function (_t) {
 		});
 	});
 
-	return Promise.all(pending);
+	group('tracks test dependencies', function (beforeEach, test) {
+		var apiEmitter;
+		beforeEach(function () {
+			apiEmitter = new EventEmitter();
+			api.on = function (event, fn) {
+				apiEmitter.on(event, fn);
+			};
+		});
+
+		var emitDependencies = function (file, dependencies) {
+			apiEmitter.emit('dependencies', file, dependencies);
+		};
+
+		var seed = function (sources) {
+			var done;
+			api.run.returns(new Promise(function (resolve) {
+				done = resolve;
+			}));
+
+			var watcher = start(sources);
+			emitDependencies(path.join('test', '1.js'), [path.resolve('dep-1.js'), path.resolve('dep-3.js')]);
+			emitDependencies(path.join('test', '2.js'), [path.resolve('dep-2.js'), path.resolve('dep-3.js')]);
+
+			done();
+			api.run.returns(new Promise(function () {}));
+			return watcher;
+		};
+
+		test('runs specific tests that depend on changed sources', function (t) {
+			t.plan(2);
+			seed();
+
+			change('dep-1.js');
+			return debounce().then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
+			});
+		});
+
+		test('reruns all tests if a source cannot be mapped to a particular test', function (t) {
+			t.plan(2);
+			seed();
+
+			change('cannot-be-mapped.js');
+			return debounce().then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [files]);
+			});
+		});
+
+		test('runs changed tests and tests that depend on changed sources', function (t) {
+			t.plan(2);
+			seed();
+
+			change('dep-1.js');
+			change(path.join('test', '2.js'));
+			return debounce(2).then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '2.js'), path.join('test', '1.js')]]);
+			});
+		});
+
+		test('avoids duplication when both a test and a source dependency change', function (t) {
+			t.plan(2);
+			seed();
+
+			change(path.join('test', '1.js'));
+			change('dep-1.js');
+			return debounce(2).then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
+			});
+		});
+
+		test('stops tracking unlinked tests', function (t) {
+			t.plan(2);
+			seed();
+
+			unlink(path.join('test', '1.js'));
+			change('dep-3.js');
+			return debounce(2).then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '2.js')]]);
+			});
+		});
+
+		test('updates test dependencies', function (t) {
+			t.plan(2);
+			seed();
+
+			emitDependencies(path.join('test', '1.js'), [path.resolve('dep-4.js')]);
+			change('dep-4.js');
+			return debounce().then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
+			});
+		});
+
+		[
+			{
+				desc: 'only tracks source dependencies',
+				sources: ['dep-1.js']
+			},
+			{
+				desc: 'exclusion patterns affect tracked source dependencies',
+				sources: ['!dep-2.js']
+			}
+		].forEach(function (variant) {
+			test(variant.desc, function (t) {
+				t.plan(2);
+				seed(variant.sources);
+
+				// dep-2.js isn't treated as a source and therefore it's not tracked as
+				// a dependency for test/2.js. Pretend Chokidar detected a change to
+				// verify (normally Chokidar would also be ignoring this file but hey).
+				change('dep-2.js');
+				return debounce().then(function () {
+					t.ok(api.run.calledTwice);
+					// Expect all tests to be rerun since dep-2.js is not a tracked
+					// dependency.
+					t.same(api.run.secondCall.args, [files]);
+				});
+			});
+		});
+
+		test('uses default patterns', function (t) {
+			t.plan(4);
+			seed();
+
+			emitDependencies(path.join('test', '1.js'), [path.resolve('package.json'), path.resolve('index.js'), path.resolve('lib/util.js')]);
+			emitDependencies(path.join('test', '2.js'), [path.resolve('foo.bar')]);
+			change('package.json');
+			change('index.js');
+			change(path.join('lib', 'util.js'));
+
+			api.run.returns(Promise.resolve());
+			return debounce(3).then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')]]);
+
+				change('foo.bar');
+				return debounce();
+			}).then(function () {
+				t.ok(api.run.calledThrice);
+				// Expect all tests to be rerun since foo.bar is not a tracked
+				// dependency.
+				t.same(api.run.thirdCall.args, [files]);
+			});
+		});
+
+		test('uses default exclusion patterns if no exclusion pattern is given', function (t) {
+			t.plan(2);
+
+			// Ensure each directory is treated as containing sources, but rely on
+			// the default exclusion patterns, also based on these directories, to
+			// exclude them again.
+			var sources = defaultIgnore.map(function (dir) {
+				return dir + '/**/*';
+			});
+			seed(sources);
+
+			// Synthesize an excluded file for each directory that's ignored by
+			// default. Apply deeper nesting for each file.
+			var excludedFiles = defaultIgnore.map(function (dir, index) {
+				var relPath = dir;
+				for (var i = index; i >= 0; i--) {
+					relPath = path.join(relPath, String(i));
+				}
+				return relPath;
+			});
+
+			// Ensure test/1.js also depends on the excluded files.
+			emitDependencies(path.join('test', '1.js'), excludedFiles.map(function (relPath) {
+				return path.resolve(relPath);
+			}).concat('dep-1.js'));
+
+			// Modify all excluded files.
+			excludedFiles.forEach(change);
+
+			return debounce(excludedFiles.length).then(function () {
+				t.ok(api.run.calledTwice);
+				// Since the excluded files are not tracked as a dependency, all tests
+				// are expected to be rerun.
+				t.same(api.run.secondCall.args, [files]);
+			});
+		});
+
+		test('ignores dependencies outside of the current working directory', function (t) {
+			t.plan(2);
+			seed();
+
+			emitDependencies(path.join('test', '1.js'), [path.resolve('../outside.js')]);
+			// Pretend Chokidar detected a change to verify (normally Chokidar would
+			// also be ignoring this file but hey).
+			change(path.join('..', 'outside.js'));
+			return debounce().then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [files]);
+			});
+		});
+
+		test('logs a debug message when a dependent test is found', function (t) {
+			t.plan(2);
+			seed();
+
+			change('dep-1.js');
+			return debounce().then(function () {
+				t.ok(debug.calledTwice);
+				t.same(debug.secondCall.args, ['ava:watcher', '%s is a dependency of %s', 'dep-1.js', path.join('test', '1.js')]);
+			});
+		});
+
+		test('logs a debug message when sources remain without dependent tests', function (t) {
+			t.plan(2);
+			seed();
+
+			change('cannot-be-mapped.js');
+			return debounce().then(function () {
+				t.ok(debug.calledTwice);
+				t.same(debug.secondCall.args, ['ava:watcher', 'Sources remain that cannot be traced to specific tests. Rerunning all tests']);
+			});
+		});
+	});
 });
