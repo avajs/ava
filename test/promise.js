@@ -210,28 +210,15 @@ test('throws with string argument will reject if message does not match', functi
 	});
 });
 
-test('handle throws with regex with string reject', function (t) {
-	ava(function (a) {
-		a.plan(1);
-
-		var promise = Promise.reject('abc');
-		return a.throws(promise, /abc/);
-	}).run().then(function (result) {
-		t.is(result.passed, true);
-		t.is(result.result.assertCount, 1);
-		t.end();
-	});
-});
-
-test('handle throws with string with string reject', function (t) {
+test('does not handle throws with string reject', function (t) {
 	ava(function (a) {
 		a.plan(1);
 
 		var promise = Promise.reject('abc');
 		return a.throws(promise, 'abc');
 	}).run().then(function (result) {
-		t.is(result.passed, true);
-		t.is(result.result.assertCount, 1);
+		t.is(result.passed, false);
+		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
