@@ -181,13 +181,7 @@ Api.prototype.run = function (files) {
 
 			return new Promise(function (resolve) {
 				tests.forEach(function (test) {
-					var counted = false;
-
 					function tryRun() {
-						if (counted) {
-							return;
-						}
-
 						if (++statsCount === self.fileCount) {
 							self.emit('ready');
 
