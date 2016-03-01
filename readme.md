@@ -383,8 +383,6 @@ test('foo bar', t => {
 });
 ```
 
-[#111](https://github.com/sindresorhus/ava/issues/111) is tracking this item as a potential enhancement.
-
 ### Promise support
 
 If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
