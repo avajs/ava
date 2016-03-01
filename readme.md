@@ -424,7 +424,9 @@ AVA comes with builtin support for ES2015 through [Babel 6](https://babeljs.io).
 
 AVA includes typings for TypeScript. You have to setup transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use Promises and async functions.
 
-If you want to customize the babel transpiler for test files, you can do so by adding a `"babel"` key to the `"ava"` section in your package.json file.
+### Babel Configuration for Test Scripts
+
+If you want to customize the babel transpiler for test files, you can do so by adding a `"babel"` key to the `ava` section in your `package.json` file.
 
 ```json
 {
@@ -440,7 +442,7 @@ If you want to customize the babel transpiler for test files, you can do so by a
 }
 ```
 
-In addition to specifying a custom babel config, you can also use the special `inherit` keyword. When you do this, AVA will allow tests to be transpiled using the configuration defined in your .babelrc file or in package.json/babel. This way, your test files will be transpiled using the same options as your source files, but you won't have to define the options twice.
+In addition to specifying a custom Babel config, you can also use the special `"inherit"` keyword. When you do this, AVA will allow tests to be transpiled using the configuration defined in your `.babelrc` file or in package.json/babel. This way, your test files will be transpiled using the same options as your source files, but you won't have to define the options twice.
 
 ```json
 {
@@ -457,7 +459,25 @@ In addition to specifying a custom babel config, you can also use the special `i
 }
 ```
 
-If you do not specify a "babel" key in your ava configuration, or if you set it to `"default"`, AVA will transpile the test files with AVA's default babel configuration.
+Note: When configuring Babel for tests manually, the espower and transform-runtime plugins will be
+added for you.
+
+## Default Babel Configuration for Test Scripts
+
+If you don't explicitly configure Babel for your tests using the `"babel"` key in package.json, your tests will be transpiled using AVA's default Babel configuration, which is as follows:
+
+```json
+{
+  "presets": [
+    "es2015",
+    "stage-0",
+  ],
+  "plugins": [
+    "espower",
+    "transform-runtime"
+  ]
+}
+```
 
 #### Transpiling Imported Modules
 

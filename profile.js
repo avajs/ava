@@ -20,7 +20,11 @@ globals.setTimeout = setTimeout.bind(null);
 globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
-var conf = pkgConf.sync('ava');
+var conf = pkgConf.sync('ava', {
+	defaults: {
+		babel: 'default'
+	}
+});
 
 // Define a minimal set of options from the main CLI.
 var cli = meow([
