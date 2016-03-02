@@ -3,8 +3,11 @@ export interface Observable {
 }
 
 export type Test = (t: TestContext) => Promise<void> | Iterator<any> | Observable | void;
+export type ContextualTest = (t: ContextualTestContext) => Promise<void> | Iterator<any> | Observable | void;
 export type SerialTest = (t: TestContext) => void;
+export type ContextualSerialTest = (t: ContextualTestContext) => void;
 export type CallbackTest = (t: CallbackTestContext) => void;
+export type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
 
 export interface Runner {
 	(name: string, run: Test): void;
@@ -12,38 +15,54 @@ export interface Runner {
 	skip: Runner;
 	cb: CallbackRunner;
 }
+export interface ContextualRunner {
+	(name: string, run: ContextualTest): void;
+	(run: ContextualTest): void;
+	skip: ContextualRunner;
+	cb: ContextualCallbackRunner;
+}
 export interface SerialRunner {
 	(name: string, run: SerialTest): void;
 	(run: SerialTest): void;
 	skip: SerialRunner;
+}
+export interface ContextualSerialRunner {
+	(name: string, run: ContextualSerialTest): void;
+	(run: ContextualSerialTest): void;
+	skip: ContextualSerialRunner;
 }
 export interface CallbackRunner {
 	(name: string, run: CallbackTest): void;
 	(run: CallbackTest): void;
 	skip: CallbackRunner;
 }
+export interface ContextualCallbackRunner {
+	(name: string, run: ContextualCallbackTest): void;
+	(run: ContextualCallbackTest): void;
+	skip: ContextualCallbackRunner;
+}
 
-export function test(name: string, run: Test): void;
-export function test(run: Test): void;
+export function test(name: string, run: ContextualTest): void;
+export function test(run: ContextualTest): void;
 export namespace test {
 	export const before: Runner;
 	export const after: Runner;
-	export const beforeEach: Runner;
-	export const afterEach: Runner;
+	export const beforeEach: ContextualRunner;
+	export const afterEach: ContextualRunner;
 
 	export const skip: typeof test;
 	export const only: typeof test;
 
-	export function serial(name: string, run: SerialTest): void;
-	export function serial(run: SerialTest): void;
-	export function cb(name: string, run: CallbackTest): void;
-	export function cb(run: CallbackTest): void;
+	export function serial(name: string, run: ContextualSerialTest): void;
+	export function serial(run: ContextualSerialTest): void;
+	export function cb(name: string, run: ContextualCallbackTest): void;
+	export function cb(run: ContextualCallbackTest): void;
 }
 export namespace test.serial {
 	export const before: SerialRunner;
 	export const after: SerialRunner;
-	export const beforeEach: SerialRunner;
-	export const afterEach: SerialRunner;
+	export const beforeEach: ContextualSerialRunner;
+	export const afterEach: ContextualSerialRunner;
 
 	export const skip: typeof test.serial;
 	export const only: typeof test.serial;
@@ -51,8 +70,8 @@ export namespace test.serial {
 export namespace test.cb {
 	export const before: CallbackRunner;
 	export const after: CallbackRunner;
-	export const beforeEach: CallbackRunner;
-	export const afterEach: CallbackRunner;
+	export const beforeEach: ContextualCallbackRunner;
+	export const afterEach: ContextualCallbackRunner;
 
 	export const skip: typeof test.cb;
 	export const only: typeof test.cb;
@@ -132,12 +151,16 @@ export interface TestContext extends AssertContext {
 	plan(count: number): void;
 
 	skip: AssertContext;
-
-	context: any;
 }
 export interface CallbackTestContext extends TestContext {
 	/**
 	 * End the test.
 	 */
 	end(): void;
+}
+export interface ContextualTestContext extends TestContext {
+	context: any;
+}
+export interface ContextualCallbackTestContext extends CallbackTestContext {
+	context: any;
 }
