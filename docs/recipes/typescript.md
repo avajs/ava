@@ -7,7 +7,7 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 First install the TypeScript compiler [tsc](https://github.com/Microsoft/TypeScript).
 
 ```
-$ npm install tsc --save-dev
+$ npm install --save-dev tsc
 ```
 
 Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig.json) file. This file specifies the compiler options required to compile the project or the test file.
@@ -39,7 +39,7 @@ Create a `test.ts` file.
 ```ts
 import test from 'ava';
 
-async function fn(): Promise<any> {
+async function fn() {
     return Promise.resolve('foo');
 }
 
