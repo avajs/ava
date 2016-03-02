@@ -562,7 +562,7 @@ Assert that `value` is not deep equal to `expected`.
 
 ### .throws(function|promise, [error, [message]])
 
-Assert that `function` throws an error or `promise` rejects.
+Assert that `function` throws an error, or `promise` rejects with an error.
 
 `error` can be a constructor, regex, error message or validation function.
 
