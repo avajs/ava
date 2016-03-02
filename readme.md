@@ -699,7 +699,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [Endpoint testing](docs/recipes/endpoint-testing.md)
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
-
+- [TypeScript](docs/recipes/typescript.md)
 
 ## Support
 
