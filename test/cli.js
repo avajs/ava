@@ -146,7 +146,7 @@ test('watcher works', function (t) {
 	// on that without switching the stream to flowing mode.
 	child.stderr.pause().on('data', function (str) {
 		buffer += str;
-		if (/1 test passed/.test(str)) {
+		if (/1 test passed/.test(buffer)) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, 'fixture/watcher/test.js'));
 				buffer = '';
