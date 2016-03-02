@@ -28,7 +28,7 @@ test('before', function (t) {
 		arr.push('b');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['a', 'b']);
 	});
 });
@@ -47,7 +47,7 @@ test('after', function (t) {
 		arr.push('a');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.passCount, 1);
 		t.is(runner.stats.failCount, 0);
 		t.same(arr, ['a', 'b']);
@@ -74,7 +74,7 @@ test('stop if before hooks failed', function (t) {
 		a.end();
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['a']);
 		t.end();
 	});
@@ -104,7 +104,7 @@ test('before each with concurrent tests', function (t) {
 		arr[1].push('d');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, [['a', 'b', 'c'], ['a', 'b', 'd']]);
 		t.end();
 	});
@@ -132,7 +132,7 @@ test('before each with serial tests', function (t) {
 		arr.push('d');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['a', 'b', 'c', 'a', 'b', 'd']);
 		t.end();
 	});
@@ -154,7 +154,7 @@ test('fail if beforeEach hook fails', function (t) {
 		a.pass();
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.failCount, 1);
 		t.same(arr, ['a']);
 		t.end();
@@ -185,7 +185,7 @@ test('after each with concurrent tests', function (t) {
 		arr[1].push('d');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, [['c', 'a', 'b'], ['d', 'a', 'b']]);
 		t.end();
 	});
@@ -213,7 +213,7 @@ test('after each with serial tests', function (t) {
 		arr.push('d');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
 		t.end();
 	});
@@ -245,7 +245,7 @@ test('ensure hooks run only around tests', function (t) {
 		arr.push('test');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
 		t.end();
 	});
@@ -278,7 +278,7 @@ test('shared context', function (t) {
 		a.same(a.context.arr, ['a', 'b', 'c']);
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.failCount, 0);
 		t.end();
 	});
@@ -297,7 +297,7 @@ test('shared context of any type', function (t) {
 		a.is(a.context, 'foo');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.failCount, 0);
 		t.end();
 	});
@@ -307,7 +307,7 @@ test('don\'t display hook title if it did not fail', function (t) {
 	t.plan(2);
 
 	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
-		.run()
+		.run({})
 		.on('test', function (test) {
 			t.same(test.error, null);
 			t.is(test.title, 'pass');
@@ -321,7 +321,7 @@ test('display hook title if it failed', function (t) {
 	t.plan(2);
 
 	fork(path.join(__dirname, 'fixture', 'hooks-failing.js'))
-		.run()
+		.run({})
 		.on('test', function (test) {
 			t.is(test.error.name, 'AssertionError');
 			t.is(test.title, 'fail for pass');

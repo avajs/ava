@@ -21,7 +21,7 @@ test('emits test event', function (t) {
 	t.plan(1);
 
 	fork(fixture('generators.js'))
-		.run()
+		.run({})
 		.on('test', function (tt) {
 			t.is(tt.title, 'generator function');
 			t.end();
@@ -34,7 +34,7 @@ test('resolves promise with tests info', function (t) {
 	var file = fixture('generators.js');
 
 	fork(file)
-		.run()
+		.run({})
 		.then(function (info) {
 			t.is(info.stats.passCount, 1);
 			t.is(info.tests.length, 1);
@@ -50,7 +50,7 @@ test('exit after tests are finished', function (t) {
 	var cleanupCompleted = false;
 
 	fork(fixture('long-running.js'))
-		.run()
+		.run({})
 		.on('exit', function () {
 			t.true(Date.now() - start < 10000, 'test waited for a pending setTimeout');
 			t.true(cleanupCompleted, 'cleanup did not complete');
@@ -62,7 +62,7 @@ test('exit after tests are finished', function (t) {
 
 test('fake timers do not break duration', function (t) {
 	fork(fixture('fake-timers.js'))
-		.run()
+		.run({})
 		.then(function (info) {
 			var duration = info.tests[0].duration;
 			t.true(duration < 1000, duration + ' < 1000');
@@ -75,7 +75,7 @@ test('fake timers do not break duration', function (t) {
 /*
 test('destructuring of `t` is allowed', function (t) {
 	fork(fixture('destructuring-public-api.js'))
-		.run()
+		.run({})
 		.then(function (info) {
 			t.is(info.stats.failCount, 0);
 			t.is(info.stats.passCount, 3);
@@ -86,7 +86,7 @@ test('destructuring of `t` is allowed', function (t) {
 
 test('babelrc is ignored', function (t) {
 	fork(fixture('babelrc/test.js'))
-	.run()
+	.run({})
 	.then(function (info) {
 		t.is(info.stats.passCount, 1);
 		t.end();

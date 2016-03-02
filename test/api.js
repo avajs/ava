@@ -600,6 +600,26 @@ test('test file with only skipped tests does not create a failure', function (t)
 		});
 });
 
+test('test file with exclusive tests causes non-exclusive tests in other files to be ignored', function (t) {
+	t.plan(4);
+
+	var files = [
+		path.join(__dirname, 'fixture/exclusive.js'),
+		path.join(__dirname, 'fixture/exclusive-nonexclusive.js'),
+		path.join(__dirname, 'fixture/one-pass-one-fail.js')
+	];
+
+	var api = new Api();
+
+	api.run(files)
+		.then(function () {
+			t.ok(api.hasExclusive);
+			t.is(api.testCount, 2);
+			t.is(api.passCount, 2);
+			t.is(api.failCount, 0);
+		});
+});
+
 test('resets state before running', function (t) {
 	t.plan(2);
 

@@ -26,7 +26,7 @@ test('runner emits a "test" event', function (t) {
 		t.end();
 	});
 
-	runner.run();
+	runner.run({});
 });
 
 test('run serial tests before concurrent ones', function (t) {
@@ -48,7 +48,7 @@ test('run serial tests before concurrent ones', function (t) {
 		a.end();
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(arr, ['a', 'b', 'c']);
 		t.end();
 	});
@@ -82,7 +82,7 @@ test('anything can be skipped', function (t) {
 	runner.serial(pusher('serial'));
 	runner.serial.skip(pusher('serial.skip'));
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
 		t.same(arr, [
 			'before',
@@ -122,7 +122,7 @@ test('include skipped tests in results', function (t) {
 		titles.push(test.title);
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(titles, [
 			'before',
 			'before.skip',
@@ -173,7 +173,7 @@ test('test types and titles', function (t) {
 		t.is(props.type, test.type);
 	});
 
-	runner.run().then(t.end);
+	runner.run({}).then(t.end);
 });
 
 test('skip test', function (t) {
@@ -190,7 +190,7 @@ test('skip test', function (t) {
 		arr.push('b');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.testCount, 2);
 		t.is(runner.stats.passCount, 1);
 		t.same(arr, ['a']);
@@ -212,10 +212,30 @@ test('only test', function (t) {
 		arr.push('b');
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.is(runner.stats.testCount, 1);
 		t.is(runner.stats.passCount, 1);
 		t.same(arr, ['b']);
+		t.end();
+	});
+});
+
+test('runOnlyExclusive option test', function (t) {
+	t.plan(4);
+
+	var runner = new Runner();
+	var options = {runOnlyExclusive: true};
+	var arr = [];
+
+	runner.test(function () {
+		arr.push('a');
+	});
+
+	runner.run(options).then(function () {
+		t.is(runner.stats.failCount, 0);
+		t.is(runner.stats.passCount, 0);
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.testCount, 0);
 		t.end();
 	});
 });
@@ -245,7 +265,7 @@ test('options.serial forces all tests to be serial', function (t) {
 		t.end();
 	});
 
-	runner.run();
+	runner.run({});
 });
 
 test('options.bail will bail out', function (t) {
@@ -262,7 +282,7 @@ test('options.bail will bail out', function (t) {
 		t.fail();
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.end();
 	});
 });
@@ -288,7 +308,7 @@ test('options.bail will bail out (async)', function (t) {
 		}, 300);
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(tests, [1]);
 		// With concurrent tests there is no stopping the second `setTimeout` callback from happening.
 		// See the `bail + serial` test below for comparison
@@ -320,7 +340,7 @@ test('options.bail + serial - tests will never happen (async)', function (t) {
 		}, 300);
 	});
 
-	runner.run().then(function () {
+	runner.run({}).then(function () {
 		t.same(tests, [1]);
 		setTimeout(function () {
 			t.same(tests, [1]);
