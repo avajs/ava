@@ -13,6 +13,7 @@ var commonPathPrefix = require('common-path-prefix');
 var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
+var slash = require('slash');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
@@ -64,6 +65,7 @@ Api.prototype._runFile = function (file) {
 	});
 
 	return fork(file, options)
+		.on('teardown', this._handleTeardown)
 		.on('stats', this._handleStats)
 		.on('test', this._handleTest)
 		.on('unhandledRejections', this._handleRejections)
@@ -94,6 +96,10 @@ Api.prototype._handleExceptions = function (data) {
 	err.file = data.file;
 	this.emit('error', err);
 	this.errors.push(err);
+};
+
+Api.prototype._handleTeardown = function (data) {
+	this.emit('dependencies', data.file, data.dependencies);
 };
 
 Api.prototype._handleStats = function (stats) {
@@ -242,10 +248,17 @@ function handlePaths(files, excludePatterns) {
 	return files
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
-				return handlePaths([path.join(file, '**', '*.js')], excludePatterns);
+				var pattern = path.join(file, '**', '*.js');
+				if (process.platform === 'win32') {
+					// Always use / in patterns, harmonizing matching across platforms.
+					pattern = slash(pattern);
+				}
+				return handlePaths([pattern], excludePatterns);
 			}
 
-			return file;
+			// globby returns slashes even on Windows. Normalize here so the file
+			// paths are consistently platform-accurate as tests are run.
+			return path.normalize(file);
 		})
 		.then(flatten)
 		.filter(function (file) {

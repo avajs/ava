@@ -612,3 +612,35 @@ test('resets state before running', function (t) {
 		t.is(api.passCount, 1);
 	});
 });
+
+test('emits dependencies for test files', function (t) {
+	t.plan(8);
+
+	var api = new Api({
+		require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
+	});
+
+	var testFiles = [
+		path.normalize('test/fixture/with-dependencies/no-tests.js'),
+		path.normalize('test/fixture/with-dependencies/test.js'),
+		path.normalize('test/fixture/with-dependencies/test-failure.js'),
+		path.normalize('test/fixture/with-dependencies/test-uncaught-exception.js')
+	];
+
+	var sourceFiles = [
+		path.resolve('test/fixture/with-dependencies/dep-1.js'),
+		path.resolve('test/fixture/with-dependencies/dep-2.js'),
+		path.resolve('test/fixture/with-dependencies/dep-3.custom')
+	];
+
+	api.on('dependencies', function (file, dependencies) {
+		t.notEqual(testFiles.indexOf(file), -1);
+		t.same(dependencies.slice(-3), sourceFiles);
+	});
+
+	var result = api.run(['test/fixture/with-dependencies/*test*.js']);
+
+	// The test files are designed to cause errors so ignore them here.
+	api.on('error', function () {});
+	result.catch(function () {});
+});
