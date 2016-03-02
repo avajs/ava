@@ -13,7 +13,8 @@ require('./lib/test-worker').avaRequired = true;
 var opts = globals.options;
 var runner = new Runner({
 	serial: opts.serial,
-	bail: opts.failFast
+	bail: opts.failFast,
+	match: opts.match
 });
 
 // check if the test is being run without AVA cli

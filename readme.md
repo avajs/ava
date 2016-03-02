@@ -115,6 +115,7 @@ $ ava --help
     --tap, -t        Generate TAP output
     --verbose, -v    Enable verbose output
     --no-cache       Disable the transpiler cache
+    --match, -m      Only run tests with matching title (Can be repeated)',
 
   Examples
     ava
@@ -134,6 +135,32 @@ Directories are recursive by default. Directories named `fixtures` and `helpers`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
+### The `--match` flag
+
+The `--match` flag allows you to run a subset of the tests in your suite that have a matching title. This is achieved with simple wildcard patterns. For more information, check out [sindresorhus/matcher](https://github.com/sindresorhus/matcher).
+
+```
+# match titles ending with 'foo'
+$ ava --match='*foo'
+
+# match titles starting with 'foo'
+$ ava --match='foo*'
+
+# match titles containing 'foo'
+$ ava --match='*foo*'
+
+# match titles not containing 'foo'
+$ ava --match='!*foo*'
+
+# match titles starting with 'foo' and ending with 'bar'
+$ ava --match='foo*bar'
+
+# match titles starting with 'foo' or ending with 'bar'
+$ ava --match='foo*' --match='*bar'
+```
+
+*Tests without a title will not run if* **any** *match pattern is supplied.*
+
 ## Configuration
 
 All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
@@ -144,6 +171,10 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "files": [
       "my-test-folder/*.js",
       "!**/not-this-file.js"
+    ],
+    "match": [
+      "*oo",
+      "!foo"
     ],
     "failFast": true,
     "tap": true,
