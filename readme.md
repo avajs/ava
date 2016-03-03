@@ -266,15 +266,19 @@ test(t => {
 }); // fails, the test ends synchronously before the assertion is executed
 ```
 
-### Serial-tests
+### Running tests serially
 
-While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
+By default tests are run concurrently, which is awesome. Sometimes though you have to write tests that cannot run concurrently.
+
+In these rare cases you can use the `.serial` modifier. It'll force those tests to run serially *before* the concurrent ones.
 
 ```js
 test.serial(t => {
 	t.pass();
 });
 ```
+
+Note that this only applies to tests within a particular test file. AVA will still run multiple tests files at the same time unless you pass the [`--serial` CLI flag](#cli).
 
 ### Only-tests
 
