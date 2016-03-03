@@ -62,13 +62,13 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 
 ```json
 {
-	"name": "awesome-package",
-	"scripts": {
-		"test": "ava"
-	},
-	"devDependencies": {
-		"ava": "^0.11.0"
-	}
+  "name": "awesome-package",
+  "scripts": {
+    "test": "ava"
+  },
+  "devDependencies": {
+    "ava": "^0.11.0"
+  }
 }
 ```
 
@@ -363,7 +363,7 @@ test.afterEach.cb(t => {
 });
 
 test.after(t => {
-   return new Promise(/* ... */);
+	 return new Promise(/* ... */);
 });
 ```
 
