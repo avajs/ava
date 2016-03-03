@@ -2,15 +2,24 @@
 var chalk = require('chalk');
 var test = require('tap').test;
 var AvaError = require('../../lib/ava-error');
-var miniReporter = require('../../lib/reporters/mini');
+var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
+
+function miniReporter() {
+	var reporter = _miniReporter();
+	reporter.start = function () {
+		return '';
+	};
+	return reporter;
+}
 
 process.stderr.setMaxListeners(50);
 
 test('start', function (t) {
-	var reporter = miniReporter();
+	var reporter = _miniReporter();
 
-	t.is(reporter.start(), '');
+	t.is(reporter.start(), '⠋');
+	reporter.clearInterval();
 	t.end();
 });
 
@@ -22,7 +31,7 @@ test('passing test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.green('passed'),
+		'⠋  ' + chalk.green('passed'),
 		'',
 		'  ' + chalk.green('1 passed')
 	].join('\n');
@@ -42,7 +51,7 @@ test('failing test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.red('failed'),
+		'⠋  ' + chalk.red('failed'),
 		'',
 		'  ' + chalk.red('1 failed')
 	].join('\n');
@@ -60,7 +69,7 @@ test('skipped test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.yellow('- skipped'),
+		'⠋  ' + chalk.yellow('- skipped'),
 		'',
 		''
 	].join('\n');
@@ -79,7 +88,7 @@ test('todo test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.blue('- todo'),
+		'⠋  ' + chalk.blue('- todo'),
 		'',
 		''
 	].join('\n');

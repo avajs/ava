@@ -88,6 +88,7 @@
     "caching-transform": "^1.0.0",
     "chalk": "^1.0.0",
     "cli-cursor": "^1.0.2",
+    "cli-spinners": "^0.1.2",
     "co-with-promise": "^4.6.0",
     "common-path-prefix": "^1.0.0",
     "convert-source-map": "^1.1.2",
