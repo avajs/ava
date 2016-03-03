@@ -537,19 +537,11 @@ If you don't explicitly configure Babel for your tests using the `"babel"` key i
 
 ### Transpiling imported modules
 
-AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you ```import``` from outside of the test.* While there are valid reasons for taking this approach, it may not be what you expect!
+AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
-As a simple workaround, you can use [Babel's require hook](https://babeljs.io/docs/usage/require/) in order to do on-the-fly transpiling of modules that are subsequently imported. Because AVA supports ES2015 module syntax, you can use it to import the require hook itself:
+If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. Run AVA with `--require babel-register` (see [CLI](#cli)) or [configure it in your `package.json`](#configuration).
 
-```js
-import test from 'ava';
-import 'babel-register';
-import foo from './foo'; // <-- foo can be written in ES2015!
-
-test('foo bar', t => {
-	t.same('baz', foo('bar'));
-});
-```
+You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
 
 ### Promise support
 
