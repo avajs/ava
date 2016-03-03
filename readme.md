@@ -12,7 +12,6 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/readme.md), [日本語](https://github.com/sindresorhus/ava-docs/blob/master/ja_JP/readme.md), [Português](https://github.com/sindresorhus/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/sindresorhus/ava-docs/blob/master/ru_RU/readme.md)
 
-
 ## Table of Contents
 
 - [Usage](#usage)
@@ -23,7 +22,6 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Assertions](#assertions)
 - [FAQ](#faq)
 - [Recipes](#recipes)
-
 
 ## Why AVA?
 
@@ -42,7 +40,6 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Optional TAP output](#optional-tap-output)
 - [Clean stack traces](#clean-stack-traces)
 
-
 ## Test syntax
 
 ```js
@@ -52,7 +49,6 @@ test(t => {
 	t.same([1, 2], [1, 2]);
 });
 ```
-
 
 ## Usage
 
@@ -97,7 +93,6 @@ test('bar', async t => {
 ```
 $ npm test
 ```
-
 
 ## CLI
 
@@ -227,7 +222,6 @@ test.cb(t => {
 });
 ```
 
-
 ### Serial-tests
 
 While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
@@ -319,7 +313,6 @@ When setup and/or teardown is required, you can use `test.before()` and `test.af
 used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
 
 If you need to set up some global state between tests using `test.beforeEach()` and `test.afterEach()` (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are run serially (using either [test.serial](#serial-tests) or [`--serial`](#cli)).
-
 
 ```js
 test.before(t => {
@@ -575,13 +568,11 @@ $ ava --tap | tap-nyan
 
 <img src="media/tap-output.png" width="398">
 
-
 ### Clean stack traces
 
 AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
 
 <img src="media/stack-traces.png" width="300">
-
 
 ## API
 
@@ -619,7 +610,6 @@ Plan how many assertion there are in the test. The test will fail if the actual 
 ###### .end()
 
 End the test. Only works with `test.cb()`.
-
 
 ## Assertions
 
@@ -758,11 +748,9 @@ All the assert methods are enhanced.
 
 Have fun!
 
-
 ## Isolated environment
 
 Each test file is run in a separate Node.js process. This comes with a lot of benefits. Different test files can no longer affect each other. Like test files mocking with the global environment, overriding builtins, etc. However, it's mainly done for performance reasons. Even though Node.js can run async IO concurrently, that doesn't help much when tests are heavy on synchronous operations, which blocks the main thread. By running tests concurrently and test files in parallel we take full advantage of modern systems.
-
 
 ## Tips
 
@@ -783,7 +771,6 @@ $ ava --serial
 You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#isolated-environment), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
 
 As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
-
 
 ## FAQ
 
@@ -807,7 +794,6 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 [Concurrency is not parallelism. It enables parallelism.](http://stackoverflow.com/q/1050222)
 
-
 ## Recipes
 
 - [Code coverage](docs/recipes/code-coverage.md)
@@ -822,7 +808,6 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [Gitter chat](https://gitter.im/sindresorhus/ava)
 - [Twitter](https://twitter.com/ava__js)
 
-
 ## Related
 
 - [sublime-ava](https://github.com/sindresorhus/sublime-ava) - Snippets for AVA tests
@@ -834,12 +819,10 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
-
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 - [Awesome list](https://github.com/sindresorhus/awesome-ava)
-
 
 ## Team
 
@@ -850,8 +833,6 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 ### Former
 
 - [Kevin Mårtensson](https://github.com/kevva)
-
-
 
 <div align="center">
 	<br>
