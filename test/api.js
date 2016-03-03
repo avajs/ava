@@ -664,3 +664,22 @@ test('emits dependencies for test files', function (t) {
 	api.on('error', function () {});
 	result.catch(function () {});
 });
+
+test('verify test count', function (t) {
+	t.plan(8);
+
+	var api = new Api();
+
+	t.is(api.passCount, 0);
+	t.is(api.failCount, 0);
+	t.is(api.skipCount, 0);
+	t.is(api.todoCount, 0);
+
+	api.run([path.join(__dirname, 'fixture/test-count.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+			t.is(api.failCount, 1);
+			t.is(api.skipCount, 1);
+			t.is(api.todoCount, 1);
+		});
+});
