@@ -187,19 +187,21 @@ You must define all tests synchronously. They can't be defined inside `setTimeou
 
 Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
 
-### Test anatomy
+### Creating tests
 
-To create a test, you call the `test` function you `require`d from AVA and pass in an optional test name and a function containing the test execution. The passed function is given the context as the first argument, where you can call the different AVA methods and [assertions](#assertions).
+To create a test you call the `test` function you imported from AVA. Provide the optional title and callback function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
 
 ```js
-test('name', t => {
+import test from 'ava';
+
+test('my passing test', t => {
 	t.pass();
 });
 ```
 
-### Optional test name
+#### Titles
 
-Naming a test is optional, but you're recommended to use one if you have more than one test.
+Titles are optional, meaning you can do:
 
 ```js
 test(t => {
@@ -207,7 +209,9 @@ test(t => {
 });
 ```
 
-You can also choose to use a named function instead:
+It's recommended to provide test titles if you have more than one test.
+
+If you haven't provided a test title, but the callback is a named function, that name will be used as the test title:
 
 ```js
 test(function name(t) {
@@ -328,7 +332,7 @@ test.todo('will think about writing this later');
 ### Before & after hooks
 
 When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
+used in the same manner as `test()`. The callback function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
 
 If you need to set up some global state between tests using `test.beforeEach()` and `test.afterEach()` (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are run serially (using either [test.serial](#serial-tests) or [`--serial`](#cli)).
 
@@ -407,7 +411,7 @@ test(t => {
 You can chain test modifiers together in the following ways:
 
 ```js
-test.before.skip([title], testFn);
+test.before.skip([title], callback);
 test.skip.after(....);
 test.serial.only(...);
 test.only.serial(...);
@@ -594,16 +598,16 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## API
 
-### test([title], body)
-### test.serial([title], body)
-### test.cb([title], body)
-### test.only([title], body)
-### test.skip([title], body)
+### test([title], callback)
+### test.serial([title], callback)
+### test.cb([title], callback)
+### test.only([title], callback)
+### test.skip([title], callback)
 ### test.todo(title)
-### test.before([title], body)
-### test.after([title], body)
-### test.beforeEach([title], body)
-### test.afterEach([title], body)
+### test.before([title], callback)
+### test.after([title], callback)
+### test.beforeEach([title], callback)
+### test.afterEach([title], callback)
 
 #### title
 
@@ -611,15 +615,17 @@ Type: `string`
 
 Test title.
 
-#### body(context)
+#### callback(t)
 
 Type: `function`
 
 Should contain the actual test.
 
-##### context
+##### t
 
-Passed into the test function and contains the different AVA methods and [assertions](#assertions).
+Type: `object`
+
+The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods.
 
 ###### .plan(count)
 
@@ -631,7 +637,7 @@ End the test. Only works with `test.cb()`.
 
 ## Assertions
 
-Assertions are mixed into the test [context](#context):
+Assertions are mixed into the [execution object](#t) provided to each test callback:
 
 ```js
 test(t => {
