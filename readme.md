@@ -118,7 +118,7 @@ $ npm test
 $ ava --help
 
   Usage
-    ava [<file|folder|glob> ...]
+    ava [<file|directory|glob> ...]
 
   Options
     --init           Add AVA to your project
