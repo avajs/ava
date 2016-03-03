@@ -447,16 +447,16 @@ Context sharing is *not* available to `before` and `after` hooks.
 
 ### Chaining test modifiers
 
-You can chain test modifiers together in the following ways:
+You can use the `.serial`, `.only` and `.skip` modifiers in any order, with `test`, `before`, `after`, `beforeEach` and `afterEach`. For example:
 
 ```js
-test.before.skip([title], callback);
-test.skip.after(....);
+test.before.skip(...);
+test.skip.after(...);
 test.serial.only(...);
 test.only.serial(...);
 ```
 
-This is especially helpful temporarily using `skip` or `only` on a test, without losing the information and behavior the other modifiers provide.
+This means you can temporarily add `.skip` or `.only` at the end of a test or hook definition without having to make any other changes.
 
 ### Custom assertion module
 
