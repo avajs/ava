@@ -5,6 +5,7 @@ var test = require('tap').test;
 var uniqueTempDir = require('unique-temp-dir');
 var sinon = require('sinon');
 var babel = require('babel-core');
+var transformRuntime = require('babel-plugin-transform-runtime');
 
 var CachingPrecompiler = require('../lib/caching-precompiler');
 
@@ -93,10 +94,13 @@ test('allows babel config from package.json/babel when babelConfig === "inherit"
 
 test('uses babelConfig for babel options when babelConfig is an object', function (t) {
 	var tempDir = uniqueTempDir();
+	var customPlugin = sinon.stub().returns({visitor: {}});
+	var powerAssert = sinon.stub().returns({visitor: {}});
 	var precompiler = new CachingPrecompiler(tempDir, {
 		presets: ['stage-2', 'es2015'],
-		plugins: []
+		plugins: [customPlugin]
 	});
+	sinon.stub(precompiler, '_createEspowerPlugin').returns(powerAssert);
 	babel.transform.reset();
 
 	precompiler.precompileFile(fixture('es2015.js'));
@@ -109,7 +113,7 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.false(options.ast);
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
-	t.deepEqual(options.presets, ['stage-2', 'es2015']);
-	t.equal(options.plugins.length, 2);
+	t.same(options.presets, ['stage-2', 'es2015']);
+	t.same(options.plugins, [customPlugin, powerAssert, transformRuntime]);
 	t.end();
 });
