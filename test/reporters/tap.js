@@ -146,3 +146,40 @@ test('results does not show skipped tests if there are none', function (t) {
 	t.is(actualOutput, expectedOutput);
 	t.end();
 });
+
+test('todo test', function (t) {
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.test({
+		title: 'should think about doing this',
+		passed: false,
+		skip: true,
+		todo: true
+	});
+
+	var expectedOutput = [
+		'# should think about doing this',
+		'not ok 1 - should think about doing this # TODO'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('skip test', function (t) {
+	var reporter = tapReporter();
+
+	var actualOutput = reporter.test({
+		title: 'skipped',
+		passed: true,
+		skip: true
+	});
+
+	var expectedOutput = [
+		'# skipped',
+		'ok 1 - skipped # SKIP'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});

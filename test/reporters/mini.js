@@ -69,6 +69,25 @@ test('skipped test', function (t) {
 	t.end();
 });
 
+test('todo test', function (t) {
+	var reporter = miniReporter();
+
+	var actualOutput = reporter.test({
+		title: 'todo',
+		skip: true,
+		todo: true
+	});
+
+	var expectedOutput = [
+		'  ' + chalk.blue('- todo'),
+		'',
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('results with passing tests', function (t) {
 	var reporter = miniReporter();
 	reporter.passCount = 1;
@@ -93,6 +112,22 @@ test('results with skipped tests', function (t) {
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
 		'\n  ' + chalk.yellow('1 skipped'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with todo tests', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.todoCount = 1;
+	reporter.failCount = 0;
+
+	var actualOutput = reporter.finish();
+	var expectedOutput = [
+		'\n  ' + chalk.blue('1 todo'),
 		''
 	].join('\n');
 
