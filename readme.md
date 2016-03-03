@@ -248,12 +248,20 @@ test.only('will be run', t => {
 
 ### Skip-tests
 
-Skip-tests are shown in the output as skipped but never run.
+Skip-tests are shown in the output as skipped but never run. Skip-tests require a function.
 
 ```js
 test.skip('will not be run', t => {
 	t.fail();
 });
+```
+
+### Todo-tests
+
+Todo-tests, like skip-tests, are shown in the output but are never run. They can be useful for planning future tests. Todo-tests require only a test title.
+
+```js
+test.todo('will think about writing this later');
 ```
 
 ### Before & after hooks
@@ -478,6 +486,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 ### test.cb([title], body)
 ### test.only([title], body)
 ### test.skip([title], body)
+### test.todo(title)
 ### test.before([title], body)
 ### test.after([title], body)
 ### test.beforeEach([title], body)
