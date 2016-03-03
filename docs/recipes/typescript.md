@@ -1,5 +1,7 @@
 # TypeScript
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/typescript.md)
+
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
 ## Setup
