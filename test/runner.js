@@ -379,8 +379,8 @@ test('options.bail + serial - tests will never happen (async)', function (t) {
 	});
 });
 
-test('options.match will skip tests with non-matching titles', function (t) {
-	t.plan(6);
+test('options.match will not run tests with non-matching titles', function (t) {
+	t.plan(5);
 
 	var runner = new Runner({
 		match: ['*oo', '!foo']
@@ -399,13 +399,13 @@ test('options.match will skip tests with non-matching titles', function (t) {
 	});
 
 	runner.test(function () {
-		t.pass();
+		t.fail();
 	});
 
 	runner.run({}).then(function () {
-		t.is(runner.stats.skipCount, 1);
-		t.is(runner.stats.passCount, 3);
-		t.is(runner.stats.testCount, 4);
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
 		t.end();
 	});
 });
@@ -431,6 +431,29 @@ test('options.match hold no effect on hooks with titles', function (t) {
 		t.is(runner.stats.skipCount, 0);
 		t.is(runner.stats.passCount, 1);
 		t.is(runner.stats.testCount, 1);
+		t.end();
+	});
+});
+
+test('options.match overrides .only', function (t) {
+	t.plan(5);
+
+	var runner = new Runner({
+		match: ['*oo']
+	});
+
+	runner.test('moo', function () {
+		t.pass();
+	});
+
+	runner.test.only('boo', function () {
+		t.pass();
+	});
+
+	runner.run({}).then(function () {
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
 		t.end();
 	});
 });
