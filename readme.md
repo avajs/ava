@@ -52,9 +52,14 @@ test(t => {
 
 ## Usage
 
-### Initialize
+### Add AVA to your project
 
-Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your `package.json` or create one.
+Install AVA globally run with `--init` to add AVA to your `package.json`:
+
+```console
+$ npm install --global ava
+$ ava --init
+```
 
 ```json
 {
@@ -67,6 +72,19 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
   }
 }
 ```
+
+Any arguments passed after `--init` are added in the `package.json`.
+
+#### Manual installation
+
+You can also install AVA directly:
+
+```console
+$ npm install --save-dev ava
+```
+
+You'll have to configure the `test` script in your `package.json` to use `ava`
+(see above).
 
 ### Create your test file
 
