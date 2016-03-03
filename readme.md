@@ -219,11 +219,13 @@ test(function name(t) {
 });
 ```
 
-### Assertion plan
+### Assertion planning
 
-An assertion plan can be used to ensure a specific number of assertions are made. In the most common scenario, it validates that the test didn't exit before executing the expected number of assertions. It also fails the test if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops. Be aware that, unlike node-tap & tape, AVA does *not* auto-end a test when the planned assertion count is reached.
+Assertion plans ensure tests only pass when a specific number of assertions have been executed. They'll help you catch cases where tests exit too early. They'll also cause tests to fail if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
 
-This will result in a passed test:
+Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https://www.npmjs.com/package/tape), AVA does *not* automatically end a test when the planned assertion count is reached.
+
+These examples will result in a passed test:
 
 ```js
 test(t => {
@@ -242,6 +244,26 @@ test.cb(t => {
 		t.end();
 	});
 });
+```
+
+These won't:
+
+```js
+test(t => {
+	t.plan(2);
+
+	for (let i = 0; i < 3; i++) {
+		t.true(i < 3);
+	}
+}); // fails, 3 assertions are executed which is too many
+
+test(t => {
+	t.plan(1);
+
+	someAsyncFunction(() => {
+		t.pass();
+	});
+}); // fails, the test ends synchronously before the assertion is executed
 ```
 
 ### Serial-tests
@@ -629,7 +651,7 @@ The execution object of a particular test. Each test callback receives a differe
 
 ###### .plan(count)
 
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match planned assertions.
+Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](#assertion-planning).
 
 ###### .end()
 
