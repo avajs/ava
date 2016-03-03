@@ -458,9 +458,11 @@ test.only.serial(...);
 
 This means you can temporarily add `.skip` or `.only` at the end of a test or hook definition without having to make any other changes.
 
-### Custom assertion module
+### Custom assertions
 
-You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
+You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
+
+This won't give you as nice an experience as you'd get with the [built-in assertions](#assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/sindresorhus/ava/issues/25)).
 
 ```js
 import assert from 'assert';
