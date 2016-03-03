@@ -36,7 +36,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
-- [Enhanced asserts](#enhanced-asserts)
+- [Enhanced assertion messages](#enhanced-assertion-messages)
 - [Optional TAP output](#optional-tap-output)
 - [Clean stack traces](#clean-stack-traces)
 
@@ -739,7 +739,7 @@ Assert that `contents` matches `regex`.
 
 Assert that `error` is falsy.
 
-## Skipping Assertions
+### Skipping assertions
 
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
 
@@ -751,36 +751,26 @@ test(t => {
 });
 ```
 
-## Enhanced asserts
+### Enhanced assertion messages
 
 AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) built-in, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
 
-The following test:
+Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
 
 ```js
-test(t => {
-	const x = 'foo';
-	t.ok(x === 'bar');
-});
+const a = /foo/;
+const b = 'bar';
+const c = 'baz';
+require('assert').ok(a.test(b) || b === c);
 ```
 
-Would normally give the unhelpful output:
+If you paste that into a Node REPL it'l return:
 
 ```
-false === true
+AssertionError: false == true
 ```
 
-With the enhanced asserts, you'll get:
-
-```
-t.ok(x === 'bar')
-     |
-     "foo"
-```
-
-True, you could use `t.is()` in this case, and probably should, but this is just a simple example.
-
-Let try a more advanced example:
+In AVA however, this test:
 
 ```js
 test(t => {
@@ -791,7 +781,7 @@ test(t => {
 });
 ```
 
-And there you go:
+Will output:
 
 ```
 t.ok(a.test(b) || b === c)
@@ -799,10 +789,6 @@ t.ok(a.test(b) || b === c)
        |    "bar" "bar" "baz"
        false
 ```
-
-All the assert methods are enhanced.
-
-Have fun!
 
 ## Isolated environment
 
