@@ -20,6 +20,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Documentation](#documentation)
 - [API](#api)
 - [Assertions](#assertions)
+- [Tips](#tips)
 - [FAQ](#faq)
 - [Recipes](#recipes)
 
@@ -798,7 +799,9 @@ Each test file is run in a separate Node.js process. This allows you to change t
 
 ### Temp files
 
-Running tests concurrently comes with some challenges, doing IO is one. Usually, serial tests just create temp directories in the current test directory and cleans it up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
+Running tests concurrently comes with some challenges, doing file IO is one.
+
+Usually, serial tests create temp directories in the current test directory and clean them up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
 
 ### Debugging
 
@@ -810,9 +813,9 @@ $ ava --serial
 
 ### Code coverage
 
-You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#process-isolation), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
+You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#process-isolation). You can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
 
-As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
+As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your Babel config to `inline`.
 
 ## FAQ
 
