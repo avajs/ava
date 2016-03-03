@@ -56,7 +56,7 @@ test(t => {
 
 ## Usage
 
-#### Initialize
+### Initialize
 
 Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your `package.json` or create one.
 
@@ -72,7 +72,7 @@ Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with a
 }
 ```
 
-#### Create your test file
+### Create your test file
 
 Create a file named `test.js` in the project root directory:
 
@@ -92,7 +92,7 @@ test('bar', async t => {
 
 <img src="screenshot.png" width="150" align="right">
 
-#### Run it
+### Run it
 
 ```
 $ npm test
@@ -462,7 +462,7 @@ In addition to specifying a custom Babel config, you can also use the special `"
 Note: When configuring Babel for tests manually, the espower and transform-runtime plugins will be
 added for you.
 
-## Default Babel Configuration for Test Scripts
+#### Default Babel Configuration for Test Scripts
 
 If you don't explicitly configure Babel for your tests using the `"babel"` key in package.json, your tests will be transpiled using AVA's default Babel configuration, which is as follows:
 
@@ -479,7 +479,7 @@ If you don't explicitly configure Babel for your tests using the `"babel"` key i
 }
 ```
 
-#### Transpiling Imported Modules
+### Transpiling Imported Modules
 
 AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you ```import``` from outside of the test.* While there are valid reasons for taking this approach, it may not be what you expect!
 
@@ -847,7 +847,7 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 ---|---|---|---|---
 [Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net)
 
-#### Former
+### Former
 
 - [Kevin Mårtensson](https://github.com/kevva)
 
