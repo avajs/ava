@@ -30,7 +30,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
-- [Isolated environment for each test file](#isolated-environment)
+- [Isolated environment for each test file](#process-isolation)
 - [Write your tests in ES2015](#es2015-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
@@ -790,9 +790,9 @@ t.ok(a.test(b) || b === c)
        false
 ```
 
-## Isolated environment
+## Process isolation
 
-Each test file is run in a separate Node.js process. This comes with a lot of benefits. Different test files can no longer affect each other. Like test files mocking with the global environment, overriding built-ins, etc. However, it's mainly done for performance reasons. Even though Node.js can run async IO concurrently, that doesn't help much when tests are heavy on synchronous operations, which blocks the main thread. By running tests concurrently and test files in parallel we take full advantage of modern systems.
+Each test file is run in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another. It's also great for performance on modern multi-core processors, allowing multiple test files to execute in parallel.
 
 ## Tips
 
@@ -810,7 +810,7 @@ $ ava --serial
 
 ### Code coverage
 
-You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#isolated-environment), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
+You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#process-isolation), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
 
 As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
 
