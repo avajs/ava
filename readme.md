@@ -359,10 +359,15 @@ test.todo('will think about writing this later');
 
 ### Before & after hooks
 
-When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The callback function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
+AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-If you need to set up some global state between tests using `test.beforeEach()` and `test.afterEach()` (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are run serially (using either [test.serial](#serial-tests) or [`--serial`](#cli)).
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test.
+
+`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test.
+
+Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
+
+`before` hooks execute before `beforeEach` hooks. `afterEach` hooks execute before `after` hooks. Within their category the hooks execute in the order they were defined.
 
 ```js
 test.before(t => {
@@ -390,11 +395,15 @@ test(t => {
 });
 ```
 
-You may use async functions, return async objects, or enable "callback mode" in any of the hooks.
+Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, use an async function, or enable callback mode via `test.cb.before()`, `test.cb.beforeEach()` etc.
 
 ```js
 test.before(async t => {
 	await promiseFn();
+});
+
+test.after(t => {
+	return new Promise(/* ... */);
 });
 
 test.cb.beforeEach(t => {
@@ -404,11 +413,11 @@ test.cb.beforeEach(t => {
 test.afterEach.cb(t => {
 	setTimeout(t.end);
 });
-
-test.after(t => {
-	 return new Promise(/* ... */);
-});
 ```
+
+Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
+
+Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `after`-hook since that's only called right before the process exits.
 
 The `beforeEach` & `afterEach` hooks can share context with the test:
 
@@ -422,7 +431,7 @@ test(t => {
 });
 ```
 
-The context is by default an object, but it can also be directly assigned:
+By default `t.context` is an object but you can reassign it:
 
 ```js
 test.beforeEach(t => {
@@ -433,6 +442,8 @@ test(t => {
 	t.is(t.context, 'unicorn');
 });
 ```
+
+Context sharing is *not* available to `before` and `after` hooks.
 
 ### Chaining test modifiers
 
@@ -653,7 +664,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods.
+The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
 ###### .plan(count)
 
