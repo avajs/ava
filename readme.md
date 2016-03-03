@@ -58,7 +58,7 @@ test(t => {
 
 #### Initialize
 
-Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your package.json or create one.
+Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your `package.json` or create one.
 
 ```json
 {
