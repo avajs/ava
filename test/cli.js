@@ -141,12 +141,9 @@ test('watcher works', function (t) {
 
 	var buffer = '';
 	var passedFirst = false;
-	// Pause the stream before attaching the 'data' listener. execCli() uses
-	// get-stream which read()s from the stream. The test just needs to piggyback
-	// on that without switching the stream to flowing mode.
-	child.stderr.pause().on('data', function (str) {
+	child.stderr.on('data', function (str) {
 		buffer += str;
-		if (/1 test passed/.test(str)) {
+		if (/1 test passed/.test(buffer)) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, 'fixture/watcher/test.js'));
 				buffer = '';
