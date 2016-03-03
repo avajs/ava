@@ -819,13 +819,17 @@ As of version `5.0.0` it uses source maps to report coverage for your actual cod
 
 ## FAQ
 
-### Why not `mocha`, `tape`, `node-tap`?
+### Why not `mocha`, `tape`, `tap`?
 
-Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use), too unopinionated, bloated, synchronous by default, unusable programmatic API, serial test execution, and slow. Tape and node-tap are pretty good. AVA is highly inspired by their syntax. However, they both execute tests serially and they've made [TAP](https://testanything.org) a first-class citizen which has IMHO made their codebases a bit convoluted and coupled. TAP output is hard to read so you always end up using an external tap reporter. AVA is highly opinionated and concurrent. It comes with a default simple reporter and supports TAP through a CLI flag.
+Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use). It's not very opinionated and executes tests serially without process isolation, making it slow.
+
+Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
+
+In contrast AVA is highly opinionated and runs tests concurrently, with a separate processes for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
 ### How can I use custom reporters?
 
-Use the [`--tap` flag](#optional-tap-output) with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
 
 ### How is the name written and pronounced?
 
@@ -833,11 +837,11 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### What is the header background?
 
-[Andromeda galaxy.](https://simple.wikipedia.org/wiki/Andromeda_galaxy)
+It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
-### Concurrency vs. parallelism
+### What is the difference between concurrency and parallelism?
 
-[Concurrency is not parallelism. It enables parallelism.](http://stackoverflow.com/q/1050222)
+[Concurrency is not parallelism. It enables parallelism.](https://stackoverflow.com/q/1050222)
 
 ## Recipes
 
