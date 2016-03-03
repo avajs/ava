@@ -280,19 +280,21 @@ test.serial(t => {
 
 Note that this only applies to tests within a particular test file. AVA will still run multiple tests files at the same time unless you pass the [`--serial` CLI flag](#cli).
 
-### Only-tests
+### Running specific tests
 
-Only-tests enforces only those tests to be run. This can be useful for running only a few tests during development.
+During development it can be helpful to only run a few specific tests. This can be accomplished using the `.only` modifier:
 
 ```js
 test('will not be run', t => {
 	t.fail();
-})
+});
 
 test.only('will be run', t => {
 	t.pass();
 });
 ```
+
+`.only` applies across all test files, so if you use it in one file, no tests from the other file will run.
 
 ### Matched-tests
 
