@@ -1,5 +1,7 @@
 # Setting up AVA for browser testing
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/browser-testing.md)
+
 AVA does not support running tests in browsers [yet](https://github.com/sindresorhus/ava/issues/24). Some libraries require browser specific globals (`window`, `document`, `navigator`, etc).
 An example of this is React, at least if you want to use ReactDOM.render and simulate events with ReactTestUtils.
 
