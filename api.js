@@ -50,6 +50,7 @@ Api.prototype._reset = function () {
 	this.exceptionCount = 0;
 	this.passCount = 0;
 	this.skipCount = 0;
+	this.todoCount = 0;
 	this.failCount = 0;
 	this.fileCount = 0;
 	this.testCount = 0;
@@ -217,7 +218,7 @@ Api.prototype.run = function (files) {
 									});
 
 									return {
-										stats: {passCount: 0, skipCount: 0, failCount: 0},
+										stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
 										tests: []
 									};
 								});
@@ -244,6 +245,7 @@ Api.prototype.run = function (files) {
 
 			self.passCount = sum(self.stats, 'passCount');
 			self.skipCount = sum(self.stats, 'skipCount');
+			self.todoCount = sum(self.stats, 'todoCount');
 			self.failCount = sum(self.stats, 'failCount');
 		});
 };

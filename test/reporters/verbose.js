@@ -104,6 +104,21 @@ test('skipped test', function (t) {
 	t.end();
 });
 
+test('todo test', function (t) {
+	var reporter = createReporter();
+
+	var actualOutput = reporter.test({
+		title: 'todo',
+		skip: true,
+		todo: true
+	});
+
+	var expectedOutput = '  ' + chalk.blue('- todo');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('uncaught exception', function (t) {
 	var reporter = createReporter();
 
@@ -193,6 +208,23 @@ test('results with skipped tests', function (t) {
 		'',
 		'  ' + chalk.green('1 test passed'),
 		'  ' + chalk.yellow('1 test skipped'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with todo tests', function (t) {
+	var reporter = createReporter();
+	reporter.api.passCount = 1;
+	reporter.api.todoCount = 1;
+
+	var actualOutput = reporter.finish();
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.blue('1 test todo'),
 		''
 	].join('\n');
 

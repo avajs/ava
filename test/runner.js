@@ -177,7 +177,7 @@ test('test types and titles', function (t) {
 });
 
 test('skip test', function (t) {
-	t.plan(3);
+	t.plan(5);
 
 	var runner = new Runner();
 	var arr = [];
@@ -190,9 +190,39 @@ test('skip test', function (t) {
 		arr.push('b');
 	});
 
+	t.throws(function () {
+		runner.skip('should be a todo');
+	}, {message: 'Expected a function. Use `test.todo()` for tests without a function.'});
+
 	runner.run({}).then(function () {
 		t.is(runner.stats.testCount, 2);
 		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.skipCount, 1);
+		t.same(arr, ['a']);
+		t.end();
+	});
+});
+
+test('todo test', function (t) {
+	t.plan(5);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.test(function () {
+		arr.push('a');
+	});
+
+	runner.todo('todo');
+
+	t.throws(function () {
+		runner.todo(function () {});
+	}, {message: '`todo` tests require a title'});
+
+	runner.run({}).then(function () {
+		t.is(runner.stats.testCount, 2);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.todoCount, 1);
 		t.same(arr, ['a']);
 		t.end();
 	});
