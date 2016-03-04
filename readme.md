@@ -23,6 +23,10 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Tips](#tips)
 - [FAQ](#faq)
 - [Recipes](#recipes)
+- [Support](#support)
+- [Related](#related)
+- [Links](#links)
+- [Team](#team)
 
 ## Why AVA?
 
