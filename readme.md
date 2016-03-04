@@ -637,40 +637,40 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## API
 
-### test([title], callback)
-### test.serial([title], callback)
-### test.cb([title], callback)
-### test.only([title], callback)
-### test.skip([title], callback)
-### test.todo(title)
-### test.before([title], callback)
-### test.after([title], callback)
-### test.beforeEach([title], callback)
-### test.afterEach([title], callback)
+### `test([title], callback)`
+### `test.serial([title], callback)`
+### `test.cb([title], callback)`
+### `test.only([title], callback)`
+### `test.skip([title], callback)`
+### `test.todo(title)`
+### `test.before([title], callback)`
+### `test.after([title], callback)`
+### `test.beforeEach([title], callback)`
+### `test.afterEach([title], callback)`
 
-#### title
+#### `title`
 
 Type: `string`
 
 Test title.
 
-#### callback(t)
+#### `callback(t)`
 
 Type: `function`
 
 Should contain the actual test.
 
-##### t
+##### `t`
 
 Type: `object`
 
 The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
-###### .plan(count)
+###### `t.plan(count)`
 
 Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](#assertion-planning).
 
-###### .end()
+###### `t.end()`
 
 End the test. Only works with `test.cb()`.
 
