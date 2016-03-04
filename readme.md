@@ -109,13 +109,13 @@ test('bar', async t => {
 
 ### Run it
 
-```
+```console
 $ npm test
 ```
 
 ## CLI
 
-```
+```console
 $ ava --help
 
   Usage
@@ -617,7 +617,7 @@ test.cb(t => {
 
 AVA can generate TAP output via `--tap` option for use with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
 
-```
+```console
 $ ava --tap | tap-nyan
 ```
 
@@ -807,7 +807,7 @@ Usually, serial tests create temp directories in the current test directory and 
 
 AVA runs tests concurrently by default, which is suboptimal when you need to debug something. Instead, run tests serially with the `--serial` option:
 
-```
+```console
 $ ava --serial
 ```
 
