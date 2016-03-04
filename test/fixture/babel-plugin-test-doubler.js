@@ -21,7 +21,7 @@ function plugin(babel) {
 				var node = path.node;
 				var callee = node.callee;
 				var args = node.arguments;
-				if (!path.generated && callee.type === 'Identifier' && callee.name === 'test') {
+				if (callee.type === 'Identifier' && callee.name === 'test') {
 					if (args.length === 1) {
 						args = [t.StringLiteral('repeated test: anonymous' + anonCount++), args[0]];
 					} else if (args.length === 2 && args[0].type === 'StringLiteral') {
