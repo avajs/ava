@@ -686,47 +686,47 @@ test(t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-### .pass([message])
+### `.pass([message])`
 
 Passing assertion.
 
-### .fail([message])
+### `.fail([message])`
 
 Failing assertion.
 
-### .ok(value, [message])
+### `.ok(value, [message])`
 
 Assert that `value` is truthy.
 
-### .notOk(value, [message])
+### `.notOk(value, [message])`
 
 Assert that `value` is falsy.
 
-### .true(value, [message])
+### `.true(value, [message])`
 
 Assert that `value` is `true`.
 
-### .false(value, [message])
+### `.false(value, [message])`
 
 Assert that `value` is `false`.
 
-### .is(value, expected, [message])
+### `.is(value, expected, [message])`
 
 Assert that `value` is equal to `expected`.
 
-### .not(value, expected, [message])
+### `.not(value, expected, [message])`
 
 Assert that `value` is not equal to `expected`.
 
-### .same(value, expected, [message])
+### `.same(value, expected, [message])`
 
 Assert that `value` is deep equal to `expected`.
 
-### .notSame(value, expected, [message])
+### `.notSame(value, expected, [message])`
 
 Assert that `value` is not deep equal to `expected`.
 
-### .throws(function|promise, [error, [message]])
+### `.throws(function|promise, [error, [message]])`
 
 Assert that `function` throws an error, or `promise` rejects with an error.
 
@@ -734,15 +734,15 @@ Assert that `function` throws an error, or `promise` rejects with an error.
 
 Returns the error thrown by `function` or the rejection reason of `promise`.
 
-### .notThrows(function|promise, [message])
+### `.notThrows(function|promise, [message])`
 
 Assert that `function` doesn't throw an `error` or `promise` resolves.
 
-### .regex(contents, regex, [message])
+### `.regex(contents, regex, [message])`
 
 Assert that `contents` matches `regex`.
 
-### .ifError(error, [message])
+### `.ifError(error, [message])`
 
 Assert that `error` is falsy.
 
