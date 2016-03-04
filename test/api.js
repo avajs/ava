@@ -690,7 +690,6 @@ test('Custom Babel Plugin Support', function (t) {
 	t.plan(1);
 
 	var api = new Api({
-		cacheEnabled: false,
 		babelConfig: {
 			presets: ['es2015', 'stage-2'],
 			plugins: [testDoublerPlugin]
@@ -709,9 +708,7 @@ test('Custom Babel Plugin Support', function (t) {
 test('Default babel config doesn\'t use .babelrc', function (t) {
 	t.plan(1);
 
-	var api = new Api({
-		cacheEnabled: false
-	});
+	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(
