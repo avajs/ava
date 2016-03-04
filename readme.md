@@ -340,15 +340,17 @@ test(function () {
 
 Note that a match pattern takes precedence over `.only`, and *any tests without an explicit title will* **not run** *if a match pattern is supplied.*
 
-### Skip-tests
+### Skipping tests
 
-Skip-tests are shown in the output as skipped but never run. Skip-tests require a function.
+Sometimes failing tests can be hard to fix. You can tell AVA to skip these tests using the `.skip` modifier. They'll still be shown in the output (as having been skipped) but are never run.
 
 ```js
 test.skip('will not be run', t => {
 	t.fail();
 });
 ```
+
+You must specify the callback function.
 
 ### Todo-tests
 
