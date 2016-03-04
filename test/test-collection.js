@@ -19,7 +19,8 @@ function metadata(opts) {
 function mockTest(opts, title) {
 	return {
 		title: title,
-		metadata: metadata(opts)
+		metadata: metadata(opts),
+		fn: function () {}
 	};
 }
 
