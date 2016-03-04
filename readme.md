@@ -352,9 +352,9 @@ test.skip('will not be run', t => {
 
 You must specify the callback function.
 
-### Todo-tests
+### Test placeholders ("todo")
 
-Todo-tests, like skip-tests, are shown in the output but are never run. They can be useful for planning future tests. Todo-tests require only a test title.
+You can use the `.todo` modifier when you're planning to write a test. Like skipped tests these placeholders are shown in the output. They only require a title; you cannot specify the callback function.
 
 ```js
 test.todo('will think about writing this later');
