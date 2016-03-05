@@ -675,11 +675,12 @@ test('verify test count', function (t) {
 	t.is(api.skipCount, 0);
 	t.is(api.todoCount, 0);
 
-	api.run([path.join(__dirname, 'fixture/test-count.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
-			t.is(api.failCount, 1);
-			t.is(api.skipCount, 1);
-			t.is(api.todoCount, 1);
-		});
+	return api.run([
+		path.join(__dirname, 'fixture/test-count.js')
+	]).then(function () {
+		t.is(api.passCount, 1);
+		t.is(api.failCount, 1);
+		t.is(api.skipCount, 1);
+		t.is(api.todoCount, 1);
+	});
 });
