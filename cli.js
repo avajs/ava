@@ -125,10 +125,10 @@ api.on('stderr', logger.stderr);
 var files = cli.input.length ? cli.input : arrify(conf.files);
 if (files.length === 0) {
 	files = [
-			'test.js',
-			'test-*.js',
-			'test'
-		];
+		'test.js',
+		'test-*.js',
+		'test'
+	];
 }
 
 if (cli.flags.watch) {

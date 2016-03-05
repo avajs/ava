@@ -156,7 +156,6 @@
   },
   "xo": {
     "ignore": [
-      "cli.js",
       "bench/*/*.js"
     ]
   }
