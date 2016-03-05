@@ -378,3 +378,82 @@ test('options.bail + serial - tests will never happen (async)', function (t) {
 		}, 250);
 	});
 });
+
+test('options.match will not run tests with non-matching titles', function (t) {
+	t.plan(5);
+
+	var runner = new Runner({
+		match: ['*oo', '!foo']
+	});
+
+	runner.test('mhm. grass tasty. moo', function () {
+		t.pass();
+	});
+
+	runner.test('juggaloo', function () {
+		t.pass();
+	});
+
+	runner.test('foo', function () {
+		t.fail();
+	});
+
+	runner.test(function () {
+		t.fail();
+	});
+
+	runner.run({}).then(function () {
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
+		t.end();
+	});
+});
+
+test('options.match hold no effect on hooks with titles', function (t) {
+	t.plan(4);
+
+	var runner = new Runner({
+		match: ['!before*']
+	});
+
+	var actual;
+
+	runner.before('before hook with title', function () {
+		actual = 'foo';
+	});
+
+	runner.test('after', function () {
+		t.is(actual, 'foo');
+	});
+
+	runner.run({}).then(function () {
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
+		t.end();
+	});
+});
+
+test('options.match overrides .only', function (t) {
+	t.plan(5);
+
+	var runner = new Runner({
+		match: ['*oo']
+	});
+
+	runner.test('moo', function () {
+		t.pass();
+	});
+
+	runner.test.only('boo', function () {
+		t.pass();
+	});
+
+	runner.run({}).then(function () {
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
+		t.end();
+	});
+});

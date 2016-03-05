@@ -115,6 +115,7 @@ $ ava --help
     --tap, -t        Generate TAP output
     --verbose, -v    Enable verbose output
     --no-cache       Disable the transpiler cache
+    --match, -m      Only run tests with matching title (Can be repeated)',
 
   Examples
     ava
@@ -144,6 +145,10 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "files": [
       "my-test-folder/*.js",
       "!**/not-this-file.js"
+    ],
+    "match": [
+      "*oo",
+      "!foo"
     ],
     "failFast": true,
     "tap": true,
@@ -245,6 +250,49 @@ test.only('will be run', t => {
 	t.pass();
 });
 ```
+
+### Matched-tests
+
+The `--match` flag allows you to run a subset of the tests in your suite that have a matching title. This is achieved with simple wildcard patterns. For more information, check out [matcher](https://github.com/sindresorhus/matcher).
+
+```
+# match titles ending with 'foo'
+$ ava --match='*foo'
+
+# match titles starting with 'foo'
+$ ava --match='foo*'
+
+# match titles containing 'foo'
+$ ava --match='*foo*'
+
+# match titles not containing 'foo'
+$ ava --match='!*foo*'
+
+# match titles starting with 'foo' and ending with 'bar'
+$ ava --match='foo*bar'
+
+# match titles starting with 'foo' or ending with 'bar'
+$ ava --match='foo*' --match='*bar'
+```
+
+```js
+// $ ava --match='*oo'
+
+test('foo will run', t => {
+	t.pass();
+});
+
+test.only('moo will also run', t => {
+	t.pass();
+});
+
+// won't run!
+test(function () {
+	t.fail();
+});
+```
+
+Note that a match pattern takes precedence over `.only`, and *any tests without an explicit title will* **not run** *if a match pattern is supplied.*
 
 ### Skip-tests
 

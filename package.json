@@ -106,6 +106,7 @@
     "is-promise": "^2.1.0",
     "last-line-stream": "^1.0.0",
     "loud-rejection": "^1.2.0",
+    "matcher": "^0.1.1",
     "max-timeout": "^1.0.0",
     "md5-hex": "^1.2.0",
     "meow": "^3.7.0",

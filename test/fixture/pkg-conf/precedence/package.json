@@ -6,6 +6,7 @@
     "serial": true,
     "failFast": true,
     "cache": false,
+    "match": ["*"],
     "require": "./default-required.js"
   }
 }
