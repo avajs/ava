@@ -122,7 +122,7 @@ test('skipped test', function (t) {
 		' ',
 		'⠋  ' + chalk.yellow('- skipped'),
 		'',
-		''
+		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -142,7 +142,7 @@ test('todo test', function (t) {
 		' ',
 		'⠋  ' + chalk.blue('- todo'),
 		'',
-		''
+		'   ' + chalk.blue('1 todo')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -156,7 +156,7 @@ test('results with passing tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.green('1 passed'),
+		'\n   ' + chalk.green('1 passed'),
 		''
 	].join('\n');
 
@@ -172,7 +172,7 @@ test('results with skipped tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.yellow('1 skipped'),
+		'\n   ' + chalk.yellow('1 skipped'),
 		''
 	].join('\n');
 
@@ -188,7 +188,7 @@ test('results with todo tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.blue('1 todo'),
+		'\n   ' + chalk.blue('1 todo'),
 		''
 	].join('\n');
 
@@ -204,8 +204,9 @@ test('results with passing skipped tests', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed') + '  ' + chalk.yellow('1 skipped'));
-	t.is(output[2], '');
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.yellow('1 skipped'));
+	t.is(output[3], '');
 	t.end();
 });
 
@@ -225,8 +226,8 @@ test('results with passing tests and rejections', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed'));
-	t.is(output[2], '  ' + chalk.red('1 rejection'));
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.red('1 rejection'));
 	t.is(output[3], '');
 	t.is(output[4], '  ' + chalk.red('1. Unhandled Rejection'));
 	t.match(output[5], /Error: failure/);
@@ -253,8 +254,8 @@ test('results with passing tests and exceptions', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed'));
-	t.is(output[2], '  ' + chalk.red('2 exceptions'));
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.red('2 exceptions'));
 	t.is(output[3], '');
 	t.is(output[4], '  ' + chalk.red('1. Uncaught Exception'));
 	t.match(output[5], /Error: failure/);
@@ -281,7 +282,7 @@ test('results with errors', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.red('1 failed'));
+	t.is(output[1], '   ' + chalk.red('1 failed'));
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. failed'));
 	t.match(output[4], /failure/);
