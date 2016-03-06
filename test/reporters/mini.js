@@ -18,7 +18,7 @@ process.stderr.setMaxListeners(50);
 test('start', function (t) {
 	var reporter = _miniReporter();
 
-	t.is(reporter.start(), '⠋');
+	t.is(reporter.start(), ' \n⠋');
 	reporter.clearInterval();
 	t.end();
 });
@@ -31,9 +31,10 @@ test('passing test', function (t) {
 	});
 
 	var expectedOutput = [
+		' ',
 		'⠋  ' + chalk.green('passed'),
 		'',
-		'  ' + chalk.green('1 passed')
+		'   ' + chalk.green('1 passed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -51,9 +52,10 @@ test('failing test', function (t) {
 	});
 
 	var expectedOutput = [
+		' ',
 		'⠋  ' + chalk.red('failed'),
 		'',
-		'  ' + chalk.red('1 failed')
+		'   ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -69,6 +71,7 @@ test('skipped test', function (t) {
 	});
 
 	var expectedOutput = [
+		' ',
 		'⠋  ' + chalk.yellow('- skipped'),
 		'',
 		''
@@ -88,6 +91,7 @@ test('todo test', function (t) {
 	});
 
 	var expectedOutput = [
+		' ',
 		'⠋  ' + chalk.blue('- todo'),
 		'',
 		''
