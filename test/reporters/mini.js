@@ -18,7 +18,7 @@ process.stderr.setMaxListeners(50);
 test('start', function (t) {
 	var reporter = _miniReporter();
 
-	t.is(reporter.start(), ' \n⠋');
+	t.is(reporter.start(), ' \n ⠋ ');
 	reporter.clearInterval();
 	t.end();
 });
@@ -32,7 +32,7 @@ test('passing test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.green('passed'),
+		' ⠋ ' + chalk.green('passed'),
 		'',
 		'   ' + chalk.green('1 passed')
 	].join('\n');
@@ -53,7 +53,7 @@ test('failing test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.red('failed'),
+		' ⠋ ' + chalk.red('failed'),
 		'',
 		'   ' + chalk.red('1 failed')
 	].join('\n');
@@ -76,7 +76,7 @@ test('passing test after failing', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.green('passed'),
+		' ⠋ ' + chalk.green('passed'),
 		'',
 		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 failed')
@@ -100,7 +100,7 @@ test('failing test after passing', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.red('failed'),
+		' ⠋ ' + chalk.red('failed'),
 		'',
 		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 failed')
@@ -120,7 +120,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.yellow('- skipped'),
+		' ⠋ ' + chalk.yellow('- skipped'),
 		'',
 		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
@@ -140,7 +140,7 @@ test('todo test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		'⠋  ' + chalk.blue('- todo'),
+		' ⠋ ' + chalk.blue('- todo'),
 		'',
 		'   ' + chalk.blue('1 todo')
 	].join('\n');
