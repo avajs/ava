@@ -54,9 +54,8 @@ var cli = meow([
 	'  --verbose, -v    Enable verbose output',
 	'  --no-cache       Disable the transpiler cache',
 	'  --match, -m      Only run tests with matching title (Can be repeated)',
-	// Leave --watch and --sources undocumented until they're stable enough
-	// '  --watch, -w      Re-run tests when tests and source files change',
-	// '  --source         Pattern to match source files so tests can be re-run (Can be repeated)',
+	'  --watch, -w      Re-run tests when tests and source files change',
+	'  --source         Pattern to match source files so tests can be re-run (Can be repeated)',
 	'',
 	'Examples',
 	'  ava',
