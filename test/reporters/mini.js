@@ -78,7 +78,8 @@ test('passing test after failing', function (t) {
 		' ',
 		'⠋  ' + chalk.green('passed'),
 		'',
-		'   ' + chalk.green('1 passed') + '   ' + chalk.red('1 failed')
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -101,7 +102,8 @@ test('failing test after passing', function (t) {
 		' ',
 		'⠋  ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.green('1 passed') + '   ' + chalk.red('1 failed')
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
