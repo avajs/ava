@@ -62,6 +62,52 @@ test('failing test', function (t) {
 	t.end();
 });
 
+test('passing test after failing', function (t) {
+	var reporter = miniReporter();
+
+	reporter.test({
+		title: 'failed',
+		error: {
+			message: 'assertion failed'
+		}
+	});
+
+	var actualOutput = reporter.test({title: 'passed'});
+
+	var expectedOutput = [
+		' ',
+		'⠋  ' + chalk.green('passed'),
+		'',
+		'   ' + chalk.green('1 passed') + '   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failing test after passing', function (t) {
+	var reporter = miniReporter();
+
+	reporter.test({title: 'passed'});
+
+	var actualOutput = reporter.test({
+		title: 'failed',
+		error: {
+			message: 'assertion failed'
+		}
+	});
+
+	var expectedOutput = [
+		' ',
+		'⠋  ' + chalk.red('failed'),
+		'',
+		'   ' + chalk.green('1 passed') + '   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('skipped test', function (t) {
 	var reporter = miniReporter();
 
