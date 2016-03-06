@@ -301,48 +301,79 @@ test.only('will be run', t => {
 
 `.only` applies across all test files, so if you use it in one file, no tests from the other file will run.
 
-### Matched-tests
+### Running tests with matching titles
 
-The `--match` flag allows you to run a subset of the tests in your suite that have a matching title. This is achieved with simple wildcard patterns. For more information, check out [matcher](https://github.com/sindresorhus/matcher).
+The `--match` flag allows you to run just the tests that have a matching title. This is achieved with simple wildcard patterns. Patterns are case insensitive. See [`matcher`](https://github.com/sindresorhus/matcher) for more details.
 
-```
-# match titles ending with 'foo'
+Match titles ending with `foo`:
+
+```console
 $ ava --match='*foo'
+```
 
-# match titles starting with 'foo'
+Match titles starting with `foo`:
+
+```console
 $ ava --match='foo*'
+```
 
-# match titles containing 'foo'
+Match titles containing `foo`:
+
+```console
 $ ava --match='*foo*'
+```
 
-# match titles not containing 'foo'
+Match titles that are *exactly* `foo` (albeit case insensitively):
+
+```console
+$ ava --match='foo'
+```
+
+Watch titles not containing `foo`:
+
+```console
 $ ava --match='!*foo*'
+```
 
-# match titles starting with 'foo' and ending with 'bar'
+Match titles starting with `foo` and ending with `bar`:
+
+```console
 $ ava --match='foo*bar'
+```
 
-# match titles starting with 'foo' or ending with 'bar'
+Match titles starting with `foo` or ending with `bar`:
+
+```console
 $ ava --match='foo*' --match='*bar'
 ```
 
-```js
-// $ ava --match='*oo'
+Note that a match pattern takes precedence over the `.only` modifier. Only tests with an explicit title are matched. Tests without titles or whose title is derived from the callback function will be skipped when `--match` is used.
 
+Here's what happens when you run AVA with a match pattern of `*oo*` and the following tests:
+
+```js
 test('foo will run', t => {
 	t.pass();
 });
 
-test.only('moo will also run', t => {
+test('moo will also run', t => {
 	t.pass();
 });
 
-// won't run!
-test(function () {
+test.only('boo will run but not exclusively', t => {
+	t.pass();
+});
+
+// won't run, no title
+test(function (t) {
+	t.fail();
+});
+
+// won't run, no explicit title
+test(function foo(t) {
 	t.fail();
 });
 ```
-
-Note that a match pattern takes precedence over `.only`, and *any tests without an explicit title will* **not run** *if a match pattern is supplied.*
 
 ### Skipping tests
 
