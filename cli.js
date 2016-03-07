@@ -35,7 +35,11 @@ var Api = require('./api');
 // Bluebird specific
 Promise.longStackTraces();
 
-var conf = pkgConf.sync('ava');
+var conf = pkgConf.sync('ava', {
+	defaults: {
+		babel: 'default'
+	}
+});
 
 var cli = meow([
 	'Usage',
@@ -102,7 +106,8 @@ var api = new Api({
 	require: arrify(cli.flags.require),
 	cacheEnabled: cli.flags.cache !== false,
 	explicitTitles: cli.flags.watch,
-	match: arrify(cli.flags.match)
+	match: arrify(cli.flags.match),
+	babelConfig: conf.babel
 });
 
 var reporter;

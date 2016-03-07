@@ -20,7 +20,11 @@ globals.setTimeout = setTimeout.bind(null);
 globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
-var conf = pkgConf.sync('ava');
+var conf = pkgConf.sync('ava', {
+	defaults: {
+		babel: 'default'
+	}
+});
 
 // Define a minimal set of options from the main CLI.
 var cli = meow([
@@ -63,7 +67,7 @@ var opts = {
 	require: arrify(cli.flags.require),
 	tty: false,
 	cacheDir: cacheDir,
-	precompiled: new CachingPrecompiler(cacheDir).generateHashForFile(file)
+	precompiled: new CachingPrecompiler(cacheDir, conf.babel).generateHashForFile(file)
 };
 
 var events = new EventEmitter();

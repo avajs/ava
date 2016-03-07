@@ -5,6 +5,7 @@ var rimraf = require('rimraf');
 var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
+var testDoublerPlugin = require('./fixture/babel-plugin-test-doubler');
 
 test('must be called with new', function (t) {
 	t.throws(function () {
@@ -683,4 +684,34 @@ test('verify test count', function (t) {
 		t.is(api.skipCount, 1);
 		t.is(api.todoCount, 1);
 	});
+});
+
+test('Custom Babel Plugin Support', function (t) {
+	t.plan(1);
+
+	var api = new Api({
+		babelConfig: {
+			presets: ['es2015', 'stage-2'],
+			plugins: [testDoublerPlugin]
+		}
+	});
+
+	api.run([path.join(__dirname, 'fixture/es2015.js')])
+		.then(
+			function () {
+				t.is(api.passCount, 2);
+			},
+			t.threw
+		);
+});
+
+test('Default babel config doesn\'t use .babelrc', function (t) {
+	t.plan(1);
+
+	var api = new Api();
+
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
 });
