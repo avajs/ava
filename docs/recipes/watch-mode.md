@@ -69,7 +69,7 @@ Dependency tracking works for required modules. Custom extensions and transpiler
 
 ## Manually rerunning all tests
 
-You can quickly rerun all tests by typing <kbd>rs</kbd> on the console, followed by <kbd>Enter</kbd>. [Just like in `nodemon`](https://github.com/remy/nodemon#manual-restarting)!
+You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed by <kbd>Enter</kbd>.
 
 ## Debugging
 
