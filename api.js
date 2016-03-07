@@ -194,35 +194,43 @@ Api.prototype.run = function (files) {
 			var tests = files.map(self._runFile);
 
 			// receive test count from all files and then run the tests
-			var statsCount = 0;
+			var unreportedFiles = self.fileCount;
 
 			return new Promise(function (resolve) {
-				tests.forEach(function (test) {
-					function tryRun() {
-						if (++statsCount === self.fileCount) {
-							self.emit('ready');
+				function run() {
+					self.emit('ready');
 
-							var method = self.options.serial ? 'mapSeries' : 'map';
-							var options = {
-								runOnlyExclusive: self.hasExclusive
+					var method = self.options.serial ? 'mapSeries' : 'map';
+					var options = {
+						runOnlyExclusive: self.hasExclusive
+					};
+
+					resolve(Promise[method](files, function (file, index) {
+						return tests[index].run(options).catch(function (err) {
+							// The test failed catastrophically. Flag it up as an
+							// exception, then return an empty result. Other tests may
+							// continue to run.
+							self._handleExceptions({
+								exception: err,
+								file: file
+							});
+
+							return {
+								stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
+								tests: []
 							};
+						});
+					}));
+				}
 
-							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run(options).catch(function (err) {
-									// The test failed catastrophically. Flag it up as an
-									// exception, then return an empty result. Other tests may
-									// continue to run.
-									self._handleExceptions({
-										exception: err,
-										file: file
-									});
-
-									return {
-										stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
-										tests: []
-									};
-								});
-							}));
+				tests.forEach(function (test) {
+					var tried = false;
+					function tryRun() {
+						if (!tried) {
+							unreportedFiles--;
+							if (unreportedFiles === 0) {
+								run();
+							}
 						}
 					}
 
