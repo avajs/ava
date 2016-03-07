@@ -12,7 +12,6 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/readme.md), [日本語](https://github.com/sindresorhus/ava-docs/blob/master/ja_JP/readme.md), [Português](https://github.com/sindresorhus/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/sindresorhus/ava-docs/blob/master/ru_RU/readme.md)
 
-
 ## Table of Contents
 
 - [Usage](#usage)
@@ -21,9 +20,13 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - [Documentation](#documentation)
 - [API](#api)
 - [Assertions](#assertions)
+- [Tips](#tips)
 - [FAQ](#faq)
 - [Recipes](#recipes)
-
+- [Support](#support)
+- [Related](#related)
+- [Links](#links)
+- [Team](#team)
 
 ## Why AVA?
 
@@ -32,16 +35,15 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
-- [Isolated environment for each test file](#isolated-environment)
+- [Isolated environment for each test file](#process-isolation)
 - [Write your tests in ES2015](#es2015-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
-- [Enhanced asserts](#enhanced-asserts)
+- [Enhanced assertion messages](#enhanced-assertion-messages)
 - [Optional TAP output](#optional-tap-output)
 - [Clean stack traces](#clean-stack-traces)
-
 
 ## Test syntax
 
@@ -53,26 +55,43 @@ test(t => {
 });
 ```
 
-
 ## Usage
 
-#### Initialize
+### Add AVA to your project
 
-Install AVA globally `$ npm install --global ava` and run `$ ava --init` (with any options) to add AVA to your package.json or create one.
+Install AVA globally run with `--init` to add AVA to your `package.json`:
+
+```console
+$ npm install --global ava
+$ ava --init
+```
 
 ```json
 {
-	"name": "awesome-package",
-	"scripts": {
-		"test": "ava"
-	},
-	"devDependencies": {
-		"ava": "^0.11.0"
-	}
+  "name": "awesome-package",
+  "scripts": {
+    "test": "ava"
+  },
+  "devDependencies": {
+    "ava": "^0.11.0"
+  }
 }
 ```
 
-#### Create your test file
+Any arguments passed after `--init` are added in the `package.json`.
+
+#### Manual installation
+
+You can also install AVA directly:
+
+```console
+$ npm install --save-dev ava
+```
+
+You'll have to configure the `test` script in your `package.json` to use `ava`
+(see above).
+
+### Create your test file
 
 Create a file named `test.js` in the project root directory:
 
@@ -92,20 +111,19 @@ test('bar', async t => {
 
 <img src="screenshot.png" width="150" align="right">
 
-#### Run it
+### Run it
 
-```
+```console
 $ npm test
 ```
 
-
 ## CLI
 
-```
+```console
 $ ava --help
 
   Usage
-    ava [<file|folder|glob> ...]
+    ava [<file|directory|glob> ...]
 
   Options
     --init           Add AVA to your project
@@ -131,7 +149,7 @@ $ ava --help
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
 
-Directories are recursive by default. Directories named `fixtures` and `helpers` are ignored, as well as files starting with `_`. This can be useful for having helpers in the same directory as your test files.
+Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are *always* ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
@@ -162,31 +180,35 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
+See the [ES2015 support](#es2015-support) section for details on the `babel` option.
+
 ## Documentation
 
-Tests are run asynchronously and require you to return a supported async object (a promise, or [observable](https://github.com/zenparsing/zen-observable)). We *highly* recommend the use of [async functions](#async-function-support); They make async code concise and readable, and they implicitly return a promise, so you don't have to.
+Tests are run concurrently. You can specify synchronous and asynchronous tests. Tests are considered synchronous unless you return a promise or [observable](https://github.com/zenparsing/zen-observable)).
 
-If you don't return one of the supported async objects mentioned above, the test is considered to be synchronous and ended immediately.
+We *highly* recommend the use of [async functions](#async-function-support). They make asynchronous code concise and readable, and they implicitly return a promise so you don't have to.
 
-If you're unable to use promises or other supported async objects, you may enable "callback mode" by defining your test with `test.cb([title], fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
+If you're unable to use promises or observables, you may enable "callback mode" by defining your test with `test.cb([title], fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
 Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
 
-### Test anatomy
+### Creating tests
 
-To create a test, you call the `test` function you `require`d from AVA and pass in an optional test name and a function containing the test execution. The passed function is given the context as the first argument, where you can call the different AVA methods and [assertions](#assertions).
+To create a test you call the `test` function you imported from AVA. Provide the optional title and callback function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
 
 ```js
-test('name', t => {
+import test from 'ava';
+
+test('my passing test', t => {
 	t.pass();
 });
 ```
 
-### Optional test name
+#### Titles
 
-Naming a test is optional, but you're recommended to use one if you have more than one test.
+Titles are optional, meaning you can do:
 
 ```js
 test(t => {
@@ -194,7 +216,9 @@ test(t => {
 });
 ```
 
-You can also choose to use a named function instead:
+It's recommended to provide test titles if you have more than one test.
+
+If you haven't provided a test title, but the callback is a named function, that name will be used as the test title:
 
 ```js
 test(function name(t) {
@@ -202,11 +226,13 @@ test(function name(t) {
 });
 ```
 
-### Assertion plan
+### Assertion planning
 
-An assertion plan can be used to ensure a specific number of assertions are made. In the most common scenario, it validates that the test didn't exit before executing the expected number of assertions. It also fails the test if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops. Be aware that, unlike node-tap & tape, AVA does *not* auto-end a test when the planned assertion count is reached.
+Assertion plans ensure tests only pass when a specific number of assertions have been executed. They'll help you catch cases where tests exit too early. They'll also cause tests to fail if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
 
-This will result in a passed test:
+Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https://www.npmjs.com/package/tape), AVA does *not* automatically end a test when the planned assertion count is reached.
+
+These examples will result in a passed test:
 
 ```js
 test(t => {
@@ -227,10 +253,31 @@ test.cb(t => {
 });
 ```
 
+These won't:
 
-### Serial-tests
+```js
+test(t => {
+	t.plan(2);
 
-While concurrency is awesome, there are some things that can't be done concurrently. In these rare cases, you can call `test.serial`, which will force those tests to run serially before the concurrent ones.
+	for (let i = 0; i < 3; i++) {
+		t.true(i < 3);
+	}
+}); // fails, 3 assertions are executed which is too many
+
+test(t => {
+	t.plan(1);
+
+	someAsyncFunction(() => {
+		t.pass();
+	});
+}); // fails, the test ends synchronously before the assertion is executed
+```
+
+### Running tests serially
+
+By default tests are run concurrently, which is awesome. Sometimes though you have to write tests that cannot run concurrently.
+
+In these rare cases you can use the `.serial` modifier. It'll force those tests to run serially *before* the concurrent ones.
 
 ```js
 test.serial(t => {
@@ -238,66 +285,101 @@ test.serial(t => {
 });
 ```
 
-### Only-tests
+Note that this only applies to tests within a particular test file. AVA will still run multiple tests files at the same time unless you pass the [`--serial` CLI flag](#cli).
 
-Only-tests enforces only those tests to be run. This can be useful for running only a few tests during development.
+### Running specific tests
+
+During development it can be helpful to only run a few specific tests. This can be accomplished using the `.only` modifier:
 
 ```js
 test('will not be run', t => {
 	t.fail();
-})
+});
 
 test.only('will be run', t => {
 	t.pass();
 });
 ```
 
-### Matched-tests
+`.only` applies across all test files, so if you use it in one file, no tests from the other file will run.
 
-The `--match` flag allows you to run a subset of the tests in your suite that have a matching title. This is achieved with simple wildcard patterns. For more information, check out [matcher](https://github.com/sindresorhus/matcher).
+### Running tests with matching titles
 
-```
-# match titles ending with 'foo'
+The `--match` flag allows you to run just the tests that have a matching title. This is achieved with simple wildcard patterns. Patterns are case insensitive. See [`matcher`](https://github.com/sindresorhus/matcher) for more details.
+
+Match titles ending with `foo`:
+
+```console
 $ ava --match='*foo'
+```
 
-# match titles starting with 'foo'
+Match titles starting with `foo`:
+
+```console
 $ ava --match='foo*'
+```
 
-# match titles containing 'foo'
+Match titles containing `foo`:
+
+```console
 $ ava --match='*foo*'
+```
 
-# match titles not containing 'foo'
+Match titles that are *exactly* `foo` (albeit case insensitively):
+
+```console
+$ ava --match='foo'
+```
+
+Watch titles not containing `foo`:
+
+```console
 $ ava --match='!*foo*'
+```
 
-# match titles starting with 'foo' and ending with 'bar'
+Match titles starting with `foo` and ending with `bar`:
+
+```console
 $ ava --match='foo*bar'
+```
 
-# match titles starting with 'foo' or ending with 'bar'
+Match titles starting with `foo` or ending with `bar`:
+
+```console
 $ ava --match='foo*' --match='*bar'
 ```
 
-```js
-// $ ava --match='*oo'
+Note that a match pattern takes precedence over the `.only` modifier. Only tests with an explicit title are matched. Tests without titles or whose title is derived from the callback function will be skipped when `--match` is used.
 
+Here's what happens when you run AVA with a match pattern of `*oo*` and the following tests:
+
+```js
 test('foo will run', t => {
 	t.pass();
 });
 
-test.only('moo will also run', t => {
+test('moo will also run', t => {
 	t.pass();
 });
 
-// won't run!
-test(function () {
+test.only('boo will run but not exclusively', t => {
+	t.pass();
+});
+
+// won't run, no title
+test(function (t) {
+	t.fail();
+});
+
+// won't run, no explicit title
+test(function foo(t) {
 	t.fail();
 });
 ```
 
-Note that a match pattern takes precedence over `.only`, and *any tests without an explicit title will* **not run** *if a match pattern is supplied.*
+### Skipping tests
 
-### Skip-tests
-
-Skip-tests are shown in the output as skipped but never run. Skip-tests require a function.
+Sometimes failing tests can be hard to fix. You can tell AVA to skip these tests using the `.skip` modifier. They'll still be shown in the output (as having been skipped) but are never run.
 
 ```js
 test.skip('will not be run', t => {
@@ -305,9 +387,11 @@ test.skip('will not be run', t => {
 });
 ```
 
-### Todo-tests
+You must specify the callback function.
 
-Todo-tests, like skip-tests, are shown in the output but are never run. They can be useful for planning future tests. Todo-tests require only a test title.
+### Test placeholders ("todo")
+
+You can use the `.todo` modifier when you're planning to write a test. Like skipped tests these placeholders are shown in the output. They only require a title; you cannot specify the callback function.
 
 ```js
 test.todo('will think about writing this later');
@@ -315,11 +399,15 @@ test.todo('will think about writing this later');
 
 ### Before & after hooks
 
-When setup and/or teardown is required, you can use `test.before()` and `test.after()`,
-used in the same manner as `test()`. The test function given to `test.before()` and `test.after()` is called before/after all tests. You can also use `test.beforeEach()` and `test.afterEach()` if you need setup/teardown for each test. Hooks are run serially in the test file. Add as many of these as you want. You can optionally specify a title that is shown on failure.
+AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-If you need to set up some global state between tests using `test.beforeEach()` and `test.afterEach()` (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are run serially (using either [test.serial](#serial-tests) or [`--serial`](#cli)).
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test.
 
+`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test.
+
+Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
+
+`before` hooks execute before `beforeEach` hooks. `afterEach` hooks execute before `after` hooks. Within their category the hooks execute in the order they were defined.
 
 ```js
 test.before(t => {
@@ -347,11 +435,15 @@ test(t => {
 });
 ```
 
-You may use async functions, return async objects, or enable "callback mode" in any of the hooks.
+Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, use an async function, or enable callback mode via `test.cb.before()`, `test.cb.beforeEach()` etc.
 
 ```js
 test.before(async t => {
 	await promiseFn();
+});
+
+test.after(t => {
+	return new Promise(/* ... */);
 });
 
 test.cb.beforeEach(t => {
@@ -361,11 +453,11 @@ test.cb.beforeEach(t => {
 test.afterEach.cb(t => {
 	setTimeout(t.end);
 });
-
-test.after(t => {
-   return new Promise(/* ... */);
-});
 ```
+
+Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
+
+Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `after`-hook since that's only called right before the process exits.
 
 The `beforeEach` & `afterEach` hooks can share context with the test:
 
@@ -379,7 +471,7 @@ test(t => {
 });
 ```
 
-The context is by default an object, but it can also be directly assigned:
+By default `t.context` is an object but you can reassign it:
 
 ```js
 test.beforeEach(t => {
@@ -391,22 +483,26 @@ test(t => {
 });
 ```
 
+Context sharing is *not* available to `before` and `after` hooks.
+
 ### Chaining test modifiers
 
-You can chain test modifiers together in the following ways:
+You can use the `.serial`, `.only` and `.skip` modifiers in any order, with `test`, `before`, `after`, `beforeEach` and `afterEach`. For example:
 
 ```js
-test.before.skip([title], testFn);
-test.skip.after(....);
+test.before.skip(...);
+test.skip.after(...);
 test.serial.only(...);
 test.only.serial(...);
 ```
 
-This is especially helpful temporarily using `skip` or `only` on a test, without losing the information and behavior the other modifiers provide.
+This means you can temporarily add `.skip` or `.only` at the end of a test or hook definition without having to make any other changes.
 
-### Custom assertion module
+### Custom assertions
 
-You can use any assertion module instead or in addition to the one that comes with AVA, but you won't be able to use the `.plan()` method, [yet](https://github.com/sindresorhus/ava/issues/25).
+You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
+
+This won't give you as nice an experience as you'd get with the [built-in assertions](#assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/sindresorhus/ava/issues/25)).
 
 ```js
 import assert from 'assert';
@@ -418,15 +514,24 @@ test(t => {
 
 ### ES2015 support
 
-AVA comes with builtin support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](http://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](http://babeljs.io/docs/plugins/preset-stage-2/) presets.
+AVA comes with built-in support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](https://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) presets, as well as the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
 
-### TypeScript support
+The corresponding Babel config for AVA's setup is as follows:
 
-AVA includes typings for TypeScript. You have to setup transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use Promises and async functions.
+```json
+{
+  "presets": [
+    "es2015",
+    "stage-0",
+  ],
+  "plugins": [
+    "espower",
+    "transform-runtime"
+  ]
+}
+```
 
-### Babel Configuration for Test Scripts
-
-If you want to customize the babel transpiler for test files, you can do so by adding a `"babel"` key to the `ava` section in your `package.json` file.
+You can customize how AVA transpiles the test files through the `babel` option in AVA's [`package.json` configuration](#configuration). For example to override the presets you can use:
 
 ```json
 {
@@ -442,9 +547,9 @@ If you want to customize the babel transpiler for test files, you can do so by a
 }
 ```
 
-In addition to specifying a custom Babel config, you can also use the special `"inherit"` keyword. When you do this, AVA will allow tests to be transpiled using the configuration defined in your `.babelrc` file or in package.json/babel. This way, your test files will be transpiled using the same options as your source files, but you won't have to define the options twice.
+You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
 
-```json
+ ```json
 {
 	"babel": {
 		"presets": [
@@ -459,41 +564,19 @@ In addition to specifying a custom Babel config, you can also use the special `"
 }
 ```
 
-Note: When configuring Babel for tests manually, the espower and transform-runtime plugins will be
-added for you.
+Note that AVA will *always* apply the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
 
-## Default Babel Configuration for Test Scripts
+### TypeScript support
 
-If you don't explicitly configure Babel for your tests using the `"babel"` key in package.json, your tests will be transpiled using AVA's default Babel configuration, which is as follows:
+AVA includes typings for TypeScript. You have to set up transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use promises and async functions.
 
-```json
-{
-  "presets": [
-    "es2015",
-    "stage-0",
-  ],
-  "plugins": [
-    "espower",
-    "transform-runtime"
-  ]
-}
-```
+### Transpiling imported modules
 
-#### Transpiling Imported Modules
+AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
-AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you ```import``` from outside of the test.* While there are valid reasons for taking this approach, it may not be what you expect!
+If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. Run AVA with `--require babel-register` (see [CLI](#cli)) or [configure it in your `package.json`](#configuration).
 
-As a simple workaround, you can use [Babel's require hook](https://babeljs.io/docs/usage/require/) in order to do on-the-fly transpiling of modules that are subsequently imported. Because AVA supports ES2015 module syntax, you can use it to import the require hook itself:
-
-```js
-import test from 'ava';
-import 'babel-register';
-import foo from './foo'; // <-- foo can be written in ES2015!
-
-test('foo bar', t => {
-	t.same('baz', foo('bar'));
-});
-```
+You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
 
 ### Promise support
 
@@ -509,7 +592,7 @@ test(t => {
 
 ### Generator function support
 
-AVA comes with builtin support for [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+AVA comes with built-in support for [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
 
 ```js
 test(function * (t) {
@@ -520,7 +603,7 @@ test(function * (t) {
 
 ### Async function support
 
-AVA comes with builtin support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
+AVA comes with built-in support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
 
 ```js
 test(async function (t) {
@@ -537,8 +620,7 @@ test(async t => {
 
 ### Observable support
 
-AVA comes with builtin support for [observables](https://github.com/zenparsing/es-observable).
-If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
+AVA comes with built-in support for [observables](https://github.com/zenparsing/es-observable). If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
 
 *You do not need to use "callback mode" or call `t.end()`.*
 
@@ -569,12 +651,11 @@ test.cb(t => {
 
 AVA can generate TAP output via `--tap` option for use with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
 
-```
+```console
 $ ava --tap | tap-nyan
 ```
 
 <img src="media/tap-output.png" width="398">
-
 
 ### Clean stack traces
 
@@ -582,48 +663,48 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 <img src="media/stack-traces.png" width="300">
 
-
 ## API
 
-### test([title], body)
-### test.serial([title], body)
-### test.cb([title], body)
-### test.only([title], body)
-### test.skip([title], body)
-### test.todo(title)
-### test.before([title], body)
-### test.after([title], body)
-### test.beforeEach([title], body)
-### test.afterEach([title], body)
+### `test([title], callback)`
+### `test.serial([title], callback)`
+### `test.cb([title], callback)`
+### `test.only([title], callback)`
+### `test.skip([title], callback)`
+### `test.todo(title)`
+### `test.before([title], callback)`
+### `test.after([title], callback)`
+### `test.beforeEach([title], callback)`
+### `test.afterEach([title], callback)`
 
-#### title
+#### `title`
 
 Type: `string`
 
 Test title.
 
-#### body(context)
+#### `callback(t)`
 
 Type: `function`
 
 Should contain the actual test.
 
-##### context
+##### `t`
 
-Passed into the test function and contains the different AVA methods and [assertions](#assertions).
+Type: `object`
 
-###### .plan(count)
+The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match planned assertions.
+###### `t.plan(count)`
 
-###### .end()
+Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](#assertion-planning).
+
+###### `t.end()`
 
 End the test. Only works with `test.cb()`.
 
-
 ## Assertions
 
-Assertions are mixed into the test [context](#context):
+Assertions are mixed into the [execution object](#t) provided to each test callback:
 
 ```js
 test(t => {
@@ -633,47 +714,47 @@ test(t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-### .pass([message])
+### `.pass([message])`
 
 Passing assertion.
 
-### .fail([message])
+### `.fail([message])`
 
 Failing assertion.
 
-### .ok(value, [message])
+### `.ok(value, [message])`
 
 Assert that `value` is truthy.
 
-### .notOk(value, [message])
+### `.notOk(value, [message])`
 
 Assert that `value` is falsy.
 
-### .true(value, [message])
+### `.true(value, [message])`
 
 Assert that `value` is `true`.
 
-### .false(value, [message])
+### `.false(value, [message])`
 
 Assert that `value` is `false`.
 
-### .is(value, expected, [message])
+### `.is(value, expected, [message])`
 
 Assert that `value` is equal to `expected`.
 
-### .not(value, expected, [message])
+### `.not(value, expected, [message])`
 
 Assert that `value` is not equal to `expected`.
 
-### .same(value, expected, [message])
+### `.same(value, expected, [message])`
 
 Assert that `value` is deep equal to `expected`.
 
-### .notSame(value, expected, [message])
+### `.notSame(value, expected, [message])`
 
 Assert that `value` is not deep equal to `expected`.
 
-### .throws(function|promise, [error, [message]])
+### `.throws(function|promise, [error, [message]])`
 
 Assert that `function` throws an error, or `promise` rejects with an error.
 
@@ -681,19 +762,19 @@ Assert that `function` throws an error, or `promise` rejects with an error.
 
 Returns the error thrown by `function` or the rejection reason of `promise`.
 
-### .notThrows(function|promise, [message])
+### `.notThrows(function|promise, [message])`
 
 Assert that `function` doesn't throw an `error` or `promise` resolves.
 
-### .regex(contents, regex, [message])
+### `.regex(contents, regex, [message])`
 
 Assert that `contents` matches `regex`.
 
-### .ifError(error, [message])
+### `.ifError(error, [message])`
 
 Assert that `error` is falsy.
 
-## Skipping Assertions
+### Skipping assertions
 
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
 
@@ -705,36 +786,26 @@ test(t => {
 });
 ```
 
-## Enhanced asserts
+### Enhanced assertion messages
 
-AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) builtin, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
+AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) built-in, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
 
-The following test:
+Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
 
 ```js
-test(t => {
-	const x = 'foo';
-	t.ok(x === 'bar');
-});
+const a = /foo/;
+const b = 'bar';
+const c = 'baz';
+require('assert').ok(a.test(b) || b === c);
 ```
 
-Would normally give the unhelpful output:
+If you paste that into a Node REPL it'l return:
 
 ```
-false === true
+AssertionError: false == true
 ```
 
-With the enhanced asserts, you'll get:
-
-```
-t.ok(x === 'bar')
-     |
-     "foo"
-```
-
-True, you could use `t.is()` in this case, and probably should, but this is just a simple example.
-
-Let try a more advanced example:
+In AVA however, this test:
 
 ```js
 test(t => {
@@ -745,7 +816,7 @@ test(t => {
 });
 ```
 
-And there you go:
+Will output:
 
 ```
 t.ok(a.test(b) || b === c)
@@ -754,46 +825,45 @@ t.ok(a.test(b) || b === c)
        false
 ```
 
-All the assert methods are enhanced.
+## Process isolation
 
-Have fun!
-
-
-## Isolated environment
-
-Each test file is run in a separate Node.js process. This comes with a lot of benefits. Different test files can no longer affect each other. Like test files mocking with the global environment, overriding builtins, etc. However, it's mainly done for performance reasons. Even though Node.js can run async IO concurrently, that doesn't help much when tests are heavy on synchronous operations, which blocks the main thread. By running tests concurrently and test files in parallel we take full advantage of modern systems.
-
+Each test file is run in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another. It's also great for performance on modern multi-core processors, allowing multiple test files to execute in parallel.
 
 ## Tips
 
 ### Temp files
 
-Running tests concurrently comes with some challenges, doing IO is one. Usually, serial tests just create temp directories in the current test directory and cleans it up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
+Running tests concurrently comes with some challenges, doing file IO is one.
+
+Usually, serial tests create temp directories in the current test directory and clean them up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
 
 ### Debugging
 
 AVA runs tests concurrently by default, which is suboptimal when you need to debug something. Instead, run tests serially with the `--serial` option:
 
-```
+```console
 $ ava --serial
 ```
 
 ### Code coverage
 
-You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#isolated-environment), but you can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
+You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#process-isolation). You can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
 
-As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your `.babelrc` to `inline`.
-
+As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your Babel config to `inline`.
 
 ## FAQ
 
-### Why not `mocha`, `tape`, `node-tap`?
+### Why not `mocha`, `tape`, `tap`?
 
-Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use), too unopinionated, bloated, synchronous by default, unusable programmatic API, serial test execution, and slow. Tape and node-tap are pretty good. AVA is highly inspired by their syntax. However, they both execute tests serially and they've made [TAP](https://testanything.org) a first-class citizen which has IMHO made their codebases a bit convoluted and coupled. TAP output is hard to read so you always end up using an external tap reporter. AVA is highly opinionated and concurrent. It comes with a default simple reporter and supports TAP through a CLI flag.
+Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use). It's not very opinionated and executes tests serially without process isolation, making it slow.
+
+Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
+
+In contrast AVA is highly opinionated and runs tests concurrently, with a separate processes for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
 ### How can I use custom reporters?
 
-Use the [`--tap` flag](#optional-tap-output) with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
+AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
 
 ### How is the name written and pronounced?
 
@@ -801,12 +871,11 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 
 ### What is the header background?
 
-[Andromeda galaxy.](https://simple.wikipedia.org/wiki/Andromeda_galaxy)
+It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
-### Concurrency vs. parallelism
+### What is the difference between concurrency and parallelism?
 
-[Concurrency is not parallelism. It enables parallelism.](http://stackoverflow.com/q/1050222)
-
+[Concurrency is not parallelism. It enables parallelism.](https://stackoverflow.com/q/1050222)
 
 ## Recipes
 
@@ -822,7 +891,6 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [Gitter chat](https://gitter.im/sindresorhus/ava)
 - [Twitter](https://twitter.com/ava__js)
 
-
 ## Related
 
 - [sublime-ava](https://github.com/sindresorhus/sublime-ava) - Snippets for AVA tests
@@ -834,12 +902,10 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
-
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 - [Awesome list](https://github.com/sindresorhus/awesome-ava)
-
 
 ## Team
 
@@ -847,11 +913,9 @@ AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?ra
 ---|---|---|---|---
 [Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net)
 
-#### Former
+### Former
 
 - [Kevin Mårtensson](https://github.com/kevva)
-
-
 
 <div align="center">
 	<br>
