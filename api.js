@@ -14,6 +14,7 @@ var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var slash = require('slash');
+var getPort = require('get-port');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
@@ -61,19 +62,44 @@ Api.prototype._reset = function () {
 	this.base = '';
 };
 
-Api.prototype._runFile = function (file) {
+Api.prototype._runFile = function (file, onForkStarting) {
 	var options = objectAssign({}, this.options, {
 		precompiled: this.precompiler.generateHashForFile(file)
 	});
 
-	return fork(file, options)
-		.on('teardown', this._handleTeardown)
-		.on('stats', this._handleStats)
-		.on('test', this._handleTest)
-		.on('unhandledRejections', this._handleRejections)
-		.on('uncaughtException', this._handleExceptions)
-		.on('stdout', this._handleOutput.bind(this, 'stdout'))
-		.on('stderr', this._handleOutput.bind(this, 'stderr'));
+	var execArgv = process.execArgv.slice();
+	var debugArgIndex = -1;
+	for (var i = 0; i < execArgv.length; i++) {
+		if (execArgv[i].indexOf('--debug-brk=') === 0 || execArgv[i].indexOf('--debug=') === 0) {
+			debugArgIndex = i;
+			break;
+		}
+	}
+
+	var execArgvPromise;
+	if (debugArgIndex === -1) {
+		execArgvPromise = Promise.resolve(execArgv);
+	} else {
+		execArgvPromise = getPort()
+			.then(function (port) {
+				execArgv[debugArgIndex] = '--debug-brk=' + port;
+				return execArgv;
+			});
+	}
+
+	return execArgvPromise
+		.then(function (execArgv) {
+			var result = fork(file, options, execArgv)
+				.on('teardown', this._handleTeardown)
+				.on('stats', this._handleStats)
+				.on('test', this._handleTest)
+				.on('unhandledRejections', this._handleRejections)
+				.on('uncaughtException', this._handleExceptions)
+				.on('stdout', this._handleOutput.bind(this, 'stdout'))
+				.on('stderr', this._handleOutput.bind(this, 'stderr'));
+			onForkStarting(result);
+			return result.promise;
+		}.bind(this));
 };
 
 Api.prototype._handleOutput = function (channel, data) {
@@ -191,44 +217,57 @@ Api.prototype.run = function (files) {
 			self.fileCount = files.length;
 			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
-			var tests = files.map(self._runFile);
-
-			// receive test count from all files and then run the tests
-			var statsCount = 0;
-
 			return new Promise(function (resolve) {
-				tests.forEach(function (test) {
-					function tryRun() {
-						if (++statsCount === self.fileCount) {
-							self.emit('ready');
+				// receive test count from all files and then run the tests
+				var statsCount = 0;
 
-							var method = self.options.serial ? 'mapSeries' : 'map';
-							var options = {
-								runOnlyExclusive: self.hasExclusive
-							};
-
-							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run(options).catch(function (err) {
-									// The test failed catastrophically. Flag it up as an
-									// exception, then return an empty result. Other tests may
-									// continue to run.
-									self._handleExceptions({
-										exception: err,
-										file: file
-									});
-
-									return {
-										stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
-										tests: []
-									};
-								});
-							}));
-						}
-					}
-
-					test.on('stats', tryRun);
-					test.catch(tryRun);
+				var tests = new Array(files.length);
+				files.forEach(function (file, index) {
+					self._runFile(file, function (forkManager) {
+						tests[index] = forkManager;
+						forkManager.on('stats', tryRun);
+					})
+					.catch(function (error) {
+						tests[index] = {
+							run: function () {
+								return this;
+							},
+							promise: Promise.reject(error),
+							then: function () {
+								return this.promise.then.apply(this.promise, arguments);
+							}
+						};
+						tryRun();
+					});
 				});
+
+				function tryRun() {
+					if (++statsCount === self.fileCount) {
+						self.emit('ready');
+
+						var method = self.options.serial ? 'mapSeries' : 'map';
+						var options = {
+							runOnlyExclusive: self.hasExclusive
+						};
+
+						resolve(Promise[method](files, function (file, index) {
+							return tests[index].run(options).promise.catch(function (err) {
+								// The test failed catastrophically. Flag it up as an
+								// exception, then return an empty result. Other tests may
+								// continue to run.
+								self._handleExceptions({
+									exception: err,
+									file: file
+								});
+
+								return {
+									stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
+									tests: []
+								};
+							});
+						}));
+					}
+				}
 			});
 		})
 		.then(function (results) {
