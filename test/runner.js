@@ -203,6 +203,16 @@ test('skip test', function (t) {
 	});
 });
 
+test('test throws when given no function', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.test();
+	}, {message: 'Expected a function. Use `test.todo()` for tests without a function.'});
+});
+
 test('todo test', function (t) {
 	t.plan(5);
 
