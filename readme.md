@@ -143,7 +143,7 @@ $ ava --help
     --no-cache       Disable the transpiler cache
     --match, -m      Only run tests with matching title (Can be repeated)',
     --watch, -w      Re-run tests when tests and source files change
-    --source         Pattern to match source files so tests can be re-run (Can be repeated)
+    --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)
 
   Examples
     ava
