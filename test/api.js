@@ -710,11 +710,8 @@ test('Default babel config doesn\'t use .babelrc', function (t) {
 
 	var api = new Api();
 
-	api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(
-			function () {
-				t.is(api.passCount, 1);
-			},
-			t.threw
-		);
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
 });
