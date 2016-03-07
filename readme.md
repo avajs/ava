@@ -180,6 +180,8 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
+See the [ES2015 support](#es2015-support) section for details on the `babel` option.
+
 ## Documentation
 
 Tests are run concurrently. You can specify synchronous and asynchronous tests. Tests are considered synchronous unless you return a promise or [observable](https://github.com/zenparsing/zen-observable)).
@@ -512,15 +514,24 @@ test(t => {
 
 ### ES2015 support
 
-AVA comes with built-in support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](http://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](http://babeljs.io/docs/plugins/preset-stage-2/) presets.
+AVA comes with built-in support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](https://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) presets, as well as the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
 
-### TypeScript support
+The corresponding Babel config for AVA's setup is as follows:
 
-AVA includes typings for TypeScript. You have to set up transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use promises and async functions.
+```json
+{
+  "presets": [
+    "es2015",
+    "stage-0",
+  ],
+  "plugins": [
+    "espower",
+    "transform-runtime"
+  ]
+}
+```
 
-### Babel Configuration for Test Scripts
-
-If you want to customize the babel transpiler for test files, you can do so by adding a `"babel"` key to the `ava` section in your `package.json` file.
+You can customize how AVA transpiles the test files through the `babel` option in AVA's [`package.json` configuration](#configuration). For example to override the presets you can use:
 
 ```json
 {
@@ -536,9 +547,9 @@ If you want to customize the babel transpiler for test files, you can do so by a
 }
 ```
 
-In addition to specifying a custom Babel config, you can also use the special `"inherit"` keyword. When you do this, AVA will allow tests to be transpiled using the configuration defined in your `.babelrc` file or in package.json/babel. This way, your test files will be transpiled using the same options as your source files, but you won't have to define the options twice.
+You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
 
-```json
+ ```json
 {
 	"babel": {
 		"presets": [
@@ -553,25 +564,11 @@ In addition to specifying a custom Babel config, you can also use the special `"
 }
 ```
 
-Note: When configuring Babel for tests manually, the espower and transform-runtime plugins will be
-added for you.
+Note that AVA will *always* apply the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
 
-#### Default Babel Configuration for Test Scripts
+### TypeScript support
 
-If you don't explicitly configure Babel for your tests using the `"babel"` key in package.json, your tests will be transpiled using AVA's default Babel configuration, which is as follows:
-
-```json
-{
-  "presets": [
-    "es2015",
-    "stage-0",
-  ],
-  "plugins": [
-    "espower",
-    "transform-runtime"
-  ]
-}
-```
+AVA includes typings for TypeScript. You have to set up transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use promises and async functions.
 
 ### Transpiling imported modules
 
