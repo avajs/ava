@@ -28,6 +28,7 @@ function Api(options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
+	this.options.match = this.options.match || [];
 
 	this.excludePatterns = [
 		'!**/node_modules/**',
@@ -198,6 +199,20 @@ Api.prototype.run = function (files) {
 
 			return new Promise(function (resolve) {
 				function run() {
+					if (self.options.match.length > 0 && !self.hasExclusive) {
+						self._handleExceptions({
+							exception: new AvaError('Couldn\'t find any matching tests'),
+							file: undefined
+						});
+
+						tests.forEach(function (test) {
+							// No tests will be run so tear down the child processes.
+							test.send('teardown');
+						});
+						resolve([]);
+						return;
+					}
+
 					self.emit('ready');
 
 					var method = self.options.serial ? 'mapSeries' : 'map';
