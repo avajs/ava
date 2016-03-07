@@ -715,3 +715,18 @@ test('Default babel config doesn\'t use .babelrc', function (t) {
 			t.is(api.passCount, 1);
 		});
 });
+
+test('using --match with no matching tests causes an AvaError to be emitted', function (t) {
+	t.plan(2);
+
+	var api = new Api({
+		match: ['can\'t match this']
+	});
+
+	api.on('error', function (err) {
+		t.is(err.name, 'AvaError');
+		t.match(err.message, /Couldn't find any matching tests/);
+	});
+
+	return api.run([path.join(__dirname, 'fixture/match-no-match.js')]);
+});

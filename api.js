@@ -28,6 +28,7 @@ function Api(options) {
 
 	this.options = options || {};
 	this.options.require = (this.options.require || []).map(resolveCwd);
+	this.options.match = this.options.match || [];
 
 	this.excludePatterns = [
 		'!**/node_modules/**',
@@ -194,35 +195,57 @@ Api.prototype.run = function (files) {
 			var tests = files.map(self._runFile);
 
 			// receive test count from all files and then run the tests
-			var statsCount = 0;
+			var unreportedFiles = self.fileCount;
 
 			return new Promise(function (resolve) {
-				tests.forEach(function (test) {
-					function tryRun() {
-						if (++statsCount === self.fileCount) {
-							self.emit('ready');
+				function run() {
+					if (self.options.match.length > 0 && !self.hasExclusive) {
+						self._handleExceptions({
+							exception: new AvaError('Couldn\'t find any matching tests'),
+							file: undefined
+						});
 
-							var method = self.options.serial ? 'mapSeries' : 'map';
-							var options = {
-								runOnlyExclusive: self.hasExclusive
+						tests.forEach(function (test) {
+							// No tests will be run so tear down the child processes.
+							test.send('teardown');
+						});
+						resolve([]);
+						return;
+					}
+
+					self.emit('ready');
+
+					var method = self.options.serial ? 'mapSeries' : 'map';
+					var options = {
+						runOnlyExclusive: self.hasExclusive
+					};
+
+					resolve(Promise[method](files, function (file, index) {
+						return tests[index].run(options).catch(function (err) {
+							// The test failed catastrophically. Flag it up as an
+							// exception, then return an empty result. Other tests may
+							// continue to run.
+							self._handleExceptions({
+								exception: err,
+								file: file
+							});
+
+							return {
+								stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
+								tests: []
 							};
+						});
+					}));
+				}
 
-							resolve(Promise[method](files, function (file, index) {
-								return tests[index].run(options).catch(function (err) {
-									// The test failed catastrophically. Flag it up as an
-									// exception, then return an empty result. Other tests may
-									// continue to run.
-									self._handleExceptions({
-										exception: err,
-										file: file
-									});
-
-									return {
-										stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
-										tests: []
-									};
-								});
-							}));
+				tests.forEach(function (test) {
+					var tried = false;
+					function tryRun() {
+						if (!tried) {
+							unreportedFiles--;
+							if (unreportedFiles === 0) {
+								run();
+							}
 						}
 					}
 
