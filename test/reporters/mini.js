@@ -120,7 +120,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.yellow('- skipped'),
+		' ⠋ ' + chalk.yellow('skipped'),
 		'',
 		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
@@ -140,7 +140,7 @@ test('todo test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.blue('- todo'),
+		' ⠋ ' + chalk.blue('todo'),
 		'',
 		'   ' + chalk.blue('1 todo')
 	].join('\n');
