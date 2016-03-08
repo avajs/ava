@@ -8,6 +8,11 @@ async function testFn(t) {
 	t.pass();
 }
 
+async function failFn(t) {
+	await delay(40);
+	t.fail();
+}
+
 for (var i = 0; i < 400; i++) {
-	test.serial('test number ' + i, testFn);
+	test.serial('test number ' + i, i === 125 ? failFn : testFn);
 }

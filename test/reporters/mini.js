@@ -2,15 +2,24 @@
 var chalk = require('chalk');
 var test = require('tap').test;
 var AvaError = require('../../lib/ava-error');
-var miniReporter = require('../../lib/reporters/mini');
+var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
+
+function miniReporter() {
+	var reporter = _miniReporter();
+	reporter.start = function () {
+		return '';
+	};
+	return reporter;
+}
 
 process.stderr.setMaxListeners(50);
 
 test('start', function (t) {
-	var reporter = miniReporter();
+	var reporter = _miniReporter();
 
-	t.is(reporter.start(), '');
+	t.is(reporter.start(), ' \n ⠋ ');
+	reporter.clearInterval();
 	t.end();
 });
 
@@ -22,9 +31,10 @@ test('passing test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.green('passed'),
+		' ',
+		' ⠋ ' + chalk.green('passed'),
 		'',
-		'  ' + chalk.green('1 passed')
+		'   ' + chalk.green('1 passed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -42,9 +52,58 @@ test('failing test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.red('failed'),
+		' ',
+		' ⠋ ' + chalk.red('failed'),
 		'',
-		'  ' + chalk.red('1 failed')
+		'   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('passing test after failing', function (t) {
+	var reporter = miniReporter();
+
+	reporter.test({
+		title: 'failed',
+		error: {
+			message: 'assertion failed'
+		}
+	});
+
+	var actualOutput = reporter.test({title: 'passed'});
+
+	var expectedOutput = [
+		' ',
+		' ⠋ ' + chalk.green('passed'),
+		'',
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failing test after passing', function (t) {
+	var reporter = miniReporter();
+
+	reporter.test({title: 'passed'});
+
+	var actualOutput = reporter.test({
+		title: 'failed',
+		error: {
+			message: 'assertion failed'
+		}
+	});
+
+	var expectedOutput = [
+		' ',
+		' ⠋ ' + chalk.red('failed'),
+		'',
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -60,9 +119,10 @@ test('skipped test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.yellow('- skipped'),
+		' ',
+		' ⠋ ' + chalk.yellow('- skipped'),
 		'',
-		''
+		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -79,9 +139,10 @@ test('todo test', function (t) {
 	});
 
 	var expectedOutput = [
-		'  ' + chalk.blue('- todo'),
+		' ',
+		' ⠋ ' + chalk.blue('- todo'),
 		'',
-		''
+		'   ' + chalk.blue('1 todo')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -95,7 +156,7 @@ test('results with passing tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.green('1 passed'),
+		'\n   ' + chalk.green('1 passed'),
 		''
 	].join('\n');
 
@@ -111,7 +172,7 @@ test('results with skipped tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.yellow('1 skipped'),
+		'\n   ' + chalk.yellow('1 skipped'),
 		''
 	].join('\n');
 
@@ -127,7 +188,7 @@ test('results with todo tests', function (t) {
 
 	var actualOutput = reporter.finish();
 	var expectedOutput = [
-		'\n  ' + chalk.blue('1 todo'),
+		'\n   ' + chalk.blue('1 todo'),
 		''
 	].join('\n');
 
@@ -143,8 +204,9 @@ test('results with passing skipped tests', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed') + '  ' + chalk.yellow('1 skipped'));
-	t.is(output[2], '');
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.yellow('1 skipped'));
+	t.is(output[3], '');
 	t.end();
 });
 
@@ -164,8 +226,8 @@ test('results with passing tests and rejections', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed'));
-	t.is(output[2], '  ' + chalk.red('1 rejection'));
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.red('1 rejection'));
 	t.is(output[3], '');
 	t.is(output[4], '  ' + chalk.red('1. Unhandled Rejection'));
 	t.match(output[5], /Error: failure/);
@@ -192,8 +254,8 @@ test('results with passing tests and exceptions', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.green('1 passed'));
-	t.is(output[2], '  ' + chalk.red('2 exceptions'));
+	t.is(output[1], '   ' + chalk.green('1 passed'));
+	t.is(output[2], '   ' + chalk.red('2 exceptions'));
 	t.is(output[3], '');
 	t.is(output[4], '  ' + chalk.red('1. Uncaught Exception'));
 	t.match(output[5], /Error: failure/);
@@ -220,7 +282,7 @@ test('results with errors', function (t) {
 	var output = reporter.finish().split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '  ' + chalk.red('1 failed'));
+	t.is(output[1], '   ' + chalk.red('1 failed'));
 	t.is(output[2], '');
 	t.is(output[3], '  ' + chalk.red('1. failed'));
 	t.match(output[4], /failure/);

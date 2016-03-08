@@ -100,7 +100,7 @@ run(
 			'You should see the entire contents of the Gettysburg address.',
 			'Three paragraphs with a blank line in between each.',
 			'There should be no other blank lines within the speech text.',
-			'The test counter should display "400 passed" at the bottom.'
+			'The test counter should display "399 passed  1 failed" at the bottom.'
 		]
 	))
 ;
