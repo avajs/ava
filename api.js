@@ -106,6 +106,8 @@ Api.prototype._handleTeardown = function (data) {
 };
 
 Api.prototype._handleStats = function (stats) {
+	this.emit('stats', stats);
+
 	if (this.hasExclusive && !stats.hasExclusive) {
 		return;
 	}
@@ -165,10 +167,15 @@ Api.prototype._prefixTitle = function (file) {
 	return prefix;
 };
 
-Api.prototype.run = function (files) {
+Api.prototype.run = function (files, options) {
 	var self = this;
 
 	this._reset();
+
+	if (options && options.runOnlyExclusive) {
+		this.hasExclusive = true;
+	}
+
 	return handlePaths(files, this.excludePatterns)
 		.map(function (file) {
 			return path.resolve(file);
