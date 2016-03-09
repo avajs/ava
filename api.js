@@ -194,9 +194,6 @@ Api.prototype.run = function (files) {
 
 			var tests = files.map(self._runFile);
 
-			// receive test count from all files and then run the tests
-			var unreportedFiles = self.fileCount;
-
 			return new Promise(function (resolve) {
 				function run() {
 					if (self.options.match.length > 0 && !self.hasExclusive) {
@@ -238,6 +235,8 @@ Api.prototype.run = function (files) {
 					}));
 				}
 
+				// receive test count from all files and then run the tests
+				var unreportedFiles = self.fileCount;
 				tests.forEach(function (test) {
 					var tried = false;
 					function tryRun() {
