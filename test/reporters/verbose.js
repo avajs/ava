@@ -5,6 +5,8 @@ var test = require('tap').test;
 var beautifyStack = require('../../lib/beautify-stack');
 var verboseReporter = require('../../lib/reporters/verbose');
 
+chalk.enabled = true;
+
 function createReporter() {
 	var reporter = verboseReporter();
 	reporter.api = {
@@ -98,7 +100,7 @@ test('skipped test', function (t) {
 		skip: true
 	});
 
-	var expectedOutput = '  ' + chalk.cyan('- skipped');
+	var expectedOutput = '  ' + chalk.yellow('- skipped');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
