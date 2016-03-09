@@ -730,3 +730,19 @@ test('using --match with no matching tests causes an AvaError to be emitted', fu
 
 	return api.run([path.join(__dirname, 'fixture/match-no-match.js')]);
 });
+
+test('errors thrown when running files are emitted', function (t) {
+	t.plan(2);
+
+	var api = new Api();
+
+	api.on('error', function (err) {
+		t.is(err.name, 'SyntaxError');
+		t.match(err.message, /Unexpected token/);
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/es2015.js'),
+		path.join(__dirname, 'fixture/syntax-error.js')
+	]);
+});

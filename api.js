@@ -192,8 +192,7 @@ Api.prototype.run = function (files) {
 			self.fileCount = files.length;
 			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
-			var tests = files.map(self._runFile);
-
+			var tests = new Array(self.fileCount);
 			return new Promise(function (resolve) {
 				function run() {
 					if (self.options.match.length > 0 && !self.hasExclusive) {
@@ -202,10 +201,6 @@ Api.prototype.run = function (files) {
 							file: undefined
 						});
 
-						tests.forEach(function (test) {
-							// No tests will be run so tear down the child processes.
-							test.send('teardown');
-						});
 						resolve([]);
 						return;
 					}
@@ -237,10 +232,11 @@ Api.prototype.run = function (files) {
 
 				// receive test count from all files and then run the tests
 				var unreportedFiles = self.fileCount;
-				tests.forEach(function (test) {
+				var bailed = false;
+				files.every(function (file, index) {
 					var tried = false;
 					function tryRun() {
-						if (!tried) {
+						if (!tried && !bailed) {
 							unreportedFiles--;
 							if (unreportedFiles === 0) {
 								run();
@@ -248,9 +244,30 @@ Api.prototype.run = function (files) {
 						}
 					}
 
-					test.on('stats', tryRun);
-					test.catch(tryRun);
+					try {
+						var test = tests[index] = self._runFile(file);
+						test.on('stats', tryRun);
+						test.catch(tryRun);
+						return true;
+					} catch (err) {
+						bailed = true;
+						self._handleExceptions({
+							exception: err,
+							file: file
+						});
+						resolve([]);
+						return false;
+					}
 				});
+			}).then(function (results) {
+				if (results.length === 0) {
+					// No tests ran, make sure to tear down the child processes.
+					tests.forEach(function (test) {
+						test.send('teardown');
+					});
+				}
+
+				return results;
 			});
 		})
 		.then(function (results) {
