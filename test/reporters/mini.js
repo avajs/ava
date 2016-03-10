@@ -36,7 +36,7 @@ test('passing test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ' + graySpinner + ' ' + chalk.green('passed'),
+		' ' + graySpinner + ' passed',
 		'',
 		'   ' + chalk.green('1 passed')
 	].join('\n');
@@ -80,7 +80,7 @@ test('passing test after failing', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ' + graySpinner + ' ' + chalk.green('passed'),
+		' ' + graySpinner + ' passed',
 		'',
 		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 failed')
@@ -124,11 +124,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		' ',
-<<<<<<< HEAD
-		' ' + graySpinner + ' ' + chalk.yellow('- skipped'),
-=======
-		' ⠋ ' + chalk.yellow('skipped'),
->>>>>>> master
+		' ' + graySpinner + ' skipped',
 		'',
 		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
@@ -148,11 +144,7 @@ test('todo test', function (t) {
 
 	var expectedOutput = [
 		' ',
-<<<<<<< HEAD
-		' ' + graySpinner + ' ' + chalk.blue('- todo'),
-=======
-		' ⠋ ' + chalk.blue('todo'),
->>>>>>> master
+		' ' + graySpinner + ' todo',
 		'',
 		'   ' + chalk.blue('1 todo')
 	].join('\n');
