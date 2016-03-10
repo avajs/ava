@@ -124,7 +124,11 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		' ',
+<<<<<<< HEAD
 		' ' + graySpinner + ' ' + chalk.yellow('- skipped'),
+=======
+		' ⠋ ' + chalk.yellow('skipped'),
+>>>>>>> master
 		'',
 		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
@@ -144,7 +148,11 @@ test('todo test', function (t) {
 
 	var expectedOutput = [
 		' ',
+<<<<<<< HEAD
 		' ' + graySpinner + ' ' + chalk.blue('- todo'),
+=======
+		' ⠋ ' + chalk.blue('todo'),
+>>>>>>> master
 		'',
 		'   ' + chalk.blue('1 todo')
 	].join('\n');
