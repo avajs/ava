@@ -127,6 +127,8 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 
 ## CLI
 
+![](screenshot-mini-reporter.gif)
+
 ```console
 $ ava --help
 
