@@ -5,6 +5,10 @@ var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
 
+chalk.enabled = true;
+
+var graySpinner = chalk.gray.dim('⠋');
+
 function miniReporter() {
 	var reporter = _miniReporter();
 	reporter.start = function () {
@@ -18,7 +22,7 @@ process.stderr.setMaxListeners(50);
 test('start', function (t) {
 	var reporter = _miniReporter();
 
-	t.is(reporter.start(), ' \n ⠋ ');
+	t.is(reporter.start(), ' \n ' + graySpinner + ' ');
 	reporter.clearInterval();
 	t.end();
 });
@@ -32,7 +36,7 @@ test('passing test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.green('passed'),
+		' ' + graySpinner + ' passed',
 		'',
 		'   ' + chalk.green('1 passed')
 	].join('\n');
@@ -53,7 +57,7 @@ test('failing test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.red('failed'),
+		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
 		'   ' + chalk.red('1 failed')
 	].join('\n');
@@ -76,7 +80,7 @@ test('passing test after failing', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.green('passed'),
+		' ' + graySpinner + ' passed',
 		'',
 		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 failed')
@@ -100,7 +104,7 @@ test('failing test after passing', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.red('failed'),
+		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
 		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 failed')
@@ -120,7 +124,7 @@ test('skipped test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.yellow('skipped'),
+		' ' + graySpinner + ' skipped',
 		'',
 		'   ' + chalk.yellow('1 skipped')
 	].join('\n');
@@ -140,7 +144,7 @@ test('todo test', function (t) {
 
 	var expectedOutput = [
 		' ',
-		' ⠋ ' + chalk.blue('todo'),
+		' ' + graySpinner + ' todo',
 		'',
 		'   ' + chalk.blue('1 todo')
 	].join('\n');
