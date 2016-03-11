@@ -875,7 +875,7 @@ Mocha requires you to use implicit globals like `describe` and `it` with the def
 
 Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
 
-In contrast AVA is highly opinionated and runs tests concurrently, with a separate processes for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
+In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
 ### How can I use custom reporters?
 
