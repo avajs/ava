@@ -129,11 +129,13 @@ export interface AssertContext {
 	 * Assert that function throws an error or promise rejects.
 	 * @param error Can be a constructor, regex, error message or validation function.
 	 */
-	throws(value: (() => void) | Promise<{}>, error?: ErrorValidator, message?: string);
+	throws(value: Promise<{}>, error?: ErrorValidator, message?: string): Promise<any>;
+	throws(value: () => void, error?: ErrorValidator, message?: string): any;
 	/**
 	 * Assert that function doesn't throw an error or promise resolves.
 	 */
-	notThrows(value: (() => void) | Promise<{}>, message?: string);
+	notThrows<U>(value: Promise<U>, message?: string): Promise<U>;
+	notThrows(value: () => void, message?: string): void;
 	/**
 	 * Assert that contents matches regex.
 	 */
