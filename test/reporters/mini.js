@@ -8,6 +8,9 @@ var beautifyStack = require('../../lib/beautify-stack');
 chalk.enabled = true;
 
 var graySpinner = chalk.gray.dim('⠋');
+
+// Needed because tap doesn't emulate a tty environment and thus this is
+// undefined, making `cli-truncate` append '...' to test titles
 process.stdout.columns = 5000;
 
 function miniReporter() {
