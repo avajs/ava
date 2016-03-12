@@ -8,6 +8,7 @@ var beautifyStack = require('../../lib/beautify-stack');
 chalk.enabled = true;
 
 var graySpinner = chalk.gray.dim('⠋');
+process.stdout.columns = 5000;
 
 function miniReporter() {
 	var reporter = _miniReporter();
