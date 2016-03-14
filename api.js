@@ -244,6 +244,7 @@ Api.prototype.run = function (files, options) {
 					var tried = false;
 					function tryRun() {
 						if (!tried && !bailed) {
+							tried = true;
 							unreportedFiles--;
 							if (unreportedFiles === 0) {
 								run();
