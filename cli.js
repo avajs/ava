@@ -23,6 +23,7 @@ var arrify = require('arrify');
 var meow = require('meow');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
+var chalk = require('chalk');
 var isCi = require('is-ci');
 var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
@@ -40,6 +41,18 @@ var conf = pkgConf.sync('ava', {
 		babel: 'default'
 	}
 });
+
+// check for valid babel config shortcuts (can be either "default" or "inherit")
+var isValidShortcut = ['default', 'inherit'].indexOf(conf.babel) !== -1;
+
+if (!conf.babel || (typeof conf.babel === 'string' && !isValidShortcut)) {
+	var message = '';
+	message += 'Unexpected Babel configuration for AVA. ';
+	message += 'See ' + chalk.underline('https://github.com/sindresorhus/ava#es2015-support') + ' for allowed values.';
+
+	console.log('\n  ' + colors.error(figures.cross) + ' ' + message);
+	process.exit(1);
+}
 
 var cli = meow([
 	'Usage',

@@ -4,9 +4,15 @@ var childProcess = require('child_process');
 var test = require('tap').test;
 global.Promise = require('bluebird');
 var getStream = require('get-stream');
+var figures = require('figures');
 var arrify = require('arrify');
+var chalk = require('chalk');
 var touch = require('touch');
 var cliPath = path.join(__dirname, '../cli.js');
+
+// for some reason chalk is disabled by default
+chalk.enabled = true;
+var colors = require('../lib/colors');
 
 function execCli(args, opts, cb) {
 	var dirname;
@@ -57,6 +63,20 @@ function execCli(args, opts, cb) {
 
 	return child;
 }
+
+test('disallow invalid babel config shortcuts', function (t) {
+	execCli('es2015.js', {dirname: 'fixture/invalid-babel-config'}, function (err, stdout) {
+		t.ok(err);
+
+		var expectedOutput = '\n  ';
+		expectedOutput += colors.error(figures.cross) + ' Unexpected Babel configuration for AVA.';
+		expectedOutput += ' See ' + chalk.underline('https://github.com/sindresorhus/ava#es2015-support') + ' for allowed values.';
+		expectedOutput += '\n';
+
+		t.is(stdout, expectedOutput);
+		t.end();
+	});
+});
 
 test('throwing a named function will report the to the console', function (t) {
 	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
