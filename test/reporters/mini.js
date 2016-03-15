@@ -121,39 +121,25 @@ test('failing test after passing', function (t) {
 test('skipped test', function (t) {
 	var reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	var output = reporter.test({
 		title: 'skipped',
 		skip: true
 	});
 
-	var expectedOutput = [
-		' ',
-		' ' + graySpinner + ' skipped',
-		'',
-		'   ' + chalk.yellow('1 skipped')
-	].join('\n');
-
-	t.is(actualOutput, expectedOutput);
+	t.false(output);
 	t.end();
 });
 
 test('todo test', function (t) {
 	var reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	var output = reporter.test({
 		title: 'todo',
 		skip: true,
 		todo: true
 	});
 
-	var expectedOutput = [
-		' ',
-		' ' + graySpinner + ' todo',
-		'',
-		'   ' + chalk.blue('1 todo')
-	].join('\n');
-
-	t.is(actualOutput, expectedOutput);
+	t.false(output);
 	t.end();
 });
 
