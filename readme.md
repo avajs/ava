@@ -919,6 +919,8 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [fly-ava](https://github.com/pine613/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
+[More...](https://github.com/sindresorhus/awesome-ava#packages)
+
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
