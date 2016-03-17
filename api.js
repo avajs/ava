@@ -13,8 +13,10 @@ var commonPathPrefix = require('common-path-prefix');
 var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
+var debounce = require('lodash.debounce');
 var slash = require('slash');
 var isObj = require('is-obj');
+var ms = require('ms');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
@@ -42,6 +44,11 @@ function Api(options) {
 	}, this);
 
 	this._reset();
+
+	if (this.options.timeout) {
+		var timeout = ms(this.options.timeout);
+		this._restartTimer = debounce(this._onTimeout, timeout);
+	}
 }
 
 util.inherits(Api, EventEmitter);
@@ -180,6 +187,18 @@ Api.prototype._prefixTitle = function (file) {
 	return prefix;
 };
 
+Api.prototype._onTimeout = function () {
+	var timeout = ms(this.options.timeout);
+	var message = 'Exited because no new tests completed within the last ' + timeout + 'ms of inactivity';
+
+	this._handleExceptions({
+		exception: new AvaError(message),
+		file: null
+	});
+
+	this.emit('timeout');
+};
+
 Api.prototype.run = function (files, options) {
 	var self = this;
 
@@ -187,6 +206,11 @@ Api.prototype.run = function (files, options) {
 
 	if (options && options.runOnlyExclusive) {
 		this.hasExclusive = true;
+	}
+
+	if (this.options.timeout) {
+		this._restartTimer();
+		this.on('test', this._restartTimer);
 	}
 
 	return handlePaths(files, this.excludePatterns)
@@ -213,6 +237,12 @@ Api.prototype.run = function (files, options) {
 			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
 			var tests = new Array(self.fileCount);
+
+			self.on('timeout', function () {
+				tests.forEach(function (fork) {
+					fork.exit();
+				});
+			});
 
 			return new Promise(function (resolve) {
 				function run() {
@@ -306,6 +336,11 @@ Api.prototype.run = function (files, options) {
 			});
 		})
 		.then(function (results) {
+			// cancel debounced _onTimeout() from firing
+			if (self.options.timeout) {
+				self._restartTimer.cancel();
+			}
+
 			// assemble stats from all tests
 			self.stats = results.map(function (result) {
 				return result.stats;

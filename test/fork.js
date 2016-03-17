@@ -49,7 +49,7 @@ test('exit after tests are finished', function (t) {
 	var start = Date.now();
 	var cleanupCompleted = false;
 
-	fork(fixture('long-running.js'))
+	fork(fixture('slow-exit.js'))
 		.run({})
 		.on('exit', function () {
 			t.true(Date.now() - start < 10000, 'test waited for a pending setTimeout');

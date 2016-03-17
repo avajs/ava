@@ -146,6 +146,7 @@ $ ava --help
     --match, -m      Only run tests with matching title (Can be repeated)',
     --watch, -w      Re-run tests when tests and source files change
     --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)
+    --timeout, -T    Set global timeout
 
   Examples
     ava
@@ -678,6 +679,20 @@ $ ava --tap | tap-nyan
 AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
 
 <img src="media/stack-traces.png" width="300">
+
+### Global timeout
+
+A global timeout can be set via the `--timeout` option.
+Timeout in AVA behaves differently than in other test frameworks.
+AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout.
+
+You can set timeouts in a human-readable way:
+
+```
+$ ava --timeout=10s # 10 seconds
+$ ava --timeout=2m # 2 minutes
+$ ava --timeout=100 # 100 milliseconds
+```
 
 ## API
 
