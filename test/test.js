@@ -205,26 +205,31 @@ test('handle falsy testing of objects', function (t) {
 });
 
 test('handle throws with error', function (t) {
+	var expected = new Error('foo');
+	var actual;
 	var result = ava(function (a) {
-		a.throws(function () {
-			throw new Error('foo');
+		actual = a.throws(function () {
+			throw expected;
 		});
 	}).run();
 
 	t.is(result.passed, true);
 	t.is(result.result.assertCount, 1);
+	t.is(actual, expected);
 	t.end();
 });
 
 test('handle throws without error', function (t) {
+	var actual;
 	var result = ava(function (a) {
-		a.throws(function () {
+		actual = a.throws(function () {
 			return;
 		});
 	}).run();
 
 	t.is(result.passed, false);
 	t.ok(result.reason);
+	t.is(actual, null);
 	t.end();
 });
 
