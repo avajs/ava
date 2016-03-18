@@ -113,6 +113,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		stdin = new PassThrough();
 		stdin.pause();
+		stdin.on('data', function (data) {
+			stdin.emit('keypress', data, {});
+		});
 	});
 
 	var start = function (sources) {
@@ -511,102 +514,100 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		});
 	});
 
-	["r", "rs"].forEach(function (input) {
-		test('reruns initial tests when "' + input + '" is entered on stdin', function (t) {
-			t.plan(2);
-			api.run.returns(Promise.resolve());
-			start().observeStdin(stdin);
-
-			stdin.write(input + '\n');
-			return delay().then(function () {
-				t.ok(api.run.calledTwice);
-
-				stdin.write('\t' + input + '  \n');
-				return delay();
-			}).then(function () {
-				t.ok(api.run.calledThrice);
-			});
-		});
-
-		test('entering "' + input + '" on stdin cancels any debouncing', function (t) {
-			t.plan(7);
-			api.run.returns(Promise.resolve());
-			start().observeStdin(stdin);
-
-			var before = clock.now;
-			var done;
-			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
-			}));
-
-			add();
-			stdin.write(input + '\n');
-			return delay().then(function () {
-				// Processing "rs" caused a new run.
-				t.ok(api.run.calledTwice);
-
-				// Try to advance the clock. This is *after* input was processed. The
-				// debounce timeout should have been canceled, so the clock can't have
-				// advanced.
-				clock.next();
-				t.is(before, clock.now);
-
-				add();
-				// Advance clock *before* input is received. Note that the previous run
-				// hasn't finished yet.
-				clock.next();
-				stdin.write(input + '\n');
-
-				return delay();
-			}).then(function () {
-				// No new runs yet.
-				t.ok(api.run.calledTwice);
-				// Though the clock has advanced.
-				t.is(clock.now - before, 10);
-				before = clock.now;
-
-				var previous = done;
-				api.run.returns(new Promise(function (resolve) {
-					done = resolve;
-				}));
-
-				// Finish the previous run.
-				previous();
-
-				return delay();
-			}).then(function () {
-				// There's only one new run.
-				t.ok(api.run.calledThrice);
-
-				stdin.write(input + '\n');
-				return delay();
-			}).then(function () {
-				add();
-
-				// Finish the previous run. This should cause a new run due to the
-				// input.
-				done();
-
-				return delay();
-			}).then(function () {
-				// Again there's only one new run.
-				t.is(api.run.callCount, 4);
-
-				// Try to advance the clock. This is *after* input was processed. The
-				// debounce timeout should have been canceled, so the clock can't have
-				// advanced.
-				clock.next();
-				t.is(before, clock.now);
-			});
-		});
-	});
-
-	test('does nothing if anything other than "rs" is entered on stdin', function (t) {
+	test('reruns initial tests when "r" is entered on stdin', function (t) {
 		t.plan(2);
 		api.run.returns(Promise.resolve());
 		start().observeStdin(stdin);
 
-		stdin.write('foo\n');
+		stdin.write('r');
+		return delay().then(function () {
+			t.ok(api.run.calledTwice);
+
+			stdin.write('r');
+			return delay();
+		}).then(function () {
+			t.ok(api.run.calledThrice);
+		});
+	});
+
+	test('entering "r" on stdin cancels any debouncing', function (t) {
+		t.plan(7);
+		api.run.returns(Promise.resolve());
+		start().observeStdin(stdin);
+
+		var before = clock.now;
+		var done;
+		api.run.returns(new Promise(function (resolve) {
+			done = resolve;
+		}));
+
+		add();
+		stdin.write('r');
+		return delay().then(function () {
+			// Processing "r" caused a new run.
+			t.ok(api.run.calledTwice);
+
+			// Try to advance the clock. This is *after* input was processed. The
+			// debounce timeout should have been canceled, so the clock can't have
+			// advanced.
+			clock.next();
+			t.is(before, clock.now);
+
+			add();
+			// Advance clock *before* input is received. Note that the previous run
+			// hasn't finished yet.
+			clock.next();
+			stdin.write('r');
+
+			return delay();
+		}).then(function () {
+			// No new runs yet.
+			t.ok(api.run.calledTwice);
+			// Though the clock has advanced.
+			t.is(clock.now - before, 10);
+			before = clock.now;
+
+			var previous = done;
+			api.run.returns(new Promise(function (resolve) {
+				done = resolve;
+			}));
+
+			// Finish the previous run.
+			previous();
+
+			return delay();
+		}).then(function () {
+			// There's only one new run.
+			t.ok(api.run.calledThrice);
+
+			stdin.write('r');
+			return delay();
+		}).then(function () {
+			add();
+
+			// Finish the previous run. This should cause a new run due to the
+			// input.
+			done();
+
+			return delay();
+		}).then(function () {
+			// Again there's only one new run.
+			t.is(api.run.callCount, 4);
+
+			// Try to advance the clock. This is *after* input was processed. The
+			// debounce timeout should have been canceled, so the clock can't have
+			// advanced.
+			clock.next();
+			t.is(before, clock.now);
+		});
+	});
+
+	test('does nothing if anything other than "r" is entered on stdin', function (t) {
+		t.plan(2);
+		api.run.returns(Promise.resolve());
+		start().observeStdin(stdin);
+
+		stdin.write('foo');
 		return debounce().then(function () {
 			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
