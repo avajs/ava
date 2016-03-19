@@ -1,8 +1,7 @@
 'use strict';
 var path = require('path');
 var chalk = require('chalk');
-var serializeError = require('serialize-error');
-var beautifyStack = require('./lib/beautify-stack');
+var serializeError = require('./lib/serialize-error');
 var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
@@ -49,9 +48,6 @@ function test(props) {
 
 	if (hasError) {
 		props.error = serializeError(props.error);
-		if (props.error.stack) {
-			props.error.stack = beautifyStack(props.error.stack);
-		}
 	} else {
 		props.error = null;
 	}

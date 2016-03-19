@@ -14,6 +14,7 @@ var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var slash = require('slash');
+var isObj = require('is-obj');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
@@ -81,10 +82,22 @@ Api.prototype._handleOutput = function (channel, data) {
 	this.emit(channel, data);
 };
 
+function normalizeError(err) {
+	if (!isObj(err)) {
+		err = {
+			message: err,
+			stack: err
+		};
+	}
+
+	return err;
+}
+
 Api.prototype._handleRejections = function (data) {
 	this.rejectionCount += data.rejections.length;
 
 	data.rejections.forEach(function (err) {
+		err = normalizeError(err);
 		err.type = 'rejection';
 		err.file = data.file;
 		this.emit('error', err);
@@ -94,7 +107,7 @@ Api.prototype._handleRejections = function (data) {
 
 Api.prototype._handleExceptions = function (data) {
 	this.exceptionCount++;
-	var err = data.exception;
+	var err = normalizeError(data.exception);
 	err.type = 'exception';
 	err.file = data.file;
 	this.emit('error', err);
