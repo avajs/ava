@@ -740,11 +740,11 @@ Failing assertion.
 
 ### `.ok(value, [message])`
 
-Assert that `value` is truthy.
+Assert that `value` is truthy. (Alias: `.truthy`)
 
 ### `.notOk(value, [message])`
 
-Assert that `value` is falsy.
+Assert that `value` is falsy. (Alias: `.falsy`)
 
 ### `.true(value, [message])`
 
