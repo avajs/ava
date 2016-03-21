@@ -18,7 +18,7 @@ function endsWithJs(filename) {
 }
 
 function endsWithMap(filename) {
-	return /\.js$/.test(filename);
+	return /\.js\.map$/.test(filename);
 }
 
 sinon.spy(babel, 'transform');
@@ -50,7 +50,7 @@ test('adds files and source maps to the cache directory as needed', function (t)
 	var files = fs.readdirSync(tempDir);
 	t.is(files.length, 2);
 	t.is(files.filter(endsWithJs).length, 1, 'one .js file is saved to the cache');
-	t.is(files.filter(endsWithMap).length, 1, 'one .map file is saved to the cache');
+	t.is(files.filter(endsWithMap).length, 1, 'one .js.map file is saved to the cache');
 	t.end();
 });
 
