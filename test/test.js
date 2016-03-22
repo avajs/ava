@@ -103,7 +103,7 @@ test('run more assertions than planned', function (t) {
 	t.is(result.reason.name, 'AssertionError');
 	t.is(result.reason.expected, 2);
 	t.is(result.reason.actual, 3);
-	t.match(result.reason.message, /count does not match planned/);
+	t.match(result.reason.message, /Planned for 2 assertions, but got 3\./);
 	t.end();
 });
 
