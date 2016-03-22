@@ -6,6 +6,7 @@ var uniqueTempDir = require('unique-temp-dir');
 var sinon = require('sinon');
 var babel = require('babel-core');
 var transformRuntime = require('babel-plugin-transform-runtime');
+var fromMapFileSource = require('convert-source-map').fromMapFileSource;
 
 var CachingPrecompiler = require('../lib/caching-precompiler');
 
@@ -18,7 +19,7 @@ function endsWithJs(filename) {
 }
 
 function endsWithMap(filename) {
-	return /\.js$/.test(filename);
+	return /\.js\.map$/.test(filename);
 }
 
 sinon.spy(babel, 'transform');
@@ -50,7 +51,35 @@ test('adds files and source maps to the cache directory as needed', function (t)
 	var files = fs.readdirSync(tempDir);
 	t.is(files.length, 2);
 	t.is(files.filter(endsWithJs).length, 1, 'one .js file is saved to the cache');
-	t.is(files.filter(endsWithMap).length, 1, 'one .map file is saved to the cache');
+	t.is(files.filter(endsWithMap).length, 1, 'one .js.map file is saved to the cache');
+	t.end();
+});
+
+test('adds a map file comment to the cached files', function (t) {
+	var tempDir = uniqueTempDir();
+	var precompiler = new CachingPrecompiler(tempDir, null);
+
+	precompiler.precompileFile(fixture('es2015.js'));
+
+	var cachedCode;
+	var cachedMap;
+	fs.readdirSync(tempDir).map(function (file) {
+		return path.join(tempDir, file);
+	}).forEach(function (file) {
+		if (endsWithJs(file)) {
+			cachedCode = fs.readFileSync(file, 'utf8');
+		} else if (endsWithMap(file)) {
+			cachedMap = fs.readFileSync(file, 'utf8');
+		}
+	});
+
+	// This is comparable to how nyc resolves the source map. It has access to the
+	// cached code but believes it to come from the original es2015.js fixture.
+	// Ensure the cached map can be resolved from the cached code. Also see
+	// <https://github.com/bcoe/nyc/blob/69ed03b29c423c0fd7bd41f9dc8e7a3a68f7fe50/index.js#L244>.
+	var foundMap = fromMapFileSource(cachedCode, path.join(__dirname, 'fixture'));
+	t.ok(foundMap);
+	t.is(foundMap.toJSON(), cachedMap);
 	t.end();
 });
 
