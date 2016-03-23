@@ -76,6 +76,18 @@ test('rejects promise if the process exits without results', function (t) {
 		});
 });
 
+test('rejects promise if the process is killed', function (t) {
+	var forked = fork(fixture('es2015.js'));
+	return forked
+		.on('stats', function () {
+			this.kill('SIGKILL');
+		})
+		.catch(function (err) {
+			t.is(err.name, 'AvaError');
+			t.is(err.message, path.join('test', 'fixture', 'es2015.js') + ' exited due to SIGKILL');
+		});
+});
+
 test('fake timers do not break duration', function (t) {
 	fork(fixture('fake-timers.js'))
 		.run({})
