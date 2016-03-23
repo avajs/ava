@@ -60,6 +60,22 @@ test('exit after tests are finished', function (t) {
 		});
 });
 
+test('rejects promise if the process exits with a non-zero code', function (t) {
+	return fork(fixture('immediate-3-exit.js'))
+		.catch(function (err) {
+			t.is(err.name, 'AvaError');
+			t.is(err.message, path.join('test', 'fixture', 'immediate-3-exit.js') + ' exited with a non-zero exit code: 3');
+		});
+});
+
+test('rejects promise if the process exits without results', function (t) {
+	return fork(fixture('immediate-0-exit.js'))
+		.catch(function (err) {
+			t.is(err.name, 'AvaError');
+			t.is(err.message, 'Test results were not received from ' + path.join('test', 'fixture', 'immediate-0-exit.js'));
+		});
+});
+
 test('fake timers do not break duration', function (t) {
 	fork(fixture('fake-timers.js'))
 		.run({})
