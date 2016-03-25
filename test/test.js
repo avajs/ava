@@ -447,8 +447,10 @@ test('throws does not work with literals', function (t) {
 		});
 	}).run();
 
-	t.is(result.reason.message, 'Expected an object to be thrown.');
 	t.is(result.passed, false);
+	t.is(result.reason.message, 'Error `foo` is not of type `object` but of type `string`.');
+	t.is(result.reason.actual, 'string');
+	t.is(result.reason.expected, 'object');
 	t.is(result.result.planCount, 2);
 	t.is(result.result.assertCount, 2);
 	t.end();
@@ -457,10 +459,12 @@ test('throws does not work with literals', function (t) {
 test('throws does not work with promises rejecting literals', function (t) {
 	ava(function (a) {
 		a.plan(1);
-		a.throws(Promise.reject('foo'));
+		a.throws(Promise.reject(5));
 	}).run().then(function (result) {
-		t.is(result.reason.message, 'Expected an object to be thrown.');
 		t.is(result.passed, false);
+		t.is(result.reason.message, 'Error `5` is not of type `object` but of type `number`.');
+		t.is(result.reason.actual, 'number');
+		t.is(result.reason.expected, 'object');
 		t.is(result.result.planCount, 1);
 		t.is(result.result.assertCount, 1);
 		t.end();
