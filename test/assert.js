@@ -30,6 +30,8 @@ test('.ok()', function (t) {
 		assert.ok(true);
 	});
 
+	t.same(assert.ok, assert.truthy);
+
 	t.end();
 });
 
@@ -43,6 +45,8 @@ test('.notOk()', function (t) {
 		assert.notOk(0);
 		assert.notOk(false);
 	});
+
+	t.same(assert.notOk, assert.falsy);
 
 	t.end();
 });
