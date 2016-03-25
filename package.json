@@ -104,6 +104,7 @@
     "globby": "^4.0.0",
     "ignore-by-default": "^1.0.0",
     "is-ci": "^1.0.7",
+    "is-error": "^2.2.0",
     "is-generator-fn": "^1.0.0",
     "is-obj": "^1.0.0",
     "is-observable": "^0.1.0",
