@@ -270,12 +270,12 @@ test('shared context', function (t) {
 
 	runner.test(function (a) {
 		a.context.arr.push('b');
-		a.same(a.context.arr, ['a', 'b']);
+		a.deepEqual(a.context.arr, ['a', 'b']);
 	});
 
 	runner.afterEach(function (a) {
 		a.context.arr.push('c');
-		a.same(a.context.arr, ['a', 'b', 'c']);
+		a.deepEqual(a.context.arr, ['a', 'b', 'c']);
 	});
 
 	runner.run({}).then(function () {

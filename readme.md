@@ -51,7 +51,7 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 import test from 'ava';
 
 test(t => {
-	t.same([1, 2], [1, 2]);
+	t.deepEqual([1, 2], [1, 2]);
 });
 ```
 
@@ -762,11 +762,11 @@ Assert that `value` is equal to `expected`.
 
 Assert that `value` is not equal to `expected`.
 
-### `.same(value, expected, [message])`
+### `.deepEqual(value, expected, [message])`
 
 Assert that `value` is deep equal to `expected`.
 
-### `.notSame(value, expected, [message])`
+### `.notDeepEqual(value, expected, [message])`
 
 Assert that `value` is not deep equal to `expected`.
 
