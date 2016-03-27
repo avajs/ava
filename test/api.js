@@ -1,8 +1,8 @@
 'use strict';
 var path = require('path');
+var fs = require('fs');
 var figures = require('figures');
 var rimraf = require('rimraf');
-var fs = require('fs');
 var test = require('tap').test;
 var Api = require('../api');
 var testDoublerPlugin = require('./fixture/babel-plugin-test-doubler');

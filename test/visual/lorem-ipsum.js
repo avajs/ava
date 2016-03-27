@@ -1,6 +1,6 @@
 'use strict';
-var test = require('../../');
 var delay = require('delay');
+var test = require('../../');
 require('./print-lorem-ipsum');
 
 async function testFn(t) {

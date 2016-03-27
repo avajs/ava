@@ -1,5 +1,6 @@
 'use strict';
-
+// eslint-disable import-order/import-order
+// ^ https://github.com/jfmengels/eslint-plugin-import-order/issues/5
 require('loud-rejection');
 var path = require('path');
 var childProcess = require('child_process');

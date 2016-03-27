@@ -1,5 +1,5 @@
-import test from '../../';
 import delay from 'delay';
+import test from '../../';
 
 test('testName1', async t => {
 	console.log('foo');

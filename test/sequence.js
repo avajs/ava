@@ -1,7 +1,7 @@
 'use strict';
 var test = require('tap').test;
-var Sequence = require('../lib/sequence');
 var Promise = require('bluebird');
+var Sequence = require('../lib/sequence');
 
 function pass(val) {
 	return {

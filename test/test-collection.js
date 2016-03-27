@@ -1,6 +1,6 @@
 var test = require('tap').test;
-var TestCollection = require('../lib/test-collection');
 var objectAssign = require('object-assign');
+var TestCollection = require('../lib/test-collection');
 
 function defaults() {
 	return {

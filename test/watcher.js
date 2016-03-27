@@ -1,13 +1,12 @@
 'use strict';
-
-var Promise = require('bluebird');
+var path = require('path');
 var EventEmitter = require('events').EventEmitter;
+var PassThrough = require('stream').PassThrough;
+var Promise = require('bluebird');
 var defaultIgnore = require('ignore-by-default').directories();
 var lolex = require('lolex');
-var path = require('path');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
-var PassThrough = require('stream').PassThrough;
 var test = require('tap').test;
 
 var setImmediate = require('../lib/globals').setImmediate;
