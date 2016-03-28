@@ -213,6 +213,7 @@ Api.prototype.run = function (files, options) {
 			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
 			var tests = new Array(self.fileCount);
+
 			return new Promise(function (resolve) {
 				function run() {
 					if (self.options.match.length > 0 && !self.hasExclusive) {
@@ -243,7 +244,12 @@ Api.prototype.run = function (files, options) {
 							});
 
 							return {
-								stats: {passCount: 0, skipCount: 0, todoCount: 0, failCount: 0},
+								stats: {
+									passCount: 0,
+									skipCount: 0,
+									todoCount: 0,
+									failCount: 0
+								},
 								tests: []
 							};
 						});
@@ -253,12 +259,15 @@ Api.prototype.run = function (files, options) {
 				// receive test count from all files and then run the tests
 				var unreportedFiles = self.fileCount;
 				var bailed = false;
+
 				files.every(function (file, index) {
 					var tried = false;
+
 					function tryRun() {
 						if (!tried && !bailed) {
 							tried = true;
 							unreportedFiles--;
+
 							if (unreportedFiles === 0) {
 								run();
 							}
@@ -267,16 +276,21 @@ Api.prototype.run = function (files, options) {
 
 					try {
 						var test = tests[index] = self._runFile(file);
+
 						test.on('stats', tryRun);
 						test.catch(tryRun);
+
 						return true;
 					} catch (err) {
 						bailed = true;
+
 						self._handleExceptions({
 							exception: err,
 							file: file
 						});
+
 						resolve([]);
+
 						return false;
 					}
 				});
@@ -318,10 +332,12 @@ function handlePaths(files, excludePatterns) {
 		.map(function (file) {
 			if (fs.statSync(file).isDirectory()) {
 				var pattern = path.join(file, '**', '*.js');
+
 				if (process.platform === 'win32') {
 					// Always use / in patterns, harmonizing matching across platforms.
 					pattern = slash(pattern);
 				}
+
 				return handlePaths([pattern], excludePatterns);
 			}
 

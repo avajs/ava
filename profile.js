@@ -20,6 +20,7 @@ globals.setTimeout = setTimeout.bind(null);
 globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
+
 var conf = pkgConf.sync('ava', {
 	defaults: {
 		babel: 'default'

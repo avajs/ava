@@ -265,7 +265,7 @@ test('unhandled promises will throw an error', function (t) {
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
-		t.match(data.message, /You can\'t handle this!/);
+		t.match(data.message, /You can't handle this!/);
 	});
 
 	api.run([path.join(__dirname, 'fixture/loud-rejection.js')])
@@ -281,7 +281,7 @@ test('uncaught exception will throw an error', function (t) {
 
 	api.on('error', function (data) {
 		t.is(data.name, 'Error');
-		t.match(data.message, /Can\'t catch me!/);
+		t.match(data.message, /Can't catch me!/);
 	});
 
 	api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
