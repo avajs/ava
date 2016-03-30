@@ -108,7 +108,6 @@
     "is-obj": "^1.0.0",
     "is-observable": "^0.1.0",
     "is-promise": "^2.1.0",
-    "keypress": "^0.2.1",
     "last-line-stream": "^1.0.0",
     "loud-rejection": "^1.2.0",
     "matcher": "^0.1.1",
