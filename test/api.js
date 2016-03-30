@@ -533,6 +533,15 @@ test('Node.js-style --require CLI argument', function (t) {
 		});
 });
 
+test('Node.js-style --require CLI argument module not found', function (t) {
+	t.plan(1);
+
+	t.throws(function () {
+		/* eslint no-new: 0 */
+		new Api({require: ['foo-bar']});
+	}, /^Could not resolve required module 'foo-bar'$/);
+});
+
 test('power-assert support', function (t) {
 	t.plan(3);
 
