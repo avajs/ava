@@ -8,9 +8,13 @@ var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
 var precompiler = new CachingPrecompiler(cacheDir);
 
 function fork(testPath) {
+	var hash = precompiler.precompileFile(testPath);
+	var precompiled = {};
+	precompiled[testPath] = hash;
+
 	return _fork(testPath, {
 		cacheDir: cacheDir,
-		precompiled: precompiler.generateHashForFile(testPath)
+		precompiled: precompiled
 	});
 }
 
