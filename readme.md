@@ -700,13 +700,8 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
  * `t` Type: `object` The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
-###### `t.plan(count)`
-
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](#assertion-planning).
-
-###### `t.end()`
-
-End the test. Only works with `test.cb()`.
+  `t.plan(count)` Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](#assertion-planning).
+  `t.end()` End the test. Only works with `test.cb()`.
 
 ## Assertions
 
