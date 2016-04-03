@@ -681,34 +681,24 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## API
 
-### `test([title], callback)`
-### `test.serial([title], callback)`
-### `test.cb([title], callback)`
-### `test.only([title], callback)`
-### `test.skip([title], callback)`
-### `test.todo(title)`
-### `test.before([title], callback)`
-### `test.after([title], callback)`
-### `test.beforeEach([title], callback)`
-### `test.afterEach([title], callback)`
+* `test([title], callback)`
+* `test.serial([title], callback)`
+* `test.cb([title], callback)`
+* `test.only([title], callback)`
+* `test.skip([title], callback)`
+* `test.todo(title)`
+* `test.before([title], callback)`
+* `test.after([title], callback)`
+* `test.beforeEach([title], callback)`
+* `test.afterEach([title], callback)`
 
-#### `title`
+#### Params
 
-Type: `string`
+* `title` Type: `string` Test title
 
-Test title.
+* `callback(t)` Type: `function` Should contain the actual test
 
-#### `callback(t)`
-
-Type: `function`
-
-Should contain the actual test.
-
-##### `t`
-
-Type: `object`
-
-The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
+ * `t` Type: `object` The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
 ###### `t.plan(count)`
 
@@ -730,65 +720,39 @@ test(t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-### `.pass([message])`
+* `.pass([message])` Passing assertion.
 
-Passing assertion.
+* `.fail([message])` Failing assertion.
 
-### `.fail([message])`
+* `.ok(value, [message])` Assert that `value` is truthy.
 
-Failing assertion.
+* `.notOk(value, [message])` Assert that `value` is falsy.
 
-### `.ok(value, [message])`
+* `.true(value, [message])` Assert that `value` is `true`.
 
-Assert that `value` is truthy.
+* `.false(value, [message])` Assert that `value` is `false`.
 
-### `.notOk(value, [message])`
+* `.is(value, expected, [message])` Assert that `value` is equal to `expected`.
 
-Assert that `value` is falsy.
+* `.not(value, expected, [message])` Assert that `value` is not equal to `expected`.
 
-### `.true(value, [message])`
+* `.same(value, expected, [message])` Assert that `value` is deep equal to `expected`.
 
-Assert that `value` is `true`.
+* `.notSame(value, expected, [message])` Assert that `value` is not deep equal to `expected`.
 
-### `.false(value, [message])`
+* `.throws(function|promise, [error, [message]])` 
 
-Assert that `value` is `false`.
+ Assert that `function` throws an error, or `promise` rejects with an error.
 
-### `.is(value, expected, [message])`
+ `error` can be a constructor, regex, error message or validation function.
 
-Assert that `value` is equal to `expected`.
+ Returns the error thrown by `function` or the rejection reason of `promise`.
 
-### `.not(value, expected, [message])`
+* `.notThrows(function|promise, [message])` Assert that `function` doesn't throw an `error` or `promise` resolves.
 
-Assert that `value` is not equal to `expected`.
+* `.regex(contents, regex, [message])` Assert that `contents` matches `regex`.
 
-### `.same(value, expected, [message])`
-
-Assert that `value` is deep equal to `expected`.
-
-### `.notSame(value, expected, [message])`
-
-Assert that `value` is not deep equal to `expected`.
-
-### `.throws(function|promise, [error, [message]])`
-
-Assert that `function` throws an error, or `promise` rejects with an error.
-
-`error` can be a constructor, regex, error message or validation function.
-
-Returns the error thrown by `function` or the rejection reason of `promise`.
-
-### `.notThrows(function|promise, [message])`
-
-Assert that `function` doesn't throw an `error` or `promise` resolves.
-
-### `.regex(contents, regex, [message])`
-
-Assert that `contents` matches `regex`.
-
-### `.ifError(error, [message])`
-
-Assert that `error` is falsy.
+* `.ifError(error, [message])` Assert that `error` is falsy.
 
 ### Skipping assertions
 
