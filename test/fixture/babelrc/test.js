@@ -1,3 +1,3 @@
 import test from '../../../'
 
-test(t => t.pass());
+test('foo', t => t.pass());

@@ -5,7 +5,7 @@ var figures = require('figures');
 var rimraf = require('rimraf');
 var test = require('tap').test;
 var Api = require('../api');
-var testDoublerPlugin = require('./fixture/babel-plugin-test-doubler');
+var testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
 
 test('must be called with new', function (t) {
 	t.throws(function () {
@@ -731,28 +731,115 @@ test('verify test count', function (t) {
 });
 
 test('Custom Babel Plugin Support', function (t) {
-	t.plan(1);
+	t.plan(2);
 
 	var api = new Api({
 		babelConfig: {
 			presets: ['es2015', 'stage-2'],
-			plugins: [testDoublerPlugin]
-		}
+			plugins: [testCapitalizerPlugin]
+		},
+		cacheEnabled: false
 	});
 
-	api.run([path.join(__dirname, 'fixture/es2015.js')])
+	api.on('test', function (data) {
+		t.is(data.title, 'FOO');
+	});
+
+	api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(
 			function () {
-				t.is(api.passCount, 2);
+				t.is(api.passCount, 1);
 			},
 			t.threw
 		);
 });
 
 test('Default babel config doesn\'t use .babelrc', function (t) {
-	t.plan(1);
+	t.plan(2);
 
 	var api = new Api();
+
+	api.on('test', function (data) {
+		t.is(data.title, 'foo');
+	});
+
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 1);
+		});
+});
+
+test('babelConfig:"inherit" uses .babelrc', function (t) {
+	t.plan(3);
+
+	var api = new Api({
+		babelConfig: 'inherit',
+		cacheEnabled: false
+	});
+
+	api.on('test', function (data) {
+		t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+	});
+
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 2);
+		});
+});
+
+test('babelConfig:{babelrc:true} uses .babelrc', function (t) {
+	t.plan(3);
+
+	var api = new Api({
+		babelConfig: {babelrc: true},
+		cacheEnabled: false
+	});
+
+	api.on('test', function (data) {
+		t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+	});
+
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 2);
+		});
+});
+
+test('babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc', function (t) {
+	t.plan(3);
+
+	var api = new Api({
+		babelConfig: {
+			plugins: [testCapitalizerPlugin],
+			babelrc: true
+		},
+		cacheEnabled: false
+	});
+
+	api.on('test', function (data) {
+		t.ok((data.title === 'FOO') || /^repeated test:/.test(data.title));
+	});
+
+	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		.then(function () {
+			t.is(api.passCount, 2);
+		});
+});
+
+test('babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc', function (t) {
+	t.plan(2);
+
+	var api = new Api({
+		babelConfig: {
+			plugins: [testCapitalizerPlugin],
+			extends: path.join(__dirname, 'fixture/babelrc/.alt-babelrc')
+		},
+		cacheEnabled: false
+	});
+
+	api.on('test', function (data) {
+		t.ok((data.title === 'BAR'));
+	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(function () {
