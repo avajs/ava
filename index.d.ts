@@ -130,11 +130,11 @@ export interface AssertContext {
 	 * @param error Can be a constructor, regex, error message or validation function.
 	 */
 	 /**
- 	 * Assert that value is deep equal to expected. (DEPRECATED, use `deepEqual`)
+ 	 * DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
  	 */
  	same<U>(value: U, expected: U, message?: string): void;
  	/**
- 	 * Assert that value is not deep equal to expected. (DEPRECATED use `notDeepEqual`)
+ 	 * DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
  	 */
  	notSame<U>(value: U, expected: U, message?: string): void;
  	/**
