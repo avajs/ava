@@ -28,8 +28,15 @@ function Api(options) {
 	EventEmitter.call(this);
 
 	this.options = options || {};
-	this.options.require = (this.options.require || []).map(resolveCwd);
 	this.options.match = this.options.match || [];
+	this.options.require = (this.options.require || []).map(function (moduleId) {
+		var ret = resolveCwd(moduleId);
+		if (ret === null) {
+			throw new Error('Could not resolve required module \'' + moduleId + '\'');
+		}
+
+		return ret;
+	});
 
 	this.excludePatterns = [
 		'!**/node_modules/**',
