@@ -129,6 +129,18 @@ export interface AssertContext {
 	 * Assert that function throws an error or promise rejects.
 	 * @param error Can be a constructor, regex, error message or validation function.
 	 */
+	 /**
+ 	 * Assert that value is deep equal to expected. (DEPRECATED, use `deepEqual`)
+ 	 */
+ 	same<U>(value: U, expected: U, message?: string): void;
+ 	/**
+ 	 * Assert that value is not deep equal to expected. (DEPRECATED use `notDeepEqual`)
+ 	 */
+ 	notSame<U>(value: U, expected: U, message?: string): void;
+ 	/**
+ 	 * Assert that function throws an error or promise rejects.
+ 	 * @param error Can be a constructor, regex, error message or validation function.
+ 	 */
 	throws(value: Promise<{}>, error?: ErrorValidator, message?: string): Promise<any>;
 	throws(value: () => void, error?: ErrorValidator, message?: string): any;
 	/**
