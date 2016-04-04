@@ -581,6 +581,8 @@ You can also use the special `"inherit"` keyword. This makes AVA defer to the Ba
 }
 ```
 
+See AVA's [`.babelrc` recipe](docs/recipes/babelrc.md) for further examples and a more detailed explanation of configuration options.
+
 Note that AVA will *always* apply the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
 
 ### TypeScript support
@@ -916,6 +918,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
+- [Configuring Babel](docs/recipes/babelrc.md)
 
 ## Support
 
