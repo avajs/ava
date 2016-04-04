@@ -227,7 +227,7 @@ test('todo test', function (t) {
 
 	t.throws(function () {
 		runner.todo('todo', function () {});
-	}, {message: '`todo` tests are not allowed to have a function'});
+	}, {message: '`todo` tests are not allowed to have a function. Use `test.skip()` for tests with a function.'});
 
 	t.throws(function () {
 		runner.todo();
