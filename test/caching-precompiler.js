@@ -145,6 +145,6 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.same(options.presets, ['stage-2', 'es2015']);
-	t.same(options.plugins, [customPlugin, transformRuntime, rewrite, powerAssert]);
+	t.same(options.plugins, [customPlugin, powerAssert, rewrite, transformRuntime]);
 	t.end();
 });
