@@ -277,37 +277,3 @@ test('.deepEqual() should not mask RangeError from underlying assert', function 
 
 	t.end();
 });
-
-test('.same() should log a deprecation notice', function (t) {
-	var calledWith;
-	var originalConsole = console.warn;
-	console.warn = function () {
-		calledWith = arguments;
-	};
-
-	assert.same({}, {});
-
-	t.true(calledWith[0].indexOf('DEPRECATION NOTICE') !== -1);
-	t.true(calledWith[0].indexOf('same()') !== -1);
-	t.true(calledWith[0].indexOf('deepEqual()') !== -1);
-
-	console.warn = originalConsole;
-	t.end();
-});
-
-test('.notSame() should log a deprecation notice', function (t) {
-	var calledWith;
-	var originalConsole = console.warn;
-	console.warn = function () {
-		calledWith = arguments;
-	};
-
-	assert.notSame({foo: 'bar'}, {bar: 'foo'});
-
-	t.true(calledWith[0].indexOf('DEPRECATION NOTICE') !== -1);
-	t.true(calledWith[0].indexOf('notSame()') !== -1);
-	t.true(calledWith[0].indexOf('notDeepEqual()') !== -1);
-
-	console.warn = originalConsole;
-	t.end();
-});
