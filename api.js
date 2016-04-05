@@ -78,8 +78,12 @@ Api.prototype._reset = function () {
 };
 
 Api.prototype._runFile = function (file) {
+	var hash = this.precompiler.precompileFile(file);
+	var precompiled = {};
+	precompiled[file] = hash;
+
 	var options = objectAssign({}, this.options, {
-		precompiled: this.precompiler.generateHashForFile(file)
+		precompiled: precompiled
 	});
 
 	return fork(file, options)

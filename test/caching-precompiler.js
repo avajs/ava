@@ -27,7 +27,7 @@ sinon.spy(babel, 'transform');
 test('creation with new', function (t) {
 	var tempDir = uniqueTempDir();
 	var precompiler = new CachingPrecompiler(tempDir, null);
-	t.is(precompiler.cacheDir, tempDir);
+	t.is(precompiler.cacheDirPath, tempDir);
 	t.end();
 });
 
@@ -145,6 +145,6 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.same(options.presets, ['stage-2', 'es2015']);
-	t.same(options.plugins, [customPlugin, powerAssert, transformRuntime, rewrite]);
+	t.same(options.plugins, [customPlugin, powerAssert, rewrite, transformRuntime]);
 	t.end();
 });
