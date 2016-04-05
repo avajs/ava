@@ -447,7 +447,6 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['foo-{bar,baz}.js'];
-		avaFiles.defaultExcludePatterns.reset();
 		avaFiles.defaultExcludePatterns.returns(['!*bar*']);
 		api.run.returns(Promise.resolve());
 		start();

@@ -2,24 +2,19 @@
 var EventEmitter = require('events').EventEmitter;
 var path = require('path');
 var util = require('util');
-var flatten = require('arr-flatten');
 var Promise = require('bluebird');
-var figures = require('figures');
-var chalk = require('chalk');
 var objectAssign = require('object-assign');
 var commonPathPrefix = require('common-path-prefix');
 var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
-var slash = require('slash');
 var isObj = require('is-obj');
-var ms = require('ms');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
-var formatter = require('./lib/enhance-assert').formatter();
 var CachingPrecompiler = require('./lib/caching-precompiler');
 var AvaFiles = require('./lib/ava-files');
+var TestData = require('./lib/test-data');
 
 function Api(options) {
 	if (!(this instanceof Api)) {
@@ -43,8 +38,6 @@ function Api(options) {
 		this[key] = this[key].bind(this);
 	}, this);
 
-	this._reset();
-
 	if (this.options.timeout) {
 		var timeout = ms(this.options.timeout);
 		this._restartTimer = debounce(this._onTimeout, timeout);
@@ -54,23 +47,7 @@ function Api(options) {
 util.inherits(Api, EventEmitter);
 module.exports = Api;
 
-Api.prototype._reset = function () {
-	this.rejectionCount = 0;
-	this.exceptionCount = 0;
-	this.passCount = 0;
-	this.skipCount = 0;
-	this.todoCount = 0;
-	this.failCount = 0;
-	this.fileCount = 0;
-	this.testCount = 0;
-	this.hasExclusive = false;
-	this.errors = [];
-	this.stats = [];
-	this.tests = [];
-	this.base = '';
-};
-
-Api.prototype._runFile = function (file) {
+Api.prototype._runFile = function (file, testData) {
 	var hash = this.precompiler.precompileFile(file);
 	var precompiled = {};
 	precompiled[file] = hash;
@@ -78,117 +55,12 @@ Api.prototype._runFile = function (file) {
 	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
 	});
+	
+	var emitter = fork(file, options);
 
-	return fork(file, options)
-		.on('teardown', this._handleTeardown)
-		.on('stats', this._handleStats)
-		.on('test', this._handleTest)
-		.on('unhandledRejections', this._handleRejections)
-		.on('uncaughtException', this._handleExceptions)
-		.on('stdout', this._handleOutput.bind(this, 'stdout'))
-		.on('stderr', this._handleOutput.bind(this, 'stderr'));
-};
+	testData.listenToTestRun(emitter);
 
-Api.prototype._handleOutput = function (channel, data) {
-	this.emit(channel, data);
-};
-
-function normalizeError(err) {
-	if (!isObj(err)) {
-		err = {
-			message: err,
-			stack: err
-		};
-	}
-
-	return err;
-}
-
-Api.prototype._handleRejections = function (data) {
-	this.rejectionCount += data.rejections.length;
-
-	data.rejections.forEach(function (err) {
-		err = normalizeError(err);
-		err.type = 'rejection';
-		err.file = data.file;
-		this.emit('error', err);
-		this.errors.push(err);
-	}, this);
-};
-
-Api.prototype._handleExceptions = function (data) {
-	this.exceptionCount++;
-	var err = normalizeError(data.exception);
-	err.type = 'exception';
-	err.file = data.file;
-	this.emit('error', err);
-	this.errors.push(err);
-};
-
-Api.prototype._handleTeardown = function (data) {
-	this.emit('dependencies', data.file, data.dependencies);
-};
-
-Api.prototype._handleStats = function (stats) {
-	this.emit('stats', stats);
-
-	if (this.hasExclusive && !stats.hasExclusive) {
-		return;
-	}
-
-	if (!this.hasExclusive && stats.hasExclusive) {
-		this.hasExclusive = true;
-		this.testCount = 0;
-	}
-
-	this.testCount += stats.testCount;
-};
-
-Api.prototype._handleTest = function (test) {
-	test.title = this._prefixTitle(test.file) + test.title;
-
-	if (test.error) {
-		if (test.error.powerAssertContext) {
-			var message = formatter(test.error.powerAssertContext);
-
-			if (test.error.originalMessage) {
-				message = test.error.originalMessage + ' ' + message;
-			}
-
-			test.error.message = message;
-		}
-
-		if (test.error.name !== 'AssertionError') {
-			test.error.message = 'failed with "' + test.error.message + '"';
-		}
-
-		this.errors.push(test);
-	}
-
-	this.emit('test', test);
-};
-
-Api.prototype._prefixTitle = function (file) {
-	if (this.fileCount === 1 && !this.options.explicitTitles) {
-		return '';
-	}
-
-	var separator = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
-
-	var prefix = path.relative('.', file)
-		.replace(this.base, '')
-		.replace(/\.spec/, '')
-		.replace(/\.test/, '')
-		.replace(/test\-/g, '')
-		.replace(/\.js$/, '')
-		.split(path.sep)
-		.join(separator);
-
-	if (prefix.length > 0) {
-		prefix += separator;
-	}
-
-	return prefix;
+	return emitter;
 };
 
 Api.prototype._onTimeout = function () {
@@ -204,25 +76,32 @@ Api.prototype._onTimeout = function () {
 };
 
 Api.prototype.run = function (files, options) {
-	this._reset();
+	var self = this;
 
-	if (options && options.runOnlyExclusive) {
-		this.hasExclusive = true;
-	}
+	return new AvaFiles(files)
+		.findTestFiles()
+		.then(function (files) {
+			return self._run(files, options);
+		});
+};
 
-	if (this.options.timeout) {
+Api.prototype._run = function (files, _options) {
+	var self = this;
+	var testData = new TestData({
+		prefixTitles: this.options.explicitTitles || files.length > 1,
+		runOnlyExclusive: _options && _options.runOnlyExclusive,
+		base: path.relative('.', commonPathPrefix(files)) + path.sep
+	});
+
+	if (self.options.timeout) {
 		this._restartTimer();
 		this.on('test', this._restartTimer);
 	}
 
-	return new AvaFiles(files).findTestFiles().then(this._run);
-};
-
-Api.prototype._run = function (files) {
-	var self = this;
+	self.emit('test-run', testData, files);
 
 	if (files.length === 0) {
-		self._handleExceptions({
+		testData.handleExceptions({
 			exception: new AvaError('Couldn\'t find any files to test'),
 			file: undefined
 		});
@@ -237,10 +116,10 @@ Api.prototype._run = function (files) {
 	self.options.cacheDir = cacheDir;
 	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
 	self.fileCount = files.length;
-	self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
 
 	var tests = new Array(self.fileCount);
 
+	// TODO: thid should be cleared at the end of the run
 	self.on('timeout', function () {
 		tests.forEach(function (fork) {
 			fork.exit();
@@ -249,8 +128,8 @@ Api.prototype._run = function (files) {
 
 	return new Promise(function (resolve) {
 		function run() {
-			if (self.options.match.length > 0 && !self.hasExclusive) {
-				self._handleExceptions({
+			if (self.options.match.length > 0 && !testData.hasExclusive) {
+				testData.handleExceptions({
 					exception: new AvaError('Couldn\'t find any matching tests'),
 					file: undefined
 				});
@@ -263,7 +142,7 @@ Api.prototype._run = function (files) {
 
 			var method = self.options.serial ? 'mapSeries' : 'map';
 			var options = {
-				runOnlyExclusive: self.hasExclusive
+				runOnlyExclusive: testData.hasExclusive
 			};
 
 			resolve(Promise[method](files, function (file, index) {
@@ -271,7 +150,7 @@ Api.prototype._run = function (files) {
 					// The test failed catastrophically. Flag it up as an
 					// exception, then return an empty result. Other tests may
 					// continue to run.
-					self._handleExceptions({
+					testData.handleExceptions({
 						exception: err,
 						file: file
 					});
@@ -308,7 +187,7 @@ Api.prototype._run = function (files) {
 			}
 
 			try {
-				var test = tests[index] = self._runFile(file);
+				var test = tests[index] = self._runFile(file, testData);
 
 				test.on('stats', tryRun);
 				test.catch(tryRun);
@@ -317,7 +196,7 @@ Api.prototype._run = function (files) {
 			} catch (err) {
 				bailed = true;
 
-				self._handleExceptions({
+				testData.handleExceptions({
 					exception: err,
 					file: file
 				});
@@ -342,30 +221,7 @@ Api.prototype._run = function (files) {
 			self._restartTimer.cancel();
 		}
 		
-		// assemble stats from all tests
-		self.stats = results.map(function (result) {
-			return result.stats;
-		});
-
-		self.tests = results.map(function (result) {
-			return result.tests;
-		});
-
-		self.tests = flatten(self.tests);
-
-		self.passCount = sum(self.stats, 'passCount');
-		self.skipCount = sum(self.stats, 'skipCount');
-		self.todoCount = sum(self.stats, 'todoCount');
-		self.failCount = sum(self.stats, 'failCount');
+		testData.processResults(results);
+		return testData;
 	});
 };
-
-function sum(arr, key) {
-	var result = 0;
-
-	arr.forEach(function (item) {
-		result += item[key];
-	});
-
-	return result;
-}

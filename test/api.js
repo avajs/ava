@@ -21,8 +21,8 @@ test('ES2015 support', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/es2015.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -32,8 +32,8 @@ test('generators support', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/generators.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -43,8 +43,8 @@ test('async/await support', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/async-await.js')])
-		.then(function () {
-			t.is(api.passCount, 2);
+		.then(function (result) {
+			t.is(result.passCount, 2);
 		});
 });
 
@@ -76,13 +76,15 @@ test('test title prefixes — multiple files', function (t) {
 			t.is(expected.length, 0);
 		});
 
-	api.on('test', function (a) {
-		index = expected.indexOf(a.title);
+	api.on('test-run', function (testData) {
+		testData.on('test', function (a) {
+			index = expected.indexOf(a.title);
 
-		t.true(index >= 0);
+			t.true(index >= 0);
 
-		// remove line from expected output
-		expected.splice(index, 1);
+			// remove line from expected output
+			expected.splice(index, 1);
+		});
 	});
 });
 
@@ -107,13 +109,15 @@ test('test title prefixes — single file', function (t) {
 			t.is(expected.length, 0);
 		});
 
-	api.on('test', function (a) {
-		index = expected.indexOf(a.title);
+	api.on('test-run', function (testData) {
+		testData.on('test', function (a) {
+			index = expected.indexOf(a.title);
 
-		t.true(index >= 0);
+			t.true(index >= 0);
 
-		// remove line from expected output
-		expected.splice(index, 1);
+			// remove line from expected output
+			expected.splice(index, 1);
+		});
 	});
 });
 
@@ -140,13 +144,15 @@ test('test title prefixes — single file (explicit)', function (t) {
 			t.is(expected.length, 0);
 		});
 
-	api.on('test', function (a) {
-		index = expected.indexOf(a.title);
+	api.on('test-run', function (testData) {
+		testData.on('test', function (a) {
+			index = expected.indexOf(a.title);
 
-		t.true(index >= 0);
+			t.true(index >= 0);
 
-		// remove line from expected output
-		expected.splice(index, 1);
+			// remove line from expected output
+			expected.splice(index, 1);
+		});
 	});
 });
 
@@ -161,10 +167,10 @@ test('display filename prefixes for failed test stack traces', function (t) {
 	var api = new Api();
 
 	api.run(files)
-		.then(function () {
-			t.is(api.passCount, 2);
-			t.is(api.failCount, 1);
-			t.match(api.errors[0].title, /one-pass-one-fail \S this is a failing test/);
+		.then(function (result) {
+			t.is(result.passCount, 2);
+			t.is(result.failCount, 1);
+			t.match(result.errors[0].title, /one-pass-one-fail \S this is a failing test/);
 		});
 });
 
@@ -181,10 +187,10 @@ test('display filename prefixes for failed test stack traces in subdirs', functi
 	var api = new Api();
 
 	api.run(files)
-		.then(function () {
-			t.is(api.passCount, 1);
-			t.is(api.failCount, 1);
-			t.match(api.errors[0].title, /subdir \S failing-subdir \S subdir fail/);
+		.then(function (result) {
+			t.is(result.passCount, 1);
+			t.is(result.failCount, 1);
+			t.match(result.errors[0].title, /subdir \S failing-subdir \S subdir fail/);
 		});
 });
 
@@ -197,15 +203,17 @@ test('fail-fast mode', function (t) {
 
 	var tests = [];
 
-	api.on('test', function (test) {
-		tests.push({
-			ok: !test.error,
-			title: test.title
+	api.on('test-run', function (testData) {
+		testData.on('test', function (test) {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
 		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/fail-fast.js')])
-		.then(function () {
+		.then(function (result) {
 			t.ok(api.options.failFast);
 			t.same(tests, [{
 				ok: true,
@@ -214,9 +222,9 @@ test('fail-fast mode', function (t) {
 				ok: false,
 				title: 'second fail'
 			}]);
-			t.is(api.passCount, 1);
-			t.is(api.failCount, 1);
-			t.match(api.errors[0].error.message, /Test failed via t.fail()/);
+			t.is(result.passCount, 1);
+			t.is(result.failCount, 1);
+			t.match(result.errors[0].error.message, /Test failed via t.fail()/);
 		});
 });
 
@@ -228,10 +236,10 @@ test('serial execution mode', function (t) {
 	});
 
 	api.run([path.join(__dirname, 'fixture/serial.js')])
-		.then(function () {
+		.then(function (result) {
 			t.ok(api.options.serial);
-			t.is(api.passCount, 3);
-			t.is(api.failCount, 0);
+			t.is(result.passCount, 3);
+			t.is(result.failCount, 0);
 		});
 });
 
@@ -241,9 +249,9 @@ test('circular references on assertions do not break process.send', function (t)
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
-		.then(function () {
-			t.is(api.failCount, 1);
-			t.match(api.errors[0].error.message, /'c'.*?'d'/);
+		.then(function (result) {
+			t.is(result.failCount, 1);
+			t.match(result.errors[0].error.message, /'c'.*?'d'/);
 		});
 });
 
@@ -253,8 +261,8 @@ test('change process.cwd() to a test\'s directory', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/process-cwd.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -263,14 +271,16 @@ test('unhandled promises will throw an error', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (data) {
-		t.is(data.name, 'Error');
-		t.match(data.message, /You can't handle this!/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.is(data.name, 'Error');
+			t.match(data.message, /You can't handle this!/);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/loud-rejection.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -279,14 +289,16 @@ test('uncaught exception will throw an error', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (data) {
-		t.is(data.name, 'Error');
-		t.match(data.message, /Can't catch me!/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.is(data.name, 'Error');
+			t.match(data.message, /Can't catch me!/);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -296,9 +308,9 @@ test('errors can occur without messages', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/error-without-message.js')])
-		.then(function () {
-			t.is(api.failCount, 1);
-			t.is(api.errors.length, 1);
+		.then(function (result) {
+			t.is(result.failCount, 1);
+			t.is(result.errors.length, 1);
 		});
 });
 
@@ -309,15 +321,17 @@ test('stack traces for exceptions are corrected using a source map file', functi
 		cacheEnabled: true
 	});
 
-	api.on('error', function (data) {
-		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.match(data.message, /Thrown by source-map-fixtures/);
+			t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+			t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/source-map-file.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -328,15 +342,17 @@ test('stack traces for exceptions are corrected using a source map file (cache o
 		cacheEnabled: false
 	});
 
-	api.on('error', function (data) {
-		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.match(data.message, /Thrown by source-map-fixtures/);
+			t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+			t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/source-map-file.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -347,15 +363,17 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		cacheEnabled: true
 	});
 
-	api.on('error', function (data) {
-		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.match(data.message, /Thrown by source-map-fixtures/);
+			t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+			t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -366,15 +384,17 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		cacheEnabled: false
 	});
 
-	api.on('error', function (data) {
-		t.match(data.message, /Thrown by source-map-fixtures/);
-		t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-		t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (data) {
+			t.match(data.message, /Thrown by source-map-fixtures/);
+			t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+			t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -384,8 +404,8 @@ test('absolute paths', function (t) {
 	var api = new Api();
 
 	api.run([path.resolve('test/fixture/es2015.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -395,9 +415,9 @@ test('search directories recursively for files', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/subdir')])
-		.then(function () {
-			t.is(api.passCount, 2);
-			t.is(api.failCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 2);
+			t.is(result.failCount, 1);
 		});
 });
 
@@ -407,10 +427,10 @@ test('titles of both passing and failing tests and AssertionErrors are returned'
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
-		.then(function () {
-			t.match(api.errors[0].title, /this is a failing test/);
-			t.match(api.tests[0].title, /this is a passing test/);
-			t.match(api.errors[0].error.name, /AssertionError/);
+		.then(function (result) {
+			t.match(result.errors[0].title, /this is a failing test/);
+			t.match(result.tests[0].title, /this is a passing test/);
+			t.match(result.errors[0].error.name, /AssertionError/);
 		});
 });
 
@@ -419,9 +439,11 @@ test('empty test files cause an AvaError to be emitted', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /No tests found.*?import "ava"/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /No tests found.*?import "ava"/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/empty.js')]);
@@ -432,9 +454,11 @@ test('test file with no tests causes an AvaError to be emitted', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /No tests/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /No tests/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/no-tests.js')]);
@@ -445,9 +469,11 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Test results were not received from/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Test results were not received from/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
@@ -458,9 +484,11 @@ test('testing nonexistent files causes an AvaError to be emitted', function (t) 
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Couldn't find any files to test/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/broken.js')]);
@@ -471,22 +499,11 @@ test('test file in node_modules is ignored', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
-	});
-
-	return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
-});
-
-test('test file in node_modules is ignored', function (t) {
-	t.plan(2);
-
-	var api = new Api();
-
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Couldn't find any files to test/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
@@ -497,9 +514,11 @@ test('test file in fixtures is ignored', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Couldn't find any files to test/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
@@ -510,9 +529,11 @@ test('test file in helpers is ignored', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any files to test/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Couldn't find any files to test/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
@@ -528,8 +549,8 @@ test('Node.js-style --require CLI argument', function (t) {
 	});
 
 	api.run([path.join(__dirname, 'fixture/validate-installed-global.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -548,16 +569,16 @@ test('power-assert support', function (t) {
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/power-assert.js')])
-		.then(function () {
-			t.ok(api.errors[0].error.powerAssertContext);
+		.then(function (result) {
+			t.ok(result.errors[0].error.powerAssertContext);
 
 			t.match(
-				api.errors[0].error.message,
+				result.errors[0].error.message,
 				/t\.true\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
 			);
 
 			t.match(
-				api.errors[1].error.message,
+				result.errors[1].error.message,
 				/with message\s+t\.true\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
 			);
 		});
@@ -604,9 +625,9 @@ test('test file with only skipped tests does not create a failure', function (t)
 	var api = new Api();
 
 	api.run([path.join(__dirname, 'fixture/skip-only.js')])
-		.then(function () {
-			t.is(api.tests.length, 1);
-			t.true(api.tests[0].skip);
+		.then(function (result) {
+			t.is(result.tests.length, 1);
+			t.true(result.tests[0].skip);
 		});
 });
 
@@ -622,11 +643,11 @@ test('test file with exclusive tests causes non-exclusive tests in other files t
 	var api = new Api();
 
 	api.run(files)
-		.then(function () {
-			t.ok(api.hasExclusive);
-			t.is(api.testCount, 2);
-			t.is(api.passCount, 2);
-			t.is(api.failCount, 0);
+		.then(function (result) {
+			t.ok(result.hasExclusive);
+			t.is(result.testCount, 2);
+			t.is(result.passCount, 2);
+			t.is(result.failCount, 0);
 		});
 });
 
@@ -637,11 +658,11 @@ test('test files can be forced to run in exclusive mode', function (t) {
 	return api.run(
 		[path.join(__dirname, 'fixture/es2015.js')],
 		{runOnlyExclusive: true}
-	).then(function () {
-		t.ok(api.hasExclusive);
-		t.is(api.testCount, 0);
-		t.is(api.passCount, 0);
-		t.is(api.failCount, 0);
+	).then(function (result) {
+		t.ok(result.hasExclusive);
+		t.is(result.testCount, 0);
+		t.is(result.passCount, 0);
+		t.is(result.failCount, 0);
 	});
 });
 
@@ -650,11 +671,11 @@ test('resets state before running', function (t) {
 
 	var api = new Api();
 
-	api.run([path.resolve('test/fixture/es2015.js')]).then(function () {
-		t.is(api.passCount, 1);
+	api.run([path.resolve('test/fixture/es2015.js')]).then(function (result) {
+		t.is(result.passCount, 1);
 		return api.run([path.resolve('test/fixture/es2015.js')]);
-	}).then(function () {
-		t.is(api.passCount, 1);
+	}).then(function (result) {
+		t.is(result.passCount, 1);
 	});
 });
 
@@ -678,30 +699,35 @@ test('emits dependencies for test files', function (t) {
 		path.resolve('test/fixture/with-dependencies/dep-3.custom')
 	];
 
-	api.on('dependencies', function (file, dependencies) {
-		t.notEqual(testFiles.indexOf(file), -1);
-		t.same(dependencies.slice(-3), sourceFiles);
+	api.on('test-run', function (testData) {
+		testData.on('dependencies', function (file, dependencies) {
+			t.notEqual(testFiles.indexOf(file), -1);
+			t.same(dependencies.slice(-3), sourceFiles);
+		});
+
+		// The test files are designed to cause errors so ignore them here.
+		testData.on('error', function () {});
 	});
 
 	var result = api.run(['test/fixture/with-dependencies/*test*.js']);
 
-	// The test files are designed to cause errors so ignore them here.
-	api.on('error', function () {});
-	result.catch(function () {});
+	return result.catch(function () {});
 });
 
 test('emits stats for test files', function (t) {
 	t.plan(2);
 
 	var api = new Api();
-	api.on('stats', function (stats) {
-		if (stats.file === path.normalize('test/fixture/exclusive.js')) {
-			t.is(stats.hasExclusive, true);
-		} else if (stats.file === path.normalize('test/fixture/generators.js')) {
-			t.is(stats.hasExclusive, false);
-		} else {
-			t.ok(false);
-		}
+	api.on('test-run', function (testData) {
+		testData.on('stats', function (stats) {
+			if (stats.file === path.normalize('test/fixture/exclusive.js')) {
+				t.is(stats.hasExclusive, true);
+			} else if (stats.file === path.normalize('test/fixture/generators.js')) {
+				t.is(stats.hasExclusive, false);
+			} else {
+				t.ok(false);
+			}
+		});
 	});
 
 	return api.run([
@@ -715,18 +741,20 @@ test('verify test count', function (t) {
 
 	var api = new Api();
 
-	t.is(api.passCount, 0);
-	t.is(api.failCount, 0);
-	t.is(api.skipCount, 0);
-	t.is(api.todoCount, 0);
+	api.on('test-run', function (testData) {
+		t.is(testData.passCount, 0);
+		t.is(testData.failCount, 0);
+		t.is(testData.skipCount, 0);
+		t.is(testData.todoCount, 0);
+	});
 
 	return api.run([
 		path.join(__dirname, 'fixture/test-count.js')
-	]).then(function () {
-		t.is(api.passCount, 1);
-		t.is(api.failCount, 1);
-		t.is(api.skipCount, 1);
-		t.is(api.todoCount, 1);
+	]).then(function (result) {
+		t.is(result.passCount, 1);
+		t.is(result.failCount, 1);
+		t.is(result.skipCount, 1);
+		t.is(result.todoCount, 1);
 	});
 });
 
@@ -741,14 +769,17 @@ test('Custom Babel Plugin Support', function (t) {
 		cacheEnabled: false
 	});
 
-	api.on('test', function (data) {
-		t.is(data.title, 'FOO');
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.is(data.title, 'FOO');
+		});
 	});
 
 	api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(
-			function () {
-				t.is(api.passCount, 1);
+			function (result) {
+				console.error('foo');
+				t.is(result.passCount, 1);
 			},
 			t.threw
 		);
@@ -759,10 +790,12 @@ test('Default babel config doesn\'t use .babelrc', function (t) {
 
 	var api = new Api();
 
-	api.on('test', function (data) {
-		t.is(data.title, 'foo');
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.is(data.title, 'foo');
+		});
 	});
-
+	
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(function () {
 			t.is(api.passCount, 1);
@@ -777,8 +810,10 @@ test('babelConfig:"inherit" uses .babelrc', function (t) {
 		cacheEnabled: false
 	});
 
-	api.on('test', function (data) {
-		t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
@@ -795,8 +830,10 @@ test('babelConfig:{babelrc:true} uses .babelrc', function (t) {
 		cacheEnabled: false
 	});
 
-	api.on('test', function (data) {
-		t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
@@ -816,8 +853,10 @@ test('babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc', f
 		cacheEnabled: false
 	});
 
-	api.on('test', function (data) {
-		t.ok((data.title === 'FOO') || /^repeated test:/.test(data.title));
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.ok((data.title === 'FOO') || /^repeated test:/.test(data.title));
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
@@ -837,13 +876,15 @@ test('babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc', f
 		cacheEnabled: false
 	});
 
-	api.on('test', function (data) {
-		t.ok((data.title === 'BAR'));
+	api.on('test-run', function (testData) {
+		testData.on('test', function (data) {
+			t.ok((data.title === 'BAR'));
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -854,9 +895,11 @@ test('using --match with no matching tests causes an AvaError to be emitted', fu
 		match: ['can\'t match this']
 	});
 
-	api.on('error', function (err) {
-		t.is(err.name, 'AvaError');
-		t.match(err.message, /Couldn't find any matching tests/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.match(err.message, /Couldn't find any matching tests/);
+		});
 	});
 
 	return api.run([path.join(__dirname, 'fixture/match-no-match.js')]);
@@ -867,9 +910,11 @@ test('errors thrown when running files are emitted', function (t) {
 
 	var api = new Api();
 
-	api.on('error', function (err) {
-		t.is(err.name, 'SyntaxError');
-		t.match(err.message, /Unexpected token/);
+	api.on('test-run', function (testData) {
+		testData.on('error', function (err) {
+			t.is(err.name, 'SyntaxError');
+			t.match(err.message, /Unexpected token/);
+		});
 	});
 
 	return api.run([
