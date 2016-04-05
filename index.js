@@ -61,8 +61,10 @@ function test(props) {
 }
 
 function exit() {
+	var stats = runner._buildStats();
+
 	send('results', {
-		stats: runner.stats
+		stats: stats
 	});
 }
 
@@ -84,6 +86,10 @@ globals.setImmediate(function () {
 
 	process.on('ava-run', function (options) {
 		runner.run(options).then(exit);
+	});
+
+	process.on('ava-init-exit', function () {
+		exit();
 	});
 });
 

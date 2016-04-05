@@ -78,7 +78,15 @@ test('disallow invalid babel config shortcuts', function (t) {
 	});
 });
 
-test('throwing a named function will report the function to the console', function (t) {
+test('timeout', function (t) {
+	execCli(['fixture/long-running.js', '-T', '1s'], function (err, stdout, stderr) {
+		t.ok(err);
+		t.match(stderr, /Exited because no new tests completed within the last 1000ms of inactivity/);
+		t.end();
+	});
+});
+
+test('throwing a named function will report the to the console', function (t) {
 	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
 		t.ok(err);
 		t.match(stderr, /function fooFn\(\) \{\}/);

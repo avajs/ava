@@ -69,6 +69,7 @@ var cli = meow([
 	'  --match, -m      Only run tests with matching title (Can be repeated)',
 	'  --watch, -w      Re-run tests when tests and source files change',
 	'  --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)',
+	'  --timeout, -T    Set global timeout',
 	'',
 	'Examples',
 	'  ava',
@@ -84,6 +85,7 @@ var cli = meow([
 	string: [
 		'_',
 		'require',
+		'timeout',
 		'source',
 		'match'
 	],
@@ -102,7 +104,8 @@ var cli = meow([
 		s: 'serial',
 		m: 'match',
 		w: 'watch',
-		S: 'source'
+		S: 'source',
+		T: 'timeout'
 	}
 });
 
@@ -120,7 +123,8 @@ var api = new Api({
 	cacheEnabled: cli.flags.cache !== false,
 	explicitTitles: cli.flags.watch,
 	match: arrify(cli.flags.match),
-	babelConfig: conf.babel
+	babelConfig: conf.babel,
+	timeout: cli.flags.timeout
 });
 
 var reporter;
