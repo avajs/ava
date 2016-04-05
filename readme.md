@@ -830,7 +830,7 @@ const c = 'baz';
 require('assert').ok(a.test(b) || b === c);
 ```
 
-If you paste that into a Node REPL it'l return:
+If you paste that into a Node REPL it'll return:
 
 ```
 AssertionError: false == true
