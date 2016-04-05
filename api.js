@@ -2,11 +2,9 @@
 var EventEmitter = require('events').EventEmitter;
 var path = require('path');
 var util = require('util');
-var fs = require('fs');
 var flatten = require('arr-flatten');
 var Promise = require('bluebird');
 var figures = require('figures');
-var globby = require('globby');
 var chalk = require('chalk');
 var objectAssign = require('object-assign');
 var commonPathPrefix = require('common-path-prefix');
@@ -21,6 +19,7 @@ var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var formatter = require('./lib/enhance-assert').formatter();
 var CachingPrecompiler = require('./lib/caching-precompiler');
+var AvaFiles = require('./lib/ava-files');
 
 function Api(options) {
 	if (!(this instanceof Api)) {
@@ -39,12 +38,6 @@ function Api(options) {
 
 		return ret;
 	});
-
-	this.excludePatterns = [
-		'!**/node_modules/**',
-		'!**/fixtures/**',
-		'!**/helpers/**'
-	];
 
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
@@ -211,8 +204,6 @@ Api.prototype._onTimeout = function () {
 };
 
 Api.prototype.run = function (files, options) {
-	var self = this;
-
 	this._reset();
 
 	if (options && options.runOnlyExclusive) {
@@ -224,178 +215,150 @@ Api.prototype.run = function (files, options) {
 		this.on('test', this._restartTimer);
 	}
 
-	return handlePaths(files, this.excludePatterns)
-		.map(function (file) {
-			return path.resolve(file);
-		})
-		.then(function (files) {
-			if (files.length === 0) {
+	return new AvaFiles(files).findTestFiles().then(this._run);
+};
+
+Api.prototype._run = function (files) {
+	var self = this;
+
+	if (files.length === 0) {
+		self._handleExceptions({
+			exception: new AvaError('Couldn\'t find any files to test'),
+			file: undefined
+		});
+
+		return Promise.resolve([]);
+	}
+
+	var cacheEnabled = self.options.cacheEnabled !== false;
+	var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
+		uniqueTempDir();
+
+	self.options.cacheDir = cacheDir;
+	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
+	self.fileCount = files.length;
+	self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
+
+	var tests = new Array(self.fileCount);
+
+	self.on('timeout', function () {
+		tests.forEach(function (fork) {
+			fork.exit();
+		});
+	});
+
+	return new Promise(function (resolve) {
+		function run() {
+			if (self.options.match.length > 0 && !self.hasExclusive) {
 				self._handleExceptions({
-					exception: new AvaError('Couldn\'t find any files to test'),
+					exception: new AvaError('Couldn\'t find any matching tests'),
 					file: undefined
 				});
 
-				return [];
+				resolve([]);
+				return;
 			}
 
-			var cacheEnabled = self.options.cacheEnabled !== false;
-			var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
-				uniqueTempDir();
+			self.emit('ready');
 
-			self.options.cacheDir = cacheDir;
-			self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
-			self.fileCount = files.length;
-			self.base = path.relative('.', commonPathPrefix(files)) + path.sep;
+			var method = self.options.serial ? 'mapSeries' : 'map';
+			var options = {
+				runOnlyExclusive: self.hasExclusive
+			};
 
-			var tests = new Array(self.fileCount);
-
-			self.on('timeout', function () {
-				tests.forEach(function (fork) {
-					fork.exit();
-				});
-			});
-
-			return new Promise(function (resolve) {
-				function run() {
-					if (self.options.match.length > 0 && !self.hasExclusive) {
-						self._handleExceptions({
-							exception: new AvaError('Couldn\'t find any matching tests'),
-							file: undefined
-						});
-
-						resolve([]);
-						return;
-					}
-
-					self.emit('ready');
-
-					var method = self.options.serial ? 'mapSeries' : 'map';
-					var options = {
-						runOnlyExclusive: self.hasExclusive
-					};
-
-					resolve(Promise[method](files, function (file, index) {
-						return tests[index].run(options).catch(function (err) {
-							// The test failed catastrophically. Flag it up as an
-							// exception, then return an empty result. Other tests may
-							// continue to run.
-							self._handleExceptions({
-								exception: err,
-								file: file
-							});
-
-							return {
-								stats: {
-									passCount: 0,
-									skipCount: 0,
-									todoCount: 0,
-									failCount: 0
-								},
-								tests: []
-							};
-						});
-					}));
-				}
-
-				// receive test count from all files and then run the tests
-				var unreportedFiles = self.fileCount;
-				var bailed = false;
-
-				files.every(function (file, index) {
-					var tried = false;
-
-					function tryRun() {
-						if (!tried && !bailed) {
-							tried = true;
-							unreportedFiles--;
-
-							if (unreportedFiles === 0) {
-								run();
-							}
-						}
-					}
-
-					try {
-						var test = tests[index] = self._runFile(file);
-
-						test.on('stats', tryRun);
-						test.catch(tryRun);
-
-						return true;
-					} catch (err) {
-						bailed = true;
-
-						self._handleExceptions({
-							exception: err,
-							file: file
-						});
-
-						resolve([]);
-
-						return false;
-					}
-				});
-			}).then(function (results) {
-				if (results.length === 0) {
-					// No tests ran, make sure to tear down the child processes.
-					tests.forEach(function (test) {
-						test.send('teardown');
+			resolve(Promise[method](files, function (file, index) {
+				return tests[index].run(options).catch(function (err) {
+					// The test failed catastrophically. Flag it up as an
+					// exception, then return an empty result. Other tests may
+					// continue to run.
+					self._handleExceptions({
+						exception: err,
+						file: file
 					});
-				}
 
-				return results;
-			});
-		})
-		.then(function (results) {
-			// cancel debounced _onTimeout() from firing
-			if (self.options.timeout) {
-				self._restartTimer.cancel();
+					return {
+						stats: {
+							passCount: 0,
+							skipCount: 0,
+							todoCount: 0,
+							failCount: 0
+						},
+						tests: []
+					};
+				});
+			}));
+		}
+
+		// receive test count from all files and then run the tests
+		var unreportedFiles = self.fileCount;
+		var bailed = false;
+
+		files.every(function (file, index) {
+			var tried = false;
+
+			function tryRun() {
+				if (!tried && !bailed) {
+					tried = true;
+					unreportedFiles--;
+
+					if (unreportedFiles === 0) {
+						run();
+					}
+				}
 			}
 
-			// assemble stats from all tests
-			self.stats = results.map(function (result) {
-				return result.stats;
-			});
+			try {
+				var test = tests[index] = self._runFile(file);
 
-			self.tests = results.map(function (result) {
-				return result.tests;
-			});
+				test.on('stats', tryRun);
+				test.catch(tryRun);
 
-			self.tests = flatten(self.tests);
+				return true;
+			} catch (err) {
+				bailed = true;
 
-			self.passCount = sum(self.stats, 'passCount');
-			self.skipCount = sum(self.stats, 'skipCount');
-			self.todoCount = sum(self.stats, 'todoCount');
-			self.failCount = sum(self.stats, 'failCount');
+				self._handleExceptions({
+					exception: err,
+					file: file
+				});
+
+				resolve([]);
+
+				return false;
+			}
 		});
+	}).then(function (results) {
+		if (results.length === 0) {
+			// No tests ran, make sure to tear down the child processes.
+			tests.forEach(function (test) {
+				test.send('teardown');
+			});
+		}
+
+		return results;
+	}).then(function (results) {
+		// cancel debounced _onTimeout() from firing
+		if (self.options.timeout) {
+			self._restartTimer.cancel();
+		}
+		
+		// assemble stats from all tests
+		self.stats = results.map(function (result) {
+			return result.stats;
+		});
+
+		self.tests = results.map(function (result) {
+			return result.tests;
+		});
+
+		self.tests = flatten(self.tests);
+
+		self.passCount = sum(self.stats, 'passCount');
+		self.skipCount = sum(self.stats, 'skipCount');
+		self.todoCount = sum(self.stats, 'todoCount');
+		self.failCount = sum(self.stats, 'failCount');
+	});
 };
-
-function handlePaths(files, excludePatterns) {
-	// convert pinkie-promise to Bluebird promise
-	files = Promise.resolve(globby(files.concat(excludePatterns)));
-
-	return files
-		.map(function (file) {
-			if (fs.statSync(file).isDirectory()) {
-				var pattern = path.join(file, '**', '*.js');
-
-				if (process.platform === 'win32') {
-					// Always use / in patterns, harmonizing matching across platforms.
-					pattern = slash(pattern);
-				}
-
-				return handlePaths([pattern], excludePatterns);
-			}
-
-			// globby returns slashes even on Windows. Normalize here so the file
-			// paths are consistently platform-accurate as tests are run.
-			return path.normalize(file);
-		})
-		.then(flatten)
-		.filter(function (file) {
-			return path.extname(file) === '.js' && path.basename(file)[0] !== '_';
-		});
-}
 
 function sum(arr, key) {
 	var result = 0;
