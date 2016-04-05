@@ -148,3 +148,14 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.same(options.plugins, [customPlugin, powerAssert, rewrite, transformRuntime]);
 	t.end();
 });
+
+test('does not modify plugins array in babelConfig', function (t) {
+	var plugins = [];
+	var precompiler = new CachingPrecompiler(uniqueTempDir(), {
+		plugins: plugins
+	});
+
+	precompiler.precompileFile(fixture('es2015.js'));
+	t.same(plugins, []);
+	t.end();
+});
