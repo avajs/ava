@@ -214,7 +214,7 @@ test('test throws when given no function', function (t) {
 });
 
 test('todo test', function (t) {
-	t.plan(5);
+	t.plan(6);
 
 	var runner = new Runner();
 	var arr = [];
@@ -226,7 +226,11 @@ test('todo test', function (t) {
 	runner.todo('todo');
 
 	t.throws(function () {
-		runner.todo(function () {});
+		runner.todo('todo', function () {});
+	}, {message: '`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.'});
+
+	t.throws(function () {
+		runner.todo();
 	}, {message: '`todo` tests require a title'});
 
 	runner.run({}).then(function () {
