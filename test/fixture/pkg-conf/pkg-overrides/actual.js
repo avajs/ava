@@ -7,7 +7,7 @@ test(t => {
 	t.is(opts.failFast, true);
 	t.is(opts.serial, true);
 	t.is(opts.cacheEnabled, false);
-	t.same(opts.require, [
+	t.deepEqual(opts.require, [
 		path.join(__dirname, "required.js")
 	]);
 });

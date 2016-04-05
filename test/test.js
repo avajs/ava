@@ -166,7 +166,7 @@ test('handle non-assertion errors even when planned', function (t) {
 
 test('handle testing of arrays', function (t) {
 	var result = ava(function (a) {
-		a.same(['foo', 'bar'], ['foo', 'bar']);
+		a.deepEqual(['foo', 'bar'], ['foo', 'bar']);
 	}).run();
 
 	t.is(result.passed, true);
@@ -176,7 +176,7 @@ test('handle testing of arrays', function (t) {
 
 test('handle falsy testing of arrays', function (t) {
 	var result = ava(function (a) {
-		a.notSame(['foo', 'bar'], ['foo', 'bar', 'cat']);
+		a.notDeepEqual(['foo', 'bar'], ['foo', 'bar', 'cat']);
 	}).run();
 
 	t.is(result.passed, true);
@@ -186,7 +186,7 @@ test('handle falsy testing of arrays', function (t) {
 
 test('handle testing of objects', function (t) {
 	var result = ava(function (a) {
-		a.same({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
+		a.deepEqual({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
 	}).run();
 
 	t.is(result.passed, true);
@@ -196,7 +196,7 @@ test('handle testing of objects', function (t) {
 
 test('handle falsy testing of objects', function (t) {
 	var result = ava(function (a) {
-		a.notSame({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
+		a.notDeepEqual({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
 	}).run();
 
 	t.is(result.passed, true);

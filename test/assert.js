@@ -119,51 +119,51 @@ test('.not()', function (t) {
 	t.end();
 });
 
-test('.same()', function (t) {
+test('.deepEqual()', function (t) {
 	t.doesNotThrow(function () {
-		assert.same({a: 'a'}, {a: 'a'});
+		assert.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
 	t.doesNotThrow(function () {
-		assert.same(['a', 'b'], ['a', 'b']);
+		assert.deepEqual(['a', 'b'], ['a', 'b']);
 	});
 
 	t.throws(function () {
-		assert.same({a: 'a'}, {a: 'b'});
+		assert.deepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	t.throws(function () {
-		assert.same(['a', 'b'], ['a', 'a']);
+		assert.deepEqual(['a', 'b'], ['a', 'a']);
 	});
 
 	t.throws(function () {
-		assert.same([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+		assert.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	}, / 'c' ].*? 'd' ]/);
 
 	t.throws(function () {
 		var circular = ['a', 'b'];
 		circular.push(circular);
-		assert.same([circular, 'c'], [circular, 'd']);
+		assert.deepEqual([circular, 'c'], [circular, 'd']);
 	}, / 'c' ].*? 'd' ]/);
 
 	t.end();
 });
 
-test('.notSame()', function (t) {
+test('.notDeepEqual()', function (t) {
 	t.doesNotThrow(function () {
-		assert.notSame({a: 'a'}, {a: 'b'});
+		assert.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	t.doesNotThrow(function () {
-		assert.notSame(['a', 'b'], ['c', 'd']);
+		assert.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
 	t.throws(function () {
-		assert.notSame({a: 'a'}, {a: 'a'});
+		assert.notDeepEqual({a: 'a'}, {a: 'a'});
 	});
 
 	t.throws(function () {
-		assert.notSame(['a', 'b'], ['a', 'b']);
+		assert.notDeepEqual(['a', 'b'], ['a', 'b']);
 	});
 
 	t.end();
@@ -259,7 +259,7 @@ test('.ifError()', function (t) {
 	t.end();
 });
 
-test('.same() should not mask RangeError from underlying assert', function (t) {
+test('.deepEqual() should not mask RangeError from underlying assert', function (t) {
 	var Circular = function () {
 		this.test = this;
 	};
@@ -268,11 +268,11 @@ test('.same() should not mask RangeError from underlying assert', function (t) {
 	var b = new Circular();
 
 	t.throws(function () {
-		assert.notSame(a, b);
+		assert.notDeepEqual(a, b);
 	});
 
 	t.doesNotThrow(function () {
-		assert.same(a, b);
+		assert.deepEqual(a, b);
 	});
 
 	t.end();
