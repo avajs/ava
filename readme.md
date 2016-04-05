@@ -843,14 +843,14 @@ test(t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';
-	t.truthy(a.test(b) || b === c);
+	t.true(a.test(b) || b === c);
 });
 ```
 
 Will output:
 
 ```
-t.truthy(a.test(b) || b === c)
+t.true(a.test(b) || b === c)
        |    |     |     |
        |    "bar" "bar" "baz"
        false
