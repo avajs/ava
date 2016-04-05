@@ -20,7 +20,7 @@ test.cb('long running', t => {
 	}, {alwaysLast: true});
 
 	setTimeout(() => {
-		t.truthy(true);
+		t.pass();
 		t.end();
 	});
 
