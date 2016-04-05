@@ -3,11 +3,11 @@ import test from '../../';
 test.serial(t => {
 	const a = 'foo';
 
-	t.ok(a === 'bar');
+	t.truthy(a === 'bar');
 });
 
 test.serial(t => {
 	const a = 'bar';
 
-	t.ok(a === 'foo', 'with message');
+	t.truthy(a === 'foo', 'with message');
 });

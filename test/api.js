@@ -553,12 +553,12 @@ test('power-assert support', function (t) {
 
 			t.match(
 				api.errors[0].error.message,
-				/t\.ok\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
+				/t\.truthy\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
 			);
 
 			t.match(
 				api.errors[1].error.message,
-				/with message\s+t\.ok\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
+				/with message\s+t\.truthy\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
 			);
 		});
 });

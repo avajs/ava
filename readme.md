@@ -739,7 +739,7 @@ Assertions are mixed into the [execution object](#t) provided to each test callb
 
 ```js
 test(t => {
-	t.ok('unicorn'); // assertion
+	t.truthy('unicorn'); // assertion
 });
 ```
 
@@ -753,11 +753,11 @@ Passing assertion.
 
 Failing assertion.
 
-### `.ok(value, [message])`
+### `.truthy(value, [message])`
 
 Assert that `value` is truthy.
 
-### `.notOk(value, [message])`
+### `.falsy(value, [message])`
 
 Assert that `value` is falsy.
 
@@ -843,14 +843,14 @@ test(t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';
-	t.ok(a.test(b) || b === c);
+	t.truthy(a.test(b) || b === c);
 });
 ```
 
 Will output:
 
 ```
-t.ok(a.test(b) || b === c)
+t.truthy(a.test(b) || b === c)
        |    |     |     |
        |    "bar" "bar" "baz"
        false

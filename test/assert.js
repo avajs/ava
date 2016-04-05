@@ -19,29 +19,29 @@ test('.fail()', function (t) {
 	t.end();
 });
 
-test('.ok()', function (t) {
+test('.truthy()', function (t) {
 	t.throws(function () {
-		assert.ok(0);
-		assert.ok(false);
+		assert.truthy(0);
+		assert.truthy(false);
 	});
 
 	t.doesNotThrow(function () {
-		assert.ok(1);
-		assert.ok(true);
+		assert.truthy(1);
+		assert.truthy(true);
 	});
 
 	t.end();
 });
 
-test('.notOk()', function (t) {
+test('.falsy()', function (t) {
 	t.throws(function () {
-		assert.notOk(1);
-		assert.notOk(true);
+		assert.falsy(1);
+		assert.falsy(true);
 	});
 
 	t.doesNotThrow(function () {
-		assert.notOk(0);
-		assert.notOk(false);
+		assert.falsy(0);
+		assert.falsy(false);
 	});
 
 	t.end();
