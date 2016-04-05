@@ -433,6 +433,44 @@ test('throws and notThrows work with promises', function (t) {
 	});
 });
 
+test('throws does not work with literals', function (t) {
+	var result = ava(function (a) {
+		a.plan(2);
+		a.throws(function () {
+			// eslint-disable-next-line
+			throw 'foo';
+		});
+
+		a.throws(function () {
+			// eslint-disable-next-line
+			throw 5;
+		});
+	}).run();
+
+	t.is(result.passed, false);
+	t.is(result.reason.message, 'Error `foo` is not of type `object` but of type `string`.');
+	t.is(result.reason.actual, 'string');
+	t.is(result.reason.expected, 'object');
+	t.is(result.result.planCount, 2);
+	t.is(result.result.assertCount, 2);
+	t.end();
+});
+
+test('throws does not work with promises rejecting literals', function (t) {
+	ava(function (a) {
+		a.plan(1);
+		a.throws(Promise.reject(5));
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.message, 'Error `5` is not of type `object` but of type `number`.');
+		t.is(result.reason.actual, 'number');
+		t.is(result.reason.expected, 'object');
+		t.is(result.result.planCount, 1);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
 test('waits for t.throws to resolve after t.end is called', function (t) {
 	ava.cb(function (a) {
 		a.plan(1);
