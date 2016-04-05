@@ -478,16 +478,21 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('files patterns may match directories', function (t) {
 		t.plan(2);
 
-		files = ['dir', 'dir2/*/dir3'];
+		files = ['dir', 'another-dir/*/deeper'];
 		api.run.returns(Promise.resolve());
 		start();
 
-		add(path.join('dir', 'foo.js'));
-		add(path.join('dir2', 'foo', 'dir3', 'bar.js'));
-		return debounce(2).then(function () {
+		add(path.join('dir', 'test.js'));
+		add(path.join('dir', 'nested', 'test.js'));
+		add(path.join('another-dir', 'nested', 'deeper', 'test.js'));
+		return debounce(3).then(function () {
 			t.ok(api.run.calledTwice);
 			t.same(api.run.secondCall.args, [
-				[path.join('dir', 'foo.js'), path.join('dir2', 'foo', 'dir3', 'bar.js')],
+				[
+					path.join('dir', 'test.js'),
+					path.join('dir', 'nested', 'test.js'),
+					path.join('another-dir', 'nested', 'deeper', 'test.js')
+				],
 				{runOnlyExclusive: false}
 			]);
 		});
