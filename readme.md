@@ -851,8 +851,8 @@ Will output:
 
 ```
 t.true(a.test(b) || b === c)
-       |    |     |     |
-       |    "bar" "bar" "baz"
+       |      |     |     |
+       |      "bar" "bar" "baz"
        false
 ```
 
