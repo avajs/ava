@@ -80,7 +80,7 @@ var cli = meow([
 	'  ava --init foo.js',
 	'',
 	'Default patterns when no arguments:',
-	'test.js test-*.js test/**/*.js __tests__/**/*.js **/*.test.js'
+	'test.js test-*.js test/**/*.js **/__tests__/** **/*.test.js'
 ], {
 	string: [
 		'_',

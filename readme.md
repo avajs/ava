@@ -157,7 +157,7 @@ $ ava --help
     ava --init foo.js
 
   Default patterns when no arguments:
-  test.js test-*.js test/**/*.js __tests__/**/*.js **/*.test.js
+  test.js test-*.js test/**/*.js **/__tests__/** **/*.test.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
