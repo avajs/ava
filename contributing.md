@@ -12,6 +12,8 @@ Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es
 
 As a user of AVA you're the perfect candidate to help us improve our documentation. Typo corrections, error fixes, better explanations, more examples, etc. Open issues for things that could be improved. [Help translate our docs.](https://github.com/sindresorhus/ava-docs) Anything. Even improvements to this document.
 
+Use the [`docs` label](https://github.com/sindresorhus/ava/labels/docs) to find suggestions for what we'd love to see more documentation on.
+
 ### Improve issues
 
 Some issues are created with missing information, not reproducible, or plain invalid. Help make them easier to resolve. Handling issues takes a lot of time that we could rather spend on fixing bugs and adding features.
@@ -20,11 +22,29 @@ Some issues are created with missing information, not reproducible, or plain inv
 
 We're always looking for more opinions on discussions in the issue tracker. It's a good opportunity to influence the future direction of AVA.
 
+The [`question` label](https://github.com/sindresorhus/ava/labels/question) is a good place to find ongoing discussions.
+
+### Write code
+
+You can use issue labels to discover issues you could help out with:
+
+* [`babel` issues](https://github.com/sindresorhus/ava/labels/babel) relate to our Babel infrastructure
+* [`blocked` issues](https://github.com/sindresorhus/ava/labels/blocked) need help getting unstuck
+* [`bug` issues](https://github.com/sindresorhus/ava/labels/bug) are known bugs we'd like to fix
+* [`enhancement` issues](https://github.com/sindresorhus/ava/labels/enhancement) are features we're open to including
+* [`performance` issues](https://github.com/sindresorhus/ava/labels/performance) track ideas on how to improve AVA's performance
+
+The [`help wanted`](https://github.com/sindresorhus/ava/labels/help%20wanted) and [`good for beginner`](https://github.com/sindresorhus/ava/labels/good%20for%20beginner) labels are especially useful.
+
+You may find an issue is assigned, or has the [`assigned` label](https://github.com/sindresorhus/ava/labels/assigned). Please double-check before starting on this issue because somebody else is likely already working on it.
+
+We'd like to fix [`priority` issues](https://github.com/sindresorhus/ava/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/sindresorhus/ava/labels/low%20priority) too. [`future` issues](https://github.com/sindresorhus/ava/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
+
 ### Hang out in our chat
 
 We have a [chat](https://gitter.im/sindresorhus/ava). Jump in there and lurk, talk to us, and help others.
 
-### Submitting an issue
+## Submitting an issue
 
 - The issue tracker is for issues. Use our [chat](https://gitter.im/sindresorhus/ava) or [Stack Overflow](https://stackoverflow.com/questions/tagged/ava) for support.
 - Search the issue tracker before opening an issue.
@@ -34,7 +54,7 @@ We have a [chat](https://gitter.im/sindresorhus/ava). Jump in there and lurk, ta
 - The more time you put into an issue, the more we will.
 - [The best issue report is a failing test proving it.](https://twitter.com/sindresorhus/status/579306280495357953)
 
-### Submitting a pull request
+## Submitting a pull request
 
 - Non-trivial changes are often best discussed in an issue first, to prevent you from doing unnecessary work.
 - For ambitious tasks, you should try to get your work in front of the community for feedback as soon as possible. Open a pull request as soon as you have done the minimum needed to demonstrate your idea. At this early stage, don't worry about making things perfect, or 100% complete. Add a [WIP] prefix to the title, and describe what you still need to do. This lets reviewers know not to nit-pick small details or point out improvements you already know you need to make.
