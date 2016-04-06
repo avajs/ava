@@ -41,7 +41,7 @@ test('failing test', function (t) {
 
 	var expectedOutput = [
 		'# failing',
-		'not ok 1 - false == true',
+		'not ok 1 - failing',
 		'  ---',
 		'    operator: ==',
 		'    expected: true',
