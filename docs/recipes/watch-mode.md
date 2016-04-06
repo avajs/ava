@@ -69,6 +69,10 @@ AVA tracks which source files your test files depend on. If you change such a de
 
 Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you loaded them using the [`--require` CLI flag] and not from inside your test file. Files accessed using the `fs` module are not tracked.
 
+## Watch mode and the `.only` modifier
+
+The `.only` modifier disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
+
 ## Manually rerunning all tests
 
 You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed by <kbd>Enter</kbd>.
@@ -96,3 +100,4 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`--require` CLI flag]: https://github.com/sindresorhus/ava#cli
 [`--source` CLI flag]: https://github.com/sindresorhus/ava#cli
+[`.only` modifier]: https://github.com/sindresorhus/ava#running-specific-tests

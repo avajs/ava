@@ -938,7 +938,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			change(t4);
 			return debounce(2).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [[t3, t4], {runOnlyExclusive: true}]);
+				t.same(api.run.secondCall.args, [[t1, t2, t3, t4], {runOnlyExclusive: true}]);
 			});
 		});
 
@@ -950,7 +950,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			change(t4);
 			return debounce(2).then(function () {
 				t.ok(api.run.calledTwice);
-				t.same(api.run.secondCall.args, [[t1, t4], {runOnlyExclusive: true}]);
+				t.same(api.run.secondCall.args, [[t1, t2, t4], {runOnlyExclusive: true}]);
 			});
 		});
 
