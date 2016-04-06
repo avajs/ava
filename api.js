@@ -9,7 +9,7 @@ var resolveCwd = require('resolve-cwd');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
-var isObj = require('is-obj');
+var ms = require('ms');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
@@ -37,11 +37,6 @@ function Api(options) {
 	Object.keys(Api.prototype).forEach(function (key) {
 		this[key] = this[key].bind(this);
 	}, this);
-
-	if (this.options.timeout) {
-		var timeout = ms(this.options.timeout);
-		this._restartTimer = debounce(this._onTimeout, timeout);
-	}
 }
 
 util.inherits(Api, EventEmitter);
@@ -55,7 +50,7 @@ Api.prototype._runFile = function (file, testData) {
 	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
 	});
-	
+
 	var emitter = fork(file, options);
 
 	testData.listenToTestRun(emitter);
@@ -63,16 +58,16 @@ Api.prototype._runFile = function (file, testData) {
 	return emitter;
 };
 
-Api.prototype._onTimeout = function () {
+Api.prototype._onTimeout = function (testData) {
 	var timeout = ms(this.options.timeout);
 	var message = 'Exited because no new tests completed within the last ' + timeout + 'ms of inactivity';
 
-	this._handleExceptions({
+	testData.handleExceptions({
 		exception: new AvaError(message),
 		file: null
 	});
 
-	this.emit('timeout');
+	testData.emit('timeout');
 };
 
 Api.prototype.run = function (files, options) {
@@ -94,8 +89,12 @@ Api.prototype._run = function (files, _options) {
 	});
 
 	if (self.options.timeout) {
-		this._restartTimer();
-		this.on('test', this._restartTimer);
+		var timeout = ms(self.options.timeout);
+		testData._restartTimer = debounce(function () {
+			self._onTimeout(testData);
+		}, timeout);
+		testData._restartTimer();
+		testData.on('test', testData._restartTimer);
 	}
 
 	self.emit('test-run', testData, files);
@@ -120,7 +119,7 @@ Api.prototype._run = function (files, _options) {
 	var tests = new Array(self.fileCount);
 
 	// TODO: thid should be cleared at the end of the run
-	self.on('timeout', function () {
+	testData.on('timeout', function () {
 		tests.forEach(function (fork) {
 			fork.exit();
 		});
@@ -218,9 +217,9 @@ Api.prototype._run = function (files, _options) {
 	}).then(function (results) {
 		// cancel debounced _onTimeout() from firing
 		if (self.options.timeout) {
-			self._restartTimer.cancel();
+			testData._restartTimer.cancel();
 		}
-		
+
 		testData.processResults(results);
 		return testData;
 	});

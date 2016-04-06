@@ -778,7 +778,6 @@ test('Custom Babel Plugin Support', function (t) {
 	api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 		.then(
 			function (result) {
-				console.error('foo');
 				t.is(result.passCount, 1);
 			},
 			t.threw
@@ -795,10 +794,10 @@ test('Default babel config doesn\'t use .babelrc', function (t) {
 			t.is(data.title, 'foo');
 		});
 	});
-	
+
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(function () {
-			t.is(api.passCount, 1);
+		.then(function (result) {
+			t.is(result.passCount, 1);
 		});
 });
 
@@ -817,8 +816,8 @@ test('babelConfig:"inherit" uses .babelrc', function (t) {
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(function () {
-			t.is(api.passCount, 2);
+		.then(function (result) {
+			t.is(result.passCount, 2);
 		});
 });
 
@@ -837,8 +836,8 @@ test('babelConfig:{babelrc:true} uses .babelrc', function (t) {
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(function () {
-			t.is(api.passCount, 2);
+		.then(function (result) {
+			t.is(result.passCount, 2);
 		});
 });
 
@@ -860,8 +859,8 @@ test('babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc', f
 	});
 
 	return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-		.then(function () {
-			t.is(api.passCount, 2);
+		.then(function (result) {
+			t.is(result.passCount, 2);
 		});
 });
 
