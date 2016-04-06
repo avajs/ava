@@ -14,7 +14,7 @@ var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
 var AvaFiles = require('./lib/ava-files');
-var TestData = require('./lib/test-data');
+var TestData = require('./lib/run-status');
 
 function Api(options) {
 	if (!(this instanceof Api)) {
