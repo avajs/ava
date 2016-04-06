@@ -213,7 +213,7 @@ Test files are run from their current directory, so [`process.cwd()`](https://no
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and callback function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
+To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
 
 ```js
 import test from 'ava';
@@ -235,7 +235,7 @@ test(t => {
 
 It's recommended to provide test titles if you have more than one test.
 
-If you haven't provided a test title, but the callback is a named function, that name will be used as the test title:
+If you haven't provided a test title, but the implementation is a named function, that name will be used as the test title:
 
 ```js
 test(function name(t) {
@@ -366,7 +366,7 @@ Match titles starting with `foo` or ending with `bar`:
 $ ava --match='foo*' --match='*bar'
 ```
 
-Note that a match pattern takes precedence over the `.only` modifier. Only tests with an explicit title are matched. Tests without titles or whose title is derived from the callback function will be skipped when `--match` is used.
+Note that a match pattern takes precedence over the `.only` modifier. Only tests with an explicit title are matched. Tests without titles or whose title is derived from the implementation function will be skipped when `--match` is used.
 
 Here's what happens when you run AVA with a match pattern of `*oo*` and the following tests:
 
@@ -404,11 +404,11 @@ test.skip('will not be run', t => {
 });
 ```
 
-You must specify the callback function.
+You must specify the implementation function.
 
 ### Test placeholders ("todo")
 
-You can use the `.todo` modifier when you're planning to write a test. Like skipped tests these placeholders are shown in the output. They only require a title; you cannot specify the callback function.
+You can use the `.todo` modifier when you're planning to write a test. Like skipped tests these placeholders are shown in the output. They only require a title; you cannot specify the implementation function.
 
 ```js
 test.todo('will think about writing this later');
@@ -698,16 +698,16 @@ $ ava --timeout=100 # 100 milliseconds
 
 ## API
 
-### `test([title], callback)`
-### `test.serial([title], callback)`
-### `test.cb([title], callback)`
-### `test.only([title], callback)`
-### `test.skip([title], callback)`
+### `test([title], implementation)`
+### `test.serial([title], implementation)`
+### `test.cb([title], implementation)`
+### `test.only([title], implementation)`
+### `test.skip([title], implementation)`
 ### `test.todo(title)`
-### `test.before([title], callback)`
-### `test.after([title], callback)`
-### `test.beforeEach([title], callback)`
-### `test.afterEach([title], callback)`
+### `test.before([title], implementation)`
+### `test.after([title], implementation)`
+### `test.beforeEach([title], implementation)`
+### `test.afterEach([title], implementation)`
 
 #### `title`
 
@@ -715,7 +715,7 @@ Type: `string`
 
 Test title.
 
-#### `callback(t)`
+#### `implementation(t)`
 
 Type: `function`
 
@@ -725,7 +725,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test callback receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
+The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
 
 ###### `t.plan(count)`
 
@@ -737,7 +737,7 @@ End the test. Only works with `test.cb()`.
 
 ## Assertions
 
-Assertions are mixed into the [execution object](#t) provided to each test callback:
+Assertions are mixed into the [execution object](#t) provided to each test implementation:
 
 ```js
 test(t => {
