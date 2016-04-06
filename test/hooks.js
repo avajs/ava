@@ -51,9 +51,9 @@ test('after', function (t) {
 		arr.push('a');
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.failCount, 0);
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 1);
+		t.is(stats.failCount, 0);
 		t.same(arr, ['a', 'b']);
 		t.end();
 	});
@@ -158,8 +158,8 @@ test('fail if beforeEach hook fails', function (t) {
 		a.pass();
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.failCount, 1);
+	runner.run({}).then(function (stats) {
+		t.is(stats.failCount, 1);
 		t.same(arr, ['a']);
 		t.end();
 	});
@@ -282,8 +282,8 @@ test('shared context', function (t) {
 		a.deepEqual(a.context.arr, ['a', 'b', 'c']);
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.failCount, 0);
+	runner.run({}).then(function (stats) {
+		t.is(stats.failCount, 0);
 		t.end();
 	});
 });
@@ -301,8 +301,8 @@ test('shared context of any type', function (t) {
 		a.is(a.context, 'foo');
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.failCount, 0);
+	runner.run({}).then(function (stats) {
+		t.is(stats.failCount, 0);
 		t.end();
 	});
 });

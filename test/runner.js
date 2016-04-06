@@ -194,10 +194,10 @@ test('skip test', function (t) {
 		runner.skip('should be a todo');
 	}, {message: 'Expected a function. Use `test.todo()` for tests without a function.'});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.testCount, 2);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.skipCount, 1);
+	runner.run({}).then(function (stats) {
+		t.is(stats.testCount, 2);
+		t.is(stats.passCount, 1);
+		t.is(stats.skipCount, 1);
 		t.same(arr, ['a']);
 		t.end();
 	});
@@ -233,10 +233,10 @@ test('todo test', function (t) {
 		runner.todo();
 	}, {message: '`todo` tests require a title'});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.testCount, 2);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.todoCount, 1);
+	runner.run({}).then(function (stats) {
+		t.is(stats.testCount, 2);
+		t.is(stats.passCount, 1);
+		t.is(stats.todoCount, 1);
 		t.same(arr, ['a']);
 		t.end();
 	});
@@ -256,16 +256,16 @@ test('only test', function (t) {
 		arr.push('b');
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.testCount, 1);
-		t.is(runner.stats.passCount, 1);
+	runner.run({}).then(function (stats) {
+		t.is(stats.testCount, 1);
+		t.is(stats.passCount, 1);
 		t.same(arr, ['b']);
 		t.end();
 	});
 });
 
 test('runOnlyExclusive option test', function (t) {
-	t.plan(4);
+	t.plan(1);
 
 	var runner = new Runner();
 	var options = {runOnlyExclusive: true};
@@ -275,11 +275,8 @@ test('runOnlyExclusive option test', function (t) {
 		arr.push('a');
 	});
 
-	runner.run(options).then(function () {
-		t.is(runner.stats.failCount, 0);
-		t.is(runner.stats.passCount, 0);
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.testCount, 0);
+	runner.run(options).then(function (stats) {
+		t.is(stats, null);
 		t.end();
 	});
 });
@@ -416,10 +413,10 @@ test('options.match will not run tests with non-matching titles', function (t) {
 		t.fail();
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 2);
-		t.is(runner.stats.testCount, 2);
+	runner.run({}).then(function (stats) {
+		t.is(stats.skipCount, 0);
+		t.is(stats.passCount, 2);
+		t.is(stats.testCount, 2);
 		t.end();
 	});
 });
@@ -441,10 +438,10 @@ test('options.match hold no effect on hooks with titles', function (t) {
 		t.is(actual, 'foo');
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.testCount, 1);
+	runner.run({}).then(function (stats) {
+		t.is(stats.skipCount, 0);
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
 		t.end();
 	});
 });
@@ -464,10 +461,10 @@ test('options.match overrides .only', function (t) {
 		t.pass();
 	});
 
-	runner.run({}).then(function () {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 2);
-		t.is(runner.stats.testCount, 2);
+	runner.run({}).then(function (stats) {
+		t.is(stats.skipCount, 0);
+		t.is(stats.passCount, 2);
+		t.is(stats.testCount, 2);
 		t.end();
 	});
 });
