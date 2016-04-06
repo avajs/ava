@@ -4,6 +4,7 @@ var test = require('tap').test;
 var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
+var cross = require('figures').cross;
 
 chalk.enabled = true;
 
@@ -255,7 +256,7 @@ test('results with passing tests and exceptions', function (t) {
 	t.match(output[5], /Error: failure/);
 	t.match(output[6], /test\/reporters\/mini\.js/);
 	var next = 6 + output.slice(6).indexOf('') + 1;
-	t.is(output[next], '  ' + chalk.red('2. A futuristic test runner'));
+	t.is(output[next], '  ' + chalk.red(cross + ' A futuristic test runner'));
 	t.end();
 });
 
@@ -291,6 +292,6 @@ test('empty results after reset', function (t) {
 	reporter.reset();
 
 	var output = reporter.finish();
-	t.is(output, '\n\n');
+	t.is(output, '\n');
 	t.end();
 });
