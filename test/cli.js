@@ -179,10 +179,10 @@ test('pkg-conf: cli takes precedence', function (t) {
 test('watcher works', function (t) {
 	var killed = false;
 
-	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout) {
+	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
 		if (err && err.code === 1 && !hasChokidar) {
 			t.comment('chokidar dependency is missing, cannot test watcher');
-			t.match(stdout, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
+			t.match(stderr, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
 			t.end();
 		} else {
 			t.ok(killed);

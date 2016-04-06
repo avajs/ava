@@ -176,7 +176,7 @@ if (cli.flags.watch) {
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
-			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			console.error('  ' + colors.error(figures.cross) + ' ' + err.message);
 			logger.exit(1);
 		} else {
 			// Rethrow so it becomes an uncaught exception.
