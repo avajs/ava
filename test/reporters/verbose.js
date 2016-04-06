@@ -189,10 +189,10 @@ test('unhandled error without stack', function (t) {
 
 test('results with passing tests', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -205,11 +205,11 @@ test('results with passing tests', function (t) {
 
 test('results with skipped tests', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
-	testData.skipCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
+	runStatus.skipCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -223,11 +223,11 @@ test('results with skipped tests', function (t) {
 
 test('results with todo tests', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
-	testData.todoCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
+	runStatus.todoCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -241,11 +241,11 @@ test('results with todo tests', function (t) {
 
 test('results with passing tests and rejections', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
-	testData.rejectionCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
+	runStatus.rejectionCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -259,11 +259,11 @@ test('results with passing tests and rejections', function (t) {
 
 test('results with passing tests and exceptions', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
-	testData.exceptionCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
+	runStatus.exceptionCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -277,12 +277,12 @@ test('results with passing tests and exceptions', function (t) {
 
 test('results with passing tests, rejections and exceptions', function (t) {
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.passCount = 1;
-	testData.exceptionCount = 1;
-	testData.rejectionCount = 1;
+	var runStatus = createTestData();
+	runStatus.passCount = 1;
+	runStatus.exceptionCount = 1;
+	runStatus.rejectionCount = 1;
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -300,14 +300,14 @@ test('results with errors', function (t) {
 	error.stack = beautifyStack(error.stack);
 
 	var reporter = createReporter();
-	var testData = createTestData();
-	testData.failCount = 1;
-	testData.tests = [{
+	var runStatus = createTestData();
+	runStatus.failCount = 1;
+	runStatus.tests = [{
 		title: 'fail',
 		error: error
 	}];
 
-	var output = reporter.finish(testData).split('\n');
+	var output = reporter.finish(runStatus).split('\n');
 
 	t.is(output[1], '  ' + chalk.red('1 test failed'));
 	t.is(output[3], '  ' + chalk.red('1. fail'));

@@ -96,7 +96,7 @@ test('ava error', function (t) {
 
 test('results', function (t) {
 	var reporter = tapReporter();
-	var testData = {
+	var runStatus = {
 		passCount: 1,
 		failCount: 2,
 		skipCount: 1,
@@ -104,14 +104,14 @@ test('results', function (t) {
 		exceptionCount: 4
 	};
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'1..' + (testData.passCount + testData.failCount + testData.skipCount),
-		'# tests ' + (testData.passCount + testData.failCount + testData.skipCount),
-		'# pass ' + testData.passCount,
-		'# skip ' + testData.skipCount,
-		'# fail ' + (testData.failCount + testData.rejectionCount + testData.exceptionCount),
+		'1..' + (runStatus.passCount + runStatus.failCount + runStatus.skipCount),
+		'# tests ' + (runStatus.passCount + runStatus.failCount + runStatus.skipCount),
+		'# pass ' + runStatus.passCount,
+		'# skip ' + runStatus.skipCount,
+		'# fail ' + (runStatus.failCount + runStatus.rejectionCount + runStatus.exceptionCount),
 		''
 	].join('\n');
 
@@ -121,7 +121,7 @@ test('results', function (t) {
 
 test('results does not show skipped tests if there are none', function (t) {
 	var reporter = tapReporter();
-	var testData = {
+	var runStatus = {
 		passCount: 1,
 		failCount: 2,
 		skipCount: 0,
@@ -129,13 +129,13 @@ test('results does not show skipped tests if there are none', function (t) {
 		exceptionCount: 4
 	};
 
-	var actualOutput = reporter.finish(testData);
+	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'1..' + (testData.passCount + testData.failCount),
-		'# tests ' + (testData.passCount + testData.failCount),
-		'# pass ' + testData.passCount,
-		'# fail ' + (testData.failCount + testData.rejectionCount + testData.exceptionCount),
+		'1..' + (runStatus.passCount + runStatus.failCount),
+		'# tests ' + (runStatus.passCount + runStatus.failCount),
+		'# pass ' + runStatus.passCount,
+		'# fail ' + (runStatus.failCount + runStatus.rejectionCount + runStatus.exceptionCount),
 		''
 	].join('\n');
 

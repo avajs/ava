@@ -82,7 +82,7 @@ Api.prototype.run = function (files, options) {
 
 Api.prototype._run = function (files, _options) {
 	var self = this;
-	var testData = new TestData({
+	var runStatus = new TestData({
 		prefixTitles: this.options.explicitTitles || files.length > 1,
 		runOnlyExclusive: _options && _options.runOnlyExclusive,
 		base: path.relative('.', commonPathPrefix(files)) + path.sep
@@ -90,17 +90,17 @@ Api.prototype._run = function (files, _options) {
 
 	if (self.options.timeout) {
 		var timeout = ms(self.options.timeout);
-		testData._restartTimer = debounce(function () {
-			self._onTimeout(testData);
+		runStatus._restartTimer = debounce(function () {
+			self._onTimeout(runStatus);
 		}, timeout);
-		testData._restartTimer();
-		testData.on('test', testData._restartTimer);
+		runStatus._restartTimer();
+		runStatus.on('test', runStatus._restartTimer);
 	}
 
-	self.emit('test-run', testData, files);
+	self.emit('test-run', runStatus, files);
 
 	if (files.length === 0) {
-		testData.handleExceptions({
+		runStatus.handleExceptions({
 			exception: new AvaError('Couldn\'t find any files to test'),
 			file: undefined
 		});
@@ -119,7 +119,7 @@ Api.prototype._run = function (files, _options) {
 	var tests = new Array(self.fileCount);
 
 	// TODO: thid should be cleared at the end of the run
-	testData.on('timeout', function () {
+	runStatus.on('timeout', function () {
 		tests.forEach(function (fork) {
 			fork.exit();
 		});
@@ -127,8 +127,8 @@ Api.prototype._run = function (files, _options) {
 
 	return new Promise(function (resolve) {
 		function run() {
-			if (self.options.match.length > 0 && !testData.hasExclusive) {
-				testData.handleExceptions({
+			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+				runStatus.handleExceptions({
 					exception: new AvaError('Couldn\'t find any matching tests'),
 					file: undefined
 				});
@@ -141,7 +141,7 @@ Api.prototype._run = function (files, _options) {
 
 			var method = self.options.serial ? 'mapSeries' : 'map';
 			var options = {
-				runOnlyExclusive: testData.hasExclusive
+				runOnlyExclusive: runStatus.hasExclusive
 			};
 
 			resolve(Promise[method](files, function (file, index) {
@@ -149,7 +149,7 @@ Api.prototype._run = function (files, _options) {
 					// The test failed catastrophically. Flag it up as an
 					// exception, then return an empty result. Other tests may
 					// continue to run.
-					testData.handleExceptions({
+					runStatus.handleExceptions({
 						exception: err,
 						file: file
 					});
@@ -186,7 +186,7 @@ Api.prototype._run = function (files, _options) {
 			}
 
 			try {
-				var test = tests[index] = self._runFile(file, testData);
+				var test = tests[index] = self._runFile(file, runStatus);
 
 				test.on('stats', tryRun);
 				test.catch(tryRun);
@@ -195,7 +195,7 @@ Api.prototype._run = function (files, _options) {
 			} catch (err) {
 				bailed = true;
 
-				testData.handleExceptions({
+				runStatus.handleExceptions({
 					exception: err,
 					file: file
 				});
@@ -217,10 +217,10 @@ Api.prototype._run = function (files, _options) {
 	}).then(function (results) {
 		// cancel debounced _onTimeout() from firing
 		if (self.options.timeout) {
-			testData._restartTimer.cancel();
+			runStatus._restartTimer.cancel();
 		}
 
-		testData.processResults(results);
-		return testData;
+		runStatus.processResults(results);
+		return runStatus;
 	});
 };
