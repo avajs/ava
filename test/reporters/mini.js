@@ -214,11 +214,11 @@ test('results with passing tests and rejections', function (t) {
 	err.type = 'rejection';
 	err.stack = beautifyStack(err.stack);
 
-	reporter.api = {
+	var testData = {
 		errors: [err]
 	};
 
-	var output = reporter.finish().split('\n');
+	var output = reporter.finish(testData).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '   ' + chalk.green('1 passed'));
@@ -242,11 +242,11 @@ test('results with passing tests and exceptions', function (t) {
 	var avaErr = new AvaError('A futuristic test runner');
 	avaErr.type = 'exception';
 
-	reporter.api = {
+	var testData = {
 		errors: [err, avaErr]
 	};
 
-	var output = reporter.finish().split('\n');
+	var output = reporter.finish(testData).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '   ' + chalk.green('1 passed'));
@@ -267,14 +267,14 @@ test('results with errors', function (t) {
 	var err = new Error('failure');
 	err.stack = beautifyStack(err.stack);
 
-	reporter.api = {
+	var testData = {
 		errors: [{
 			title: 'failed',
 			error: err
 		}]
 	};
 
-	var output = reporter.finish().split('\n');
+	var output = reporter.finish(testData).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '   ' + chalk.red('1 failed'));

@@ -9,12 +9,14 @@ chalk.enabled = true;
 
 function createReporter() {
 	var reporter = verboseReporter();
-	reporter.api = {
+	return reporter;
+}
+
+function createTestData() {
+	return {
 		fileCount: 1,
 		testCount: 1
 	};
-
-	return reporter;
 }
 
 test('beautify stack - removes uninteresting lines', function (t) {
@@ -33,7 +35,7 @@ test('beautify stack - removes uninteresting lines', function (t) {
 test('start', function (t) {
 	var reporter = createReporter();
 
-	t.is(reporter.start(), '');
+	t.is(reporter.start(createTestData()), '');
 	t.end();
 });
 
@@ -43,7 +45,7 @@ test('passing test and duration less than threshold', function (t) {
 	var actualOutput = reporter.test({
 		title: 'passed',
 		duration: 90
-	});
+	}, createTestData());
 
 	var expectedOutput = '  ' + chalk.green(figures.tick) + ' passed';
 
@@ -57,7 +59,7 @@ test('passing test and duration greater than threshold', function (t) {
 	var actualOutput = reporter.test({
 		title: 'passed',
 		duration: 150
-	});
+	}, createTestData());
 
 	var expectedOutput = '  ' + chalk.green(figures.tick) + ' passed' + chalk.grey.dim(' (150ms)');
 
@@ -70,7 +72,7 @@ test('don\'t display test title if there is only one anonymous test', function (
 
 	var output = reporter.test({
 		title: '[anonymous]'
-	});
+	}, createTestData());
 
 	t.is(output, undefined);
 	t.end();
@@ -84,7 +86,7 @@ test('failing test', function (t) {
 		error: {
 			message: 'assertion failed'
 		}
-	});
+	}, createTestData());
 
 	var expectedOutput = '  ' + chalk.red(figures.cross) + ' failed ' + chalk.red('assertion failed');
 
@@ -98,7 +100,7 @@ test('skipped test', function (t) {
 	var actualOutput = reporter.test({
 		title: 'skipped',
 		skip: true
-	});
+	}, createTestData());
 
 	var expectedOutput = '  ' + chalk.yellow('- skipped');
 
@@ -113,7 +115,7 @@ test('todo test', function (t) {
 		title: 'todo',
 		skip: true,
 		todo: true
-	});
+	}, createTestData());
 
 	var expectedOutput = '  ' + chalk.blue('- todo');
 
@@ -130,7 +132,7 @@ test('uncaught exception', function (t) {
 		type: 'exception',
 		file: 'test.js',
 		stack: beautifyStack(error.stack)
-	}).split('\n');
+	}, createTestData()).split('\n');
 
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
@@ -146,7 +148,7 @@ test('ava error', function (t) {
 		file: 'test.js',
 		name: 'AvaError',
 		message: 'A futuristic test runner'
-	}).split('\n');
+	}, createTestData()).split('\n');
 
 	t.is(output[0], chalk.red('  ' + figures.cross + ' A futuristic test runner'));
 	t.end();
@@ -161,7 +163,7 @@ test('unhandled rejection', function (t) {
 		type: 'rejection',
 		file: 'test.js',
 		stack: beautifyStack(error.stack)
-	}).split('\n');
+	}, createTestData()).split('\n');
 
 	t.is(output[0], chalk.red('Unhandled Rejection: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
@@ -178,7 +180,7 @@ test('unhandled error without stack', function (t) {
 		message: 'test'
 	};
 
-	var output = reporter.unhandledError(err).split('\n');
+	var output = reporter.unhandledError(err, createTestData()).split('\n');
 
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
 	t.is(output[1], '  ' + chalk.red(JSON.stringify(err)));
@@ -187,9 +189,10 @@ test('unhandled error without stack', function (t) {
 
 test('results with passing tests', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -202,10 +205,11 @@ test('results with passing tests', function (t) {
 
 test('results with skipped tests', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
-	reporter.api.skipCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
+	testData.skipCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -219,10 +223,11 @@ test('results with skipped tests', function (t) {
 
 test('results with todo tests', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
-	reporter.api.todoCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
+	testData.todoCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -236,10 +241,11 @@ test('results with todo tests', function (t) {
 
 test('results with passing tests and rejections', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
-	reporter.api.rejectionCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
+	testData.rejectionCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -253,10 +259,11 @@ test('results with passing tests and rejections', function (t) {
 
 test('results with passing tests and exceptions', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
-	reporter.api.exceptionCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
+	testData.exceptionCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -270,11 +277,12 @@ test('results with passing tests and exceptions', function (t) {
 
 test('results with passing tests, rejections and exceptions', function (t) {
 	var reporter = createReporter();
-	reporter.api.passCount = 1;
-	reporter.api.exceptionCount = 1;
-	reporter.api.rejectionCount = 1;
+	var testData = createTestData();
+	testData.passCount = 1;
+	testData.exceptionCount = 1;
+	testData.rejectionCount = 1;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed'),
@@ -292,13 +300,14 @@ test('results with errors', function (t) {
 	error.stack = beautifyStack(error.stack);
 
 	var reporter = createReporter();
-	reporter.api.failCount = 1;
-	reporter.api.tests = [{
+	var testData = createTestData();
+	testData.failCount = 1;
+	testData.tests = [{
 		title: 'fail',
 		error: error
 	}];
 
-	var output = reporter.finish().split('\n');
+	var output = reporter.finish(testData).split('\n');
 
 	t.is(output[1], '  ' + chalk.red('1 test failed'));
 	t.is(output[3], '  ' + chalk.red('1. fail'));

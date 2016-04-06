@@ -96,7 +96,7 @@ test('ava error', function (t) {
 
 test('results', function (t) {
 	var reporter = tapReporter();
-	var api = {
+	var testData = {
 		passCount: 1,
 		failCount: 2,
 		skipCount: 1,
@@ -104,16 +104,14 @@ test('results', function (t) {
 		exceptionCount: 4
 	};
 
-	reporter.api = api;
-
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
-		'1..' + (api.passCount + api.failCount + api.skipCount),
-		'# tests ' + (api.passCount + api.failCount + api.skipCount),
-		'# pass ' + api.passCount,
-		'# skip ' + api.skipCount,
-		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),
+		'1..' + (testData.passCount + testData.failCount + testData.skipCount),
+		'# tests ' + (testData.passCount + testData.failCount + testData.skipCount),
+		'# pass ' + testData.passCount,
+		'# skip ' + testData.skipCount,
+		'# fail ' + (testData.failCount + testData.rejectionCount + testData.exceptionCount),
 		''
 	].join('\n');
 
@@ -123,7 +121,7 @@ test('results', function (t) {
 
 test('results does not show skipped tests if there are none', function (t) {
 	var reporter = tapReporter();
-	var api = {
+	var testData = {
 		passCount: 1,
 		failCount: 2,
 		skipCount: 0,
@@ -131,15 +129,13 @@ test('results does not show skipped tests if there are none', function (t) {
 		exceptionCount: 4
 	};
 
-	reporter.api = api;
-
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish(testData);
 	var expectedOutput = [
 		'',
-		'1..' + (api.passCount + api.failCount),
-		'# tests ' + (api.passCount + api.failCount),
-		'# pass ' + api.passCount,
-		'# fail ' + (api.failCount + api.rejectionCount + api.exceptionCount),
+		'1..' + (testData.passCount + testData.failCount),
+		'# tests ' + (testData.passCount + testData.failCount),
+		'# pass ' + testData.passCount,
+		'# fail ' + (testData.failCount + testData.rejectionCount + testData.exceptionCount),
 		''
 	].join('\n');
 
