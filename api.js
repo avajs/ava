@@ -53,7 +53,7 @@ Api.prototype._runFile = function (file, testData) {
 
 	var emitter = fork(file, options);
 
-	testData.listenToTestRun(emitter);
+	testData.observeFork(emitter);
 
 	return emitter;
 };
