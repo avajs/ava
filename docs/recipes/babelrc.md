@@ -1,5 +1,7 @@
 # Configuring Babel
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/babelrc.md)
+
 There are multiple options for configuring how AVA transpiles your tests using Babel.
 
  - [Specify a complete config in `package.json`](#specify-a-complete-config-in-packagejson)
