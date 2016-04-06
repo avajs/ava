@@ -877,16 +877,31 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		});
 
 		test('ignores dependencies outside of the current working directory', function (t) {
-			t.plan(2);
-			seed();
+			t.plan(4);
+			seed(['**/*.js', '..foo.js']);
 
 			emitDependencies(path.join('test', '1.js'), [path.resolve('../outside.js')]);
+			emitDependencies(path.join('test', '2.js'), [path.resolve('..foo.js')]);
 			// Pretend Chokidar detected a change to verify (normally Chokidar would
 			// also be ignoring this file but hey).
 			change(path.join('..', 'outside.js'));
+
+			api.run.returns(Promise.resolve());
 			return debounce().then(function () {
 				t.ok(api.run.calledTwice);
+				// If ../outside.js was tracked as a dependency of test/1.js this would
+				// have caused test/1.js to be rerun. Instead expect all tests to be
+				// rerun. This is somewhat artifical: normally changes to ../outside.js
+				// wouldn't even be picked up. However this lets us test dependency
+				// tracking without directly inspecting the internal state of the
+				// watcher.
 				t.same(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+
+				change('..foo.js');
+				return debounce();
+			}).then(function () {
+				t.ok(api.run.calledThrice);
+				t.same(api.run.thirdCall.args, [[path.join('test', '2.js')], {runOnlyExclusive: false}]);
 			});
 		});
 
