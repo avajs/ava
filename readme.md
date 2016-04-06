@@ -741,7 +741,7 @@ Assertions are mixed into the [execution object](#t) provided to each test callb
 
 ```js
 test(t => {
-	t.ok('unicorn'); // assertion
+	t.truthy('unicorn'); // assertion
 });
 ```
 
@@ -755,11 +755,11 @@ Passing assertion.
 
 Failing assertion.
 
-### `.ok(value, [message])`
+### `.truthy(value, [message])`
 
 Assert that `value` is truthy.
 
-### `.notOk(value, [message])`
+### `.falsy(value, [message])`
 
 Assert that `value` is falsy.
 
@@ -832,7 +832,7 @@ const c = 'baz';
 require('assert').ok(a.test(b) || b === c);
 ```
 
-If you paste that into a Node REPL it'l return:
+If you paste that into a Node REPL it'll return:
 
 ```
 AssertionError: false == true
@@ -845,16 +845,16 @@ test(t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';
-	t.ok(a.test(b) || b === c);
+	t.true(a.test(b) || b === c);
 });
 ```
 
 Will output:
 
 ```
-t.ok(a.test(b) || b === c)
-       |    |     |     |
-       |    "bar" "bar" "baz"
+t.true(a.test(b) || b === c)
+       |      |     |     |
+       |      "bar" "bar" "baz"
        false
 ```
 

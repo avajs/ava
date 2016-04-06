@@ -96,9 +96,17 @@ export interface AssertContext {
 	/**
 	 * Assert that value is truthy.
 	 */
-	ok(value: any, message?: string): void;
+	truthy(value: any, message?: string): void;
 	/**
 	 * Assert that value is falsy.
+	 */
+	falsy(value: any, message?: string): void;
+	/**
+	 * DEPRECATED, use `truthy`. Assert that value is truthy.
+	 */
+	ok(value: any, message?: string): void;
+	/**
+	 * DEPRECATED, use `falsy`. Assert that value is falsy.
 	 */
 	notOk(value: any, message?: string): void;
 	/**

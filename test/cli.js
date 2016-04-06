@@ -120,7 +120,7 @@ test('throwing a anonymous function will report the function to the console', fu
 test('log failed tests', function (t) {
 	execCli('fixture/one-pass-one-fail.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.match(stderr, /false == true/);
+		t.match(stderr, /failed via t.fail\(\)/);
 		t.end();
 	});
 });
