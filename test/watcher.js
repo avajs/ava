@@ -174,7 +174,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.same(chokidar.watch.firstCall.args, [
 			['package.json', '**/*.js'].concat(files),
 			{
-				ignored: defaultIgnore,
+				ignored: defaultIgnore.map(function (dir) {
+					return dir + '/**/*';
+				}),
 				ignoreInitial: true
 			}
 		]);
@@ -188,21 +190,25 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.same(chokidar.watch.firstCall.args, [
 			['foo.js', 'baz.js'].concat(files),
 			{
-				ignored: ['bar.js', 'qux.js'],
+				ignored: defaultIgnore.map(function (dir) {
+					return dir + '/**/*';
+				}).concat('bar.js', 'qux.js'),
 				ignoreInitial: true
 			}
 		]);
 	});
 
-	test('default set of ignored files if configured sources does not contain exclusion patterns', function (t) {
+	test('configured sources can override default ignore patterns', function (t) {
 		t.plan(2);
-		start(['foo.js', 'baz.js']);
+		start(['node_modules/foo/*.js']);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.same(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(files),
+			['node_modules/foo/*.js'].concat(files),
 			{
-				ignored: defaultIgnore,
+				ignored: defaultIgnore.map(function (dir) {
+					return dir + '/**/*';
+				}).concat('!node_modules/foo/*.js'),
 				ignoreInitial: true
 			}
 		]);
@@ -814,7 +820,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 		});
 
-		test('uses default patterns', function (t) {
+		test('uses default source patterns', function (t) {
 			t.plan(4);
 			seed();
 
@@ -839,16 +845,11 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 		});
 
-		test('uses default exclusion patterns if no exclusion pattern is given', function (t) {
+		test('uses default exclusion patterns', function (t) {
 			t.plan(2);
 
-			// Ensure each directory is treated as containing sources, but rely on
-			// the default exclusion patterns, also based on these directories, to
-			// exclude them again.
-			var sources = defaultIgnore.map(function (dir) {
-				return dir + '/**/*';
-			});
-			seed(sources);
+			// Ensure each directory is treated as containing sources.
+			seed(['**/*']);
 
 			// Synthesize an excluded file for each directory that's ignored by
 			// default. Apply deeper nesting for each file.
@@ -857,7 +858,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 				for (var i = index; i >= 0; i--) {
 					relPath = path.join(relPath, String(i));
 				}
-				return relPath;
+				return relPath + '.js';
 			});
 
 			// Ensure test/1.js also depends on the excluded files.
@@ -873,6 +874,20 @@ group('chokidar is installed', function (beforeEach, test, group) {
 				// Since the excluded files are not tracked as a dependency, all tests
 				// are expected to be rerun.
 				t.same(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			});
+		});
+
+		test('allows default exclusion patterns to be overriden', function (t) {
+			t.plan(2);
+			seed(['node_modules/foo/*.js']);
+
+			var dep = path.join('node_modules', 'foo', 'index.js');
+			emitDependencies(path.join('test', '1.js'), [path.resolve(dep)]);
+			change(dep);
+
+			return debounce(1).then(function () {
+				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
 			});
 		});
 
