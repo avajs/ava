@@ -192,7 +192,7 @@ test('skip test', function (t) {
 
 	t.throws(function () {
 		runner.skip('should be a todo');
-	}, {message: 'Expected a function. Use `test.todo()` for tests without a function.'});
+	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
 
 	runner.run({}).then(function () {
 		t.is(runner.stats.testCount, 2);
@@ -210,7 +210,7 @@ test('test throws when given no function', function (t) {
 
 	t.throws(function () {
 		runner.test();
-	}, {message: 'Expected a function. Use `test.todo()` for tests without a function.'});
+	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
 });
 
 test('todo test', function (t) {
