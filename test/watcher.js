@@ -63,24 +63,24 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	};
 
 	var api = {
-		excludePatterns: [
-			'!**/node_modules/**',
-			'!**/fixtures/**',
-			'!**/helpers/**'
-		],
 		on: function () {},
 		run: sinon.stub()
 	};
 
+	var avaFiles = sinon.stub();
+	avaFiles.defaultExcludePatterns = sinon.stub();
+	avaFiles.defaultIncludePatterns = sinon.stub();
+
 	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
-		chokidar: chokidar,
-		debug: function (name) {
+		'chokidar': chokidar,
+		'debug': function (name) {
 			return function () {
 				var args = [name];
 				args.push.apply(args, arguments);
 				debug.apply(null, args);
 			};
-		}
+		},
+		'./ava-files': avaFiles
 	});
 
 	var clock;
@@ -101,6 +101,22 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		logger.finish.reset();
 		logger.reset.reset();
+
+		avaFiles.reset();
+		avaFiles.defaultExcludePatterns.reset();
+		avaFiles.defaultIncludePatterns.reset();
+
+		avaFiles.defaultExcludePatterns.returns([
+			'!**/node_modules/**',
+			'!**/fixtures/**',
+			'!**/helpers/**'
+		]);
+
+		avaFiles.defaultIncludePatterns.returns([
+			'test.js',
+			'test-*.js',
+			'test'
+		]);
 
 		api.run.reset();
 		api.run.returns(new Promise(function () {}));
@@ -431,7 +447,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['foo-{bar,baz}.js'];
-		api.excludePatterns = ['!*bar*'];
+		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
+		avaFiles.defaultExcludePatterns.returns(['!*bar*']);
 		api.run.returns(Promise.resolve());
 		start();
 
@@ -502,7 +519,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['dir'];
-		api.excludePatterns = ['!**/exclude/**'];
+		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
+		avaFiles.defaultExcludePatterns.returns(['!**/exclude/**']);
 		api.run.returns(Promise.resolve());
 		start();
 

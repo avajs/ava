@@ -142,11 +142,14 @@ var logger = new Logger(reporter);
 
 logger.start();
 
-api.on('test', logger.test);
-api.on('error', logger.unhandledError);
+api.on('test-run', function (runStatus) {
+	reporter.api = runStatus;
+	runStatus.on('test', logger.test);
+	runStatus.on('error', logger.unhandledError);
 
-api.on('stdout', logger.stdout);
-api.on('stderr', logger.stderr);
+	runStatus.on('stdout', logger.stdout);
+	runStatus.on('stderr', logger.stderr);
+});
 
 var files = cli.input.length ? cli.input : arrify(conf.files);
 if (files.length === 0) {
@@ -173,9 +176,9 @@ if (cli.flags.watch) {
 	}
 } else {
 	api.run(files)
-		.then(function () {
-			logger.finish();
-			logger.exit(api.failCount > 0 || api.rejectionCount > 0 || api.exceptionCount > 0 ? 1 : 0);
+		.then(function (runStatus) {
+			logger.finish(runStatus);
+			logger.exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
 		})
 		.catch(function (err) {
 			// Don't swallow exceptions. Note that any expected error should already
