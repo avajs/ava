@@ -71,7 +71,7 @@ Dependency tracking works for required modules. Custom extensions and transpiler
 
 ## Watch mode and the `.only` modifier
 
-The `.only` modifier disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
+The [`.only` modifier] disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
 
 ## Manually rerunning all tests
 
