@@ -447,6 +447,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['foo-{bar,baz}.js'];
+		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
 		avaFiles.defaultExcludePatterns.returns(['!*bar*']);
 		api.run.returns(Promise.resolve());
 		start();
@@ -518,7 +519,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['dir'];
-		api.excludePatterns = ['!**/exclude/**'];
+		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
+		avaFiles.defaultExcludePatterns.returns(['!**/exclude/**']);
 		api.run.returns(Promise.resolve());
 		start();
 
