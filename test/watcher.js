@@ -60,6 +60,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	var logger = {
 		start: sinon.spy(),
 		finish: sinon.spy(),
+		clear: sinon.spy(),
 		reset: sinon.spy()
 	};
 
@@ -102,6 +103,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		logger.start.reset();
 		logger.finish.reset();
+		logger.clear.reset();
 		logger.reset.reset();
 
 		avaFiles.reset();
@@ -211,7 +213,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	test('starts running the initial tests', function (t) {
-		t.plan(7);
+		t.plan(8);
 
 		var done;
 		var runStatus = {};
@@ -222,6 +224,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		}));
 
 		start();
+		t.ok(logger.clear.notCalled);
 		t.ok(logger.reset.notCalled);
 		t.ok(logger.start.notCalled);
 		t.ok(api.run.calledOnce);
@@ -257,7 +260,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		{label: 'is removed', fire: unlink}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
-			t.plan(10);
+			t.plan(12);
 
 			var runStatus = {failCount: 0};
 			api.run.returns(Promise.resolve(runStatus));
@@ -272,9 +275,12 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 			variant.fire();
 			return debounce().then(function () {
+				t.ok(logger.clear.calledOnce);
 				t.ok(logger.reset.calledOnce);
 				t.ok(logger.start.calledOnce);
 				t.ok(api.run.calledTwice);
+				// clear is called before reset.
+				t.ok(logger.clear.firstCall.calledBefore(logger.reset.firstCall));
 				// reset is called before the second run.
 				t.ok(logger.reset.firstCall.calledBefore(api.run.secondCall));
 				// reset is called before start
@@ -293,6 +299,24 @@ group('chokidar is installed', function (beforeEach, test, group) {
 				t.ok(logger.finish.calledTwice);
 				t.is(logger.finish.secondCall.args[0], runStatus);
 			});
+		});
+	});
+
+	test('does not clear logger if the previous run had failures', function (t) {
+		t.plan(2);
+
+		api.run.returns(Promise.resolve({failCount: 1}));
+		start();
+
+		api.run.returns(Promise.resolve({failCount: 0}));
+		change();
+		return debounce().then(function () {
+			t.ok(logger.clear.notCalled);
+
+			change();
+			return debounce();
+		}).then(function () {
+			t.ok(logger.clear.calledOnce);
 		});
 	});
 
@@ -575,6 +599,18 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			}).then(function () {
 				t.ok(api.run.calledThrice);
 				t.same(api.run.thirdCall.args, [files, {runOnlyExclusive: false}]);
+			});
+		});
+
+		test('entering "' + input + '" on stdin prevents the logger from being cleared', function (t) {
+			t.plan(2);
+			api.run.returns(Promise.resolve({failCount: 0}));
+			start().observeStdin(stdin);
+
+			stdin.write(input + '\n');
+			return delay().then(function () {
+				t.ok(api.run.calledTwice);
+				t.ok(logger.clear.notCalled);
 			});
 		});
 

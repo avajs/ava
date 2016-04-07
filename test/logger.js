@@ -45,6 +45,23 @@ test('only write if reset is supported by reporter', function (t) {
 	t.end();
 });
 
+test('only call clear if supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = undefined;
+	logger.clear();
+	t.end();
+});
+
+test('only write if clear is supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = undefined;
+	logger.write = t.fail;
+	logger.clear();
+	t.end();
+});
+
 test('writes the reporter reset result', function (t) {
 	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
