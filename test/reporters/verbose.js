@@ -2,10 +2,14 @@
 var figures = require('figures');
 var chalk = require('chalk');
 var test = require('tap').test;
+var lolex = require('lolex');
 var beautifyStack = require('../../lib/beautify-stack');
 var verboseReporter = require('../../lib/reporters/verbose');
 
 chalk.enabled = true;
+
+lolex.install(new Date('2014-11-19T00:19:12+0700').getTime(), ['Date']);
+var time = ' ' + chalk.grey.dim('[17:19:12]');
 
 function createReporter() {
 	var reporter = verboseReporter();
@@ -195,7 +199,7 @@ test('results with passing tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		''
 	].join('\n');
 
@@ -212,7 +216,7 @@ test('results with skipped tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.yellow('1 test skipped'),
 		''
 	].join('\n');
@@ -230,7 +234,7 @@ test('results with todo tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.blue('1 test todo'),
 		''
 	].join('\n');
@@ -248,7 +252,7 @@ test('results with passing tests and rejections', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 unhandled rejection'),
 		''
 	].join('\n');
@@ -266,7 +270,7 @@ test('results with passing tests and exceptions', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 uncaught exception'),
 		''
 	].join('\n');
@@ -285,7 +289,7 @@ test('results with passing tests, rejections and exceptions', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 unhandled rejection'),
 		'  ' + chalk.red('1 uncaught exception'),
 		''
@@ -309,7 +313,7 @@ test('results with errors', function (t) {
 
 	var output = reporter.finish(runStatus).split('\n');
 
-	t.is(output[1], '  ' + chalk.red('1 test failed'));
+	t.is(output[1], '  ' + chalk.red('1 test failed') + time);
 	t.is(output[3], '  ' + chalk.red('1. fail'));
 	t.match(output[4], /Error: error message/);
 	t.match(output[5], /test\/reporters\/verbose\.js/);
