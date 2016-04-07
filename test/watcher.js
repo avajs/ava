@@ -211,11 +211,14 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	test('starts running the initial tests', function (t) {
-		t.plan(6);
+		t.plan(7);
 
 		var done;
+		var runStatus = {};
 		api.run.returns(new Promise(function (resolve) {
-			done = resolve;
+			done = function () {
+				resolve(runStatus);
+			};
 		}));
 
 		start();
@@ -229,6 +232,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		done();
 		return delay().then(function () {
 			t.ok(logger.finish.calledOnce);
+			t.is(logger.finish.firstCall.args[0], runStatus);
 		});
 	});
 
@@ -253,13 +257,17 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		{label: 'is removed', fire: unlink}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
-			t.plan(8);
-			api.run.returns(Promise.resolve());
+			t.plan(10);
+
+			var runStatus = {failCount: 0};
+			api.run.returns(Promise.resolve(runStatus));
 			start();
 
 			var done;
 			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
+				done = function () {
+					resolve(runStatus);
+				};
 			}));
 
 			variant.fire();
@@ -276,17 +284,21 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 				// finish is only called after the run promise fulfils.
 				t.ok(logger.finish.calledOnce);
+				t.is(logger.finish.firstCall.args[0], runStatus);
+
+				runStatus = {failCount: 0};
 				done();
 				return delay();
 			}).then(function () {
 				t.ok(logger.finish.calledTwice);
+				t.is(logger.finish.secondCall.args[0], runStatus);
 			});
 		});
 	});
 
 	test('debounces by 10ms', function (t) {
 		t.plan(1);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		change();
@@ -298,7 +310,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('debounces again if changes occur in the interval', function (t) {
 		t.plan(2);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		change();
@@ -319,7 +331,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		var done;
 		api.run.returns(new Promise(function (resolve) {
-			done = resolve;
+			done = function () {
+				resolve({});
+			};
 		}));
 		start();
 
@@ -337,12 +351,14 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('only reruns tests once the previous run has finished', function (t) {
 		t.plan(3);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		var done;
 		api.run.returns(new Promise(function (resolve) {
-			done = resolve;
+			done = function () {
+				resolve({});
+			};
 		}));
 
 		change();
@@ -367,13 +383,17 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		{label: 'changes', fire: change}
 	].forEach(function (variant) {
 		test('(re)runs a test file when it ' + variant.label, function (t) {
-			t.plan(4);
-			api.run.returns(Promise.resolve());
+			t.plan(6);
+
+			var runStatus = {};
+			api.run.returns(Promise.resolve(runStatus));
 			start();
 
 			var done;
 			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
+				done = function () {
+					resolve(runStatus);
+				};
 			}));
 
 			variant.fire('test.js');
@@ -384,17 +404,20 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 				// finish is only called after the run promise fulfils.
 				t.ok(logger.finish.calledOnce);
+				t.is(logger.finish.firstCall.args[0], runStatus);
+
 				done();
 				return delay();
 			}).then(function () {
 				t.ok(logger.finish.calledTwice);
+				t.is(logger.finish.secondCall.args[0], runStatus);
 			});
 		});
 	});
 
 	test('(re)runs several test files when they are added or changed', function (t) {
 		t.plan(2);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('test-one.js');
@@ -408,7 +431,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('reruns initial tests if both source and test files are added or changed', function (t) {
 		t.plan(2);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('test.js');
@@ -422,7 +445,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('does nothing if tests are deleted', function (t) {
 		t.plan(1);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		unlink('test.js');
@@ -435,7 +458,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['foo-{bar,baz}.js'];
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('foo-bar.js');
@@ -452,7 +475,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		files = ['foo-{bar,baz}.js'];
 		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
 		avaFiles.defaultExcludePatterns.returns(['!*bar*']);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('foo-bar.js');
@@ -469,7 +492,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['foo.bar'];
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('foo.bar');
@@ -484,7 +507,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		api.files = ['_foo.bar'];
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add('_foo.bar');
@@ -499,7 +522,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		t.plan(2);
 
 		files = ['dir', 'another-dir/*/deeper'];
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add(path.join('dir', 'test.js'));
@@ -524,7 +547,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		files = ['dir'];
 		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
 		avaFiles.defaultExcludePatterns.returns(['!**/exclude/**']);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		add(path.join('dir', 'exclude', 'foo.js'));
@@ -539,7 +562,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	["r", "rs"].forEach(function (input) {
 		test('reruns initial tests when "' + input + '" is entered on stdin', function (t) {
 			t.plan(2);
-			api.run.returns(Promise.resolve());
+			api.run.returns(Promise.resolve({}));
 			start().observeStdin(stdin);
 
 			stdin.write(input + '\n');
@@ -555,13 +578,15 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		test('entering "' + input + '" on stdin cancels any debouncing', function (t) {
 			t.plan(7);
-			api.run.returns(Promise.resolve());
+			api.run.returns(Promise.resolve({}));
 			start().observeStdin(stdin);
 
 			var before = clock.now;
 			var done;
 			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
+				done = function () {
+					resolve({});
+				};
 			}));
 
 			add();
@@ -592,7 +617,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 				var previous = done;
 				api.run.returns(new Promise(function (resolve) {
-					done = resolve;
+					done = function () {
+						resolve({});
+					};
 				}));
 
 				// Finish the previous run.
@@ -628,7 +655,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('does nothing if anything other than "rs" is entered on stdin', function (t) {
 		t.plan(1);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start().observeStdin(stdin);
 
 		stdin.write('foo\n');
@@ -639,7 +666,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('ignores unexpected events from chokidar', function (t) {
 		t.plan(1);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		emitChokidar('foo');
@@ -668,7 +695,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	test('subsequent run rejects', function (t) {
 		t.plan(1);
-		api.run.returns(Promise.resolve());
+		api.run.returns(Promise.resolve({}));
 		start();
 
 		var expected = new Error();
@@ -703,7 +730,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		var seed = function (sources) {
 			var done;
 			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
+				done = function () {
+					resolve({});
+				};
 			}));
 
 			var watcher = start(sources);
@@ -825,7 +854,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			change('index.js');
 			change(path.join('lib', 'util.js'));
 
-			api.run.returns(Promise.resolve());
+			api.run.returns(Promise.resolve({}));
 			return debounce(3).then(function () {
 				t.ok(api.run.calledTwice);
 				t.same(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
@@ -935,7 +964,9 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		var seed = function () {
 			var done;
 			api.run.returns(new Promise(function (resolve) {
-				done = resolve;
+				done = function () {
+					resolve({});
+				};
 			}));
 
 			var watcher = start();
