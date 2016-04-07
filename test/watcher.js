@@ -58,6 +58,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	var debug = sinon.spy();
 
 	var logger = {
+		start: sinon.spy(),
 		finish: sinon.spy(),
 		reset: sinon.spy()
 	};
@@ -99,6 +100,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		debug.reset();
 
+		logger.start.reset();
 		logger.finish.reset();
 		logger.reset.reset();
 
@@ -209,7 +211,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	test('starts running the initial tests', function (t) {
-		t.plan(4);
+		t.plan(6);
 
 		var done;
 		api.run.returns(new Promise(function (resolve) {
@@ -217,6 +219,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		}));
 
 		start();
+		t.ok(logger.reset.notCalled);
+		t.ok(logger.start.notCalled);
 		t.ok(api.run.calledOnce);
 		t.same(api.run.firstCall.args, [files, {runOnlyExclusive: false}]);
 
@@ -249,7 +253,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		{label: 'is removed', fire: unlink}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
-			t.plan(6);
+			t.plan(8);
 			api.run.returns(Promise.resolve());
 			start();
 
@@ -260,10 +264,13 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 			variant.fire();
 			return debounce().then(function () {
-				t.ok(logger.reset.calledTwice);
+				t.ok(logger.reset.calledOnce);
+				t.ok(logger.start.calledOnce);
 				t.ok(api.run.calledTwice);
 				// reset is called before the second run.
-				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
+				t.ok(logger.reset.firstCall.calledBefore(api.run.secondCall));
+				// reset is called before start
+				t.ok(logger.reset.firstCall.calledBefore(logger.start.firstCall));
 				// no explicit files are provided.
 				t.same(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 
@@ -360,7 +367,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		{label: 'changes', fire: change}
 	].forEach(function (variant) {
 		test('(re)runs a test file when it ' + variant.label, function (t) {
-			t.plan(6);
+			t.plan(4);
 			api.run.returns(Promise.resolve());
 			start();
 
@@ -371,10 +378,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 			variant.fire('test.js');
 			return debounce().then(function () {
-				t.ok(logger.reset.calledTwice);
 				t.ok(api.run.calledTwice);
-				// reset is called before the second run.
-				t.ok(logger.reset.secondCall.calledBefore(api.run.secondCall));
 				// the test.js file is provided
 				t.same(api.run.secondCall.args, [['test.js'], {runOnlyExclusive: false}]);
 
@@ -417,13 +421,12 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	test('does nothing if tests are deleted', function (t) {
-		t.plan(2);
+		t.plan(1);
 		api.run.returns(Promise.resolve());
 		start();
 
 		unlink('test.js');
 		return debounce().then(function () {
-			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
@@ -624,25 +627,23 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	test('does nothing if anything other than "rs" is entered on stdin', function (t) {
-		t.plan(2);
+		t.plan(1);
 		api.run.returns(Promise.resolve());
 		start().observeStdin(stdin);
 
 		stdin.write('foo\n');
 		return debounce().then(function () {
-			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
 
 	test('ignores unexpected events from chokidar', function (t) {
-		t.plan(2);
+		t.plan(1);
 		api.run.returns(Promise.resolve());
 		start();
 
 		emitChokidar('foo');
 		return debounce().then(function () {
-			t.ok(logger.reset.calledOnce);
 			t.ok(api.run.calledOnce);
 		});
 	});
