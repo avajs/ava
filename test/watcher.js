@@ -561,18 +561,20 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	["r", "rs"].forEach(function (input) {
 		test('reruns initial tests when "' + input + '" is entered on stdin', function (t) {
-			t.plan(2);
+			t.plan(4);
 			api.run.returns(Promise.resolve({}));
 			start().observeStdin(stdin);
 
 			stdin.write(input + '\n');
 			return delay().then(function () {
 				t.ok(api.run.calledTwice);
+				t.same(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 
 				stdin.write('\t' + input + '  \n');
 				return delay();
 			}).then(function () {
 				t.ok(api.run.calledThrice);
+				t.same(api.run.thirdCall.args, [files, {runOnlyExclusive: false}]);
 			});
 		});
 
