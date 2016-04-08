@@ -1,10 +1,10 @@
 'use strict';
 var chalk = require('chalk');
 var test = require('tap').test;
+var cross = require('figures').cross;
 var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
-var cross = require('figures').cross;
 
 chalk.enabled = true;
 

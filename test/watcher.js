@@ -149,8 +149,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	};
 
 	var delay = function () {
-		return new Promise(function (now) {
-			setImmediate(now);
+		return new Promise(function (resolve) {
+			setImmediate(resolve);
 		});
 	};
 
