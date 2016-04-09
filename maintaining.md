@@ -31,6 +31,29 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 - Squash commits when merging. *[Example](https://github.com/sindresorhus/ava/commit/0675d3444da6958b54c7e5eada91034e516bc97c)*
 
 
+## Issue labels
+
+Add labels when triaging issues:
+
+* `babel`: Use this when the issue relates to our Babel infrastructure
+* `blocked`: Use this when the issue is blocked. Please leave a comment or edit the issue description with what is blocking the issue
+* `bug`: Use this for AVA bugs
+* `DO NOT MERGE`: Use this for exploratory pull requests that must not be merged
+* `docs`: Use this to track documentation improvements
+* `enhancement`: Use this for feature requests
+* `good for beginner`: Use this for issues that are good for beginners
+* `help wanted`: Use this for issues where we'd really love help from people outside the core team
+* `performance`: Use this for performance related issues
+* `question`: Use this for issues that are in a discussion phase
+
+Please note the priority labels:
+
+* `priority`: Issues to tackle as soon as possible
+* `low priority`: Issues we'd like to see progress on
+* `future`: Issues we're not planning on getting to anytime soon. These are the long term suggestions for which we're unlikely to accept PRs
+
+Use the `assigned` label when somebody is working on the issue so we can avoid duplicated effort.
+
 ## Profiling
 
 You should first install [`iron-node`](https://github.com/s-a/iron-node) and / or [`devtool`](https://github.com/Jam3/devtool) globally:
