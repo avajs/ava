@@ -6,6 +6,7 @@ var uniqueTempDir = require('unique-temp-dir');
 var sinon = require('sinon');
 var babel = require('babel-core');
 var transformRuntime = require('babel-plugin-transform-runtime');
+var throwsHelper = require('babel-plugin-ava-throws-helper');
 var fromMapFileSource = require('convert-source-map').fromMapFileSource;
 
 var CachingPrecompiler = require('../lib/caching-precompiler');
@@ -145,7 +146,7 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.same(options.presets, ['stage-2', 'es2015']);
-	t.same(options.plugins, [customPlugin, powerAssert, rewrite, transformRuntime]);
+	t.same(options.plugins, [customPlugin, powerAssert, throwsHelper, rewrite, transformRuntime]);
 	t.end();
 });
 

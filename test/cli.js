@@ -96,6 +96,14 @@ test('throwing a named function will report the to the console', function (t) {
 	});
 });
 
+test('improper use of t.throws will be reported to the console', function (t) {
+	execCli('fixture/improper-t-throws.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.match(stderr, /Improper usage of t\.throws detected at .*improper-t-throws.js \(4:10\)/);
+		t.end();
+	});
+});
+
 test('babel require hook only applies to the test file', function (t) {
 	t.plan(3);
 

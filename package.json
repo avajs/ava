@@ -79,6 +79,7 @@
     "arrify": "^1.0.0",
     "ava-init": "^0.1.0",
     "babel-core": "^6.3.21",
+    "babel-plugin-ava-throws-helper": "0.0.4",
     "babel-plugin-detective": "^1.0.2",
     "babel-plugin-espower": "^2.1.0",
     "babel-plugin-transform-runtime": "^6.3.13",
