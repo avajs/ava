@@ -52,7 +52,7 @@ Please note the priority labels:
 * `low priority`: Issues we'd like to see progress on
 * `future`: Issues we're not planning on getting to anytime soon. These are the long term suggestions for which we're unlikely to accept PRs
 
-Use the `assigned` label when somebody is working on the issue, but we can't actually assign the issue to them.
+Use the `assigned` label when somebody is working on the issue so we can avoid duplicated effort.
 
 ## Profiling
 
