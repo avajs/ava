@@ -16,6 +16,27 @@ var files = fs.readdirSync(path.join(__dirname, '.results'))
 		return fileB['.time'] - fileA['.time'];
 	});
 
+function average(data) {
+	var sum = data.reduce(function (sum, value) {
+		return sum + value;
+	}, 0);
+
+	var avg = sum / data.length;
+	return avg;
+}
+
+function standardDeviation(values) {
+	var avg = average(values);
+	var squareDiffs = values.map(function (value) {
+		var diff = value - avg;
+		var sqrDiff = diff * diff;
+		return sqrDiff;
+	});
+	var avgSquareDiff = average(squareDiffs);
+	var stdDev = Math.sqrt(avgSquareDiff);
+	return stdDev;
+}
+
 // Only the 3 most recent runs
 files = files.slice(0, 3);
 
@@ -38,6 +59,7 @@ function prepStats(times) {
 	return {
 		mean: Math.round((sum / times.length) * 1000) / 1000,
 		median: times[Math.floor(times.length / 2)],
+		stdDev: standardDeviation(times).toFixed(4),
 		min: times[0],
 		max: times[times.length - 1]
 	};
@@ -47,7 +69,7 @@ var results = {};
 var fileNames = files.map(function (file) {
 	return file['.file'];
 });
-var stats = ['mean', 'median', 'min', 'max'];
+var stats = ['mean', 'stdDev', 'median', 'min', 'max'];
 
 files.forEach(function (file) {
 	Object.keys(file)
