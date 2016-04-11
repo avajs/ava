@@ -73,21 +73,37 @@ and test your React components:
 ```js
 import test from 'ava';
 import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 import { noop, renderJSX, JSX } from 'jsx-test-helpers';
-
+import sinon from 'sinon';
 import MyComponent from '../';
 import Foo from '../../Foo';
 
-test('renders three <Foo /> components', t => {
+test('Can render & test a class component', t => {
   const actual = renderJSX(<MyComponent />);
   const expected = JSX(
-    <div onClick={ noop } className='MyComponent'>
+    <div className='MyComponent'>
       <span className='icon-star'/>
       <Foo/>
       <Foo/>
       <Foo/>
     </div>
   );
+  t.is(actual, expected);
+});
+
+test("Can render & test a class handler on a child", t => {
+  const onButtonClick = sinon.spy();
+  const actual = renderJSX(
+    <Foo onButtonClick={onButtonClick} />,
+    render => TestUtils.Simulate.click(TestUtils.findRenderedDOMComponentWithTag(render, 'button'))
+  );
+  const expected = JSX(
+    <div className='Foo'>
+      <button onClick={ noop }>{'Click Me'}</button>
+    </div>
+  );
+  t.true(onButtonClick.calledOnce);
   t.is(actual, expected);
 });
 ```
