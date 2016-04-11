@@ -6,13 +6,13 @@ The first thing you need to do is to set up `babel` to transpile JSX code from t
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme/)
 
-Let's first see how to use AVA with one of the most popular React testing library: [Enzyme](https://github.com/airbnb/enzyme).
+Let's first see how to use AVA with one of the most popular React testing libraries: [Enzyme](https://github.com/airbnb/enzyme).
 
 If you only plan to use `shallow` component rendering, you don't need any extra setup.
 
 First install [Enzyme required packages](https://github.com/airbnb/enzyme/#installation):
 
-```js
+```
 npm install --save-dev enzyme react-addons-test-utils react-dom
 ```
 
@@ -22,7 +22,6 @@ and you can use Enzyme straight away:
 import test from 'ava';
 import React from 'react';
 import {shallow} from 'enzyme';
-import sinon from 'sinon';
 import MyComponent from '../';
 import Foo from '../../Foo';
 
@@ -46,12 +45,11 @@ test('renders children when passed in', t => {
 });
 
 test('simulates click events', t => {
-  const onButtonClick = sinon.spy();
+  t.plan(1);
   const wrapper = shallow(
-    <Foo onButtonClick={onButtonClick} />
+    <Foo onButtonClick={() => t.pass()} />
   );
   wrapper.find('button').simulate('click');
-  t.true(onButtonClick.calledOnce);
 });
 ```
 
@@ -75,7 +73,6 @@ import test from 'ava';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import { noop, renderJSX, JSX } from 'jsx-test-helpers';
-import sinon from 'sinon';
 import MyComponent from '../';
 import Foo from '../../Foo';
 
@@ -93,9 +90,9 @@ test('Can render & test a class component', t => {
 });
 
 test("Can render & test a class handler on a child", t => {
-  const onButtonClick = sinon.spy();
+  t.plan(1);
   const actual = renderJSX(
-    <Foo onButtonClick={onButtonClick} />,
+    <Foo onButtonClick={() => t.pass()} />,
     render => TestUtils.Simulate.click(TestUtils.findRenderedDOMComponentWithTag(render, 'button'))
   );
   const expected = JSX(
@@ -103,7 +100,6 @@ test("Can render & test a class handler on a child", t => {
       <button onClick={ noop }>{'Click Me'}</button>
     </div>
   );
-  t.true(onButtonClick.calledOnce);
   t.is(actual, expected);
 });
 ```
