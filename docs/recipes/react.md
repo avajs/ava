@@ -6,7 +6,7 @@ The first thing you need to do is to set up `babel` to transpile JSX code from t
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme/)
 
-Let's first see how to use AVA with one of the most popular React testing library: [enzyme](https://github.com/airbnb/enzyme).
+Let's first see how to use AVA with one of the most popular React testing library: [Enzyme](https://github.com/airbnb/enzyme).
 
 If you only plan to use `shallow` component rendering, you don't need any extra setup.
 
@@ -16,7 +16,7 @@ First install [Enzyme required packages](https://github.com/airbnb/enzyme/#insta
 npm install --save-dev enzyme react-addons-test-utils react-dom
 ```
 
-and you can use enzyme straight away (example from the enzyme readme):
+and you can use Enzyme straight away:
 
 ```js
 import test from 'ava';
@@ -55,7 +55,7 @@ test('simulates click events', t => {
 });
 ```
 
-`enzyme` also has a `mount` and `render` helper to test in an actual browser environment, if you want to use these helpers, you will have to setup a browser environment. To do so, you should check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md).
+Enzyme also has a `mount` and `render` helper to test in an actual browser environment, if you want to use these helpers, you will have to setup a browser environment. To do so, you should check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md).
 
 To see an example of AVA working together with Enzyme set up for browser testing, you can have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 
