@@ -110,4 +110,4 @@ test("Can render & test a class handler on a child", t => {
 
 Note that you have to use variables like `actual` and `expected` because [`power-assert` doesn't handle JSX correctly](https://github.com/power-assert-js/power-assert/issues/34).
 
-You can find annotated test file [here](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js) with more examples.
+You can find an annotated test file [here](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js) with more examples.
