@@ -583,7 +583,7 @@ You can also use the special `"inherit"` keyword. This makes AVA defer to the Ba
 
 See AVA's [`.babelrc` recipe](docs/recipes/babelrc.md) for further examples and a more detailed explanation of configuration options.
 
-Note that AVA will *always* apply the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
+Note that AVA will *always* apply [a few internal plugins](docs/recipes/babelrc.md#notes) regardless of configuration, but they should not impact the behavior of your code.
 
 ### TypeScript support
 
