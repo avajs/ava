@@ -122,5 +122,6 @@ AVA *always* adds a few custom Babel plugins when transpiling your plugins. They
 
  * Enable `power-assert` support.
  * Rewrite require paths internal AVA dependencies like `babel-runtime` (important if you are still using `npm@2`).
+ * [`ava-throws-helper`](https://github.com/jamestalmage/babel-plugin-ava-throws-helper) helps AVA [detect and report](https://github.com/sindresorhus/ava/pull/742) improper use of the `t.throws` assertion.
  * Generate test metadata to determine which files should be run first (*future*).
  * Static analysis of dependencies for precompilation (*future*).
