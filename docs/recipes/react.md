@@ -4,7 +4,7 @@ This recipe is giving guidelines to test React components.
 
 ## Setting up Babel
 
-The first thing you need is to set up babel to transpile JSX code from the tests. To do that, I'll recommend the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md) using `babel-preset-react`.
+The first thing you need to do is to set up `babel` to transpile JSX code from the tests. To do that, I'd recommend the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md) using `babel-preset-react`. You can also have a look at this sample project configuration: https://github.com/adriantoine/ava-enzyme-demo
 
 ## Enzyme
 
