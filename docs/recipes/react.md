@@ -2,6 +2,10 @@
 
 This recipe is giving guidelines to test React components.
 
+## Setting up Babel
+
+The first thing you need is to set up babel to transpile JSX code from the tests. To do that, I'll recommend the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md) using `babel-preset-react`.
+
 ## Enzyme
 
 Let's see first how to implement how to use ava with one of the most popular React testing library: [enzyme](https://github.com/airbnb/enzyme).
@@ -9,7 +13,7 @@ Let's see first how to implement how to use ava with one of the most popular Rea
 If you only plan to use `shallow` component rendering, you don't need extra setup. First install `enzyme`:
 
 ```js
-npm i --save-dev enzyme
+npm i --save-dev enzyme react-addons-test-utils react-dom
 ```
 
 and you can use enzyme straight away (example from the enzyme readme):
@@ -53,6 +57,8 @@ test('simulates click events', t => {
 ```
 
 `enzyme` also has a `mount` and `render` helper to test in an actual browser environment, if you want to use these helpers, you will have to setup a browser environment, to do so, you should check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md).
+
+Here is a simple and minimal example of testing react components using `ava` and `enzyme` along with browser testing: https://github.com/adriantoine/ava-enzyme-demo
 
 ## Using JSX helpers
 
