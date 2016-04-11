@@ -89,7 +89,7 @@ test('Can render & test a class component', t => {
   t.is(actual, expected);
 });
 
-test("Can render & test a class handler on a child", t => {
+test('Can render & test a class handler on a child', t => {
   t.plan(1);
   const actual = renderJSX(
     <Foo onButtonClick={() => t.pass()} />,
@@ -107,3 +107,6 @@ test("Can render & test a class handler on a child", t => {
 Note that you have to use variables like `actual` and `expected` because [`power-assert` doesn't handle JSX correctly](https://github.com/power-assert-js/power-assert/issues/34).
 
 You can find an annotated test file [here](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js) with more examples.
+
+## Reference
+* [In depth guide of seeing up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
