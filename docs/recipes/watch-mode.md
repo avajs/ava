@@ -45,6 +45,8 @@ And then use:
 $ npm run test:watch
 ```
 
+Please note that the TAP reporter is unavailable when using watch mode.
+
 ## Requirements
 
 AVA uses [`chokidar`] as the file watcher. It's configured as an optional dependency since `chokidar` sometimes can't be installed. Watch mode is not available if `chokidar` fails to install, instead you'll see a message like:

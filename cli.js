@@ -25,6 +25,7 @@ var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
 var chalk = require('chalk');
 var isCi = require('is-ci');
+var hasFlag = require('has-flag');
 var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
@@ -116,6 +117,14 @@ if (cli.flags.init) {
 	return;
 }
 
+if (
+	(hasFlag('--watch') || hasFlag('-w')) && (hasFlag('--tap') || hasFlag('-t')) ||
+	conf.watch && conf.tap
+) {
+	console.error('  ' + colors.error(figures.cross) + ' The TAP reporter is not available when using watch mode.');
+	process.exit(1);
+}
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
@@ -129,7 +138,7 @@ var api = new Api({
 
 var reporter;
 
-if (cli.flags.tap) {
+if (cli.flags.tap && !cli.flags.watch) {
 	reporter = tapReporter();
 } else if (cli.flags.verbose || isCi) {
 	reporter = verboseReporter();
@@ -167,7 +176,7 @@ if (cli.flags.watch) {
 	} catch (err) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
-			console.log('  ' + colors.error(figures.cross) + ' ' + err.message);
+			console.error('  ' + colors.error(figures.cross) + ' ' + err.message);
 			logger.exit(1);
 		} else {
 			// Rethrow so it becomes an uncaught exception.
