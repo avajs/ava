@@ -4,7 +4,9 @@ var chalk = require('chalk');
 var test = require('tap').test;
 var lolex = require('lolex');
 var beautifyStack = require('../../lib/beautify-stack');
+var colors = require('../../lib/colors');
 var verboseReporter = require('../../lib/reporters/verbose');
+var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
 
@@ -300,23 +302,37 @@ test('results with passing tests, rejections and exceptions', function (t) {
 });
 
 test('results with errors', function (t) {
-	var error = new Error('error message');
-	error.stack = beautifyStack(error.stack);
+	var error1 = new Error('error one message');
+	error1.stack = beautifyStack(error1.stack);
+	var error2 = new Error('error two message');
+	error2.stack = 'stack line with trailing whitespace\t\n';
 
 	var reporter = createReporter();
 	var runStatus = createTestData();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
-		title: 'fail',
-		error: error
+		title: 'fail one',
+		error: error1
+	}, {
+		title: 'fail two',
+		error: error2
 	}];
 
-	var output = reporter.finish(runStatus).split('\n');
-
-	t.is(output[1], '  ' + chalk.red('1 test failed') + time);
-	t.is(output[3], '  ' + chalk.red('1. fail'));
-	t.match(output[4], /Error: error message/);
-	t.match(output[5], /test\/reporters\/verbose\.js/);
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'',
+		'  ' + chalk.red('1. fail one'),
+		/Error: error one message/,
+		/test\/reporters\/verbose\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'  ' + chalk.red('2. fail two'),
+		'  ' + colors.stack('stack line with trailing whitespace')
+	]);
 	t.end();
 });
 

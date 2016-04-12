@@ -6,6 +6,8 @@ var lolex = require('lolex');
 var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
+var colors = require('../../lib/colors');
+var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
 
@@ -214,23 +216,33 @@ test('results with passing tests and rejections', function (t) {
 	reporter.passCount = 1;
 	reporter.rejectionCount = 1;
 
-	var err = new Error('failure');
-	err.type = 'rejection';
-	err.stack = beautifyStack(err.stack);
+	var err1 = new Error('failure one');
+	err1.type = 'rejection';
+	err1.stack = beautifyStack(err1.stack);
+	var err2 = new Error('failure two');
+	err2.type = 'rejection';
+	err2.stack = 'stack line with trailing whitespace\t\n';
 
 	var runStatus = {
-		errors: [err]
+		errors: [err1, err2]
 	};
 
-	var output = reporter.finish(runStatus).split('\n');
-
-	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.green('1 passed') + time);
-	t.is(output[2], '   ' + chalk.red('1 rejection'));
-	t.is(output[3], '');
-	t.is(output[4], '  ' + chalk.red('1. Unhandled Rejection'));
-	t.match(output[5], /Error: failure/);
-	t.match(output[6], /test\/reporters\/mini\.js/);
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'   ' + chalk.green('1 passed') + time,
+		'   ' + chalk.red('1 rejection'),
+		'',
+		'',
+		'   ' + chalk.red('1. Unhandled Rejection'),
+		/Error: failure/,
+		/test\/reporters\/mini\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'   ' + chalk.red('2. Unhandled Rejection'),
+		'   ' + colors.stack('stack line with trailing whitespace')
+	]);
 	t.end();
 });
 
@@ -250,17 +262,21 @@ test('results with passing tests and exceptions', function (t) {
 		errors: [err, avaErr]
 	};
 
-	var output = reporter.finish(runStatus).split('\n');
-
-	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.green('1 passed') + time);
-	t.is(output[2], '   ' + chalk.red('2 exceptions'));
-	t.is(output[3], '');
-	t.is(output[4], '  ' + chalk.red('1. Uncaught Exception'));
-	t.match(output[5], /Error: failure/);
-	t.match(output[6], /test\/reporters\/mini\.js/);
-	var next = 6 + output.slice(6).indexOf('') + 1;
-	t.is(output[next], '  ' + chalk.red(cross + ' A futuristic test runner'));
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'   ' + chalk.green('1 passed') + time,
+		'   ' + chalk.red('2 exceptions'),
+		'',
+		'',
+		'   ' + chalk.red('1. Uncaught Exception'),
+		/Error: failure/,
+		/test\/reporters\/mini\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'   ' + chalk.red(cross + ' A futuristic test runner')
+	]);
 	t.end();
 });
 
@@ -268,24 +284,37 @@ test('results with errors', function (t) {
 	var reporter = miniReporter();
 	reporter.failCount = 1;
 
-	var err = new Error('failure');
-	err.stack = beautifyStack(err.stack);
+	var err1 = new Error('failure one');
+	err1.stack = beautifyStack(err1.stack);
+	var err2 = new Error('failure two');
+	err2.stack = 'first line is stripped\nstack line with trailing whitespace\t\n';
 
 	var runStatus = {
 		errors: [{
-			title: 'failed',
-			error: err
+			title: 'failed one',
+			error: err1
+		}, {
+			title: 'failed two',
+			error: err2
 		}]
 	};
 
-	var output = reporter.finish(runStatus).split('\n');
-
-	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.red('1 failed') + time);
-	t.is(output[2], '');
-	t.is(output[3], '  ' + chalk.red('1. failed'));
-	t.match(output[4], /failure/);
-	t.match(output[5], /test\/reporters\/mini\.js/);
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'   ' + chalk.red('1 failed') + time,
+		'',
+		'',
+		'   ' + chalk.red('1. failed one'),
+		/failure/,
+		/test\/reporters\/mini\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'   ' + chalk.red('2. failed two')
+	].concat(
+		colors.stack('   failure two\n  stack line with trailing whitespace').split('\n')
+	));
 	t.end();
 });
 
