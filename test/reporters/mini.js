@@ -3,6 +3,7 @@ var chalk = require('chalk');
 var test = require('tap').test;
 var cross = require('figures').cross;
 var lolex = require('lolex');
+var repeating = require('repeating');
 var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
 var beautifyStack = require('../../lib/beautify-stack');
@@ -16,6 +17,7 @@ var graySpinner = chalk.gray.dim('⠋');
 // Needed because tap doesn't emulate a tty environment and thus this is
 // undefined, making `cli-truncate` append '...' to test titles
 process.stdout.columns = 5000;
+var fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
 
 function miniReporter() {
 	var reporter = _miniReporter();
@@ -326,5 +328,13 @@ test('empty results after reset', function (t) {
 
 	var output = reporter.finish();
 	t.is(output, '\n');
+	t.end();
+});
+
+test('full-width line when sectioning', function (t) {
+	var reporter = miniReporter();
+
+	var output = reporter.section();
+	t.is(output, '\n' + fullWidthLine);
 	t.end();
 });

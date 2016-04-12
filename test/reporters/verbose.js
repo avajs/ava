@@ -3,12 +3,17 @@ var figures = require('figures');
 var chalk = require('chalk');
 var test = require('tap').test;
 var lolex = require('lolex');
+var repeating = require('repeating');
 var beautifyStack = require('../../lib/beautify-stack');
 var colors = require('../../lib/colors');
 var verboseReporter = require('../../lib/reporters/verbose');
 var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
+
+// tap doesn't emulate a tty environment and thus process.stdout.columns is
+// undefined. Expect an 80 character wide line to be rendered.
+var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
 
 lolex.install(new Date('2014-11-19T00:19:12+0700').getTime(), ['Date']);
 var time = ' ' + chalk.grey.dim('[17:19:12]');
@@ -333,6 +338,14 @@ test('results with errors', function (t) {
 		'  ' + chalk.red('2. fail two'),
 		'  ' + colors.stack('stack line with trailing whitespace')
 	]);
+	t.end();
+});
+
+test('full-width line when sectioning', function (t) {
+	var reporter = createReporter();
+
+	var output = reporter.section();
+	t.is(output, fullWidthLine);
 	t.end();
 });
 

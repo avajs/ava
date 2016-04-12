@@ -60,7 +60,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	var logger = {
 		start: sinon.spy(),
 		finish: sinon.spy(),
-		clear: sinon.spy(),
+		section: sinon.spy(),
+		clear: sinon.stub().returns(true),
 		reset: sinon.spy()
 	};
 
@@ -103,8 +104,11 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		logger.start.reset();
 		logger.finish.reset();
-		logger.clear.reset();
+		logger.section.reset();
 		logger.reset.reset();
+
+		logger.clear.reset();
+		logger.clear.returns(true);
 
 		avaFiles.reset();
 		avaFiles.defaultExcludePatterns.reset();
@@ -317,6 +321,54 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			return debounce();
 		}).then(function () {
 			t.ok(logger.clear.calledOnce);
+		});
+	});
+
+	test('sections the logger if it was not cleared', function (t) {
+		t.plan(5);
+
+		api.run.returns(Promise.resolve({failCount: 1}));
+		start();
+
+		api.run.returns(Promise.resolve({failCount: 0}));
+		change();
+		return debounce().then(function () {
+			t.ok(logger.clear.notCalled);
+			t.ok(logger.reset.calledTwice);
+			t.ok(logger.section.calledOnce);
+			t.ok(logger.reset.firstCall.calledBefore(logger.section.firstCall));
+			t.ok(logger.reset.secondCall.calledAfter(logger.section.firstCall));
+		});
+	});
+
+	test('sections the logger if it could not be cleared', function (t) {
+		t.plan(5);
+
+		logger.clear.returns(false);
+		api.run.returns(Promise.resolve({failCount: 0}));
+		start();
+
+		change();
+		return debounce().then(function () {
+			t.ok(logger.clear.calledOnce);
+			t.ok(logger.reset.calledTwice);
+			t.ok(logger.section.calledOnce);
+			t.ok(logger.reset.firstCall.calledBefore(logger.section.firstCall));
+			t.ok(logger.reset.secondCall.calledAfter(logger.section.firstCall));
+		});
+	});
+
+	test('does not section the logger if it was cleared', function (t) {
+		t.plan(3);
+
+		api.run.returns(Promise.resolve({failCount: 0}));
+		start();
+
+		change();
+		return debounce().then(function () {
+			t.ok(logger.clear.calledOnce);
+			t.ok(logger.section.notCalled);
+			t.ok(logger.reset.calledOnce);
 		});
 	});
 
