@@ -34,7 +34,7 @@ You could also set up a special script:
 {
   "scripts": {
     "test": "ava",
-    "test:watch": "ava --watch"
+    "watch:test": "ava --watch"
   }
 }
 ```
@@ -42,7 +42,17 @@ You could also set up a special script:
 And then use:
 
 ```console
-$ npm run test:watch
+$ npm run watch:test
+```
+
+Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`]:
+
+```json
+{
+  "ava": {
+    "watch": true
+  }
+}
 ```
 
 Please note that the TAP reporter is unavailable when using watch mode.
@@ -61,7 +71,7 @@ In AVA there's a distinction between *source files* and *test files*. As you can
 
 By default AVA watches for changes to the test files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-You can configure patterns for the source files using the [`--source` CLI flag] or in the `ava` section of your `package.json` file.
+You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key. This is the recommended way, though you could also use the [`--source` CLI flag].
 
 You can specify patterns to match files in the folders that would otherwise be ignored, e.g. use `node_modules/some-dependency/*.js` to specify all `.js` files in `node_modules/some-dependency` as a source, even though normally all files in `node_modules` are ignored. Note that you need to specify an exact directory; `{bower_components,node_modules}/**/*.js` won't work.
 
@@ -83,17 +93,17 @@ You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed 
 
 ## Debugging
 
-Sometimes watch mode does something surprising like rerunning all tests when you thought only a single test would be run. To see its reasoning you can enable a debug mode:
+Sometimes watch mode does something surprising like rerunning all tests when you thought only a single test would be run. To see its reasoning you can enable a debug mode. This will work best with the verbose reporter:
 
 ```console
-$ DEBUG=ava:watcher npm test -- --watch
+$ DEBUG=ava:watcher npm test -- --watch --verbose
 ```
 
 On Windows use:
 
 ```console
 $ set DEBUG=ava:watcher
-$ npm test -- --watch
+$ npm test -- --watch --verbose
 ```
 
 ## Help us make watch mode better
@@ -105,3 +115,4 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [`--require` CLI flag]: https://github.com/sindresorhus/ava#cli
 [`--source` CLI flag]: https://github.com/sindresorhus/ava#cli
 [`.only` modifier]: https://github.com/sindresorhus/ava#running-specific-tests
+[`ava` section of your `package.json`]: https://github.com/sindresorhus/ava#configuration
