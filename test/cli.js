@@ -235,7 +235,7 @@ if (hasChokidar) {
 			t.is(err.code, 1);
 			t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 			t.end();
-		}).stderr.pipe(process.stderr);
+		});
 	});
 
 	['--watch', '-w'].forEach(function (watchFlag) {
@@ -245,7 +245,7 @@ if (hasChokidar) {
 					t.is(err.code, 1);
 					t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 					t.end();
-				}).stderr.pipe(process.stderr);
+				});
 			});
 		});
 	});
