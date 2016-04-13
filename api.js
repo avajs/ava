@@ -14,7 +14,7 @@ var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
 var AvaFiles = require('./lib/ava-files');
-var TestData = require('./lib/run-status');
+var RunStatus = require('./lib/run-status');
 
 function Api(options) {
 	if (!(this instanceof Api)) {
@@ -42,7 +42,7 @@ function Api(options) {
 util.inherits(Api, EventEmitter);
 module.exports = Api;
 
-Api.prototype._runFile = function (file, testData) {
+Api.prototype._runFile = function (file, runStatus) {
 	var hash = this.precompiler.precompileFile(file);
 	var precompiled = {};
 	precompiled[file] = hash;
@@ -53,21 +53,21 @@ Api.prototype._runFile = function (file, testData) {
 
 	var emitter = fork(file, options);
 
-	testData.observeFork(emitter);
+	runStatus.observeFork(emitter);
 
 	return emitter;
 };
 
-Api.prototype._onTimeout = function (testData) {
+Api.prototype._onTimeout = function (runStatus) {
 	var timeout = ms(this.options.timeout);
 	var message = 'Exited because no new tests completed within the last ' + timeout + 'ms of inactivity';
 
-	testData.handleExceptions({
+	runStatus.handleExceptions({
 		exception: new AvaError(message),
 		file: null
 	});
 
-	testData.emit('timeout');
+	runStatus.emit('timeout');
 };
 
 Api.prototype.run = function (files, options) {
@@ -82,7 +82,7 @@ Api.prototype.run = function (files, options) {
 
 Api.prototype._run = function (files, _options) {
 	var self = this;
-	var runStatus = new TestData({
+	var runStatus = new RunStatus({
 		prefixTitles: this.options.explicitTitles || files.length > 1,
 		runOnlyExclusive: _options && _options.runOnlyExclusive,
 		base: path.relative('.', commonPathPrefix(files)) + path.sep
