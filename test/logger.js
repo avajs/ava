@@ -45,6 +45,56 @@ test('only write if reset is supported by reporter', function (t) {
 	t.end();
 });
 
+test('only call section if supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.section = undefined;
+	logger.section();
+	t.end();
+});
+
+test('only write if section is supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.section = undefined;
+	logger.write = t.fail;
+	logger.section();
+	t.end();
+});
+
+test('only call clear if supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = undefined;
+	logger.clear();
+	t.end();
+});
+
+test('only write if clear is supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = undefined;
+	logger.write = t.fail;
+	logger.clear();
+	t.end();
+});
+
+test('return false if clear is not supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = undefined;
+	t.false(logger.clear());
+	t.end();
+});
+
+test('return true if clear is supported by reporter', function (t) {
+	var tapReporter = tap();
+	var logger = new Logger(tapReporter);
+	tapReporter.clear = function () {};
+	t.true(logger.clear());
+	t.end();
+});
+
 test('writes the reporter reset result', function (t) {
 	var tapReporter = tap();
 	var logger = new Logger(tapReporter);

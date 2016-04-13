@@ -2,10 +2,21 @@
 var figures = require('figures');
 var chalk = require('chalk');
 var test = require('tap').test;
+var lolex = require('lolex');
+var repeating = require('repeating');
 var beautifyStack = require('../../lib/beautify-stack');
+var colors = require('../../lib/colors');
 var verboseReporter = require('../../lib/reporters/verbose');
+var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
+
+// tap doesn't emulate a tty environment and thus process.stdout.columns is
+// undefined. Expect an 80 character wide line to be rendered.
+var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
+
+lolex.install(new Date('2014-11-19T00:19:12+0700').getTime(), ['Date']);
+var time = ' ' + chalk.grey.dim('[17:19:12]');
 
 function createReporter() {
 	var reporter = verboseReporter();
@@ -195,7 +206,7 @@ test('results with passing tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		''
 	].join('\n');
 
@@ -212,7 +223,7 @@ test('results with skipped tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.yellow('1 test skipped'),
 		''
 	].join('\n');
@@ -230,7 +241,7 @@ test('results with todo tests', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.blue('1 test todo'),
 		''
 	].join('\n');
@@ -248,7 +259,7 @@ test('results with passing tests and rejections', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 unhandled rejection'),
 		''
 	].join('\n');
@@ -266,7 +277,7 @@ test('results with passing tests and exceptions', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 uncaught exception'),
 		''
 	].join('\n');
@@ -285,7 +296,7 @@ test('results with passing tests, rejections and exceptions', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed'),
+		'  ' + chalk.green('1 test passed') + time,
 		'  ' + chalk.red('1 unhandled rejection'),
 		'  ' + chalk.red('1 uncaught exception'),
 		''
@@ -296,23 +307,45 @@ test('results with passing tests, rejections and exceptions', function (t) {
 });
 
 test('results with errors', function (t) {
-	var error = new Error('error message');
-	error.stack = beautifyStack(error.stack);
+	var error1 = new Error('error one message');
+	error1.stack = beautifyStack(error1.stack);
+	var error2 = new Error('error two message');
+	error2.stack = 'stack line with trailing whitespace\t\n';
 
 	var reporter = createReporter();
 	var runStatus = createTestData();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
-		title: 'fail',
-		error: error
+		title: 'fail one',
+		error: error1
+	}, {
+		title: 'fail two',
+		error: error2
 	}];
 
-	var output = reporter.finish(runStatus).split('\n');
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'',
+		'  ' + chalk.red('1. fail one'),
+		/Error: error one message/,
+		/test\/reporters\/verbose\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'  ' + chalk.red('2. fail two'),
+		'  ' + colors.stack('stack line with trailing whitespace')
+	]);
+	t.end();
+});
 
-	t.is(output[1], '  ' + chalk.red('1 test failed'));
-	t.is(output[3], '  ' + chalk.red('1. fail'));
-	t.match(output[4], /Error: error message/);
-	t.match(output[5], /test\/reporters\/verbose\.js/);
+test('full-width line when sectioning', function (t) {
+	var reporter = createReporter();
+
+	var output = reporter.section();
+	t.is(output, fullWidthLine);
 	t.end();
 });
 
