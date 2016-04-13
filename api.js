@@ -64,7 +64,7 @@ Api.prototype._onTimeout = function (runStatus) {
 
 	runStatus.handleExceptions({
 		exception: new AvaError(message),
-		file: null
+		file: undefined
 	});
 
 	runStatus.emit('timeout');
@@ -151,7 +151,7 @@ Api.prototype._run = function (files, _options) {
 					// continue to run.
 					runStatus.handleExceptions({
 						exception: err,
-						file: file
+						file: path.relative('.', file)
 					});
 
 					return {
@@ -197,7 +197,7 @@ Api.prototype._run = function (files, _options) {
 
 				runStatus.handleExceptions({
 					exception: err,
-					file: file
+					file: path.relative('.', file)
 				});
 
 				resolve([]);
