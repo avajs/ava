@@ -1021,7 +1021,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			// also be ignoring this file but hey).
 			change(path.join('..', 'outside.js'));
 
-			api.run.returns(Promise.resolve());
+			api.run.returns(Promise.resolve({failCount: 0}));
 			return debounce().then(function () {
 				t.ok(api.run.calledTwice);
 				// If ../outside.js was tracked as a dependency of test/1.js this would
