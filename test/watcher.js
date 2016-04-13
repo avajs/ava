@@ -812,15 +812,23 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 	group('tracks test dependencies', function (beforeEach, test) {
 		var apiEmitter;
+		var runStatus;
+		var runStatusEmitter;
 		beforeEach(function () {
 			apiEmitter = new EventEmitter();
 			api.on = function (event, fn) {
 				apiEmitter.on(event, fn);
 			};
+			runStatusEmitter = new EventEmitter();
+			runStatus = {
+				on: function (event, fn) {
+					runStatusEmitter.on(event, fn);
+				}
+			};
 		});
 
 		var emitDependencies = function (file, dependencies) {
-			apiEmitter.emit('dependencies', file, dependencies);
+			runStatusEmitter.emit('dependencies', file, dependencies);
 		};
 
 		var seed = function (sources) {
@@ -832,8 +840,13 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			}));
 
 			var watcher = start(sources);
-			emitDependencies(path.join('test', '1.js'), [path.resolve('dep-1.js'), path.resolve('dep-3.js')]);
-			emitDependencies(path.join('test', '2.js'), [path.resolve('dep-2.js'), path.resolve('dep-3.js')]);
+			var files = [path.join('test', '1.js'), path.join('test', '2.js')];
+			var absFiles = files.map(function (relFile) {
+				return path.resolve(relFile);
+			});
+			apiEmitter.emit('test-run', runStatus, absFiles);
+			emitDependencies(files[0], [path.resolve('dep-1.js'), path.resolve('dep-3.js')]);
+			emitDependencies(files[1], [path.resolve('dep-2.js'), path.resolve('dep-3.js')]);
 
 			done();
 			api.run.returns(new Promise(function () {}));

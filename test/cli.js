@@ -176,7 +176,7 @@ test('pkg-conf: cli takes precedence', function (t) {
 	});
 });
 
-test('watcher works', function (t) {
+test("watcher reruns test files when they changed", function (t) {
 	var killed = false;
 
 	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
@@ -209,6 +209,30 @@ test('watcher works', function (t) {
 });
 
 if (hasChokidar) {
+	test("watcher reruns test files when source dependencies change", function (t) {
+		var killed = false;
+
+		var child = execCli(['--verbose', '--watch', '--source=source.js', 'test-*.js'], {dirname: 'fixture/watcher/with-dependencies'}, function (err) {
+			t.ok(killed);
+			t.ifError(err);
+			t.end();
+		});
+
+		var buffer = '';
+		var passedFirst = false;
+		child.stderr.on('data', function (str) {
+			buffer += str;
+			if (/2 tests passed/.test(buffer) && !passedFirst) {
+				touch.sync(path.join(__dirname, 'fixture/watcher/with-dependencies/source.js'));
+				buffer = '';
+				passedFirst = true;
+			} else if (/1 test passed/.test(buffer) && !killed) {
+				child.kill();
+				killed = true;
+			}
+		});
+	});
+
 	test('`"tap": true` config is ignored when --watch is given', function (t) {
 		var killed = false;
 
