@@ -157,7 +157,7 @@ test('results with passing tests', function (t) {
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n   ' + chalk.green('1 passed') + time,
 		''
@@ -173,7 +173,7 @@ test('results with skipped tests', function (t) {
 	reporter.skipCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n   ' + chalk.yellow('1 skipped') + time,
 		''
@@ -189,7 +189,7 @@ test('results with todo tests', function (t) {
 	reporter.todoCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish();
+	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n   ' + chalk.blue('1 todo') + time,
 		''
@@ -204,7 +204,7 @@ test('results with passing skipped tests', function (t) {
 	reporter.passCount = 1;
 	reporter.skipCount = 1;
 
-	var output = reporter.finish().split('\n');
+	var output = reporter.finish({}).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '   ' + chalk.green('1 passed') + time);
@@ -320,13 +320,47 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results with 1 previous failure', function (t) {
+	var reporter = miniReporter();
+	reporter.todoCount = 1;
+
+	var runStatus = {
+		previousFailCount: 1
+	};
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'   ' + colors.todo('1 todo') + time,
+		'   ' + colors.error('1 previous failure in test files that were not rerun')
+	]);
+	t.end();
+});
+
+test('results with 2 previous failures', function (t) {
+	var reporter = miniReporter();
+	reporter.todoCount = 1;
+
+	var runStatus = {
+		previousFailCount: 2
+	};
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'   ' + colors.todo('1 todo') + time,
+		'   ' + colors.error('2 previous failures in test files that were not rerun')
+	]);
+	t.end();
+});
+
 test('empty results after reset', function (t) {
 	var reporter = miniReporter();
 
 	reporter.failCount = 1;
 	reporter.reset();
 
-	var output = reporter.finish();
+	var output = reporter.finish({});
 	t.is(output, '\n');
 	t.end();
 });

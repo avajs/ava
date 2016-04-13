@@ -1191,4 +1191,139 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 		});
 	});
+
+	group('tracks previous failures', function (beforeEach, test) {
+		var apiEmitter;
+		var runStatus;
+		var runStatusEmitter;
+		beforeEach(function () {
+			apiEmitter = new EventEmitter();
+			api.on = function (event, fn) {
+				apiEmitter.on(event, fn);
+			};
+			runStatusEmitter = new EventEmitter();
+			runStatus = {
+				on: function (event, fn) {
+					runStatusEmitter.on(event, fn);
+				}
+			};
+		});
+
+		var seed = function (seedFailures) {
+			var done;
+			api.run.returns(new Promise(function (resolve) {
+				done = function () {
+					resolve(runStatus);
+				};
+			}));
+
+			var watcher = start();
+			var files = [path.join('test', '1.js'), path.join('test', '2.js')];
+			apiEmitter.emit('test-run', runStatus, files.map(function (relFile) {
+				return path.resolve(relFile);
+			}));
+
+			if (seedFailures) {
+				seedFailures(files);
+			}
+
+			done();
+			api.run.returns(new Promise(function () {}));
+			return watcher;
+		};
+
+		var rerun = function (file) {
+			runStatus = {on: runStatus.on};
+			var done;
+			api.run.returns(new Promise(function (resolve) {
+				done = function () {
+					resolve(runStatus);
+				};
+			}));
+
+			change(file);
+			return debounce().then(function () {
+				apiEmitter.emit('test-run', runStatus, [path.resolve(file)]);
+				done();
+
+				api.run.returns(new Promise(function () {}));
+			});
+		};
+
+		test('sets runStatus.previousFailCount to 0 if there were no previous failures', function (t) {
+			t.plan(1);
+
+			seed(function (files) {
+				runStatusEmitter.emit('error', {file: files[0]});
+			});
+			return debounce().then(function () {
+				t.is(runStatus.previousFailCount, 0);
+			});
+		});
+
+		test('sets runStatus.previousFailCount if there were prevous failures', function (t) {
+			t.plan(1);
+
+			var other;
+			seed(function (files) {
+				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('error', {file: files[0]});
+				other = files[1];
+			});
+
+			return rerun(other).then(function () {
+				t.is(runStatus.previousFailCount, 2);
+			});
+		});
+
+		test('tracks failures from multiple files', function (t) {
+			t.plan(1);
+
+			var first;
+			seed(function (files) {
+				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('error', {file: files[1]});
+				first = files[0];
+			});
+
+			return rerun(first).then(function () {
+				t.is(runStatus.previousFailCount, 1);
+			});
+		});
+
+		test("previous failures don't count when that file is rerun", function (t) {
+			t.plan(1);
+
+			var same;
+			seed(function (files) {
+				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('error', {file: files[0]});
+				same = files[0];
+			});
+
+			return rerun(same).then(function () {
+				t.is(runStatus.previousFailCount, 0);
+			});
+		});
+
+		test("previous failures don't count when that file is deleted", function (t) {
+			t.plan(1);
+
+			var same;
+			var other;
+			seed(function (files) {
+				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('error', {file: files[0]});
+				same = files[0];
+				other = files[1];
+			});
+
+			unlink(same);
+			return debounce().then(function () {
+				return rerun(other);
+			}).then(function () {
+				t.is(runStatus.previousFailCount, 0);
+			});
+		});
+	});
 });
