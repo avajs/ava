@@ -71,6 +71,7 @@ npm install --save-dev jsx-test-helpers
 ```
 
 and test your React components:
+
 ```js
 import test from 'ava';
 import React from 'react';
