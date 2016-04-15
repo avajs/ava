@@ -29,7 +29,7 @@ function miniReporter() {
 
 process.stderr.setMaxListeners(50);
 
-lolex.install(new Date('2014-11-19T00:19:12+0700').getTime(), ['Date']);
+lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 var time = ' ' + chalk.grey.dim('[17:19:12]');
 
 test('start', function (t) {
