@@ -51,74 +51,74 @@ test('chokidar is not installed', function (t) {
 });
 
 group('chokidar is installed', function (beforeEach, test, group) {
-	var chokidar = {
-		watch: sinon.stub()
-	};
-
-	var debug = sinon.spy();
-
-	var logger = {
-		start: sinon.spy(),
-		finish: sinon.spy(),
-		section: sinon.spy(),
-		clear: sinon.stub().returns(true),
-		reset: sinon.spy()
-	};
-
-	var api = {
-		on: function () {},
-		run: sinon.stub()
-	};
-
-	var avaFiles = sinon.stub();
-	avaFiles.defaultExcludePatterns = sinon.stub();
-	avaFiles.defaultIncludePatterns = sinon.stub();
-
-	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
-		'chokidar': chokidar,
-		'debug': function (name) {
-			return function () {
-				var args = [name];
-				args.push.apply(args, arguments);
-				debug.apply(null, args);
-			};
-		},
-		'./ava-files': avaFiles
-	});
-
+	var chokidar;
+	var debug;
+	var logger;
+	var api;
+	var avaFiles;
+	var Subject;
 	var runStatus;
-	var resetRunStatus = function () {
-		runStatus = {failCount: 0, rejectionCount: 0, exceptionCount: 0};
-		return runStatus;
-	};
-
+	var resetRunStatus;
 	var clock;
 	var chokidarEmitter;
 	var stdin;
 	var files;
+
+	function proxyWalker(opts) {
+		return proxyquire.noCallThru().load('../lib/watcher', opts ||
+			{
+				'chokidar': chokidar,
+				'debug': function (name) {
+					return function () {
+						var args = [name];
+						args.push.apply(args, arguments);
+						debug.apply(null, args);
+					};
+				},
+				'./ava-files': avaFiles
+			});
+	}
+
 	beforeEach(function () {
+		chokidar = {
+			watch: sinon.stub()
+		};
+
+		debug = sinon.spy();
+
+		logger = {
+			start: sinon.spy(),
+			finish: sinon.spy(),
+			section: sinon.spy(),
+			clear: sinon.stub().returns(true),
+			reset: sinon.spy()
+		};
+
+		api = {
+			on: function () {},
+			run: sinon.stub()
+		};
+
+		avaFiles = sinon.stub();
+		avaFiles.defaultExcludePatterns = sinon.stub();
+		avaFiles.defaultIncludePatterns = sinon.stub();
+
+		Subject = proxyWalker();
+
+		resetRunStatus = function () {
+			runStatus = {failCount: 0, rejectionCount: 0, exceptionCount: 0};
+			return runStatus;
+		};
+
 		if (clock) {
 			clock.uninstall();
 		}
 		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
 
 		chokidarEmitter = new EventEmitter();
-		chokidar.watch.reset();
 		chokidar.watch.returns(chokidarEmitter);
 
-		debug.reset();
-
-		logger.start.reset();
-		logger.finish.reset();
-		logger.section.reset();
-		logger.reset.reset();
-
-		logger.clear.reset();
 		logger.clear.returns(true);
-
-		avaFiles.reset();
-		avaFiles.defaultExcludePatterns.reset();
-		avaFiles.defaultIncludePatterns.reset();
 
 		avaFiles.defaultExcludePatterns.returns([
 			'!**/node_modules/**',
@@ -132,7 +132,6 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			'test'
 		]);
 
-		api.run.reset();
 		api.run.returns(new Promise(function () {}));
 		files = [
 			'test.js',
