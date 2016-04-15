@@ -464,7 +464,7 @@ test('test file with no tests causes an AvaError to be emitted', function (t) {
 	return api.run([path.join(__dirname, 'fixture/no-tests.js')]);
 });
 
-test('test file that immediately exits with 0 exit code ', function (t) {
+test('test file that immediately exits with 0 exit code', function (t) {
 	t.plan(2);
 
 	var api = new Api();
@@ -477,6 +477,22 @@ test('test file that immediately exits with 0 exit code ', function (t) {
 	});
 
 	return api.run([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
+});
+
+test('test file that immediately exits with 3 exit code', function (t) {
+	t.plan(3);
+
+	var api = new Api();
+
+	api.on('test-run', function (runStatus) {
+		runStatus.on('error', function (err) {
+			t.is(err.name, 'AvaError');
+			t.is(err.file, path.join('test', 'fixture', 'immediate-3-exit.js'));
+			t.match(err.message, /exited with a non-zero exit code: 3/);
+		});
+	});
+
+	return api.run([path.join(__dirname, 'fixture/immediate-3-exit.js')]);
 });
 
 test('testing nonexistent files causes an AvaError to be emitted', function (t) {
@@ -905,13 +921,14 @@ test('using --match with no matching tests causes an AvaError to be emitted', fu
 });
 
 test('errors thrown when running files are emitted', function (t) {
-	t.plan(2);
+	t.plan(3);
 
 	var api = new Api();
 
 	api.on('test-run', function (runStatus) {
 		runStatus.on('error', function (err) {
 			t.is(err.name, 'SyntaxError');
+			t.is(err.file, path.join('test', 'fixture', 'syntax-error.js'));
 			t.match(err.message, /Unexpected token/);
 		});
 	});

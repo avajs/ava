@@ -341,6 +341,42 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results with 1 previous failure', function (t) {
+	var reporter = createReporter();
+
+	var runStatus = createRunStatus();
+	runStatus.passCount = 1;
+	runStatus.exceptionCount = 1;
+	runStatus.previousFailCount = 1;
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.pass('1 test passed') + time,
+		'  ' + colors.error('1 uncaught exception'),
+		'  ' + colors.error('1 previous failure in test files that were not rerun')
+	]);
+	t.end();
+});
+
+test('results with 2 previous failures', function (t) {
+	var reporter = createReporter();
+
+	var runStatus = createRunStatus();
+	runStatus.passCount = 1;
+	runStatus.exceptionCount = 1;
+	runStatus.previousFailCount = 2;
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.pass('1 test passed') + time,
+		'  ' + colors.error('1 uncaught exception'),
+		'  ' + colors.error('2 previous failures in test files that were not rerun')
+	]);
+	t.end();
+});
+
 test('full-width line when sectioning', function (t) {
 	var reporter = createReporter();
 
