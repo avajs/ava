@@ -131,7 +131,7 @@ test('renders children when passed in', t => {
 
 Note that you have to use variables like `actual` and `expected` because [`power-assert` doesn't handle JSX correctly](https://github.com/power-assert-js/power-assert/issues/34).
 
-This is a basic example about how to use `jsx-test-helpers` with AVA, to see a more advanced usage of this library, please have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
+This is a basic example about how to use `jsx-test-helpers` with AVA. To see a more advanced usage of this library, have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
 
 ## Reference
 - [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
