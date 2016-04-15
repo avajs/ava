@@ -539,7 +539,7 @@ The corresponding Babel config for AVA's setup is as follows:
 {
   "presets": [
     "es2015",
-    "stage-2",
+    "stage-2"
   ],
   "plugins": [
     "espower",
