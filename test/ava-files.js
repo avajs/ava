@@ -2,6 +2,14 @@
 var test = require('tap').test;
 var AvaFiles = require('../lib/ava-files');
 
+test('requires new', function (t) {
+	var avaFiles = AvaFiles;
+	t.throws(function () {
+		avaFiles(['**/foo*']);
+	}, 'Class constructor AvaFiles cannot be invoked without \'new\'');
+	t.end();
+});
+
 test('testMatcher', function (t) {
 	var avaFiles = new AvaFiles(['**/foo*']);
 
@@ -19,6 +27,8 @@ test('testMatcher', function (t) {
 	isTest('foo.js');
 	isTest('foo/blah.js');
 	isTest('bar/foo.js');
+	isTest('bar/foo-bar/baz/buz.js');
+	notTest('bar/baz/buz.js');
 	notTest('bar.js');
 	notTest('bar/bar.js');
 	notTest('_foo-bar.js');
@@ -30,7 +40,7 @@ test('testMatcher', function (t) {
 	t.end();
 });
 
-test('sourceMatcher', function (t) {
+test('sourceMatcher - defaults', function (t) {
 	var avaFiles = new AvaFiles(['**/foo*']);
 
 	var matcher = avaFiles.makeSourceMatcher();
@@ -63,5 +73,26 @@ test('sourceMatcher', function (t) {
 	isSource('bar/bar.js');
 	notSource('node_modules/foo.js');
 
+	t.end();
+});
+
+test('sourceMatcher - allow matching specific node_modules directories', function (t) {
+	var avaFiles = new AvaFiles(['**/foo*'], ['node_modules/foo/**']);
+
+	var matcher = avaFiles.makeSourceMatcher();
+
+	t.true(matcher('node_modules/foo/foo.js'));
+	t.false(matcher('node_modules/bar/foo.js'));
+	t.end();
+});
+
+test('sourceMatcher - providing negation patterns', function (t) {
+	var avaFiles = new AvaFiles(['**/foo*'], ['!**/bar*']);
+
+	var matcher = avaFiles.makeSourceMatcher();
+
+	t.false(matcher('node_modules/foo/foo.js'));
+	t.false(matcher('bar.js'));
+	t.false(matcher('foo/bar.js'));
 	t.end();
 });
