@@ -2,21 +2,34 @@
 
 ## Setting up Babel
 
-The first thing you need to do is to set up `babel` to transpile JSX code from the tests. To do that, I'd recommend the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md) using [`babel-preset-react`](http://babeljs.io/docs/plugins/preset-react/). You can also have a look at this [sample project config](https://github.com/adriantoine/ava-enzyme-demo)
+The first thing you need to do is to set up `babel` to transpile JSX code from the tests by adding an AVA section to your `package.json`:
 
-## Using [Enzyme](https://github.com/airbnb/enzyme/)
+```json
+{
+  "ava": {
+    "require": ["babel-register"]
+  },
+  "babel": {
+    "presets": ["react"]
+  }
+}
+```
+
+You can find more information about setting up `babel` with AVA in the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md).
+
+## Using [Enzyme](https://github.com/airbnb/enzyme)
 
 Let's first see how to use AVA with one of the most popular React testing libraries: [Enzyme](https://github.com/airbnb/enzyme).
 
-If you only plan to use `shallow` component rendering, you don't need any extra setup.
+If you only plan to use [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering), you don't need any extra setup.
 
 First install [Enzyme required packages](https://github.com/airbnb/enzyme/#installation):
 
 ```console
-npm install --save-dev enzyme react-addons-test-utils react-dom
+$ npm install --save-dev enzyme react-addons-test-utils react-dom
 ```
 
-and you can use Enzyme straight away:
+And you can use Enzyme straight away:
 
 ```js
 import test from 'ava';
@@ -54,11 +67,11 @@ test('renders children when passed in', t => {
 });
 ```
 
-Enzyme also has a `mount` and `render` helper to test in an actual browser environment, if you want to use these helpers, you will have to setup a browser environment. To do so, you should check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md).
+Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md) on how to do so.
 
-To see an example of AVA working together with Enzyme set up for browser testing, you can have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
+To see an example of AVA working together with Enzyme, set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 
-This is a basic example about how to integrate Enzyme with AVA, to get more information about using Enzyme for unit testing React component, please have a look at [Enzyme's documentation](http://airbnb.io/enzyme/).
+This is a basic example about how to integrate Enzyme with AVA. For more information about using Enzyme for unit testing React component, have a look at [Enzyme's documentation](http://airbnb.io/enzyme/).
 
 ## Using JSX helpers
 
@@ -66,11 +79,11 @@ There is another approach to testing React component, which is to use the [`reac
 
 To do so you can use the [`jsx-test-helpers`](https://github.com/MoOx/jsx-test-helpers) library:
 
-```js
-npm install --save-dev jsx-test-helpers
+```console
+$ npm install --save-dev jsx-test-helpers
 ```
 
-and test your React components:
+And test your React components:
 
 ```js
 import test from 'ava';
@@ -121,4 +134,4 @@ Note that you have to use variables like `actual` and `expected` because [`power
 This is a basic example about how to use `jsx-test-helpers` with AVA, to see a more advanced usage of this library, please have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
 
 ## Reference
-* [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
+- [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
