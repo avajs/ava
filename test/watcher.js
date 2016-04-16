@@ -654,7 +654,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		});
 	});
 
-	["r", "rs"].forEach(function (input) {
+	['r', 'rs'].forEach(function (input) {
 		test('reruns initial tests when "' + input + '" is entered on stdin', function (t) {
 			t.plan(4);
 			api.run.returns(Promise.resolve(runStatus));
@@ -1291,7 +1291,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 		});
 
-		test("previous failures don't count when that file is rerun", function (t) {
+		test('previous failures don\'t count when that file is rerun', function (t) {
 			t.plan(1);
 
 			var same;
@@ -1306,7 +1306,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			});
 		});
 
-		test("previous failures don't count when that file is deleted", function (t) {
+		test('previous failures don\'t count when that file is deleted', function (t) {
 			t.plan(1);
 
 			var same;

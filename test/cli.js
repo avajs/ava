@@ -176,7 +176,7 @@ test('pkg-conf: cli takes precedence', function (t) {
 	});
 });
 
-test("watcher reruns test files when they changed", function (t) {
+test('watcher reruns test files when they changed', function (t) {
 	var killed = false;
 
 	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
@@ -209,7 +209,7 @@ test("watcher reruns test files when they changed", function (t) {
 });
 
 if (hasChokidar) {
-	test("watcher reruns test files when source dependencies change", function (t) {
+	test('watcher reruns test files when source dependencies change', function (t) {
 		var killed = false;
 
 		var child = execCli(['--verbose', '--watch', '--source=source.js', 'test-*.js'], {dirname: 'fixture/watcher/with-dependencies'}, function (err) {

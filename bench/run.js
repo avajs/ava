@@ -102,7 +102,7 @@ Promise.each(combined, function (definition) {
 		if (result.err && !definition.shouldFail) {
 			console.log(result.stdout);
 			console.log(result.stderr);
-			throw (result.err);
+			throw result.err;
 		}
 		results[key] = results[key] || [];
 		results[key].push({passed: !results.err, shouldFail: definition.shouldFail, time: seconds});

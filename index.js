@@ -25,7 +25,7 @@ if (!isForked) {
 	console.log();
 	console.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
 
-	process.exit(1);
+	process.exit(1); // eslint-disable-line
 }
 
 // if fail-fast is enabled, use this variable to detect

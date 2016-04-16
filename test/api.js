@@ -893,7 +893,7 @@ test('babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc', f
 
 	api.on('test-run', function (runStatus) {
 		runStatus.on('test', function (data) {
-			t.ok((data.title === 'BAR'));
+			t.is(data.title, 'BAR');
 		});
 	});
 
