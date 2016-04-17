@@ -170,10 +170,5 @@
   },
   "optionalDependencies": {
     "chokidar": "^1.4.2"
-  },
-  "xo": {
-    "ignore": [
-      "bench/*/*.js"
-    ]
   }
 }
