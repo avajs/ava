@@ -131,4 +131,4 @@ The above benchmarks two commands, but expects the second one to fail.
 
 - Add the user to the `readme.md` and `package.json`.
 - Add the user as a collaborator to all AVA related repos and npm packages.
-- Share the Twitter account login info and that he user is free to tweet/retweet relevant stuff.
+- Share the Twitter account login info and encourage to tweet/retweet relevant stuff.
