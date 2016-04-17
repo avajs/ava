@@ -25,6 +25,11 @@
       "name": "Mark Wubben",
       "email": "mark@novemberborn.net",
       "url": "novemberborn.net"
+    },
+    {
+      "name": "Juan Soto",
+      "email": "juan@juansoto.me",
+      "url": "juansoto.me"
     }
   ],
   "bin": "cli.js",
