@@ -75,7 +75,7 @@ This is a basic example about how to integrate Enzyme with AVA. For more informa
 
 ## Using JSX helpers
 
-Another approach to testing React component is to use the [`react-element-to-jsx-string`](https://github.com/algolia/react-element-to-jsx-string) package to compare DOM trees as strings. [`jsx-test-helpers`](https://github.com/MoOx/jsx-test-helpers) is a nice library handling [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering) and converting them to string in order to test React components using AVA assertions.
+Another approach to testing React component is to use the [`react-element-to-jsx-string`](https://github.com/algolia/react-element-to-jsx-string) package to compare DOM trees as strings. [`jsx-test-helpers`](https://github.com/MoOx/jsx-test-helpers) is a nice library handling [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering) and converting JSX to string in order to test React components using AVA assertions.
 
 ```console
 $ npm install --save-dev jsx-test-helpers
