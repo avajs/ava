@@ -576,7 +576,7 @@ You can also use the special `"inherit"` keyword. This makes AVA defer to the Ba
 		]
 	},
 	"ava": {
-		"babel": "inherit",
+		"babel": "inherit"
 	},
 }
 ```
