@@ -75,15 +75,13 @@ This is a basic example about how to integrate Enzyme with AVA. For more informa
 
 ## Using JSX helpers
 
-There is another approach to testing React component, which is to use the [`react-element-to-jsx-string`](https://github.com/algolia/react-element-to-jsx-string) package to compare DOM trees as strings, like [`expect-jsx`](https://github.com/algolia/expect-jsx). [You can use `expect-jsx` with AVA](https://github.com/sindresorhus/ava/issues/186#issuecomment-161317068) however it is nicer to use AVA assertions and only rely on helpers.
-
-To do so you can use the [`jsx-test-helpers`](https://github.com/MoOx/jsx-test-helpers) library:
+Another approach to testing React component is to use the [`react-element-to-jsx-string`](https://github.com/algolia/react-element-to-jsx-string) package to compare DOM trees as strings. [`jsx-test-helpers`](https://github.com/MoOx/jsx-test-helpers) is a nice library handling [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering) and converting them to string in order to test React components using AVA assertions.
 
 ```console
 $ npm install --save-dev jsx-test-helpers
 ```
 
-And test your React components:
+Usage example:
 
 ```js
 import test from 'ava';
@@ -132,6 +130,14 @@ test('renders children when passed in', t => {
 Note that you have to use variables like `actual` and `expected` because [`power-assert` doesn't handle JSX correctly](https://github.com/power-assert-js/power-assert/issues/34).
 
 This is a basic example about how to use `jsx-test-helpers` with AVA. To see a more advanced usage of this library, have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
+
+[This sample project](https://github.com/MoOx/jsx-test-helpers) shows a basic and minimal setup of AVA with `jsx-test-helpers`.
+
+## Using other assertion libraries
+
+In AVA, you can use any assertion library and there is already a few out there allowing to test React components. Here is a list of assertion libraries working well with AVA:
+- [`expect-jsx`](https://github.com/algolia/expect-jsx) ([Example](https://github.com/sindresorhus/ava/issues/186#issuecomment-161317068))
+- [`unexpected-react`](https://github.com/bruderstein/unexpected-react) ([Sample project with an output example](https://github.com/adriantoine/ava-unexpected-react-demo))
 
 ## Reference
 - [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
