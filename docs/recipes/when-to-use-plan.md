@@ -48,10 +48,6 @@ test(async t => {
 });
 ```
 
-## Good uses of `t.plan()`
-
-`t.plan()` has many acceptable uses.
-
 ### Promises with a `.catch()` block
 
 ```js
@@ -59,13 +55,22 @@ test(t => {
 	t.plan(2);
 
 	return shouldRejectWithFoo().catch(reason => {
-		t.is(reason.message, 'Hello') // Prefer t.throws() if all you care about is the message
+		t.is(reason.message, 'Hello');
 		t.is(reason.foo, 'bar');
 	});
 });
 ```
 
-Here, `t.plan()` is used to ensure the code inside the `catch` block happens. In most cases, you should prefer the `t.throws()` assertion, but this is an acceptable use since `t.throws()` only allows you to assert against the error's `message` property.
+Here, the use of `t.plan()` seeks to ensure that the code inside the `catch` block is executed.
+Instead, you should take advantage of `t.throws` and `async`/`await`, as this leads to flatter code that is easier to reason about:
+
+```js
+test(async t => {
+	const reason = await t.throws(shouldRejectWithFoo());
+	t.is(reason.message, 'Hello');
+	t.is(reason.foo, 'bar');
+});
+```
 
 ### Ensuring a catch statement happens
 
@@ -76,13 +81,17 @@ test(t => {
 	try {
 		shouldThrow();
 	} catch (err) {
-		t.is(err.message, 'Hello') // Prefer t.throws() if all you care about is the message
+		t.is(err.message, 'Hello');
 		t.is(err.foo, 'bar');
 	}
 });
 ```
 
-As stated in the `try`/`catch` example above, using the `t.throws()` assertion is usually a better choice, but it only lets you assert against the error's `message` property.
+As stated in the previous example, using the `t.throws()` assertion with `async`/`await` is a better choice.
+
+## Good uses of `t.plan()`
+
+`t.plan()` provides value in the following cases.
 
 ### Ensuring multiple callbacks are actually called
 
