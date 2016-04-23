@@ -125,6 +125,18 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.doesNotThrow(function () {
+		assert.deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+	});
+
+	t.doesNotThrow(function () {
+		assert.deepEqual({a: 'a', b: 'b', c: {d: 'd'}}, {c: {d: 'd'}, b: 'b', a: 'a'});
+	});
+
+	t.throws(function () {
+		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
+	});
+
+	t.doesNotThrow(function () {
 		assert.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
