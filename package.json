@@ -125,7 +125,7 @@
     "meow": "^3.7.0",
     "ms": "^0.7.1",
     "multimatch": "^2.1.0",
-    "not-so-shallow": "^0.1.1",
+    "not-so-shallow": "^0.1.2",
     "object-assign": "^4.0.1",
     "observable-to-promise": "^0.4.0",
     "option-chain": "^0.1.0",
