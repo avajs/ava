@@ -433,6 +433,27 @@ test('throws and notThrows work with promises', function (t) {
 	});
 });
 
+test('end should not be called multiple times', function (t) {
+	ava.cb(function (a) {
+		a.end();
+		a.end();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.message, '.end() called more than once');
+		t.end();
+	});
+});
+
+test('cb test that throws sync', function (t) {
+	var result = ava.cb(function () {
+		throw new Error('foo');
+	}).run();
+
+	t.is(result.passed, false);
+	t.is(result.reason.message, 'foo');
+	t.end();
+});
+
 test('waits for t.throws to resolve after t.end is called', function (t) {
 	ava.cb(function (a) {
 		a.plan(1);
