@@ -133,6 +133,48 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.throws(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+	});
+
+	t.doesNotThrow(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3]);
+	});
+
+	t.throws(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+	});
+
+	t.throws(function () {
+		var fnA = a => a;
+		var fnB = a => a;
+
+		assert.deepEqual(fnA, fnB);
+	});
+
+	t.doesNotThrow(function () {
+		var x1 = {z: 4};
+		var y1 = {x: x1};
+		x1.y = y1;
+
+		var x2 = {z: 4};
+		var y2 = {x: x2};
+		x2.y = y2;
+
+		assert.deepEqual(x1, x2);
+	});
+
+	t.doesNotThrow(function () {
+		function Foo(a) {
+			this.a = a;
+		}
+
+		var x = new Foo(1);
+		var y = new Foo(1);
+
+		assert.deepEqual(x, y);
+	});
+
+	t.throws(function () {
 		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
 	});
 
