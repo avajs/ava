@@ -120,6 +120,10 @@ test('.not()', function (t) {
 });
 
 test('.deepEqual()', function (t) {
+	t.throws(function () {
+		assert.deepEqual({a: false}, {a: 0});
+	});
+
 	t.doesNotThrow(function () {
 		assert.deepEqual({a: 'a'}, {a: 'a'});
 	});
