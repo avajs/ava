@@ -178,6 +178,21 @@ test('.deepEqual()', function (t) {
 		assert.deepEqual(x, y);
 	});
 
+	t.doesNotThrow(function () {
+		function Foo(a) {
+			this.a = a;
+		}
+
+		function Bar(a) {
+			this.a = a;
+		}
+
+		var x = new Foo(1);
+		var y = new Bar(1);
+
+		assert.deepEqual(x, y);
+	});
+
 	t.throws(function () {
 		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
 	});
