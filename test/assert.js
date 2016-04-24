@@ -145,8 +145,12 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.throws(function () {
-		var fnA = a => a;
-		var fnB = a => a;
+		var fnA = function (a) {
+			return a;
+		};
+		var fnB = function (a) {
+			return a;
+		};
 
 		assert.deepEqual(fnA, fnB);
 	});
