@@ -12,7 +12,7 @@ var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
 
-var graySpinner = chalk.gray.dim('⠋');
+var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
 
 // Needed because tap doesn't emulate a tty environment and thus this is
 // undefined, making `cli-truncate` append '...' to test titles
