@@ -1,28 +1,60 @@
-<!--
+<!-- CLICK "Preview" FOR MORE READABLE FORMAT -->
 
 ## Prerequisites
 
 - Read the [contributing guidelines](https://github.com/sindresorhus/ava/blob/master/contributing.md).
-- Support questions are better asked in our [chat](https://gitter.im/sindresorhus/ava) or on [Stack Overflow](https://stackoverflow.com/questions/tagged/ava).
+- Support questions are better asked in one of the following locations
+  - [our chat](https://gitter.im/sindresorhus/ava)
+  - [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
 - Ensure the issue isn't already reported.
-- Should be reproducible with the latest AVA version. (Ensure `ava --version` matches ![](https://img.shields.io/npm/v/ava.svg))
-
--->
+- Should be reproducible with the latest AVA version.
+  - (Ensure `ava --version` matches ![](https://img.shields.io/npm/v/ava.svg))
 
 ## Description
 
-<!--
+If this is a feature request, explain why it should be added. Specific use cases are best.
 
-Description of the issue.
+For bug reports, please provide as much *relevant* info as possible.
 
-If it's a feature request, include why it should be added.
+### Test Source
 
--->
+```js
+// Avoid posting hundreds of lines of source code.
+// Edit to just the relevant portions.
+```
 
+### Stack Trace
+
+```
+COPY THE FAILURE STACK TRACE HERE
+```
+
+### Configuration
+
+Copy the relevant section from `package.json`:
+
+```json
+{
+  "ava": {
+  ...
+  }
+}
+```
+
+### Command Line Arguments
+
+Copy your npm build scripts or the `ava` command used:
+
+```
+ava [OPTIONS HERE]
+```
+
+## Relevant Links
+
+- If your project is public, link to the repo so we can investigate directly.
+- **BONUS POINTS:** Create a [minimal reproduction](http://stackoverflow.com/help/mcve) and upload it to GitHub. This will get you the fastest support.
 
 ## Environment
-
-<!--
 
 Include the Node.js version and operating system. Run the following to get it quickly:
 
@@ -30,4 +62,9 @@ Include the Node.js version and operating system. Run the following to get it qu
 node -e "var os=require('os');console.log('Node.js ' + process.version + '\n' + os.platform() + ' ' + os.release())"
 ```
 
--->
+The versions of AVA and `npm` in use:
+
+```
+ava --version
+npm --version
+```
