@@ -120,6 +120,88 @@ test('.not()', function (t) {
 });
 
 test('.deepEqual()', function (t) {
+	// Tests starting here are to detect regressions in the underlying libraries
+	// used to test deep object equality
+
+	t.throws(function () {
+		assert.deepEqual({a: false}, {a: 0});
+	});
+
+	t.doesNotThrow(function () {
+		assert.deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+	});
+
+	t.doesNotThrow(function () {
+		assert.deepEqual({a: 'a', b: 'b', c: {d: 'd'}}, {c: {d: 'd'}, b: 'b', a: 'a'});
+	});
+
+	t.throws(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+	});
+
+	t.doesNotThrow(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3]);
+	});
+
+	t.throws(function () {
+		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+	});
+
+	t.throws(function () {
+		var fnA = function (a) {
+			return a;
+		};
+		var fnB = function (a) {
+			return a;
+		};
+
+		assert.deepEqual(fnA, fnB);
+	});
+
+	t.doesNotThrow(function () {
+		var x1 = {z: 4};
+		var y1 = {x: x1};
+		x1.y = y1;
+
+		var x2 = {z: 4};
+		var y2 = {x: x2};
+		x2.y = y2;
+
+		assert.deepEqual(x1, x2);
+	});
+
+	t.doesNotThrow(function () {
+		function Foo(a) {
+			this.a = a;
+		}
+
+		var x = new Foo(1);
+		var y = new Foo(1);
+
+		assert.deepEqual(x, y);
+	});
+
+	t.doesNotThrow(function () {
+		function Foo(a) {
+			this.a = a;
+		}
+
+		function Bar(a) {
+			this.a = a;
+		}
+
+		var x = new Foo(1);
+		var y = new Bar(1);
+
+		assert.deepEqual(x, y);
+	});
+
+	t.throws(function () {
+		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
+	});
+
+	// Regression test end here
+
 	t.doesNotThrow(function () {
 		assert.deepEqual({a: 'a'}, {a: 'a'});
 	});
