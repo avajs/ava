@@ -116,6 +116,18 @@ Api.prototype._run = function (files, _options) {
 	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
 	self.fileCount = files.length;
 
+	var overwatch;
+	if (this.options.poolSize > 0 && !self.options.serial) {
+		overwatch = this._runLimitedPool(files, runStatus);
+	} else {
+		overwatch = this._runNoPool(files, runStatus);
+	}
+
+	return overwatch;
+};
+
+Api.prototype._runNoPool = function (files, runStatus) {
+	var self = this;
 	var tests = new Array(self.fileCount);
 
 	// TODO: thid should be cleared at the end of the run
@@ -222,5 +234,87 @@ Api.prototype._run = function (files, _options) {
 
 		runStatus.processResults(results);
 		return runStatus;
+	});
+};
+
+Api.prototype._runLimitedPool = function (files, runStatus) {
+	var self = this;
+	var tests = {};
+	var blankResults = {
+		stats: {
+			testCount: 0,
+			passCount: 0,
+			skipCount: 0,
+			todoCount: 0,
+			failCount: 0
+		},
+		tests: []
+	};
+
+	runStatus.on('timeout', function () {
+		Object.keys(tests).forEach(function (file) {
+			var fork = tests[file];
+			fork.exit();
+		});
+	});
+
+	return new Promise(function (resolve) {
+		Promise.map(files, function (file) {
+			function runner(test, runnerResolver) {
+				return function () {
+					self.emit('ready');
+					var options = {};
+					test.run(options)
+						.then(runnerResolver)
+						.catch(function (err) {
+							if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+								runStatus.handleExceptions({
+									exception: new AvaError('Couldn\'t find any matching tests'),
+									file: undefined
+								});
+								runnerResolver(blankResults);
+								return;
+							}
+							// The test failed catastrophically. Flag it up as an
+							// exception, then return an empty result. Other tests may
+							// continue to run.
+							runStatus.handleExceptions({
+								exception: err,
+								file: path.relative('.', file)
+							});
+
+							runnerResolver(blankResults);
+						});
+				};
+			}
+
+			try {
+				var test = tests[file] = self._runFile(file, runStatus);
+
+				return new Promise(function (testResolve) {
+					test.on('stats', runner(test, testResolve));
+					test.on('exit', function () {
+						delete tests[file];
+					});
+					test.catch(runner(test, testResolve));
+				});
+			} catch (err) {
+				runStatus.handleExceptions({
+					exception: err,
+					file: path.relative('.', file)
+				});
+
+				return blankResults;
+			}
+		}, {concurrency: self.options.poolSize})
+			.then(function (results) {
+				// cancel debounced _onTimeout() from firing
+				if (self.options.timeout) {
+					runStatus._restartTimer.cancel();
+				}
+
+				runStatus.processResults(results);
+				resolve(runStatus);
+			});
 	});
 };

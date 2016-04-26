@@ -71,6 +71,7 @@ var cli = meow([
 	'  --watch, -w      Re-run tests when tests and source files change',
 	'  --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)',
 	'  --timeout, -T    Set global timeout',
+	'  --pool-size, -z  Set worker pool size (BETA)',
 	'',
 	'Examples',
 	'  ava',
@@ -88,7 +89,8 @@ var cli = meow([
 		'require',
 		'timeout',
 		'source',
-		'match'
+		'match',
+		'pool-size'
 	],
 	boolean: [
 		'fail-fast',
@@ -106,7 +108,8 @@ var cli = meow([
 		m: 'match',
 		w: 'watch',
 		S: 'source',
-		T: 'timeout'
+		T: 'timeout',
+		z: 'pool-size'
 	}
 });
 
@@ -133,7 +136,8 @@ var api = new Api({
 	explicitTitles: cli.flags.watch,
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,
-	timeout: cli.flags.timeout
+	timeout: cli.flags.timeout,
+	poolSize: cli.flags.poolSize ? parseInt(cli.flags.poolSize, 10) : 0
 });
 
 var reporter;
