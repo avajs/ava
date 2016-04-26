@@ -120,6 +120,9 @@ test('.not()', function (t) {
 });
 
 test('.deepEqual()', function (t) {
+	// Tests starting here are to detect regressions in the underlying libraries
+	// used to test deep object equality
+
 	t.throws(function () {
 		assert.deepEqual({a: false}, {a: 0});
 	});
@@ -196,6 +199,8 @@ test('.deepEqual()', function (t) {
 	t.throws(function () {
 		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
 	});
+
+	// Regression test end here
 
 	t.doesNotThrow(function () {
 		assert.deepEqual({a: 'a'}, {a: 'a'});
