@@ -2,7 +2,7 @@
 
 ## Setting up Babel
 
-The first thing you need to do is to set up `babel` to transpile JSX code from the tests by adding an AVA section to your `package.json`:
+The first step is setting up Babel to transpile JSX code from the tests by adding an AVA section to your package.json:
 
 ```json
 {
@@ -15,13 +15,13 @@ The first thing you need to do is to set up `babel` to transpile JSX code from t
 }
 ```
 
-You can find more information about setting up `babel` with AVA in the [babelrc recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/babelrc.md).
+You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
 Let's first see how to use AVA with one of the most popular React testing libraries: [Enzyme](https://github.com/airbnb/enzyme).
 
-If you only plan to use [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering), you don't need any extra setup.
+If you intend to only use [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering), you don't need any extra setup.
 
 First install [Enzyme required packages](https://github.com/airbnb/enzyme/#installation):
 
@@ -29,7 +29,7 @@ First install [Enzyme required packages](https://github.com/airbnb/enzyme/#insta
 $ npm install --save-dev enzyme react-addons-test-utils react-dom
 ```
 
-And you can use Enzyme straight away:
+Then you can use Enzyme straight away:
 
 ```js
 import test from 'ava';
@@ -69,9 +69,9 @@ test('renders children when passed in', t => {
 
 Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md) on how to do so.
 
-To see an example of AVA working together with Enzyme, set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
+To see an example of AVA working together with Enzyme set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 
-This is a basic example about how to integrate Enzyme with AVA. For more information about using Enzyme for unit testing React component, have a look at [Enzyme's documentation](http://airbnb.io/enzyme/).
+This is a basic example on how to integrate Enzyme with AVA. For more information about using Enzyme for unit testing React component, have a look at [Enzyme's documentation](http://airbnb.io/enzyme/).
 
 ## Using JSX helpers
 
@@ -129,15 +129,17 @@ test('renders children when passed in', t => {
 
 Note that you have to use variables like `actual` and `expected` because [`power-assert` doesn't handle JSX correctly](https://github.com/power-assert-js/power-assert/issues/34).
 
-This is a basic example about how to use `jsx-test-helpers` with AVA. To see a more advanced usage of this library, have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
+This is a basic example on how to use `jsx-test-helpers` with AVA. To see a more advanced usage of this library, have a look at [this annotated test file](https://github.com/MoOx/jsx-test-helpers/blob/master/src/__tests__/index.js).
 
 [This sample project](https://github.com/MoOx/jsx-test-helpers) shows a basic and minimal setup of AVA with `jsx-test-helpers`.
 
 ## Using other assertion libraries
 
-In AVA, you can use any assertion library and there is already a few out there allowing to test React components. Here is a list of assertion libraries working well with AVA:
+In AVA, you can use any assertion library, and there are already a few out there to test React components. Here is a list of assertion libraries working well with AVA:
+
 - [`expect-jsx`](https://github.com/algolia/expect-jsx) ([Example](https://github.com/sindresorhus/ava/issues/186#issuecomment-161317068))
 - [`unexpected-react`](https://github.com/bruderstein/unexpected-react) ([Sample project with an output example](https://github.com/adriantoine/ava-unexpected-react-demo))
 
 ## Reference
+
 - [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)
