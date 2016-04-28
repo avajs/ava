@@ -71,7 +71,7 @@ var cli = meow([
 	'  --watch, -w        Re-run tests when tests and source files change',
 	'  --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)',
 	'  --timeout, -T      Set global timeout',
-	'  --concurrency, -c  Maximum number of child processes (EXPERIMENTAL)',
+	'  --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)',
 	'',
 	'Examples',
 	'  ava',

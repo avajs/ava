@@ -132,21 +132,24 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 ```console
 $ ava --help
 
+  Futuristic test runner 🚀
+
   Usage
     ava [<file|directory|glob> ...]
 
   Options
-    --init           Add AVA to your project
-    --fail-fast      Stop after first test failure
-    --serial, -s     Run tests serially
-    --require, -r    Module to preload (Can be repeated)
-    --tap, -t        Generate TAP output
-    --verbose, -v    Enable verbose output
-    --no-cache       Disable the transpiler cache
-    --match, -m      Only run tests with matching title (Can be repeated)
-    --watch, -w      Re-run tests when tests and source files change
-    --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)
-    --timeout, -T    Set global timeout
+    --init             Add AVA to your project
+    --fail-fast        Stop after first test failure
+    --serial, -s       Run tests serially
+    --require, -r      Module to preload (Can be repeated)
+    --tap, -t          Generate TAP output
+    --verbose, -v      Enable verbose output
+    --no-cache         Disable the transpiler cache
+    --match, -m        Only run tests with matching title (Can be repeated)
+    --watch, -w        Re-run tests when tests and source files change
+    --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
+    --timeout, -T      Set global timeout
+    --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
 
   Examples
     ava
