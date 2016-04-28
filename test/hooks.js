@@ -33,7 +33,7 @@ test('before', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['a', 'b']);
+		t.strictDeepEqual(arr, ['a', 'b']);
 	});
 });
 
@@ -54,7 +54,7 @@ test('after', function (t) {
 	runner.run({}).then(function (stats) {
 		t.is(stats.passCount, 1);
 		t.is(stats.failCount, 0);
-		t.same(arr, ['a', 'b']);
+		t.strictDeepEqual(arr, ['a', 'b']);
 		t.end();
 	});
 });
@@ -79,7 +79,7 @@ test('stop if before hooks failed', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['a']);
+		t.strictDeepEqual(arr, ['a']);
 		t.end();
 	});
 });
@@ -109,7 +109,7 @@ test('before each with concurrent tests', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, [['a', 'b', 'c'], ['a', 'b', 'd']]);
+		t.strictDeepEqual(arr, [['a', 'b', 'c'], ['a', 'b', 'd']]);
 		t.end();
 	});
 });
@@ -137,7 +137,7 @@ test('before each with serial tests', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['a', 'b', 'c', 'a', 'b', 'd']);
+		t.strictDeepEqual(arr, ['a', 'b', 'c', 'a', 'b', 'd']);
 		t.end();
 	});
 });
@@ -160,7 +160,7 @@ test('fail if beforeEach hook fails', function (t) {
 
 	runner.run({}).then(function (stats) {
 		t.is(stats.failCount, 1);
-		t.same(arr, ['a']);
+		t.strictDeepEqual(arr, ['a']);
 		t.end();
 	});
 });
@@ -190,7 +190,7 @@ test('after each with concurrent tests', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, [['c', 'a', 'b'], ['d', 'a', 'b']]);
+		t.strictDeepEqual(arr, [['c', 'a', 'b'], ['d', 'a', 'b']]);
 		t.end();
 	});
 });
@@ -218,7 +218,7 @@ test('after each with serial tests', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
+		t.strictDeepEqual(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
 		t.end();
 	});
 });
@@ -250,7 +250,7 @@ test('ensure hooks run only around tests', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
+		t.strictDeepEqual(arr, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
 		t.end();
 	});
 });
@@ -313,7 +313,7 @@ test('don\'t display hook title if it did not fail', function (t) {
 	fork(path.join(__dirname, 'fixture', 'hooks-passing.js'))
 		.run({})
 		.on('test', function (test) {
-			t.same(test.error, null);
+			t.strictDeepEqual(test.error, null);
 			t.is(test.title, 'pass');
 		})
 		.then(function () {
