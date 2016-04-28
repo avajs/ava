@@ -60,18 +60,18 @@ var cli = meow([
 	'  ava [<file|directory|glob> ...]',
 	'',
 	'Options',
-	'  --init           Add AVA to your project',
-	'  --fail-fast      Stop after first test failure',
-	'  --serial, -s     Run tests serially',
-	'  --require, -r    Module to preload (Can be repeated)',
-	'  --tap, -t        Generate TAP output',
-	'  --verbose, -v    Enable verbose output',
-	'  --no-cache       Disable the transpiler cache',
-	'  --match, -m      Only run tests with matching title (Can be repeated)',
-	'  --watch, -w      Re-run tests when tests and source files change',
-	'  --source, -S     Pattern to match source files so tests can be re-run (Can be repeated)',
-	'  --timeout, -T    Set global timeout',
-	'  --pool-size, -z  Set worker pool size (BETA)',
+	'  --init            Add AVA to your project',
+	'  --fail-fast       Stop after first test failure',
+	'  --serial, -s      Run tests serially',
+	'  --require, -r     Module to preload (Can be repeated)',
+	'  --tap, -t         Generate TAP output',
+	'  --verbose, -v     Enable verbose output',
+	'  --no-cache        Disable the transpiler cache',
+	'  --match, -m       Only run tests with matching title (Can be repeated)',
+	'  --watch, -w       Re-run tests when tests and source files change',
+	'  --source, -S      Pattern to match source files so tests can be re-run (Can be repeated)',
+	'  --timeout, -T     Set global timeout',
+	'  --concurrency, -c Maximum number of child processes (EXPERIMENTAL)',
 	'',
 	'Examples',
 	'  ava',
@@ -90,7 +90,7 @@ var cli = meow([
 		'timeout',
 		'source',
 		'match',
-		'pool-size'
+		'concurrency'
 	],
 	boolean: [
 		'fail-fast',
@@ -109,7 +109,7 @@ var cli = meow([
 		w: 'watch',
 		S: 'source',
 		T: 'timeout',
-		z: 'pool-size'
+		c: 'concurrency'
 	}
 });
 
@@ -137,7 +137,7 @@ var api = new Api({
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,
 	timeout: cli.flags.timeout,
-	poolSize: cli.flags.poolSize ? parseInt(cli.flags.poolSize, 10) : 0
+	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
 });
 
 var reporter;

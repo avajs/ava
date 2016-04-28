@@ -2,4 +2,3 @@ node_modules
 .nyc_output
 coverage
 bench/.results
-.idea

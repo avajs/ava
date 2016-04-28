@@ -21,7 +21,7 @@ generateTests('Without Pool: ', function (options) {
 
 generateTests('With Pool: ', function (options) {
 	options = options || {};
-	options.poolSize = 5;
+	options.concurrency = 2;
 	return new Api(options);
 });
 
