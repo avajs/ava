@@ -226,7 +226,7 @@ function generateTests(prefix, apiCreator) {
 		api.run([path.join(__dirname, 'fixture/fail-fast.js')])
 			.then(function (result) {
 				t.ok(api.options.failFast);
-				t.same(tests, [{
+				t.strictDeepEqual(tests, [{
 					ok: true,
 					title: 'first pass'
 				}, {
@@ -729,7 +729,7 @@ function generateTests(prefix, apiCreator) {
 		api.on('test-run', function (runStatus) {
 			runStatus.on('dependencies', function (file, dependencies) {
 				t.notEqual(testFiles.indexOf(file), -1);
-				t.same(dependencies.slice(-3), sourceFiles);
+				t.strictDeepEqual(dependencies.slice(-3), sourceFiles);
 			});
 
 			// The test files are designed to cause errors so ignore them here.
@@ -950,4 +950,3 @@ function generateTests(prefix, apiCreator) {
 		]);
 	});
 }
-

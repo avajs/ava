@@ -65,7 +65,7 @@ test('all sync - all pass - no bail', function (t) {
 		false
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: true,
 		reason: null,
 		result: [
@@ -87,7 +87,7 @@ test('all sync - no failure - bail', function (t) {
 		true
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: true,
 		reason: null,
 		result: [
@@ -109,7 +109,7 @@ test('all sync - begin failure - no bail', function (t) {
 		false
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'a',
 		result: [
@@ -131,7 +131,7 @@ test('all sync - mid failure - no bail', function (t) {
 		false
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'b',
 		result: [
@@ -153,7 +153,7 @@ test('all sync - end failure - no bail', function (t) {
 		false
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'c',
 		result: [
@@ -175,7 +175,7 @@ test('all sync - multiple failure - no bail', function (t) {
 		false
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'a',
 		result: [
@@ -197,7 +197,7 @@ test('all sync - begin failure - bail', function (t) {
 		true
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'a',
 		result: [
@@ -217,7 +217,7 @@ test('all sync - mid failure - bail', function (t) {
 		true
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'b',
 		result: [
@@ -238,7 +238,7 @@ test('all sync - end failure - bail', function (t) {
 		true
 	).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: false,
 		reason: 'c',
 		result: [
@@ -259,7 +259,7 @@ test('all async - no failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -281,7 +281,7 @@ test('all async - no failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -303,7 +303,7 @@ test('last async - no failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -325,7 +325,7 @@ test('mid async - no failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -347,7 +347,7 @@ test('first async - no failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -369,7 +369,7 @@ test('last async - no failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -391,7 +391,7 @@ test('mid async - no failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -413,7 +413,7 @@ test('first async - no failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: true,
 			reason: null,
 			result: [
@@ -435,7 +435,7 @@ test('all async - begin failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'a',
 			result: [
@@ -455,7 +455,7 @@ test('all async - mid failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'b',
 			result: [
@@ -476,7 +476,7 @@ test('all async - end failure - bail', function (t) {
 		],
 		true
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'c',
 			result: [
@@ -498,7 +498,7 @@ test('all async - begin failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'a',
 			result: [
@@ -520,7 +520,7 @@ test('all async - mid failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'b',
 			result: [
@@ -542,7 +542,7 @@ test('all async - end failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'c',
 			result: [
@@ -564,7 +564,7 @@ test('all async - multiple failure - no bail', function (t) {
 		],
 		false
 	).run().then(function (result) {
-		t.same(result, {
+		t.strictDeepEqual(result, {
 			passed: false,
 			reason: 'a',
 			result: [
@@ -619,7 +619,7 @@ test('sequences of sequences', function (t) {
 		new Concurrent([pass('c')])
 	]).run();
 
-	t.same(result, {
+	t.strictDeepEqual(result, {
 		passed: true,
 		reason: null,
 		result: [

@@ -111,7 +111,7 @@ test('hasExclusive is set when an exclusive test is added', function (t) {
 test('adding a concurrent test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({}, 'foo'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		tests: {
 			concurrent: ['foo']
 		}
@@ -122,7 +122,7 @@ test('adding a concurrent test', function (t) {
 test('adding a serial test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({serial: true}, 'bar'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		tests: {
 			serial: ['bar']
 		}
@@ -133,7 +133,7 @@ test('adding a serial test', function (t) {
 test('adding a before test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'before'}, 'baz'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			before: ['baz']
 		}
@@ -144,7 +144,7 @@ test('adding a before test', function (t) {
 test('adding a beforeEach test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'beforeEach'}, 'foo'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			beforeEach: ['foo']
 		}
@@ -155,7 +155,7 @@ test('adding a beforeEach test', function (t) {
 test('adding a after test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'after'}, 'bar'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			after: ['bar']
 		}
@@ -166,7 +166,7 @@ test('adding a after test', function (t) {
 test('adding a afterEach test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'afterEach'}, 'baz'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			afterEach: ['baz']
 		}
@@ -181,7 +181,7 @@ test('adding a bunch of different types', function (t) {
 	collection.add(mockTest({serial: true}, 'c'));
 	collection.add(mockTest({serial: true}, 'd'));
 	collection.add(mockTest({type: 'before'}, 'e'));
-	t.same(serialize(collection), {
+	t.strictDeepEqual(serialize(collection), {
 		tests: {
 			concurrent: ['a', 'b'],
 			serial: ['c', 'd']
@@ -225,7 +225,7 @@ test('foo', function (t) {
 
 	t.is(result.passed, true);
 
-	t.same(log, [
+	t.strictDeepEqual(log, [
 		'before1',
 		'before2',
 		'beforeEach1 for test1',
@@ -282,7 +282,7 @@ test('foo', function (t) {
 
 	t.is(result.passed, true);
 
-	t.same(log, [
+	t.strictDeepEqual(log, [
 		'before1',
 		'before2',
 		'beforeEach1 for test1',

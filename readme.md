@@ -921,6 +921,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
 - [Configuring Babel](docs/recipes/babelrc.md)
+- [Testing React components](docs/recipes/react.md)
 
 ## Support
 

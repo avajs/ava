@@ -569,7 +569,7 @@ test('assertions return promises', function (t) {
 test('contextRef', function (t) {
 	new Test('foo',
 		function (a) {
-			t.same(a.context, {foo: 'bar'});
+			t.strictDeepEqual(a.context, {foo: 'bar'});
 			t.end();
 		},
 		{context: {foo: 'bar'}}

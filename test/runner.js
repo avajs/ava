@@ -49,7 +49,7 @@ test('run serial tests before concurrent ones', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(arr, ['a', 'b', 'c']);
+		t.strictDeepEqual(arr, ['a', 'b', 'c']);
 		t.end();
 	});
 });
@@ -84,7 +84,7 @@ test('anything can be skipped', function (t) {
 
 	runner.run({}).then(function () {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
-		t.same(arr, [
+		t.strictDeepEqual(arr, [
 			'before',
 			'beforeEach',
 			'serial',
@@ -123,7 +123,7 @@ test('include skipped tests in results', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(titles, [
+		t.strictDeepEqual(titles, [
 			'before',
 			'before.skip',
 			'beforeEach for test',
@@ -198,7 +198,7 @@ test('skip test', function (t) {
 		t.is(stats.testCount, 2);
 		t.is(stats.passCount, 1);
 		t.is(stats.skipCount, 1);
-		t.same(arr, ['a']);
+		t.strictDeepEqual(arr, ['a']);
 		t.end();
 	});
 });
@@ -237,7 +237,7 @@ test('todo test', function (t) {
 		t.is(stats.testCount, 2);
 		t.is(stats.passCount, 1);
 		t.is(stats.todoCount, 1);
-		t.same(arr, ['a']);
+		t.strictDeepEqual(arr, ['a']);
 		t.end();
 	});
 });
@@ -259,7 +259,7 @@ test('only test', function (t) {
 	runner.run({}).then(function (stats) {
 		t.is(stats.testCount, 1);
 		t.is(stats.passCount, 1);
-		t.same(arr, ['b']);
+		t.strictDeepEqual(arr, ['b']);
 		t.end();
 	});
 });
@@ -302,7 +302,7 @@ test('options.serial forces all tests to be serial', function (t) {
 	});
 
 	runner.test(function () {
-		t.same(arr, [1, 2]);
+		t.strictDeepEqual(arr, [1, 2]);
 		t.end();
 	});
 
@@ -350,11 +350,11 @@ test('options.bail will bail out (async)', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(tests, [1]);
+		t.strictDeepEqual(tests, [1]);
 		// With concurrent tests there is no stopping the second `setTimeout` callback from happening.
 		// See the `bail + serial` test below for comparison
 		setTimeout(function () {
-			t.same(tests, [1, 2]);
+			t.strictDeepEqual(tests, [1, 2]);
 			t.end();
 		}, 250);
 	});
@@ -382,9 +382,9 @@ test('options.bail + serial - tests will never happen (async)', function (t) {
 	});
 
 	runner.run({}).then(function () {
-		t.same(tests, [1]);
+		t.strictDeepEqual(tests, [1]);
 		setTimeout(function () {
-			t.same(tests, [1]);
+			t.strictDeepEqual(tests, [1]);
 			t.end();
 		}, 250);
 	});

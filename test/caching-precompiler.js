@@ -145,8 +145,8 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.false(options.ast);
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
-	t.same(options.presets, ['stage-2', 'es2015']);
-	t.same(options.plugins, [customPlugin, powerAssert, throwsHelper, rewrite, transformRuntime]);
+	t.strictDeepEqual(options.presets, ['stage-2', 'es2015']);
+	t.strictDeepEqual(options.plugins, [customPlugin, powerAssert, throwsHelper, rewrite, transformRuntime]);
 	t.end();
 });
 
@@ -157,6 +157,6 @@ test('does not modify plugins array in babelConfig', function (t) {
 	});
 
 	precompiler.precompileFile(fixture('es2015.js'));
-	t.same(plugins, []);
+	t.strictDeepEqual(plugins, []);
 	t.end();
 });
