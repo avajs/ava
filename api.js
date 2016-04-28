@@ -237,15 +237,17 @@ Api.prototype._runNoPool = function (files, runStatus) {
 	});
 };
 
-Api._blankResults = {
-	stats: {
-		testCount: 0,
-		passCount: 0,
-		skipCount: 0,
-		todoCount: 0,
-		failCount: 0
-	},
-	tests: []
+var getBlankResults = function () {
+	return {
+		stats: {
+			testCount: 0,
+			passCount: 0,
+			skipCount: 0,
+			todoCount: 0,
+			failCount: 0
+		},
+		tests: []
+	};
 };
 
 Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
@@ -277,7 +279,7 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 				file: path.relative('.', file)
 			});
 
-			return Api._blankResults;
+			return getBlankResults();
 		}
 	}, {concurrency: concurrency})
 		.then(function (results) {
@@ -304,18 +306,17 @@ Api.prototype._generateRunner = function (file, test, runStatus, cb) {
 						exception: new AvaError('Couldn\'t find any matching tests'),
 						file: undefined
 					});
-					cb(Api._blankResults);
-					return;
+				} else {
+					// The test failed catastrophically. Flag it up as an
+					// exception, then return an empty result. Other tests may
+					// continue to run.
+					runStatus.handleExceptions({
+						exception: err,
+						file: path.relative('.', file)
+					});
 				}
-				// The test failed catastrophically. Flag it up as an
-				// exception, then return an empty result. Other tests may
-				// continue to run.
-				runStatus.handleExceptions({
-					exception: err,
-					file: path.relative('.', file)
-				});
 
-				cb(Api._blankResults);
+				cb(getBlankResults());
 			});
 	};
 };
