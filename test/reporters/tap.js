@@ -186,7 +186,7 @@ test('reporter strips ANSI characters', function (t) {
 	var reporter = tapReporter();
 
 	var output = reporter.test({
-		title: chalk.gray.dim('test ' + chalk.gray.dim('›') + ' my test'),
+		title: 'test ' + chalk.gray.dim('›') + ' my test',
 		type: 'test',
 		file: 'test.js'
 	});
