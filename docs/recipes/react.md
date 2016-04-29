@@ -1,5 +1,7 @@
 # Testing React components
 
+Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/react.md)
+
 ## Setting up Babel
 
 The first step is setting up Babel to transpile JSX code from the tests by adding an AVA section to your package.json:
