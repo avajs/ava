@@ -190,7 +190,7 @@ test('reporter strips ANSI characters', function (t) {
 	  file: 'test.js'
 	};
 
-	var output = reporter.test(test)
+	var output = reporter.test(test);
 
 	t.notOk(hasAnsi(output.title));
 	t.end();
