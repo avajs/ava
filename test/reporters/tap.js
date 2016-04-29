@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tap').test;
 var hasAnsi = require('has-ansi');
+var chalk = require('chalk');
 var tapReporter = require('../../lib/reporters/tap');
 
 test('start', function (t) {
@@ -184,13 +185,11 @@ test('skip test', function (t) {
 test('reporter strips ANSI characters', function (t) {
 	var reporter = tapReporter();
 
-	var test = {
-		title: 'test \u001b[90m\u001b[2m›\u001b[22m\u001b[39m my test',
+	var output = reporter.test({
+		title: chalk.gray.dim('test \u001b[90m\u001b[2m›\u001b[22m\u001b[39m my test'),
 		type: 'test',
 		file: 'test.js'
-	};
-
-	var output = reporter.test(test);
+	});
 
 	t.notOk(hasAnsi(output.title));
 	t.end();
