@@ -132,8 +132,6 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 ```console
 $ ava --help
 
-  Futuristic test runner 🚀
-
   Usage
     ava [<file|directory|glob> ...]
 
