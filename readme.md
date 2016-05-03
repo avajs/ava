@@ -418,9 +418,9 @@ test.todo('will think about writing this later');
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. `test.after.always()` registers a hook to be run **always** after the last test, even if before hook/some tests fail.
 
-`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test.
+`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. `test.afterEach.always()` registers a hook to be run **always** after each test, even if beforeEach hook/the test fails.
 
 Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
 
@@ -439,12 +439,20 @@ test.after('cleanup', t => {
 	// this runs after all tests
 });
 
+test.after.always('always cleanup', t => {
+	// this runs always after all tests
+});
+
 test.beforeEach(t => {
 	// this runs before each test
 });
 
 test.afterEach(t => {
 	// this runs after each test
+});
+
+test.afterEach.always(t => {
+	// this runs always after each test
 });
 
 test(t => {
