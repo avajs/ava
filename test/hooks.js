@@ -59,6 +59,68 @@ test('after', function (t) {
 	});
 });
 
+test('after not run if test failed', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.after(function () {
+		arr.push('a');
+	});
+
+	runner.test(function () {
+		throw new Error('something went wrong');
+	});
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 0);
+		t.is(stats.failCount, 1);
+		t.strictDeepEqual(arr, []);
+		t.end();
+	});
+});
+
+test('after.always run even if test failed', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.after.always(function () {
+		arr.push('a');
+	});
+
+	runner.test(function () {
+		throw new Error('something went wrong');
+	});
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 0);
+		t.is(stats.failCount, 1);
+		t.strictDeepEqual(arr, ['a']);
+		t.end();
+	});
+});
+
+test('after.always run even if before failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.before(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.after.always(function () {
+		arr.push('a');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, ['a']);
+		t.end();
+	});
+});
+
 test('stop if before hooks failed', function (t) {
 	t.plan(1);
 
@@ -219,6 +281,110 @@ test('after each with serial tests', function (t) {
 
 	runner.run({}).then(function () {
 		t.strictDeepEqual(arr, ['c', 'a', 'b', 'd', 'a', 'b']);
+		t.end();
+	});
+});
+
+test('afterEach not run if concurrent tests failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.afterEach(function () {
+		arr.push('a');
+	});
+
+	runner.test(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, []);
+		t.end();
+	});
+});
+
+test('afterEach not run if serial tests failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.afterEach(function () {
+		arr.push('a');
+	});
+
+	runner.serial(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, []);
+		t.end();
+	});
+});
+
+test('afterEach.always run even if concurrent tests failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.afterEach.always(function () {
+		arr.push('a');
+	});
+
+	runner.test(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, ['a']);
+		t.end();
+	});
+});
+
+test('afterEach.always run even if serial tests failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.afterEach.always(function () {
+		arr.push('a');
+	});
+
+	runner.serial(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, ['a']);
+		t.end();
+	});
+});
+
+test('afterEach.always run even if beforeEach failed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+	var arr = [];
+
+	runner.beforeEach(function () {
+		throw new Error('something went wrong');
+	});
+
+	runner.test(function () {
+		arr.push('a');
+	});
+
+	runner.afterEach.always(function () {
+		arr.push('b');
+	});
+
+	runner.run({}).then(function () {
+		t.strictDeepEqual(arr, ['b']);
 		t.end();
 	});
 });
