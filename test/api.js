@@ -949,7 +949,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', function (runStatus) {
 			runStatus.on('test', function (data) {
-				t.is(data.title, 'match-no-match-2 › this test will match');
+				t.match(data.title, /^match-no-match-2 .+ this test will match$/);
 			});
 			runStatus.on('error', function (err) {
 				t.fail('Unexpected failure: ' + err);
