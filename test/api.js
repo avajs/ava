@@ -19,6 +19,44 @@ generateTests('Without Pool: ', function (options) {
 	return new Api(options);
 });
 
+// The following two tests are only run against "Without Pool" behavior as they test the exclusive test features. These
+// features are currently not expected to work correctly in the limited process pool. When the limited process pool
+// behavior is finalized this test file will be updated. See: https://github.com/sindresorhus/ava/pull/791#issuecomment-216293302
+test('Without Pool: test file with exclusive tests causes non-exclusive tests in other files to be ignored', function (t) {
+	t.plan(4);
+
+	var files = [
+		path.join(__dirname, 'fixture/exclusive.js'),
+		path.join(__dirname, 'fixture/exclusive-nonexclusive.js'),
+		path.join(__dirname, 'fixture/one-pass-one-fail.js')
+	];
+
+	var api = new Api();
+
+	api.run(files)
+		.then(function (result) {
+			t.ok(result.hasExclusive);
+			t.is(result.testCount, 2);
+			t.is(result.passCount, 2);
+			t.is(result.failCount, 0);
+		});
+});
+
+test('Without Pool: test files can be forced to run in exclusive mode', function (t) {
+	t.plan(4);
+
+	var api = new Api();
+	return api.run(
+		[path.join(__dirname, 'fixture/es2015.js')],
+		{runOnlyExclusive: true}
+	).then(function (result) {
+		t.ok(result.hasExclusive);
+		t.is(result.testCount, 0);
+		t.is(result.passCount, 0);
+		t.is(result.failCount, 0);
+	});
+});
+
 generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
@@ -658,41 +696,6 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'test file with exclusive tests causes non-exclusive tests in other files to be ignored', function (t) {
-		t.plan(4);
-
-		var files = [
-			path.join(__dirname, 'fixture/exclusive.js'),
-			path.join(__dirname, 'fixture/exclusive-nonexclusive.js'),
-			path.join(__dirname, 'fixture/one-pass-one-fail.js')
-		];
-
-		var api = apiCreator();
-
-		api.run(files)
-			.then(function (result) {
-				t.ok(result.hasExclusive);
-				t.is(result.testCount, 2);
-				t.is(result.passCount, 2);
-				t.is(result.failCount, 0);
-			});
-	});
-
-	test(prefix + 'test files can be forced to run in exclusive mode', function (t) {
-		t.plan(4);
-
-		var api = apiCreator();
-		return api.run(
-			[path.join(__dirname, 'fixture/es2015.js')],
-			{runOnlyExclusive: true}
-		).then(function (result) {
-			t.ok(result.hasExclusive);
-			t.is(result.testCount, 0);
-			t.is(result.passCount, 0);
-			t.is(result.failCount, 0);
-		});
-	});
-
 	test(prefix + 'resets state before running', function (t) {
 		t.plan(2);
 
@@ -922,13 +925,45 @@ function generateTests(prefix, apiCreator) {
 		});
 
 		api.on('test-run', function (runStatus) {
+			runStatus.on('test', function (data) {
+				t.fail("Unexpected test run: " + data.title);
+			});
 			runStatus.on('error', function (err) {
 				t.is(err.name, 'AvaError');
 				t.match(err.message, /Couldn't find any matching tests/);
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/match-no-match.js')]);
+		return api.run([
+			path.join(__dirname, 'fixture/match-no-match.js'),
+			path.join(__dirname, 'fixture/match-no-match-2.js')
+		]);
+	});
+
+	test(prefix + 'using --match with matching tests will only report those passing tests', function (t) {
+		t.plan(2);
+
+		var api = apiCreator({
+			match: ['this test will match']
+		});
+
+		api.on('test-run', function (runStatus) {
+			runStatus.on('test', function (data) {
+				t.is(data.title, 'match-no-match-2 › this test will match');
+			});
+			runStatus.on('error', function (err) {
+				t.fail("Unexpected failure: " + err);
+			});
+		});
+
+		return api.run([
+			path.join(__dirname, 'fixture/match-no-match.js'),
+			path.join(__dirname, 'fixture/match-no-match-2.js')
+		]).then(function (result) {
+			t.is(result.passCount, 1);
+		}).catch(function () {
+			t.fail();
+		});
 	});
 
 	test(prefix + 'errors thrown when running files are emitted', function (t) {

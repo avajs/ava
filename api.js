@@ -120,6 +120,7 @@ Api.prototype._run = function (files, _options) {
 	if (this.options.concurrency > 0) {
 		overwatch = this._runLimitedPool(files, runStatus, self.options.serial ? 1 : this.options.concurrency);
 	} else {
+		// _runNoPool exists to preserve legacy behavior, specifically around `.only`
 		overwatch = this._runNoPool(files, runStatus);
 	}
 
@@ -166,15 +167,7 @@ Api.prototype._runNoPool = function (files, runStatus) {
 						file: path.relative('.', file)
 					});
 
-					return {
-						stats: {
-							passCount: 0,
-							skipCount: 0,
-							todoCount: 0,
-							failCount: 0
-						},
-						tests: []
-					};
+					return getBlankResults();
 				});
 			}));
 		}
@@ -237,7 +230,7 @@ Api.prototype._runNoPool = function (files, runStatus) {
 	});
 };
 
-var getBlankResults = function () {
+function getBlankResults() {
 	return {
 		stats: {
 			testCount: 0,
@@ -248,7 +241,7 @@ var getBlankResults = function () {
 		},
 		tests: []
 	};
-};
+}
 
 Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 	var self = this;
@@ -265,58 +258,56 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 		try {
 			var test = tests[file] = self._runFile(file, runStatus);
 
-			return new Promise(function (resolve) {
-				var runner = self._generateRunner(file, test, runStatus, resolve);
+			return new Promise(function (resolve, reject) {
+				var runner = function () {
+					self.emit('ready');
+					var options = {
+						// If we're looking for matches, run every single test process in exclusive-only mode
+						runOnlyExclusive: self.options.match.length > 0
+					};
+					test.run(options)
+						.then(resolve)
+						.catch(reject);
+				};
+
 				test.on('stats', runner);
 				test.on('exit', function () {
 					delete tests[file];
 				});
 				test.catch(runner);
+			}).catch(function (err) {
+				runStatus.handleExceptions({
+					exception: err,
+					file: path.relative('.', file)
+				});
 			});
 		} catch (err) {
 			runStatus.handleExceptions({
 				exception: err,
 				file: path.relative('.', file)
 			});
-
-			return getBlankResults();
 		}
 	}, {concurrency: concurrency})
 		.then(function (results) {
+			results = results.filter(function (result) {
+				return Boolean(result); // Filter out undefined results (usually result of caught exceptions)
+			});
+
 			// cancel debounced _onTimeout() from firing
 			if (self.options.timeout) {
 				runStatus._restartTimer.cancel();
 			}
 
+			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+				runStatus.handleExceptions({
+					exception: new AvaError('Couldn\'t find any matching tests'),
+					file: undefined
+				});
+				runStatus.processResults([]);
+				return runStatus;
+			}
+
 			runStatus.processResults(results);
 			return runStatus;
 		});
-};
-
-Api.prototype._generateRunner = function (file, test, runStatus, cb) {
-	var self = this;
-	return function () {
-		self.emit('ready');
-		var options = {};
-		test.run(options)
-			.then(cb)
-			.catch(function (err) {
-				if (self.options.match.length > 0 && !runStatus.hasExclusive) {
-					runStatus.handleExceptions({
-						exception: new AvaError('Couldn\'t find any matching tests'),
-						file: undefined
-					});
-				} else {
-					// The test failed catastrophically. Flag it up as an
-					// exception, then return an empty result. Other tests may
-					// continue to run.
-					runStatus.handleExceptions({
-						exception: err,
-						file: path.relative('.', file)
-					});
-				}
-
-				cb(getBlankResults());
-			});
-	};
 };
