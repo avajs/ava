@@ -926,7 +926,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', function (runStatus) {
 			runStatus.on('test', function (data) {
-				t.fail("Unexpected test run: " + data.title);
+				t.fail('Unexpected test run: ' + data.title);
 			});
 			runStatus.on('error', function (err) {
 				t.is(err.name, 'AvaError');
@@ -952,7 +952,7 @@ function generateTests(prefix, apiCreator) {
 				t.is(data.title, 'match-no-match-2 › this test will match');
 			});
 			runStatus.on('error', function (err) {
-				t.fail("Unexpected failure: " + err);
+				t.fail('Unexpected failure: ' + err);
 			});
 		});
 
