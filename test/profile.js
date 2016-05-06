@@ -3,6 +3,7 @@ var path = require('path');
 var test = require('tap').test;
 var execa = require('execa');
 var arrify = require('arrify');
+global.Promise = require('bluebird');
 
 var cwd = path.join(__dirname, '..');
 var profileScript = path.join(cwd, 'profile.js');

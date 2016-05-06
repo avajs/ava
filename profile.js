@@ -105,7 +105,10 @@ events.on('results', function (data) {
 	console.log('RESULTS:', data.stats);
 
 	if (process.exit) {
-		process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line
+		// Delay is For Node 0.10 which emits uncaughtExceptions async.
+		setTimeout(function () {
+			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line
+		}, 20);
 	}
 });
 
