@@ -82,7 +82,7 @@ process.send = function (data) {
 	if (data && data.ava) {
 		var name = data.name.replace(/^ava-/, '');
 
-		if (events.listenerCount(name)) {
+		if (events.listeners(name).length > 0) {
 			events.emit(name, data.data);
 		} else {
 			console.log('UNHANDLED AVA EVENT:', name, data.data);
