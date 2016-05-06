@@ -12,11 +12,11 @@ var fixtureDir = path.join(cwd, 'test', 'fixture');
 function fixture(file) {
 	// add .js extension
 	file = /\.[a-z]{1,6}$/.test(file) ? file : file + '.js';
-	return path.join(fixtureDir, file);
+	return path.relative(cwd, path.join(fixtureDir, file));
 }
 
 function run(files) {
-	return execa('node', [profileScript].concat(arrify(files).map(fixture)), {cwd: cwd});
+	return execa(process.execPath, [profileScript].concat(arrify(files).map(fixture)), {cwd: cwd});
 }
 
 test('exits with 0 exit code when tests pass', function (t) {
