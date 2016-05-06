@@ -75,6 +75,7 @@ var opts = {
 };
 
 var events = new EventEmitter();
+var uncaughtExceptionCount = 0;
 
 // Mock the behavior of a parent process.
 process.send = function (data) {
@@ -102,6 +103,10 @@ events.on('results', function (data) {
 		console.profileEnd();
 	}
 	console.log('RESULTS:', data.stats);
+
+	if (process.exit) {
+		process.exit(data.stats.failCount + uncaughtExceptionCount);
+	}
 });
 
 events.on('stats', function () {
@@ -111,6 +116,7 @@ events.on('stats', function () {
 });
 
 events.on('uncaughtException', function (data) {
+	uncaughtExceptionCount++;
 	var stack = data && data.exception && data.exception.stack;
 	stack = stack || data;
 	console.log(stack);
