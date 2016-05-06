@@ -39,7 +39,7 @@ test('exits with 1 exit code when one test fails', function (t) {
 		.catch(function (err) {
 			t.is(err.code, 1);
 			t.end();
-		})
+		});
 });
 
 test('exits with non-zero exit code when there is an uncaught exception', function (t) {
@@ -51,5 +51,5 @@ test('exits with non-zero exit code when there is an uncaught exception', functi
 		.catch(function (err) {
 			t.true(err.code > 0);
 			t.end();
-		})
+		});
 });
