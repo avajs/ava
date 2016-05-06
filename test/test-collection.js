@@ -100,6 +100,14 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	t.end();
 });
 
+test('throws if you try to set a before hook as alwyas', function (t) {
+	var collection = new TestCollection();
+	t.throws(function () {
+		collection.add(mockTest({type: 'before', always: true}));
+	}, {message: '"always" cannot be used with a before test'});
+	t.end();
+});
+
 test('hasExclusive is set when an exclusive test is added', function (t) {
 	var collection = new TestCollection();
 	t.false(collection.hasExclusive);
