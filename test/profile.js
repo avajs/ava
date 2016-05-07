@@ -19,7 +19,7 @@ function run(files) {
 	return execa(process.execPath, [profileScript].concat(arrify(files).map(fixture)), {cwd: cwd});
 }
 
-test('exits with 0 exit code when tests pass', function (t) {
+test('exits normally when tests pass', function (t) {
 	t.plan(1);
 	run('es2015')
 		.catch(function (e) {
@@ -31,26 +31,26 @@ test('exits with 0 exit code when tests pass', function (t) {
 		});
 });
 
-test('exits with 1 exit code when one test fails', function (t) {
+test('exits with a non-zero exit code when one test fails', function (t) {
 	t.plan(1);
 	run('one-pass-one-fail')
 		.then(function () {
 			t.fail();
 		})
 		.catch(function (err) {
-			t.is(err.code, 1);
+			t.true(Boolean(err.code));
 			t.end();
 		});
 });
 
-test('exits with non-zero exit code when there is an uncaught exception', function (t) {
+test('exits with a non-zero exit code when there is an uncaught exception', function (t) {
 	t.plan(1);
 	run('uncaught-exception')
 		.then(function () {
 			t.fail();
 		})
 		.catch(function (err) {
-			t.true(err.code > 0);
+			t.true(Boolean(err.code));
 			t.end();
 		});
 });
