@@ -106,7 +106,15 @@ test('throws if you try to set a before hook as always', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add(mockTest({type: 'before', always: true}));
-	}, {message: '"always" cannot be used with a before test'});
+	}, {message: '"always" can only be used with after and afterEach hooks'});
+	t.end();
+});
+
+test('throws if you try to set a test as always', function (t) {
+	var collection = new TestCollection();
+	t.throws(function () {
+		collection.add(mockTest({always: true}));
+	}, {message: '"always" can only be used with after and afterEach hooks'});
 	t.end();
 });
 
