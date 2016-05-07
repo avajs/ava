@@ -255,6 +255,13 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 	});
 
 	return Promise.map(files, function (file) {
+		var handleException = function (err) {
+			runStatus.handleExceptions({
+				exception: err,
+				file: path.relative('.', file)
+			});
+		};
+
 		try {
 			var test = tests[file] = self._runFile(file, runStatus);
 
@@ -275,23 +282,14 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 					delete tests[file];
 				});
 				test.catch(runner);
-			}).catch(function (err) {
-				runStatus.handleExceptions({
-					exception: err,
-					file: path.relative('.', file)
-				});
-			});
+			}).catch(handleException);
 		} catch (err) {
-			runStatus.handleExceptions({
-				exception: err,
-				file: path.relative('.', file)
-			});
+			handleException(err);
 		}
 	}, {concurrency: concurrency})
 		.then(function (results) {
-			results = results.filter(function (result) {
-				return Boolean(result); // Filter out undefined results (usually result of caught exceptions)
-			});
+			// Filter out undefined results (usually result of caught exceptions)
+			results = results.filter(Boolean);
 
 			// cancel debounced _onTimeout() from firing
 			if (self.options.timeout) {
@@ -299,12 +297,12 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 			}
 
 			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+				// Ensure results are empty
+				results = [];
 				runStatus.handleExceptions({
 					exception: new AvaError('Couldn\'t find any matching tests'),
 					file: undefined
 				});
-				runStatus.processResults([]);
-				return runStatus;
 			}
 
 			runStatus.processResults(results);
