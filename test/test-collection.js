@@ -102,7 +102,7 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	t.end();
 });
 
-test('throws if you try to set a before hook as alwyas', function (t) {
+test('throws if you try to set a before hook as always', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add(mockTest({type: 'before', always: true}));
