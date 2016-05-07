@@ -8,7 +8,8 @@ function defaults() {
 		serial: false,
 		exclusive: false,
 		skipped: false,
-		callback: false
+		callback: false,
+		always: false
 	};
 }
 
