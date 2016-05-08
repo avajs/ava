@@ -61,6 +61,9 @@ if (cli.input.length !== 1) {
 
 var file = path.resolve(cli.input[0]);
 var cacheDir = findCacheDir({name: 'ava', files: [file]}) || uniqueTempDir();
+var precompiled = {};
+precompiled[file] = new CachingPrecompiler(cacheDir, conf.babel).precompileFile(file);
+
 var opts = {
 	file: file,
 	failFast: cli.flags.failFast,
@@ -68,17 +71,18 @@ var opts = {
 	require: arrify(cli.flags.require),
 	tty: false,
 	cacheDir: cacheDir,
-	precompiled: new CachingPrecompiler(cacheDir, conf.babel).generateHashForFile(file)
+	precompiled: precompiled
 };
 
 var events = new EventEmitter();
+var uncaughtExceptionCount = 0;
 
 // Mock the behavior of a parent process.
 process.send = function (data) {
 	if (data && data.ava) {
 		var name = data.name.replace(/^ava-/, '');
 
-		if (events.listenerCount(name)) {
+		if (events.listeners(name).length > 0) {
 			events.emit(name, data.data);
 		} else {
 			console.log('UNHANDLED AVA EVENT:', name, data.data);
@@ -95,21 +99,39 @@ events.on('test', function (data) {
 });
 
 events.on('results', function (data) {
-	console.profileEnd();
+	if (console.profileEnd) {
+		console.profileEnd();
+	}
 	console.log('RESULTS:', data.stats);
+
+	if (process.exit) {
+		// Delay is For Node 0.10 which emits uncaughtExceptions async.
+		setTimeout(function () {
+			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line
+		}, 20);
+	}
 });
 
 events.on('stats', function () {
 	setImmediate(function () {
-		process.emit('ava-run');
+		process.emit('ava-run', {});
 	});
+});
+
+events.on('uncaughtException', function (data) {
+	uncaughtExceptionCount++;
+	var stack = data && data.exception && data.exception.stack;
+	stack = stack || data;
+	console.log(stack);
 });
 
 // test-worker will read process.argv[2] for options
 process.argv[2] = JSON.stringify(opts);
 process.argv.length = 3;
 
-console.profile('AVA test-worker process');
+if (console.profile) {
+	console.profile('AVA test-worker process');
+}
 
 setImmediate(function () {
 	require('./lib/test-worker');
