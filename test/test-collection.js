@@ -8,7 +8,8 @@ function defaults() {
 		serial: false,
 		exclusive: false,
 		skipped: false,
-		callback: false
+		callback: false,
+		always: false
 	};
 }
 
@@ -69,7 +70,9 @@ function serialize(collection) {
 			before: titles(collection.hooks.before),
 			beforeEach: titles(collection.hooks.beforeEach),
 			after: titles(collection.hooks.after),
-			afterEach: titles(collection.hooks.afterEach)
+			afterAlways: titles(collection.hooks.afterAlways),
+			afterEach: titles(collection.hooks.afterEach),
+			afterEachAlways: titles(collection.hooks.afterEachAlways)
 		}
 	};
 
@@ -96,7 +99,23 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
 		collection.add(mockTest({type: 'beforeEach', exclusive: true}));
-	}, {message: '"only" cannot be used with a beforeEach test'});
+	}, {message: '"only" cannot be used with a beforeEach hook'});
+	t.end();
+});
+
+test('throws if you try to set a before hook as always', function (t) {
+	var collection = new TestCollection();
+	t.throws(function () {
+		collection.add(mockTest({type: 'before', always: true}));
+	}, {message: '"always" can only be used with after and afterEach hooks'});
+	t.end();
+});
+
+test('throws if you try to set a test as always', function (t) {
+	var collection = new TestCollection();
+	t.throws(function () {
+		collection.add(mockTest({always: true}));
+	}, {message: '"always" can only be used with after and afterEach hooks'});
 	t.end();
 });
 
@@ -163,12 +182,34 @@ test('adding a after test', function (t) {
 	t.end();
 });
 
+test('adding a after.always test', function (t) {
+	var collection = new TestCollection();
+	collection.add(mockTest({type: 'after', always: true}, 'bar'));
+	t.strictDeepEqual(serialize(collection), {
+		hooks: {
+			afterAlways: ['bar']
+		}
+	});
+	t.end();
+});
+
 test('adding a afterEach test', function (t) {
 	var collection = new TestCollection();
 	collection.add(mockTest({type: 'afterEach'}, 'baz'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			afterEach: ['baz']
+		}
+	});
+	t.end();
+});
+
+test('adding a afterEach.always test', function (t) {
+	var collection = new TestCollection();
+	collection.add(mockTest({type: 'afterEach', always: true}, 'baz'));
+	t.strictDeepEqual(serialize(collection), {
+		hooks: {
+			afterEachAlways: ['baz']
 		}
 	});
 	t.end();
@@ -211,10 +252,12 @@ test('foo', function (t) {
 	}
 
 	add('after1', {type: 'after'});
+	add('after.always', {type: 'after', always: true});
 	add('beforeEach1', {type: 'beforeEach'});
 	add('before1', {type: 'before'});
 	add('beforeEach2', {type: 'beforeEach'});
 	add('afterEach1', {type: 'afterEach'});
+	add('afterEach.always', {type: 'afterEach', always: true});
 	add('test1', {});
 	add('afterEach2', {type: 'afterEach'});
 	add('test2', {});
@@ -233,13 +276,16 @@ test('foo', function (t) {
 		'test1',
 		'afterEach1 for test1',
 		'afterEach2 for test1',
+		'afterEach.always for test1',
 		'beforeEach1 for test2',
 		'beforeEach2 for test2',
 		'test2',
 		'afterEach1 for test2',
 		'afterEach2 for test2',
+		'afterEach.always for test2',
 		'after1',
-		'after2'
+		'after2',
+		'after.always'
 	]);
 
 	t.end();
@@ -266,10 +312,12 @@ test('foo', function (t) {
 	}
 
 	add('after1', {type: 'after'});
+	add('after.always', {type: 'after', always: true});
 	add('beforeEach1', {type: 'beforeEach'});
 	add('before1', {type: 'before'});
 	add('beforeEach2', {type: 'beforeEach'});
 	add('afterEach1', {type: 'afterEach'});
+	add('afterEach.always', {type: 'afterEach', always: true});
 	add('test1', {});
 	add('afterEach2', {type: 'afterEach'});
 	add('test2', {});
@@ -290,13 +338,16 @@ test('foo', function (t) {
 		'test1',
 		'afterEach1 for test1',
 		'afterEach2 for test1',
+		'afterEach.always for test1',
 		'beforeEach1 for test2',
 		'beforeEach2 for test2',
 		'test2',
 		'afterEach1 for test2',
 		'afterEach2 for test2',
+		'afterEach.always for test2',
 		'after1',
-		'after2'
+		'after2',
+		'after.always'
 	]);
 
 	t.end();
