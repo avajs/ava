@@ -779,12 +779,14 @@ function generateTests(prefix, apiCreator) {
 		});
 
 		return api.run([
-			path.join(__dirname, 'fixture/test-count.js')
+			path.join(__dirname, 'fixture/test-count.js'),
+			path.join(__dirname, 'fixture/test-count-2.js'),
+			path.join(__dirname, 'fixture/test-count-3.js')
 		]).then(function (result) {
-			t.is(result.passCount, 1);
-			t.is(result.failCount, 1);
-			t.is(result.skipCount, 1);
-			t.is(result.todoCount, 1);
+			t.is(result.passCount, 4, 'pass count');
+			t.is(result.failCount, 3, 'fail count');
+			t.is(result.skipCount, 3, 'skip count');
+			t.is(result.todoCount, 3, 'todo count');
 		});
 	});
 
@@ -936,7 +938,8 @@ function generateTests(prefix, apiCreator) {
 
 		return api.run([
 			path.join(__dirname, 'fixture/match-no-match.js'),
-			path.join(__dirname, 'fixture/match-no-match-2.js')
+			path.join(__dirname, 'fixture/match-no-match-2.js'),
+			path.join(__dirname, 'fixture/test-count.js')
 		]);
 	});
 
@@ -958,7 +961,8 @@ function generateTests(prefix, apiCreator) {
 
 		return api.run([
 			path.join(__dirname, 'fixture/match-no-match.js'),
-			path.join(__dirname, 'fixture/match-no-match-2.js')
+			path.join(__dirname, 'fixture/match-no-match-2.js'),
+			path.join(__dirname, 'fixture/test-count.js')
 		]).then(function (result) {
 			t.is(result.passCount, 1);
 		}).catch(function () {
