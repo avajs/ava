@@ -62,9 +62,9 @@ import CustomInput from './components/custom-input.jsx';
 test('Input calls onBlur', t => {
 	const onUserBlur = sinon.spy();
 	const input = render(
-		React.createElement(CustomInput, {onUserBlur),
+		React.createElement(CustomInput, onUserBlur),
 		div
-	)
+	);
 
 	Simulate.blur(input);
 
