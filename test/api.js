@@ -384,6 +384,27 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+	test(prefix + 'stack traces for exceptions are corrected using a source map file in what looks like a browser env', function (t) {
+		t.plan(4);
+
+		var api = apiCreator({
+			cacheEnabled: true
+		});
+
+		api.on('test-run', function (runStatus) {
+			runStatus.on('error', function (data) {
+				t.match(data.message, /Thrown by source-map-fixtures/);
+				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:14.*$/m);
+			});
+		});
+
+		api.run([path.join(__dirname, 'fixture/source-map-file-browser-env.js')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+
 	test(prefix + 'stack traces for exceptions are corrected using a source map file (cache off)', function (t) {
 		t.plan(4);
 
