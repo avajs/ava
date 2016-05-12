@@ -150,8 +150,6 @@ Api.prototype._runNoPool = function (files, runStatus) {
 				return;
 			}
 
-			self.emit('ready');
-
 			var method = self.options.serial ? 'mapSeries' : 'map';
 			var options = {
 				runOnlyExclusive: runStatus.hasExclusive
@@ -267,7 +265,6 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 
 			return new Promise(function (resolve, reject) {
 				var runner = function () {
-					self.emit('ready');
 					var options = {
 						// If we're looking for matches, run every single test process in exclusive-only mode
 						runOnlyExclusive: self.options.match.length > 0
