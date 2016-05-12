@@ -116,6 +116,19 @@ Api.prototype._run = function (files, _options) {
 	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
 	self.fileCount = files.length;
 
+	var overwatch;
+	if (this.options.concurrency > 0) {
+		overwatch = this._runLimitedPool(files, runStatus, self.options.serial ? 1 : this.options.concurrency);
+	} else {
+		// _runNoPool exists to preserve legacy behavior, specifically around `.only`
+		overwatch = this._runNoPool(files, runStatus);
+	}
+
+	return overwatch;
+};
+
+Api.prototype._runNoPool = function (files, runStatus) {
+	var self = this;
 	var tests = new Array(self.fileCount);
 
 	// TODO: thid should be cleared at the end of the run
@@ -154,15 +167,7 @@ Api.prototype._run = function (files, _options) {
 						file: path.relative('.', file)
 					});
 
-					return {
-						stats: {
-							passCount: 0,
-							skipCount: 0,
-							todoCount: 0,
-							failCount: 0
-						},
-						tests: []
-					};
+					return getBlankResults();
 				});
 			}));
 		}
@@ -223,4 +228,84 @@ Api.prototype._run = function (files, _options) {
 		runStatus.processResults(results);
 		return runStatus;
 	});
+};
+
+function getBlankResults() {
+	return {
+		stats: {
+			testCount: 0,
+			passCount: 0,
+			skipCount: 0,
+			todoCount: 0,
+			failCount: 0
+		},
+		tests: []
+	};
+}
+
+Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
+	var self = this;
+	var tests = {};
+
+	runStatus.on('timeout', function () {
+		Object.keys(tests).forEach(function (file) {
+			var fork = tests[file];
+			fork.exit();
+		});
+	});
+
+	return Promise.map(files, function (file) {
+		var handleException = function (err) {
+			runStatus.handleExceptions({
+				exception: err,
+				file: path.relative('.', file)
+			});
+		};
+
+		try {
+			var test = tests[file] = self._runFile(file, runStatus);
+
+			return new Promise(function (resolve, reject) {
+				var runner = function () {
+					self.emit('ready');
+					var options = {
+						// If we're looking for matches, run every single test process in exclusive-only mode
+						runOnlyExclusive: self.options.match.length > 0
+					};
+					test.run(options)
+						.then(resolve)
+						.catch(reject);
+				};
+
+				test.on('stats', runner);
+				test.on('exit', function () {
+					delete tests[file];
+				});
+				test.catch(runner);
+			}).catch(handleException);
+		} catch (err) {
+			handleException(err);
+		}
+	}, {concurrency: concurrency})
+		.then(function (results) {
+			// Filter out undefined results (usually result of caught exceptions)
+			results = results.filter(Boolean);
+
+			// cancel debounced _onTimeout() from firing
+			if (self.options.timeout) {
+				runStatus._restartTimer.cancel();
+			}
+
+			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+				// Ensure results are empty
+				results = [];
+				runStatus.handleExceptions({
+					exception: new AvaError('Couldn\'t find any matching tests'),
+					file: undefined
+				});
+			}
+
+			runStatus.processResults(results);
+			return runStatus;
+		});
 };
