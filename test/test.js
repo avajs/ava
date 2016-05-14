@@ -5,6 +5,8 @@ var delay = require('delay');
 var isPromise = require('is-promise');
 var Test = require('../lib/test');
 
+var failingTestHint = 'Test was expected to fail, but succeeded, you should unmark the test as failing';
+
 function ava(title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
 	t.metadata = {callback: false};
@@ -61,7 +63,7 @@ test('fail a failing test if it pass', function (t) {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.message, 'Test was expected to fail, but succeeded, you should unmark the test as failing');
+	t.is(result.reason.message, failingTestHint);
 	t.end();
 });
 
@@ -174,7 +176,7 @@ test('fail a failing callback test if it passed', function (t) {
 		a.end();
 	}).run().then(function (result) {
 		t.is(result.passed, false);
-		t.is(result.reason.message, 'Test was expected to fail, but succeeded, you should unmark the test as failing');
+		t.is(result.reason.message, failingTestHint);
 		t.end();
 	});
 });
@@ -638,4 +640,16 @@ test('it is an error to set context in a hook', function (t) {
 	t.is(result.passed, false);
 	t.match(result.reason.message, /t\.context is not available in foo tests/);
 	t.end();
+});
+
+test('failing test returns a resolved promise is failure', function (t) {
+	ava.failing(function (a) {
+		a.plan(1);
+		a.notThrows(delay(10), 'foo');
+		return Promise.resolve();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.message, failingTestHint);
+		t.end();
+	});
 });
