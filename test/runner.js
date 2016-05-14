@@ -468,3 +468,56 @@ test('options.match overrides .only', function (t) {
 		t.end();
 	});
 });
+
+test('additional args will be passed as an array', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+
+	runner.test('test1', function (avaT, args) {
+		t.deepEqual(args, ['foo', 'bar']);
+	}, 'foo', 'bar');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
+		t.end();
+	});
+});
+
+test('macro functions can be named by attaching a custom function', function (t) {
+	t.plan(8);
+
+	var expectedTitles = [
+		'titleA',
+		'overridden',
+		'titleC'
+	];
+
+	var expectedArgs = [
+		['A'],
+		['B'],
+		['C']
+	];
+
+	function macroFn(avaT, args) {
+		t.is(avaT.title, expectedTitles.shift());
+		t.deepEqual(args, expectedArgs.shift());
+	}
+
+	macroFn.title = function (args) {
+		return 'title' + args[0];
+	};
+
+	var runner = new Runner();
+
+	runner.test(macroFn, 'A');
+	runner.test('overridden', macroFn, 'B');
+	runner.test(macroFn, 'C');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 3);
+		t.is(stats.testCount, 3);
+		t.end();
+	});
+});
