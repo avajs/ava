@@ -653,3 +653,14 @@ test('failing test returns a resolved promise is failure', function (t) {
 		t.end();
 	});
 });
+
+test('failing test returns a rejected promise is passing', function (t) {
+	ava.failing(function (a) {
+		a.plan(1);
+		a.notThrows(delay(10), 'foo');
+		return Promise.reject();
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
