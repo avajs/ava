@@ -55,6 +55,16 @@ test('expected failing test', function (t) {
 	t.end();
 });
 
+test('fail a failing test if it pass', function (t) {
+	var result = ava.failing('foo', function (a) {
+		a.pass();
+	}).run();
+
+	t.is(result.passed, false);
+	t.is(result.reason.message, 'Test was expected to fail, but succeeded, you should unmark the test as failing');
+	t.end();
+});
+
 test('title is optional', function (t) {
 	var result = ava(function (a) {
 		a.pass();
@@ -155,6 +165,16 @@ test('end can be used as callback with error', function (t) {
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason, err);
+		t.end();
+	});
+});
+
+test('fail a failing callback test if it passed', function (t) {
+	ava.cb.failing(function (a) {
+		a.end();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.message, 'Test was expected to fail, but succeeded, you should unmark the test as failing');
 		t.end();
 	});
 });
