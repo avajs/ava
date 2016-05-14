@@ -11,6 +11,12 @@ function ava(title, fn, contextRef, report) {
 	return t;
 }
 
+ava.failing = function (title, fn, contextRef, report) {
+	var t = new Test(title, fn, contextRef, report);
+	t.metadata = {callback: false, failing: true};
+	return t;
+};
+
 ava.cb = function (title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
 	t.metadata = {callback: true};
@@ -31,6 +37,15 @@ test('run test', function (t) {
 	}).run();
 
 	t.is(result.passed, false);
+	t.end();
+});
+
+test('expected failing test', function (t) {
+	var result = ava.failing('foo', function (a) {
+		a.fail();
+	}).run();
+
+	t.is(result.passed, true);
 	t.end();
 });
 
