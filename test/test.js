@@ -23,6 +23,12 @@ ava.cb = function (title, fn, contextRef, report) {
 	return t;
 };
 
+ava.cb.failing = function (title, fn, contextRef, report) {
+	var t = new Test(title, fn, contextRef, report);
+	t.metadata = {callback: true, failing: true};
+	return t;
+};
+
 test('must be called with new', function (t) {
 	t.throws(function () {
 		var test = Test;
@@ -148,6 +154,17 @@ test('end can be used as callback with error', function (t) {
 		a.end(err);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
+		t.is(result.reason, err);
+		t.end();
+	});
+});
+
+test('failing can work with callback', function (t) {
+	var err = new Error('failed');
+	ava.cb.failing(function (a) {
+		a.end(err);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
 		t.is(result.reason, err);
 		t.end();
 	});
