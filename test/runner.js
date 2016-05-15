@@ -2,6 +2,7 @@
 var test = require('tap').test;
 var Runner = require('../lib/runner');
 
+var slice = Array.prototype.slice;
 var noop = function () {};
 
 test('must be called with new', function (t) {
@@ -474,8 +475,8 @@ test('additional args will be passed as an array', function (t) {
 
 	var runner = new Runner();
 
-	runner.test('test1', function (avaT, args) {
-		t.deepEqual(args, ['foo', 'bar']);
+	runner.test('test1', function () {
+		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 	}, 'foo', 'bar');
 
 	runner.run({}).then(function (stats) {
@@ -500,13 +501,13 @@ test('macro functions can be named by attaching a custom function', function (t)
 		['C']
 	];
 
-	function macroFn(avaT, args) {
+	function macroFn(avaT) {
 		t.is(avaT.title, expectedTitles.shift());
-		t.deepEqual(args, expectedArgs.shift());
+		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
 	}
 
-	macroFn.title = function (args) {
-		return 'title' + args[0];
+	macroFn.title = function (firstArg) {
+		return 'title' + firstArg;
 	};
 
 	var runner = new Runner();

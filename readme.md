@@ -526,10 +526,10 @@ This means you can temporarily add `.skip` or `.only` at the end of a test or ho
 
 ### Test macros
 
-Additional arguments after the test function will be passed as an array to the test function. This is useful for creating reusable test macros.
+Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.
 
 ```js
-function macro(t, [input, expected]) {
+function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
@@ -537,14 +537,14 @@ test('2 + 2 === 4', macro, '2 + 2', 4);
 test('2 * 3 === 6', macro, '2 * 3', 6);
 ```
 
-You can build the test title programatically by attaching a `title` function to the macro:
+You can build the test title programmatically by attaching a `title` function to the macro:
 
 ```js
-function macro(t, [input, expected]) {
+function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-macro.title = ([input, expected]) => `${input} === ${expected}`;
+macro.title = (input, expected) => `${input} === ${expected}`;
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
