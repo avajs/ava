@@ -550,6 +550,23 @@ test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
 ```
 
+You can also pass arrays of macro functions:
+
+```js
+var safeEval = require('safe-eval');
+
+function evalMacro(t, input, expected) {
+	t.is(eval(input), expected);
+}
+
+function safeEvalMacro(t, input, expected) {
+	t.is(safeEval(input), expected);
+}
+
+test([evalMacro, safeEvalMacro], '2 + 2', 4);
+test([evalMacro, safeEvalMacro], '2 * 3', 6);
+```
+
 
 ### Custom assertions
 
