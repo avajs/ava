@@ -285,6 +285,22 @@ test('.throws() returns the rejection reason of promise', function (t) {
 	});
 });
 
+test('.throws should throw if passed a bad value', function (t) {
+	t.plan(1);
+
+	t.throws(function () {
+		assert.throws('not a function');
+	}, {name: 'TypeError', message: /t\.throws must be called with a function, Promise, or Observable/});
+});
+
+test('.notThrows should throw if passed a bad value', function (t) {
+	t.plan(1);
+
+	t.throws(function () {
+		assert.notThrows('not a function');
+	}, {name: 'TypeError', message: /t\.notThrows must be called with a function, Promise, or Observable/});
+});
+
 test('.notThrows()', function (t) {
 	t.doesNotThrow(function () {
 		assert.notThrows(function () {});
