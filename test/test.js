@@ -5,7 +5,7 @@ var delay = require('delay');
 var isPromise = require('is-promise');
 var Test = require('../lib/test');
 
-var failingTestHint = 'Test was expected to fail, but succeeded, you should unmark the test as failing';
+var failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
 function ava(title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
@@ -45,25 +45,6 @@ test('run test', function (t) {
 	}).run();
 
 	t.is(result.passed, false);
-	t.end();
-});
-
-test('expected failing test', function (t) {
-	var result = ava.failing('foo', function (a) {
-		a.fail();
-	}).run();
-
-	t.is(result.passed, true);
-	t.end();
-});
-
-test('fail a failing test if it pass', function (t) {
-	var result = ava.failing('foo', function (a) {
-		a.pass();
-	}).run();
-
-	t.is(result.passed, false);
-	t.is(result.reason.message, failingTestHint);
 	t.end();
 });
 
@@ -166,27 +147,6 @@ test('end can be used as callback with error', function (t) {
 		a.end(err);
 	}).run().then(function (result) {
 		t.is(result.passed, false);
-		t.is(result.reason, err);
-		t.end();
-	});
-});
-
-test('fail a failing callback test if it passed', function (t) {
-	ava.cb.failing(function (a) {
-		a.end();
-	}).run().then(function (result) {
-		t.is(result.passed, false);
-		t.is(result.reason.message, failingTestHint);
-		t.end();
-	});
-});
-
-test('failing can work with callback', function (t) {
-	var err = new Error('failed');
-	ava.cb.failing(function (a) {
-		a.end(err);
-	}).run().then(function (result) {
-		t.is(result.passed, true);
 		t.is(result.reason, err);
 		t.end();
 	});
@@ -642,10 +602,48 @@ test('it is an error to set context in a hook', function (t) {
 	t.end();
 });
 
-test('failing test returns a resolved promise is failure', function (t) {
-	ava.failing(function (a) {
-		a.plan(1);
-		a.notThrows(delay(10), 'foo');
+test('failing tests should fail', function (t) {
+	var result = ava.failing('foo', function (a) {
+		a.fail();
+	}).run();
+
+	t.is(result.passed, true);
+	t.end();
+});
+
+test('failing callback tests should end with an error', function (t) {
+	var err = new Error('failed');
+	ava.cb.failing(function (a) {
+		a.end(err);
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(result.reason, err);
+		t.end();
+	});
+});
+
+test('failing tests must not pass', function (t) {
+	var result = ava.failing('foo', function (a) {
+		a.pass();
+	}).run();
+
+	t.is(result.passed, false);
+	t.is(result.reason.message, failingTestHint);
+	t.end();
+});
+
+test('failing callback tests must not pass', function (t) {
+	ava.cb.failing(function (a) {
+		a.end();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.reason.message, failingTestHint);
+		t.end();
+	});
+});
+
+test('failing tests must not return a fulfilled promise', function (t) {
+	ava.failing(function () {
 		return Promise.resolve();
 	}).run().then(function (result) {
 		t.is(result.passed, false);
@@ -654,7 +652,7 @@ test('failing test returns a resolved promise is failure', function (t) {
 	});
 });
 
-test('failing test returns a rejected promise is passing', function (t) {
+test('failing tests pass when returning a rejected promise', function (t) {
 	ava.failing(function (a) {
 		a.plan(1);
 		a.notThrows(delay(10), 'foo');
@@ -665,7 +663,7 @@ test('failing test returns a rejected promise is passing', function (t) {
 	});
 });
 
-test('failing test with t.throws(nonThrowingPromise) is passing', function (t) {
+test('failing tests pass with `t.throws(nonThrowingPromise)`', function (t) {
 	ava.failing(function (a) {
 		a.throws(Promise.resolve(10));
 	}).run().then(function (result) {
@@ -674,7 +672,7 @@ test('failing test with t.throws(nonThrowingPromise) is passing', function (t) {
 	});
 });
 
-test('failing test with t.notThrows(throws) is failure', function (t) {
+test('failing tests fail with `t.notThrows(throws)`', function (t) {
 	ava.failing(function (a) {
 		a.notThrows(Promise.resolve('foo'));
 	}).run().then(function (result) {
