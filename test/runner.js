@@ -470,7 +470,7 @@ test('options.match overrides .only', function (t) {
 	});
 });
 
-test('additional args will be passed as an array', function (t) {
+test('macros: Additional args will be spread as additional args on implementation function', function (t) {
 	t.plan(3);
 
 	var runner = new Runner();
@@ -486,13 +486,13 @@ test('additional args will be passed as an array', function (t) {
 	});
 });
 
-test('macro functions can be named by attaching a custom function', function (t) {
+test('macros: Customize test names attaching a `title` function', function (t) {
 	t.plan(8);
 
 	var expectedTitles = [
-		'titleA',
-		'overridden',
-		'titleC'
+		'defaultA',
+		'suppliedB',
+		'defaultC'
 	];
 
 	var expectedArgs = [
@@ -506,14 +506,14 @@ test('macro functions can be named by attaching a custom function', function (t)
 		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
 	}
 
-	macroFn.title = function (firstArg) {
-		return 'title' + firstArg;
+	macroFn.title = function (title, firstArg) {
+		return (title || 'default') + firstArg;
 	};
 
 	var runner = new Runner();
 
 	runner.test(macroFn, 'A');
-	runner.test('overridden', macroFn, 'B');
+	runner.test('supplied', macroFn, 'B');
 	runner.test(macroFn, 'C');
 
 	runner.run({}).then(function (stats) {
@@ -530,7 +530,7 @@ test('match applies to macros', function (t) {
 		t.is(avaT.title, 'foobar');
 	}
 
-	macroFn.title = function (firstArg) {
+	macroFn.title = function (title, firstArg) {
 		return firstArg + 'bar';
 	};
 
@@ -592,14 +592,14 @@ test('match applies to arrays of macros', function (t) {
 	function fooMacro() {
 		t.fail();
 	}
-	fooMacro.title = function (firstArg) {
+	fooMacro.title = function (title, firstArg) {
 		return firstArg + 'foo';
 	};
 
 	function barMacro(avaT) {
 		t.is(avaT.title, 'foobar');
 	}
-	barMacro.title = function (firstArg) {
+	barMacro.title = function (title, firstArg) {
 		return firstArg + 'bar';
 	};
 
