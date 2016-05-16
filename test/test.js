@@ -674,7 +674,7 @@ test('failing test with t.throws(nonThrowingPromise) is passing', function (t) {
 	});
 });
 
-test('failing test with t.throws(throws) is failure', function (t) {
+test('failing test with t.notThrows(throws) is failure', function (t) {
 	ava.failing(function (a) {
 		a.notThrows(Promise.resolve('foo'));
 	}).run().then(function (result) {
