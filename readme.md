@@ -415,6 +415,16 @@ You can use the `.todo` modifier when you're planning to write a test. Like skip
 test.todo('will think about writing this later');
 ```
 
+### Failing tests
+
+You can use the `.failing` modifier for submitting tests that are intended to be failures without killing CI process. And if the failing test does pass, it will fail, and it will remind you remove the failing modifier.
+
+```js
+test.failing('this test prove something wrong', t => {
+	t.fail();
+}); // will count as passed test
+```
+
 ### Before & after hooks
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
