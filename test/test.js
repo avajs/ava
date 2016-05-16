@@ -260,6 +260,17 @@ test('handle notThrows with error', function (t) {
 	t.end();
 });
 
+test('fails if a bad value is passed to t.throws', function (t) {
+	var result = ava(function (a) {
+		a.throws('not a function');
+	}).run();
+
+	t.is(result.passed, false);
+	t.ok(result.reason);
+	t.is(result.reason.name, 'TypeError');
+	t.end();
+});
+
 test('handle notThrows without error', function (t) {
 	var result = ava(function (a) {
 		a.notThrows(function () {
