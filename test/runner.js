@@ -2,6 +2,7 @@
 var test = require('tap').test;
 var Runner = require('../lib/runner');
 
+var slice = Array.prototype.slice;
 var noop = function () {};
 
 test('must be called with new', function (t) {
@@ -465,6 +466,160 @@ test('options.match overrides .only', function (t) {
 		t.is(stats.skipCount, 0);
 		t.is(stats.passCount, 2);
 		t.is(stats.testCount, 2);
+		t.end();
+	});
+});
+
+test('macros: Additional args will be spread as additional args on implementation function', function (t) {
+	t.plan(3);
+
+	var runner = new Runner();
+
+	runner.test('test1', function () {
+		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
+	}, 'foo', 'bar');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
+		t.end();
+	});
+});
+
+test('macros: Customize test names attaching a `title` function', function (t) {
+	t.plan(8);
+
+	var expectedTitles = [
+		'defaultA',
+		'suppliedB',
+		'defaultC'
+	];
+
+	var expectedArgs = [
+		['A'],
+		['B'],
+		['C']
+	];
+
+	function macroFn(avaT) {
+		t.is(avaT.title, expectedTitles.shift());
+		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
+	}
+
+	macroFn.title = function (title, firstArg) {
+		return (title || 'default') + firstArg;
+	};
+
+	var runner = new Runner();
+
+	runner.test(macroFn, 'A');
+	runner.test('supplied', macroFn, 'B');
+	runner.test(macroFn, 'C');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 3);
+		t.is(stats.testCount, 3);
+		t.end();
+	});
+});
+
+test('match applies to macros', function (t) {
+	t.plan(3);
+
+	function macroFn(avaT) {
+		t.is(avaT.title, 'foobar');
+	}
+
+	macroFn.title = function (title, firstArg) {
+		return firstArg + 'bar';
+	};
+
+	var runner = new Runner({
+		match: ['foobar']
+	});
+
+	runner.test(macroFn, 'foo');
+	runner.test(macroFn, 'bar');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
+		t.end();
+	});
+});
+
+test('arrays of macros', function (t) {
+	var expectedArgsA = [
+		['A'],
+		['B'],
+		['C']
+	];
+
+	var expectedArgsB = [
+		['A'],
+		['B'],
+		['D']
+	];
+
+	function macroFnA() {
+		t.deepEqual(slice.call(arguments, 1), expectedArgsA.shift());
+	}
+
+	function macroFnB() {
+		t.deepEqual(slice.call(arguments, 1), expectedArgsB.shift());
+	}
+
+	var runner = new Runner();
+
+	runner.test([macroFnA, macroFnB], 'A');
+	runner.test([macroFnA, macroFnB], 'B');
+	runner.test(macroFnA, 'C');
+	runner.test(macroFnB, 'D');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 6);
+		t.is(stats.testCount, 6);
+		t.is(expectedArgsA.length, 0);
+		t.is(expectedArgsB.length, 0);
+		t.end();
+	});
+});
+
+test('match applies to arrays of macros', function (t) {
+	t.plan(3);
+
+	// foo
+	function fooMacro() {
+		t.fail();
+	}
+	fooMacro.title = function (title, firstArg) {
+		return firstArg + 'foo';
+	};
+
+	function barMacro(avaT) {
+		t.is(avaT.title, 'foobar');
+	}
+	barMacro.title = function (title, firstArg) {
+		return firstArg + 'bar';
+	};
+
+	function bazMacro() {
+		t.fail();
+	}
+	bazMacro.title = function (firstArg) {
+		return firstArg + 'baz';
+	};
+
+	var runner = new Runner({
+		match: ['foobar']
+	});
+
+	runner.test([fooMacro, barMacro, bazMacro], 'foo');
+	runner.test([fooMacro, barMacro, bazMacro], 'bar');
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
 		t.end();
 	});
 });

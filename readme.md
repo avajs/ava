@@ -537,6 +537,54 @@ test.only.serial(...);
 
 This means you can temporarily add `.skip` or `.only` at the end of a test or hook definition without having to make any other changes.
 
+### Test macros
+
+Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.
+
+```js
+function macro(t, input, expected) {
+	t.is(eval(input), expected);
+}
+
+test('2 + 2 === 4', macro, '2 + 2', 4);
+test('2 * 3 === 6', macro, '2 * 3', 6);
+```
+
+You can build the test title programmatically by attaching a `title` function to the macro:
+
+```js
+function macro(t, input, expected) {
+	t.is(eval(input), expected);
+}
+
+macro.title = (providedTitle, input, expected) => `${providedTitle} ${input} === ${expected}`.trim();
+
+test(macro, '2 + 2', 4);
+test(macro, '2 * 3', 6);
+test('providedTitle', macro, '3 * 3', 9);
+```
+
+The `providedTitle` argument defaults to an empty string if the user does not supply a string title. This allows for easy concatenation without having to worry about `null` / `undefined`. It is worth remembering that the empty string is considered a falsy value, so you can still use `if(providedTitle) {...}`.
+
+You can also pass arrays of macro functions:
+
+```js
+const safeEval = require('safe-eval');
+
+function evalMacro(t, input, expected) {
+	t.is(eval(input), expected);
+}
+
+function safeEvalMacro(t, input, expected) {
+	t.is(safeEval(input), expected);
+}
+
+test([evalMacro, safeEvalMacro], '2 + 2', 4);
+test([evalMacro, safeEvalMacro], '2 * 3', 6);
+```
+
+We encourage you to use macros instead of building your own test generators ([here is an example](https://github.com/jamestalmage/ava-codemods/blob/47073b5b58aa6f3fb24f98757be5d3f56218d160/test/ok-to-truthy.js#L7-L9) of code that should be replaced with a macro). Macros are designed to perform static analysis of your code, which can lead to better performance, IDE integration, and linter rules.
+
 ### Custom assertions
 
 You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
