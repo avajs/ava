@@ -415,6 +415,19 @@ You can use the `.todo` modifier when you're planning to write a test. Like skip
 test.todo('will think about writing this later');
 ```
 
+### Failing tests
+
+You can use the `.failing` modifier to document issues with your code that need to be fixed. Failing tests are run just like normal ones, but they are expected to fail, and will not break your build when they do. If a test marked as failing actually passes, it will be reported as an error and fail the build with a helpful message instructing you to remove the .failing modifier.
+
+This allows you to merge `.failing` tests before a fix is implemented without breaking CI. This is a great way to recognize good bug report PR's with a commit credit, even if the reporter is unable to actually fix the problem.
+
+```js
+// See: github.com/user/repo/issues/1234
+test.failing('demonstrate some bug', t => {
+	t.fail(); // test will count as passed
+});
+```
+
 ### Before & after hooks
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
