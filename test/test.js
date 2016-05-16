@@ -664,3 +664,22 @@ test('failing test returns a rejected promise is passing', function (t) {
 		t.end();
 	});
 });
+
+test('failing test with t.throws(nonThrowingPromise) is passing', function (t) {
+	ava.failing(function (a) {
+		a.throws(Promise.resolve(10));
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('failing test with t.throws(throws) is failure', function (t) {
+	ava.failing(function (a) {
+		a.throws(Promise.resolve('foo'));
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.is(result.message, failingTestHint);
+		t.end();
+	});
+});
