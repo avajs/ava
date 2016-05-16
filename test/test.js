@@ -5,7 +5,7 @@ var delay = require('delay');
 var isPromise = require('is-promise');
 var Test = require('../lib/test');
 
-var failingTestHint = 'Test was expected to fail, but succeeded, you should unmark the test as failing';
+var failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
 function ava(title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
