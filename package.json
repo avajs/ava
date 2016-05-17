@@ -3,7 +3,7 @@
   "version": "0.14.0",
   "description": "Futuristic test runner 🚀",
   "license": "MIT",
-  "repository": "sindresorhus/ava",
+  "repository": "avajs/ava",
   "homepage": "https://ava.li",
   "author": {
     "name": "Sindre Sorhus",

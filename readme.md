@@ -2,7 +2,7 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/sindresorhus/ava.svg?branch=master)](https://travis-ci.org/sindresorhus/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/sindresorhus/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/sindresorhus/ava?branch=master) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/sindresorhus/ava)
+[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/avajs/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/avajs/ava/badge.svg?branch=master&service=github)](https://coveralls.io/github/avajs/ava?branch=master) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
@@ -10,7 +10,7 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
-Translations: [Español](https://github.com/sindresorhus/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/sindresorhus/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/sindresorhus/ava-docs/blob/master/ja_JP/readme.md), [Português](https://github.com/sindresorhus/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/sindresorhus/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/sindresorhus/ava-docs/blob/master/zh_CN/readme.md)
+Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
 
 ## Table of Contents
 
@@ -494,7 +494,7 @@ test.afterEach.cb(t => {
 });
 ```
 
-Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/sindresorhus/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
+Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
 
 Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `after`-hook since that's only called right before the process exits.
 
@@ -589,7 +589,7 @@ We encourage you to use macros instead of building your own test generators ([he
 
 You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
 
-This won't give you as nice an experience as you'd get with the [built-in assertions](#assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/sindresorhus/ava/issues/25)).
+This won't give you as nice an experience as you'd get with the [built-in assertions](#assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/avajs/ava/issues/25)).
 
 ```js
 import assert from 'assert';
@@ -996,26 +996,26 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 ## Support
 
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
-- [Gitter chat](https://gitter.im/sindresorhus/ava)
+- [Gitter chat](https://gitter.im/avajs/ava)
 - [Twitter](https://twitter.com/ava__js)
 
 ## Related
 
-- [sublime-ava](https://github.com/sindresorhus/sublime-ava) - Snippets for AVA tests
-- [atom-ava](https://github.com/sindresorhus/atom-ava) - Snippets for AVA tests
+- [sublime-ava](https://github.com/avajs/sublime-ava) - Snippets for AVA tests
+- [atom-ava](https://github.com/avajs/atom-ava) - Snippets for AVA tests
 - [vscode-ava](https://github.com/samverschueren/vscode-ava) - Snippets for AVA tests
-- [eslint-plugin-ava](https://github.com/sindresorhus/eslint-plugin-ava) - Lint rules for AVA tests
-- [gulp-ava](https://github.com/sindresorhus/gulp-ava) - Run tests with gulp
-- [grunt-ava](https://github.com/sindresorhus/grunt-ava) - Run tests with grunt
+- [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) - Lint rules for AVA tests
+- [gulp-ava](https://github.com/avajs/gulp-ava) - Run tests with gulp
+- [grunt-ava](https://github.com/avajs/grunt-ava) - Run tests with grunt
 - [fly-ava](https://github.com/pine/fly-ava) - Run tests with fly
 - [start-ava](https://github.com/start-runner/ava) - Run tests with start
 
-[More...](https://github.com/sindresorhus/awesome-ava#packages)
+[More...](https://github.com/avajs/awesome-ava#packages)
 
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
-- [Awesome list](https://github.com/sindresorhus/awesome-ava)
+- [Awesome list](https://github.com/avajs/awesome-ava)
 - [JavaScript Air podcast episode](http://jsair.io/ava)
 
 ## Team
@@ -1032,7 +1032,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 	<br>
-	<img src="https://cdn.rawgit.com/sindresorhus/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
+	<img src="https://cdn.rawgit.com/avajs/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
 	<br>
 	<br>
 </div>

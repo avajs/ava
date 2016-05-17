@@ -49,7 +49,7 @@ var isValidShortcut = ['default', 'inherit'].indexOf(conf.babel) !== -1;
 if (!conf.babel || (typeof conf.babel === 'string' && !isValidShortcut)) {
 	var message = '';
 	message += 'Unexpected Babel configuration for AVA. ';
-	message += 'See ' + chalk.underline('https://github.com/sindresorhus/ava#es2015-support') + ' for allowed values.';
+	message += 'See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
 
 	console.log('\n  ' + colors.error(figures.cross) + ' ' + message);
 	process.exit(1);

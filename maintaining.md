@@ -1,4 +1,4 @@
-# Maintaining [![Dependency Status](https://david-dm.org/sindresorhus/ava.svg)](https://david-dm.org/sindresorhus/ava) [![devDependency Status](https://david-dm.org/sindresorhus/ava/dev-status.svg)](https://david-dm.org/sindresorhus/ava#info=devDependencies)
+# Maintaining [![Dependency Status](https://david-dm.org/avajs/ava.svg)](https://david-dm.org/avajs/ava) [![devDependency Status](https://david-dm.org/avajs/ava/dev-status.svg)](https://david-dm.org/avajs/ava#info=devDependencies)
 
 
 ## Conduct
@@ -18,9 +18,9 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 ## Release process
 
 - Bump dependencies.
-- Ensure [Travis CI](https://travis-ci.org/sindresorhus/ava) and [AppVeyor](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) are green.
+- Ensure [Travis CI](https://travis-ci.org/avajs/ava) and [AppVeyor](https://ci.appveyor.com/project/avajs/ava/branch/master) are green.
 - Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [semver](http://semver.org).
-- Write a [release note](https://github.com/sindresorhus/ava/releases/new) following the style of previous release notes.
+- Write a [release note](https://github.com/avajs/ava/releases/new) following the style of previous release notes.
 
 
 ## Pull requests
@@ -28,7 +28,7 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 - New features should come with tests and documentation.
 - Ensure the [contributing guidelines](contributing.md) are followed.
 - At least one team member must `LGTM` a pull request before it's merged.
-- Squash commits when merging. *[Example](https://github.com/sindresorhus/ava/commit/0675d3444da6958b54c7e5eada91034e516bc97c)*
+- Squash commits when merging. *[Example](https://github.com/avajs/ava/commit/0675d3444da6958b54c7e5eada91034e516bc97c)*
 
 
 ## Issue labels
