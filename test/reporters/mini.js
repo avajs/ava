@@ -157,7 +157,7 @@ test('results with passing tests', function (t) {
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
+	var actualOutput = reporter.finish({}, true);
 	var expectedOutput = [
 		'\n   ' + chalk.green('1 passed') + time,
 		''
@@ -173,7 +173,7 @@ test('results with skipped tests', function (t) {
 	reporter.skipCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
+	var actualOutput = reporter.finish({}, true);
 	var expectedOutput = [
 		'\n   ' + chalk.yellow('1 skipped') + time,
 		''
@@ -189,7 +189,7 @@ test('results with todo tests', function (t) {
 	reporter.todoCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
+	var actualOutput = reporter.finish({}, true);
 	var expectedOutput = [
 		'\n   ' + chalk.blue('1 todo') + time,
 		''
@@ -204,7 +204,7 @@ test('results with passing skipped tests', function (t) {
 	reporter.passCount = 1;
 	reporter.skipCount = 1;
 
-	var output = reporter.finish({}).split('\n');
+	var output = reporter.finish({}, true).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '   ' + chalk.green('1 passed') + time);
@@ -229,7 +229,7 @@ test('results with passing tests and rejections', function (t) {
 		errors: [err1, err2]
 	};
 
-	var output = reporter.finish(runStatus);
+	var output = reporter.finish(runStatus, true);
 	compareLineOutput(t, output, [
 		'',
 		'   ' + chalk.green('1 passed') + time,
@@ -264,7 +264,7 @@ test('results with passing tests and exceptions', function (t) {
 		errors: [err, avaErr]
 	};
 
-	var output = reporter.finish(runStatus);
+	var output = reporter.finish(runStatus, true);
 	compareLineOutput(t, output, [
 		'',
 		'   ' + chalk.green('1 passed') + time,
@@ -301,7 +301,7 @@ test('results with errors', function (t) {
 		}]
 	};
 
-	var output = reporter.finish(runStatus);
+	var output = reporter.finish(runStatus, true);
 	compareLineOutput(t, output, [
 		'',
 		'   ' + chalk.red('1 failed') + time,
@@ -328,7 +328,7 @@ test('results with 1 previous failure', function (t) {
 		previousFailCount: 1
 	};
 
-	var output = reporter.finish(runStatus);
+	var output = reporter.finish(runStatus, true);
 	compareLineOutput(t, output, [
 		'',
 		'   ' + colors.todo('1 todo') + time,
@@ -345,7 +345,7 @@ test('results with 2 previous failures', function (t) {
 		previousFailCount: 2
 	};
 
-	var output = reporter.finish(runStatus);
+	var output = reporter.finish(runStatus, true);
 	compareLineOutput(t, output, [
 		'',
 		'   ' + colors.todo('1 todo') + time,

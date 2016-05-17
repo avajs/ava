@@ -190,7 +190,7 @@ if (cli.flags.watch) {
 } else {
 	api.run(files)
 		.then(function (runStatus) {
-			logger.finish(runStatus);
+			logger.finish(runStatus, false);
 			logger.exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
 		})
 		.catch(function (err) {
