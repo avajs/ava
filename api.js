@@ -105,7 +105,7 @@ Api.prototype._run = function (files, _options) {
 			file: undefined
 		});
 
-		return Promise.resolve([]);
+		return Promise.resolve(runStatus);
 	}
 
 	var cacheEnabled = self.options.cacheEnabled !== false;
