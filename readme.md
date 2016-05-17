@@ -1,4 +1,4 @@
-# ![AVA](media/header.png)
+# [![AVA](media/header.png)](https://ava.li)
 
 > Futuristic test runner
 
@@ -1028,11 +1028,14 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 - [Kevin Mårtensson](https://github.com/kevva)
 
+
 <div align="center">
 	<br>
 	<br>
 	<br>
-	<img src="https://cdn.rawgit.com/avajs/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
+	<a href="https://ava.li">
+		<img src="https://cdn.rawgit.com/avajs/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
+	</a>
 	<br>
 	<br>
 </div>
