@@ -290,3 +290,11 @@ test('handles NODE_PATH', function (t) {
 		t.end();
 	});
 });
+
+test('works when no files are found', function (t) {
+	execCli('!*', function (err, stdout, stderr) {
+		t.is(err.code, 1);
+		t.match(stderr, 'Couldn\'t find any files to test');
+		t.end();
+	});
+});
