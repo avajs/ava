@@ -95,7 +95,7 @@ test('timeout', function (t) {
 test('throwing a named function will report the to the console', function (t) {
 	execCli('fixture/throw-named-function.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.match(stderr, /function fooFn\(\) \{\}/);
+		t.match(stderr, /function fooFn\(\)\{\}/);
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
@@ -140,7 +140,7 @@ test('babel require hook only applies to the test file', function (t) {
 test('throwing a anonymous function will report the function to the console', function (t) {
 	execCli('fixture/throw-anonymous-function.js', function (err, stdout, stderr) {
 		t.ok(err);
-		t.match(stderr, /function \(\) \{\}/);
+		t.match(stderr, /function \(\)\{\}/);
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
