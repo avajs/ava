@@ -147,7 +147,7 @@ if (cli.flags.tap && !cli.flags.watch) {
 } else if (cli.flags.verbose || isCi) {
 	reporter = verboseReporter();
 } else {
-	reporter = miniReporter({isWatching: cli.flags.watch});
+	reporter = miniReporter({watching: cli.flags.watch});
 }
 
 reporter.api = api;

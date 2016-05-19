@@ -374,7 +374,7 @@ test('full-width line when sectioning', function (t) {
 });
 
 test('results with watching enabled', function (t) {
-	var reporter = miniReporter({isWatching: true});
+	var reporter = miniReporter({watching: true});
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
