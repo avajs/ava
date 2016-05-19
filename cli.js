@@ -147,7 +147,7 @@ if (cli.flags.tap && !cli.flags.watch) {
 } else if (cli.flags.verbose || isCi) {
 	reporter = verboseReporter();
 } else {
-	reporter = miniReporter();
+	reporter = miniReporter({isWatching: cli.flags.watch});
 }
 
 reporter.api = api;
@@ -190,7 +190,7 @@ if (cli.flags.watch) {
 } else {
 	api.run(files)
 		.then(function (runStatus) {
-			logger.finish(runStatus, false);
+			logger.finish(runStatus);
 			logger.exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
 		})
 		.catch(function (err) {

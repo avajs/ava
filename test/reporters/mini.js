@@ -19,8 +19,8 @@ var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
 process.stdout.columns = 5000;
 var fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
 
-function miniReporter() {
-	var reporter = _miniReporter();
+function miniReporter(options) {
+	var reporter = _miniReporter(options);
 	reporter.start = function () {
 		return '';
 	};
@@ -374,11 +374,11 @@ test('full-width line when sectioning', function (t) {
 });
 
 test('results with watching enabled', function (t) {
-	var reporter = miniReporter();
+	var reporter = miniReporter({isWatching: true});
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({}, true);
+	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n   ' + chalk.green('1 passed') + time,
 		''
