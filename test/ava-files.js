@@ -53,20 +53,19 @@ test('sourceMatcher - defaults', function (t) {
 		t.false(matcher(file), file + ' should not be a source');
 	}
 
-	// TODO: Should these actually not be considered sources since they would match as a test?
 	isSource('foo-bar.js');
 	isSource('foo.js');
 	isSource('foo/blah.js');
 	isSource('bar/foo.js');
 
-	// TODO: Same as above - shouldn't these be "not sources" - they are test fixtures and helpers
 	isSource('_foo-bar.js');
 	isSource('foo/_foo-bar.js');
 	isSource('fixtures/foo.js');
 	isSource('helpers/foo.js');
 
-	// TODO: What if a non `.js` file is read with `fs.readFileXXX` and has an impact on behavior? Shouldn't changing it trigger a re-run? (Obviously can't take advantage of smart watcher behavior).
+	// TODO: Watcher should probably track any required file that matches the source pattern and has a require extension installed for the given extension.
 	notSource('foo-bar.json');
+	notSource('foo-bar.coffee');
 
 	// These seem OK
 	isSource('bar.js');

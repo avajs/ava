@@ -65,7 +65,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	var stdin;
 	var files;
 
-	function proxyWalker(opts) {
+	function proxyWatcher(opts) {
 		return proxyquire.noCallThru().load('../lib/watcher', opts ||
 			{
 				'chokidar': chokidar,
@@ -129,7 +129,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		stdin = new PassThrough();
 		stdin.pause();
 
-		Subject = proxyWalker();
+		Subject = proxyWatcher();
 	});
 
 	var start = function (sources) {
@@ -555,11 +555,12 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		avaFiles = function (files, sources) {
 			var ret = new AvaFiles(files, sources);
-			// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
+			// Note: There is no way for users to actually set exclude patterns yet.
+			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!*bar*'];
 			return ret;
 		};
-		Subject = proxyWalker();
+		Subject = proxyWatcher();
 
 		files = ['foo-{bar,baz}.js'];
 		api.run.returns(Promise.resolve(runStatus));
@@ -633,12 +634,13 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		avaFiles = function (files, sources) {
 			var ret = new AvaFiles(files, sources);
-			// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
+			// Note: There is no way for users to actually set exclude patterns yet.
+			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!**/exclude/**'];
 			return ret;
 		};
 
-		Subject = proxyWalker();
+		Subject = proxyWatcher();
 
 		files = ['dir'];
 		api.run.returns(Promise.resolve(runStatus));
