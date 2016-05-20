@@ -55,6 +55,26 @@ test('passing test', function (t) {
 	t.end();
 });
 
+test('known failure test', function (t) {
+	var reporter = miniReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true
+	});
+
+	var expectedOutput = [
+		' ',
+		' ' + graySpinner + ' ' + chalk.red('known failure'),
+		'',
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 known failure')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('failing test', function (t) {
 	var reporter = miniReporter();
 
@@ -68,6 +88,28 @@ test('failing test', function (t) {
 	var expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
+		'',
+		'   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failed known failure test', function (t) {
+	var reporter = miniReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true,
+		error: {
+			message: 'Test was expected to fail, but succeeded, you should stop marking the test as failing'
+		}
+	});
+
+	var expectedOutput = [
+		' ',
+		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
 		'   ' + chalk.red('1 failed')
 	].join('\n');
