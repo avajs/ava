@@ -13,7 +13,7 @@ var cliPath = path.join(__dirname, '../cli.js');
 
 // for some reason chalk is disabled by default
 chalk.enabled = true;
-var colors = require('../lib/colors');
+var colors = require('../lib/reporters/helpers/colors');
 
 function execCli(args, opts, cb) {
 	var dirname;
