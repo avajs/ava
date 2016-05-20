@@ -628,6 +628,7 @@ test('failing callback tests should end without error', function (t) {
 		a.end(err);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
+		t.is(result.reason, undefined);
 		t.end();
 	});
 });
