@@ -29,9 +29,6 @@ function miniReporter(options) {
 
 process.stderr.setMaxListeners(50);
 
-lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
-var time = ' ' + chalk.grey.dim('[17:19:12]');
-
 test('start', function (t) {
 	var reporter = _miniReporter();
 
@@ -374,6 +371,9 @@ test('full-width line when sectioning', function (t) {
 });
 
 test('results with watching enabled', function (t) {
+	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
+	var time = ' ' + chalk.grey.dim('[17:19:12]');
+
 	var reporter = miniReporter({watching: true});
 	reporter.passCount = 1;
 	reporter.failCount = 0;
