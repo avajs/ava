@@ -622,13 +622,12 @@ test('failing tests should fail', function (t) {
 	t.end();
 });
 
-test('failing callback tests should end with an error', function (t) {
+test('failing callback tests should end without error', function (t) {
 	var err = new Error('failed');
 	ava.cb.failing(function (a) {
 		a.end(err);
 	}).run().then(function (result) {
 		t.is(result.passed, true);
-		t.is(result.reason, err);
 		t.end();
 	});
 });
