@@ -243,7 +243,6 @@ test('results with passing known failure tests', function (t) {
 		'',
 		'',
 		'  ' + chalk.red('1. known failure'),
-		'',
 		''
 	].join('\n');
 
