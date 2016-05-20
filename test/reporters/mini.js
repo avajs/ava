@@ -206,6 +206,29 @@ test('results with passing tests', function (t) {
 	t.end();
 });
 
+test('results with passing known failure tests', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 1;
+	reporter.knownFailureCount = 1;
+	reporter.failCount = 0;
+
+	var runStatus = {
+		knownFailures: [{title: 'known failure', failing: true}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n   ' + chalk.green('1 passed') + time,
+		'   ' + chalk.red('1 known failure'),
+		'',
+		'',
+		'   ' + chalk.red('1. known failure'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('results with skipped tests', function (t) {
 	var reporter = miniReporter();
 	reporter.passCount = 0;
