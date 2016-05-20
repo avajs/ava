@@ -89,6 +89,20 @@ test('don\'t display test title if there is only one anonymous test', function (
 	t.end();
 });
 
+test('known failure test', function (t) {
+	var reporter = createReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true
+	}, createRunStatus());
+
+	var expectedOutput = ' ' + chalk.red('known failure');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('failing test', function (t) {
 	var reporter = createReporter();
 
