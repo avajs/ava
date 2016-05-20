@@ -25,13 +25,13 @@ For bug reports, please provide as much *relevant* info as possible.
 // Edit to just the relevant portions.
 ```
 
-### Stack Trace
+### Error Message & Stack Trace
 
 ```
-COPY THE FAILURE STACK TRACE HERE
+COPY THE ERROR MESSAGE, INCLUDING STACK TRACE HERE
 ```
 
-### Configuration
+### Config
 
 Copy the relevant section from `package.json`:
 
