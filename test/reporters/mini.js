@@ -19,8 +19,8 @@ var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
 process.stdout.columns = 5000;
 var fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
 
-function miniReporter() {
-	var reporter = _miniReporter();
+function miniReporter(options) {
+	var reporter = _miniReporter(options);
 	reporter.start = function () {
 		return '';
 	};
@@ -28,9 +28,6 @@ function miniReporter() {
 }
 
 process.stderr.setMaxListeners(50);
-
-lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
-var time = ' ' + chalk.grey.dim('[17:19:12]');
 
 test('start', function (t) {
 	var reporter = _miniReporter();
@@ -159,7 +156,7 @@ test('results with passing tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed') + time,
+		'\n   ' + chalk.green('1 passed'),
 		''
 	].join('\n');
 
@@ -175,7 +172,7 @@ test('results with skipped tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.yellow('1 skipped') + time,
+		'\n   ' + chalk.yellow('1 skipped'),
 		''
 	].join('\n');
 
@@ -191,7 +188,7 @@ test('results with todo tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.blue('1 todo') + time,
+		'\n   ' + chalk.blue('1 todo'),
 		''
 	].join('\n');
 
@@ -207,7 +204,7 @@ test('results with passing skipped tests', function (t) {
 	var output = reporter.finish({}).split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.green('1 passed') + time);
+	t.is(output[1], '   ' + chalk.green('1 passed'));
 	t.is(output[2], '   ' + chalk.yellow('1 skipped'));
 	t.is(output[3], '');
 	t.end();
@@ -232,7 +229,7 @@ test('results with passing tests and rejections', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed') + time,
+		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 rejection'),
 		'',
 		'',
@@ -267,7 +264,7 @@ test('results with passing tests and exceptions', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed') + time,
+		'   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('2 exceptions'),
 		'',
 		'',
@@ -304,7 +301,7 @@ test('results with errors', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.red('1 failed') + time,
+		'   ' + chalk.red('1 failed'),
 		'',
 		'',
 		'   ' + chalk.red('1. failed one'),
@@ -331,7 +328,7 @@ test('results with 1 previous failure', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo') + time,
+		'   ' + colors.todo('1 todo'),
 		'   ' + colors.error('1 previous failure in test files that were not rerun')
 	]);
 	t.end();
@@ -348,7 +345,7 @@ test('results with 2 previous failures', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo') + time,
+		'   ' + colors.todo('1 todo'),
 		'   ' + colors.error('2 previous failures in test files that were not rerun')
 	]);
 	t.end();
@@ -370,5 +367,23 @@ test('full-width line when sectioning', function (t) {
 
 	var output = reporter.section();
 	t.is(output, '\n' + fullWidthLine);
+	t.end();
+});
+
+test('results with watching enabled', function (t) {
+	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
+	var time = ' ' + chalk.grey.dim('[17:19:12]');
+
+	var reporter = miniReporter({watching: true});
+	reporter.passCount = 1;
+	reporter.failCount = 0;
+
+	var actualOutput = reporter.finish({});
+	var expectedOutput = [
+		'\n   ' + chalk.green('1 passed') + time,
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
 	t.end();
 });
