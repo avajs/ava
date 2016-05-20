@@ -1,14 +1,16 @@
-<!-- CLICK "Preview" FOR MORE READABLE FORMAT -->
+<!-- CLICK "Preview" FOR INSTRUCTIONS IN A MORE READABLE FORMAT -->
 
 ## Prerequisites
 
 - Read the [contributing guidelines](https://github.com/sindresorhus/ava/blob/master/contributing.md).
-- Support questions are better asked in one of the following locations
-  - [our chat](https://gitter.im/sindresorhus/ava)
+- Support questions are better asked in one of the following locations:
+  - [Our chat](https://gitter.im/sindresorhus/ava)
   - [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
 - Ensure the issue isn't already reported.
 - Should be reproducible with the latest AVA version.
   - (Ensure `ava --version` matches ![](https://img.shields.io/npm/v/ava.svg))
+
+*Delete the above section and the instructions in the sections below before submitting*
 
 ## Description
 
@@ -56,15 +58,10 @@ ava [OPTIONS HERE]
 
 ## Environment
 
-Include the Node.js version and operating system. Run the following to get it quickly:
+Tell us which operating system you are using, as well as which versions of  Node.js, npm, and AVA. Run the following to get it quickly:
 
 ```
 node -e "var os=require('os');console.log('Node.js ' + process.version + '\n' + os.platform() + ' ' + os.release())"
-```
-
-The versions of AVA and `npm` in use:
-
-```
 ava --version
 npm --version
 ```
