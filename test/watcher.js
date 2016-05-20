@@ -8,6 +8,7 @@ var lolex = require('lolex');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var test = require('tap').test;
+var AvaFiles = require('../lib/ava-files');
 
 var setImmediate = require('../lib/globals').setImmediate;
 
@@ -51,88 +52,71 @@ test('chokidar is not installed', function (t) {
 });
 
 group('chokidar is installed', function (beforeEach, test, group) {
-	var chokidar = {
-		watch: sinon.stub()
-	};
-
-	var debug = sinon.spy();
-
-	var logger = {
-		start: sinon.spy(),
-		finish: sinon.spy(),
-		section: sinon.spy(),
-		clear: sinon.stub().returns(true),
-		reset: sinon.spy()
-	};
-
-	var api = {
-		on: function () {},
-		run: sinon.stub()
-	};
-
-	var avaFiles = sinon.stub();
-	avaFiles.defaultExcludePatterns = sinon.stub();
-	avaFiles.defaultIncludePatterns = sinon.stub();
-
-	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
-		'chokidar': chokidar,
-		'debug': function (name) {
-			return function () {
-				var args = [name];
-				args.push.apply(args, arguments);
-				debug.apply(null, args);
-			};
-		},
-		'./ava-files': avaFiles
-	});
-
+	var chokidar;
+	var debug;
+	var logger;
+	var api;
+	var avaFiles;
+	var Subject;
 	var runStatus;
-	var resetRunStatus = function () {
-		runStatus = {failCount: 0, rejectionCount: 0, exceptionCount: 0};
-		return runStatus;
-	};
-
+	var resetRunStatus;
 	var clock;
 	var chokidarEmitter;
 	var stdin;
 	var files;
+
+	function proxyWatcher(opts) {
+		return proxyquire.noCallThru().load('../lib/watcher', opts ||
+			{
+				'chokidar': chokidar,
+				'debug': function (name) {
+					return function () {
+						var args = [name];
+						args.push.apply(args, arguments);
+						debug.apply(null, args);
+					};
+				},
+				'./ava-files': avaFiles
+			});
+	}
+
 	beforeEach(function () {
+		chokidar = {
+			watch: sinon.stub()
+		};
+
+		debug = sinon.spy();
+
+		logger = {
+			start: sinon.spy(),
+			finish: sinon.spy(),
+			section: sinon.spy(),
+			clear: sinon.stub().returns(true),
+			reset: sinon.spy()
+		};
+
+		api = {
+			on: function () {},
+			run: sinon.stub()
+		};
+
+		resetRunStatus = function () {
+			runStatus = {failCount: 0, rejectionCount: 0, exceptionCount: 0};
+			return runStatus;
+		};
+
 		if (clock) {
 			clock.uninstall();
 		}
 		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
 
 		chokidarEmitter = new EventEmitter();
-		chokidar.watch.reset();
 		chokidar.watch.returns(chokidarEmitter);
 
-		debug.reset();
-
-		logger.start.reset();
-		logger.finish.reset();
-		logger.section.reset();
-		logger.reset.reset();
-
-		logger.clear.reset();
 		logger.clear.returns(true);
 
-		avaFiles.reset();
-		avaFiles.defaultExcludePatterns.reset();
-		avaFiles.defaultIncludePatterns.reset();
+		avaFiles = AvaFiles;
 
-		avaFiles.defaultExcludePatterns.returns([
-			'!**/node_modules/**',
-			'!**/fixtures/**',
-			'!**/helpers/**'
-		]);
-
-		avaFiles.defaultIncludePatterns.returns([
-			'test.js',
-			'test-*.js',
-			'test'
-		]);
-
-		api.run.reset();
 		api.run.returns(new Promise(function () {}));
 		files = [
 			'test.js',
@@ -144,6 +128,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		stdin = new PassThrough();
 		stdin.pause();
+
+		Subject = proxyWatcher();
 	});
 
 	var start = function (sources) {
@@ -567,9 +553,16 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('initial exclude patterns override whether something is a test file', function (t) {
 		t.plan(2);
 
+		avaFiles = function (files, sources) {
+			var ret = new AvaFiles(files, sources);
+			// Note: There is no way for users to actually set exclude patterns yet.
+			// This test just validates that internal updates to the default excludes pattern will be obeyed.
+			ret.excludePatterns = ['!*bar*'];
+			return ret;
+		};
+		Subject = proxyWatcher();
+
 		files = ['foo-{bar,baz}.js'];
-		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
-		avaFiles.defaultExcludePatterns.returns(['!*bar*']);
 		api.run.returns(Promise.resolve(runStatus));
 		start();
 
@@ -639,9 +632,17 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('exclude patterns override directory matches', function (t) {
 		t.plan(2);
 
+		avaFiles = function (files, sources) {
+			var ret = new AvaFiles(files, sources);
+			// Note: There is no way for users to actually set exclude patterns yet.
+			// This test just validates that internal updates to the default excludes pattern will be obeyed.
+			ret.excludePatterns = ['!**/exclude/**'];
+			return ret;
+		};
+
+		Subject = proxyWatcher();
+
 		files = ['dir'];
-		// TODO(@jamestalmage, @novemberborn): There is no way for users to actually set exclude patterns yet.
-		avaFiles.defaultExcludePatterns.returns(['!**/exclude/**']);
 		api.run.returns(Promise.resolve(runStatus));
 		start();
 
