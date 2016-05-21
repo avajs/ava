@@ -776,6 +776,7 @@ $ ava --timeout=100 # 100 milliseconds
 ### `test.only([title], implementation)`
 ### `test.skip([title], implementation)`
 ### `test.todo(title)`
+### `test.failing([title], implementation)`
 ### `test.before([title], implementation)`
 ### `test.after([title], implementation)`
 ### `test.beforeEach([title], implementation)`
