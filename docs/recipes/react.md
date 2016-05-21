@@ -1,6 +1,6 @@
 # Testing React components
 
-Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/react.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/react.md)
 
 ## Setting up Babel
 
@@ -69,7 +69,7 @@ test('renders children when passed in', t => {
 });
 ```
 
-Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/sindresorhus/ava/blob/master/docs/recipes/browser-testing.md) on how to do so.
+Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/avajs/ava/blob/master/docs/recipes/browser-testing.md) on how to do so.
 
 To see an example of AVA working together with Enzyme set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 
@@ -139,7 +139,7 @@ This is a basic example on how to use `jsx-test-helpers` with AVA. To see a more
 
 In AVA, you can use any assertion library, and there are already a few out there to test React components. Here is a list of assertion libraries working well with AVA:
 
-- [`expect-jsx`](https://github.com/algolia/expect-jsx) ([Example](https://github.com/sindresorhus/ava/issues/186#issuecomment-161317068))
+- [`expect-jsx`](https://github.com/algolia/expect-jsx) ([Example](https://github.com/avajs/ava/issues/186#issuecomment-161317068))
 - [`unexpected-react`](https://github.com/bruderstein/unexpected-react) ([Sample project with an output example](https://github.com/adriantoine/ava-unexpected-react-demo))
 
 ## Reference
