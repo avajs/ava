@@ -1,6 +1,6 @@
 # Configuring Babel
 
-Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/babelrc.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/babelrc.md)
 
 There are multiple options for configuring how AVA transpiles your tests using Babel.
 
@@ -48,7 +48,7 @@ To transpile your sources, you will need to define a [`babel config` ](http://ba
 }
 ```
 
-Note that loading `babel-register` in every forked process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to transpile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `babel-register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [open issue](https://github.com/sindresorhus/ava/issues/577) discussing ways we could make this experience better.
+Note that loading `babel-register` in every forked process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to transpile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `babel-register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [open issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
 
 ## Transpiling tests and sources the same way
 
@@ -122,6 +122,6 @@ AVA *always* adds a few custom Babel plugins when transpiling your plugins. They
 
  * Enable `power-assert` support.
  * Rewrite require paths internal AVA dependencies like `babel-runtime` (important if you are still using `npm@2`).
- * [`ava-throws-helper`](https://github.com/jamestalmage/babel-plugin-ava-throws-helper) helps AVA [detect and report](https://github.com/sindresorhus/ava/pull/742) improper use of the `t.throws` assertion.
+ * [`ava-throws-helper`](https://github.com/avajs/babel-plugin-ava-throws-helper) helps AVA [detect and report](https://github.com/avajs/ava/pull/742) improper use of the `t.throws` assertion.
  * Generate test metadata to determine which files should be run first (*future*).
  * Static analysis of dependencies for precompilation (*future*).

@@ -1,6 +1,6 @@
 # Watch mode
 
-Translations: [Français](https://github.com/sindresorhus/ava-docs/blob/master/fr_FR/docs/recipes/watch-mode.md), [Italiano](https://github.com/sindresorhus/ava-docs/blob/master/it_IT/recipes/watch-mode.md), [Русский](https://github.com/sindresorhus/ava-docs/blob/master/ru_RU/docs/recipes/watch-mode.md), [简体中文](https://github.com/sindresorhus/ava-docs/blob/master/zh_CN/docs/recipes/watch-mode.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/watch-mode.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/recipes/watch-mode.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/watch-mode.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/watch-mode.md)
 
 AVA comes with an intelligent watch mode. It watches for files to change and runs just those tests that are affected.
 
@@ -108,11 +108,11 @@ $ npm test -- --watch --verbose
 
 ## Help us make watch mode better
 
-Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/sindresorhus/ava/issues) any issues you encounter. Thanks!
+Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/avajs/ava/issues) any issues you encounter. Thanks!
 
 [`chokidar`]: https://github.com/paulmillr/chokidar
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
-[`--require` CLI flag]: https://github.com/sindresorhus/ava#cli
-[`--source` CLI flag]: https://github.com/sindresorhus/ava#cli
-[`.only` modifier]: https://github.com/sindresorhus/ava#running-specific-tests
-[`ava` section of your `package.json`]: https://github.com/sindresorhus/ava#configuration
+[`--require` CLI flag]: https://github.com/avajs/ava#cli
+[`--source` CLI flag]: https://github.com/avajs/ava#cli
+[`.only` modifier]: https://github.com/avajs/ava#running-specific-tests
+[`ava` section of your `package.json`]: https://github.com/avajs/ava#configuration
