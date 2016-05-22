@@ -217,7 +217,7 @@ test('results with passing known failure tests', function (t) {
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed') + time,
+		'\n   ' + chalk.green('1 passed'),
 		'   ' + chalk.red('1 known failure'),
 		'',
 		'',
