@@ -95,3 +95,12 @@ test('sourceMatcher - providing negation patterns', function (t) {
 	t.false(matcher('foo/bar.js'));
 	t.end();
 });
+
+test('findFiles - does not return duplicates of the same file', function (t) {
+	var avaFiles = new AvaFiles(['**/ava-files/no-duplicates/**']);
+
+	avaFiles.findTestFiles().then(function (files) {
+		t.is(files.length, 2);
+		t.end();
+	});
+});
