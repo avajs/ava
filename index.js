@@ -6,9 +6,6 @@ var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
 var send = require('./lib/send');
 
-// note that test files have require('ava')
-require('./lib/test-worker').avaRequired = true;
-
 var opts = globals.options;
 var runner = new Runner({
 	serial: opts.serial,
@@ -27,6 +24,9 @@ if (!isForked) {
 
 	process.exit(1); // eslint-disable-line
 }
+
+// note that test files have require('ava')
+require('./lib/test-worker').avaRequired = true;
 
 // if fail-fast is enabled, use this variable to detect
 // that no more tests should be logged

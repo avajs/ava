@@ -298,3 +298,11 @@ test('works when no files are found', function (t) {
 		t.end();
 	});
 });
+
+test('should warn ava is required without the cli', function (t) {
+	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../index.js')], function (error) {
+		t.ok(error);
+		t.match(error.message, /Test files must be run with the AVA CLI/);
+		t.end();
+	});
+});
