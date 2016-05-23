@@ -25,7 +25,7 @@ test('requires new', function (t) {
 });
 
 test('testMatcher', function (t) {
-	var avaFiles = new AvaFiles(['**/foo*']);
+	var avaFiles = new AvaFiles({files: ['**/foo*']});
 
 	var matcher = avaFiles.makeTestMatcher();
 
@@ -55,7 +55,7 @@ test('testMatcher', function (t) {
 });
 
 test('sourceMatcher - defaults', function (t) {
-	var avaFiles = new AvaFiles(['**/foo*']);
+	var avaFiles = new AvaFiles({files: ['**/foo*']});
 
 	var matcher = avaFiles.makeSourceMatcher();
 
@@ -90,7 +90,10 @@ test('sourceMatcher - defaults', function (t) {
 });
 
 test('sourceMatcher - allow matching specific node_modules directories', function (t) {
-	var avaFiles = new AvaFiles(['**/foo*'], ['node_modules/foo/**']);
+	var avaFiles = new AvaFiles({
+		files: ['**/foo*'],
+		sources: ['node_modules/foo/**']
+	});
 
 	var matcher = avaFiles.makeSourceMatcher();
 
@@ -100,7 +103,10 @@ test('sourceMatcher - allow matching specific node_modules directories', functio
 });
 
 test('sourceMatcher - providing negation patterns', function (t) {
-	var avaFiles = new AvaFiles(['**/foo*'], ['!**/bar*']);
+	var avaFiles = new AvaFiles({
+		files: ['**/foo*'],
+		sources: ['!**/bar*']
+	});
 
 	var matcher = avaFiles.makeSourceMatcher();
 
@@ -111,10 +117,23 @@ test('sourceMatcher - providing negation patterns', function (t) {
 });
 
 test('findFiles - does not return duplicates of the same file', function (t) {
-	var avaFiles = new AvaFiles(['**/ava-files/no-duplicates/**']);
+	var avaFiles = new AvaFiles({files: ['**/ava-files/no-duplicates/**']});
 
 	avaFiles.findTestFiles().then(function (files) {
 		t.is(files.length, 2);
+		t.end();
+	});
+});
+
+test('findFiles - honors cwd option', function (t) {
+	var avaFiles = new AvaFiles({
+		files: ['**/test/*.js'],
+		cwd: path.join(__dirname, 'fixture', 'ava-files', 'cwd', 'dir-b')
+	});
+
+	avaFiles.findTestFiles().then(function (files) {
+		t.is(files.length, 1);
+		t.is(path.basename(files[0]), 'baz.js');
 		t.end();
 	});
 });
