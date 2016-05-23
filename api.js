@@ -233,6 +233,7 @@ function getBlankResults() {
 		stats: {
 			testCount: 0,
 			passCount: 0,
+			knownFailureCount: 0,
 			skipCount: 0,
 			todoCount: 0,
 			failCount: 0
