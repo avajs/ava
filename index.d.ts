@@ -57,6 +57,7 @@ export namespace test {
 	export function serial(run: ContextualSerialTest): void;
 	export function cb(name: string, run: ContextualCallbackTest): void;
 	export function cb(run: ContextualCallbackTest): void;
+	export function todo(name: string): void;
 }
 export namespace test.serial {
 	export const before: SerialRunner;
