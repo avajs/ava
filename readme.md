@@ -436,7 +436,8 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail. `.always()` hooks are ideal for cleanup tasks.
 
-**Note**: if `--fail-fast` flag is provided, ava will stop after first test failure and `.always` hook will **NOT** run.
+**Note**: If the `--fail-fast` flag is specified, AVA will stop after the first test failure and the `.always` hook will **not** run.
+
 
 Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
 
