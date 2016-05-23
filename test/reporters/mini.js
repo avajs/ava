@@ -89,7 +89,7 @@ test('failing test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.red('1 failed') + time
+		'   ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
