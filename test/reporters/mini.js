@@ -55,6 +55,26 @@ test('passing test', function (t) {
 	t.end();
 });
 
+test('known failure test', function (t) {
+	var reporter = miniReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true
+	});
+
+	var expectedOutput = [
+		' ',
+		' ' + graySpinner + ' ' + chalk.red('known failure'),
+		'',
+		'   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 known failure')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('failing test', function (t) {
 	var reporter = miniReporter();
 
@@ -68,6 +88,28 @@ test('failing test', function (t) {
 	var expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
+		'',
+		'   ' + chalk.red('1 failed')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failed known failure test', function (t) {
+	var reporter = miniReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true,
+		error: {
+			message: 'Test was expected to fail, but succeeded, you should stop marking the test as failing'
+		}
+	});
+
+	var expectedOutput = [
+		' ',
+		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
 		'   ' + chalk.red('1 failed')
 	].join('\n');
@@ -157,6 +199,29 @@ test('results with passing tests', function (t) {
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n   ' + chalk.green('1 passed'),
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with passing known failure tests', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 1;
+	reporter.knownFailureCount = 1;
+	reporter.failCount = 0;
+
+	var runStatus = {
+		knownFailures: [{title: 'known failure', failing: true}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n   ' + chalk.green('1 passed'),
+		'   ' + chalk.red('1 known failure'),
+		'',
+		'',
+		'   ' + chalk.red('1. known failure'),
 		''
 	].join('\n');
 

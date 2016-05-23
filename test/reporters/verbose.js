@@ -89,6 +89,20 @@ test('don\'t display test title if there is only one anonymous test', function (
 	t.end();
 });
 
+test('known failure test', function (t) {
+	var reporter = createReporter();
+
+	var actualOutput = reporter.test({
+		title: 'known failure',
+		failing: true
+	}, createRunStatus());
+
+	var expectedOutput = '  ' + chalk.red(figures.tick) + ' ' + chalk.red('known failure');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
 test('failing test', function (t) {
 	var reporter = createReporter();
 
@@ -207,6 +221,28 @@ test('results with passing tests', function (t) {
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
+		''
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with passing known failure tests', function (t) {
+	var reporter = createReporter();
+	var runStatus = createRunStatus();
+	runStatus.passCount = 1;
+	runStatus.knownFailureCount = 1;
+	runStatus.knownFailures = [{title: 'known failure', failing: true}];
+
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		'  ' + chalk.red('1 known failure'),
+		'',
+		'',
+		'  ' + chalk.red('1. known failure'),
 		''
 	].join('\n');
 
