@@ -97,7 +97,7 @@ test('known failure test', function (t) {
 		failing: true
 	}, createRunStatus());
 
-	var expectedOutput = ' ' + chalk.red('known failure');
+	var expectedOutput = '  ' + chalk.red(figures.tick) + ' ' + chalk.red('known failure');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -239,7 +239,7 @@ test('results with passing known failure tests', function (t) {
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.red('1 test known failure'),
+		'  ' + chalk.red('1 known failure'),
 		'',
 		'',
 		'  ' + chalk.red('1. known failure'),
