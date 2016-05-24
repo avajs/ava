@@ -553,8 +553,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('initial exclude patterns override whether something is a test file', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!*bar*'];
@@ -632,8 +632,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('exclude patterns override directory matches', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!**/exclude/**'];
