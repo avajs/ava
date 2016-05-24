@@ -29,6 +29,8 @@ new Api(apiOptions).run(files, runOptions)
 
 - **concurrency** - `number` - How many processes at once.
 
+- **failFast** - `boolean` - bail at first failure
+
 
 
 ### run(files, runOptions)
