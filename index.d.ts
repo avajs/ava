@@ -174,6 +174,8 @@ export interface TestContext extends AssertContext {
 	plan(count: number): void;
 
 	skip: AssertContext;
+
+	context: any;
 }
 export interface CallbackTestContext extends TestContext {
 	/**
