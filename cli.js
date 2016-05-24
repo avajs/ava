@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+var path = require('path');
 var debug = require('debug')('ava');
 
 // Prefer the local installation of AVA.
@@ -42,6 +43,8 @@ var conf = pkgConf.sync('ava', {
 		babel: 'default'
 	}
 });
+
+var pkgDir = path.dirname(pkgConf.filepath(conf));
 
 // check for valid babel config shortcuts (can be either "default" or "inherit")
 var isValidShortcut = ['default', 'inherit'].indexOf(conf.babel) !== -1;
@@ -136,6 +139,7 @@ var api = new Api({
 	explicitTitles: cli.flags.watch,
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,
+	resolveTestsFrom: cli.input.length === 0 ? pkgDir : process.cwd(),
 	timeout: cli.flags.timeout,
 	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
 });
