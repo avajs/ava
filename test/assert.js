@@ -345,6 +345,18 @@ test('.regex()', function (t) {
 	t.end();
 });
 
+test('.notRegex()', function (t) {
+	t.doesNotThrow(function () {
+		assert.notRegex('abc', /def/);
+	});
+
+	t.throws(function () {
+		assert.notRegex('abc', /abc/);
+	});
+
+	t.end();
+});
+
 test('.ifError()', function (t) {
 	t.throws(function () {
 		assert.ifError(new Error());

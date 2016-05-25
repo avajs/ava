@@ -878,6 +878,10 @@ Assert that `function` doesn't throw an `error` or `promise` resolves.
 
 Assert that `contents` matches `regex`.
 
+### `.notRegex(contents, regex, [message])`
+
+Assert that `contents` does not match `regex`.
+
 ### `.ifError(error, [message])`
 
 Assert that `error` is falsy.
