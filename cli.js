@@ -165,13 +165,6 @@ api.on('test-run', function (runStatus) {
 });
 
 var files = cli.input.length ? cli.input : arrify(conf.files);
-if (files.length === 0) {
-	files = [
-		'test.js',
-		'test-*.js',
-		'test'
-	];
-}
 
 if (cli.flags.watch) {
 	try {

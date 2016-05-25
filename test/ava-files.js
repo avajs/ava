@@ -104,3 +104,29 @@ test('findFiles - does not return duplicates of the same file', function (t) {
 		t.end();
 	});
 });
+
+test('findFiles - finds the correct files by default', function (t) {
+	var avaFiles = new AvaFiles(['**/ava-files/default-patterns/**']);
+	var filesToFind = [
+		'sub/directory/__tests__/foo.js',
+		'sub/directory/bar.test.js',
+		'test-foo.js',
+		'test.js',
+		'test/baz.js'
+	];
+
+	avaFiles.findTestFiles().then(function (files) {
+		var allFilesFound = filesToFind.every(function (fileToFind) {
+			return files.some(function (file) {
+				return endsWith(file, fileToFind);
+			});
+		});
+		t.true(allFilesFound);
+		t.is(files.length, 5);
+		t.end();
+	});
+});
+
+function endsWith(str, suffix) {
+	return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
