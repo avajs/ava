@@ -11,6 +11,7 @@ var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
 var ms = require('ms');
 var AvaFiles = require('ava-files');
+var getPort = require('get-port');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
@@ -46,7 +47,7 @@ function Api(options) {
 util.inherits(Api, EventEmitter);
 module.exports = Api;
 
-Api.prototype._runFile = function (file, runStatus) {
+Api.prototype._runFile = function (file, runStatus, execArgv) {
 	var hash = this.precompiler.precompileFile(file);
 	var precompiled = {};
 	precompiled[file] = hash;
@@ -55,7 +56,7 @@ Api.prototype._runFile = function (file, runStatus) {
 		precompiled: precompiled
 	});
 
-	var emitter = fork(file, options);
+	var emitter = fork(file, options, execArgv);
 
 	runStatus.observeFork(emitter);
 
@@ -133,6 +134,36 @@ Api.prototype._run = function (files, _options) {
 	return overwatch;
 };
 
+Api.prototype.computeForkExecArgs = function (files) {
+	var execArgv = this.options.testOnlyExecArgv || process.execArgv;
+	var debugArgIndex = -1;
+	execArgv.some(function (arg, index) {
+		if (arg === '--debug' || arg === '--debug-brk' || arg.indexOf('--debug-brk=') === 0 || arg.indexOf('--debug=') === 0) {
+			debugArgIndex = index;
+			return true;
+		}
+		return false;
+	});
+
+	if (debugArgIndex === -1) {
+		return Promise.resolve([]);
+	}
+
+	return Promise.map(files, getPort)
+		.then(function (ports) {
+			return ports.map(function (port) {
+				var forkExecArgv = execArgv.slice();
+				var flagName = '--debug';
+				var oldValue = forkExecArgv[debugArgIndex];
+				if (oldValue.indexOf('brk') > 0) {
+					flagName += '-brk';
+				}
+				forkExecArgv[debugArgIndex] = flagName + '=' + port;
+				return forkExecArgv;
+			});
+		});
+};
+
 Api.prototype._runNoPool = function (files, runStatus) {
 	var self = this;
 	var tests = new Array(self.fileCount);
@@ -144,94 +175,97 @@ Api.prototype._runNoPool = function (files, runStatus) {
 		});
 	});
 
-	return new Promise(function (resolve) {
-		function run() {
-			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
-				runStatus.handleExceptions({
-					exception: new AvaError('Couldn\'t find any matching tests'),
-					file: undefined
-				});
+	return self.computeForkExecArgs(files)
+		.then(function (execArgvList) {
+			return new Promise(function (resolve) {
+				function run() {
+					if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+						runStatus.handleExceptions({
+							exception: new AvaError('Couldn\'t find any matching tests'),
+							file: undefined
+						});
 
-				resolve([]);
-				return;
-			}
-
-			var method = self.options.serial ? 'mapSeries' : 'map';
-			var options = {
-				runOnlyExclusive: runStatus.hasExclusive
-			};
-
-			resolve(Promise[method](files, function (file, index) {
-				return tests[index].run(options).catch(function (err) {
-					// The test failed catastrophically. Flag it up as an
-					// exception, then return an empty result. Other tests may
-					// continue to run.
-					runStatus.handleExceptions({
-						exception: err,
-						file: path.relative('.', file)
-					});
-
-					return getBlankResults();
-				});
-			}));
-		}
-
-		// receive test count from all files and then run the tests
-		var unreportedFiles = self.fileCount;
-		var bailed = false;
-
-		files.every(function (file, index) {
-			var tried = false;
-
-			function tryRun() {
-				if (!tried && !bailed) {
-					tried = true;
-					unreportedFiles--;
-
-					if (unreportedFiles === 0) {
-						run();
+						resolve([]);
+						return;
 					}
+
+					var method = self.options.serial ? 'mapSeries' : 'map';
+					var options = {
+						runOnlyExclusive: runStatus.hasExclusive
+					};
+
+					resolve(Promise[method](files, function (file, index) {
+						return tests[index].run(options).catch(function (err) {
+							// The test failed catastrophically. Flag it up as an
+							// exception, then return an empty result. Other tests may
+							// continue to run.
+							runStatus.handleExceptions({
+								exception: err,
+								file: path.relative('.', file)
+							});
+
+							return getBlankResults();
+						});
+					}));
 				}
-			}
 
-			try {
-				var test = tests[index] = self._runFile(file, runStatus);
+				// receive test count from all files and then run the tests
+				var unreportedFiles = self.fileCount;
+				var bailed = false;
 
-				test.on('stats', tryRun);
-				test.catch(tryRun);
+				files.every(function (file, index) {
+					var tried = false;
 
-				return true;
-			} catch (err) {
-				bailed = true;
+					function tryRun() {
+						if (!tried && !bailed) {
+							tried = true;
+							unreportedFiles--;
 
-				runStatus.handleExceptions({
-					exception: err,
-					file: path.relative('.', file)
+							if (unreportedFiles === 0) {
+								run();
+							}
+						}
+					}
+
+					try {
+						var test = tests[index] = self._runFile(file, runStatus, execArgvList[index]);
+
+						test.on('stats', tryRun);
+						test.catch(tryRun);
+
+						return true;
+					} catch (err) {
+						bailed = true;
+
+						runStatus.handleExceptions({
+							exception: err,
+							file: path.relative('.', file)
+						});
+
+						resolve([]);
+
+						return false;
+					}
 				});
+			}).then(function (results) {
+				if (results.length === 0) {
+					// No tests ran, make sure to tear down the child processes.
+					tests.forEach(function (test) {
+						test.send('teardown');
+					});
+				}
 
-				resolve([]);
+				return results;
+			}).then(function (results) {
+				// cancel debounced _onTimeout() from firing
+				if (self.options.timeout) {
+					runStatus._restartTimer.cancel();
+				}
 
-				return false;
-			}
-		});
-	}).then(function (results) {
-		if (results.length === 0) {
-			// No tests ran, make sure to tear down the child processes.
-			tests.forEach(function (test) {
-				test.send('teardown');
+				runStatus.processResults(results);
+				return runStatus;
 			});
-		}
-
-		return results;
-	}).then(function (results) {
-		// cancel debounced _onTimeout() from firing
-		if (self.options.timeout) {
-			runStatus._restartTimer.cancel();
-		}
-
-		runStatus.processResults(results);
-		return runStatus;
-	});
+		});
 };
 
 function getBlankResults() {
@@ -259,57 +293,60 @@ Api.prototype._runLimitedPool = function (files, runStatus, concurrency) {
 		});
 	});
 
-	return Promise.map(files, function (file) {
-		var handleException = function (err) {
-			runStatus.handleExceptions({
-				exception: err,
-				file: path.relative('.', file)
-			});
-		};
-
-		try {
-			var test = tests[file] = self._runFile(file, runStatus);
-
-			return new Promise(function (resolve, reject) {
-				var runner = function () {
-					var options = {
-						// If we're looking for matches, run every single test process in exclusive-only mode
-						runOnlyExclusive: self.options.match.length > 0
+	return self.computeForkExecArgs(files)
+			.then(function (execArgvList) {
+				return Promise.map(files, function (file, index) {
+					var handleException = function (err) {
+						runStatus.handleExceptions({
+							exception: err,
+							file: path.relative('.', file)
+						});
 					};
-					test.run(options)
-						.then(resolve)
-						.catch(reject);
-				};
 
-				test.on('stats', runner);
-				test.on('exit', function () {
-					delete tests[file];
-				});
-				test.catch(runner);
-			}).catch(handleException);
-		} catch (err) {
-			handleException(err);
-		}
-	}, {concurrency: concurrency})
-		.then(function (results) {
-			// Filter out undefined results (usually result of caught exceptions)
-			results = results.filter(Boolean);
+					try {
+						var test = tests[file] = self._runFile(file, runStatus, execArgvList[index]);
 
-			// cancel debounced _onTimeout() from firing
-			if (self.options.timeout) {
-				runStatus._restartTimer.cancel();
-			}
+						return new Promise(function (resolve, reject) {
+							var runner = function () {
+								var options = {
+									// If we're looking for matches, run every single test process in exclusive-only mode
+									runOnlyExclusive: self.options.match.length > 0
+								};
+								test.run(options)
+									.then(resolve)
+									.catch(reject);
+							};
 
-			if (self.options.match.length > 0 && !runStatus.hasExclusive) {
-				// Ensure results are empty
-				results = [];
-				runStatus.handleExceptions({
-					exception: new AvaError('Couldn\'t find any matching tests'),
-					file: undefined
-				});
-			}
+							test.on('stats', runner);
+							test.on('exit', function () {
+								delete tests[file];
+							});
+							test.catch(runner);
+						}).catch(handleException);
+					} catch (err) {
+						handleException(err);
+					}
+				}, {concurrency: concurrency})
+					.then(function (results) {
+						// Filter out undefined results (usually result of caught exceptions)
+						results = results.filter(Boolean);
 
-			runStatus.processResults(results);
-			return runStatus;
-		});
+						// cancel debounced _onTimeout() from firing
+						if (self.options.timeout) {
+							runStatus._restartTimer.cancel();
+						}
+
+						if (self.options.match.length > 0 && !runStatus.hasExclusive) {
+							// Ensure results are empty
+							results = [];
+							runStatus.handleExceptions({
+								exception: new AvaError('Couldn\'t find any matching tests'),
+								file: undefined
+							});
+						}
+
+						runStatus.processResults(results);
+						return runStatus;
+					});
+			});
 };

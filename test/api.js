@@ -1022,3 +1022,20 @@ function generateTests(prefix, apiCreator) {
 		]);
 	});
 }
+
+function generatePassDebugTests(execArgv) {
+	test('pass ' + execArgv.join(' ') + ' to fork', function (t) {
+		t.plan(3);
+
+		var api = new Api({testOnlyExecArgv: execArgv});
+		return api.computeForkExecArgs(['foo.js'])
+			.then(function (result) {
+				t.true(result.length === 1);
+				t.true(result[0].length === 1);
+				t.true(/--debug=\d+/.test(result[0][0]));
+			});
+	});
+}
+
+generatePassDebugTests(['--debug=0']);
+generatePassDebugTests(['--debug']);
