@@ -109,7 +109,7 @@ test('bar', async t => {
 });
 ```
 
-<img src="screenshot.png" width="150" align="right">
+<img src="media/screenshot.png" width="150" align="right">
 
 ### Run it
 
@@ -127,7 +127,7 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 
 ## CLI
 
-![](screenshot-mini-reporter.gif)
+![](media/screenshot-mini-reporter.gif)
 
 ```console
 $ ava --help
