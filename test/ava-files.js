@@ -1,6 +1,20 @@
 'use strict';
-var test = require('tap').test;
+var path = require('path');
+var tap = require('tap');
+var test = tap.test;
 var AvaFiles = require('../lib/ava-files');
+
+tap.afterEach(function (done) {
+	// We changed the CWD in some of the tests.
+	process.chdir(path.join(__dirname, '..'));
+	done();
+});
+
+function fixture() {
+	var args = Array.prototype.slice.call(arguments);
+	args.unshift(__dirname, 'fixture', 'ava-files');
+	return path.join.apply(path, args);
+}
 
 test('requires new', function (t) {
 	var avaFiles = AvaFiles;
@@ -106,27 +120,24 @@ test('findFiles - does not return duplicates of the same file', function (t) {
 });
 
 test('findFiles - finds the correct files by default', function (t) {
-	var avaFiles = new AvaFiles(['**/ava-files/default-patterns/**']);
-	var filesToFind = [
+	var fixtureDir = fixture('default-patterns');
+	process.chdir(fixtureDir);
+
+	var expected = [
 		'sub/directory/__tests__/foo.js',
 		'sub/directory/bar.test.js',
 		'test-foo.js',
 		'test.js',
-		'test/baz.js'
-	];
+		'test/baz.js',
+		'test/deep/deep.js'
+	].map(function (file) {
+		return path.join(fixtureDir, file);
+	}).sort();
 
+	var avaFiles = new AvaFiles();
 	avaFiles.findTestFiles().then(function (files) {
-		var allFilesFound = filesToFind.every(function (fileToFind) {
-			return files.some(function (file) {
-				return endsWith(file, fileToFind);
-			});
-		});
-		t.true(allFilesFound);
-		t.is(files.length, 5);
+		files.sort();
+		t.deepEqual(files, expected);
 		t.end();
 	});
 });
-
-function endsWith(str, suffix) {
-	return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
