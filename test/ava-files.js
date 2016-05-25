@@ -104,3 +104,12 @@ test('findFiles - does not return duplicates of the same file', function (t) {
 		t.end();
 	});
 });
+
+test('findFiles - should test *.jsx files', function (t) {
+	var avaFiles = new AvaFiles(['**/ava-files/**/*.jsx']);
+
+	avaFiles.findTestFiles().then(function (files) {
+		t.is(files.length, 1);
+		t.end();
+	});
+});
