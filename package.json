@@ -146,7 +146,7 @@
     "strip-bom": "^2.0.0",
     "time-require": "^0.1.2",
     "unique-temp-dir": "^1.0.0",
-    "update-notifier": "^0.6.0"
+    "update-notifier": "^0.7.0"
   },
   "devDependencies": {
     "cli-table2": "^0.2.0",
