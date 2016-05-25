@@ -55,6 +55,8 @@ export namespace test {
 
 	export function serial(name: string, run: ContextualSerialTest): void;
 	export function serial(run: ContextualSerialTest): void;
+	export function failing(name: string, run: ContextualCallbackTest): void;
+	export function failing(run: ContextualCallbackTest): void;
 	export function cb(name: string, run: ContextualCallbackTest): void;
 	export function cb(run: ContextualCallbackTest): void;
 	export function todo(name: string): void;
@@ -67,6 +69,21 @@ export namespace test.serial {
 
 	export const skip: typeof test.serial;
 	export const only: typeof test.serial;
+
+	export function cb(name: string, run: ContextualCallbackTest): void;
+	export function cb(run: ContextualCallbackTest): void;
+}
+export namespace test.failing {
+	export const before: CallbackRunner;
+	export const after: CallbackRunner;
+	export const beforeEach: ContextualCallbackRunner;
+	export const afterEach: ContextualCallbackRunner;
+
+	export const skip: typeof test.cb;
+	export const only: typeof test.cb;
+
+	export function cb(name: string, run: ContextualCallbackTest): void;
+	export function cb(run: ContextualCallbackTest): void;
 }
 export namespace test.cb {
 	export const before: CallbackRunner;
