@@ -143,7 +143,7 @@
     "source-map-support": "^0.4.0",
     "stack-utils": "^0.4.0",
     "strip-ansi": "^3.0.1",
-    "strip-bom-buf": "^1.0.0",
+    "strip-bom": "^2.0.0",
     "time-require": "^0.1.2",
     "unique-temp-dir": "^1.0.0",
     "update-notifier": "^0.7.0"
