@@ -15,11 +15,17 @@ export interface Runner {
 	skip: Runner;
 	cb: CallbackRunner;
 }
+export interface AfterRunner extends Runner {
+	always: Runner;
+}
 export interface ContextualRunner {
 	(name: string, run: ContextualTest): void;
 	(run: ContextualTest): void;
 	skip: ContextualRunner;
 	cb: ContextualCallbackRunner;
+}
+export interface ContextualAfterRunner extends ContextualRunner {
+	always: ContextualRunner;
 }
 export interface SerialRunner {
 	(name: string, run: SerialTest): void;
@@ -46,9 +52,9 @@ export function test(name: string, run: ContextualTest): void;
 export function test(run: ContextualTest): void;
 export namespace test {
 	export const before: Runner;
-	export const after: Runner;
+	export const after: AfterRunner;
 	export const beforeEach: ContextualRunner;
-	export const afterEach: ContextualRunner;
+	export const afterEach: ContextualAfterRunner;
 
 	export const skip: typeof test;
 	export const only: typeof test;
