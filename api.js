@@ -81,6 +81,10 @@ Api.prototype.run = function (files, options) {
 		.findTestFiles()
 		.then(function (files) {
 			return self._run(files, options);
+		})
+		.then(function (status) {
+			status.emit('finish');
+			return status;
 		});
 };
 
