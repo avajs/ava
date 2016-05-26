@@ -145,18 +145,8 @@ if (cli.flags.tap && !cli.flags.watch) {
 	reporter = miniReporter({watching: cli.flags.watch});
 }
 
-reporter.api = api;
-var logger = new Logger(reporter);
-
-logger.start();
-
-api.on('test-run', function (runStatus) {
-	reporter.api = runStatus;
-	runStatus.on('test', logger.test);
-	runStatus.on('error', logger.unhandledError);
-
-	runStatus.on('stdout', logger.stdout);
-	runStatus.on('stderr', logger.stderr);
+api.on('test-run', function (status) {
+	reporter.init(status);
 });
 
 var files = cli.input.length ? cli.input : arrify(conf.files);
@@ -169,7 +159,7 @@ if (cli.flags.watch) {
 		if (err.name === 'AvaError') {
 			// An AvaError may be thrown if chokidar is not installed. Log it nicely.
 			console.error('  ' + colors.error(figures.cross) + ' ' + err.message);
-			logger.exit(1);
+			exit(1);
 		} else {
 			// Rethrow so it becomes an uncaught exception.
 			throw err;
@@ -178,8 +168,7 @@ if (cli.flags.watch) {
 } else {
 	api.run(files)
 		.then(function (runStatus) {
-			logger.finish(runStatus);
-			logger.exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
+			exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
 		})
 		.catch(function (err) {
 			// Don't swallow exceptions. Note that any expected error should already
@@ -188,4 +177,16 @@ if (cli.flags.watch) {
 				throw err;
 			});
 		});
+}
+
+function exit (code) {
+	// TODO: figure out why this needs to be here to
+	// correctly flush the output when multiple test files
+	process.stdout.write('');
+	process.stderr.write('');
+
+	// timeout required to correctly flush IO on Node.js 0.10 on Windows
+	setTimeout(function () {
+		process.exit(code); // eslint-disable-line
+	}, process.env.AVA_APPVEYOR ? 500 : 0);
 }
