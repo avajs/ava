@@ -1,5 +1,5 @@
 // TypeScript definitions are generated here.
-// ava allows chaining of function names, like `test.after.cb.always`.
+// AVA allows chaining of function names, like `test.after.cb.always`.
 // The order of these names is not important.
 // Writing these definitions by hand is hard. Because of chaining,
 // the number of combinations grows fast (2^n). To reduce this number,
