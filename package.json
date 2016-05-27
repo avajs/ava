@@ -33,6 +33,7 @@
     }
   ],
   "bin": "cli.js",
+  "typings": "types/generated.d.ts",
   "engines": {
     "node": ">=0.10.0"
   },
@@ -44,7 +45,7 @@
   "files": [
     "lib",
     "*.js",
-    "index.d.ts"
+    "types/generated.d.ts"
   ],
   "keywords": [
     "test",
