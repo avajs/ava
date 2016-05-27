@@ -1037,5 +1037,20 @@ function generatePassDebugTests(execArgv) {
 	});
 }
 
+function generatePassDebugIntegrationTests(execArgv) {
+	test('pass ' + execArgv.join(' ') + ' to fork', function (t) {
+		t.plan(1);
+
+		var api = new Api({testOnlyExecArgv: execArgv});
+		return api.run([path.join(__dirname, 'fixture/debug-arg.js')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+}
+
 generatePassDebugTests(['--debug=0']);
 generatePassDebugTests(['--debug']);
+
+generatePassDebugIntegrationTests(['--debug=0']);
+
