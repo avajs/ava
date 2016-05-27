@@ -90,6 +90,10 @@ export interface AssertContext {
 	 */
 	regex(contents: string, regex: RegExp, message?: string): void;
 	/**
+	 * Assert that contents does not match regex.
+	 */
+	notRegex(contents, regex, message?: string): void;
+	/**
 	 * Assert that error is falsy.
 	 */
 	ifError(error: any, message?: string): void;
