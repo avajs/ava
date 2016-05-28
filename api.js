@@ -13,7 +13,6 @@ var ms = require('ms');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
-var AvaFiles = require('./lib/ava-files');
 var RunStatus = require('./lib/run-status');
 
 function Api(options) {
@@ -70,17 +69,7 @@ Api.prototype._onTimeout = function (runStatus) {
 	runStatus.emit('timeout');
 };
 
-Api.prototype.run = function (files, options) {
-	var self = this;
-
-	return new AvaFiles(files)
-		.findTestFiles()
-		.then(function (files) {
-			return self._run(files, options);
-		});
-};
-
-Api.prototype._run = function (files, _options) {
+Api.prototype.run = function (files, _options) {
 	var self = this;
 	var runStatus = new RunStatus({
 		prefixTitles: this.options.explicitTitles || files.length > 1,

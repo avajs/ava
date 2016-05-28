@@ -4,6 +4,7 @@ var fs = require('fs');
 var figures = require('figures');
 var rimraf = require('rimraf');
 var test = require('tap').test;
+var AvaFiles = require('../lib/ava-files');
 var Api = require('../api');
 var testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
 
@@ -118,13 +119,6 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run(files)
-			.then(function () {
-				// if all lines were removed from expected output
-				// actual output matches expected output
-				t.is(expected.length, 0);
-			});
-
 		api.on('test-run', function (runStatus) {
 			runStatus.on('test', function (a) {
 				index = expected.indexOf(a.title);
@@ -135,6 +129,13 @@ function generateTests(prefix, apiCreator) {
 				expected.splice(index, 1);
 			});
 		});
+
+		api.run(files)
+			.then(function () {
+				// if all lines were removed from expected output
+				// actual output matches expected output
+				t.is(expected.length, 0);
+			});
 	});
 
 	test(prefix + 'test title prefixes — single file', function (t) {
@@ -151,13 +152,6 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run(files)
-			.then(function () {
-				// if all lines were removed from expected output
-				// actual output matches expected output
-				t.is(expected.length, 0);
-			});
-
 		api.on('test-run', function (runStatus) {
 			runStatus.on('test', function (a) {
 				index = expected.indexOf(a.title);
@@ -168,6 +162,13 @@ function generateTests(prefix, apiCreator) {
 				expected.splice(index, 1);
 			});
 		});
+
+		api.run(files)
+			.then(function () {
+				// if all lines were removed from expected output
+				// actual output matches expected output
+				t.is(expected.length, 0);
+			});
 	});
 
 	test(prefix + 'test title prefixes — single file (explicit)', function (t) {
@@ -186,13 +187,6 @@ function generateTests(prefix, apiCreator) {
 			explicitTitles: true
 		});
 
-		api.run(files)
-			.then(function () {
-				// if all lines were removed from expected output
-				// actual output matches expected output
-				t.is(expected.length, 0);
-			});
-
 		api.on('test-run', function (runStatus) {
 			runStatus.on('test', function (a) {
 				index = expected.indexOf(a.title);
@@ -203,6 +197,13 @@ function generateTests(prefix, apiCreator) {
 				expected.splice(index, 1);
 			});
 		});
+
+		api.run(files)
+			.then(function () {
+				// if all lines were removed from expected output
+				// actual output matches expected output
+				t.is(expected.length, 0);
+			});
 	});
 
 	test(prefix + 'display filename prefixes for failed test stack traces', function (t) {
@@ -479,18 +480,6 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'search directories recursively for files', function (t) {
-		t.plan(2);
-
-		var api = apiCreator();
-
-		api.run([path.join(__dirname, 'fixture/subdir')])
-			.then(function (result) {
-				t.is(result.passCount, 2);
-				t.is(result.failCount, 1);
-			});
-	});
-
 	test(prefix + 'titles of both passing and failing tests and AssertionErrors are returned', function (t) {
 		t.plan(3);
 
@@ -563,66 +552,6 @@ function generateTests(prefix, apiCreator) {
 		});
 
 		return api.run([path.join(__dirname, 'fixture/immediate-3-exit.js')]);
-	});
-
-	test(prefix + 'testing nonexistent files causes an AvaError to be emitted', function (t) {
-		t.plan(2);
-
-		var api = apiCreator();
-
-		api.on('test-run', function (runStatus) {
-			runStatus.on('error', function (err) {
-				t.is(err.name, 'AvaError');
-				t.match(err.message, /Couldn't find any files to test/);
-			});
-		});
-
-		return api.run([path.join(__dirname, 'fixture/broken.js')]);
-	});
-
-	test(prefix + 'test file in node_modules is ignored', function (t) {
-		t.plan(2);
-
-		var api = apiCreator();
-
-		api.on('test-run', function (runStatus) {
-			runStatus.on('error', function (err) {
-				t.is(err.name, 'AvaError');
-				t.match(err.message, /Couldn't find any files to test/);
-			});
-		});
-
-		return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
-	});
-
-	test(prefix + 'test file in fixtures is ignored', function (t) {
-		t.plan(2);
-
-		var api = apiCreator();
-
-		api.on('test-run', function (runStatus) {
-			runStatus.on('error', function (err) {
-				t.is(err.name, 'AvaError');
-				t.match(err.message, /Couldn't find any files to test/);
-			});
-		});
-
-		return api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
-	});
-
-	test(prefix + 'test file in helpers is ignored', function (t) {
-		t.plan(2);
-
-		var api = apiCreator();
-
-		api.on('test-run', function (runStatus) {
-			runStatus.on('error', function (err) {
-				t.is(err.name, 'AvaError');
-				t.match(err.message, /Couldn't find any files to test/);
-			});
-		});
-
-		return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 	});
 
 	test(prefix + 'Node.js-style --require CLI argument', function (t) {
@@ -760,7 +689,8 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', function () {});
 		});
 
-		var result = api.run(['test/fixture/with-dependencies/*test*.js']);
+		var files = new AvaFiles(['test/fixture/with-dependencies/*test*.js']).findTestFilesSync();
+		var result = api.run(files);
 
 		return result.catch(function () {});
 	});
@@ -782,8 +712,8 @@ function generateTests(prefix, apiCreator) {
 		});
 
 		return api.run([
-			'test/fixture/exclusive.js',
-			'test/fixture/generators.js'
+			path.resolve('test/fixture/exclusive.js'),
+			path.resolve('test/fixture/generators.js')
 		]);
 	});
 

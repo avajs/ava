@@ -30,6 +30,7 @@ var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
+var AvaFiles = require('./lib/ava-files');
 var Logger = require('./lib/logger');
 var Watcher = require('./lib/watcher');
 var Api = require('./api');
@@ -128,6 +129,10 @@ if (
 	process.exit(1);
 }
 
+var patterns = cli.input.length ? cli.input : arrify(conf.files);
+var files = new AvaFiles(patterns)
+	.findTestFilesSync();
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
@@ -164,11 +169,9 @@ api.on('test-run', function (runStatus) {
 	runStatus.on('stderr', logger.stderr);
 });
 
-var files = cli.input.length ? cli.input : arrify(conf.files);
-
 if (cli.flags.watch) {
 	try {
-		var watcher = new Watcher(logger, api, files, arrify(cli.flags.source));
+		var watcher = new Watcher(logger, api, patterns, arrify(cli.flags.source));
 		watcher.observeStdin(process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
