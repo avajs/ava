@@ -12,7 +12,6 @@ var debounce = require('lodash.debounce');
 var ms = require('ms');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
-var CachingPrecompiler = require('./lib/caching-precompiler');
 var RunStatus = require('./lib/run-status');
 
 function Api(options) {
@@ -42,13 +41,17 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file, runStatus) {
-	var hash = this.precompiler.precompileFile(file);
-	var precompiled = {};
-	precompiled[file] = hash;
+	var options = objectAssign({}, this.options);
 
-	var options = objectAssign({}, this.options, {
-		precompiled: precompiled
-	});
+	var babelEnabled = this.options.babelEnabled !== false;
+
+	if (babelEnabled) {
+		var hash = this.precompiler.precompileFile(file);
+		var precompiled = {};
+		precompiled[file] = hash;
+
+		options.precompiled = precompiled;
+	}
 
 	var emitter = fork(file, options);
 
@@ -97,12 +100,19 @@ Api.prototype.run = function (files, _options) {
 		return Promise.resolve(runStatus);
 	}
 
-	var cacheEnabled = self.options.cacheEnabled !== false;
-	var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
-		uniqueTempDir();
+	var babelEnabled = self.options.babelEnabled !== false;
 
-	self.options.cacheDir = cacheDir;
-	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
+	if (babelEnabled) {
+		var CachingPrecompiler = require('./lib/caching-precompiler');
+
+		var cacheEnabled = self.options.cacheEnabled !== false;
+		var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
+			uniqueTempDir();
+
+		self.options.cacheDir = cacheDir;
+		self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
+	}
+
 	self.fileCount = files.length;
 
 	var overwatch;
