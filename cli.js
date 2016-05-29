@@ -17,6 +17,9 @@ if (debug.enabled) {
 	require('time-require');
 }
 
+var fs = require('fs');
+var uniqueTempDir = require('unique-temp-dir');
+var findCacheDir = require('find-cache-dir');
 var updateNotifier = require('update-notifier');
 var figures = require('figures');
 var arrify = require('arrify');
@@ -26,7 +29,9 @@ var pkgConf = require('pkg-conf');
 var chalk = require('chalk');
 var isCi = require('is-ci');
 var hasFlag = require('has-flag');
+var through = require('through');
 var colors = require('./lib/colors');
+var CachingPrecompiler = require('./lib/caching-precompiler');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
@@ -98,7 +103,8 @@ var cli = meow([
 		'verbose',
 		'serial',
 		'tap',
-		'watch'
+		'watch',
+		'browser'
 	],
 	default: conf,
 	alias: {
@@ -110,7 +116,8 @@ var cli = meow([
 		w: 'watch',
 		S: 'source',
 		T: 'timeout',
-		c: 'concurrency'
+		c: 'concurrency',
+		b: 'browser'
 	}
 });
 
@@ -132,6 +139,70 @@ if (
 var patterns = cli.input.length ? cli.input : arrify(conf.files);
 var files = new AvaFiles(patterns)
 	.findTestFilesSync();
+
+if (cli.flags.browser) {
+	var browserify = require('browserify');
+
+	var cacheDirPath = findCacheDir({name: 'ava', files: files}) || uniqueTempDir();
+	var precompiler = new CachingPrecompiler(cacheDirPath, cli.flags.babelConfig);
+
+	function precompile (file) {
+		if (files.indexOf(file) < 0) {
+			return through();
+		}
+
+		precompiler.precompileFile(file);
+
+		var hash = precompiler.fileHashes[file];
+		var path = __dirname + '/node_modules/.cache/ava/' + hash + '.js';
+
+		var fileStream = fs.createReadStream(path);
+		var transformStream = through(function () {}, function () {});
+
+		fileStream.on('data', function (data) {
+			transformStream.queue(data);
+		});
+
+		fileStream.on('end', function () {
+			transformStream.queue(null);
+		});
+
+		return transformStream;
+	}
+
+	var state = {
+		files: files,
+		conf: conf,
+		cli: cli
+	};
+
+	var statePath = cacheDirPath + '/state.json';
+	fs.writeFileSync(statePath, JSON.stringify(state), 'utf8');
+
+	var browserBundle = browserify(['browser.js'], {
+		fullPaths: true,
+		insertGlobals: true
+	});
+
+	browserBundle.require(statePath, { expose: './state' });
+
+	var browserStream = fs.createWriteStream('tests.js');
+	browserBundle.bundle().pipe(browserStream);
+
+	var workerBundle = browserify(['lib/browser-test-worker.js'], {
+		fullPaths: true,
+		insertGlobals: true
+	});
+
+	workerBundle.transform(precompile);
+	workerBundle.require(arrify(cli.flags.require));
+	workerBundle.require(files);
+
+	var workerStream = fs.createWriteStream('test-worker.js');
+	workerBundle.bundle().pipe(workerStream);
+
+	return;
+}
 
 var api = new Api({
 	failFast: cli.flags.failFast,
