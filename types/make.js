@@ -1,3 +1,5 @@
+'use strict';
+
 // TypeScript definitions are generated here.
 // AVA allows chaining of function names, like `test.after.cb.always`.
 // The order of these names is not important.
@@ -16,10 +18,10 @@ const runner = require('../lib/runner');
 
 const arrayHas = parts => part => parts.includes(part);
 
-const base = fs.readFileSync(path.join(__dirname, 'base.d.ts')).toString();
+const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 
 // All suported function names
-const allParts = Object.keys(runner.chainableMethods).filter(name => name !== 'test');
+const allParts = Object.keys(runner._chainableMethods).filter(name => name !== 'test');
 
 const output = base + generatePrefixed([]);
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);

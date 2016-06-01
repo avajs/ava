@@ -40,7 +40,8 @@
   "scripts": {
     "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
-    "visual": "node test/visual/run-visual-tests.js"
+    "visual": "node test/visual/run-visual-tests.js",
+    "make-ts": "node types/make"
   },
   "files": [
     "lib",
