@@ -750,7 +750,6 @@ $ ava --tap | tap-nyan
 
 Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
 
-
 ### Clean stack traces
 
 AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
