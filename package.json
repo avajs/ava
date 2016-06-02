@@ -176,6 +176,12 @@
     "xo": "*",
     "zen-observable": "^0.2.1"
   },
+  "optionalDependencies": {
+    "chokidar": "^1.4.2"
+  },
+  "browser": {
+    "./lib/process-adapter.js": "./lib/browser-adapter.js"
+  },
   "xo": {
     "rules": {
       "import/newline-after-import": 0

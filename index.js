@@ -1,8 +1,9 @@
 'use strict';
+var process = require('./lib/process-adapter');
 var serializeError = require('./lib/serialize-error');
 var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
-var send = require('./lib/send-to-parent');
+var send = process.send;
 
 var opts = globals.options;
 var runner = new Runner({
