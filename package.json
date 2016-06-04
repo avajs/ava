@@ -150,6 +150,7 @@
     "update-notifier": "^0.7.0"
   },
   "devDependencies": {
+    "babel-preset-react": "^6.5.0",
     "cli-table2": "^0.2.0",
     "coveralls": "^2.11.4",
     "delay": "^1.3.0",

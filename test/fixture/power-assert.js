@@ -11,3 +11,15 @@ test.serial(t => {
 
 	t.true(a === 'foo', 'with message');
 });
+
+test.serial(t => {
+	const o = {};
+
+	t.true(o === {...o});
+});
+
+test.serial(t => {
+	const React = { createElement: function(type) { return type } }
+
+	t.true(<div /> === <span />);
+});
