@@ -650,9 +650,13 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(prefix + 'power-assert support', function (t) {
-		t.plan(3);
+		t.plan(5);
 
-		var api = apiCreator();
+		var api = apiCreator({
+			babelConfig: {
+				presets: ['react', 'es2015', 'stage-2']
+			}
+		});
 
 		api.run([path.join(__dirname, 'fixture/power-assert.js')])
 			.then(function (result) {
@@ -666,6 +670,16 @@ function generateTests(prefix, apiCreator) {
 				t.match(
 					result.errors[1].error.message,
 					/with message\s+t\.true\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
+				);
+
+				t.match(
+					result.errors[2].error.message,
+					/t\.true\(o === \{ ...o \}\)\s*\n\s+\|\s*\n\s+Object\{\}/m
+				);
+
+				t.match(
+					result.errors[3].error.message,
+					/t\.true\(<div \/> === <span \/>\)/m
 				);
 			});
 	});
