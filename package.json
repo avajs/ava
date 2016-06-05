@@ -1,6 +1,6 @@
 {
   "name": "ava",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Futuristic test runner 🚀",
   "license": "MIT",
   "repository": "avajs/ava",
@@ -103,6 +103,7 @@
     "common-path-prefix": "^1.0.0",
     "convert-source-map": "^1.2.0",
     "core-assert": "^0.2.0",
+    "currently-unhandled": "^0.4.1",
     "debug": "^2.2.0",
     "empower-core": "^0.6.1",
     "figures": "^1.4.0",
