@@ -662,6 +662,8 @@ Note that AVA will *always* apply [a few internal plugins](docs/recipes/babelrc.
 
 AVA includes typings for TypeScript. You have to set up transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use promises and async functions.
 
+See AVA's [TypeScript recipe](docs/recipes/typescript.md) for a more detailed explanation.
+
 ### Transpiling imported modules
 
 AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
