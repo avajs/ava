@@ -186,6 +186,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
       "*oo",
       "!foo"
     ],
+    "concurrency": 5,
     "failFast": true,
     "tap": true,
     "require": [
