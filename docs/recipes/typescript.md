@@ -6,10 +6,10 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 
 ## Setup
 
-First install the TypeScript compiler [tsc](https://github.com/Microsoft/TypeScript).
+First install [TypeScript](https://github.com/Microsoft/TypeScript).
 
 ```
-$ npm install --save-dev tsc
+$ npm install --save-dev typescript
 ```
 
 Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig.json) file. This file specifies the compiler options required to compile the project or the test file.
