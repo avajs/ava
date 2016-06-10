@@ -703,7 +703,7 @@ function generateTests(prefix, apiCreator) {
 		}
 
 		function endsWithMap(filename) {
-			return /\.js$/.test(filename);
+			return /\.map$/.test(filename);
 		}
 	});
 
