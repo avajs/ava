@@ -650,7 +650,7 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(prefix + 'power-assert support', function (t) {
-		t.plan(5);
+		t.plan(4);
 
 		var api = apiCreator({
 			babelConfig: {
@@ -660,8 +660,6 @@ function generateTests(prefix, apiCreator) {
 
 		api.run([path.join(__dirname, 'fixture/power-assert.js')])
 			.then(function (result) {
-				t.ok(result.errors[0].error.powerAssertContext);
-
 				t.match(
 					result.errors[0].error.message,
 					/t\.true\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
