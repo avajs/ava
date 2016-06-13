@@ -36,25 +36,7 @@ function makeGroup(test) {
 }
 var group = makeGroup(test);
 
-test('chokidar is not installed', function (t) {
-	t.plan(2);
-
-	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
-		chokidar: null
-	});
-
-	try {
-		new Subject({}, { // eslint-disable-line no-new
-			excludePatterns: [],
-			on: function () {}
-		}, [], []);
-	} catch (err) {
-		t.is(err.name, 'AvaError');
-		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
-	}
-});
-
-group('chokidar is installed', function (beforeEach, test, group) {
+group('chokidar', function (beforeEach, test, group) {
 	var chokidar;
 	var debug;
 	var logger;
