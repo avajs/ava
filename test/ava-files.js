@@ -141,3 +141,18 @@ test('findFiles - finds the correct files by default', function (t) {
 		t.end();
 	});
 });
+
+test('findFiles - test file in node_modules, fixtures and helpers is ignored', function (t) {
+	var fixtureDir = fixture('ignored-dirs');
+	process.chdir(fixtureDir);
+
+	var expected = [];
+
+	var avaFiles = new AvaFiles();
+	avaFiles
+		.findTestFiles()
+		.then(function (files) {
+			t.deepEqual(files, expected);
+			t.end();
+		});
+});

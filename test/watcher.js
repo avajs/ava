@@ -115,14 +115,19 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 		logger.clear.returns(true);
 
-		avaFiles = AvaFiles;
-
-		api.run.returns(new Promise(function () {}));
 		files = [
 			'test.js',
 			'test-*.js',
 			'test'
 		];
+
+		avaFiles = AvaFiles;
+
+		avaFiles.prototype.findTestFilesSync = function () {
+			return this.files;
+		};
+
+		api.run.returns(new Promise(function () {}));
 
 		resetRunStatus();
 
