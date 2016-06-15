@@ -176,5 +176,10 @@
   },
   "optionalDependencies": {
     "chokidar": "^1.4.2"
+  },
+  "xo": {
+    "rules": {
+      "import/newline-after-import": 0
+    }
   }
 }

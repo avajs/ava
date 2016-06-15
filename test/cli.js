@@ -8,6 +8,7 @@ var figures = require('figures');
 var arrify = require('arrify');
 var chalk = require('chalk');
 var touch = require('touch');
+
 var cliPath = path.join(__dirname, '../cli.js');
 
 // for some reason chalk is disabled by default

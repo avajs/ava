@@ -4,6 +4,7 @@ var test = require('tap').test;
 var Runner = require('../lib/runner');
 var _fork = require('../lib/fork.js');
 var CachingPrecompiler = require('../lib/caching-precompiler');
+
 var cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
 var precompiler = new CachingPrecompiler(cacheDir);
 

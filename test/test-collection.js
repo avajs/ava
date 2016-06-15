@@ -90,7 +90,10 @@ test('must be called with new', function (t) {
 test('throws if no type is supplied', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
-		collection.add({title: 'someTitle', metadata: {}});
+		collection.add({
+			title: 'someTitle',
+			metadata: {}
+		});
 	}, {message: 'Test type must be specified'});
 	t.end();
 });
@@ -98,7 +101,10 @@ test('throws if no type is supplied', function (t) {
 test('throws if you try to set a hook as exclusive', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
-		collection.add(mockTest({type: 'beforeEach', exclusive: true}));
+		collection.add(mockTest({
+			type: 'beforeEach',
+			exclusive: true
+		}));
 	}, {message: '"only" cannot be used with a beforeEach hook'});
 	t.end();
 });
@@ -106,7 +112,10 @@ test('throws if you try to set a hook as exclusive', function (t) {
 test('throws if you try to set a before hook as always', function (t) {
 	var collection = new TestCollection();
 	t.throws(function () {
-		collection.add(mockTest({type: 'before', always: true}));
+		collection.add(mockTest({
+			type: 'before',
+			always: true
+		}));
 	}, {message: '"always" can only be used with after and afterEach hooks'});
 	t.end();
 });
@@ -184,7 +193,10 @@ test('adding a after test', function (t) {
 
 test('adding a after.always test', function (t) {
 	var collection = new TestCollection();
-	collection.add(mockTest({type: 'after', always: true}, 'bar'));
+	collection.add(mockTest({
+		type: 'after',
+		always: true
+	}, 'bar'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			afterAlways: ['bar']
@@ -206,7 +218,10 @@ test('adding a afterEach test', function (t) {
 
 test('adding a afterEach.always test', function (t) {
 	var collection = new TestCollection();
-	collection.add(mockTest({type: 'afterEach', always: true}, 'baz'));
+	collection.add(mockTest({
+		type: 'afterEach',
+		always: true
+	}, 'baz'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
 			afterEachAlways: ['baz']
@@ -252,12 +267,18 @@ test('foo', function (t) {
 	}
 
 	add('after1', {type: 'after'});
-	add('after.always', {type: 'after', always: true});
+	add('after.always', {
+		type: 'after',
+		always: true
+	});
 	add('beforeEach1', {type: 'beforeEach'});
 	add('before1', {type: 'before'});
 	add('beforeEach2', {type: 'beforeEach'});
 	add('afterEach1', {type: 'afterEach'});
-	add('afterEach.always', {type: 'afterEach', always: true});
+	add('afterEach.always', {
+		type: 'afterEach',
+		always: true
+	});
 	add('test1', {});
 	add('afterEach2', {type: 'afterEach'});
 	add('test2', {});
@@ -312,12 +333,18 @@ test('foo', function (t) {
 	}
 
 	add('after1', {type: 'after'});
-	add('after.always', {type: 'after', always: true});
+	add('after.always', {
+		type: 'after',
+		always: true
+	});
 	add('beforeEach1', {type: 'beforeEach'});
 	add('before1', {type: 'before'});
 	add('beforeEach2', {type: 'beforeEach'});
 	add('afterEach1', {type: 'afterEach'});
-	add('afterEach.always', {type: 'afterEach', always: true});
+	add('afterEach.always', {
+		type: 'afterEach',
+		always: true
+	});
 	add('test1', {});
 	add('afterEach2', {type: 'afterEach'});
 	add('test2', {});

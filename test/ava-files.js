@@ -1,8 +1,9 @@
 'use strict';
 var path = require('path');
 var tap = require('tap');
-var test = tap.test;
 var AvaFiles = require('../lib/ava-files');
+
+var test = tap.test;
 
 tap.afterEach(function (done) {
 	// We changed the CWD in some of the tests.

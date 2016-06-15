@@ -7,6 +7,7 @@ var arrify = require('arrify');
 var Promise = require('bluebird');
 var pify = require('pify');
 var inquirer = pify(require('inquirer'), Promise);
+
 var cwd = path.resolve(__dirname, '../../');
 
 function fixture(fixtureName) {

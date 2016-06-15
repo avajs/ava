@@ -121,8 +121,8 @@ if (cli.flags.init) {
 }
 
 if (
-	(hasFlag('--watch') || hasFlag('-w')) && (hasFlag('--tap') || hasFlag('-t')) ||
-	conf.watch && conf.tap
+	((hasFlag('--watch') || hasFlag('-w')) && (hasFlag('--tap') || hasFlag('-t'))) ||
+	(conf.watch && conf.tap)
 ) {
 	console.error('  ' + colors.error(figures.cross) + ' The TAP reporter is not available when using watch mode.');
 	process.exit(1);

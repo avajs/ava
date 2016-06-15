@@ -109,8 +109,10 @@ Api.prototype._run = function (files, _options) {
 	}
 
 	var cacheEnabled = self.options.cacheEnabled !== false;
-	var cacheDir = (cacheEnabled && findCacheDir({name: 'ava', files: files})) ||
-		uniqueTempDir();
+	var cacheDir = (cacheEnabled && findCacheDir({
+		name: 'ava',
+		files: files
+	})) || uniqueTempDir();
 
 	self.options.cacheDir = cacheDir;
 	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);

@@ -69,9 +69,18 @@ test('all sync - all pass - no bail', function (t) {
 		passed: true,
 		reason: null,
 		result: [
-			{passed: true, result: 'a'},
-			{passed: true, result: 'b'},
-			{passed: true, result: 'c'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
 		]
 	});
 	t.end();
@@ -91,9 +100,18 @@ test('all sync - no failure - bail', function (t) {
 		passed: true,
 		reason: null,
 		result: [
-			{passed: true, result: 'a'},
-			{passed: true, result: 'b'},
-			{passed: true, result: 'c'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
 		]
 	});
 	t.end();
@@ -113,9 +131,18 @@ test('all sync - begin failure - no bail', function (t) {
 		passed: false,
 		reason: 'a',
 		result: [
-			{passed: false, reason: 'a'},
-			{passed: true, result: 'b'},
-			{passed: true, result: 'c'}
+			{
+				passed: false,
+				reason: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
 		]
 	});
 	t.end();
@@ -135,9 +162,18 @@ test('all sync - mid failure - no bail', function (t) {
 		passed: false,
 		reason: 'b',
 		result: [
-			{passed: true, result: 'a'},
-			{passed: false, reason: 'b'},
-			{passed: true, result: 'c'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: false,
+				reason: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
 		]
 	});
 	t.end();
@@ -157,9 +193,18 @@ test('all sync - end failure - no bail', function (t) {
 		passed: false,
 		reason: 'c',
 		result: [
-			{passed: true, result: 'a'},
-			{passed: true, result: 'b'},
-			{passed: false, reason: 'c'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
 		]
 	});
 	t.end();
@@ -179,9 +224,18 @@ test('all sync - multiple failure - no bail', function (t) {
 		passed: false,
 		reason: 'a',
 		result: [
-			{passed: false, reason: 'a'},
-			{passed: true, result: 'b'},
-			{passed: false, reason: 'c'}
+			{
+				passed: false,
+				reason: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
 		]
 	});
 	t.end();
@@ -201,7 +255,10 @@ test('all sync - begin failure - bail', function (t) {
 		passed: false,
 		reason: 'a',
 		result: [
-			{passed: false, reason: 'a'}
+			{
+				passed: false,
+				reason: 'a'
+			}
 		]
 	});
 	t.end();
@@ -221,8 +278,14 @@ test('all sync - mid failure - bail', function (t) {
 		passed: false,
 		reason: 'b',
 		result: [
-			{passed: true, result: 'a'},
-			{passed: false, reason: 'b'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: false,
+				reason: 'b'
+			}
 		]
 	});
 	t.end();
@@ -242,9 +305,18 @@ test('all sync - end failure - bail', function (t) {
 		passed: false,
 		reason: 'c',
 		result: [
-			{passed: true, result: 'a'},
-			{passed: true, result: 'b'},
-			{passed: false, reason: 'c'}
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
 		]
 	});
 	t.end();
@@ -263,9 +335,18 @@ test('all async - no failure - no bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -285,9 +366,18 @@ test('all async - no failure - bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -307,9 +397,18 @@ test('last async - no failure - no bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -329,9 +428,18 @@ test('mid async - no failure - no bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -351,9 +459,18 @@ test('first async - no failure - no bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -373,9 +490,18 @@ test('last async - no failure - bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -395,9 +521,18 @@ test('mid async - no failure - bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -417,9 +552,18 @@ test('first async - no failure - bail', function (t) {
 			passed: true,
 			reason: null,
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -439,7 +583,10 @@ test('all async - begin failure - bail', function (t) {
 			passed: false,
 			reason: 'a',
 			result: [
-				{passed: false, reason: 'a'}
+				{
+					passed: false,
+					reason: 'a'
+				}
 			]
 		});
 		t.end();
@@ -459,8 +606,14 @@ test('all async - mid failure - bail', function (t) {
 			passed: false,
 			reason: 'b',
 			result: [
-				{passed: true, result: 'a'},
-				{passed: false, reason: 'b'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: false,
+					reason: 'b'
+				}
 			]
 		});
 		t.end();
@@ -480,9 +633,18 @@ test('all async - end failure - bail', function (t) {
 			passed: false,
 			reason: 'c',
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: false, reason: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: false,
+					reason: 'c'
+				}
 			]
 		});
 		t.end();
@@ -502,9 +664,18 @@ test('all async - begin failure - no bail', function (t) {
 			passed: false,
 			reason: 'a',
 			result: [
-				{passed: false, reason: 'a'},
-				{passed: true, result: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: false,
+					reason: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -524,9 +695,18 @@ test('all async - mid failure - no bail', function (t) {
 			passed: false,
 			reason: 'b',
 			result: [
-				{passed: true, result: 'a'},
-				{passed: false, reason: 'b'},
-				{passed: true, result: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: false,
+					reason: 'b'
+				},
+				{
+					passed: true,
+					result: 'c'
+				}
 			]
 		});
 		t.end();
@@ -546,9 +726,18 @@ test('all async - end failure - no bail', function (t) {
 			passed: false,
 			reason: 'c',
 			result: [
-				{passed: true, result: 'a'},
-				{passed: true, result: 'b'},
-				{passed: false, reason: 'c'}
+				{
+					passed: true,
+					result: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: false,
+					reason: 'c'
+				}
 			]
 		});
 		t.end();
@@ -568,9 +757,18 @@ test('all async - multiple failure - no bail', function (t) {
 			passed: false,
 			reason: 'a',
 			result: [
-				{passed: false, reason: 'a'},
-				{passed: true, result: 'b'},
-				{passed: false, reason: 'c'}
+				{
+					passed: false,
+					reason: 'a'
+				},
+				{
+					passed: true,
+					result: 'b'
+				},
+				{
+					passed: false,
+					reason: 'c'
+				}
 			]
 		});
 		t.end();
@@ -585,8 +783,8 @@ test('rejections are just passed through - no bail', function (t) {
 			reject('foo')
 		],
 		false
-	).run().catch(function (reason) {
-		t.is(reason, 'foo');
+	).run().catch(function (err) {
+		t.is(err, 'foo');
 		t.end();
 	});
 });
@@ -599,8 +797,8 @@ test('rejections are just passed through - bail', function (t) {
 			reject('foo')
 		],
 		true
-	).run().catch(function (reason) {
-		t.is(reason, 'foo');
+	).run().catch(function (err) {
+		t.is(err, 'foo');
 		t.end();
 	});
 });
@@ -627,15 +825,24 @@ test('sequences of sequences', function (t) {
 				passed: true,
 				reason: null,
 				result: [
-					{passed: true, result: 'a'},
-					{passed: true, result: 'b'}
+					{
+						passed: true,
+						result: 'a'
+					},
+					{
+						passed: true,
+						result: 'b'
+					}
 				]
 			},
 			{
 				passed: true,
 				reason: null,
 				result: [
-					{passed: true, result: 'c'}
+					{
+						passed: true,
+						result: 'c'
+					}
 				]
 			}
 		]

@@ -1,8 +1,8 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
-var text = fs.readFileSync(path.join(__dirname, 'lorem-ipsum.txt'), 'utf8');
 
+var text = fs.readFileSync(path.join(__dirname, 'lorem-ipsum.txt'), 'utf8');
 var lines = text.split(/\r?\n/g).map(function (line) {
 	return line.split(' ');
 });

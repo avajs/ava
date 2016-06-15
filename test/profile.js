@@ -22,8 +22,8 @@ function run(files) {
 test('exits normally when tests pass', function (t) {
 	t.plan(1);
 	run('es2015')
-		.catch(function (e) {
-			t.fail(e);
+		.catch(function (err) {
+			t.fail(err);
 		})
 		.then(function () {
 			t.pass();
