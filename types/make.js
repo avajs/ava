@@ -16,7 +16,7 @@ const path = require('path');
 const fs = require('fs');
 const runner = require('../lib/runner');
 
-const includes = (array, value ) => array.indexOf(value) !== -1;
+const includes = (array, value) => array.indexOf(value) !== -1;
 const arrayHas = parts => part => includes(parts, part);
 
 const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
