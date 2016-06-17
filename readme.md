@@ -59,12 +59,14 @@ test(t => {
 
 ### Add AVA to your project
 
-Install AVA globally run with `--init` to add AVA to your `package.json`:
+Install AVA globally and run it with `--init` to add AVA to your `package.json`:
 
 ```console
 $ npm install --global ava
 $ ava --init
 ```
+
+Your `package.json` will then look like this:
 
 ```json
 {
@@ -73,12 +75,12 @@ $ ava --init
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.11.0"
+    "ava": "^0.15.0"
   }
 }
 ```
 
-Any arguments passed after `--init` are added in the `package.json`.
+Any arguments passed after `--init` are added as config to `package.json`.
 
 #### Manual installation
 
