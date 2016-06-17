@@ -73,7 +73,7 @@ $ ava --init
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.11.0"
+    "ava": "^0.15.0"
   }
 }
 ```
