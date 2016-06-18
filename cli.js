@@ -38,11 +38,7 @@ var Api = require('./api');
 // Bluebird specific
 Promise.longStackTraces();
 
-var conf = pkgConf.sync('ava', {
-	defaults: {
-		babel: 'default'
-	}
-});
+var conf = pkgConf.sync('ava');
 
 var pkgDir = path.dirname(pkgConf.filepath(conf));
 
