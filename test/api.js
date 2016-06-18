@@ -1023,16 +1023,20 @@ function generateTests(prefix, apiCreator) {
 	});
 }
 
-function generatePassDebugTests(execArgv) {
+function generatePassDebugTests(execArgv, expectedInspectIndex) {
 	test('pass ' + execArgv.join(' ') + ' to fork', function (t) {
-		t.plan(3);
+		t.plan(expectedInspectIndex === -1 ? 3 : 2);
 
 		var api = new Api({testOnlyExecArgv: execArgv});
 		return api.computeForkExecArgs(['foo.js'])
 			.then(function (result) {
 				t.true(result.length === 1);
-				t.true(result[0].length === 1);
-				t.true(/--debug=\d+/.test(result[0][0]));
+				if (expectedInspectIndex === -1) {
+					t.true(result[0].length === 1);
+					t.true(/--debug=\d+/.test(result[0][0]));
+				} else {
+					t.true(/--inspect=\d+/.test(result[0][expectedInspectIndex]));
+				}
 			});
 	});
 }
@@ -1049,8 +1053,18 @@ function generatePassDebugIntegrationTests(execArgv) {
 	});
 }
 
-generatePassDebugTests(['--debug=0']);
-generatePassDebugTests(['--debug']);
+generatePassDebugTests(['--debug=0'], -1);
+generatePassDebugTests(['--debug'], -1);
 
+generatePassDebugTests(['--inspect=0'], 0);
+generatePassDebugTests(['--inspect'], 0);
+
+generatePassDebugTests(['--inspect=0', '--debug-brk'], 0);
+generatePassDebugTests(['--inspect', '--debug-brk'], 0);
+
+generatePassDebugTests(['--debug-brk', '--inspect=0'], 1);
+generatePassDebugTests(['--debug-brk', '--inspect'], 1);
+
+// --inspect cannot be tested because released node doesn't support it
 generatePassDebugIntegrationTests(['--debug=0']);
-
+generatePassDebugIntegrationTests(['--debug']);

@@ -137,13 +137,26 @@ Api.prototype._run = function (files, _options) {
 Api.prototype.computeForkExecArgs = function (files) {
 	var execArgv = this.options.testOnlyExecArgv || process.execArgv;
 	var debugArgIndex = -1;
+
+	// --debug-brk is used in addition to --inspect to break on first line and wait
 	execArgv.some(function (arg, index) {
-		if (arg === '--debug' || arg === '--debug-brk' || arg.indexOf('--debug-brk=') === 0 || arg.indexOf('--debug=') === 0) {
+		if (arg === '--inspect' || arg.indexOf('--inspect=') === 0) {
 			debugArgIndex = index;
 			return true;
 		}
 		return false;
 	});
+
+	var isInspect = debugArgIndex !== -1;
+	if (!isInspect) {
+		execArgv.some(function (arg, index) {
+			if (arg === '--debug' || arg === '--debug-brk' || arg.indexOf('--debug-brk=') === 0 || arg.indexOf('--debug=') === 0) {
+				debugArgIndex = index;
+				return true;
+			}
+			return false;
+		});
+	}
 
 	if (debugArgIndex === -1) {
 		return Promise.resolve([]);
@@ -153,7 +166,7 @@ Api.prototype.computeForkExecArgs = function (files) {
 		.then(function (ports) {
 			return ports.map(function (port) {
 				var forkExecArgv = execArgv.slice();
-				var flagName = '--debug';
+				var flagName = isInspect ? '--inspect' : '--debug';
 				var oldValue = forkExecArgv[debugArgIndex];
 				if (oldValue.indexOf('brk') > 0) {
 					flagName += '-brk';
