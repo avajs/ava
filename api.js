@@ -10,10 +10,10 @@ var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
 var ms = require('ms');
+var AvaFiles = require('ava-files');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
-var AvaFiles = require('./lib/ava-files');
 var RunStatus = require('./lib/run-status');
 
 function Api(options) {
@@ -23,7 +23,9 @@ function Api(options) {
 
 	EventEmitter.call(this);
 
-	this.options = options || {};
+	this.options = objectAssign({}, options);
+	this.options.cwd = this.options.cwd || process.cwd();
+	this.options.resolveTestsFrom = this.options.resolveTestsFrom || this.options.cwd;
 	this.options.match = this.options.match || [];
 	this.options.require = (this.options.require || []).map(function (moduleId) {
 		var ret = resolveCwd(moduleId);
@@ -73,7 +75,7 @@ Api.prototype._onTimeout = function (runStatus) {
 Api.prototype.run = function (files, options) {
 	var self = this;
 
-	return new AvaFiles(files)
+	return new AvaFiles({files: files, cwd: this.options.resolveTestsFrom})
 		.findTestFiles()
 		.then(function (files) {
 			return self._run(files, options);

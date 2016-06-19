@@ -8,7 +8,7 @@ var lolex = require('lolex');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var test = require('tap').test;
-var AvaFiles = require('../lib/ava-files');
+var AvaFiles = require('ava-files');
 
 var setImmediate = require('../lib/globals').setImmediate;
 
@@ -61,7 +61,7 @@ group('chokidar', function (beforeEach, test, group) {
 						debug.apply(null, args);
 					};
 				},
-				'./ava-files': avaFiles
+				'ava-files': avaFiles
 			});
 	}
 
@@ -580,8 +580,8 @@ group('chokidar', function (beforeEach, test, group) {
 	test('initial exclude patterns override whether something is a test file', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!*bar*'];
@@ -659,8 +659,8 @@ group('chokidar', function (beforeEach, test, group) {
 	test('exclude patterns override directory matches', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!**/exclude/**'];

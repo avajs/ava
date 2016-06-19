@@ -171,6 +171,39 @@ test('pkg-conf: cli takes precedence', function (t) {
 	});
 });
 
+test('pkg-conf(resolve-dir): works as expected when run from the package.json directory', function (t) {
+	execCli(['--verbose'], {dirname: 'fixture/pkg-conf/resolve-dir'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-base-1/);
+		t.match(stderr, /dir-a-base-2/);
+		t.notMatch(stderr, /dir-a-wrapper/);
+		t.notMatch(stdout, /dir-a-wrapper/);
+		t.end();
+	});
+});
+
+test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none are specified on cli', function (t) {
+	execCli(['--verbose'], {dirname: 'fixture/pkg-conf/resolve-dir/dir-a-wrapper'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-base-1/);
+		t.match(stderr, /dir-a-base-2/);
+		t.notMatch(stderr, /dir-a-wrapper/);
+		t.notMatch(stdout, /dir-a-wrapper/);
+		t.end();
+	});
+});
+
+test('pkg-conf(resolve-dir): resolves tests process.cwd() if globs are passed on the command line', function (t) {
+	execCli(['--verbose', 'dir-a/*.js'], {dirname: 'fixture/pkg-conf/resolve-dir/dir-a-wrapper'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-wrapper-3/);
+		t.match(stderr, /dir-a-wrapper-4/);
+		t.notMatch(stderr, /dir-a-base/);
+		t.notMatch(stdout, /dir-a-base/);
+		t.end();
+	});
+});
+
 test('watcher reruns test files when they changed', function (t) {
 	var killed = false;
 
