@@ -12,6 +12,28 @@ You may be using a service that only allows a limited number of concurrent conne
 
 Use the `concurrency` flag to limit the number of processes ran. For example, if your service plan allows 5 clients, you should run AVA with `concurrency=5` or less.
 
+## Async operations
+
+You may be running an async operation inside a test and wondering why it's not finishing. If your async operation uses promises, you should be returning the promise:
+
+```js
+test(t => {
+  return fetch().then(data => {
+    t.is(data, 'foo');
+  });
+});
+```
+
+If it uses callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
+
+```js
+test.cb(t => {
+  fetch((err, data) => {
+    t.is(data, 'bar');
+  });
+});
+```
+
 ---
 
 Is your problem not listed here? Submit a pull request or comment on [this](https://github.com/avajs/ava/issues/404) issue.
