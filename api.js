@@ -23,10 +23,12 @@ function Api(options) {
 
 	EventEmitter.call(this);
 
-	this.options = objectAssign({}, options);
-	this.options.cwd = this.options.cwd || process.cwd();
-	this.options.resolveTestsFrom = this.options.resolveTestsFrom || this.options.cwd;
-	this.options.match = this.options.match || [];
+	this.options = objectAssign({
+		cwd: process.cwd(),
+		resolveTestsFrom: process.cwd(),
+		match: []
+	}, options);
+
 	this.options.require = (this.options.require || []).map(function (moduleId) {
 		var ret = resolveCwd(moduleId);
 		if (ret === null) {
