@@ -24,7 +24,6 @@ var arrify = require('arrify');
 var meow = require('meow');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
-var chalk = require('chalk');
 var isCi = require('is-ci');
 var hasFlag = require('has-flag');
 var colors = require('./lib/colors');
@@ -33,28 +32,20 @@ var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
 var Watcher = require('./lib/watcher');
+var babelConfig = require('./lib/babel-config');
 var Api = require('./api');
 
 // Bluebird specific
 Promise.longStackTraces();
 
-var conf = pkgConf.sync('ava', {
-	defaults: {
-		babel: 'default'
-	}
-});
+var conf = pkgConf.sync('ava');
 
 var pkgDir = path.dirname(pkgConf.filepath(conf));
 
-// check for valid babel config shortcuts (can be either "default" or "inherit")
-var isValidShortcut = ['default', 'inherit'].indexOf(conf.babel) !== -1;
-
-if (!conf.babel || (typeof conf.babel === 'string' && !isValidShortcut)) {
-	var message = '';
-	message += 'Unexpected Babel configuration for AVA. ';
-	message += 'See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
-
-	console.log('\n  ' + colors.error(figures.cross) + ' ' + message);
+try {
+	conf.babel = babelConfig.validate(conf.babel);
+} catch (err) {
+	console.log('\n  ' + err.message);
 	process.exit(1);
 }
 
