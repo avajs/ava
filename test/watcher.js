@@ -8,7 +8,7 @@ var lolex = require('lolex');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var test = require('tap').test;
-var AvaFiles = require('../lib/ava-files');
+var AvaFiles = require('ava-files');
 
 var setImmediate = require('../lib/globals').setImmediate;
 
@@ -61,7 +61,7 @@ group('chokidar', function (beforeEach, test, group) {
 						debug.apply(null, args);
 					};
 				},
-				'./ava-files': avaFiles
+				'ava-files': avaFiles
 			});
 	}
 

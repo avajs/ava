@@ -10,10 +10,10 @@ var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
 var ms = require('ms');
+var AvaFiles = require('ava-files');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
-var AvaFiles = require('./lib/ava-files');
 var RunStatus = require('./lib/run-status');
 
 function Api(options) {
