@@ -87,6 +87,7 @@ var cli = meow([
 		'concurrency'
 	],
 	boolean: [
+		'debug',
 		'fail-fast',
 		'verbose',
 		'serial',
@@ -109,6 +110,22 @@ var cli = meow([
 
 updateNotifier({pkg: cli.pkg}).notify();
 
+if (cli.flags.debug) {
+	cli.flags.concurrency = '1';
+	cli.flags.debug = 5858;
+	process.argv.some(function (arg) {
+		if (/^--debug=/.test(arg)) {
+			cli.flags.debug = parseInt(arg.substring(8), 10);
+			return true;
+		}
+		return false;
+	});
+
+	if (isNaN(cli.flags.debug)) {
+		cli.flags.debug = 5858;
+	}
+}
+
 if (cli.flags.init) {
 	require('ava-init')();
 	return;
@@ -125,6 +142,7 @@ if (
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
+	debug: cli.flags.debug,
 	require: arrify(cli.flags.require),
 	cacheEnabled: cli.flags.cache !== false,
 	explicitTitles: cli.flags.watch,
