@@ -4,7 +4,7 @@
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [https://github.com/avajs/ava/issues/751](#751).
 
-AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these](https://github.com/watson/is-ci/blob/master/index.js) variables.
+AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these variables](https://github.com/watson/is-ci/blob/master/index.js).
 
 ## AVA and connected client limits
 
@@ -14,7 +14,7 @@ Use the `concurrency` flag to limit the number of processes ran. For example, if
 
 ## Async operations
 
-You may be running an async operation inside a test and wondering why it's not finishing. If your async operation uses promises, you should be returning the promise:
+You may be running an async operation inside a test and wondering why it's not finishing. If your async operation uses promises, you should return the promise:
 
 ```js
 test(t => {
@@ -30,11 +30,13 @@ If it uses callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-supp
 test.cb(t => {
   fetch((err, data) => {
     t.is(data, 'bar');
+    t.end();
   });
 });
 ```
 
+Alternatively, promisify the promise using something like [pify](https://github.com/sindresorhus/pify).
+
 ---
 
-Is your problem not listed here? Submit a pull request or comment on [this](https://github.com/avajs/ava/issues/404) issue.
-
+Is your problem not listed here? Submit a pull request or comment on [this issue](https://github.com/avajs/ava/issues/404).
