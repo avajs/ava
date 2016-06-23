@@ -35,7 +35,7 @@ test.cb(t => {
 });
 ```
 
-Alternatively, promisify the promise using something like [pify](https://github.com/sindresorhus/pify).
+Alternatively, promisify the callback function using something like [pify](https://github.com/sindresorhus/pify).
 
 ---
 
