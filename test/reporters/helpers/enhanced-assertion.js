@@ -1,7 +1,7 @@
 'use strict';
 var test = require('tap').test;
 var chalk = require('chalk');
-var enhancedAssertion = require('../../../lib/reporters/helpers/enhanced-assertion')();
+var EnhancedAssertion = require('../../../lib/reporters/helpers/enhanced-assertion');
 var compareLineOutput = require('../../helper/compare-line-output');
 
 test('Show `expected` and `actual` without a message', function (t) {
@@ -11,7 +11,7 @@ test('Show `expected` and `actual` without a message', function (t) {
 		name: 'AssertionError',
 		message: '3 == 4'
 	};
-
+	var enhancedAssertion = new EnhancedAssertion();
 	var output = enhancedAssertion.error(assertionError);
 
 	compareLineOutput(t, output, [
@@ -34,6 +34,7 @@ test('Show `expected` and `actual` with a message', function (t) {
 		message: 'foo'
 	};
 
+	var enhancedAssertion = new EnhancedAssertion();
 	var output = enhancedAssertion.error(assertionError);
 
 	compareLineOutput(t, output, [
@@ -56,6 +57,7 @@ test('Show a simple AssertionError message', function (t) {
 		message: 'foo'
 	};
 
+	var enhancedAssertion = new EnhancedAssertion();
 	var output = enhancedAssertion.error(assertionError);
 
 	compareLineOutput(t, output, [
