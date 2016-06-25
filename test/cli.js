@@ -302,6 +302,15 @@ test('--match works', function (t) {
 	});
 });
 
+['--tap', '-t'].forEach(function (tapFlag) {
+	test(tapFlag + ' should produce TAP output', function (t) {
+		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, function (err) {
+			t.ok(!err);
+			t.end();
+		});
+	});
+});
+
 test('handles NODE_PATH', function (t) {
 	var nodePaths = 'fixture/node-paths/modules' + path.delimiter + 'fixture/node-paths/deep/nested';
 

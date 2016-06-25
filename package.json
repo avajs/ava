@@ -37,7 +37,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
+    "test": "xo && nyc --cache --reporter=lcov --reporter=text --reporter=html tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js"
   },
@@ -182,7 +182,9 @@
     },
     "overrides": [
       {
-        "files": ["test/**/*.js"],
+        "files": [
+          "test/**/*.js"
+        ],
         "rules": {
           "max-lines": 0
         }
