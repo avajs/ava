@@ -1008,6 +1008,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
 - [Gitter chat](https://gitter.im/avajs/ava)
 - [Twitter](https://twitter.com/ava__js)
+- [Common pitfalls](https://github.com/avajs/ava/blob/master/docs/common-pitfalls.md)
 
 ## Related
 
