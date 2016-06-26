@@ -968,7 +968,7 @@ As of version `5.0.0` it uses source maps to report coverage for your actual cod
 
 ### Common pitfalls
 
-We have a growing list of [common pitfalls](https://github.com/avajs/ava/blob/master/docs/common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment on [this issue](https://github.com/avajs/ava/issues/404).
+We have a growing list of [common pitfalls](docs/common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment on [this issue](https://github.com/avajs/ava/issues/404).
 
 ## FAQ
 
