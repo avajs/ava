@@ -59,26 +59,28 @@ test(t => {
 
 ### Add AVA to your project
 
-Install AVA globally run with `--init` to add AVA to your `package.json`:
+Install AVA globally and run it with `--init` to add AVA to your `package.json`:
 
 ```console
 $ npm install --global ava
 $ ava --init
 ```
 
+Your `package.json` will then look like this:
+
 ```json
 {
-	"name": "awesome-package",
-	"scripts": {
-		"test": "ava"
-	},
-	"devDependencies": {
-		"ava": "^0.11.0"
-	}
+  "name": "awesome-package",
+  "scripts": {
+    "test": "ava"
+  },
+  "devDependencies": {
+    "ava": "^0.15.0"
+  }
 }
 ```
 
-Any arguments passed after `--init` are added in the `package.json`.
+Any arguments passed after `--init` are added as config to `package.json`.
 
 #### Manual installation
 
@@ -433,7 +435,7 @@ test.failing('demonstrate some bug', t => {
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. There are two exceptions to this however. If you use `--fail-fast` AVA will stop testing as soon as a failure occurs, and it won't run any hooks including the `.always()` hooks. Uncaught exceptions will crash your tests, possibly preventing `.always()` hooks from running.
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail. `.always()` hooks are ideal for cleanup tasks.
 
