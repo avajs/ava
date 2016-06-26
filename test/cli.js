@@ -8,17 +8,12 @@ var figures = require('figures');
 var arrify = require('arrify');
 var chalk = require('chalk');
 var touch = require('touch');
+
 var cliPath = path.join(__dirname, '../cli.js');
 
 // for some reason chalk is disabled by default
 chalk.enabled = true;
 var colors = require('../lib/colors');
-
-var hasChokidar = false;
-try {
-	require('chokidar');
-	hasChokidar = true;
-} catch (err) {}
 
 function execCli(args, opts, cb) {
 	var dirname;
@@ -176,19 +171,46 @@ test('pkg-conf: cli takes precedence', function (t) {
 	});
 });
 
+test('pkg-conf(resolve-dir): works as expected when run from the package.json directory', function (t) {
+	execCli(['--verbose'], {dirname: 'fixture/pkg-conf/resolve-dir'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-base-1/);
+		t.match(stderr, /dir-a-base-2/);
+		t.notMatch(stderr, /dir-a-wrapper/);
+		t.notMatch(stdout, /dir-a-wrapper/);
+		t.end();
+	});
+});
+
+test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none are specified on cli', function (t) {
+	execCli(['--verbose'], {dirname: 'fixture/pkg-conf/resolve-dir/dir-a-wrapper'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-base-1/);
+		t.match(stderr, /dir-a-base-2/);
+		t.notMatch(stderr, /dir-a-wrapper/);
+		t.notMatch(stdout, /dir-a-wrapper/);
+		t.end();
+	});
+});
+
+test('pkg-conf(resolve-dir): resolves tests process.cwd() if globs are passed on the command line', function (t) {
+	execCli(['--verbose', 'dir-a/*.js'], {dirname: 'fixture/pkg-conf/resolve-dir/dir-a-wrapper'}, function (err, stdout, stderr) {
+		t.ifError(err);
+		t.match(stderr, /dir-a-wrapper-3/);
+		t.match(stderr, /dir-a-wrapper-4/);
+		t.notMatch(stderr, /dir-a-base/);
+		t.notMatch(stdout, /dir-a-base/);
+		t.end();
+	});
+});
+
 test('watcher reruns test files when they changed', function (t) {
 	var killed = false;
 
-	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
-		if (err && err.code === 1 && !hasChokidar) {
-			t.comment('chokidar dependency is missing, cannot test watcher');
-			t.match(stderr, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
-			t.end();
-		} else {
-			t.ok(killed);
-			t.ifError(err);
-			t.end();
-		}
+	var child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher'}, function (err) {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
 	});
 
 	var buffer = '';
@@ -208,72 +230,70 @@ test('watcher reruns test files when they changed', function (t) {
 	});
 });
 
-if (hasChokidar) {
-	test('watcher reruns test files when source dependencies change', function (t) {
-		var killed = false;
+test('watcher reruns test files when source dependencies change', function (t) {
+	var killed = false;
 
-		var child = execCli(['--verbose', '--watch', '--source=source.js', 'test-*.js'], {dirname: 'fixture/watcher/with-dependencies'}, function (err) {
-			t.ok(killed);
-			t.ifError(err);
-			t.end();
-		});
-
-		var buffer = '';
-		var passedFirst = false;
-		child.stderr.on('data', function (str) {
-			buffer += str;
-			if (/2 tests passed/.test(buffer) && !passedFirst) {
-				touch.sync(path.join(__dirname, 'fixture/watcher/with-dependencies/source.js'));
-				buffer = '';
-				passedFirst = true;
-			} else if (/1 test passed/.test(buffer) && !killed) {
-				child.kill();
-				killed = true;
-			}
-		});
+	var child = execCli(['--verbose', '--watch', '--source=source.js', 'test-*.js'], {dirname: 'fixture/watcher/with-dependencies'}, function (err) {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
 	});
 
-	test('`"tap": true` config is ignored when --watch is given', function (t) {
-		var killed = false;
+	var buffer = '';
+	var passedFirst = false;
+	child.stderr.on('data', function (str) {
+		buffer += str;
+		if (/2 tests passed/.test(buffer) && !passedFirst) {
+			touch.sync(path.join(__dirname, 'fixture/watcher/with-dependencies/source.js'));
+			buffer = '';
+			passedFirst = true;
+		} else if (/1 test passed/.test(buffer) && !killed) {
+			child.kill();
+			killed = true;
+		}
+	});
+});
 
-		var child = execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, function () {
-			t.ok(killed);
-			t.end();
-		});
+test('`"tap": true` config is ignored when --watch is given', function (t) {
+	var killed = false;
 
-		var combined = '';
-		var testOutput = function (output) {
-			combined += output;
-			t.notMatch(combined, /TAP/);
-			if (/works/.test(combined)) {
-				child.kill();
-				killed = true;
-			}
-		};
-		child.stdout.on('data', testOutput);
-		child.stderr.on('data', testOutput);
+	var child = execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, function () {
+		t.ok(killed);
+		t.end();
 	});
 
-	test('bails when config contains `"tap": true` and `"watch": true`', function (t) {
-		execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, function (err, stdout, stderr) {
-			t.is(err.code, 1);
-			t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-			t.end();
-		});
-	});
+	var combined = '';
+	var testOutput = function (output) {
+		combined += output;
+		t.notMatch(combined, /TAP/);
+		if (/works/.test(combined)) {
+			child.kill();
+			killed = true;
+		}
+	};
+	child.stdout.on('data', testOutput);
+	child.stderr.on('data', testOutput);
+});
 
-	['--watch', '-w'].forEach(function (watchFlag) {
-		['--tap', '-t'].forEach(function (tapFlag) {
-			test('bails when ' + tapFlag + ' reporter is used while ' + watchFlag + ' is given', function (t) {
-				execCli([tapFlag, watchFlag, 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
-					t.is(err.code, 1);
-					t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-					t.end();
-				});
+test('bails when config contains `"tap": true` and `"watch": true`', function (t) {
+	execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, function (err, stdout, stderr) {
+		t.is(err.code, 1);
+		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
+		t.end();
+	});
+});
+
+['--watch', '-w'].forEach(function (watchFlag) {
+	['--tap', '-t'].forEach(function (tapFlag) {
+		test('bails when ' + tapFlag + ' reporter is used while ' + watchFlag + ' is given', function (t) {
+			execCli([tapFlag, watchFlag, 'test.js'], {dirname: 'fixture/watcher'}, function (err, stdout, stderr) {
+				t.is(err.code, 1);
+				t.match(stderr, 'The TAP reporter is not available when using watch mode.');
+				t.end();
 			});
 		});
 	});
-}
+});
 
 test('--match works', function (t) {
 	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'fixture/matcher-skip.js'], function (err) {

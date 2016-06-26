@@ -160,11 +160,26 @@ test('test types and titles', function (t) {
 	runner.test('test', fn);
 
 	var tests = [
-		{type: 'before', title: 'named'},
-		{type: 'beforeEach', title: 'beforeEach for test'},
-		{type: 'test', title: 'test'},
-		{type: 'afterEach', title: 'named for test'},
-		{type: 'after', title: 'after'}
+		{
+			type: 'before',
+			title: 'named'
+		},
+		{
+			type: 'beforeEach',
+			title: 'beforeEach for test'
+		},
+		{
+			type: 'test',
+			title: 'test'
+		},
+		{
+			type: 'afterEach',
+			title: 'named for test'
+		},
+		{
+			type: 'after',
+			title: 'after'
+		}
 	];
 
 	runner.on('test', function (props) {
@@ -364,7 +379,10 @@ test('options.bail will bail out (async)', function (t) {
 test('options.bail + serial - tests will never happen (async)', function (t) {
 	t.plan(2);
 
-	var runner = new Runner({bail: true, serial: true});
+	var runner = new Runner({
+		bail: true,
+		serial: true
+	});
 	var tests = [];
 
 	runner.cb(function (a) {

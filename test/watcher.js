@@ -8,7 +8,7 @@ var lolex = require('lolex');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var test = require('tap').test;
-var AvaFiles = require('../lib/ava-files');
+var AvaFiles = require('ava-files');
 
 var setImmediate = require('../lib/globals').setImmediate;
 
@@ -36,22 +36,7 @@ function makeGroup(test) {
 }
 var group = makeGroup(test);
 
-test('chokidar is not installed', function (t) {
-	t.plan(2);
-
-	var Subject = proxyquire.noCallThru().load('../lib/watcher', {
-		chokidar: null
-	});
-
-	try {
-		new Subject({}, {excludePatterns: [], on: function () {}}, [], []); // eslint-disable-line
-	} catch (err) {
-		t.is(err.name, 'AvaError');
-		t.is(err.message, 'The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.');
-	}
-});
-
-group('chokidar is installed', function (beforeEach, test, group) {
+group('chokidar', function (beforeEach, test, group) {
 	var chokidar;
 	var debug;
 	var logger;
@@ -76,7 +61,7 @@ group('chokidar is installed', function (beforeEach, test, group) {
 						debug.apply(null, args);
 					};
 				},
-				'./ava-files': avaFiles
+				'ava-files': avaFiles
 			});
 	}
 
@@ -101,13 +86,19 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		};
 
 		resetRunStatus = function () {
-			runStatus = {failCount: 0, rejectionCount: 0, exceptionCount: 0};
+			runStatus = {
+				failCount: 0,
+				rejectionCount: 0,
+				exceptionCount: 0
+			};
+
 			return runStatus;
 		};
 
 		if (clock) {
 			clock.uninstall();
 		}
+
 		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
 
 		chokidarEmitter = new EventEmitter();
@@ -243,9 +234,21 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	[
-		{label: 'is added', fire: add, event: 'add'},
-		{label: 'changes', fire: change, event: 'change'},
-		{label: 'is removed', fire: unlink, event: 'unlink'}
+		{
+			label: 'is added',
+			fire: add,
+			event: 'add'
+		},
+		{
+			label: 'changes',
+			fire: change,
+			event: 'change'
+		},
+		{
+			label: 'is removed',
+			fire: unlink,
+			event: 'unlink'
+		}
 	].forEach(function (variant) {
 		test('logs a debug message when a file is ' + variant.label, function (t) {
 			t.plan(2);
@@ -258,9 +261,18 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	[
-		{label: 'is added', fire: add},
-		{label: 'changes', fire: change},
-		{label: 'is removed', fire: unlink}
+		{
+			label: 'is added',
+			fire: add
+		},
+		{
+			label: 'changes',
+			fire: change
+		},
+		{
+			label: 'is removed',
+			fire: unlink
+		}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
 			t.plan(12);
@@ -305,9 +317,18 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	[
-		{label: 'failures', prop: 'failCount'},
-		{label: 'rejections', prop: 'rejectionCount'},
-		{label: 'exceptions', prop: 'exceptionCount'}
+		{
+			label: 'failures',
+			prop: 'failCount'
+		},
+		{
+			label: 'rejections',
+			prop: 'rejectionCount'
+		},
+		{
+			label: 'exceptions',
+			prop: 'exceptionCount'
+		}
 	].forEach(function (variant) {
 		test('does not clear logger if the previous run had ' + variant.label, function (t) {
 			t.plan(2);
@@ -460,8 +481,14 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	});
 
 	[
-		{label: 'is added', fire: add},
-		{label: 'changes', fire: change}
+		{
+			label: 'is added',
+			fire: add
+		},
+		{
+			label: 'changes',
+			fire: change
+		}
 	].forEach(function (variant) {
 		test('(re)runs a test file when it ' + variant.label, function (t) {
 			t.plan(6);
@@ -553,8 +580,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('initial exclude patterns override whether something is a test file', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!*bar*'];
@@ -632,8 +659,8 @@ group('chokidar is installed', function (beforeEach, test, group) {
 	test('exclude patterns override directory matches', function (t) {
 		t.plan(2);
 
-		avaFiles = function (files, sources) {
-			var ret = new AvaFiles(files, sources);
+		avaFiles = function (options) {
+			var ret = new AvaFiles(options);
 			// Note: There is no way for users to actually set exclude patterns yet.
 			// This test just validates that internal updates to the default excludes pattern will be obeyed.
 			ret.excludePatterns = ['!**/exclude/**'];
@@ -1100,7 +1127,10 @@ group('chokidar is installed', function (beforeEach, test, group) {
 		});
 
 		var emitStats = function (file, hasExclusive) {
-			apiEmitter.emit('stats', {file: file, hasExclusive: hasExclusive});
+			apiEmitter.emit('stats', {
+				file: file,
+				hasExclusive: hasExclusive
+			});
 		};
 
 		var t1 = path.join('test', '1.js');
@@ -1267,8 +1297,15 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 			var other;
 			seed(function (files) {
-				runStatusEmitter.emit('test', {file: files[0], error: {}});
-				runStatusEmitter.emit('error', {file: files[0]});
+				runStatusEmitter.emit('test', {
+					file: files[0],
+					error: {}
+				});
+
+				runStatusEmitter.emit('error', {
+					file: files[0]
+				});
+
 				other = files[1];
 			});
 
@@ -1281,9 +1318,15 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(1);
 
 			var first;
+
 			seed(function (files) {
-				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('test', {
+					file: files[0],
+					error: {}
+				});
+
 				runStatusEmitter.emit('error', {file: files[1]});
+
 				first = files[0];
 			});
 
@@ -1296,9 +1339,15 @@ group('chokidar is installed', function (beforeEach, test, group) {
 			t.plan(1);
 
 			var same;
+
 			seed(function (files) {
-				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('test', {
+					file: files[0],
+					error: {}
+				});
+
 				runStatusEmitter.emit('error', {file: files[0]});
+
 				same = files[0];
 			});
 
@@ -1312,14 +1361,21 @@ group('chokidar is installed', function (beforeEach, test, group) {
 
 			var same;
 			var other;
+
 			seed(function (files) {
-				runStatusEmitter.emit('test', {file: files[0], error: {}});
+				runStatusEmitter.emit('test', {
+					file: files[0],
+					error: {}
+				});
+
 				runStatusEmitter.emit('error', {file: files[0]});
+
 				same = files[0];
 				other = files[1];
 			});
 
 			unlink(same);
+
 			return debounce().then(function () {
 				return rerun(other);
 			}).then(function () {

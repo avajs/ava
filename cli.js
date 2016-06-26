@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+var path = require('path');
 var debug = require('debug')('ava');
 
 // Prefer the local installation of AVA.
@@ -23,7 +24,6 @@ var arrify = require('arrify');
 var meow = require('meow');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
-var chalk = require('chalk');
 var isCi = require('is-ci');
 var hasFlag = require('has-flag');
 var colors = require('./lib/colors');
@@ -32,26 +32,20 @@ var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
 var Watcher = require('./lib/watcher');
+var babelConfig = require('./lib/babel-config');
 var Api = require('./api');
 
 // Bluebird specific
 Promise.longStackTraces();
 
-var conf = pkgConf.sync('ava', {
-	defaults: {
-		babel: 'default'
-	}
-});
+var conf = pkgConf.sync('ava');
 
-// check for valid babel config shortcuts (can be either "default" or "inherit")
-var isValidShortcut = ['default', 'inherit'].indexOf(conf.babel) !== -1;
+var pkgDir = path.dirname(pkgConf.filepath(conf));
 
-if (!conf.babel || (typeof conf.babel === 'string' && !isValidShortcut)) {
-	var message = '';
-	message += 'Unexpected Babel configuration for AVA. ';
-	message += 'See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
-
-	console.log('\n  ' + colors.error(figures.cross) + ' ' + message);
+try {
+	conf.babel = babelConfig.validate(conf.babel);
+} catch (err) {
+	console.log('\n  ' + err.message);
 	process.exit(1);
 }
 
@@ -121,8 +115,8 @@ if (cli.flags.init) {
 }
 
 if (
-	(hasFlag('--watch') || hasFlag('-w')) && (hasFlag('--tap') || hasFlag('-t')) ||
-	conf.watch && conf.tap
+	((hasFlag('--watch') || hasFlag('-w')) && (hasFlag('--tap') || hasFlag('-t'))) ||
+	(conf.watch && conf.tap)
 ) {
 	console.error('  ' + colors.error(figures.cross) + ' The TAP reporter is not available when using watch mode.');
 	process.exit(1);
@@ -136,6 +130,7 @@ var api = new Api({
 	explicitTitles: cli.flags.watch,
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,
+	resolveTestsFrom: cli.input.length === 0 ? pkgDir : process.cwd(),
 	timeout: cli.flags.timeout,
 	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
 });

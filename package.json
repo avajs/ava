@@ -81,6 +81,7 @@
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
     "arrify": "^1.0.0",
+    "ava-files": "^0.1.1",
     "ava-init": "^0.1.0",
     "babel-code-frame": "^6.7.5",
     "babel-core": "^6.3.21",
@@ -94,6 +95,7 @@
     "bluebird": "^3.0.0",
     "caching-transform": "^1.0.0",
     "chalk": "^1.0.0",
+    "chokidar": "^1.4.2",
     "clean-yaml-object": "^0.1.0",
     "cli-cursor": "^1.0.2",
     "cli-spinners": "^0.1.2",
@@ -108,7 +110,7 @@
     "figures": "^1.4.0",
     "find-cache-dir": "^0.1.1",
     "fn-name": "^2.0.0",
-    "globby": "^4.0.0",
+    "globby": "^5.0.0",
     "has-flag": "^2.0.0",
     "ignore-by-default": "^1.0.0",
     "is-ci": "^1.0.7",
@@ -148,7 +150,7 @@
     "strip-bom": "^2.0.0",
     "time-require": "^0.1.2",
     "unique-temp-dir": "^1.0.0",
-    "update-notifier": "^0.7.0"
+    "update-notifier": "^1.0.0"
   },
   "devDependencies": {
     "babel-preset-react": "^6.5.0",
@@ -166,7 +168,7 @@
     "pify": "^2.3.0",
     "proxyquire": "^1.7.4",
     "rimraf": "^2.5.0",
-    "signal-exit": "^2.1.2",
+    "signal-exit": "^3.0.0",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^2.1.0",
     "tap": "^5.4.2",
@@ -174,7 +176,17 @@
     "xo": "*",
     "zen-observable": "^0.2.1"
   },
-  "optionalDependencies": {
-    "chokidar": "^1.4.2"
+  "xo": {
+    "rules": {
+      "import/newline-after-import": 0
+    },
+    "overrides": [
+      {
+        "files": ["test/**/*.js"],
+        "rules": {
+          "max-lines": 0
+        }
+      }
+    ]
   }
 }

@@ -233,7 +233,10 @@ test('results with passing known failure tests', function (t) {
 	var runStatus = createRunStatus();
 	runStatus.passCount = 1;
 	runStatus.knownFailureCount = 1;
-	runStatus.knownFailures = [{title: 'known failure', failing: true}];
+	runStatus.knownFailures = [{
+		title: 'known failure',
+		failing: true
+	}];
 
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
