@@ -1,5 +1,5 @@
 import test from '../../';
 
-test(t => {
-	t.pass();
+test.cb(t => {
+	setTimeout(t.end, 2000);
 });

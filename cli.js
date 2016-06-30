@@ -30,7 +30,6 @@ var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
 var tapReporter = require('./lib/reporters/tap');
-var Logger = require('./lib/logger');
 var Watcher = require('./lib/watcher');
 var babelConfig = require('./lib/babel-config');
 var Api = require('./api');
