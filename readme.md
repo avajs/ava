@@ -134,33 +134,33 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 ```console
 $ ava --help
 
-	Usage
-		ava [<file|directory|glob> ...]
+  Usage
+    ava [<file|directory|glob> ...]
 
-	Options
-		--init             Add AVA to your project
-		--fail-fast        Stop after first test failure
-		--serial, -s       Run tests serially
-		--require, -r      Module to preload (Can be repeated)
-		--tap, -t          Generate TAP output
-		--verbose, -v      Enable verbose output
-		--no-cache         Disable the transpiler cache
-		--match, -m        Only run tests with matching title (Can be repeated)
-		--watch, -w        Re-run tests when tests and source files change
-		--source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
-		--timeout, -T      Set global timeout
-		--concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
+  Options
+    --init             Add AVA to your project
+    --fail-fast        Stop after first test failure
+    --serial, -s       Run tests serially
+    --require, -r      Module to preload (Can be repeated)
+    --tap, -t          Generate TAP output
+    --verbose, -v      Enable verbose output
+    --no-cache         Disable the transpiler cache
+    --match, -m        Only run tests with matching title (Can be repeated)
+    --watch, -w        Re-run tests when tests and source files change
+    --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
+    --timeout, -T      Set global timeout
+    --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
 
-	Examples
-		ava
-		ava test.js test2.js
-		ava test-*.js
-		ava test
-		ava --init
-		ava --init foo.js
+  Examples
+    ava
+    ava test.js test2.js
+    ava test-*.js
+    ava test
+    ava --init
+    ava --init foo.js
 
-	Default patterns when no arguments:
-	test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
+  Default patterns when no arguments:
+  test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
@@ -175,27 +175,27 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 ```json
 {
-	"ava": {
-		"files": [
-			"my-test-folder/*.js",
-			"!**/not-this-file.js"
-		],
-		"source": [
-			"**/*.{js,jsx}",
-			"!dist/**/*"
-		],
-		"match": [
-			"*oo",
-			"!foo"
-		],
-		"concurrency": 5,
-		"failFast": true,
-		"tap": true,
-		"require": [
-			"babel-register"
-		],
-		"babel": "inherit"
-	}
+  "ava": {
+    "files": [
+      "my-test-folder/*.js",
+      "!**/not-this-file.js"
+    ],
+    "source": [
+      "**/*.{js,jsx}",
+      "!dist/**/*"
+    ],
+    "match": [
+      "*oo",
+      "!foo"
+    ],
+    "concurrency": 5,
+    "failFast": true,
+    "tap": true,
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  }
 }
 ```
 
@@ -612,14 +612,14 @@ The corresponding Babel config for AVA's setup is as follows:
 
 ```json
 {
-	"presets": [
-		"es2015",
-		"stage-2"
-	],
-	"plugins": [
-		"espower",
-		"transform-runtime"
-	]
+  "presets": [
+    "es2015",
+    "stage-2"
+  ],
+  "plugins": [
+    "espower",
+    "transform-runtime"
+  ]
 }
 ```
 
@@ -937,9 +937,9 @@ Will output:
 
 ```
 t.true(a.test(b) || b === c)
-			 |      |     |     |
-			 |      "bar" "bar" "baz"
-			 false
+       |      |     |     |
+       |      "bar" "bar" "baz"
+       false
 ```
 
 ## Process isolation
