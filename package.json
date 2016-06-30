@@ -142,6 +142,7 @@
     "pretty-ms": "^2.0.0",
     "repeating": "^2.0.0",
     "require-precompiled": "^0.1.0",
+    "resolve": "^1.1.7",
     "resolve-cwd": "^1.0.0",
     "resolve-from": "^2.0.0",
     "set-immediate-shim": "^1.0.1",
