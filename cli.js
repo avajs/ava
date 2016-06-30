@@ -66,6 +66,7 @@ var cli = meow([
 	'  --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)',
 	'  --timeout, -T      Set global timeout',
 	'  --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)',
+	'  --precompile, -p   Precompile sources in the main thread (EXPERIMENTAL)',
 	'',
 	'Examples',
 	'  ava',
@@ -91,7 +92,8 @@ var cli = meow([
 		'verbose',
 		'serial',
 		'tap',
-		'watch'
+		'watch',
+		'precompile'
 	],
 	default: conf,
 	alias: {
@@ -103,7 +105,8 @@ var cli = meow([
 		w: 'watch',
 		S: 'source',
 		T: 'timeout',
-		c: 'concurrency'
+		c: 'concurrency',
+		p: 'precompile'
 	}
 });
 
@@ -125,6 +128,7 @@ if (
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
+	precompile: cli.flags.precompile,
 	require: arrify(cli.flags.require),
 	cacheEnabled: cli.flags.cache !== false,
 	explicitTitles: cli.flags.watch,

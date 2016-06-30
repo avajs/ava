@@ -326,3 +326,17 @@ test('should warn ava is required without the cli', function (t) {
 		t.end();
 	});
 });
+
+test('precompiler fixture passes with --precompile flag', function (t) {
+	execCli(['--precompile', 'fixture/precompiler/test.js'], function (error) {
+		t.ifError(error);
+		t.end();
+	});
+});
+
+test('precompiler fixture fails without --precompile flag', function (t) {
+	execCli(['fixture/precompiler/test.js'], function (error) {
+		t.ok(error);
+		t.end();
+	});
+});

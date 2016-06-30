@@ -111,6 +111,7 @@
     "find-cache-dir": "^0.1.1",
     "fn-name": "^2.0.0",
     "globby": "^5.0.0",
+    "graceful-fs": "^4.1.4",
     "has-flag": "^2.0.0",
     "ignore-by-default": "^1.0.0",
     "is-ci": "^1.0.7",
@@ -142,6 +143,7 @@
     "repeating": "^2.0.0",
     "require-precompiled": "^0.1.0",
     "resolve-cwd": "^1.0.0",
+    "resolve-from": "^2.0.0",
     "set-immediate-shim": "^1.0.1",
     "slash": "^1.0.0",
     "source-map-support": "^0.4.0",
@@ -182,7 +184,9 @@
     },
     "overrides": [
       {
-        "files": ["test/**/*.js"],
+        "files": [
+          "test/**/*.js"
+        ],
         "rules": {
           "max-lines": 0
         }
