@@ -968,6 +968,10 @@ You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code cove
 
 As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your Babel config to `inline`.
 
+### Common pitfalls
+
+We have a growing list of [common pitfalls](docs/common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
+
 ## FAQ
 
 ### Why not `mocha`, `tape`, `tap`?
