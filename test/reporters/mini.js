@@ -48,7 +48,7 @@ test('passing test', function (t) {
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
-		'   ' + chalk.green('1 passed')
+		'  ' + chalk.green('1 passed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -67,8 +67,8 @@ test('known failure test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 known failure')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 known failure')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -89,7 +89,7 @@ test('failing test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -111,7 +111,7 @@ test('failed known failure test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -134,8 +134,8 @@ test('passing test after failing', function (t) {
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -158,8 +158,8 @@ test('failing test after passing', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -198,7 +198,7 @@ test('results with passing tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed'),
+		'\n  ' + chalk.green('1 passed'),
 		''
 	].join('\n');
 
@@ -220,8 +220,8 @@ test('results with passing known failure tests', function (t) {
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 known failure'),
+		'\n  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 known failure'),
 		'',
 		'',
 		'   ' + chalk.red('1. known failure'),
@@ -240,7 +240,7 @@ test('results with skipped tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.yellow('1 skipped'),
+		'\n  ' + chalk.yellow('1 skipped'),
 		''
 	].join('\n');
 
@@ -256,7 +256,7 @@ test('results with todo tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.blue('1 todo'),
+		'\n  ' + chalk.blue('1 todo'),
 		''
 	].join('\n');
 
@@ -272,8 +272,8 @@ test('results with passing skipped tests', function (t) {
 	var output = reporter.finish({}).split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.green('1 passed'));
-	t.is(output[2], '   ' + chalk.yellow('1 skipped'));
+	t.is(output[1], '  ' + chalk.green('1 passed'));
+	t.is(output[2], '  ' + chalk.yellow('1 skipped'));
 	t.is(output[3], '');
 	t.end();
 });
@@ -297,8 +297,8 @@ test('results with passing tests and rejections', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 rejection'),
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 rejection'),
 		'',
 		'',
 		'   ' + chalk.red('1. Unhandled Rejection'),
@@ -332,8 +332,8 @@ test('results with passing tests and exceptions', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('2 exceptions'),
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('2 exceptions'),
 		'',
 		'',
 		'   ' + chalk.red('1. Uncaught Exception'),
@@ -369,7 +369,7 @@ test('results with errors', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.red('1 failed'),
+		'  ' + chalk.red('1 failed'),
 		'',
 		'',
 		'   ' + chalk.red('1. failed one'),
@@ -396,8 +396,8 @@ test('results with 1 previous failure', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo'),
-		'   ' + colors.error('1 previous failure in test files that were not rerun')
+		'  ' + colors.todo('1 todo'),
+		'  ' + colors.error('1 previous failure in test files that were not rerun')
 	]);
 	t.end();
 });
@@ -413,8 +413,8 @@ test('results with 2 previous failures', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo'),
-		'   ' + colors.error('2 previous failures in test files that were not rerun')
+		'  ' + colors.todo('1 todo'),
+		'  ' + colors.error('2 previous failures in test files that were not rerun')
 	]);
 	t.end();
 });
@@ -448,7 +448,7 @@ test('results with watching enabled', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed') + time,
+		'\n  ' + chalk.green('1 passed') + time,
 		''
 	].join('\n');
 
