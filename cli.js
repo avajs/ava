@@ -121,6 +121,18 @@ if (
 	process.exit(1);
 }
 
+function exit (code) {
+	// TODO: figure out why this needs to be here to
+	// correctly flush the output when multiple test files
+	process.stdout.write('');
+	process.stderr.write('');
+
+	// timeout required to correctly flush IO on Node.js 0.10 on Windows
+	setTimeout(function () {
+		process.exit(code); // eslint-disable-line
+	}, process.env.AVA_APPVEYOR ? 500 : 0);
+}
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
@@ -176,16 +188,4 @@ if (cli.flags.watch) {
 				throw err;
 			});
 		});
-}
-
-function exit (code) {
-	// TODO: figure out why this needs to be here to
-	// correctly flush the output when multiple test files
-	process.stdout.write('');
-	process.stderr.write('');
-
-	// timeout required to correctly flush IO on Node.js 0.10 on Windows
-	setTimeout(function () {
-		process.exit(code); // eslint-disable-line
-	}, process.env.AVA_APPVEYOR ? 500 : 0);
 }
