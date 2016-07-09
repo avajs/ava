@@ -38,10 +38,10 @@ function createReporter(options) {
 function createRunStatus(options) {
 	var status = new RunStatus({prefixTitles: false});
 	assign(status, options);
-	
+
 	var fork = new EventEmitter();
 	status.fork = fork;
-	
+
 	status.observeFork(fork);
 
 	return status;
@@ -75,8 +75,8 @@ test('passing test', function (t) {
 		' ' + graySpinner + ' passed',
 		'',
 		'   ' + chalk.green('1 passed')
-	].join('\n')
-	 
+	].join('\n');
+
 	t.is(actualOutput, expectedOutput);
 	t.end();
 });
@@ -295,12 +295,12 @@ test('results with passing known failure tests', function (t) {
 			failing: true
 		}]
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
-	
+
 	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'\n   ' + chalk.green('1 passed'),
@@ -322,12 +322,12 @@ test('results with skipped tests', function (t) {
 		skipCount: 1,
 		failCount: 0
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
-	
+
 	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
@@ -347,12 +347,12 @@ test('results with todo tests', function (t) {
 		todoCount: 1,
 		failCount: 0
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
-	
+
 	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'\n   ' + chalk.blue('1 todo'),
@@ -369,12 +369,12 @@ test('results with passing skipped tests', function (t) {
 		passCount: 1,
 		skipCount: 1
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
-	
+
 	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
@@ -382,30 +382,30 @@ test('results with passing skipped tests', function (t) {
 		'   ' + chalk.yellow('1 skipped'),
 		''
 	].join('\n');
-	
+
 	t.is(actualOutput, expectedOutput);
 	t.end();
 });
 
 test('results with passing tests and rejections', function (t) {
 	var reporter = createReporter();
-	
+
 	var err1 = new Error('failure one');
 	err1.type = 'rejection';
 	err1.stack = beautifyStack(err1.stack);
 	var err2 = new Error('failure two');
 	err2.type = 'rejection';
 	err2.stack = 'stack line with trailing whitespace\t\n';
-	
+
 	var status = createRunStatus({
 		passCount: 1,
 		rejectionCount: 1,
 		errors: [err1, err2]
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -436,16 +436,16 @@ test('results with passing tests and exceptions', function (t) {
 
 	var avaErr = new AvaError('A futuristic test runner');
 	avaErr.type = 'exception';
-	
+
 	var status = createRunStatus({
 		passCount: 1,
 		exceptionCount: 2,
 		errors: [err, avaErr]
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -473,7 +473,7 @@ test('results with errors', function (t) {
 	err1.stack = beautifyStack(err1.stack);
 	var err2 = new Error('failure two');
 	err2.stack = 'first line is stripped\nstack line with trailing whitespace\t\n';
-	
+
 	var status = createRunStatus({
 		failCount: 1,
 		errors: [{
@@ -484,10 +484,10 @@ test('results with errors', function (t) {
 			error: err2
 		}]
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -515,10 +515,10 @@ test('results with 1 previous failure', function (t) {
 		todoCount: 1,
 		previousFailCount: 1
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -536,10 +536,10 @@ test('results with 2 previous failures', function (t) {
 		todoCount: 1,
 		previousFailCount: 2
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -556,14 +556,14 @@ test('empty results after reset', function (t) {
 	var oldStatus = createRunStatus({
 		failCount: 1
 	});
-	
+
 	var status = createRunStatus();
-	
+
 	reporter.init(oldStatus);
 	reporter.clearInterval();
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var output = reporter.output;
@@ -574,10 +574,10 @@ test('empty results after reset', function (t) {
 test('full-width line when sectioning', function (t) {
 	var reporter = createReporter();
 	var status = createRunStatus();
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('section');
 
 	var output = reporter.output;
@@ -588,16 +588,16 @@ test('full-width line when sectioning', function (t) {
 test('results with watching enabled', function (t) {
 	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 	var time = ' ' + chalk.grey.dim('[17:19:12]');
-	
+
 	var reporter = createReporter({watching: true});
 	var status = createRunStatus({
 		passCount: 1,
 		failCount: 0
 	});
-	
+
 	reporter.init(status);
 	reporter.clearInterval();
-	
+
 	status.emit('finish');
 
 	var actualOutput = reporter.output;

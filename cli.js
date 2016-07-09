@@ -121,7 +121,7 @@ if (
 	process.exit(1);
 }
 
-function exit (code) {
+function exit(code) {
 	// TODO: figure out why this needs to be here to
 	// correctly flush the output when multiple test files
 	process.stdout.write('');
