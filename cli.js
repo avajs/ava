@@ -164,7 +164,7 @@ var files = cli.input.length ? cli.input : arrify(conf.files);
 
 if (cli.flags.watch) {
 	try {
-		var watcher = new Watcher(logger, api, files, arrify(cli.flags.source));
+		var watcher = new Watcher(api, files, arrify(cli.flags.source));
 		watcher.observeStdin(process.stdin);
 	} catch (err) {
 		if (err.name === 'AvaError') {
