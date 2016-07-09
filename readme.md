@@ -177,7 +177,7 @@ When using `npm test`, you can pass positional arguments directly `npm test test
 
 The verbose reporter is always used in CI environments unless [`--tap`](#optional-tap-output) is specified.
 
-<img src="media/screenshot-verbose-reporter.png" width="430">
+<img src="media/screenshot.png" width="150">
 
 ### Optional TAP output
 
