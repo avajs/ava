@@ -1,6 +1,8 @@
 # JSPM and SystemJS for ES2015
 
 It requires a special loader helper to correctly resolve `import`s of JSPM packages when using AVA.
+The purpose of the loader is to allow you to run your tests without having to
+pre-build your JSPM project.
 
 ## Setup
 
