@@ -1,5 +1,7 @@
 # JSPM and SystemJS for ES2015
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/jspm-systemjs.md)
+
 It requires a special loader helper to correctly resolve `import`s of JSPM packages when using AVA.
 
 ## Setup
