@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/jspm-systemjs.md)
 
-It requires a special loader helper to correctly resolve `import`s of JSPM packages when using AVA.
+It requires a special loader helper to correctly resolve `import`s of JSPM packages when using AVA. The purpose of the loader is to allow you to run your tests without having to pre-build your JSPM project.
 
 ## Setup
 
