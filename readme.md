@@ -984,7 +984,7 @@ In contrast AVA is highly opinionated and runs tests concurrently, with a separa
 
 ### How can I use custom reporters?
 
-AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
+AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output. The verbose reporter is always used in CI environments unless [`--tap`](#optional-tap-output) is specified.
 
 ### How is the name written and pronounced?
 
