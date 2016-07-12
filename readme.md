@@ -16,6 +16,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Reporters](#reporters)
 - [Configuration](#configuration)
 - [Documentation](#documentation)
 - [API](#api)
@@ -42,7 +43,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
-- [Optional TAP output](#optional-tap-output)
+- [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
 
 ## Test syntax
@@ -171,17 +172,19 @@ When using `npm test`, you can pass positional arguments directly `npm test test
 
 ### Mini-reporter
 
+The mini-reporter is the default reporter.
+
 ![](media/screenshot-mini-reporter.gif)
 
 ### Verbose reporter
 
-The verbose reporter is always used in CI environments unless [`--tap`](#optional-tap-output) is specified.
+The verbose reporter is always used in CI environments unless [`--tap`](#tap-reporter) is specified. Use the [`--verbose` flag](#verbose-reporter) to enable verbose output.
 
 <img src="media/screenshot.png" width="150">
 
-### Optional TAP output
+### TAP reporter
 
-AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
+AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#tap-reporter) to enable TAP output.
 
 ```console
 $ ava --tap | tap-nyan
@@ -670,7 +673,7 @@ You can customize how AVA transpiles the test files through the `babel` option i
 
 You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
 
- ```json
+```json
 {
 	"babel": {
 		"presets": [
