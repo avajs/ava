@@ -13,6 +13,22 @@ test('must be called with new', function (t) {
 	t.end();
 });
 
+test('nested tests and hooks aren\'t allowed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	runner.test(function () {
+		t.throws(function () {
+			runner.test(noop);
+		}, {message: 'Cannot have nested tests or hooks'});
+	});
+
+	runner.run({}).then(function () {
+		t.end();
+	});
+});
+
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
