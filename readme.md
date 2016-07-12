@@ -16,6 +16,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Reporters](#reporters)
 - [Configuration](#configuration)
 - [Documentation](#documentation)
 - [API](#api)
@@ -42,7 +43,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
-- [Optional TAP output](#optional-tap-output)
+- [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
 
 ## Test syntax
@@ -129,8 +130,6 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 
 ## CLI
 
-![](media/screenshot-mini-reporter.gif)
-
 ```console
 $ ava --help
 
@@ -168,6 +167,39 @@ $ ava --help
 Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are *always* ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+## Reporters
+
+### Mini-reporter
+
+The mini-reporter is the default reporter.
+
+![](media/screenshot-mini-reporter.gif)
+
+### Verbose reporter
+
+The verbose reporter is always used in CI environments unless [`--tap`](#tap-reporter) is specified. Use the [`--verbose` flag](#verbose-reporter) to enable verbose output.
+
+<img src="media/screenshot.png" width="150">
+
+### TAP reporter
+
+AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#tap-reporter) to enable TAP output.
+
+```console
+$ ava --tap | tap-nyan
+```
+
+<img src="media/tap-output.png" width="398">
+
+Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
+
+### Clean stack traces
+
+AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
+
+<img src="media/stack-traces.png" width="300">
+
 
 ## Configuration
 
@@ -641,7 +673,7 @@ You can customize how AVA transpiles the test files through the `babel` option i
 
 You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
 
- ```json
+```json
 {
 	"babel": {
 		"presets": [
@@ -742,24 +774,6 @@ test.cb(t => {
 	fs.readFile('data.txt', t.end);
 });
 ```
-
-### Optional TAP output
-
-AVA can generate TAP output via `--tap` option for use with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
-
-```console
-$ ava --tap | tap-nyan
-```
-
-<img src="media/tap-output.png" width="398">
-
-Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
-
-### Clean stack traces
-
-AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
-
-<img src="media/stack-traces.png" width="300">
 
 ### Global timeout
 
@@ -981,10 +995,6 @@ Mocha requires you to use implicit globals like `describe` and `it` with the def
 Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
 
 In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
-
-### How can I use custom reporters?
-
-AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
 
 ### How is the name written and pronounced?
 
