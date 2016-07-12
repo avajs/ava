@@ -6,13 +6,15 @@
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
+![](media/screenshot-mini-reporter.gif)
+
 *Read our [contributing guide](contributing.md) if you're looking to contribute (issues/PRs/etc).*
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
 
-## Table of Contents
+## Contents
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
@@ -174,17 +176,17 @@ When using `npm test`, you can pass positional arguments directly `npm test test
 
 The mini-reporter is the default reporter.
 
-![](media/screenshot-mini-reporter.gif)
+<img src="media/screenshot-mini-reporter.gif" width="460">
 
 ### Verbose reporter
 
-The verbose reporter is always used in CI environments unless [`--tap`](#tap-reporter) is specified. Use the [`--verbose` flag](#verbose-reporter) to enable verbose output.
+Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
 
 <img src="media/screenshot.png" width="150">
 
 ### TAP reporter
 
-AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#tap-reporter) to enable TAP output.
+AVA supports the TAP format and thus is compatible with [any TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the `--tap` flag to enable TAP output.
 
 ```console
 $ ava --tap | tap-nyan
