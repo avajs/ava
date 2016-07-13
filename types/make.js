@@ -58,9 +58,11 @@ function generatePrefixed(prefix) {
 
 		children += generatePrefixed(parts);
 	}
+
 	if (output === '') {
 		return children;
 	}
+
 	return 'export namespace ' + ['test'].concat(prefix).join('.') + ' {\n' + output + '}\n' + children;
 }
 
@@ -70,13 +72,17 @@ function writeFunction(name, args) {
 
 function verify(parts, asPrefix) {
 	const has = arrayHas(parts);
+
 	if (has('only') + has('skip') + has('todo') > 1) {
 		return false;
 	}
+
 	const beforeAfterCount = has('before') + has('beforeEach') + has('after') + has('afterEach');
+
 	if (beforeAfterCount > 1) {
 		return false;
 	}
+
 	if (beforeAfterCount === 1) {
 		if (has('only')) {
 			return false;
@@ -107,6 +113,7 @@ function isSorted(a) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -114,11 +121,14 @@ function isSorted(a) {
 function testType(parts) {
 	const has = arrayHas(parts);
 	let type = 'Test';
+
 	if (has('cb')) {
 		type = 'Callback' + type;
 	}
+
 	if (!has('beforeEach') && !has('afterEach')) {
 		type = 'Contextual' + type;
 	}
+
 	return type;
 }
