@@ -16,8 +16,7 @@ const path = require('path');
 const fs = require('fs');
 const runner = require('../lib/runner');
 
-const includes = (array, value) => array.indexOf(value) !== -1;
-const arrayHas = parts => part => includes(parts, part);
+const arrayHas = parts => part => parts.includes(part);
 
 const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 
@@ -36,7 +35,7 @@ function generatePrefixed(prefix) {
 	for (const part of allParts) {
 		const parts = prefix.concat([part]);
 
-		if (includes(prefix, part) || !verify(parts, true)) {
+		if (prefix.includes(part) || !verify(parts, true)) {
 			// Function already in prefix or not allowed here
 			continue;
 		}
@@ -48,7 +47,7 @@ function generatePrefixed(prefix) {
 			if (!isSorted(parts)) {
 				output += '\texport const ' + part + ': typeof test.' + parts.sort().join('.') + ';\n';
 				continue;
-			} else if (includes(parts, 'todo')) {
+			} else if (prefix.includes(parts, 'todo')) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
