@@ -10,8 +10,8 @@ export interface Observable {
 	subscribe(observer: (value: {}) => void): void;
 }
 
-export type Test = (t: TestContext) => Promise<void> | Iterator<any> | Observable | void;
-export type ContextualTest = (t: ContextualTestContext) => Promise<void> | Iterator<any> | Observable | void;
+export type Test = (t: TestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
+export type ContextualTest = (t: ContextualTestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type CallbackTest = (t: CallbackTestContext) => void;
 export type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
 
@@ -78,12 +78,12 @@ export interface AssertContext {
  	 * Assert that function throws an error or promise rejects.
  	 * @param error Can be a constructor, regex, error message or validation function.
  	 */
-	throws(value: Promise<{}>, error?: ErrorValidator, message?: string): Promise<any>;
+	throws(value: PromiseLike<any>, error?: ErrorValidator, message?: string): Promise<any>;
 	throws(value: () => void, error?: ErrorValidator, message?: string): any;
 	/**
 	 * Assert that function doesn't throw an error or promise resolves.
 	 */
-	notThrows<U>(value: Promise<U>, message?: string): Promise<U>;
+	notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
 	notThrows(value: () => void, message?: string): void;
 	/**
 	 * Assert that contents matches regex.
