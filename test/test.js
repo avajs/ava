@@ -9,25 +9,41 @@ var failingTestHint = 'Test was expected to fail, but succeeded, you should stop
 
 function ava(title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
-	t.metadata = {callback: false};
+	t.metadata = {
+		callback: false
+	};
 	return t;
 }
 
 ava.failing = function (title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
-	t.metadata = {callback: false, failing: true};
+
+	t.metadata = {
+		callback: false,
+		failing: true
+	};
+
 	return t;
 };
 
 ava.cb = function (title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
-	t.metadata = {callback: true};
+
+	t.metadata = {
+		callback: true
+	};
+
 	return t;
 };
 
 ava.cb.failing = function (title, fn, contextRef, report) {
 	var t = new Test(title, fn, contextRef, report);
-	t.metadata = {callback: true, failing: true};
+
+	t.metadata = {
+		callback: true,
+		failing: true
+	};
+
 	return t;
 };
 
@@ -74,6 +90,7 @@ test('infer name from function', function (t) {
 	var result = ava(function foo(a) {
 		a.pass();
 	}).run();
+
 	t.is(result.passed, true);
 	t.is(result.result.title, 'foo');
 	t.end();
@@ -200,7 +217,13 @@ test('handle falsy testing of arrays', function (t) {
 
 test('handle testing of objects', function (t) {
 	var result = ava(function (a) {
-		a.deepEqual({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar'});
+		a.deepEqual({
+			foo: 'foo',
+			bar: 'bar'
+		}, {
+			foo: 'foo',
+			bar: 'bar'
+		});
 	}).run();
 
 	t.is(result.passed, true);
@@ -210,7 +233,14 @@ test('handle testing of objects', function (t) {
 
 test('handle falsy testing of objects', function (t) {
 	var result = ava(function (a) {
-		a.notDeepEqual({foo: 'foo', bar: 'bar'}, {foo: 'foo', bar: 'bar', cat: 'cake'});
+		a.notDeepEqual({
+			foo: 'foo',
+			bar: 'bar'
+		}, {
+			foo: 'foo',
+			bar: 'bar',
+			cat: 'cake'
+		});
 	}).run();
 
 	t.is(result.passed, true);

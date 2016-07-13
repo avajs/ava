@@ -128,11 +128,29 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.doesNotThrow(function () {
-		assert.deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+		assert.deepEqual({
+			a: 'a',
+			b: 'b'
+		}, {
+			b: 'b',
+			a: 'a'
+		});
 	});
 
 	t.doesNotThrow(function () {
-		assert.deepEqual({a: 'a', b: 'b', c: {d: 'd'}}, {c: {d: 'd'}, b: 'b', a: 'a'});
+		assert.deepEqual({
+			a: 'a',
+			b: 'b',
+			c: {
+				d: 'd'
+			}
+		}, {
+			c: {
+				d: 'd'
+			},
+			b: 'b',
+			a: 'a'
+		});
 	});
 
 	t.throws(function () {
@@ -197,7 +215,19 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.throws(function () {
-		assert.deepEqual({a: 'a', b: 'b', c: {d: false}}, {c: {d: 0}, b: 'b', a: 'a'});
+		assert.deepEqual({
+			a: 'a',
+			b: 'b',
+			c: {
+				d: false
+			}
+		}, {
+			c: {
+				d: 0
+			},
+			b: 'b',
+			a: 'a'
+		});
 	});
 
 	// Regression test end here
@@ -290,7 +320,10 @@ test('.throws should throw if passed a bad value', function (t) {
 
 	t.throws(function () {
 		assert.throws('not a function');
-	}, {name: 'TypeError', message: /t\.throws must be called with a function, Promise, or Observable/});
+	}, {
+		name: 'TypeError',
+		message: /t\.throws must be called with a function, Promise, or Observable/
+	});
 });
 
 test('.notThrows should throw if passed a bad value', function (t) {
@@ -298,7 +331,10 @@ test('.notThrows should throw if passed a bad value', function (t) {
 
 	t.throws(function () {
 		assert.notThrows('not a function');
-	}, {name: 'TypeError', message: /t\.notThrows must be called with a function, Promise, or Observable/});
+	}, {
+		name: 'TypeError',
+		message: /t\.notThrows must be called with a function, Promise, or Observable/
+	});
 });
 
 test('.notThrows()', function (t) {

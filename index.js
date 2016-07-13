@@ -22,7 +22,7 @@ if (!isForked) {
 	console.log();
 	console.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
 
-	process.exit(1); // eslint-disable-line
+	process.exit(1); // eslint-disable-line xo/no-process-exit
 }
 
 // note that test files have require('ava')

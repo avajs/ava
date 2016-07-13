@@ -1,15 +1,15 @@
 # TypeScript
 
-Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/typescript.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/typescript.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/recipes/typescript.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/typescript.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/typescript.md)
+Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/typescript.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/typescript.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/typescript.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/typescript.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/typescript.md)
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
 ## Setup
 
-First install the TypeScript compiler [tsc](https://github.com/Microsoft/TypeScript).
+First install [TypeScript](https://github.com/Microsoft/TypeScript).
 
 ```
-$ npm install --save-dev tsc
+$ npm install --save-dev typescript
 ```
 
 Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig.json) file. This file specifies the compiler options required to compile the project or the test file.

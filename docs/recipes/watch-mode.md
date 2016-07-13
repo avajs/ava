@@ -1,6 +1,6 @@
 # Watch mode
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/watch-mode.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/recipes/watch-mode.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/watch-mode.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/watch-mode.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/watch-mode.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/watch-mode.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/watch-mode.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/watch-mode.md)
 
 AVA comes with an intelligent watch mode. It watches for files to change and runs just those tests that are affected.
 
@@ -59,11 +59,7 @@ Please note that the TAP reporter is unavailable when using watch mode.
 
 ## Requirements
 
-AVA uses [`chokidar`] as the file watcher. It's configured as an optional dependency since `chokidar` sometimes can't be installed. Watch mode is not available if `chokidar` fails to install, instead you'll see a message like:
-
-> The optional dependency chokidar failed to install and is required for --watch. Chokidar is likely not supported on your platform.
-
-Please refer to the [`chokidar` documentation][`chokidar`] for how to resolve this problem.
+AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
 
 ## Source files and test files
 
@@ -111,6 +107,7 @@ $ npm test -- --watch --verbose
 Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/avajs/ava/issues) any issues you encounter. Thanks!
 
 [`chokidar`]: https://github.com/paulmillr/chokidar
+[Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`--require` CLI flag]: https://github.com/avajs/ava#cli
 [`--source` CLI flag]: https://github.com/avajs/ava#cli

@@ -1,5 +1,4 @@
 'use strict';
-
 var childProcess = require('child_process');
 var path = require('path');
 var fs = require('fs');
@@ -7,6 +6,7 @@ var arrify = require('arrify');
 var Promise = require('bluebird');
 var mkdirp = require('mkdirp');
 var branch = require('git-branch').sync(path.join(__dirname, '..'));
+
 var cliPath = require.resolve('../cli');
 
 function runTests(_args) {
@@ -34,7 +34,10 @@ var list;
 
 if (process.argv.length === 2) {
 	list = [
-		{args: 'other/failures.js', shouldFail: true},
+		{
+			args: 'other/failures.js',
+			shouldFail: true
+		},
 		'serial/alternating-sync-async.js',
 		'serial/async-immediate.js',
 		'serial/async-timeout.js',
@@ -94,22 +97,32 @@ var results = {};
 
 Promise.each(combined, function (definition) {
 	var args = definition.args;
+
 	return runTests(args).then(function (result) {
 		var key = result.args.join(' ');
 		var passedOrFaild = result.err ? 'failed' : 'passed';
 		var seconds = result.time / 1000;
+
 		console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
+
 		if (result.err && !definition.shouldFail) {
 			console.log(result.stdout);
 			console.log(result.stderr);
 			throw result.err;
 		}
+
 		results[key] = results[key] || [];
-		results[key].push({passed: !results.err, shouldFail: definition.shouldFail, time: seconds});
+
+		results[key].push({
+			passed: !results.err,
+			shouldFail: definition.shouldFail,
+			time: seconds
+		});
 	});
 }).then(function () {
 	mkdirp.sync(path.join(__dirname, '.results'));
 	results['.time'] = Date.now();
+
 	fs.writeFileSync(
 		path.join(__dirname, '.results', branch + '.json'),
 		JSON.stringify(results, null, 4)

@@ -2,9 +2,11 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/igogxrcmhhm085co/branch/master?svg=true)](https://ci.appveyor.com/project/sindresorhus/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava)
+[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![Dependency Status](https://dependencyci.com/github/avajs/ava/badge)](https://dependencyci.com/github/avajs/ava) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
+
+![](media/screenshot-mini-reporter.gif)
 
 *Read our [contributing guide](contributing.md) if you're looking to contribute (issues/PRs/etc).*
 
@@ -12,10 +14,11 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
 
-## Table of Contents
+## Contents
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Reporters](#reporters)
 - [Configuration](#configuration)
 - [Documentation](#documentation)
 - [API](#api)
@@ -42,7 +45,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
-- [Optional TAP output](#optional-tap-output)
+- [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
 
 ## Test syntax
@@ -59,12 +62,14 @@ test(t => {
 
 ### Add AVA to your project
 
-Install AVA globally run with `--init` to add AVA to your `package.json`:
+Install AVA globally and run it with `--init` to add AVA to your `package.json`:
 
 ```console
 $ npm install --global ava
 $ ava --init
 ```
+
+Your `package.json` will then look like this:
 
 ```json
 {
@@ -73,12 +78,12 @@ $ ava --init
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.11.0"
+    "ava": "^0.15.0"
   }
 }
 ```
 
-Any arguments passed after `--init` are added in the `package.json`.
+Any arguments passed after `--init` are added as config to `package.json`.
 
 #### Manual installation
 
@@ -127,8 +132,6 @@ AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipe
 
 ## CLI
 
-![](media/screenshot-mini-reporter.gif)
-
 ```console
 $ ava --help
 
@@ -167,6 +170,39 @@ Directories are recursed, with all `*.js` files being treated as test files. Dir
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
+## Reporters
+
+### Mini-reporter
+
+The mini-reporter is the default reporter.
+
+<img src="media/screenshot-mini-reporter.gif" width="460">
+
+### Verbose reporter
+
+Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
+
+<img src="media/screenshot.png" width="150">
+
+### TAP reporter
+
+AVA supports the TAP format and thus is compatible with [any TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the `--tap` flag to enable TAP output.
+
+```console
+$ ava --tap | tap-nyan
+```
+
+<img src="media/tap-output.png" width="398">
+
+Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
+
+### Clean stack traces
+
+AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
+
+<img src="media/stack-traces.png" width="300">
+
+
 ## Configuration
 
 All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
@@ -186,6 +222,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
       "*oo",
       "!foo"
     ],
+    "concurrency": 5,
     "failFast": true,
     "tap": true,
     "require": [
@@ -432,7 +469,7 @@ test.failing('demonstrate some bug', t => {
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. There are two exceptions to this however. If you use `--fail-fast` AVA will stop testing as soon as a failure occurs, and it won't run any hooks including the `.always()` hooks. Uncaught exceptions will crash your tests, possibly preventing `.always()` hooks from running.
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail. `.always()` hooks are ideal for cleanup tasks.
 
@@ -638,7 +675,7 @@ You can customize how AVA transpiles the test files through the `babel` option i
 
 You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
 
- ```json
+```json
 {
 	"babel": {
 		"presets": [
@@ -660,6 +697,8 @@ Note that AVA will *always* apply [a few internal plugins](docs/recipes/babelrc.
 ### TypeScript support
 
 AVA includes typings for TypeScript. You have to set up transpilation yourself. When you set `module` to `commonjs` in your `tsconfig.json` file, TypeScript will automatically find the type definitions for AVA. You should set `target` to `es2015` to use promises and async functions.
+
+See AVA's [TypeScript recipe](docs/recipes/typescript.md) for a more detailed explanation.
 
 ### Transpiling imported modules
 
@@ -737,24 +776,6 @@ test.cb(t => {
 	fs.readFile('data.txt', t.end);
 });
 ```
-
-### Optional TAP output
-
-AVA can generate TAP output via `--tap` option for use with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters).
-
-```console
-$ ava --tap | tap-nyan
-```
-
-<img src="media/tap-output.png" width="398">
-
-Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
-
-### Clean stack traces
-
-AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
-
-<img src="media/stack-traces.png" width="300">
 
 ### Global timeout
 
@@ -963,6 +984,10 @@ You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code cove
 
 As of version `5.0.0` it uses source maps to report coverage for your actual code, regardless of transpilation. Make sure that the code you're testing includes an inline source map or references a source map file. If you use `babel-register` you can set the `sourceMaps` option in your Babel config to `inline`.
 
+### Common pitfalls
+
+We have a growing list of [common pitfalls](docs/common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
+
 ## FAQ
 
 ### Why not `mocha`, `tape`, `tap`?
@@ -972,10 +997,6 @@ Mocha requires you to use implicit globals like `describe` and `it` with the def
 Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
 
 In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
-
-### How can I use custom reporters?
-
-AVA supports the TAP format and thus is compatible with any [TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the [`--tap` flag](#optional-tap-output) to enable TAP output.
 
 ### How is the name written and pronounced?
 
@@ -999,6 +1020,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [TypeScript](docs/recipes/typescript.md)
 - [Configuring Babel](docs/recipes/babelrc.md)
 - [Testing React components](docs/recipes/react.md)
+- [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 
 ## Support
 

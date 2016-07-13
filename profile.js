@@ -60,7 +60,10 @@ if (cli.input.length !== 1) {
 }
 
 var file = path.resolve(cli.input[0]);
-var cacheDir = findCacheDir({name: 'ava', files: [file]}) || uniqueTempDir();
+var cacheDir = findCacheDir({
+	name: 'ava',
+	files: [file]
+}) || uniqueTempDir();
 var precompiled = {};
 precompiled[file] = new CachingPrecompiler(cacheDir, conf.babel).precompileFile(file);
 
@@ -107,7 +110,7 @@ events.on('results', function (data) {
 	if (process.exit) {
 		// Delay is For Node 0.10 which emits uncaughtExceptions async.
 		setTimeout(function () {
-			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line
+			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line xo/no-process-exit
 		}, 20);
 	}
 });
