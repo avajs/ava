@@ -21,12 +21,28 @@ test('nested tests and hooks aren\'t allowed', function (t) {
 	runner.test(function () {
 		t.throws(function () {
 			runner.test(noop);
-		}, {message: 'Cannot have nested tests or hooks'});
+		}, {message: 'All tests and hooks must be declared synchronously in your ' +
+		'test file, and cannot be nested within other tests or hooks.'});
 	});
 
 	runner.run({}).then(function () {
 		t.end();
 	});
+});
+
+test('tests must be declared synchronously', function (t) {
+	var runner = new Runner();
+
+	runner.test(function () {
+		return Promise.resolve();
+	});
+
+	runner.run();
+
+	t.throws(function () {
+		runner.test(noop);
+	}, {message: 'All tests and hooks must be declared synchronously in your ' +
+	'test file, and cannot be nested within other tests or hooks.'});
 });
 
 test('runner emits a "test" event', function (t) {
