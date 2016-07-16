@@ -428,7 +428,7 @@ test('full-width line when sectioning', function (t) {
 test('write should call console.error', function (t) {
 	var reporter = verboseReporter();
 	var consoleError = console.error;
-	console.error = () => {};
+	console.error = function () {};
 	var spy = sinon.spy(console, 'error');
 	reporter.write('result');
 	t.true(spy.called);

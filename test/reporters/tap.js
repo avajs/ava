@@ -199,7 +199,7 @@ test('reporter strips ANSI characters', function (t) {
 test('write should call console.log', function (t) {
 	var reporter = tapReporter();
 	var consoleLog = console.log;
-	console.log = () => {};
+	console.log = function () {};
 	var spy = sinon.spy(console, 'log');
 
 	reporter.write('result');
