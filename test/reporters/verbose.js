@@ -1,6 +1,7 @@
 'use strict';
 var figures = require('figures');
 var chalk = require('chalk');
+var sinon = require('sinon');
 var test = require('tap').test;
 var lolex = require('lolex');
 var repeating = require('repeating');
@@ -422,6 +423,28 @@ test('full-width line when sectioning', function (t) {
 	var output = reporter.section();
 	t.is(output, fullWidthLine);
 	t.end();
+});
+
+test('write should call console.error', function (t) {
+	var reporter = verboseReporter();
+	var consoleError = console.error;
+	console.error = () => {};
+	var spy = sinon.spy(console, 'error');
+	reporter.write('result');
+	t.true(spy.called);
+	t.end();
+	console.error.restore();
+	console.error = consoleError;
+});
+
+test('stdout and stderr should call process.stderr.write', function (t) {
+	var reporter = verboseReporter();
+	var spy = sinon.spy(process.stderr, 'write');
+	reporter.stdout('result');
+	reporter.stderr('result');
+	t.is(spy.callCount, 2);
+	t.end();
+	process.stderr.write.restore();
 });
 
 function fooFunc() {

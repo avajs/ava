@@ -68,3 +68,9 @@ test('prefixTitle removes test- from path', function (t) {
 	t.is(runStatus.prefixTitle('backend/test-run-status.js'), 'backend' + sep + 'run-status' + sep);
 	t.end();
 });
+
+test('should successfully init w/o any options provided', function (t) {
+	var runStatus = new RunStatus();
+	t.is(runStatus.base, '');
+	t.end();
+});

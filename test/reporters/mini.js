@@ -1,5 +1,6 @@
 'use strict';
 var chalk = require('chalk');
+var sinon = require('sinon');
 var test = require('tap').test;
 var cross = require('figures').cross;
 var lolex = require('lolex');
@@ -454,4 +455,93 @@ test('results with watching enabled', function (t) {
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
+});
+
+test('should increase number of rejections', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.rejectionCount = 0;
+	var err = new Error('failure one');
+	err.type = 'rejection';
+	reporter.unhandledError(err);
+	t.is(reporter.rejectionCount, 1);
+	t.end();
+});
+
+test('should increase number of exceptions', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.exceptionCount = 0;
+	var err = new Error('failure one');
+	err.type = 'exception';
+	reporter.unhandledError(err);
+	t.is(reporter.exceptionCount, 1);
+	t.end();
+});
+
+test('should silently handle errors w/o body', function (t) {
+	var reporter = miniReporter();
+	reporter.failCount = 1;
+	var runStatus = {
+		errors: [{}, {}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n   ' + colors.error('1 failed'),
+		''
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('should not handle errors with body in rejections', function (t) {
+	var reporter = miniReporter();
+	reporter.rejectionCount = 1;
+	var runStatus = {
+		errors: [{
+			title: 'failed test'
+		}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n   ' + colors.error('1 rejection'),
+		''
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('should return description based on error itself if no stack available', function (t) {
+	var reporter = miniReporter();
+	reporter.exceptionCount = 1;
+	var err1 = new Error('failure one');
+	var runStatus = {
+		errors: [{
+			error: err1
+		}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n   ' + colors.error('1 exception'),
+		'\n\n   ' + colors.error('1. Uncaught Exception'),
+		'   ' + colors.stack(JSON.stringify({error: err1})) + '\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('should return empty string', function (t) {
+	var reporter = miniReporter();
+	t.is(reporter.clear(), '');
+	t.end();
+});
+
+test('stderr and stdout should call _update', function (t) {
+	var reporter = miniReporter();
+	var spy = sinon.spy(reporter, '_update');
+	reporter.stdout();
+	reporter.stderr();
+	t.is(spy.callCount, 2);
+	t.end();
+	reporter._update.restore();
 });
