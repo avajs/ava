@@ -105,6 +105,7 @@ events.on('results', function (data) {
 	if (console.profileEnd) {
 		console.profileEnd();
 	}
+
 	console.log('RESULTS:', data.stats);
 
 	if (process.exit) {
