@@ -27,6 +27,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Related](#related)
 - [Links](#links)
 - [Team](#team)
+- [Experimental Features](docs/experimental-features.md)
 
 ## Why AVA?
 
@@ -150,6 +151,7 @@ $ ava --help
     --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
     --timeout, -T      Set global timeout
     --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
+    --precompile, -p   Precompile sources in the main thread (EXPERIMENTAL)
 
   Examples
     ava
@@ -189,6 +191,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
       "!foo"
     ],
     "concurrency": 5,
+    "precompile": false,
     "failFast": true,
     "tap": true,
     "require": [
