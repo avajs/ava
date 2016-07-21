@@ -51,6 +51,8 @@ function generatePrefixed(prefix) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
+				output += '\t' + writeFunction(part + '<I, E>', 'implementation: Macro<I, E, ' + type + 'Context>, input: I, expected: E');
+				output += '\t' + writeFunction(part + '<I, E>', 'name: string, implementation: Macro<I, E, ' + type + 'Context>, input: I, expected: E');
 				output += '\t' + writeFunction(part, 'name: string, implementation: ' + type);
 				output += '\t' + writeFunction(part, 'implementation: ' + type);
 			}

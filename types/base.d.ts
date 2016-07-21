@@ -120,5 +120,12 @@ export interface ContextualCallbackTestContext extends CallbackTestContext {
 	context: any;
 }
 
+export interface Macro<I, E, T> {
+	(t: T, input: I, expected: E): void;
+	title? (providedTitle: string, input: I, expected: E): string;
+}
+
 export function test(name: string, run: ContextualTest): void;
 export function test(run: ContextualTest): void;
+export function test<I, E> (run: Macro<I, E, ContextualTestContext> | Macro<I, E, ContextualTestContext>[], input: I, expected: E): void;
+export function test<I, E> (name: string, run: Macro<I, E, ContextualTestContext> | Macro<I, E, ContextualTestContext>[], input: I, expected: E): void;
