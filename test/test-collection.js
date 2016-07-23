@@ -98,36 +98,6 @@ test('throws if no type is supplied', function (t) {
 	t.end();
 });
 
-test('throws if you try to set a hook as exclusive', function (t) {
-	var collection = new TestCollection();
-	t.throws(function () {
-		collection.add(mockTest({
-			type: 'beforeEach',
-			exclusive: true
-		}));
-	}, {message: '"only" cannot be used with a beforeEach hook'});
-	t.end();
-});
-
-test('throws if you try to set a before hook as always', function (t) {
-	var collection = new TestCollection();
-	t.throws(function () {
-		collection.add(mockTest({
-			type: 'before',
-			always: true
-		}));
-	}, {message: '"always" can only be used with after and afterEach hooks'});
-	t.end();
-});
-
-test('throws if you try to set a test as always', function (t) {
-	var collection = new TestCollection();
-	t.throws(function () {
-		collection.add(mockTest({always: true}));
-	}, {message: '"always" can only be used with after and afterEach hooks'});
-	t.end();
-});
-
 test('hasExclusive is set when an exclusive test is added', function (t) {
 	var collection = new TestCollection();
 	t.false(collection.hasExclusive);

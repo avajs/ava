@@ -10,6 +10,15 @@ test('validate accepts basic test', function (t) {
 	t.end();
 });
 
+test('validate rejects tests without implementations except `todo` tests', function (t) {
+	t.type(validate('test', null, {type: 'test'}), 'string');
+	t.type(validate('before', null, {type: 'before'}), 'string');
+	t.type(validate('beforeEach', null, {type: 'beforeEach'}), 'string');
+	t.type(validate('after', null, {type: 'after'}), 'string');
+	t.type(validate('afterEach', null, {type: 'afterEach'}), 'string');
+	t.end();
+});
+
 test('validate accepts proper todo', function (t) {
 	t.assert(validate('proper todo', null, {todo: true, type: 'test'}) === null);
 	t.end();
@@ -45,42 +54,34 @@ test('validate rejects skipped exclusive', function (t) {
 	t.end();
 });
 
-test('validate rejects skipping non-tests', function (t) {
-	t.type(validate('before', null, {skipped: true, type: 'before'}), 'string');
-	t.type(validate('beforeEach', null, {skipped: true, type: 'beforeEach'}), 'string');
-	t.type(validate('after', null, {skipped: true, type: 'after'}), 'string');
-	t.type(validate('afterEach', null, {skipped: true, type: 'afterEach'}), 'string');
+test('validate rejects failing on non-tests', function (t) {
+	t.type(validate('before', noop, {failing: true, type: 'test'}), 'null');
+	t.type(validate('before', noop, {failing: true, type: 'before'}), 'string');
+	t.type(validate('beforeEach', noop, {failing: true, type: 'beforeEach'}), 'string');
+	t.type(validate('after', noop, {failing: true, type: 'after'}), 'string');
+	t.type(validate('afterEach', noop, {failing: true, type: 'afterEach'}), 'string');
 	t.end();
 });
 
 test('validate rejects failing on non-tests', function (t) {
-	t.type(validate('before', null, {failing: true, type: 'test'}), 'null');
-	t.type(validate('before', null, {failing: true, type: 'before'}), 'string');
-	t.type(validate('beforeEach', null, {failing: true, type: 'beforeEach'}), 'string');
-	t.type(validate('after', null, {failing: true, type: 'after'}), 'string');
-	t.type(validate('afterEach', null, {failing: true, type: 'afterEach'}), 'string');
-	t.end();
-});
-
-test('validate rejects failing on non-tests', function (t) {
-	t.type(validate('before', null, {exclusive: true, type: 'test'}), 'null');
-	t.type(validate('before', null, {exclusive: true, type: 'before'}), 'string');
-	t.type(validate('beforeEach', null, {exclusive: true, type: 'beforeEach'}), 'string');
-	t.type(validate('after', null, {exclusive: true, type: 'after'}), 'string');
-	t.type(validate('afterEach', null, {exclusive: true, type: 'afterEach'}), 'string');
+	t.type(validate('before', noop, {exclusive: true, type: 'test'}), 'null');
+	t.type(validate('before', noop, {exclusive: true, type: 'before'}), 'string');
+	t.type(validate('beforeEach', noop, {exclusive: true, type: 'beforeEach'}), 'string');
+	t.type(validate('after', noop, {exclusive: true, type: 'after'}), 'string');
+	t.type(validate('afterEach', noop, {exclusive: true, type: 'afterEach'}), 'string');
 	t.end();
 });
 
 test('validate only allows always on `after` and `afterEach`', function (t) {
-	t.type(validate('before', null, {always: true, type: 'test'}), 'string');
-	t.type(validate('before', null, {always: true, type: 'before'}), 'string');
-	t.type(validate('beforeEach', null, {always: true, type: 'beforeEach'}), 'string');
-	t.type(validate('after', null, {always: true, type: 'after'}), 'null');
-	t.type(validate('afterEach', null, {always: true, type: 'afterEach'}), 'null');
+	t.type(validate('before', noop, {always: true, type: 'test'}), 'string');
+	t.type(validate('before', noop, {always: true, type: 'before'}), 'string');
+	t.type(validate('beforeEach', noop, {always: true, type: 'beforeEach'}), 'string');
+	t.type(validate('after', noop, {always: true, type: 'after'}), 'null');
+	t.type(validate('afterEach', noop, {always: true, type: 'afterEach'}), 'null');
 	t.end();
 });
 
 test('validate rejects skipping failing tests', function (t) {
-	t.type(validate('before', null, {failing: true, skipped: true, type: 'test'}), 'string');
+	t.type(validate('before', noop, {failing: true, skipped: true, type: 'test'}), 'string');
 	t.end();
 });

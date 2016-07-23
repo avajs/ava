@@ -280,6 +280,36 @@ test('only test', function (t) {
 	});
 });
 
+test('throws if you try to set a hook as exclusive', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.beforeEach.only('', noop);
+	}, {message: '`only` is only for tests and cannot be used with hooks'});
+
+	t.end();
+});
+
+test('throws if you try to set a before hook as always', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.before.always('', noop);
+	}, {message: '`always` can only be used with `after` and `afterEach`'});
+
+	t.end();
+});
+
+test('throws if you try to set a test as always', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.test.always('', noop);
+	}, {message: '`always` can only be used with `after` and `afterEach`'});
+
+	t.end();
+});
+
 test('runOnlyExclusive option test', function (t) {
 	t.plan(1);
 
