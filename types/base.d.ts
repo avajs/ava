@@ -92,7 +92,7 @@ export interface AssertContext {
 	/**
 	 * Assert that contents does not match regex.
 	 */
-	notRegex(contents, regex, message?: string): void;
+	notRegex(contents: string, regex: RegExp, message?: string): void;
 	/**
 	 * Assert that error is falsy.
 	 */
