@@ -9,8 +9,10 @@ var fromMapFileSource = require('convert-source-map').fromMapFileSource;
 
 var CachingPrecompiler = require('../lib/caching-precompiler');
 
-function fixture(name) {
-	return path.join(__dirname, 'fixture', name);
+function fixture() {
+	var args = Array.prototype.slice.call(arguments);
+	args.unshift(__dirname, 'fixture');
+	return path.join.apply(path, args);
 }
 
 function endsWithJs(filename) {
@@ -19,6 +21,10 @@ function endsWithJs(filename) {
 
 function endsWithMap(filename) {
 	return /\.js\.map$/.test(filename);
+}
+
+function endsWithJson(filename) {
+	return /\.json$/.test(filename);
 }
 
 sinon.spy(babel, 'transform');
@@ -48,9 +54,10 @@ test('adds files and source maps to the cache directory as needed', function (t)
 	t.true(fs.existsSync(tempDir), 'cache directory is lazily created');
 
 	var files = fs.readdirSync(tempDir);
-	t.is(files.length, 2);
+	t.is(files.length, 3);
 	t.is(files.filter(endsWithJs).length, 1, 'one .js file is saved to the cache');
 	t.is(files.filter(endsWithMap).length, 1, 'one .js.map file is saved to the cache');
+	t.is(files.filter(endsWithJson).length, 1, 'one .json file is saved to the cache');
 	t.end();
 });
 
@@ -128,5 +135,47 @@ test('does not modify plugins array in babelConfig', function (t) {
 
 	precompiler.precompileFile(fixture('es2015.js'));
 	t.strictDeepEqual(plugins, []);
+	t.end();
+});
+
+test('prepares a list of dependencies', function (t) {
+	var precompiler = new CachingPrecompiler(uniqueTempDir(), 'default');
+
+	var hash = precompiler.precompileFile(fixture('with-dependencies', 'test.js'));
+
+	var metadata = precompiler.getDetectiveMetadata(hash);
+
+	t.strictDeepEqual(metadata, {
+		expressions: false,
+		strings: [
+			'../../../',
+			'./dep-1',
+			'./dep-2',
+			'./dep-3.custom'
+		]
+	});
+
+	t.end();
+});
+
+test('caches the list of dependencies', function (t) {
+	var cacheDirPath = uniqueTempDir();
+	var precompiler1 = new CachingPrecompiler(cacheDirPath, 'default');
+	var hash = precompiler1.precompileFile(fixture('with-dependencies', 'test.js'));
+
+	var precompiler2 = new CachingPrecompiler(cacheDirPath, 'default');
+
+	var metadata = precompiler2.getDetectiveMetadata(hash);
+
+	t.strictDeepEqual(metadata, {
+		expressions: false,
+		strings: [
+			'../../../',
+			'./dep-1',
+			'./dep-2',
+			'./dep-3.custom'
+		]
+	});
+
 	t.end();
 });

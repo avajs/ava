@@ -683,16 +683,17 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(prefix + 'caching is enabled by default', function (t) {
-		t.plan(3);
+		t.plan(4);
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 		var api = apiCreator();
 
 		api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(function () {
 				var files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-				t.is(files.length, 2);
+				t.is(files.length, 3);
 				t.is(files.filter(endsWithJs).length, 1);
 				t.is(files.filter(endsWithMap).length, 1);
+				t.is(files.filter(endsWithJson).length, 1);
 				t.end();
 			});
 
@@ -702,6 +703,10 @@ function generateTests(prefix, apiCreator) {
 
 		function endsWithMap(filename) {
 			return /\.map$/.test(filename);
+		}
+
+		function endsWithJson(filename) {
+			return /\.json/.test(filename);
 		}
 	});
 

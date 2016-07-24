@@ -14,6 +14,7 @@ var AvaFiles = require('ava-files');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
 var CachingPrecompiler = require('./lib/caching-precompiler');
+var Precompiler = require('./lib/precompiler');
 var RunStatus = require('./lib/run-status');
 
 function Api(options) {
@@ -48,8 +49,15 @@ module.exports = Api;
 
 Api.prototype._runFile = function (file, runStatus) {
 	var hash = this.precompiler.precompileFile(file);
-	var precompiled = {};
-	precompiled[file] = hash;
+
+	var precompiled;
+
+	if (this.options.precompile) {
+		precompiled = runStatus.precompiler.createHash(file, hash, this.precompiler.getDetectiveMetadata(hash));
+	} else {
+		precompiled = {};
+		precompiled[file] = hash;
+	}
 
 	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
@@ -121,6 +129,10 @@ Api.prototype._run = function (files, _options) {
 	self.options.cacheDir = cacheDir;
 	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
 	self.fileCount = files.length;
+
+	if (self.options.precompile) {
+		runStatus.precompiler = new Precompiler(cacheDir);
+	}
 
 	var overwatch;
 	if (this.options.concurrency > 0) {

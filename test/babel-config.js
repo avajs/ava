@@ -6,6 +6,7 @@ var sinon = require('sinon');
 var proxyquire = require('proxyquire').noCallThru();
 var throwsHelper = require('babel-plugin-ava-throws-helper');
 var transformRuntime = require('babel-plugin-transform-runtime');
+var detective = require('babel-plugin-detective');
 
 function fixture(name) {
 	return path.join(__dirname, 'fixture', name);
@@ -45,6 +46,6 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.strictDeepEqual(options.presets, ['stage-2', 'es2015']);
-	t.strictDeepEqual(options.plugins, [customPlugin, powerAssert, throwsHelper, rewrite, transformRuntime]);
+	t.strictDeepEqual(options.plugins, [customPlugin, powerAssert, throwsHelper, rewrite, transformRuntime, detective]);
 	t.end();
 });
