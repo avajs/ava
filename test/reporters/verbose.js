@@ -1,5 +1,7 @@
 'use strict';
+var EventEmitter = require('events').EventEmitter;
 var figures = require('figures');
+var assign = require('object-assign');
 var chalk = require('chalk');
 var test = require('tap').test;
 var lolex = require('lolex');
@@ -20,14 +22,20 @@ var time = ' ' + chalk.grey.dim('[17:19:12]');
 
 function createReporter() {
 	var reporter = verboseReporter();
+	reporter.output = null;
+
+	reporter.write = function (str) {
+		this.output = str;
+	};
+
 	return reporter;
 }
 
-function createRunStatus() {
-	return {
-		fileCount: 1,
-		testCount: 1
-	};
+function createRunStatus(options) {
+	var status = new EventEmitter();
+	assign(status, options);
+
+	return status;
 }
 
 test('beautify stack - removes uninteresting lines', function (t) {
@@ -45,20 +53,27 @@ test('beautify stack - removes uninteresting lines', function (t) {
 
 test('start', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	t.is(reporter.start(createRunStatus()), '');
+	reporter.init(status);
+
+	t.is(reporter.output, '');
 	t.end();
 });
 
 test('passing test and duration less than threshold', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'passed',
 		duration: 90
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.green(figures.tick) + ' passed';
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -66,13 +81,17 @@ test('passing test and duration less than threshold', function (t) {
 
 test('passing test and duration greater than threshold', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'passed',
 		duration: 150
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.green(figures.tick) + ' passed' + chalk.grey.dim(' (150ms)');
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -80,24 +99,34 @@ test('passing test and duration greater than threshold', function (t) {
 
 test('don\'t display test title if there is only one anonymous test', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus({
+		fileCount: 1,
+		testCount: 1
+	});
 
-	var output = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: '[anonymous]'
-	}, createRunStatus());
+	}, status);
 
-	t.is(output, undefined);
+	t.is(reporter.output, '');
 	t.end();
 });
 
 test('known failure test', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'known failure',
 		failing: true
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.red(figures.tick) + ' ' + chalk.red('known failure');
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -105,15 +134,19 @@ test('known failure test', function (t) {
 
 test('failing test', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'failed',
 		error: {
 			message: 'assertion failed'
 		}
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.red(figures.cross) + ' failed ' + chalk.red('assertion failed');
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -121,13 +154,17 @@ test('failing test', function (t) {
 
 test('skipped test', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'skipped',
 		skip: true
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.yellow('- skipped');
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -135,14 +172,18 @@ test('skipped test', function (t) {
 
 test('todo test', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var actualOutput = reporter.test({
+	reporter.init(status);
+
+	status.emit('test', {
 		title: 'todo',
 		skip: true,
 		todo: true
-	}, createRunStatus());
+	}, status);
 
 	var expectedOutput = '  ' + chalk.blue('- todo');
+	var actualOutput = reporter.output;
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -150,15 +191,19 @@ test('todo test', function (t) {
 
 test('uncaught exception', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
+
+	reporter.init(status);
 
 	var error = new Error('Unexpected token');
 
-	var output = reporter.unhandledError({
+	status.emit('error', {
 		type: 'exception',
 		file: 'test.js',
 		stack: beautifyStack(error.stack)
-	}, createRunStatus()).split('\n');
+	}, status);
 
+	var output = reporter.output.split('\n');
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
@@ -167,29 +212,37 @@ test('uncaught exception', function (t) {
 
 test('ava error', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var output = reporter.unhandledError({
+	reporter.init(status);
+
+	status.emit('error', {
 		type: 'exception',
 		file: 'test.js',
 		name: 'AvaError',
 		message: 'A futuristic test runner'
-	}, createRunStatus()).split('\n');
+	}, status);
 
+	var output = reporter.output.split('\n');
 	t.is(output[0], chalk.red('  ' + figures.cross + ' A futuristic test runner'));
 	t.end();
 });
 
 test('unhandled rejection', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
+
+	reporter.init(status);
 
 	var error = new Error('Unexpected token');
 
-	var output = reporter.unhandledError({
+	status.emit('error', {
 		type: 'rejection',
 		file: 'test.js',
 		stack: beautifyStack(error.stack)
-	}, createRunStatus()).split('\n');
+	}, status);
 
+	var output = reporter.output.split('\n');
 	t.is(output[0], chalk.red('Unhandled Rejection: test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
@@ -198,6 +251,9 @@ test('unhandled rejection', function (t) {
 
 test('unhandled error without stack', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
+
+	reporter.init(status);
 
 	var err = {
 		type: 'exception',
@@ -205,8 +261,9 @@ test('unhandled error without stack', function (t) {
 		message: 'test'
 	};
 
-	var output = reporter.unhandledError(err, createRunStatus()).split('\n');
+	status.emit('error', err, status);
 
+	var output = reporter.output.split('\n');
 	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
 	t.is(output[1], '  ' + chalk.red(JSON.stringify(err)));
 	t.end();
@@ -214,10 +271,15 @@ test('unhandled error without stack', function (t) {
 
 test('results with passing tests', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
+	var status = createRunStatus({
+		passCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -230,15 +292,20 @@ test('results with passing tests', function (t) {
 
 test('results with passing known failure tests', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.knownFailureCount = 1;
-	runStatus.knownFailures = [{
-		title: 'known failure',
-		failing: true
-	}];
+	var status = createRunStatus({
+		passCount: 1,
+		knownFailureCount: 1,
+		knownFailures: [{
+			title: 'known failure',
+			failing: true
+		}]
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -255,11 +322,16 @@ test('results with passing known failure tests', function (t) {
 
 test('results with skipped tests', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.skipCount = 1;
+	var status = createRunStatus({
+		passCount: 1,
+		skipCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -273,11 +345,16 @@ test('results with skipped tests', function (t) {
 
 test('results with todo tests', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.todoCount = 1;
+	var status = createRunStatus({
+		passCount: 1,
+		todoCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -291,11 +368,16 @@ test('results with todo tests', function (t) {
 
 test('results with passing tests and rejections', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.rejectionCount = 1;
+	var status = createRunStatus({
+		passCount: 1,
+		rejectionCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -309,11 +391,16 @@ test('results with passing tests and rejections', function (t) {
 
 test('results with passing tests and exceptions', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.exceptionCount = 1;
+	var status = createRunStatus({
+		passCount: 1,
+		exceptionCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -327,12 +414,17 @@ test('results with passing tests and exceptions', function (t) {
 
 test('results with passing tests, rejections and exceptions', function (t) {
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.exceptionCount = 1;
-	runStatus.rejectionCount = 1;
+	var status = createRunStatus({
+		passCount: 1,
+		exceptionCount: 1,
+		rejectionCount: 1
+	});
 
-	var actualOutput = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var actualOutput = reporter.output;
 	var expectedOutput = [
 		'',
 		'  ' + chalk.green('1 test passed') + time,
@@ -352,17 +444,22 @@ test('results with errors', function (t) {
 	error2.stack = 'stack line with trailing whitespace\t\n';
 
 	var reporter = createReporter();
-	var runStatus = createRunStatus();
-	runStatus.failCount = 1;
-	runStatus.tests = [{
-		title: 'fail one',
-		error: error1
-	}, {
-		title: 'fail two',
-		error: error2
-	}];
+	var status = createRunStatus({
+		failCount: 1,
+		tests: [{
+			title: 'fail one',
+			error: error1
+		}, {
+			title: 'fail two',
+			error: error2
+		}]
+	});
 
-	var output = reporter.finish(runStatus);
+	reporter.init(status);
+
+	status.emit('finish', status);
+
+	var output = reporter.output;
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.red('1 test failed') + time,
@@ -382,13 +479,17 @@ test('results with errors', function (t) {
 
 test('results with 1 previous failure', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus({
+		passCount: 1,
+		exceptionCount: 1,
+		previousFailCount: 1
+	});
 
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.exceptionCount = 1;
-	runStatus.previousFailCount = 1;
+	reporter.init(status);
 
-	var output = reporter.finish(runStatus);
+	status.emit('finish', status);
+
+	var output = reporter.output;
 	compareLineOutput(t, output, [
 		'',
 		'  ' + colors.pass('1 test passed') + time,
@@ -400,13 +501,17 @@ test('results with 1 previous failure', function (t) {
 
 test('results with 2 previous failures', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus({
+		passCount: 1,
+		exceptionCount: 1,
+		previousFailCount: 2
+	});
 
-	var runStatus = createRunStatus();
-	runStatus.passCount = 1;
-	runStatus.exceptionCount = 1;
-	runStatus.previousFailCount = 2;
+	reporter.init(status);
 
-	var output = reporter.finish(runStatus);
+	status.emit('finish', status);
+
+	var output = reporter.output;
 	compareLineOutput(t, output, [
 		'',
 		'  ' + colors.pass('1 test passed') + time,
@@ -418,9 +523,13 @@ test('results with 2 previous failures', function (t) {
 
 test('full-width line when sectioning', function (t) {
 	var reporter = createReporter();
+	var status = createRunStatus();
 
-	var output = reporter.section();
-	t.is(output, fullWidthLine);
+	reporter.init(status);
+
+	status.emit('section');
+
+	t.is(reporter.output, fullWidthLine);
 	t.end();
 });
 

@@ -49,6 +49,7 @@ group('chokidar', function (beforeEach, test, group) {
 	var chokidarEmitter;
 	var stdin;
 	var files;
+	var reporter;
 
 	function proxyWatcher(opts) {
 		return proxyquire.noCallThru().load('../lib/watcher', opts ||
@@ -72,25 +73,25 @@ group('chokidar', function (beforeEach, test, group) {
 
 		debug = sinon.spy();
 
-		logger = {
-			start: sinon.spy(),
-			finish: sinon.spy(),
-			section: sinon.spy(),
-			clear: sinon.stub().returns(true),
-			reset: sinon.spy()
-		};
-
-		api = {
-			on: function () {},
-			run: sinon.stub()
-		};
+		api = new EventEmitter();
 
 		resetRunStatus = function () {
-			runStatus = {
-				failCount: 0,
-				rejectionCount: 0,
-				exceptionCount: 0
+			reporter = {
+				start: sinon.spy(),
+				finish: sinon.spy(),
+				section: sinon.spy(),
+				clear: sinon.spy()
 			};
+
+			runStatus = new EventEmitter();
+			runStatus.failCount = 0;
+			runStatus.rejectionCount = 0;
+			runStatus.exceptionCount = 0;
+
+			runStatus.on('start', reporter.start);
+			runStatus.on('finish', reporter.finish);
+			runStatus.on('section', reporter.section);
+			runStatus.on('clear', reporter.clear);
 
 			return runStatus;
 		};
@@ -104,11 +105,9 @@ group('chokidar', function (beforeEach, test, group) {
 		chokidarEmitter = new EventEmitter();
 		chokidar.watch.returns(chokidarEmitter);
 
-		logger.clear.returns(true);
-
 		avaFiles = AvaFiles;
 
-		api.run.returns(new Promise(function () {}));
+		api.run = sinon.stub().returns(new Promise(function () {}));
 		files = [
 			'test.js',
 			'test-*.js',
@@ -117,6 +116,17 @@ group('chokidar', function (beforeEach, test, group) {
 
 		resetRunStatus();
 
+		api.run = sinon.spy(function (files, options) {
+			api.emit('test-run', runStatus, files);
+			runStatus.emit('start');
+
+			return new Promise(function (resolve) {
+				runStatus.on('finish', function () {
+					resolve(runStatus);
+				});
+			});
+		});
+
 		stdin = new PassThrough();
 		stdin.pause();
 
@@ -124,7 +134,7 @@ group('chokidar', function (beforeEach, test, group) {
 	});
 
 	var start = function (sources) {
-		return new Subject(logger, api, files, sources || []);
+		return new Subject(api, files, sources || []);
 	};
 
 	var emitChokidar = function (event, path) {
@@ -208,28 +218,21 @@ group('chokidar', function (beforeEach, test, group) {
 	});
 
 	test('starts running the initial tests', function (t) {
-		t.plan(8);
-
-		var done;
-		api.run.returns(new Promise(function (resolve) {
-			done = function () {
-				resolve(runStatus);
-			};
-		}));
+		t.plan(6);
 
 		start();
-		t.ok(logger.clear.notCalled);
-		t.ok(logger.reset.notCalled);
-		t.ok(logger.start.notCalled);
+		t.ok(reporter.clear.notCalled);
+		t.ok(reporter.start.calledOnce);
 		t.ok(api.run.calledOnce);
 		t.strictDeepEqual(api.run.firstCall.args, [files, {runOnlyExclusive: false}]);
 
 		// finish is only called after the run promise fulfils.
-		t.ok(logger.finish.notCalled);
-		done();
+		t.ok(reporter.finish.notCalled);
+
+		runStatus.emit('finish');
+
 		return delay().then(function () {
-			t.ok(logger.finish.calledOnce);
-			t.is(logger.finish.firstCall.args[0], runStatus);
+			t.ok(reporter.finish.calledOnce);
 		});
 	});
 
@@ -275,43 +278,29 @@ group('chokidar', function (beforeEach, test, group) {
 		}
 	].forEach(function (variant) {
 		test('reruns initial tests when a source file ' + variant.label, function (t) {
-			t.plan(12);
-
-			api.run.returns(Promise.resolve(runStatus));
+			t.plan(9);
 			start();
 
-			var done;
-			api.run.returns(new Promise(function (resolve) {
-				done = function () {
-					resolve(runStatus);
-				};
-			}));
+			t.ok(reporter.clear.notCalled);
+			t.ok(reporter.start.calledOnce);
+			t.ok(api.run.calledOnce);
+			// no explicit files are provided.
+			t.strictDeepEqual(api.run.firstCall.args, [files, {runOnlyExclusive: false}]);
+
+			// finish is only called after the run promise fulfils.
+			t.ok(reporter.finish.notCalled);
+
+			runStatus.emit('finish');
+			t.ok(reporter.finish.calledOnce);
 
 			variant.fire();
+
 			return debounce().then(function () {
-				t.ok(logger.clear.calledOnce);
-				t.ok(logger.reset.calledOnce);
-				t.ok(logger.start.calledOnce);
 				t.ok(api.run.calledTwice);
-				// clear is called before reset.
-				t.ok(logger.clear.firstCall.calledBefore(logger.reset.firstCall));
-				// reset is called before the second run.
-				t.ok(logger.reset.firstCall.calledBefore(api.run.secondCall));
-				// reset is called before start
-				t.ok(logger.reset.firstCall.calledBefore(logger.start.firstCall));
-				// no explicit files are provided.
 				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 
-				// finish is only called after the run promise fulfils.
-				t.ok(logger.finish.calledOnce);
-				t.is(logger.finish.firstCall.args[0], runStatus);
-
-				resetRunStatus();
-				done();
-				return delay();
-			}).then(function () {
-				t.ok(logger.finish.calledTwice);
-				t.is(logger.finish.secondCall.args[0], runStatus);
+				runStatus.emit('finish');
+				t.ok(reporter.finish.calledTwice);
 			});
 		});
 	});
@@ -334,18 +323,18 @@ group('chokidar', function (beforeEach, test, group) {
 			t.plan(2);
 
 			runStatus[variant.prop] = 1;
-			api.run.returns(Promise.resolve(runStatus));
+			api.run = sinon.stub().returns(Promise.resolve(runStatus));
 			start();
 
 			api.run.returns(Promise.resolve(resetRunStatus()));
 			change();
 			return debounce().then(function () {
-				t.ok(logger.clear.notCalled);
+				t.ok(reporter.clear.notCalled);
 
 				change();
 				return debounce();
 			}).then(function () {
-				t.ok(logger.clear.calledOnce);
+				t.ok(reporter.clear.calledOnce);
 			});
 		});
 	});
