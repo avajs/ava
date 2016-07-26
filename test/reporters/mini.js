@@ -380,7 +380,7 @@ test('results with errors', function (t) {
 		'',
 		'   ' + chalk.white('failed two')
 	].concat(
-		colors.stack('   failure two\n  stack line with trailing whitespace').split('\n')
+		colors.stack('   failure two\nstack line with trailing whitespace').split('\n')
 	));
 	t.end();
 });
