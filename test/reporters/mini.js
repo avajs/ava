@@ -223,7 +223,6 @@ test('results with passing known failure tests', function (t) {
 		'\n  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('1 known failure'),
 		'',
-		'',
 		'   ' + chalk.white('known failure'),
 		''
 	].join('\n');
@@ -300,12 +299,10 @@ test('results with passing tests and rejections', function (t) {
 		'  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('1 rejection'),
 		'',
-		'',
 		'   ' + chalk.white('Unhandled Rejection'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
-		'',
 		'',
 		'   ' + chalk.white('Unhandled Rejection'),
 		'   ' + colors.stack('stack line with trailing whitespace')
@@ -335,12 +332,10 @@ test('results with passing tests and exceptions', function (t) {
 		'  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('2 exceptions'),
 		'',
-		'',
 		'   ' + chalk.white('Uncaught Exception'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
-		'',
 		'',
 		'   ' + chalk.red(cross + ' A futuristic test runner')
 	]);
@@ -371,12 +366,10 @@ test('results with errors', function (t) {
 		'',
 		'  ' + chalk.red('1 failed'),
 		'',
-		'',
 		'   ' + chalk.white('failed one'),
 		/failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
-		'',
 		'',
 		'   ' + chalk.white('failed two')
 	].concat(
