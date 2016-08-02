@@ -24,16 +24,21 @@ function Api(options) {
 	EventEmitter.call(this);
 
 	this.options = objectAssign({
-		cwd: process.cwd(),
 		resolveTestsFrom: process.cwd(),
 		match: []
 	}, options);
 
 	this.options.require = (this.options.require || []).map(function (moduleId) {
+		var originalCwd = process.cwd();
+		if (options.pkgDir) {
+			process.chdir(options.pkgDir);
+		}
+
 		var ret = resolveCwd(moduleId);
 		if (ret === null) {
 			throw new Error('Could not resolve required module \'' + moduleId + '\'');
 		}
+		process.chdir(originalCwd);
 
 		return ret;
 	});
