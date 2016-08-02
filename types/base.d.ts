@@ -121,8 +121,8 @@ export interface ContextualCallbackTestContext extends CallbackTestContext {
 }
 
 export interface Macro<T, I, E> {
-	(t: T, input?: I, expected?: E): void;
-	title? (providedTitle: string, input?: I, expected?: E): string;
+	(t: T, input: I, expected: E): void;
+	title? (providedTitle: string, input: I, expected: E): string;
 }
 export type Macros<T, I, E> = Macro<T, I, E> | Macro<T, I, E>[];
 
