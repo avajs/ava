@@ -1,10 +1,8 @@
 'use strict';
-var path = require('path');
-var chalk = require('chalk');
 var serializeError = require('./lib/serialize-error');
 var globals = require('./lib/globals');
 var Runner = require('./lib/runner');
-var send = require('./lib/send');
+var send = require('./lib/send-to-parent');
 
 var opts = globals.options;
 var runner = new Runner({
@@ -12,18 +10,6 @@ var runner = new Runner({
 	bail: opts.failFast,
 	match: opts.match
 });
-
-// check if the test is being run without AVA cli
-var isForked = typeof process.send === 'function';
-
-if (!isForked) {
-	var fp = path.relative('.', process.argv[1]);
-
-	console.log();
-	console.error('Test files must be run with the AVA CLI:\n\n    ' + chalk.grey.dim('$') + ' ' + chalk.cyan('ava ' + fp) + '\n');
-
-	process.exit(1); // eslint-disable-line xo/no-process-exit
-}
 
 // note that test files have require('ava')
 require('./lib/test-worker').avaRequired = true;
