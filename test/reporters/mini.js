@@ -362,6 +362,10 @@ test('results with errors', function (t) {
 	};
 
 	var output = reporter.finish(runStatus);
+
+	var expectedStack = colors.error('   failure two\n') + colors.errorStack('stack line with trailing whitespace');
+	expectedStack = expectedStack.split('\n');
+
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.red('1 failed'),
@@ -373,7 +377,7 @@ test('results with errors', function (t) {
 		'',
 		'   ' + chalk.white('failed two')
 	].concat(
-		colors.stack('   failure two\nstack line with trailing whitespace').split('\n')
+		expectedStack
 	));
 	t.end();
 });
