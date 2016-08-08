@@ -425,24 +425,21 @@ test('full-width line when sectioning', function (t) {
 	t.end();
 });
 
-test('write should call console.error', function (t) {
+test('write calls console.error', function (t) {
+	var stub = sinon.stub(console, 'error');
 	var reporter = verboseReporter();
-	var consoleError = console.error;
-	console.error = function () {};
-	var spy = sinon.spy(console, 'error');
 	reporter.write('result');
-	t.true(spy.called);
+	t.true(stub.called);
 	t.end();
 	console.error.restore();
-	console.error = consoleError;
 });
 
-test('stdout and stderr should call process.stderr.write', function (t) {
+test('reporter.stdout and reporter.stderr both use process.stderr.write', function (t) {
 	var reporter = verboseReporter();
-	var spy = sinon.spy(process.stderr, 'write');
+	var stub = sinon.stub(process.stderr, 'write');
 	reporter.stdout('result');
 	reporter.stderr('result');
-	t.is(spy.callCount, 2);
+	t.is(stub.callCount, 2);
 	t.end();
 	process.stderr.write.restore();
 });

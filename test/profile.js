@@ -19,7 +19,7 @@ function run(files) {
 	return execa(process.execPath, [profileScript].concat(arrify(files).map(fixture)), {cwd: cwd});
 }
 
-test('should run profiler and throw an error when invoked w/o files to run', function (t) {
+test('should run profiler and throw an error when invoked without files to run', function (t) {
 	t.plan(1);
 	run()
 		.catch(function (err) {

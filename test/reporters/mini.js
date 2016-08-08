@@ -457,7 +457,7 @@ test('results with watching enabled', function (t) {
 	t.end();
 });
 
-test('should increase number of rejections', function (t) {
+test('increases number of rejections', function (t) {
 	var reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.rejectionCount = 0;
@@ -468,7 +468,7 @@ test('should increase number of rejections', function (t) {
 	t.end();
 });
 
-test('should increase number of exceptions', function (t) {
+test('increases number of exceptions', function (t) {
 	var reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.exceptionCount = 0;
@@ -479,7 +479,7 @@ test('should increase number of exceptions', function (t) {
 	t.end();
 });
 
-test('should silently handle errors w/o body', function (t) {
+test('silently handles errors without body', function (t) {
 	var reporter = miniReporter();
 	reporter.failCount = 1;
 	var runStatus = {
@@ -494,7 +494,7 @@ test('should silently handle errors w/o body', function (t) {
 	t.end();
 });
 
-test('should not handle errors with body in rejections', function (t) {
+test('does not handle errors with body in rejections', function (t) {
 	var reporter = miniReporter();
 	reporter.rejectionCount = 1;
 	var runStatus = {
@@ -511,7 +511,7 @@ test('should not handle errors with body in rejections', function (t) {
 	t.end();
 });
 
-test('should return description based on error itself if no stack available', function (t) {
+test('returns description based on error itself if no stack available', function (t) {
 	var reporter = miniReporter();
 	reporter.exceptionCount = 1;
 	var err1 = new Error('failure one');
@@ -530,7 +530,7 @@ test('should return description based on error itself if no stack available', fu
 	t.end();
 });
 
-test('should return empty string', function (t) {
+test('returns empty string (used in watcher in order to separate different test runs)', function (t) {
 	var reporter = miniReporter();
 	t.is(reporter.clear(), '');
 	t.end();

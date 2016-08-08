@@ -8,6 +8,8 @@ var figures = require('figures');
 var arrify = require('arrify');
 var chalk = require('chalk');
 var touch = require('touch');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
 var cliPath = path.join(__dirname, '../cli.js');
 
@@ -334,4 +336,35 @@ test('should warn ava is required without the cli', function (t) {
 		t.match(error.message, /Test files must be run with the AVA CLI/);
 		t.end();
 	});
+});
+
+test('prefers local version of ava', function (t) {
+	t.plan(1);
+
+	var stubModulePath = path.join(__dirname) + '/fixture/empty';
+	var debugSpy = sinon.spy();
+	function resolveCwdStub() {
+		return stubModulePath;
+	}
+	function debugStub() {
+		return function (message) {
+			var result = {
+				enabled: false
+			};
+
+			if (message) {
+				result = debugSpy(message);
+			}
+
+			return result;
+		};
+	}
+
+	proxyquire('../cli', {
+		'debug': debugStub,
+		'resolve-cwd': resolveCwdStub
+	});
+
+	t.ok(debugSpy.calledWith('Using local install of AVA'));
+	t.end();
 });

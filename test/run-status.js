@@ -69,7 +69,7 @@ test('prefixTitle removes test- from path', function (t) {
 	t.end();
 });
 
-test('should successfully init w/o any options provided', function (t) {
+test('successfully initializes without any options provided', function (t) {
 	var runStatus = new RunStatus();
 	t.is(runStatus.base, '');
 	t.end();
