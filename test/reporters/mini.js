@@ -299,13 +299,13 @@ test('results with passing tests and rejections', function (t) {
 		'  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('1 rejection'),
 		'',
-		'   ' + chalk.white('Unhandled Rejection'),
+		'  ' + chalk.white('Unhandled Rejection'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'   ' + chalk.white('Unhandled Rejection'),
-		'   ' + colors.stack('stack line with trailing whitespace')
+		'  ' + chalk.white('Unhandled Rejection'),
+		'  ' + colors.stack('stack line with trailing whitespace')
 	]);
 	t.end();
 });
@@ -332,12 +332,12 @@ test('results with passing tests and exceptions', function (t) {
 		'  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('2 exceptions'),
 		'',
-		'   ' + chalk.white('Uncaught Exception'),
+		'  ' + chalk.white('Uncaught Exception'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'   ' + chalk.red(cross + ' A futuristic test runner')
+		'  ' + chalk.red(cross + ' A futuristic test runner')
 	]);
 	t.end();
 });
@@ -363,19 +363,19 @@ test('results with errors', function (t) {
 
 	var output = reporter.finish(runStatus);
 
-	var expectedStack = colors.error('   failure two\n') + colors.errorStack('stack line with trailing whitespace');
+	var expectedStack = colors.error('  failure two\n') + colors.errorStack('stack line with trailing whitespace');
 	expectedStack = expectedStack.split('\n');
 
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.red('1 failed'),
 		'',
-		'   ' + chalk.white('failed one'),
+		'  ' + chalk.white('failed one'),
 		/failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'   ' + chalk.white('failed two')
+		'  ' + chalk.white('failed two')
 	].concat(
 		expectedStack
 	));
