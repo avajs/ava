@@ -1,6 +1,6 @@
 'use strict';
 var test = require('tap').test;
-var Logger = require('../lib/logger');
+var Logger = require('../lib/reporters/helpers/logger');
 var tap = require('../lib/reporters/tap');
 
 test('must be called with new', function (t) {

@@ -4,8 +4,8 @@ var chalk = require('chalk');
 var test = require('tap').test;
 var lolex = require('lolex');
 var repeating = require('repeating');
-var beautifyStack = require('../../lib/beautify-stack');
-var colors = require('../../lib/colors');
+var beautifyStack = require('../../lib/reporters/helpers/beautify-stack');
+var colors = require('../../lib/reporters/helpers/colors');
 var verboseReporter = require('../../lib/reporters/verbose');
 var compareLineOutput = require('../helper/compare-line-output');
 

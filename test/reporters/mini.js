@@ -6,8 +6,8 @@ var lolex = require('lolex');
 var repeating = require('repeating');
 var AvaError = require('../../lib/ava-error');
 var _miniReporter = require('../../lib/reporters/mini');
-var beautifyStack = require('../../lib/beautify-stack');
-var colors = require('../../lib/colors');
+var beautifyStack = require('../../lib/reporters/helpers/beautify-stack');
+var colors = require('../../lib/reporters/helpers/colors');
 var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
