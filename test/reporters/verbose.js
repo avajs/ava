@@ -430,8 +430,8 @@ test('write calls console.error', function (t) {
 	var reporter = verboseReporter();
 	reporter.write('result');
 	t.true(stub.called);
-	t.end();
 	console.error.restore();
+	t.end();
 });
 
 test('reporter.stdout and reporter.stderr both use process.stderr.write', function (t) {
@@ -440,8 +440,8 @@ test('reporter.stdout and reporter.stderr both use process.stderr.write', functi
 	reporter.stdout('result');
 	reporter.stderr('result');
 	t.is(stub.callCount, 2);
-	t.end();
 	process.stderr.write.restore();
+	t.end();
 });
 
 function fooFunc() {

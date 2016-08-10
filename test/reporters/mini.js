@@ -542,6 +542,6 @@ test('stderr and stdout should call _update', function (t) {
 	reporter.stdout();
 	reporter.stderr();
 	t.is(spy.callCount, 2);
-	t.end();
 	reporter._update.restore();
+	t.end();
 });

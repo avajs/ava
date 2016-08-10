@@ -198,16 +198,13 @@ test('reporter strips ANSI characters', function (t) {
 
 test('write should call console.log', function (t) {
 	var reporter = tapReporter();
-	var consoleLog = console.log;
-	console.log = function () {};
-	var spy = sinon.spy(console, 'log');
+	var stub = sinon.stub(console, 'log');
 
 	reporter.write('result');
 
-	t.true(spy.called);
-	t.end();
+	t.true(stub.called);
 	console.log.restore();
-	console.log = consoleLog;
+	t.end();
 });
 
 test('stdout and stderr should call process.stderr.write', function (t) {
@@ -218,6 +215,6 @@ test('stdout and stderr should call process.stderr.write', function (t) {
 	reporter.stderr('result');
 
 	t.is(spy.callCount, 2);
-	t.end();
 	process.stderr.write.restore();
+	t.end();
 });

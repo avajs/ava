@@ -23,7 +23,7 @@ test('does not strip ava internals and dependencies from stack trace with debug 
 		'at Stub.listOnTimeout (timers.js:119:15)\n'
 	);
 
-	t.true(result.search('ava/cli.js') !== -1);
+	t.true(result.indexOf('ava/cli.js') >= 0);
 	t.end();
 });
 
@@ -34,7 +34,7 @@ test('strips ava internals and dependencies from stack trace with debug disabled
 		'at Stub.listOnTimeout (timers.js:119:15)\n'
 	);
 
-	t.true(result.search('ava/cli.js') === -1);
+	t.true(result.indexOf('ava/cli.js') === -1);
 	t.end();
 });
 
