@@ -19,18 +19,18 @@ test('does not strip ava internals and dependencies from stack trace with debug 
 
 	var result = beautify(
 		'Error: TypeError\n' +
-		'at null._onTimeout (/ava/cli.js:27:11)\n' +
+		'at null._onTimeout (node_modules/ava/cli.js:27:11)\n' +
 		'at Stub.listOnTimeout (timers.js:119:15)\n'
 	);
 
-	t.true(result.indexOf('ava/cli.js') >= 0);
+	t.true(result.indexOf('ava/cli.js') !== -1);
 	t.end();
 });
 
 test('strips ava internals and dependencies from stack trace with debug disabled', function (t) {
 	var result = beautifyStack(
 		'Error: TypeError\n' +
-		'at null._onTimeout (/ava/cli.js:27:11)\n' +
+		'at null._onTimeout (node_modules/ava/cli.js:27:11)\n' +
 		'at Stub.listOnTimeout (timers.js:119:15)\n'
 	);
 

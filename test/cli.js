@@ -341,7 +341,7 @@ test('should warn ava is required without the cli', function (t) {
 test('prefers local version of ava', function (t) {
 	t.plan(1);
 
-	var stubModulePath = path.join(__dirname) + '/fixture/empty';
+	var stubModulePath = path.join(__dirname, '/fixture/empty');
 	var debugSpy = sinon.spy();
 	function resolveCwdStub() {
 		return stubModulePath;
