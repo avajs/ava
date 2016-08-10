@@ -8,7 +8,10 @@ var debug = require('debug')('ava');
 var resolveCwd = require('resolve-cwd');
 var localCLI = resolveCwd('ava/cli');
 
-if (localCLI && localCLI !== __filename) {
+// Use path.relative() to detect local AVA installation,
+// because __filename's case is inconsistent on Windows
+// see https://github.com/nodejs/node/issues/6624
+if (localCLI && path.relative(localCLI, __filename) !== '') {
 	debug('Using local install of AVA');
 	require(localCLI);
 	return;
