@@ -90,6 +90,8 @@ var cli = meow([
 		'concurrency'
 	],
 	boolean: [
+		'debug',
+		'debug-brk',
 		'fail-fast',
 		'verbose',
 		'serial',
@@ -112,6 +114,32 @@ var cli = meow([
 
 updateNotifier({pkg: cli.pkg}).notify();
 
+function checkDebugFlag(flag) {
+	flag = '--' + flag;
+
+	for (var i = 0; i < process.argv.length; i++) {
+		var arg = process.argv[i];
+		if (arg.indexOf(flag) === 0) {
+			arg = arg.substring(flag.length + 1) || '5858';
+			var port = parseInt(arg, 10);
+			if (isNaN(port)) {
+				console.log('Bad value for ' + flag + ' ' + arg);
+				process.exit(1);
+			}
+			return flag + '=' + port;
+		}
+	}
+
+	return null;
+}
+
+var debugFlag = checkDebugFlag('debug-brk') || checkDebugFlag('debug');
+var concurrency = cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0;
+
+if (debugFlag) {
+	concurrency = 1;
+}
+
 if (cli.flags.init) {
 	require('ava-init')();
 	return;
@@ -128,6 +156,7 @@ if (
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
+	debug: debugFlag,
 	require: arrify(cli.flags.require),
 	cacheEnabled: cli.flags.cache !== false,
 	explicitTitles: cli.flags.watch,
@@ -135,7 +164,7 @@ var api = new Api({
 	babelConfig: conf.babel,
 	resolveTestsFrom: cli.input.length === 0 ? pkgDir : process.cwd(),
 	timeout: cli.flags.timeout,
-	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
+	concurrency: concurrency
 });
 
 var reporter;
