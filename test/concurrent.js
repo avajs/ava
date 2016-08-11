@@ -25,6 +25,14 @@ function fail(val) {
 	};
 }
 
+function failWithTypeError() {
+	return {
+		run: function () {
+			throw new TypeError('Unexpected Error');
+		}
+	};
+}
+
 function passAsync(val) {
 	return {
 		run: function () {
@@ -848,5 +856,19 @@ test('sequences of sequences', function (t) {
 		]
 	});
 
+	t.end();
+});
+
+test('must be called with array of tests', function (t) {
+	t.throws(function () {
+		new Concurrent(pass('a')).run();
+	}, {message: 'Expected an array of tests'});
+	t.end();
+});
+
+test('should throw an error then test.run() fails with not AvaError', function (t) {
+	t.throws(function () {
+		new Concurrent([failWithTypeError()]).run();
+	}, {message: 'Unexpected Error'});
 	t.end();
 });
