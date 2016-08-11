@@ -23,7 +23,7 @@ test('runs the profiler and throws an error when invoked without files to run', 
 	t.plan(1);
 	run()
 		.catch(function (err) {
-			t.ok(/Specify a test file/.test(err.message));
+			t.ok(/Specify a test file/g.test(err.stderr));
 			t.end();
 		});
 });
