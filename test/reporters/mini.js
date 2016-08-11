@@ -484,7 +484,7 @@ test('silently handles errors without body', function (t) {
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + colors.error('1 failed'),
+		'\n  ' + colors.error('1 failed'),
 		''
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
@@ -501,7 +501,7 @@ test('does not handle errors with body in rejections', function (t) {
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + colors.error('1 rejection'),
+		'\n  ' + colors.error('1 rejection'),
 		''
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
@@ -519,9 +519,10 @@ test('returns description based on error itself if no stack available', function
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + colors.error('1 exception'),
-		'\n\n   ' + colors.error('1. Uncaught Exception'),
-		'   ' + colors.stack(JSON.stringify({error: err1})) + '\n'
+		'\n  ' + colors.error('1 exception'),
+		'\n  ' + colors.title('Uncaught Exception'),
+		'  ' + colors.stack(JSON.stringify({error: err1})),
+		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
 	t.end();
