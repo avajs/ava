@@ -11,6 +11,7 @@ var findCacheDir = require('find-cache-dir');
 var debounce = require('lodash.debounce');
 var ms = require('ms');
 var AvaFiles = require('ava-files');
+var autoBind = require('auto-bind');
 var getPort = require('get-port');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
@@ -39,9 +40,7 @@ function Api(options) {
 		return ret;
 	});
 
-	Object.keys(Api.prototype).forEach(function (key) {
-		this[key] = this[key].bind(this);
-	}, this);
+	autoBind(this);
 }
 
 util.inherits(Api, EventEmitter);
