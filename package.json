@@ -90,7 +90,7 @@
     "array-uniq": "^1.0.2",
     "arrify": "^1.0.0",
     "auto-bind": "^0.1.0",
-    "ava-files": "^0.1.1",
+    "ava-files": "^0.2.0",
     "ava-init": "^0.1.0",
     "babel-code-frame": "^6.7.5",
     "babel-core": "^6.3.21",
