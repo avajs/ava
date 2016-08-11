@@ -53,6 +53,8 @@ function generatePrefixed(prefix) {
 				const type = testType(parts);
 				output += '\t' + writeFunction(part, 'name: string, implementation: ' + type);
 				output += '\t' + writeFunction(part, 'implementation: ' + type);
+				output += '\t' + writeFunction(part, 'name: string, implementation: Macros<' + type + 'Context>, ...args: any[]');
+				output += '\t' + writeFunction(part, 'implementation: Macros<' + type + 'Context>, ...args: any[]');
 			}
 		}
 
