@@ -1,4 +1,5 @@
 'use strict';
+var sinon = require('sinon');
 var test = require('tap').test;
 var hasAnsi = require('has-ansi');
 var chalk = require('chalk');
@@ -192,5 +193,28 @@ test('reporter strips ANSI characters', function (t) {
 	});
 
 	t.notOk(hasAnsi(output.title));
+	t.end();
+});
+
+test('write should call console.log', function (t) {
+	var reporter = tapReporter();
+	var stub = sinon.stub(console, 'log');
+
+	reporter.write('result');
+
+	t.true(stub.called);
+	console.log.restore();
+	t.end();
+});
+
+test('stdout and stderr should call process.stderr.write', function (t) {
+	var reporter = tapReporter();
+	var spy = sinon.spy(process.stderr, 'write');
+
+	reporter.stdout('result');
+	reporter.stderr('result');
+
+	t.is(spy.callCount, 2);
+	process.stderr.write.restore();
 	t.end();
 });
