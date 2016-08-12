@@ -230,6 +230,14 @@ test('.deepEqual()', function (t) {
 		});
 	});
 
+	t.throws(function () {
+		assert.deepEqual({}, []);
+	});
+
+	t.throws(function () {
+		assert.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+	});
+
 	// Regression test end here
 
 	t.doesNotThrow(function () {
