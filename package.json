@@ -52,7 +52,8 @@
   "files": [
     "lib",
     "*.js",
-    "types/generated.d.ts"
+    "types/generated.d.ts",
+    "media/logo-square.png"
   ],
   "keywords": [
     "test",
