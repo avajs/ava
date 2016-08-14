@@ -200,7 +200,7 @@ test('results with passing tests', function (t) {
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n  ' + chalk.green('1 passed'),
-		''
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -225,7 +225,7 @@ test('results with passing known failure tests', function (t) {
 		'  ' + chalk.red('1 known failure'),
 		'',
 		'   ' + chalk.white('known failure'),
-		''
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -241,7 +241,7 @@ test('results with skipped tests', function (t) {
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n  ' + chalk.yellow('1 skipped'),
-		''
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -257,7 +257,7 @@ test('results with todo tests', function (t) {
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n  ' + chalk.blue('1 todo'),
-		''
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -424,7 +424,7 @@ test('empty results after reset', function (t) {
 	reporter.reset();
 
 	var output = reporter.finish({});
-	t.is(output, '\n');
+	t.is(output, '\n\n');
 	t.end();
 });
 
@@ -447,7 +447,7 @@ test('results with watching enabled', function (t) {
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
 		'\n  ' + chalk.green('1 passed') + time,
-		''
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -485,7 +485,7 @@ test('silently handles errors without body', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'\n  ' + colors.error('1 failed'),
-		''
+		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -502,7 +502,7 @@ test('does not handle errors with body in rejections', function (t) {
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
 		'\n  ' + colors.error('1 rejection'),
-		''
+		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -522,7 +522,7 @@ test('returns description based on error itself if no stack available', function
 		'\n  ' + colors.error('1 exception'),
 		'\n  ' + colors.title('Uncaught Exception'),
 		'  ' + colors.stack(JSON.stringify({error: err1})),
-		'\n'
+		'\n\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
 	t.end();
