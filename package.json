@@ -43,8 +43,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
-    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
+    "test": "tap --no-cov --reporter=classic --timeout=150 test/reporters/mini.js",
+    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/reporters/mini.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
     "make-ts": "babel-node --presets=babel-preset-es2015 --plugins=transform-runtime types/make.js"
