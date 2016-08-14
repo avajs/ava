@@ -153,7 +153,6 @@ if (cli.flags.tap && !cli.flags.watch) {
 	reporter = miniReporter({watching: cli.flags.watch});
 }
 
-reporter.api = api;
 if (cli.flags.notify) {
 	var notifier = new NotifyReporter(nodeNotifier);
 	logger = new Logger([reporter, notifier]);
@@ -164,7 +163,6 @@ if (cli.flags.notify) {
 logger.start();
 
 api.on('test-run', function (runStatus) {
-	reporter.api = runStatus;
 	runStatus.on('test', logger.test);
 	runStatus.on('error', logger.unhandledError);
 
