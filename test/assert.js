@@ -359,24 +359,6 @@ test('.notThrows()', function (t) {
 	t.end();
 });
 
-test('.doesNotThrow() alias for .notThrows()', function (t) {
-	process.noDeprecation = true;
-
-	t.doesNotThrow(function () {
-		assert.doesNotThrow(function () {});
-	});
-
-	t.throws(function () {
-		assert.doesNotThrow(function () {
-			throw new Error('foo');
-		});
-	});
-
-	process.noDeprecation = false;
-
-	t.end();
-});
-
 test('.regex()', function (t) {
 	t.doesNotThrow(function () {
 		assert.regex('abc', /^abc$/);
