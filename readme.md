@@ -114,8 +114,6 @@ test('bar', async t => {
 });
 ```
 
-<img src="media/screenshot.png" width="150" align="right">
-
 ### Run it
 
 ```console
