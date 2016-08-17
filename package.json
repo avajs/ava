@@ -52,6 +52,7 @@
   "files": [
     "lib",
     "*.js",
+    "*.js.flow",
     "types/generated.d.ts"
   ],
   "keywords": [
