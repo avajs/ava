@@ -118,38 +118,81 @@ type Macros<T> =
  * Method Types
  */
 
-type Method<TestType, TestContextType> =
-	& ((              implementation: TestType) => void)
-	& ((name: string, implementation: TestType) => void)
-	& ((              implementation: Macros<TestContextType>, ...args: Array<any>) => void)
-	& ((name: string, implementation: Macros<TestContextType>, ...args: Array<any>) => void);
+type TestMethod = {
+	(              implementation: Test): void;
+	(name: string, implementation: Test): void;
+	(              implementation: Macros<TestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<TestContext>, ...args: Array<any>): void;
 
-type TestMethod                   = Method<Test, TestContext>;
-type CallbackTestMethod           = Method<CallbackTest, CallbackTestContext>;
-type ContextualTestMethod         = Method<ContextualTest, ContextualTestContext>;
-type ContextualCallbackTestMethod = Method<ContextualCallbackTest, ContextualCallbackTestContext>;
-
-/**
- * Chain Types
- */
-
-type Chain<T, TCallback> = T & {
-	serial     : Chain<T, TCallback>;
-	before     : Chain<T, TCallback>;
-	after      : Chain<T, TCallback>;
-	skip       : Chain<T, TCallback>;
-	todo       : Chain<T, TCallback>;
-	failing    : Chain<T, TCallback>;
-	only       : Chain<T, TCallback>;
-	beforeEach : Chain<T, TCallback>;
-	afterEach  : Chain<T, TCallback>;
-	cb         : Chain<TCallback, TCallback>;
-	always     : Chain<T, TCallback>;
+	serial     : TestMethod;
+	before     : TestMethod;
+	after      : TestMethod;
+	skip       : TestMethod;
+	todo       : TestMethod;
+	failing    : TestMethod;
+	only       : TestMethod;
+	beforeEach : TestMethod;
+	afterEach  : TestMethod;
+	cb         : CallbackTestMethod;
+	always     : TestMethod;
 };
 
-type TestChain                   = Chain<TestMethod, CallbackTestMethod>;
-type ContextualTestChain         = Chain<ContextualTestMethod, ContextualCallbackTestMethod>
-type ContextualCallbackTestChain = Chain<ContextualCallbackTestMethod, ContextualCallbackTestMethod>;
+type CallbackTestMethod = {
+	(              implementation: CallbackTest): void;
+	(name: string, implementation: CallbackTest): void;
+	(              implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
+
+	serial     : CallbackTestMethod;
+	before     : CallbackTestMethod;
+	after      : CallbackTestMethod;
+	skip       : CallbackTestMethod;
+	todo       : CallbackTestMethod;
+	failing    : CallbackTestMethod;
+	only       : CallbackTestMethod;
+	beforeEach : CallbackTestMethod;
+	afterEach  : CallbackTestMethod;
+	cb         : CallbackTestMethod;
+	always     : CallbackTestMethod;
+};
+
+type ContextualTestMethod = {
+	(              implementation: ContextualTest): void;
+	(name: string, implementation: ContextualTest): void;
+	(              implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
+
+	serial     : ContextualTestMethod;
+	before     : ContextualTestMethod;
+	after      : ContextualTestMethod;
+	skip       : ContextualTestMethod;
+	todo       : ContextualTestMethod;
+	failing    : ContextualTestMethod;
+	only       : ContextualTestMethod;
+	beforeEach : ContextualTestMethod;
+	afterEach  : ContextualTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualTestMethod;
+};
+
+type ContextualCallbackTestMethod = {
+	(              implementation: ContextualCallbackTest): void;
+	(name: string, implementation: ContextualCallbackTest): void;
+	(              implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
+
+	serial     : ContextualCallbackTestMethod;
+	before     : ContextualCallbackTestMethod;
+	after      : ContextualCallbackTestMethod;
+	skip       : ContextualCallbackTestMethod;
+	todo       : ContextualCallbackTestMethod;
+	failing    : ContextualCallbackTestMethod;
+	only       : ContextualCallbackTestMethod;
+	beforeEach : ContextualCallbackTestMethod;
+	afterEach  : ContextualCallbackTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualCallbackTestMethod;
+};
 
 /**
  * Public API
@@ -161,15 +204,15 @@ declare module.exports: {
 	(              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
 	(name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
-	beforeEach : TestChain;
-	afterEach  : TestChain;
-	serial     : ContextualTestChain;
-	before     : ContextualTestChain;
-	after      : ContextualTestChain;
-	skip       : ContextualTestChain;
-	todo       : ContextualTestChain;
-	failing    : ContextualTestChain;
-	only       : ContextualTestChain;
-	cb         : ContextualCallbackTestChain;
-	always     : ContextualTestChain;
+	beforeEach : TestMethod;
+	afterEach  : TestMethod;
+	serial     : ContextualTestMethod;
+	before     : ContextualTestMethod;
+	after      : ContextualTestMethod;
+	skip       : ContextualTestMethod;
+	todo       : ContextualTestMethod;
+	failing    : ContextualTestMethod;
+	only       : ContextualTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualTestMethod;
 };
