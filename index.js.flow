@@ -4,37 +4,37 @@
  * Misc Setup Types
  */
 
-declare type PromiseLike<R> = {
+type PromiseLike<R> = {
   then<U>(
     onFulfill?: (value: R) => Promise<U> | U,
     onReject?: (error: any) => Promise<U> | U
   ): Promise<U>;
 }
 
-declare type ObservableLike = {
+type ObservableLike = {
   subscribe(observer: (value: {}) => void): void;
 };
 
-declare type SpecialReturnTypes =
+type SpecialReturnTypes =
   | PromiseLike<any>
   | Iterator<any>
   | ObservableLike;
 
-declare type Constructor = Class<{
+type Constructor = Class<{
   constructor(...args: Array<any>): any
 }>;
 
-declare type ErrorValidator =
+type ErrorValidator =
   | Constructor
   | RegExp
   | string
-  | (error: any) => boolean;
+  | ((error: any) => boolean);
 
 /**
  * Asertion Types
  */
 
-declare type AssertContext = {
+type AssertContext = {
   // Passing assertion.
   pass(message?: string): void;
   // Failing assertion.
@@ -84,33 +84,33 @@ declare type AssertContext = {
  * Context Types
  */
 
-declare type TestContext = AssertContext & {
+type TestContext = AssertContext & {
   plan(count: number): void;
   skip: AssertContext;
 };
-declare type CallbackTestContext           = TestContext         & { end(): void; };
-declare type ContextualTestContext         = TestContext         & { context: any; };
-declare type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
+type CallbackTestContext           = TestContext         & { end(): void; };
+type ContextualTestContext         = TestContext         & { context: any; };
+type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
 
 /**
  * Test Types
  */
 
-declare type Test                   = (t: TestContext)                   => SpecialReturnTypes | void;
-declare type CallbackTest           = (t: CallbackTestContext)           => void;
-declare type ContextualTest         = (t: ContextualTestContext)         => SpecialReturnTypes | void;
-declare type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
+type Test                   = (t: TestContext)                   => SpecialReturnTypes | void;
+type CallbackTest           = (t: CallbackTestContext)           => void;
+type ContextualTest         = (t: ContextualTestContext)         => SpecialReturnTypes | void;
+type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
 
 /**
  * Macro Types
  */
 
-declare type Macro<T> = {
+type Macro<T> = {
   (t: T, ...args: Array<any>): void;
   title?: (providedTitle: string, ...args: Array<any>) => string;
 };
 
-declare type Macros<T> =
+type Macros<T> =
   | Macro<T>
   | Array<Macro<T>>;
 
@@ -118,22 +118,22 @@ declare type Macros<T> =
  * Method Types
  */
 
-declare type Method<TestType, TestContextType> =
+type Method<TestType, TestContextType> =
   & ((              implementation: TestType) => void)
   & ((name: string, implementation: TestType) => void)
   & ((              implementation: Macros<TestContextType>, ...args: Array<any>) => void)
   & ((name: string, implementation: Macros<TestContextType>, ...args: Array<any>) => void);
 
-declare type TestMethod                   = Method<Test, TestContext>;
-declare type CallbackTestMethod           = Method<CallbackTest, CallbackTestContext>;
-declare type ContextualTestMethod         = Method<ContextualTest, ContextualTestContext>;
-declare type ContextualCallbackTestMethod = Method<ContextualCallbackTest, ContextualCallbackTestContext>;
+type TestMethod                   = Method<Test, TestContext>;
+type CallbackTestMethod           = Method<CallbackTest, CallbackTestContext>;
+type ContextualTestMethod         = Method<ContextualTest, ContextualTestContext>;
+type ContextualCallbackTestMethod = Method<ContextualCallbackTest, ContextualCallbackTestContext>;
 
 /**
  * Chain Types
  */
 
-declare type Chain<T, TCallback> = T & {
+type Chain<T, TCallback> = T & {
   serial     : Chain<T, TCallback>;
   before     : Chain<T, TCallback>;
   after      : Chain<T, TCallback>;
@@ -147,9 +147,9 @@ declare type Chain<T, TCallback> = T & {
   always     : Chain<T, TCallback>;
 };
 
-declare type TestChain                   = Chain<TestMethod, CallbackTestMethod>;
-declare type ContextualTestChain         = Chain<ContextualTestMethod, ContextualCallbackTestMethod>
-declare type ContextualCallbackTestChain = Chain<ContextualCallbackTestMethod, ContextualCallbackTestMethod>;
+type TestChain                   = Chain<TestMethod, CallbackTestMethod>;
+type ContextualTestChain         = Chain<ContextualTestMethod, ContextualCallbackTestMethod>
+type ContextualCallbackTestChain = Chain<ContextualCallbackTestMethod, ContextualCallbackTestMethod>;
 
 /**
  * Public API
