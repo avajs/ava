@@ -128,7 +128,7 @@ function testType(parts) {
 		type = 'Callback' + type;
 	}
 
-	if (!has('beforeEach') && !has('afterEach')) {
+	if (!has('before') && !has('after')) {
 		type = 'Contextual' + type;
 	}
 
