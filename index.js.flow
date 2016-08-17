@@ -5,79 +5,79 @@
  */
 
 type PromiseLike<R> = {
-  then<U>(
-    onFulfill?: (value: R) => Promise<U> | U,
-    onReject?: (error: any) => Promise<U> | U
-  ): Promise<U>;
+	then<U>(
+		onFulfill?: (value: R) => Promise<U> | U,
+		onReject?: (error: any) => Promise<U> | U
+	): Promise<U>;
 }
 
 type ObservableLike = {
-  subscribe(observer: (value: {}) => void): void;
+	subscribe(observer: (value: {}) => void): void;
 };
 
 type SpecialReturnTypes =
-  | PromiseLike<any>
-  | Iterator<any>
-  | ObservableLike;
+	| PromiseLike<any>
+	| Iterator<any>
+	| ObservableLike;
 
 type Constructor = Class<{
-  constructor(...args: Array<any>): any
+	constructor(...args: Array<any>): any
 }>;
 
 type ErrorValidator =
-  | Constructor
-  | RegExp
-  | string
-  | ((error: any) => boolean);
+	| Constructor
+	| RegExp
+	| string
+	| ((error: any) => boolean);
 
 /**
  * Asertion Types
  */
 
 type AssertContext = {
-  // Passing assertion.
-  pass(message?: string): void;
-  // Failing assertion.
-  fail(message?: string): void;
-  // Assert that value is truthy.
-  truthy(value: mixed, message?: string): void;
-  // Assert that value is falsy.
-  falsy(value: mixed, message?: string): void;
-  // DEPRECATED, use `truthy`. Assert that value is truthy.
-  ok(value: mixed, message?: string): void;
-  // DEPRECATED, use `falsy`. Assert that value is falsy.
-  notOk(value: mixed, message?: string): void;
-  // Assert that value is true.
-  true(value: boolean, message?: string): void;
-  // Assert that value is false.
-  false(value: boolean, message?: string): void;
-  // Assert that value is equal to expected.
-  is<U>(value: U, expected: U, message?: string): void;
-  // Assert that value is not equal to expected.
-  not<U>(value: U, expected: U, message?: string): void;
-  // Assert that value is deep equal to expected.
-  deepEqual<U>(value: U, expected: U, message?: string): void;
-  // Assert that value is not deep equal to expected.
-  notDeepEqual<U>(value: U, expected: U, message?: string): void;
-  // Assert that function throws an error or promise rejects.
-  // DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
-  // @param error Can be a constructor, regex, error message or validation function.
-  same<U>(value: U, expected: U, message?: string): void;
-  // DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
-  notSame<U>(value: U, expected: U, message?: string): void;
-  // Assert that function throws an error or promise rejects.
-  // @param error Can be a constructor, regex, error message or validation function.
-  throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
-  throws(value: () => void, error?: ErrorValidator, message?: string): mixed;
-  // Assert that function doesn't throw an error or promise resolves.
-  notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
-  notThrows(value: () => void, message?: string): void;
-  // Assert that contents matches regex.
-  regex(contents: string, regex: RegExp, message?: string): void;
-  // Assert that contents does not match regex.
-  notRegex(contents: string, regex: RegExp, message?: string): void;
-  // Assert that error is falsy.
-  ifError(error: any, message?: string): void;
+	// Passing assertion.
+	pass(message?: string): void;
+	// Failing assertion.
+	fail(message?: string): void;
+	// Assert that value is truthy.
+	truthy(value: mixed, message?: string): void;
+	// Assert that value is falsy.
+	falsy(value: mixed, message?: string): void;
+	// DEPRECATED, use `truthy`. Assert that value is truthy.
+	ok(value: mixed, message?: string): void;
+	// DEPRECATED, use `falsy`. Assert that value is falsy.
+	notOk(value: mixed, message?: string): void;
+	// Assert that value is true.
+	true(value: boolean, message?: string): void;
+	// Assert that value is false.
+	false(value: boolean, message?: string): void;
+	// Assert that value is equal to expected.
+	is<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is not equal to expected.
+	not<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is deep equal to expected.
+	deepEqual<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is not deep equal to expected.
+	notDeepEqual<U>(value: U, expected: U, message?: string): void;
+	// Assert that function throws an error or promise rejects.
+	// DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
+	// @param error Can be a constructor, regex, error message or validation function.
+	same<U>(value: U, expected: U, message?: string): void;
+	// DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
+	notSame<U>(value: U, expected: U, message?: string): void;
+	// Assert that function throws an error or promise rejects.
+	// @param error Can be a constructor, regex, error message or validation function.
+	throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
+	throws(value: () => void, error?: ErrorValidator, message?: string): mixed;
+	// Assert that function doesn't throw an error or promise resolves.
+	notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
+	notThrows(value: () => void, message?: string): void;
+	// Assert that contents matches regex.
+	regex(contents: string, regex: RegExp, message?: string): void;
+	// Assert that contents does not match regex.
+	notRegex(contents: string, regex: RegExp, message?: string): void;
+	// Assert that error is falsy.
+	ifError(error: any, message?: string): void;
 };
 
 /**
@@ -85,8 +85,8 @@ type AssertContext = {
  */
 
 type TestContext = AssertContext & {
-  plan(count: number): void;
-  skip: AssertContext;
+	plan(count: number): void;
+	skip: AssertContext;
 };
 type CallbackTestContext           = TestContext         & { end(): void; };
 type ContextualTestContext         = TestContext         & { context: any; };
@@ -106,23 +106,23 @@ type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
  */
 
 type Macro<T> = {
-  (t: T, ...args: Array<any>): void;
-  title?: (providedTitle: string, ...args: Array<any>) => string;
+	(t: T, ...args: Array<any>): void;
+	title?: (providedTitle: string, ...args: Array<any>) => string;
 };
 
 type Macros<T> =
-  | Macro<T>
-  | Array<Macro<T>>;
+	| Macro<T>
+	| Array<Macro<T>>;
 
 /**
  * Method Types
  */
 
 type Method<TestType, TestContextType> =
-  & ((              implementation: TestType) => void)
-  & ((name: string, implementation: TestType) => void)
-  & ((              implementation: Macros<TestContextType>, ...args: Array<any>) => void)
-  & ((name: string, implementation: Macros<TestContextType>, ...args: Array<any>) => void);
+	& ((              implementation: TestType) => void)
+	& ((name: string, implementation: TestType) => void)
+	& ((              implementation: Macros<TestContextType>, ...args: Array<any>) => void)
+	& ((name: string, implementation: Macros<TestContextType>, ...args: Array<any>) => void);
 
 type TestMethod                   = Method<Test, TestContext>;
 type CallbackTestMethod           = Method<CallbackTest, CallbackTestContext>;
@@ -134,17 +134,17 @@ type ContextualCallbackTestMethod = Method<ContextualCallbackTest, ContextualCal
  */
 
 type Chain<T, TCallback> = T & {
-  serial     : Chain<T, TCallback>;
-  before     : Chain<T, TCallback>;
-  after      : Chain<T, TCallback>;
-  skip       : Chain<T, TCallback>;
-  todo       : Chain<T, TCallback>;
-  failing    : Chain<T, TCallback>;
-  only       : Chain<T, TCallback>;
-  beforeEach : Chain<T, TCallback>;
-  afterEach  : Chain<T, TCallback>;
-  cb         : Chain<TCallback, TCallback>;
-  always     : Chain<T, TCallback>;
+	serial     : Chain<T, TCallback>;
+	before     : Chain<T, TCallback>;
+	after      : Chain<T, TCallback>;
+	skip       : Chain<T, TCallback>;
+	todo       : Chain<T, TCallback>;
+	failing    : Chain<T, TCallback>;
+	only       : Chain<T, TCallback>;
+	beforeEach : Chain<T, TCallback>;
+	afterEach  : Chain<T, TCallback>;
+	cb         : Chain<TCallback, TCallback>;
+	always     : Chain<T, TCallback>;
 };
 
 type TestChain                   = Chain<TestMethod, CallbackTestMethod>;
@@ -156,20 +156,20 @@ type ContextualCallbackTestChain = Chain<ContextualCallbackTestMethod, Contextua
  */
 
 declare module.exports: {
-  (              run: ContextualTest): void;
-  (name: string, run: ContextualTest): void;
-  (              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
-  (name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
+	(              run: ContextualTest): void;
+	(name: string, run: ContextualTest): void;
+	(              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
+	(name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
-  beforeEach : TestChain;
-  afterEach  : TestChain;
-  serial     : ContextualTestChain;
-  before     : ContextualTestChain;
-  after      : ContextualTestChain;
-  skip       : ContextualTestChain;
-  todo       : ContextualTestChain;
-  failing    : ContextualTestChain;
-  only       : ContextualTestChain;
-  cb         : ContextualCallbackTestChain;
-  always     : ContextualTestChain;
+	beforeEach : TestChain;
+	afterEach  : TestChain;
+	serial     : ContextualTestChain;
+	before     : ContextualTestChain;
+	after      : ContextualTestChain;
+	skip       : ContextualTestChain;
+	todo       : ContextualTestChain;
+	failing    : ContextualTestChain;
+	only       : ContextualTestChain;
+	cb         : ContextualCallbackTestChain;
+	always     : ContextualTestChain;
 };
