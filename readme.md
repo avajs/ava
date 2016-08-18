@@ -1019,6 +1019,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Configuring Babel](docs/recipes/babelrc.md)
 - [Testing React components](docs/recipes/react.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
+- [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Support
 
