@@ -29,9 +29,11 @@ var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
 var isCi = require('is-ci');
 var hasFlag = require('has-flag');
+var nodeNotifier = require('node-notifier');
 var colors = require('./lib/colors');
 var verboseReporter = require('./lib/reporters/verbose');
 var miniReporter = require('./lib/reporters/mini');
+var NotifyReporter = require('./lib/reporters/notify');
 var tapReporter = require('./lib/reporters/tap');
 var Logger = require('./lib/logger');
 var Watcher = require('./lib/watcher');
@@ -64,6 +66,7 @@ var cli = meow([
 	'  --tap, -t          Generate TAP output',
 	'  --verbose, -v      Enable verbose output',
 	'  --no-cache         Disable the transpiler cache',
+	'  --notify           Enable notification reporter',
 	'  --match, -m        Only run tests with matching title (Can be repeated)',
 	'  --watch, -w        Re-run tests when tests and source files change',
 	'  --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)',
@@ -92,6 +95,7 @@ var cli = meow([
 	boolean: [
 		'fail-fast',
 		'verbose',
+		'notify',
 		'serial',
 		'tap',
 		'watch'
@@ -139,6 +143,7 @@ var api = new Api({
 });
 
 var reporter;
+var logger;
 
 if (cli.flags.tap && !cli.flags.watch) {
 	reporter = tapReporter();
@@ -148,13 +153,16 @@ if (cli.flags.tap && !cli.flags.watch) {
 	reporter = miniReporter({watching: cli.flags.watch});
 }
 
-reporter.api = api;
-var logger = new Logger(reporter);
+if (cli.flags.notify) {
+	var notifier = new NotifyReporter(nodeNotifier);
+	logger = new Logger([reporter, notifier]);
+} else {
+	logger = new Logger(reporter);
+}
 
 logger.start();
 
 api.on('test-run', function (runStatus) {
-	reporter.api = runStatus;
 	runStatus.on('test', logger.test);
 	runStatus.on('error', logger.unhandledError);
 
