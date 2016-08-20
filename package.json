@@ -179,7 +179,7 @@
     "signal-exit": "^3.0.0",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^2.1.0",
-    "tap": "^6.3.0",
+    "tap": "^5.8.0",
     "touch": "^1.0.0",
     "xo": "*",
     "zen-observable": "^0.3.0"
