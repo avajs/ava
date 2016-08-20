@@ -317,7 +317,7 @@ test('.throws() returns the thrown error', function (t) {
 test('.throws() returns the rejection reason of promise', function (t) {
 	var expected = new Error();
 
-	assert.throws(Promise.reject(expected)).then(function (actual) {
+	return assert.throws(Promise.reject(expected)).then(function (actual) {
 		t.is(actual, expected);
 		t.end();
 	});
