@@ -357,7 +357,6 @@ test('all async - no failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -388,7 +387,6 @@ test('all async - no failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -419,7 +417,6 @@ test('last async - no failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -450,7 +447,6 @@ test('mid async - no failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -481,7 +477,6 @@ test('first async - no failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -512,7 +507,6 @@ test('last async - no failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -543,7 +537,6 @@ test('mid async - no failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -574,7 +567,6 @@ test('first async - no failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -597,7 +589,6 @@ test('all async - begin failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -624,7 +615,6 @@ test('all async - mid failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -655,7 +645,6 @@ test('all async - end failure - bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -686,7 +675,6 @@ test('all async - begin failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -717,7 +705,6 @@ test('all async - mid failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -748,7 +735,6 @@ test('all async - end failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -779,7 +765,6 @@ test('all async - multiple failure - no bail', function (t) {
 				}
 			]
 		});
-		t.end();
 	});
 });
 
@@ -793,7 +778,6 @@ test('rejections are just passed through - no bail', function (t) {
 		false
 	).run().catch(function (err) {
 		t.is(err, 'foo');
-		t.end();
 	});
 });
 
@@ -807,7 +791,6 @@ test('rejections are just passed through - bail', function (t) {
 		true
 	).run().catch(function (err) {
 		t.is(err, 'foo');
-		t.end();
 	});
 });
 
