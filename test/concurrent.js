@@ -331,7 +331,7 @@ test('all sync - end failure - bail', function (t) {
 });
 
 test('all async - no failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			passAsync('b'),
@@ -362,7 +362,7 @@ test('all async - no failure - no bail', function (t) {
 });
 
 test('all async - no failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			passAsync('b'),
@@ -393,7 +393,7 @@ test('all async - no failure - bail', function (t) {
 });
 
 test('last async - no failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			pass('b'),
@@ -424,7 +424,7 @@ test('last async - no failure - no bail', function (t) {
 });
 
 test('mid async - no failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			passAsync('b'),
@@ -455,7 +455,7 @@ test('mid async - no failure - no bail', function (t) {
 });
 
 test('first async - no failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			pass('b'),
@@ -486,7 +486,7 @@ test('first async - no failure - no bail', function (t) {
 });
 
 test('last async - no failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			pass('b'),
@@ -517,7 +517,7 @@ test('last async - no failure - bail', function (t) {
 });
 
 test('mid async - no failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			passAsync('b'),
@@ -548,7 +548,7 @@ test('mid async - no failure - bail', function (t) {
 });
 
 test('first async - no failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			pass('b'),
@@ -579,7 +579,7 @@ test('first async - no failure - bail', function (t) {
 });
 
 test('all async - begin failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			failAsync('a'),
 			passAsync('b'),
@@ -602,7 +602,7 @@ test('all async - begin failure - bail', function (t) {
 });
 
 test('all async - mid failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			failAsync('b'),
@@ -629,7 +629,7 @@ test('all async - mid failure - bail', function (t) {
 });
 
 test('all async - end failure - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			passAsync('b'),
@@ -660,7 +660,7 @@ test('all async - end failure - bail', function (t) {
 });
 
 test('all async - begin failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			failAsync('a'),
 			passAsync('b'),
@@ -691,7 +691,7 @@ test('all async - begin failure - no bail', function (t) {
 });
 
 test('all async - mid failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			failAsync('b'),
@@ -722,7 +722,7 @@ test('all async - mid failure - no bail', function (t) {
 });
 
 test('all async - end failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			passAsync('a'),
 			passAsync('b'),
@@ -753,7 +753,7 @@ test('all async - end failure - no bail', function (t) {
 });
 
 test('all async - multiple failure - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			failAsync('a'),
 			passAsync('b'),
@@ -784,7 +784,7 @@ test('all async - multiple failure - no bail', function (t) {
 });
 
 test('rejections are just passed through - no bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			pass('b'),
@@ -798,7 +798,7 @@ test('rejections are just passed through - no bail', function (t) {
 });
 
 test('rejections are just passed through - bail', function (t) {
-	new Concurrent(
+	return new Concurrent(
 		[
 			pass('a'),
 			pass('b'),
