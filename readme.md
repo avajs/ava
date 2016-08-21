@@ -384,7 +384,7 @@ Match titles that are *exactly* `foo` (albeit case insensitively):
 $ ava --match='foo'
 ```
 
-Watch titles not containing `foo`:
+Match titles not containing `foo`:
 
 ```console
 $ ava --match='!*foo*'
