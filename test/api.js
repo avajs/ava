@@ -16,6 +16,8 @@ test('must be called with new', function (t) {
 });
 
 generateTests('Without Pool: ', function (options) {
+	options = options || {};
+	options.powerAssert = true;
 	return new Api(options);
 });
 
@@ -60,6 +62,7 @@ test('Without Pool: test files can be forced to run in exclusive mode', function
 generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
+	options.powerAssert = true;
 	return new Api(options);
 });
 

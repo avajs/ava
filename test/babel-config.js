@@ -50,7 +50,8 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	var fixturePath = fixture('es2015.js');
 	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var options = babelConfigHelper.build(babelConfig, undefined, fixturePath, fixtureSource);
+	var powerAssert = true;
+	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -79,7 +80,8 @@ test('should reuse existing source maps', function (t) {
 	var fixturePath = fixture('es2015-source-maps.js');
 	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var options = babelConfigHelper.build(babelConfig, undefined, fixturePath, fixtureSource);
+	var powerAssert = true;
+	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -90,7 +92,7 @@ test('should reuse existing source maps', function (t) {
 	t.end();
 });
 
-test('should disable power-assert when disablePowerAssert is truthy', function (t) {
+test('should disable power-assert when powerAssert is false', function (t) {
 	var setup = setUp();
 	var customPlugin = setup.customPlugin;
 
@@ -107,7 +109,8 @@ test('should disable power-assert when disablePowerAssert is truthy', function (
 	var fixturePath = fixture('es2015.js');
 	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var options = babelConfigHelper.build(babelConfig, true, fixturePath, fixtureSource);
+	var powerAssert = false;
+	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.strictDeepEqual(options.plugins, [customPlugin, throwsHelper, setup.rewrite, transformRuntime]);
 	t.end();
