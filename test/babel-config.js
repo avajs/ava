@@ -50,7 +50,7 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	var fixturePath = fixture('es2015.js');
 	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var options = babelConfigHelper.build(babelConfig, fixturePath, fixtureSource);
+	var options = babelConfigHelper.build(babelConfig, undefined, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -79,7 +79,7 @@ test('should reuse existing source maps', function (t) {
 	var fixturePath = fixture('es2015-source-maps.js');
 	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var options = babelConfigHelper.build(babelConfig, fixturePath, fixtureSource);
+	var options = babelConfigHelper.build(babelConfig, undefined, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -87,5 +87,28 @@ test('should reuse existing source maps', function (t) {
 	t.true('inputSourceMap' in options);
 	t.strictDeepEqual(options.presets, ['stage-2', 'es2015']);
 	t.strictDeepEqual(options.plugins, [customPlugin, setup.powerAssert, throwsHelper, setup.rewrite, transformRuntime]);
+	t.end();
+});
+
+test('should disable power-assert when disablePowerAssert is truthy', function (t) {
+	var setup = setUp();
+	var customPlugin = setup.customPlugin;
+
+	var babelConfigHelper = proxyquire('../lib/babel-config', {
+		'babel-plugin-espower/create': setup.createEspowerPlugin,
+		'babel-plugin-detective/wrap-listener': setup.babelDetectiveWrap
+	});
+
+	var babelConfig = {
+		presets: ['stage-2', 'es2015'],
+		plugins: [customPlugin]
+	};
+
+	var fixturePath = fixture('es2015.js');
+	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
+
+	var options = babelConfigHelper.build(babelConfig, true, fixturePath, fixtureSource);
+
+	t.strictDeepEqual(options.plugins, [customPlugin, throwsHelper, setup.rewrite, transformRuntime]);
 	t.end();
 });

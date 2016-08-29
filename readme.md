@@ -144,6 +144,7 @@ $ ava --help
     --tap, -t          Generate TAP output
     --verbose, -v      Enable verbose output
     --no-cache         Disable the transpiler cache
+    --no-power-assert  Disable the power-assert feature
     --match, -m        Only run tests with matching title (Can be repeated)
     --watch, -w        Re-run tests when tests and source files change
     --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
@@ -223,6 +224,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "concurrency": 5,
     "failFast": true,
     "tap": true,
+    "powerAssert": false,
     "require": [
       "babel-register"
     ],
