@@ -106,14 +106,14 @@ function verify(parts, asPrefix) {
 		// Without it can still be a valid prefix
 		if (has('after') || has('afterEach')) {
 			return true;
-		} else if (!verify(parts.concat(['after']), false) && !verify(parts.concat(['afterEach'])), false) {
+		}
+		if (!verify(parts.concat(['after']), false) && !verify(parts.concat(['afterEach']), false)) {
 			// If `after` nor `afterEach` cannot be added to this prefix,
 			// `always` is not allowed here.
 			return false;
-		} else {
-			// Only allowed as a prefix
-			return asPrefix;
 		}
+		// Only allowed as a prefix
+		return asPrefix;
 	}
 
 	return true;
