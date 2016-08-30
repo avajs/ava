@@ -40,14 +40,20 @@ function generatePrefixed(prefix) {
 			continue;
 		}
 
+		// If `parts` is not sorted, we alias it to the sorted chain.
+		if (!isSorted(parts)) {
+			const chain = parts.sort().join('.');
+			if (exists(parts)) {
+				output += '\texport const ' + part + ': typeof test.' + chain + ';\n';
+			}
+			continue;
+		}
+
 		// Check that `part` is a valid function name.
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (!isSorted(parts)) {
-				output += '\texport const ' + part + ': typeof test.' + parts.sort().join('.') + ';\n';
-				continue;
-			} else if (prefix.includes(parts, 'todo')) {
+			if (prefix.includes(parts, 'todo')) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
@@ -72,6 +78,10 @@ function writeFunction(name, args) {
 	return 'export function ' + name + '(' + args + '): void;\n';
 }
 
+// Checks whether a chain is a valid function name (when `asPrefix === false`)
+// or a valid prefix that could contain members.
+// For instance, `test.always` is not a valid function name, but it is a valid
+// prefix of `test.always.after`.
 function verify(parts, asPrefix) {
 	const has = arrayHas(parts);
 
@@ -95,17 +105,37 @@ function verify(parts, asPrefix) {
 		// `always` can only be used with `after` or `afterEach`.
 		// Without it can still be a valid prefix
 		if (has('after') || has('afterEach')) {
-			if (!asPrefix) {
-				return false;
-			}
-		} else if (!verify(parts.concat(['after'])) && !verify(parts.concat(['afterEach']))) {
+			return true;
+		} else if (!verify(parts.concat(['after']), false) && !verify(parts.concat(['afterEach'])), false) {
 			// If `after` nor `afterEach` cannot be added to this prefix,
 			// `always` is not allowed here.
 			return false;
+		} else {
+			// Only allowed as a prefix
+			return asPrefix;
 		}
 	}
 
 	return true;
+}
+
+// Checks whether a chain is a valid function name or a valid prefix with some member
+function exists(parts) {
+	if (verify(parts, false)) {
+		// valid function name
+		return true;
+	}
+	if (!verify(parts, true)) {
+		// not valid prefix
+		return false;
+	}
+	// valid prefix, check whether it has members
+	for (const prefix of allParts) {
+		if (!parts.includes(prefix) && exists(parts.concat([prefix]))) {
+			return true;
+		}
+	}
+	return false;
 }
 
 // Checks that an array is sorted
