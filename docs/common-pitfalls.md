@@ -4,7 +4,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 ## ESLint plugin
 
-If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will guide you into using AVA correctly and help you avoid some common pitfalls.
+If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
 ## AVA in Docker
 
