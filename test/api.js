@@ -1024,6 +1024,17 @@ function generateTests(prefix, apiCreator) {
 			path.join(__dirname, 'fixture/syntax-error.js')
 		]);
 	});
+
+	test(prefix + 'finally', function (t) {
+		t.plan(1);
+
+		var api = apiCreator();
+
+		return api.run([path.join(__dirname, 'fixture/finally.js')])
+			.then(function (result) {
+				t.is(result.passCount, 2);
+			});
+	});
 }
 
 function generatePassDebugTests(execArgv, expectedInspectIndex) {
