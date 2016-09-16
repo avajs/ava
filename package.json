@@ -176,6 +176,7 @@
     "pify": "^2.3.0",
     "proxyquire": "^1.7.4",
     "rimraf": "^2.5.0",
+    "semver": "^5.3.0",
     "signal-exit": "^3.0.0",
     "sinon": "^1.17.2",
     "source-map-fixtures": "^2.1.0",
