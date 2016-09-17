@@ -1,5 +1,4 @@
 'use strict';
-var semver = require('semver');
 var test = require('tap').test;
 var Runner = require('../lib/runner');
 
@@ -197,7 +196,7 @@ test('test types and titles', function (t) {
 	runner.test('test', fn);
 
 	// See https://github.com/avajs/ava/issues/1027
-	var belowNode65 = semver.lt(process.version, 'v6.5.0');
+	var supportsFunctionNames = noop.name === 'noop';
 
 	var tests = [
 		{
@@ -206,7 +205,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'beforeEach',
-			title: belowNode65 ? 'beforeEach for test' : 'fn for test'
+			title: supportsFunctionNames ? 'fn for test' : 'beforeEach for test'
 		},
 		{
 			type: 'test',
@@ -218,7 +217,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'after',
-			title: belowNode65 ? 'after' : 'fn'
+			title: supportsFunctionNames ? 'fn' : 'after'
 		}
 	];
 
