@@ -119,7 +119,7 @@ Api.prototype._run = function (files, _options) {
 	})) || uniqueTempDir();
 
 	self.options.cacheDir = cacheDir;
-	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig);
+	self.precompiler = new CachingPrecompiler(cacheDir, self.options.babelConfig, self.options.powerAssert);
 	self.fileCount = files.length;
 
 	var overwatch;

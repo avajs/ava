@@ -195,6 +195,9 @@ test('test types and titles', function (t) {
 	runner.afterEach(named);
 	runner.test('test', fn);
 
+	// See https://github.com/avajs/ava/issues/1027
+	var supportsFunctionNames = noop.name === 'noop';
+
 	var tests = [
 		{
 			type: 'before',
@@ -202,7 +205,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'beforeEach',
-			title: 'beforeEach for test'
+			title: supportsFunctionNames ? 'fn for test' : 'beforeEach for test'
 		},
 		{
 			type: 'test',
@@ -214,7 +217,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'after',
-			title: 'after'
+			title: supportsFunctionNames ? 'fn' : 'after'
 		}
 	];
 

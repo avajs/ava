@@ -1,0 +1,218 @@
+/* @flow */
+
+/**
+ * Misc Setup Types
+ */
+
+type PromiseLike<R> = {
+	then<U>(
+		onFulfill?: (value: R) => Promise<U> | U,
+		onReject?: (error: any) => Promise<U> | U
+	): Promise<U>;
+}
+
+type ObservableLike = {
+	subscribe(observer: (value: {}) => void): void;
+};
+
+type SpecialReturnTypes =
+	| PromiseLike<any>
+	| Iterator<any>
+	| ObservableLike;
+
+type Constructor = Class<{
+	constructor(...args: Array<any>): any
+}>;
+
+type ErrorValidator =
+	| Constructor
+	| RegExp
+	| string
+	| ((error: any) => boolean);
+
+/**
+ * Asertion Types
+ */
+
+type AssertContext = {
+	// Passing assertion.
+	pass(message?: string): void;
+	// Failing assertion.
+	fail(message?: string): void;
+	// Assert that value is truthy.
+	truthy(value: mixed, message?: string): void;
+	// Assert that value is falsy.
+	falsy(value: mixed, message?: string): void;
+	// DEPRECATED, use `truthy`. Assert that value is truthy.
+	ok(value: mixed, message?: string): void;
+	// DEPRECATED, use `falsy`. Assert that value is falsy.
+	notOk(value: mixed, message?: string): void;
+	// Assert that value is true.
+	true(value: boolean, message?: string): void;
+	// Assert that value is false.
+	false(value: boolean, message?: string): void;
+	// Assert that value is equal to expected.
+	is<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is not equal to expected.
+	not<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is deep equal to expected.
+	deepEqual<U>(value: U, expected: U, message?: string): void;
+	// Assert that value is not deep equal to expected.
+	notDeepEqual<U>(value: U, expected: U, message?: string): void;
+	// Assert that function throws an error or promise rejects.
+	// DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
+	// @param error Can be a constructor, regex, error message or validation function.
+	same<U>(value: U, expected: U, message?: string): void;
+	// DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
+	notSame<U>(value: U, expected: U, message?: string): void;
+	// Assert that function throws an error or promise rejects.
+	// @param error Can be a constructor, regex, error message or validation function.
+	throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
+	throws(value: () => void, error?: ErrorValidator, message?: string): mixed;
+	// Assert that function doesn't throw an error or promise resolves.
+	notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
+	notThrows(value: () => void, message?: string): void;
+	// Assert that contents matches regex.
+	regex(contents: string, regex: RegExp, message?: string): void;
+	// Assert that contents does not match regex.
+	notRegex(contents: string, regex: RegExp, message?: string): void;
+	// Assert that error is falsy.
+	ifError(error: any, message?: string): void;
+};
+
+/**
+ * Context Types
+ */
+
+type TestContext = AssertContext & {
+	plan(count: number): void;
+	skip: AssertContext;
+};
+type CallbackTestContext           = TestContext         & { end(): void; };
+type ContextualTestContext         = TestContext         & { context: any; };
+type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
+
+/**
+ * Test Types
+ */
+
+type Test                   = (t: TestContext)                   => SpecialReturnTypes | void;
+type CallbackTest           = (t: CallbackTestContext)           => void;
+type ContextualTest         = (t: ContextualTestContext)         => SpecialReturnTypes | void;
+type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
+
+/**
+ * Macro Types
+ */
+
+type Macro<T> = {
+	(t: T, ...args: Array<any>): void;
+	title?: (providedTitle: string, ...args: Array<any>) => string;
+};
+
+type Macros<T> =
+	| Macro<T>
+	| Array<Macro<T>>;
+
+/**
+ * Method Types
+ */
+
+type TestMethod = {
+	(              implementation: Test): void;
+	(name: string, implementation: Test): void;
+	(              implementation: Macros<TestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<TestContext>, ...args: Array<any>): void;
+
+	serial     : TestMethod;
+	before     : TestMethod;
+	after      : TestMethod;
+	skip       : TestMethod;
+	todo       : TestMethod;
+	failing    : TestMethod;
+	only       : TestMethod;
+	beforeEach : TestMethod;
+	afterEach  : TestMethod;
+	cb         : CallbackTestMethod;
+	always     : TestMethod;
+};
+
+type CallbackTestMethod = {
+	(              implementation: CallbackTest): void;
+	(name: string, implementation: CallbackTest): void;
+	(              implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
+
+	serial     : CallbackTestMethod;
+	before     : CallbackTestMethod;
+	after      : CallbackTestMethod;
+	skip       : CallbackTestMethod;
+	todo       : CallbackTestMethod;
+	failing    : CallbackTestMethod;
+	only       : CallbackTestMethod;
+	beforeEach : CallbackTestMethod;
+	afterEach  : CallbackTestMethod;
+	cb         : CallbackTestMethod;
+	always     : CallbackTestMethod;
+};
+
+type ContextualTestMethod = {
+	(              implementation: ContextualTest): void;
+	(name: string, implementation: ContextualTest): void;
+	(              implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
+
+	serial     : ContextualTestMethod;
+	before     : ContextualTestMethod;
+	after      : ContextualTestMethod;
+	skip       : ContextualTestMethod;
+	todo       : ContextualTestMethod;
+	failing    : ContextualTestMethod;
+	only       : ContextualTestMethod;
+	beforeEach : ContextualTestMethod;
+	afterEach  : ContextualTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualTestMethod;
+};
+
+type ContextualCallbackTestMethod = {
+	(              implementation: ContextualCallbackTest): void;
+	(name: string, implementation: ContextualCallbackTest): void;
+	(              implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
+	(name: string, implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
+
+	serial     : ContextualCallbackTestMethod;
+	before     : ContextualCallbackTestMethod;
+	after      : ContextualCallbackTestMethod;
+	skip       : ContextualCallbackTestMethod;
+	todo       : ContextualCallbackTestMethod;
+	failing    : ContextualCallbackTestMethod;
+	only       : ContextualCallbackTestMethod;
+	beforeEach : ContextualCallbackTestMethod;
+	afterEach  : ContextualCallbackTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualCallbackTestMethod;
+};
+
+/**
+ * Public API
+ */
+
+declare module.exports: {
+	(              run: ContextualTest): void;
+	(name: string, run: ContextualTest): void;
+	(              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
+	(name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
+
+	beforeEach : TestMethod;
+	afterEach  : TestMethod;
+	serial     : ContextualTestMethod;
+	before     : ContextualTestMethod;
+	after      : ContextualTestMethod;
+	skip       : ContextualTestMethod;
+	todo       : ContextualTestMethod;
+	failing    : ContextualTestMethod;
+	only       : ContextualTestMethod;
+	cb         : ContextualCallbackTestMethod;
+	always     : ContextualTestMethod;
+};
