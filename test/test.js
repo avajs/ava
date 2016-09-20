@@ -4,6 +4,7 @@ var Promise = global.Promise = require('bluebird');
 var delay = require('delay');
 var isPromise = require('is-promise');
 var Test = require('../lib/test');
+var Observable = require('./fixture/observable');
 
 var failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -719,6 +720,274 @@ test('failing tests fail with `t.notThrows(throws)`', function (t) {
 	}).run().then(function (result) {
 		t.is(result.passed, false);
 		t.is(result.reason.message, failingTestHint);
+		t.end();
+	});
+});
+
+test('finally is called after sync test', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	var result = ava(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+		});
+		a.pass();
+		passed = true;
+	}).run();
+
+	t.is(result.passed, true);
+	t.end();
+});
+
+test('finally is called after promise test', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+		});
+
+		return new Promise(function (resolve) {
+			setTimeout(function () {
+				passed = true;
+				resolve();
+			});
+		});
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finally is called after test.cb', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava.cb(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+		});
+
+		setTimeout(function () {
+			passed = true;
+			a.end();
+		});
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finally is called after observable test', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+		});
+
+		return Observable.of(1, 2, 3, 4, 5)
+			.map(function (x) {
+				return x * 2;
+			})
+			.forEach(function (x) {
+				a.true(x % 2 === 0);
+
+				if (x === 10) {
+					passed = true;
+				}
+			});
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finally is called after test fails', function (t) {
+	var executed = false;
+
+	var result = ava(function (a) {
+		a.finally(function () {
+			executed = true;
+		});
+		a.fail();
+	}).run();
+
+	t.is(result.passed, false);
+	t.true(executed);
+	t.end();
+});
+
+test('finally.cb turns test into async', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava(function (a) {
+		a.finally.cb(function (f) {
+			t.true(passed, 'finally called before test is passed');
+			setTimeout(f.end);
+		});
+		a.pass();
+		passed = true;
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finally with promise turns test into async', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+			return new Promise(function (resolve) {
+				setTimeout(resolve);
+			});
+		});
+		a.pass();
+		passed = true;
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finally with observable turns test into async', function (t) {
+	t.plan(2);
+
+	var passed = false;
+	ava(function (a) {
+		a.finally(function () {
+			t.true(passed, 'finally called before test is passed');
+			return Observable.of(1, 2, 3);
+		});
+		a.pass();
+		passed = true;
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.end();
+	});
+});
+
+test('finnalizers are called in reverse order', function (t) {
+	t.plan(9);
+
+	var executed = 0;
+	var done = 0;
+
+	ava(function (a) {
+		a.finally.cb(function (f) {
+			executed++;
+			setTimeout(function () {
+				t.is(executed, 3);
+				t.is(done, 2);
+				done++;
+				f.end();
+			}, 1);
+		});
+		a.finally(function () {
+			executed++;
+			return new Promise(function (resolve) {
+				setTimeout(function () {
+					t.is(executed, 2);
+					t.is(done, 1);
+					done++;
+					resolve();
+				}, 2);
+			});
+		});
+		a.finally(function () {
+			executed++;
+			t.is(executed, 1);
+			t.is(done, 0);
+			done++;
+		});
+		a.pass();
+	}).run().then(function (result) {
+		t.is(result.passed, true);
+		t.is(executed, 3);
+		t.is(done, 3);
+		t.end();
+	});
+});
+
+test('error in finally fails the test', function (t) {
+	var result = ava(function (a) {
+		a.finally(function () {
+			throw new Error();
+		});
+	}).run();
+
+	t.is(result.passed, false);
+	t.end();
+});
+
+test('rejected promise in finally fails the test', function (t) {
+	t.plan(1);
+
+	ava(function (a) {
+		a.finally(function () {
+			return Promise.reject();
+		});
+		a.pass();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.end();
+	});
+});
+
+test('error passed into finally callback fails the test', function (t) {
+	t.plan(1);
+
+	ava(function (a) {
+		a.finally.cb(function (f) {
+			f.end('no');
+		});
+		a.pass();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.end();
+	});
+});
+
+test('calling finally from finally is impossible', function (t) {
+	t.plan(1);
+
+	ava(function (a) {
+		a.finally(function () {
+			return new Promise(function (resolve) {
+				a.finally(function () {
+				});
+				resolve();
+			});
+		});
+		a.pass();
+	}).run().then(function (result) {
+		t.is(result.passed, false);
+		t.end();
+	});
+});
+
+test('calling finally from finally.cb throws', function (t) {
+	t.plan(1);
+
+	ava(function (a) {
+		a.finally.cb(function (f) {
+			setTimeout(function () {
+				t.throws(function () {
+					a.finally(function () {
+					});
+				});
+				f.end();
+			});
+		});
+		a.pass();
+	}).run().then(function () {
 		t.end();
 	});
 });

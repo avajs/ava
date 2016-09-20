@@ -180,20 +180,22 @@ test('include skipped tests in results', function (t) {
 test('test types and titles', function (t) {
 	t.plan(10);
 
-	var fn = function (a) {
-		a.pass();
-	};
-
 	function named(a) {
 		a.pass();
 	}
 
 	var runner = new Runner();
 	runner.before(named);
-	runner.beforeEach(fn);
-	runner.after(fn);
+	runner.beforeEach(function (a) {
+		a.pass();
+	});
+	runner.after(function (a) {
+		a.pass();
+	});
 	runner.afterEach(named);
-	runner.test('test', fn);
+	runner.test('test', function (a) {
+		a.pass();
+	});
 
 	// See https://github.com/avajs/ava/issues/1027
 	var supportsFunctionNames = noop.name === 'noop';
