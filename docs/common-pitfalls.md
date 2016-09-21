@@ -24,9 +24,9 @@ You may be running an async operation inside a test and wondering why it's not f
 
 ```js
 test(t => {
-  return fetch().then(data => {
-    t.is(data, 'foo');
-  });
+	return fetch().then(data => {
+		t.is(data, 'foo');
+	});
 });
 ```
 
@@ -34,10 +34,10 @@ If it uses callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-supp
 
 ```js
 test.cb(t => {
-  fetch((err, data) => {
-    t.is(data, 'bar');
-    t.end();
-  });
+	fetch((err, data) => {
+		t.is(data, 'bar');
+		t.end();
+	});
 });
 ```
 
