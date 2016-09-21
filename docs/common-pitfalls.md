@@ -59,6 +59,10 @@ test(async t => {
 });
 ```
 
+### Attributing uncaught exceptions to tests
+
+AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. When working with asynchronous operations that take callbacks, consider promisifying and using `async`/`await`, as in the above example.
+
 ---
 
 Is your problem not listed here? Submit a pull request or comment on [this issue](https://github.com/avajs/ava/issues/404).
