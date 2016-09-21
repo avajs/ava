@@ -44,13 +44,20 @@ If you're using callbacks, use [`test.cb`](https://github.com/avajs/ava#callback
 ```js
 test.cb(t => {
 	fetch((err, data) => {
-		t.is(data, 'bar');
+		t.is(data, 'foo');
 		t.end();
 	});
 });
 ```
 
-Alternatively, promisify the callback function using something like [pify](https://github.com/sindresorhus/pify).
+Alternatively, promisify the callback function using something like [`pify`](https://github.com/sindresorhus/pify):
+
+```js
+test(async t => {
+	const data = await pify(fetch)();
+	t.is(data, 'foo');
+});
+```
 
 ---
 
