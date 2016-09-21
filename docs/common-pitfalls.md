@@ -18,9 +18,9 @@ You may be using a service that only allows a limited number of concurrent conne
 
 Use the `concurrency` flag to limit the number of processes ran. For example, if your service plan allows 5 clients, you should run AVA with `concurrency=5` or less.
 
-## Async operations
+## Asynchronous operations
 
-You may be running an async operation inside a test and wondering why it's not finishing. If your async operation uses promises, you should return the promise:
+You may be running an asynchronous operation inside a test and wondering why it's not finishing. If your asynchronous operation uses promises, you should return the promise:
 
 ```js
 test(t => {
