@@ -30,7 +30,16 @@ test(t => {
 });
 ```
 
-If it uses callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
+Better yet, use `async` / `await`:
+
+```js
+test(async t => {
+	const data = await fetch();
+	t.is(data, 'foo');
+});
+```
+
+If you're using callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
 
 ```js
 test.cb(t => {
