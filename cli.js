@@ -43,14 +43,8 @@ Promise.longStackTraces();
 
 var conf = pkgConf.sync('ava');
 
-var pkgDir;
 var filepath = pkgConf.filepath(conf);
-
-if (filepath === null) {
-	pkgDir = process.cwd();
-} else {
-	pkgDir = path.dirname(filepath);
-}
+var pkgDir = filepath === null ? process.cwd() : path.dirname(filepath);
 
 try {
 	conf.babel = babelConfig.validate(conf.babel);
