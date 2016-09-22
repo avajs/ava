@@ -44,12 +44,12 @@ Promise.longStackTraces();
 var conf = pkgConf.sync('ava');
 
 var pkgDir;
-var filepath = pkgConf.filepath(conf)
+var filepath = pkgConf.filepath(conf);
 
-if (!filepath) {
+if (filepath === null) {
 	pkgDir = process.cwd();
 } else {
-	pkgDir = path.dirname(filepath)
+	pkgDir = path.dirname(filepath);
 }
 
 try {
