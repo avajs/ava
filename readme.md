@@ -251,7 +251,7 @@ Test files are run from their current directory, so [`process.cwd()`](https://no
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
+To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument. By convention this argument is named `t`.
 
 ```js
 import test from 'ava';
