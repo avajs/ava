@@ -7,29 +7,35 @@ An example of this is React, at least if you want to use ReactDOM.render and sim
 
 This recipe works for any library that needs a mocked browser environment.
 
-## Install jsdom
+## Install browser-env
 
-Install [jsdom](https://github.com/tmpvar/jsdom).
+Install [browser-env](https://github.com/lukechilds/browser-env).
 
-> A JavaScript implementation of the WHATWG DOM and HTML standards, for use with node.js
+> Simulates a global browser environment using jsdom.
 
 ```
-$ npm install --save-dev jsdom
+$ npm install --save-dev browser-env
 ```
 
-## Setup jsdom
+## Setup browser-env
 
 Create a helper file and place it in the `test/helpers` folder. This ensures AVA does not treat it as a test.
 
 `test/helpers/setup-browser-env.js`:
 
 ```js
-global.document = require('jsdom').jsdom('<body></body>');
-global.window = document.defaultView;
-global.navigator = window.navigator;
+import browserEnv from 'browser-env';
+browserEnv();
 ```
 
-## Configure tests to use jsdom
+By default `browser-env` will add all global browser variables to the Node.js global scope creating a full browser environment. This should have good compatibility with most front-end libraries, however it's generally not a good idea to create lots of global variables if you don't need to. If you know exactly which browser variables you need you can pass an array of required properties.
+
+```js
+import browserEnv from 'browser-env';
+browserEnv(['window', 'document', 'navigator']);
+```
+
+## Configure tests to use browser-env
 
 Configure AVA to `require` the helper before every test file.
 
@@ -47,7 +53,7 @@ Configure AVA to `require` the helper before every test file.
 
 ## Enjoy!
 
-Write your tests and enjoy a mocked window object.
+Write your tests and enjoy a mocked browser environment.
 
 `test/my.react.test.js`:
 
