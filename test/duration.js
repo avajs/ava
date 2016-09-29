@@ -1,9 +1,7 @@
 'use strict';
 
-var lolex = require('lolex');
 var test = require('tap').test;
-var hrtimeToDuration = require('../lib/duration');
-var duration = hrtimeToDuration.duration;
+var duration = require('../lib/duration');
 
 test('displays milliseconds', function (t) {
 	t.is(duration(0), '0ms');
@@ -50,21 +48,5 @@ test('calculates days', function (t) {
 	t.is(duration(day * 5 / 3), '1.667d');
 	t.is(duration(day * 364.5), '364.5d');
 	t.is(duration(day * 500), '500d');
-	t.end();
-});
-
-test('converts hrtime difference to duration', function (t) {
-	var clock = lolex.install(0, ['hrtime']);
-	var start = process.hrtime();
-
-	clock.tick('07:07');
-	t.is(hrtimeToDuration(process.hrtime(start)), '7.117m');
-
-	clock.tick('24:25');
-	t.is(hrtimeToDuration(process.hrtime(start)), '31.533m');
-
-	clock.tick('06:01:01');
-	t.is(hrtimeToDuration(process.hrtime(start)), '6.543h');
-
 	t.end();
 });

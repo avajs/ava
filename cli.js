@@ -157,7 +157,7 @@ logger.start();
 
 api.on('test-run', function (runStatus) {
 	reporter.api = runStatus;
-	runStatus.testRunStart = process.hrtime();
+	runStatus.testRunStart = Date.now();
 	runStatus.on('test', logger.test);
 	runStatus.on('error', logger.unhandledError);
 
@@ -184,7 +184,7 @@ if (cli.flags.watch) {
 } else {
 	api.run(files)
 		.then(function (runStatus) {
-			runStatus.testRunElapsed = runStatus.testRunStart && process.hrtime(runStatus.testRunStart);
+			runStatus.testRunElapsed = runStatus.testRunStart && Date.now() - runStatus.testRunStart;
 			logger.finish(runStatus);
 			logger.exit(runStatus.failCount > 0 || runStatus.rejectionCount > 0 || runStatus.exceptionCount > 0 ? 1 : 0);
 		})
