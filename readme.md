@@ -47,6 +47,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Enhanced assertion messages](#enhanced-assertion-messages)
 - [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
+- [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
 
 ## Test syntax
 
