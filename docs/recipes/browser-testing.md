@@ -55,6 +55,19 @@ Configure AVA to `require` the helper before every test file.
 
 Write your tests and enjoy a mocked browser environment.
 
+`test/my.dom.test.js`:
+
+```js
+import test from 'ava';
+
+test('Insert to DOM', t => {
+  const div = document.createElement('div');
+  document.body.appendChild(div);
+
+  t.is(document.querySelector('div'), div);
+});
+```
+
 `test/my.react.test.js`:
 
 ```js
