@@ -67,3 +67,5 @@ We have a [chat](https://gitter.im/avajs/ava). Jump in there and lurk, talk to u
 - You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/docs/blob/master/amending-a-commit-guide.md)
 
 Note: when making code changes, try to remember AVA's mantra (stolen from Python) of having preferably one way to do something. For example, a request to add an alias to part of the API ([like this](https://github.com/avajs/ava/pull/663)) will likely be rejected without some other substantial benefit.
+
+*Looking to make your first ever contribution to an open-source project? Look no further! AVA may be one of the most welcoming projects and communities out there. Check out ["Making your first contribution"](https://medium.com/@vadimdemedes/making-your-first-contribution-de6576ddb190) blog post to start off the right way and make your work a part of AVA!*
