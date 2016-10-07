@@ -167,7 +167,7 @@ test('pkg-conf: pkg-overrides', function (t) {
 });
 
 test('pkg-conf: cli takes precedence', function (t) {
-	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
+	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});

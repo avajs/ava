@@ -99,8 +99,6 @@ To use the Babel require hook, add `babel-core/register` to the `require` sectio
 }
 ```
 
-*Note*: You can also set the require hook from the command line: `ava --require=babel-core/register`. However, configuring it in `package.json` saves you from repeatedly typing that flag.
-
 ### Putting it all together
 
 Combining the above steps, your complete `package.json` should look something like this:
