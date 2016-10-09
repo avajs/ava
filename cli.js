@@ -123,9 +123,15 @@ if (
 	process.exit(1);
 }
 
+if (hasFlag('--require') || hasFlag('-r')) {
+	console.error('  ' + colors.error(figures.cross) + ' The --require and -r flags are deprecated. Requirements should be configured in package.json - see documentation.');
+	process.exit(1);
+}
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
+	require: arrify(conf.require),
 	cacheEnabled: cli.flags.cache !== false,
 	powerAssert: cli.flags.powerAssert !== false,
 	explicitTitles: cli.flags.watch,
