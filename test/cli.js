@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path');
+var fs = require('fs');
 var childProcess = require('child_process');
 var test = require('tap').test;
 global.Promise = require('bluebird');
@@ -10,6 +11,8 @@ var chalk = require('chalk');
 var touch = require('touch');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
+var uniqueTempDir = require('unique-temp-dir');
+var execa = require('execa');
 
 var cliPath = path.join(__dirname, '../cli.js');
 
@@ -367,4 +370,18 @@ test('prefers local version of ava', function (t) {
 
 	t.ok(debugSpy.calledWith('Using local install of AVA'));
 	t.end();
+});
+
+test('use current working directory if `package.json` is not found', function (t) {
+	var dir = uniqueTempDir({create: true});
+	var testFilePath = path.join(dir, 'test.js');
+	var cliPath = require.resolve('../cli.js');
+	var avaPath = require.resolve('../index.js');
+
+	fs.writeFileSync(testFilePath, 'import test from \'' + avaPath + '\';\ntest(t => { t.pass(); });');
+
+	execa(process.execPath, [cliPath], {cwd: dir}).then(() => {
+		t.pass();
+		t.end();
+	});
 });
