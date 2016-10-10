@@ -87,7 +87,7 @@ test('callback is required', function (t) {
 });
 
 test('infer name from function', function (t) {
-	var result = ava(function foo(a) {
+	var result = ava(function foo(a) { // eslint-disable-line func-names
 		a.pass();
 	}).run();
 

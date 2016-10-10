@@ -61,7 +61,6 @@ var cli = meow([
 	'  --init             Add AVA to your project',
 	'  --fail-fast        Stop after first test failure',
 	'  --serial, -s       Run tests serially',
-	'  --require, -r      Module to preload (Can be repeated)',
 	'  --tap, -t          Generate TAP output',
 	'  --verbose, -v      Enable verbose output',
 	'  --no-cache         Disable the transpiler cache',
@@ -85,7 +84,6 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require',
 		'timeout',
 		'source',
 		'match',
@@ -102,7 +100,6 @@ var cli = meow([
 	alias: {
 		t: 'tap',
 		v: 'verbose',
-		r: 'require',
 		s: 'serial',
 		m: 'match',
 		w: 'watch',
@@ -127,10 +124,15 @@ if (
 	process.exit(1);
 }
 
+if (hasFlag('--require') || hasFlag('-r')) {
+	console.error('  ' + colors.error(figures.cross) + ' The --require and -r flags are deprecated. Requirements should be configured in package.json - see documentation.');
+	process.exit(1);
+}
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
-	require: arrify(cli.flags.require),
+	require: arrify(conf.require),
 	cacheEnabled: cli.flags.cache !== false,
 	powerAssert: cli.flags.powerAssert !== false,
 	explicitTitles: cli.flags.watch,

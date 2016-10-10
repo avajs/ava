@@ -47,6 +47,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Enhanced assertion messages](#enhanced-assertion-messages)
 - [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
+- [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
 
 ## Test syntax
 
@@ -140,7 +141,6 @@ $ ava --help
     --init             Add AVA to your project
     --fail-fast        Stop after first test failure
     --serial, -s       Run tests serially
-    --require, -r      Module to preload (Can be repeated)
     --tap, -t          Generate TAP output
     --verbose, -v      Enable verbose output
     --no-cache         Disable the transpiler cache
@@ -251,7 +251,7 @@ Test files are run from their current directory, so [`process.cwd()`](https://no
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
+To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument. By convention this argument is named `t`.
 
 ```js
 import test from 'ava';
@@ -704,7 +704,7 @@ See AVA's [TypeScript recipe](docs/recipes/typescript.md) for a more detailed ex
 
 AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
-If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. Run AVA with `--require babel-register` (see [CLI](#cli)) or [configure it in your `package.json`](#configuration).
+If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](#configuration).
 
 You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
 

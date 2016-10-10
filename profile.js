@@ -9,7 +9,6 @@ var EventEmitter = require('events').EventEmitter;
 var meow = require('meow');
 var Promise = require('bluebird');
 var pkgConf = require('pkg-conf');
-var arrify = require('arrify');
 var findCacheDir = require('find-cache-dir');
 var uniqueTempDir = require('unique-temp-dir');
 var CachingPrecompiler = require('./lib/caching-precompiler');
@@ -35,12 +34,10 @@ var cli = meow([
 	'Options',
 	'  --fail-fast    Stop after first test failure',
 	'  --serial, -s   Run tests serially',
-	'  --require, -r  Module to preload (Can be repeated)',
 	''
 ], {
 	string: [
-		'_',
-		'require'
+		'_'
 	],
 	boolean: [
 		'fail-fast',
@@ -50,7 +47,6 @@ var cli = meow([
 	],
 	default: conf,
 	alias: {
-		r: 'require',
 		s: 'serial'
 	}
 });
@@ -71,7 +67,6 @@ var opts = {
 	file: file,
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
-	require: arrify(cli.flags.require),
 	tty: false,
 	cacheDir: cacheDir,
 	precompiled: precompiled

@@ -1031,7 +1031,7 @@ function generatePassDebugTests(execArgv, expectedInspectIndex) {
 		t.plan(expectedInspectIndex === -1 ? 3 : 2);
 
 		var api = new Api({testOnlyExecArgv: execArgv});
-		return api.computeForkExecArgs(['foo.js'])
+		return api._computeForkExecArgs(['foo.js'])
 			.then(function (result) {
 				t.true(result.length === 1);
 				if (expectedInspectIndex === -1) {

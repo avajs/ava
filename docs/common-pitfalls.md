@@ -18,30 +18,50 @@ You may be using a service that only allows a limited number of concurrent conne
 
 Use the `concurrency` flag to limit the number of processes ran. For example, if your service plan allows 5 clients, you should run AVA with `concurrency=5` or less.
 
-## Async operations
+## Asynchronous operations
 
-You may be running an async operation inside a test and wondering why it's not finishing. If your async operation uses promises, you should return the promise:
+You may be running an asynchronous operation inside a test and wondering why it's not finishing. If your asynchronous operation uses promises, you should return the promise:
 
 ```js
 test(t => {
-  return fetch().then(data => {
-    t.is(data, 'foo');
-  });
+	return fetch().then(data => {
+		t.is(data, 'foo');
+	});
 });
 ```
 
-If it uses callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
+Better yet, use `async` / `await`:
+
+```js
+test(async t => {
+	const data = await fetch();
+	t.is(data, 'foo');
+});
+```
+
+If you're using callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
 
 ```js
 test.cb(t => {
-  fetch((err, data) => {
-    t.is(data, 'bar');
-    t.end();
-  });
+	fetch((err, data) => {
+		t.is(data, 'foo');
+		t.end();
+	});
 });
 ```
 
-Alternatively, promisify the callback function using something like [pify](https://github.com/sindresorhus/pify).
+Alternatively, promisify the callback function using something like [`pify`](https://github.com/sindresorhus/pify):
+
+```js
+test(async t => {
+	const data = await pify(fetch)();
+	t.is(data, 'foo');
+});
+```
+
+### Attributing uncaught exceptions to tests
+
+AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
 
 ---
 

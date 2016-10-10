@@ -170,7 +170,7 @@ test('pkg-conf: pkg-overrides', function (t) {
 });
 
 test('pkg-conf: cli takes precedence', function (t) {
-	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
+	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
@@ -372,16 +372,13 @@ test('prefers local version of ava', function (t) {
 	t.end();
 });
 
-test('use current working directory if `package.json` is not found', function (t) {
-	var dir = uniqueTempDir({create: true});
-	var testFilePath = path.join(dir, 'test.js');
+test('use current working directory if `package.json` is not found', function () {
+	var cwd = uniqueTempDir({create: true});
+	var testFilePath = path.join(cwd, 'test.js');
 	var cliPath = require.resolve('../cli.js');
-	var avaPath = require.resolve('../index.js');
+	var avaPath = require.resolve('../');
 
 	fs.writeFileSync(testFilePath, 'import test from \'' + avaPath + '\';\ntest(t => { t.pass(); });');
 
-	execa(process.execPath, [cliPath], {cwd: dir}).then(() => {
-		t.pass();
-		t.end();
-	});
+	return execa(process.execPath, [cliPath], {cwd: cwd});
 });
