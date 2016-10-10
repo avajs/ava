@@ -77,7 +77,7 @@ If your tests write to disk they may trigger the watcher to rerun your tests. If
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json`](#configuration), and not from inside your test file. Files accessed using the `fs` module are not tracked.
+Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json`], and not from inside your test file. Files accessed using the `fs` module are not tracked.
 
 ## Watch mode and the `.only` modifier
 
@@ -112,3 +112,4 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [`--source` CLI flag]: https://github.com/avajs/ava#cli
 [`.only` modifier]: https://github.com/avajs/ava#running-specific-tests
 [`ava` section of your `package.json`]: https://github.com/avajs/ava#configuration
+[added them in your `package.json`]: https://github.com/avajs/ava#configuration
