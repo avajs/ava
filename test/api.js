@@ -307,12 +307,13 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'change process.cwd() to a test\'s directory', function (t) {
+	test(prefix + 'change process.cwd() to a test\'s directory with resolveTestsFrom', function (t) {
 		t.plan(1);
 
-		var api = apiCreator();
+    var fullPath = path.join(__dirname, 'fixture/process-cwd.js');
 
-		return api.run([path.join(__dirname, 'fixture/process-cwd.js')])
+		var api = apiCreator({resolveTestsFrom: path.dirname(fullPath)});
+		return api.run([fullPath])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
