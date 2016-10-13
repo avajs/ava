@@ -139,6 +139,7 @@ var api = new Api({
 	babelConfig: conf.babel,
 	resolveTestsFrom: cli.input.length === 0 ? pkgDir : process.cwd(),
 	timeout: cli.flags.timeout,
+	pkgDir,
 	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
 });
 

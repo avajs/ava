@@ -307,22 +307,22 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'run from pkgDir by default', function (t) {
+	test(prefix + 'run from package.json folder by default', function (t) {
 		t.plan(1);
 		var api = apiCreator();
 
-		return api.run([path.join(__dirname, 'fixture/process-cwd-pkgDir.js')])
+		return api.run([path.join(__dirname, 'fixture/process-cwd-default.js')])
 			.then(function (result) {
-				t.is(result.passCount, 1)
+				t.is(result.passCount, 1);
 			});
 	});
 
-	test(prefix + 'change process.cwd() to a test\'s directory with resolveTestsFrom', function (t) {
+	test(prefix + 'change process.cwd() to a test\'s directory with pkgDir', function (t) {
 		t.plan(1);
 
-		var fullPath = path.join(__dirname, 'fixture/process-cwd.js');
+		var fullPath = path.join(__dirname, 'fixture/process-cwd-pkgDir.js');
 
-		var api = apiCreator({resolveTestsFrom: path.dirname(fullPath)});
+		var api = apiCreator({pkgDir: path.dirname(fullPath)});
 		return api.run([fullPath])
 			.then(function (result) {
 				t.is(result.passCount, 1);
