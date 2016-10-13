@@ -307,6 +307,16 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+  test(prefix + 'run from pkgDir by default', function (t) {
+    t.plan(1);
+    var api = apiCreator();
+
+    return api.run([path.join(__dirname, 'fixture/process-cwd-pkgDir.js')])
+      .then(function (result) {
+        t.is(result.passCount, 1)
+      });
+  });
+
 	test(prefix + 'change process.cwd() to a test\'s directory with resolveTestsFrom', function (t) {
 		t.plan(1);
 
