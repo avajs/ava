@@ -14,7 +14,7 @@ var setImmediate = require('../lib/globals').setImmediate;
 
 // Helper to make using beforeEach less arduous.
 function makeGroup(test) {
-	return function group(desc, fn) {
+	return function (desc, fn) {
 		test(desc, function (t) {
 			var beforeEach = function (fn) {
 				t.beforeEach(function (done) {
