@@ -549,7 +549,7 @@ test(t => {
 });
 ```
 
-By default `t.context` is an object but you can reassign it:
+The context is not shared between tests, allowing you to set up data in a way where it will not risk leaking to other, subsequent tests. By default `t.context` is an object but you can reassign it:
 
 ```js
 test.beforeEach(t => {
