@@ -14,6 +14,9 @@ matrix:
   fast_finish: true
 build: off
 shallow_clone: true
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
 test_script:
   - node --version
   - npm --version
