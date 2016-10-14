@@ -13,7 +13,6 @@ install:
 matrix:
   fast_finish: true
 build: off
-version: '{build}'
 shallow_clone: true
 test_script:
   - node --version
