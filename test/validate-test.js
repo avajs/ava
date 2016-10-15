@@ -100,9 +100,7 @@ test('validate only allows always on `after` and `afterEach`', function (t) {
 	t.end();
 });
 
-test('validate rejects skipping failing tests', function (t) {
-	var errorMessage = '`only` tests cannot be failing';
-
-	t.deepEquals(validate('before', noop, {failing: true, skipped: true, type: 'test'}), errorMessage);
+test('validate accepts skipping failing tests', function (t) {
+	t.deepEquals(validate('before', noop, {failing: true, skipped: true, type: 'test'}), null);
 	t.end();
 });
