@@ -19,6 +19,15 @@ function run(files) {
 	return execa(process.execPath, [profileScript].concat(arrify(files).map(fixture)), {cwd: cwd});
 }
 
+test('runs the profiler and throws an error when invoked without files to run', function (t) {
+	t.plan(1);
+	run()
+		.catch(function (err) {
+			t.ok(/Specify a test file/.test(err.stderr));
+			t.end();
+		});
+});
+
 test('exits normally when tests pass', function (t) {
 	t.plan(1);
 	run('es2015')

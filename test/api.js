@@ -16,6 +16,8 @@ test('must be called with new', function (t) {
 });
 
 generateTests('Without Pool: ', function (options) {
+	options = options || {};
+	options.powerAssert = true;
 	return new Api(options);
 });
 
@@ -33,7 +35,7 @@ test('Without Pool: test file with exclusive tests causes non-exclusive tests in
 
 	var api = new Api();
 
-	api.run(files)
+	return api.run(files)
 		.then(function (result) {
 			t.ok(result.hasExclusive);
 			t.is(result.testCount, 2);
@@ -60,6 +62,7 @@ test('Without Pool: test files can be forced to run in exclusive mode', function
 generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
+	options.powerAssert = true;
 	return new Api(options);
 });
 
@@ -69,7 +72,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/es2015.js')])
+		return api.run([path.join(__dirname, 'fixture/es2015.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -80,7 +83,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/generators.js')])
+		return api.run([path.join(__dirname, 'fixture/generators.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -91,7 +94,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/async-await.js')])
+		return api.run([path.join(__dirname, 'fixture/async-await.js')])
 			.then(function (result) {
 				t.is(result.passCount, 2);
 			});
@@ -215,7 +218,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run(files)
+		return api.run(files)
 			.then(function (result) {
 				t.is(result.passCount, 2);
 				t.is(result.failCount, 1);
@@ -235,7 +238,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run(files)
+		return api.run(files)
 			.then(function (result) {
 				t.is(result.passCount, 1);
 				t.is(result.failCount, 1);
@@ -261,7 +264,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/fail-fast.js')])
+		return api.run([path.join(__dirname, 'fixture/fail-fast.js')])
 			.then(function (result) {
 				t.ok(api.options.failFast);
 				t.strictDeepEqual(tests, [{
@@ -284,7 +287,7 @@ function generateTests(prefix, apiCreator) {
 			serial: true
 		});
 
-		api.run([path.join(__dirname, 'fixture/serial.js')])
+		return api.run([path.join(__dirname, 'fixture/serial.js')])
 			.then(function (result) {
 				t.ok(api.options.serial);
 				t.is(result.passCount, 3);
@@ -297,7 +300,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
+		return api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
 			.then(function (result) {
 				t.is(result.failCount, 1);
 				t.match(result.errors[0].error.message, /'c'.*?'d'/);
@@ -309,7 +312,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/process-cwd.js')])
+		return api.run([path.join(__dirname, 'fixture/process-cwd.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -327,7 +330,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/loud-rejection.js')])
+		return api.run([path.join(__dirname, 'fixture/loud-rejection.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -345,7 +348,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
+		return api.run([path.join(__dirname, 'fixture/uncaught-exception.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -356,7 +359,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/error-without-message.js')])
+		return api.run([path.join(__dirname, 'fixture/error-without-message.js')])
 			.then(function (result) {
 				t.is(result.failCount, 1);
 				t.is(result.errors.length, 1);
@@ -378,7 +381,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/source-map-file.js')])
+		return api.run([path.join(__dirname, 'fixture/source-map-file.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -399,7 +402,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/source-map-file-browser-env.js')])
+		return api.run([path.join(__dirname, 'fixture/source-map-file-browser-env.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -420,7 +423,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/source-map-file.js')])
+		return api.run([path.join(__dirname, 'fixture/source-map-file.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -441,7 +444,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
+		return api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -462,7 +465,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
+		return api.run([path.join(__dirname, 'fixture/source-map-initial.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -473,7 +476,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.resolve('test/fixture/es2015.js')])
+		return api.run([path.resolve('test/fixture/es2015.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -484,7 +487,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/subdir')])
+		return api.run([path.join(__dirname, 'fixture/subdir')])
 			.then(function (result) {
 				t.is(result.passCount, 2);
 				t.is(result.failCount, 1);
@@ -496,7 +499,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
+		return api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
 			.then(function (result) {
 				t.match(result.errors[0].title, /this is a failing test/);
 				t.match(result.tests[0].title, /this is a passing test/);
@@ -634,7 +637,7 @@ function generateTests(prefix, apiCreator) {
 			require: [requirePath]
 		});
 
-		api.run([path.join(__dirname, 'fixture/validate-installed-global.js')])
+		return api.run([path.join(__dirname, 'fixture/validate-installed-global.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
@@ -658,7 +661,7 @@ function generateTests(prefix, apiCreator) {
 			}
 		});
 
-		api.run([path.join(__dirname, 'fixture/power-assert.js')])
+		return api.run([path.join(__dirname, 'fixture/power-assert.js')])
 			.then(function (result) {
 				t.match(
 					result.errors[0].error.message,
@@ -687,7 +690,7 @@ function generateTests(prefix, apiCreator) {
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/caching/test.js')])
+		return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(function () {
 				var files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
 				t.is(files.length, 2);
@@ -710,7 +713,7 @@ function generateTests(prefix, apiCreator) {
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 		var api = apiCreator({cacheEnabled: false});
 
-		api.run([path.join(__dirname, 'fixture/caching/test.js')])
+		return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(function () {
 				t.false(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
 				t.end();
@@ -722,7 +725,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.join(__dirname, 'fixture/skip-only.js')])
+		return api.run([path.join(__dirname, 'fixture/skip-only.js')])
 			.then(function (result) {
 				t.is(result.tests.length, 1);
 				t.true(result.tests[0].skip);
@@ -734,7 +737,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		api.run([path.resolve('test/fixture/es2015.js')]).then(function (result) {
+		return api.run([path.resolve('test/fixture/es2015.js')]).then(function (result) {
 			t.is(result.passCount, 1);
 			return api.run([path.resolve('test/fixture/es2015.js')]);
 		}).then(function (result) {
@@ -840,7 +843,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
 			.then(
 				function (result) {
 					t.is(result.passCount, 1);
@@ -1022,3 +1025,49 @@ function generateTests(prefix, apiCreator) {
 		]);
 	});
 }
+
+function generatePassDebugTests(execArgv, expectedInspectIndex) {
+	test('pass ' + execArgv.join(' ') + ' to fork', function (t) {
+		t.plan(expectedInspectIndex === -1 ? 3 : 2);
+
+		var api = new Api({testOnlyExecArgv: execArgv});
+		return api._computeForkExecArgs(['foo.js'])
+			.then(function (result) {
+				t.true(result.length === 1);
+				if (expectedInspectIndex === -1) {
+					t.true(result[0].length === 1);
+					t.true(/--debug=\d+/.test(result[0][0]));
+				} else {
+					t.true(/--inspect=\d+/.test(result[0][expectedInspectIndex]));
+				}
+			});
+	});
+}
+
+function generatePassDebugIntegrationTests(execArgv) {
+	test('pass ' + execArgv.join(' ') + ' to fork', function (t) {
+		t.plan(1);
+
+		var api = new Api({testOnlyExecArgv: execArgv});
+		return api.run([path.join(__dirname, 'fixture/debug-arg.js')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+}
+
+generatePassDebugTests(['--debug=0'], -1);
+generatePassDebugTests(['--debug'], -1);
+
+generatePassDebugTests(['--inspect=0'], 0);
+generatePassDebugTests(['--inspect'], 0);
+
+generatePassDebugTests(['--inspect=0', '--debug-brk'], 0);
+generatePassDebugTests(['--inspect', '--debug-brk'], 0);
+
+generatePassDebugTests(['--debug-brk', '--inspect=0'], 1);
+generatePassDebugTests(['--debug-brk', '--inspect'], 1);
+
+// --inspect cannot be tested because released node doesn't support it
+generatePassDebugIntegrationTests(['--debug=0']);
+generatePassDebugIntegrationTests(['--debug']);

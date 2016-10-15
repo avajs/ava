@@ -38,7 +38,7 @@ test('resolves promise with tests info', function (t) {
 
 	var file = fixture('generators.js');
 
-	fork(file)
+	return fork(file)
 		.run({})
 		.then(function (info) {
 			t.is(info.stats.passCount, 1);
@@ -94,7 +94,7 @@ test('rejects promise if the process is killed', function (t) {
 });
 
 test('fake timers do not break duration', function (t) {
-	fork(fixture('fake-timers.js'))
+	return fork(fixture('fake-timers.js'))
 		.run({})
 		.then(function (info) {
 			var duration = info.tests[0].duration;
@@ -118,7 +118,7 @@ test('destructuring of `t` is allowed', function (t) {
 */
 
 test('babelrc is ignored', function (t) {
-	fork(fixture('babelrc/test.js'))
+	return fork(fixture('babelrc/test.js'))
 	.run({})
 	.then(function (info) {
 		t.is(info.stats.passCount, 1);

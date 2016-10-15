@@ -8,6 +8,8 @@ var figures = require('figures');
 var arrify = require('arrify');
 var chalk = require('chalk');
 var touch = require('touch');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
 var cliPath = path.join(__dirname, '../cli.js');
 
@@ -165,7 +167,7 @@ test('pkg-conf: pkg-overrides', function (t) {
 });
 
 test('pkg-conf: cli takes precedence', function (t) {
-	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', '--require=./required.js', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
+	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, function (err) {
 		t.ifError(err);
 		t.end();
 	});
@@ -302,6 +304,15 @@ test('--match works', function (t) {
 	});
 });
 
+['--tap', '-t'].forEach(function (tapFlag) {
+	test(tapFlag + ' should produce TAP output', function (t) {
+		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, function (err) {
+			t.ok(!err);
+			t.end();
+		});
+	});
+});
+
 test('handles NODE_PATH', function (t) {
 	var nodePaths = 'fixture/node-paths/modules' + path.delimiter + 'fixture/node-paths/deep/nested';
 
@@ -325,4 +336,35 @@ test('should warn ava is required without the cli', function (t) {
 		t.match(error.message, /Test files must be run with the AVA CLI/);
 		t.end();
 	});
+});
+
+test('prefers local version of ava', function (t) {
+	t.plan(1);
+
+	var stubModulePath = path.join(__dirname, '/fixture/empty');
+	var debugSpy = sinon.spy();
+	function resolveCwdStub() {
+		return stubModulePath;
+	}
+	function debugStub() {
+		return function (message) {
+			var result = {
+				enabled: false
+			};
+
+			if (message) {
+				result = debugSpy(message);
+			}
+
+			return result;
+		};
+	}
+
+	proxyquire('../cli', {
+		'debug': debugStub,
+		'resolve-cwd': resolveCwdStub
+	});
+
+	t.ok(debugSpy.calledWith('Using local install of AVA'));
+	t.end();
 });

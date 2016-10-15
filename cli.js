@@ -8,7 +8,10 @@ var debug = require('debug')('ava');
 var resolveCwd = require('resolve-cwd');
 var localCLI = resolveCwd('ava/cli');
 
-if (localCLI && localCLI !== __filename) {
+// Use path.relative() to detect local AVA installation,
+// because __filename's case is inconsistent on Windows
+// see https://github.com/nodejs/node/issues/6624
+if (localCLI && path.relative(localCLI, __filename) !== '') {
 	debug('Using local install of AVA');
 	require(localCLI);
 	return;
@@ -57,10 +60,10 @@ var cli = meow([
 	'  --init             Add AVA to your project',
 	'  --fail-fast        Stop after first test failure',
 	'  --serial, -s       Run tests serially',
-	'  --require, -r      Module to preload (Can be repeated)',
 	'  --tap, -t          Generate TAP output',
 	'  --verbose, -v      Enable verbose output',
 	'  --no-cache         Disable the transpiler cache',
+	'  --no-power-assert  Disable Power Assert',
 	'  --match, -m        Only run tests with matching title (Can be repeated)',
 	'  --watch, -w        Re-run tests when tests and source files change',
 	'  --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)',
@@ -80,7 +83,6 @@ var cli = meow([
 ], {
 	string: [
 		'_',
-		'require',
 		'timeout',
 		'source',
 		'match',
@@ -97,7 +99,6 @@ var cli = meow([
 	alias: {
 		t: 'tap',
 		v: 'verbose',
-		r: 'require',
 		s: 'serial',
 		m: 'match',
 		w: 'watch',
@@ -122,11 +123,17 @@ if (
 	process.exit(1);
 }
 
+if (hasFlag('--require') || hasFlag('-r')) {
+	console.error('  ' + colors.error(figures.cross) + ' The --require and -r flags are deprecated. Requirements should be configured in package.json - see documentation.');
+	process.exit(1);
+}
+
 var api = new Api({
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
-	require: arrify(cli.flags.require),
+	require: arrify(conf.require),
 	cacheEnabled: cli.flags.cache !== false,
+	powerAssert: cli.flags.powerAssert !== false,
 	explicitTitles: cli.flags.watch,
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,

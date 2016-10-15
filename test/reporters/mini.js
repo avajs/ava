@@ -1,5 +1,6 @@
 'use strict';
 var chalk = require('chalk');
+var sinon = require('sinon');
 var test = require('tap').test;
 var cross = require('figures').cross;
 var lolex = require('lolex');
@@ -48,7 +49,7 @@ test('passing test', function (t) {
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
-		'   ' + chalk.green('1 passed')
+		'  ' + chalk.green('1 passed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -67,8 +68,8 @@ test('known failure test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 known failure')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 known failure')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -89,7 +90,7 @@ test('failing test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -111,7 +112,7 @@ test('failed known failure test', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -134,8 +135,8 @@ test('passing test after failing', function (t) {
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -158,8 +159,8 @@ test('failing test after passing', function (t) {
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 failed')
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 failed')
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -198,8 +199,8 @@ test('results with passing tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed'),
-		''
+		'\n  ' + chalk.green('1 passed'),
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -220,12 +221,11 @@ test('results with passing known failure tests', function (t) {
 	};
 	var actualOutput = reporter.finish(runStatus);
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 known failure'),
+		'\n  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 known failure'),
 		'',
-		'',
-		'   ' + chalk.red('1. known failure'),
-		''
+		'   ' + chalk.white('known failure'),
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -240,8 +240,8 @@ test('results with skipped tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.yellow('1 skipped'),
-		''
+		'\n  ' + chalk.yellow('1 skipped'),
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -256,8 +256,8 @@ test('results with todo tests', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.blue('1 todo'),
-		''
+		'\n  ' + chalk.blue('1 todo'),
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -272,8 +272,8 @@ test('results with passing skipped tests', function (t) {
 	var output = reporter.finish({}).split('\n');
 
 	t.is(output[0], '');
-	t.is(output[1], '   ' + chalk.green('1 passed'));
-	t.is(output[2], '   ' + chalk.yellow('1 skipped'));
+	t.is(output[1], '  ' + chalk.green('1 passed'));
+	t.is(output[2], '  ' + chalk.yellow('1 skipped'));
 	t.is(output[3], '');
 	t.end();
 });
@@ -297,18 +297,16 @@ test('results with passing tests and rejections', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('1 rejection'),
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('1 rejection'),
 		'',
-		'',
-		'   ' + chalk.red('1. Unhandled Rejection'),
+		'  ' + chalk.white('Unhandled Rejection'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'',
-		'   ' + chalk.red('2. Unhandled Rejection'),
-		'   ' + colors.stack('stack line with trailing whitespace')
+		'  ' + chalk.white('Unhandled Rejection'),
+		'  ' + colors.stack('stack line with trailing whitespace')
 	]);
 	t.end();
 });
@@ -332,17 +330,15 @@ test('results with passing tests and exceptions', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.green('1 passed'),
-		'   ' + chalk.red('2 exceptions'),
+		'  ' + chalk.green('1 passed'),
+		'  ' + chalk.red('2 exceptions'),
 		'',
-		'',
-		'   ' + chalk.red('1. Uncaught Exception'),
+		'  ' + chalk.white('Uncaught Exception'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'',
-		'   ' + chalk.red(cross + ' A futuristic test runner')
+		'  ' + chalk.red(cross + ' A futuristic test runner')
 	]);
 	t.end();
 });
@@ -367,20 +363,22 @@ test('results with errors', function (t) {
 	};
 
 	var output = reporter.finish(runStatus);
+
+	var expectedStack = colors.error('  failure two\n') + colors.errorStack('stack line with trailing whitespace');
+	expectedStack = expectedStack.split('\n');
+
 	compareLineOutput(t, output, [
 		'',
-		'   ' + chalk.red('1 failed'),
+		'  ' + chalk.red('1 failed'),
 		'',
-		'',
-		'   ' + chalk.red('1. failed one'),
+		'  ' + chalk.white('failed one'),
 		/failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'',
-		'   ' + chalk.red('2. failed two')
+		'  ' + chalk.white('failed two')
 	].concat(
-		colors.stack('   failure two\n  stack line with trailing whitespace').split('\n')
+		expectedStack
 	));
 	t.end();
 });
@@ -396,8 +394,8 @@ test('results with 1 previous failure', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo'),
-		'   ' + colors.error('1 previous failure in test files that were not rerun')
+		'  ' + colors.todo('1 todo'),
+		'  ' + colors.error('1 previous failure in test files that were not rerun')
 	]);
 	t.end();
 });
@@ -413,8 +411,8 @@ test('results with 2 previous failures', function (t) {
 	var output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'   ' + colors.todo('1 todo'),
-		'   ' + colors.error('2 previous failures in test files that were not rerun')
+		'  ' + colors.todo('1 todo'),
+		'  ' + colors.error('2 previous failures in test files that were not rerun')
 	]);
 	t.end();
 });
@@ -426,7 +424,7 @@ test('empty results after reset', function (t) {
 	reporter.reset();
 
 	var output = reporter.finish({});
-	t.is(output, '\n');
+	t.is(output, '\n\n');
 	t.end();
 });
 
@@ -448,10 +446,100 @@ test('results with watching enabled', function (t) {
 
 	var actualOutput = reporter.finish({});
 	var expectedOutput = [
-		'\n   ' + chalk.green('1 passed') + time,
-		''
+		'\n  ' + chalk.green('1 passed') + time,
+		'\n'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('increases number of rejections', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.rejectionCount = 0;
+	var err = new Error('failure one');
+	err.type = 'rejection';
+	reporter.unhandledError(err);
+	t.is(reporter.rejectionCount, 1);
+	t.end();
+});
+
+test('increases number of exceptions', function (t) {
+	var reporter = miniReporter();
+	reporter.passCount = 0;
+	reporter.exceptionCount = 0;
+	var err = new Error('failure one');
+	err.type = 'exception';
+	reporter.unhandledError(err);
+	t.is(reporter.exceptionCount, 1);
+	t.end();
+});
+
+test('silently handles errors without body', function (t) {
+	var reporter = miniReporter();
+	reporter.failCount = 1;
+	var runStatus = {
+		errors: [{}, {}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n  ' + colors.error('1 failed'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('does not handle errors with body in rejections', function (t) {
+	var reporter = miniReporter();
+	reporter.rejectionCount = 1;
+	var runStatus = {
+		errors: [{
+			title: 'failed test'
+		}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n  ' + colors.error('1 rejection'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('returns description based on error itself if no stack available', function (t) {
+	var reporter = miniReporter();
+	reporter.exceptionCount = 1;
+	var err1 = new Error('failure one');
+	var runStatus = {
+		errors: [{
+			error: err1
+		}]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n  ' + colors.error('1 exception'),
+		'\n  ' + colors.title('Uncaught Exception'),
+		'  ' + colors.stack(JSON.stringify({error: err1})),
+		'\n\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('returns empty string (used in watcher in order to separate different test runs)', function (t) {
+	var reporter = miniReporter();
+	t.is(reporter.clear(), '');
+	t.end();
+});
+
+test('stderr and stdout should call _update', function (t) {
+	var reporter = miniReporter();
+	var spy = sinon.spy(reporter, '_update');
+	reporter.stdout();
+	reporter.stderr();
+	t.is(spy.callCount, 2);
+	reporter._update.restore();
 	t.end();
 });

@@ -47,6 +47,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Enhanced assertion messages](#enhanced-assertion-messages)
 - [TAP reporter](#tap-reporter)
 - [Clean stack traces](#clean-stack-traces)
+- [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
 
 ## Test syntax
 
@@ -114,8 +115,6 @@ test('bar', async t => {
 });
 ```
 
-<img src="media/screenshot.png" width="150" align="right">
-
 ### Run it
 
 ```console
@@ -142,10 +141,10 @@ $ ava --help
     --init             Add AVA to your project
     --fail-fast        Stop after first test failure
     --serial, -s       Run tests serially
-    --require, -r      Module to preload (Can be repeated)
     --tap, -t          Generate TAP output
     --verbose, -v      Enable verbose output
     --no-cache         Disable the transpiler cache
+    --no-power-assert  Disable Power Assert
     --match, -m        Only run tests with matching title (Can be repeated)
     --watch, -w        Re-run tests when tests and source files change
     --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
@@ -225,6 +224,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "concurrency": 5,
     "failFast": true,
     "tap": true,
+    "powerAssert": false,
     "require": [
       "babel-register"
     ],
@@ -251,7 +251,7 @@ Test files are run from their current directory, so [`process.cwd()`](https://no
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first and only argument. By convention this argument is named `t`.
+To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument. By convention this argument is named `t`.
 
 ```js
 import test from 'ava';
@@ -386,7 +386,7 @@ Match titles that are *exactly* `foo` (albeit case insensitively):
 $ ava --match='foo'
 ```
 
-Watch titles not containing `foo`:
+Match titles not containing `foo`:
 
 ```console
 $ ava --match='!*foo*'
@@ -549,7 +549,7 @@ test(t => {
 });
 ```
 
-By default `t.context` is an object but you can reassign it:
+The context is not shared between tests, allowing you to set up data in a way where it will not risk leaking to other, subsequent tests. By default `t.context` is an object but you can reassign it:
 
 ```js
 test.beforeEach(t => {
@@ -704,7 +704,7 @@ See AVA's [TypeScript recipe](docs/recipes/typescript.md) for a more detailed ex
 
 AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
-If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. Run AVA with `--require babel-register` (see [CLI](#cli)) or [configure it in your `package.json`](#configuration).
+If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](#configuration).
 
 You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
 
@@ -1021,6 +1021,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Configuring Babel](docs/recipes/babelrc.md)
 - [Testing React components](docs/recipes/react.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
+- [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Support
 
@@ -1049,9 +1050,9 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Team
 
-[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage) | [![Mark Wubben](https://avatars.githubusercontent.com/u/33538?s=130)](https://novemberborn.net) | [![Juan Soto](https://avatars.githubusercontent.com/u/8217766?s=130)](https://juansoto.me)
----|---|---|---|---|---
-[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](https://juansoto.me)
+[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage) | [![Mark Wubben](https://avatars.githubusercontent.com/u/33538?s=130)](https://novemberborn.net) | [![Juan Soto](https://avatars.githubusercontent.com/u/8217766?s=130)](https://juansoto.me) | [![Jeroen Engels](https://avatars.githubusercontent.com/u/3869412?s=130)](https://github.com/jfmengels)
+---|---|---|---|---|---|---
+[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](http://juansoto.me) | [Jeroen Engels](https://github.com/jfmengels)
 
 ### Former
 

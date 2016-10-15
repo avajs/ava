@@ -13,10 +13,46 @@ test('must be called with new', function (t) {
 	t.end();
 });
 
+test('nested tests and hooks aren\'t allowed', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	runner.test(function () {
+		t.throws(function () {
+			runner.test(noop);
+		}, {message: 'All tests and hooks must be declared synchronously in your ' +
+		'test file, and cannot be nested within other tests or hooks.'});
+	});
+
+	runner.run({}).then(function () {
+		t.end();
+	});
+});
+
+test('tests must be declared synchronously', function (t) {
+	t.plan(1);
+
+	var runner = new Runner();
+
+	runner.test(function () {
+		return Promise.resolve();
+	});
+
+	runner.run({});
+
+	t.throws(function () {
+		runner.test(noop);
+	}, {message: 'All tests and hooks must be declared synchronously in your ' +
+	'test file, and cannot be nested within other tests or hooks.'});
+
+	t.end();
+});
+
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
-	runner.test(function foo(a) {
+	runner.test('foo', function (a) {
 		a.pass();
 	});
 
@@ -159,6 +195,9 @@ test('test types and titles', function (t) {
 	runner.afterEach(named);
 	runner.test('test', fn);
 
+	// See https://github.com/avajs/ava/issues/1027
+	var supportsFunctionNames = noop.name === 'noop';
+
 	var tests = [
 		{
 			type: 'before',
@@ -166,7 +205,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'beforeEach',
-			title: 'beforeEach for test'
+			title: supportsFunctionNames ? 'fn for test' : 'beforeEach for test'
 		},
 		{
 			type: 'test',
@@ -178,7 +217,7 @@ test('test types and titles', function (t) {
 		},
 		{
 			type: 'after',
-			title: 'after'
+			title: supportsFunctionNames ? 'fn' : 'after'
 		}
 	];
 
