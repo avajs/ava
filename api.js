@@ -127,7 +127,11 @@ Api.prototype._setupPrecompiler = function (files) {
 	this.options.cacheDir = cacheDir;
 
 	var isPowerAssertEnabled = this.options.powerAssert !== false;
-	this.precompiler = new CachingPrecompiler(cacheDir, this.options.babelConfig, isPowerAssertEnabled);
+	this.precompiler = new CachingPrecompiler({
+		path: cacheDir,
+		babel: this.options.babelConfig,
+		powerAssert: isPowerAssertEnabled
+	});
 };
 
 Api.prototype._run = function (files, options) {
