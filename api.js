@@ -12,7 +12,6 @@ var AvaFiles = require('ava-files');
 var autoBind = require('auto-bind');
 var Promise = require('bluebird');
 var getPort = require('get-port');
-var pkgConf = require('pkg-conf');
 var arrify = require('arrify');
 var ms = require('ms');
 var CachingPrecompiler = require('./lib/caching-precompiler');
@@ -53,11 +52,9 @@ function Api(options) {
 	EventEmitter.call(this);
 	autoBind(this);
 
-	var conf = pkgConf.sync('ava');
 	this.options = objectAssign({
 		cwd: process.cwd(),
 		resolveTestsFrom: process.cwd(),
-		pkgDir: path.dirname(pkgConf.filepath(conf)),
 		match: []
 	}, options);
 
