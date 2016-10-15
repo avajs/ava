@@ -315,7 +315,6 @@ function generateTests(prefix, apiCreator) {
 	test(prefix + 'run from package.json folder by default', function (t) {
 		t.plan(1);
 		var api = apiCreator();
-		console.log('api.options: ', api.options);
 
 		return api.run([path.join(__dirname, 'fixture/process-cwd-default.js')])
 			.then(function (result) {
@@ -329,11 +328,8 @@ function generateTests(prefix, apiCreator) {
 		var fullPath = path.join(__dirname, 'fixture/process-cwd-pkgDir.js');
 
 		var api = apiCreator({pkgDir: path.dirname(fullPath)});
-		console.log('api.options: ', api.options);
 		return api.run([fullPath])
 			.then(function (result) {
-				//console.log('Result: ', result);
-				//console.log('fullPath: ', fullPath);
 				t.is(result.passCount, 1);
 			});
 	});
