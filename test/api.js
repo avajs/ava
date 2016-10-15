@@ -76,6 +76,17 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+	test(prefix + 'precompile helpers', function (t) {
+		t.plan(1);
+
+		var api = apiCreator();
+
+		return api.run([path.join(__dirname, 'fixture/precompile-helpers/test/test.js')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+
 	test(prefix + 'generators support', function (t) {
 		t.plan(1);
 
@@ -719,7 +730,10 @@ function generateTests(prefix, apiCreator) {
 	test(prefix + 'caching is enabled by default', function (t) {
 		t.plan(3);
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
-		var api = apiCreator();
+
+		var api = apiCreator({
+			resolveTestsFrom: path.join(__dirname, 'fixture/caching')
+		});
 
 		return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(function () {
@@ -742,7 +756,11 @@ function generateTests(prefix, apiCreator) {
 	test(prefix + 'caching can be disabled', function (t) {
 		t.plan(1);
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
-		var api = apiCreator({cacheEnabled: false});
+
+		var api = apiCreator({
+			resolveTestsFrom: path.join(__dirname, 'fixture/caching'),
+			cacheEnabled: false
+		});
 
 		return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(function () {
