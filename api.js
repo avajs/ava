@@ -14,6 +14,7 @@ var arrify = require('arrify');
 var ms = require('ms');
 var RunStatus = require('./lib/run-status');
 var AvaError = require('./lib/ava-error');
+var babelConfig = require('./lib/babel/config');
 var fork = require('./lib/fork');
 
 function resolveModules(modules) {
@@ -56,6 +57,7 @@ function Api(options) {
 	}, options);
 
 	this.options.require = resolveModules(this.options.require);
+	this.options.babel = babelConfig.build(options.babel);
 }
 
 util.inherits(Api, EventEmitter);
