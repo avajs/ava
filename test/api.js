@@ -9,6 +9,7 @@ var Api = require('../api');
 var testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
 
 var conf = pkgConf.sync('ava');
+var pkgDir = path.dirname(pkgConf.filepath(conf));
 
 test('must be called with new', function (t) {
 	t.throws(function () {
@@ -21,7 +22,7 @@ test('must be called with new', function (t) {
 generateTests('Without Pool: ', function (options) {
 	options = options || {};
 	options.powerAssert = true;
-	options.pkgDir = options.pkgDir || path.dirname(pkgConf.filepath(conf));
+	options.pkgDir = options.pkgDir || pkgDir;
 	return new Api(options);
 });
 
@@ -67,7 +68,7 @@ generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
 	options.powerAssert = true;
-	options.pkgDir = options.pkgDir || path.dirname(pkgConf.filepath(conf));
+	options.pkgDir = options.pkgDir || pkgDir;
 	return new Api(options);
 });
 
