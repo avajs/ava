@@ -3,8 +3,6 @@ var EventEmitter = require('events').EventEmitter;
 var path = require('path');
 var util = require('util');
 var commonPathPrefix = require('common-path-prefix');
-var uniqueTempDir = require('unique-temp-dir');
-var findCacheDir = require('find-cache-dir');
 var objectAssign = require('object-assign');
 var resolveCwd = require('resolve-cwd');
 var debounce = require('lodash.debounce');
@@ -14,7 +12,6 @@ var Promise = require('bluebird');
 var getPort = require('get-port');
 var arrify = require('arrify');
 var ms = require('ms');
-var CachingPrecompiler = require('./lib/caching-precompiler');
 var RunStatus = require('./lib/run-status');
 var AvaError = require('./lib/ava-error');
 var fork = require('./lib/fork');
@@ -65,15 +62,7 @@ util.inherits(Api, EventEmitter);
 module.exports = Api;
 
 Api.prototype._runFile = function (file, runStatus, execArgv) {
-	var hash = this.precompiler.precompileFile(file);
-	var precompiled = {};
-	precompiled[file] = hash;
-
-	var options = objectAssign({}, this.options, {
-		precompiled: precompiled
-	});
-
-	var emitter = fork(file, options, execArgv);
+	var emitter = fork(file, this.options, execArgv);
 	runStatus.observeFork(emitter);
 
 	return emitter;
@@ -113,23 +102,6 @@ Api.prototype._cancelTimeout = function (runStatus) {
 	runStatus._restartTimer.cancel();
 };
 
-Api.prototype._setupPrecompiler = function (files) {
-	var isCacheEnabled = this.options.cacheEnabled !== false;
-	var cacheDir = uniqueTempDir();
-
-	if (isCacheEnabled) {
-		cacheDir = findCacheDir({
-			name: 'ava',
-			files: files
-		});
-	}
-
-	this.options.cacheDir = cacheDir;
-
-	var isPowerAssertEnabled = this.options.powerAssert !== false;
-	this.precompiler = new CachingPrecompiler(cacheDir, this.options.babelConfig, isPowerAssertEnabled);
-};
-
 Api.prototype._run = function (files, options) {
 	options = options || {};
 
@@ -147,8 +119,6 @@ Api.prototype._run = function (files, options) {
 
 		return Promise.resolve(runStatus);
 	}
-
-	this._setupPrecompiler(files);
 
 	if (this.options.timeout) {
 		this._setupTimeout(runStatus);
