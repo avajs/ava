@@ -143,6 +143,7 @@
     "observable-to-promise": "^0.4.0",
     "option-chain": "^0.1.0",
     "package-hash": "^1.1.0",
+    "pirates": "^2.1.2",
     "pkg-conf": "^1.0.1",
     "plur": "^2.0.0",
     "power-assert-context-formatter": "^1.0.4",
