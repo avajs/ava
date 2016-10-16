@@ -363,7 +363,7 @@ test('prefers local version of ava', function (t) {
 	}
 
 	proxyquire('../cli', {
-		'debug': debugStub,
+		debug: debugStub,
 		'resolve-cwd': resolveCwdStub
 	});
 
