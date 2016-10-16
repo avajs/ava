@@ -106,7 +106,7 @@ events.on('results', function (data) {
 	if (process.exit) {
 		// Delay is For Node 0.10 which emits uncaughtExceptions async.
 		setTimeout(function () {
-			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line xo/no-process-exit
+			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
 		}, 20);
 	}
 });
@@ -133,5 +133,5 @@ if (console.profile) {
 }
 
 setImmediate(function () {
-	require('./lib/test-worker');
+	require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
 });

@@ -1,5 +1,5 @@
 'use strict';
-require('loud-rejection');
+require('loud-rejection'); // eslint-disable-line import/no-unassigned-import
 var path = require('path');
 var childProcess = require('child_process');
 var chalk = require('chalk');

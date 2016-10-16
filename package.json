@@ -184,7 +184,7 @@
     "source-map-fixtures": "^2.1.0",
     "tap": "^7.1.2",
     "touch": "^1.0.0",
-    "xo": "^0.16.0",
+    "xo": "^0.17.0",
     "zen-observable": "^0.3.0"
   },
   "xo": {
