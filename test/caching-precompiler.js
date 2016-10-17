@@ -25,7 +25,7 @@ sinon.spy(babel, 'transform');
 
 test('creation with new', function (t) {
 	var tempDir = uniqueTempDir();
-	var precompiler = new CachingPrecompiler(tempDir, null);
+	var precompiler = new CachingPrecompiler({path: tempDir});
 	t.is(precompiler.cacheDirPath, tempDir);
 	t.end();
 });
@@ -33,14 +33,14 @@ test('creation with new', function (t) {
 test('must be called with new', function (t) {
 	t.throws(function () {
 		var cachingPrecompiler = CachingPrecompiler;
-		cachingPrecompiler(uniqueTempDir(), null);
+		cachingPrecompiler({path: uniqueTempDir()});
 	}, {message: 'Class constructor CachingPrecompiler cannot be invoked without \'new\''});
 	t.end();
 });
 
 test('adds files and source maps to the cache directory as needed', function (t) {
 	var tempDir = uniqueTempDir();
-	var precompiler = new CachingPrecompiler(tempDir, null);
+	var precompiler = new CachingPrecompiler({path: tempDir});
 
 	t.false(fs.existsSync(tempDir), 'cache directory is not created before it is needed');
 
@@ -56,7 +56,7 @@ test('adds files and source maps to the cache directory as needed', function (t)
 
 test('adds a map file comment to the cached files', function (t) {
 	var tempDir = uniqueTempDir();
-	var precompiler = new CachingPrecompiler(tempDir, null);
+	var precompiler = new CachingPrecompiler({path: tempDir});
 
 	precompiler.precompileFile(fixture('es2015.js'));
 
@@ -84,7 +84,11 @@ test('adds a map file comment to the cached files', function (t) {
 
 test('uses default babel options when babelConfig === "default"', function (t) {
 	var tempDir = uniqueTempDir();
-	var precompiler = new CachingPrecompiler(tempDir, 'default');
+	var precompiler = new CachingPrecompiler({
+		path: tempDir,
+		babel: 'default'
+	});
+
 	babel.transform.reset();
 
 	precompiler.precompileFile(fixture('es2015.js'));
@@ -104,7 +108,11 @@ test('uses default babel options when babelConfig === "default"', function (t) {
 
 test('allows babel config from package.json/babel when babelConfig === "inherit"', function (t) {
 	var tempDir = uniqueTempDir();
-	var precompiler = new CachingPrecompiler(tempDir, 'inherit');
+	var precompiler = new CachingPrecompiler({
+		path: tempDir,
+		babel: 'inherit'
+	});
+
 	babel.transform.reset();
 
 	precompiler.precompileFile(fixture('es2015.js'));
@@ -122,7 +130,8 @@ test('allows babel config from package.json/babel when babelConfig === "inherit"
 
 test('does not modify plugins array in babelConfig', function (t) {
 	var plugins = [];
-	var precompiler = new CachingPrecompiler(uniqueTempDir(), {
+	var precompiler = new CachingPrecompiler({
+		path: uniqueTempDir(),
 		plugins: plugins
 	});
 
