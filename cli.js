@@ -138,6 +138,7 @@ var api = new Api({
 	match: arrify(cli.flags.match),
 	babelConfig: conf.babel,
 	resolveTestsFrom: cli.input.length === 0 ? pkgDir : process.cwd(),
+	pkgDir: pkgDir,
 	timeout: cli.flags.timeout,
 	concurrency: cli.flags.concurrency ? parseInt(cli.flags.concurrency, 10) : 0
 });

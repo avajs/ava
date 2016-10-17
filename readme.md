@@ -247,7 +247,7 @@ If you're unable to use promises or observables, you may enable "callback mode" 
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
-Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
+AVA tries to run test files with their current working directory set to the directory that contains your `package.json` file.
 
 ### Creating tests
 
