@@ -14,6 +14,7 @@ var arrify = require('arrify');
 var ms = require('ms');
 var RunStatus = require('./lib/run-status');
 var AvaError = require('./lib/ava-error');
+var babelBundle = require('./lib/babel/bundle');
 var babelConfig = require('./lib/babel/config');
 var fork = require('./lib/fork');
 
@@ -76,7 +77,10 @@ Api.prototype.run = function (files, options) {
 	return new AvaFiles({cwd: this.options.resolveTestsFrom, files: files})
 		.findTestFiles()
 		.then(function (files) {
-			return self._run(files, options);
+			return babelBundle.create(self.options.babel).then(function (bundle) {
+				self.options.bundle = bundle;
+				return self._run(files, options);
+			});
 		});
 };
 
