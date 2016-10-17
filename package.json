@@ -184,22 +184,13 @@
     "source-map-fixtures": "^2.1.0",
     "tap": "^7.1.2",
     "touch": "^1.0.0",
-    "xo": "*",
+    "xo": "^0.16.0",
     "zen-observable": "^0.3.0"
   },
   "xo": {
     "rules": {
-      "import/newline-after-import": 0
-    },
-    "overrides": [
-      {
-        "files": [
-          "test/**/*.js"
-        ],
-        "rules": {
-          "max-lines": 0
-        }
-      }
-    ]
+      "import/newline-after-import": "off",
+      "no-use-extend-native/no-use-extend-native": "off"
+    }
   }
 }

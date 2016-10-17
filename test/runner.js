@@ -52,7 +52,7 @@ test('tests must be declared synchronously', function (t) {
 test('runner emits a "test" event', function (t) {
 	var runner = new Runner();
 
-	runner.test(function foo(a) {
+	runner.test('foo', function (a) {
 		a.pass();
 	});
 

@@ -76,7 +76,7 @@ if (process.argv.length === 2) {
 		}
 		currentArgs.push(arg);
 	});
-	if (currentArgs.length) {
+	if (currentArgs.length > 0) {
 		list.push({
 			args: currentArgs,
 			shouldFail: shouldFail

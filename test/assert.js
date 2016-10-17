@@ -259,7 +259,7 @@ test('.deepEqual()', function (t) {
 	});
 
 	t.throws(function () {
-		assert.deepEqual(function a() {}, function a() {});
+		assert.deepEqual(function () {}, function () {});
 	});
 
 	t.doesNotThrow(function () {
