@@ -123,6 +123,14 @@ test('improper use of t.throws from within an async callback will be reported to
 	});
 });
 
+test('improper use of t.throws (with an awaited argument) will be reported to the console', function (t) {
+	execCli('fixture/improper-t-throws-await-argument.js', function (err, stdout, stderr) {
+		t.ok(err);
+		t.match(stderr, /Improper usage of t\.throws detected at .*improper-t-throws-await-argument.js \(5:10\)/);
+		t.end();
+	});
+});
+
 test('babel require hook only applies to the test file', function (t) {
 	t.plan(3);
 
