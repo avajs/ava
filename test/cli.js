@@ -1,4 +1,5 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
 var childProcess = require('child_process');
 var test = require('tap').test;
@@ -7,6 +8,7 @@ var getStream = require('get-stream');
 var figures = require('figures');
 var arrify = require('arrify');
 var chalk = require('chalk');
+var mkdirp = require('mkdirp');
 var touch = require('touch');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
@@ -367,4 +369,22 @@ test('prefers local version of ava', function (t) {
 
 	t.ok(debugSpy.calledWith('Using local install of AVA'));
 	t.end();
+});
+
+test('workers ensure test files load the same version of ava', function (t) {
+	var target = path.join(__dirname, 'fixture', 'ava-paths', 'target');
+
+	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
+	var targetInstall = path.join(target, 'node_modules', 'ava');
+	mkdirp.sync(targetInstall);
+	fs.writeFileSync(
+		path.join(targetInstall, 'index.js'),
+		fs.readFileSync(path.join(__dirname, '..', 'index.js'))
+	);
+
+	var testFile = path.join(target, 'test.js');
+	execCli([testFile], {dirname: path.join('fixture', 'ava-paths', 'cwd')}, function (err) {
+		t.ifError(err);
+		t.end();
+	});
 });
