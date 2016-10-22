@@ -543,3 +543,53 @@ test('stderr and stdout should call _update', function (t) {
 	reporter._update.restore();
 	t.end();
 });
+
+test('shows cumulative test run duration on first line of output', function (t) {
+	var clock = lolex.install(0);
+	var reporter = miniReporter();
+
+	reporter.failCount = 1;
+	reporter.skipCount = 1;
+
+	clock.tick('07');
+
+	var actualOutput = reporter.finish({
+		errors: [{}, {}],
+		testRunElapsed: Date.now()
+	});
+	var expectedOutput = [
+		'\n  ' + colors.error('1 failed') + ' (7s)',
+		'  ' + colors.skip('1 skipped'),
+		'\n'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('shows cumulative test run duration during watch', function (t) {
+	var startDate = new Date(2014, 11, 19, 17, 12, 5, 200);
+	var clock = lolex.install(startDate.getTime());
+	var time = ' ' + chalk.grey.dim('[17:19:12]');
+	var reporter = _miniReporter({watching: true});
+
+	t.is(reporter.start(), ' \n ' + graySpinner + ' ');
+	reporter.clearInterval();
+
+	clock.tick('07:07');
+
+	reporter.passCount = 1;
+	reporter.todoCount = 1;
+
+	var actualOutput = reporter.finish({
+		testRunElapsed: Date.now() - startDate
+	});
+	var expectedOutput = [
+		'\n  ' + colors.pass('1 passed') + time + ' (7.117m)',
+		'  ' + colors.todo('1 todo'),
+		'\n'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
