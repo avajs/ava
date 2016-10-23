@@ -4,8 +4,12 @@ var fs = require('fs');
 var figures = require('figures');
 var rimraf = require('rimraf');
 var test = require('tap').test;
+var pkgConf = require('pkg-conf');
 var Api = require('../api');
 var testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
+
+var conf = pkgConf.sync('ava');
+var pkgDir = path.dirname(pkgConf.filepath(conf));
 
 test('must be called with new', function (t) {
 	t.throws(function () {
@@ -18,6 +22,7 @@ test('must be called with new', function (t) {
 generateTests('Without Pool: ', function (options) {
 	options = options || {};
 	options.powerAssert = true;
+	options.pkgDir = options.pkgDir || pkgDir;
 	return new Api(options);
 });
 
@@ -63,6 +68,7 @@ generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
 	options.powerAssert = true;
+	options.pkgDir = options.pkgDir || pkgDir;
 	return new Api(options);
 });
 
@@ -307,12 +313,23 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'change process.cwd() to a test\'s directory', function (t) {
+	test(prefix + 'run from package.json folder by default', function (t) {
 		t.plan(1);
-
 		var api = apiCreator();
 
-		return api.run([path.join(__dirname, 'fixture/process-cwd.js')])
+		return api.run([path.join(__dirname, 'fixture/process-cwd-default.js')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+
+	test(prefix + 'change process.cwd() to a test\'s directory with pkgDir', function (t) {
+		t.plan(1);
+
+		var fullPath = path.join(__dirname, 'fixture/process-cwd-pkgdir.js');
+		var api = apiCreator({pkgDir: path.dirname(fullPath)});
+
+		return api.run([fullPath])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});

@@ -60,8 +60,14 @@ var cacheDir = findCacheDir({
 	name: 'ava',
 	files: [file]
 }) || uniqueTempDir();
+
+var precompiler = new CachingPrecompiler({
+	path: cacheDir,
+	babel: conf.babel
+});
+
 var precompiled = {};
-precompiled[file] = new CachingPrecompiler(cacheDir, conf.babel).precompileFile(file);
+precompiled[file] = precompiler.precompileFile(file);
 
 var opts = {
 	file: file,
