@@ -10,6 +10,7 @@ install:
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
+  - npm prune
 matrix:
   fast_finish: true
 build: off
