@@ -72,7 +72,7 @@ function execCli(args, opts, cb) {
 }
 
 test('disallow invalid babel config shortcuts', function (t) {
-	execCli('es2015.js', {dirname: 'fixture/invalid-babel-config'}, function (err, stdout) {
+	execCli('es2015.js', {dirname: 'fixture/invalid-babel-config'}, function (err, stdout, stderr) {
 		t.ok(err);
 
 		var expectedOutput = '\n  ';
@@ -80,7 +80,7 @@ test('disallow invalid babel config shortcuts', function (t) {
 		expectedOutput += ' See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
 		expectedOutput += '\n';
 
-		t.is(stdout, expectedOutput);
+		t.is(stderr, expectedOutput);
 		t.end();
 	});
 });
@@ -365,7 +365,7 @@ test('prefers local version of ava', function (t) {
 	}
 
 	proxyquire('../cli', {
-		'debug': debugStub,
+		debug: debugStub,
 		'resolve-cwd': resolveCwdStub
 	});
 

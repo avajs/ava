@@ -53,8 +53,8 @@ group('chokidar', function (beforeEach, test, group) {
 	function proxyWatcher(opts) {
 		return proxyquire.noCallThru().load('../lib/watcher', opts ||
 			{
-				'chokidar': chokidar,
-				'debug': function (name) {
+				chokidar: chokidar,
+				debug: function (name) {
 					return function () {
 						var args = [name];
 						args.push.apply(args, arguments);
