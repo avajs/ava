@@ -7,7 +7,7 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - set AVA_APPVEYOR=true
-  - npm install -g npm@latest
+  - npm install -g npm@3.x-latest
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
   - npm prune
