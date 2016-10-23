@@ -1,23 +1,24 @@
 environment:
   matrix:
     - nodejs_version: '6'
-    - nodejs_version: '5'
     - nodejs_version: '4'
     - nodejs_version: '0.12'
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - set AVA_APPVEYOR=true
-  - npm install -g npm@latest || (timeout 30 && npm install -g npm@latest)
+  - npm install -g npm@3.x-latest
   - set PATH=%APPDATA%\npm;%PATH%
-  - npm install || (timeout 30 && npm install)
+  - npm install
+  - npm prune
 matrix:
   fast_finish: true
 build: off
-version: '{build}'
 shallow_clone: true
-clone_depth: 1
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
 test_script:
   - node --version
   - npm --version
-  - npm run test-win || (timeout 30 && npm run test-win)
+  - npm run test-win
