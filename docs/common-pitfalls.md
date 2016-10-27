@@ -63,6 +63,16 @@ test(async t => {
 
 AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
 
+### Why is the power-assert information not shown?
+
+Ensure that the first parameter passed into your test is named `t`. This is a byproduct of the way power-assert works. It uses a pattern matching scheme that makes it easier for implementors to wrap any assertion library with power-assert goodness without having to understand the ES AST at all. See [#1031](https://github.com/avajs/ava/issues/1031) for more details.
+
+```js
+test(t => {
+	t.is(1, 1);
+}
+```
+
 ---
 
 Is your problem not listed here? Submit a pull request or comment on [this issue](https://github.com/avajs/ava/issues/404).
