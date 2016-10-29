@@ -150,6 +150,7 @@ $ ava --help
     --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
     --timeout, -T      Set global timeout
     --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
+    --no-color         Disable color output
 
   Examples
     ava
@@ -228,7 +229,8 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "require": [
       "babel-register"
     ],
-    "babel": "inherit"
+    "babel": "inherit",
+    "noColor": true
   }
 }
 ```
