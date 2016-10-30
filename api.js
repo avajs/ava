@@ -118,10 +118,13 @@ Api.prototype._setupPrecompiler = function (files) {
 	var cacheDir = uniqueTempDir();
 
 	if (isCacheEnabled) {
-		cacheDir = findCacheDir({
+		var foundDir = findCacheDir({
 			name: 'ava',
 			files: files
 		});
+		if (foundDir !== null) {
+			cacheDir = foundDir;
+		}
 	}
 
 	this.options.cacheDir = cacheDir;

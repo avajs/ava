@@ -12,6 +12,8 @@ var mkdirp = require('mkdirp');
 var touch = require('touch');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
+var uniqueTempDir = require('unique-temp-dir');
+var execa = require('execa');
 
 var cliPath = path.join(__dirname, '../cli.js');
 
@@ -369,6 +371,17 @@ test('prefers local version of ava', function (t) {
 
 	t.ok(debugSpy.calledWith('Using local install of AVA'));
 	t.end();
+});
+
+test('use current working directory if `package.json` is not found', function () {
+	var cwd = uniqueTempDir({create: true});
+	var testFilePath = path.join(cwd, 'test.js');
+	var cliPath = require.resolve('../cli.js');
+	var avaPath = require.resolve('../');
+
+	fs.writeFileSync(testFilePath, 'import test from ' + JSON.stringify(avaPath) + ';\ntest(t => { t.pass(); });');
+
+	return execa(process.execPath, [cliPath], {cwd: cwd});
 });
 
 test('workers ensure test files load the same version of ava', function (t) {
