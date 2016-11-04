@@ -63,6 +63,16 @@ test(async t => {
 
 AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
 
+### Why are the enhanced assertion messages not shown?
+
+Ensure that the first parameter passed into your test is named `t`. This is a requirement of [`power-assert`](https://github.com/power-assert-js/power-assert), the library that provides the enhanced messages.
+
+```js
+test(t => {
+	t.is(1, 1);
+});
+```
+
 ---
 
 Is your problem not listed here? Submit a pull request or comment on [this issue](https://github.com/avajs/ava/issues/404).
