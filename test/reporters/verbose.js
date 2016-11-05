@@ -11,6 +11,9 @@ var verboseReporter = require('../../lib/reporters/verbose');
 var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
+Object.keys(colors).forEach(function (key) {
+	colors[key].enabled = true;
+});
 
 // tap doesn't emulate a tty environment and thus process.stdout.columns is
 // undefined. Expect an 80 character wide line to be rendered.

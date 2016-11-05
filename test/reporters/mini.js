@@ -12,6 +12,9 @@ var colors = require('../../lib/colors');
 var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
+Object.keys(colors).forEach(function (key) {
+	colors[key].enabled = true;
+});
 
 var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
 
