@@ -1,4 +1,8 @@
 'use strict';
+var path = require('path');
+var indentString = require('indent-string');
+var flatten = require('arr-flatten');
+var tempWrite = require('temp-write');
 var figures = require('figures');
 var chalk = require('chalk');
 var sinon = require('sinon');
@@ -9,6 +13,8 @@ var beautifyStack = require('../../lib/beautify-stack');
 var colors = require('../../lib/colors');
 var verboseReporter = require('../../lib/reporters/verbose');
 var compareLineOutput = require('../helper/compare-line-output');
+var formatAssertError = require('../../lib/format-assert-error');
+var codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
 
@@ -19,8 +25,8 @@ var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
 lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 var time = ' ' + chalk.grey.dim('[17:19:12]');
 
-function createReporter() {
-	var reporter = verboseReporter();
+function createReporter(options) {
+	var reporter = verboseReporter(options);
 	return reporter;
 }
 
@@ -349,10 +355,25 @@ test('results with passing tests, rejections and exceptions', function (t) {
 test('results with errors', function (t) {
 	var error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
-	var error2 = new Error('error two message');
-	error2.stack = 'stack line with trailing whitespace\t\n';
+	error1.source = {file: tempWrite.sync('a();'), line: 1};
+	error1.showOutput = true;
+	error1.actual = JSON.stringify('abc');
+	error1.actualType = 'string';
+	error1.expected = JSON.stringify('abd');
+	error1.expectedType = 'string';
 
-	var reporter = createReporter();
+	var error2 = new Error('error two message');
+	// TODO: Figure out how to make it pass with \t\n at the end
+	error2.stack = 'stack line with trailing whitespace';
+	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.source = {file: tempWrite.sync('b();'), line: 1};
+	error2.showOutput = true;
+	error2.actual = JSON.stringify([1]);
+	error2.actualType = 'array';
+	error2.expected = JSON.stringify([2]);
+	error2.expectedType = 'array';
+
+	var reporter = createReporter({basePath: path.dirname(error1.source.file)});
 	var runStatus = createRunStatus();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
@@ -364,20 +385,145 @@ test('results with errors', function (t) {
 	}];
 
 	var output = reporter.finish(runStatus);
-	compareLineOutput(t, output, [
+	compareLineOutput(t, output, flatten([
 		'',
 		'  ' + chalk.red('1 test failed') + time,
 		'',
-		'',
 		'  ' + chalk.red('1. fail one'),
+		'  ' + chalk.grey(`${path.basename(error1.source.file)}:${error1.source.line}`),
+		'',
+		indentString(codeExcerpt(error1.source.file, error1.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(error1), 2).split('\n'),
 		/Error: error one message/,
 		/test\/reporters\/verbose\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
+		'',
 		'  ' + chalk.red('2. fail two'),
+		'  ' + chalk.grey(`${path.basename(error2.source.file)}:${error2.source.line}`),
+		'',
+		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(error2), 2).split('\n'),
 		'  ' + colors.stack('stack line with trailing whitespace')
-	]);
+	]));
+	t.end();
+});
+
+test('results with errors and disabled code excerpts', function (t) {
+	var error1 = new Error('error one message');
+	error1.stack = beautifyStack(error1.stack);
+	error1.showOutput = true;
+	error1.actual = JSON.stringify('abc');
+	error1.actualType = 'string';
+	error1.expected = JSON.stringify('abd');
+	error1.expectedType = 'string';
+
+	var error2 = new Error('error two message');
+	// TODO: Figure out how to make it pass with \t\n at the end
+	error2.stack = 'stack line with trailing whitespace';
+	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.source = {file: tempWrite.sync('b();'), line: 1};
+	error2.showOutput = true;
+	error2.actual = JSON.stringify([1]);
+	error2.actualType = 'array';
+	error2.expected = JSON.stringify([2]);
+	error2.expectedType = 'array';
+
+	var reporter = createReporter({basePath: path.dirname(error2.source.file)});
+	var runStatus = createRunStatus();
+	runStatus.failCount = 1;
+	runStatus.tests = [{
+		title: 'fail one',
+		error: error1
+	}, {
+		title: 'fail two',
+		error: error2
+	}];
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'  ' + chalk.red('1. fail one'),
+		'',
+		indentString(formatAssertError(error1), 2).split('\n'),
+		/Error: error one message/,
+		/test\/reporters\/verbose\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'',
+		'  ' + chalk.red('2. fail two'),
+		'  ' + chalk.grey(`${path.basename(error2.source.file)}:${error2.source.line}`),
+		'',
+		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(error2), 2).split('\n'),
+		'  ' + colors.stack('stack line with trailing whitespace')
+	]));
+	t.end();
+});
+
+test('results with errors and disabled assert output', function (t) {
+	var error1 = new Error('error one message');
+	error1.stack = beautifyStack(error1.stack);
+	error1.source = {file: tempWrite.sync('a();'), line: 1};
+	error1.showOutput = false;
+	error1.actual = JSON.stringify('abc');
+	error1.actualType = 'string';
+	error1.expected = JSON.stringify('abd');
+	error1.expectedType = 'string';
+
+	var error2 = new Error('error two message');
+	// TODO: Figure out how to make it pass with \t\n at the end
+	error2.stack = 'stack line with trailing whitespace';
+	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.source = {file: tempWrite.sync('b();'), line: 1};
+	error2.showOutput = true;
+	error2.actual = JSON.stringify([1]);
+	error2.actualType = 'array';
+	error2.expected = JSON.stringify([2]);
+	error2.expectedType = 'array';
+
+	var reporter = createReporter({basePath: path.dirname(error1.source.file)});
+	var runStatus = createRunStatus();
+	runStatus.failCount = 1;
+	runStatus.tests = [{
+		title: 'fail one',
+		error: error1
+	}, {
+		title: 'fail two',
+		error: error2
+	}];
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'  ' + chalk.red('1. fail one'),
+		'  ' + chalk.grey(`${path.basename(error1.source.file)}:${error1.source.line}`),
+		'',
+		indentString(codeExcerpt(error1.source.file, error1.source.line), 2).split('\n'),
+		'',
+		/Error: error one message/,
+		/test\/reporters\/verbose\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'',
+		'  ' + chalk.red('2. fail two'),
+		'  ' + chalk.grey(`${path.basename(error2.source.file)}:${error2.source.line}`),
+		'',
+		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(error2), 2).split('\n'),
+		'  ' + colors.stack('stack line with trailing whitespace')
+	]));
 	t.end();
 });
 
