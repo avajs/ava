@@ -192,7 +192,8 @@
   "xo": {
     "rules": {
       "import/newline-after-import": "off",
-      "no-use-extend-native/no-use-extend-native": "off"
+      "no-use-extend-native/no-use-extend-native": "off",
+      "no-useless-escape": "off"
     }
   }
 }
