@@ -185,6 +185,8 @@
     "source-map-fixtures": "^2.1.0",
     "tap": "^8.0.0",
     "touch": "^1.0.0",
+    "ts-node": "^1.6.0",
+    "typescript": "^2.0.3",
     "xo": "^0.17.0",
     "zen-observable": "^0.3.0"
   },
