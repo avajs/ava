@@ -1,7 +1,5 @@
 # Debugging tests with WebStorm
 
-**Not yet. Requires the unreleased AVA 0.17.0**
-
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-webstorm.md)
 
 Starting with version 2016.2, [WebStorm](https://www.jetbrains.com/webstorm/) and other JetBrains IDEs (IntelliJ IDEA Ultimate, PHPStorm, PyCharm Professional, and RubyMine with installed Node.js plugin) allow you to debug AVA tests.
