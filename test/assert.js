@@ -1,6 +1,7 @@
 'use strict';
 var test = require('tap').test;
 var Promise = require('bluebird');
+var sinon = require('sinon');
 var assert = require('../lib/assert');
 
 test('.pass()', t => {
@@ -487,6 +488,73 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 	t.doesNotThrow(() => {
 		assert.deepEqual(a, b);
 	});
+
+	t.end();
+});
+
+test('snapshot makes a snapshot using a library and global options', function (t) {
+	var saveSpy = sinon.spy();
+	var state = {
+		save: saveSpy
+	};
+	var stateStub = sinon.stub().returns(state);
+	var matchStub = sinon.stub().returns({
+		pass: true
+	});
+
+	t.plan(4);
+
+	t.doesNotThrow(function () {
+		assert.snapshot('tree', {
+			initializeSnapshotState: stateStub,
+			toMatchSnapshot: matchStub
+		}, {
+			file: 'hello/world.test.js',
+			updateSnapshots: false
+		});
+	});
+
+	t.ok(stateStub.calledWith(
+		'hello/world.test.js',
+		false,
+		'hello/__snapshots__/world.test.js.snap',
+		true
+	));
+
+	t.match(matchStub.firstCall.thisValue, {
+		currentTestName: 'HelloWorld component',
+		snapshotState: state
+	});
+
+	t.ok(saveSpy.calledOnce);
+
+	t.end();
+});
+
+test('if snapshot fails, prints a report', function (t) {
+	var saveSpy = sinon.spy();
+	var stateStub = sinon.stub().returns({
+		save: saveSpy
+	});
+	var reportStub = sinon.stub().returns('report');
+	var matchStub = sinon.stub().returns({
+		pass: false,
+		report: reportStub
+	});
+
+	t.plan(2);
+
+	t.throws(function () {
+		assert.snapshot('tree', {
+			initializeSnapshotState: stateStub,
+			toMatchSnapshot: matchStub
+		}, {
+			file: 'hello/world.test.js',
+			updateSnapshots: false
+		});
+	});
+
+	t.ok(reportStub.calledOnce);
 
 	t.end();
 });
