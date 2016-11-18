@@ -1024,6 +1024,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Testing React components](docs/recipes/react.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
+- [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 
 ## Support
 
