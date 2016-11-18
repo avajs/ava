@@ -184,6 +184,7 @@ See #874.
 
 ### Debugger-Specific Tips
 
+* [Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 * [WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Reporters
