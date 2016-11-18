@@ -18,6 +18,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Debugging](#debugging)
 - [Reporters](#reporters)
 - [Configuration](#configuration)
 - [Documentation](#documentation)
@@ -168,6 +169,23 @@ $ ava --help
 Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are *always* ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+## Debugging
+
+The AVA CLI runs tests in child processes.
+Thus to debug one must bypass it:
+
+``` console
+$ node --inspect node_modules/ava/profile.js some/test/file.js
+```
+
+In the future this bypass may not be required;
+See #874.
+
+### Debugger-Specific Tips
+
+* [Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
+* [WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Reporters
 
@@ -971,14 +989,6 @@ Each test file is run in a separate Node.js process. This allows you to change t
 Running tests concurrently comes with some challenges, doing file IO is one.
 
 Usually, serial tests create temp directories in the current test directory and clean them up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
-
-### Debugging
-
-AVA runs tests concurrently by default, which is suboptimal when you need to debug something. Instead, run tests serially with the `--serial` option:
-
-```console
-$ ava --serial
-```
 
 ### Code coverage
 
