@@ -172,19 +172,17 @@ When using `npm test`, you can pass positional arguments directly `npm test test
 
 ## Debugging
 
-The AVA CLI runs tests in child processes.
-Thus to debug one must bypass it:
+AVA runs tests in child processes, so to debug tests, you need to do this workaround:
 
-``` console
+```console
 $ node --inspect node_modules/ava/profile.js some/test/file.js
 ```
 
-In the future this bypass may not be required;
-See #874.
+In the future this bypass may not be required; See #874.
 
-### Debugger-Specific Tips
+### Debugger-specific tips
 
-* [WebStorm](docs/recipes/debugging-with-webstorm.md)
+- [WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Reporters
 
