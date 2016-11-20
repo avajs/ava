@@ -905,13 +905,38 @@ Assert that `value` is not deep equal to `expected`.
 
 Assert that `function` throws an error, or `promise` rejects with an error.
 
-`error` can be a constructor, regex, error message or validation function.
+`error` can be an error constructor, error message, regex matched against the error message, or validation function.
 
-Returns the error thrown by `function` or the rejection reason of `promise`.
+Returns the error thrown by `function` or a promise for the rejection reason of the specified `promise`.
+
+Example:
+
+```js
+const fn = () => {
+	throw new TypeError('🦄');
+};
+
+test('throws', t => {
+	const error = t.throws(() => {
+		fn();
+	}, TypeError);
+
+	t.is(error.message, '🦄');
+});
+```
+
+```js
+const promise = Promise.reject(new TypeError('🦄'));
+
+test('rejects', async t => {
+	const error = await t.throws(promise);
+	t.is(error.message, '🦄');
+});
+```
 
 ### `.notThrows(function|promise, [message])`
 
-Assert that `function` doesn't throw an `error` or `promise` resolves.
+Assert that `function` does not throw an error or that `promise` does not reject with an error.
 
 ### `.regex(contents, regex, [message])`
 
