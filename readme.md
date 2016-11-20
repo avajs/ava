@@ -181,6 +181,7 @@ $ node --inspect node_modules/ava/profile.js some/test/file.js
 
 ### Debugger-specific tips
 
+- [Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 
@@ -1030,6 +1031,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Configuring Babel](docs/recipes/babelrc.md)
 - [Testing React components](docs/recipes/react.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
+- [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Support
