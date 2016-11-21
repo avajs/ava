@@ -6,7 +6,6 @@ var test = require('tap').test;
 global.Promise = require('bluebird');
 var getStream = require('get-stream');
 var figures = require('figures');
-var arrify = require('arrify');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var touch = require('touch');
@@ -20,6 +19,10 @@ var cliPath = path.join(__dirname, '../cli.js');
 // for some reason chalk is disabled by default
 chalk.enabled = true;
 var colors = require('../lib/colors');
+
+Object.keys(colors).forEach(function (key) {
+	colors[key].enabled = true;
+});
 
 function execCli(args, opts, cb) {
 	var dirname;
@@ -43,7 +46,7 @@ function execCli(args, opts, cb) {
 	var stderr;
 
 	var processPromise = new Promise(function (resolve) {
-		child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(arrify(args)), {
+		child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(args, '--color'), {
 			cwd: dirname,
 			env: env,
 			stdio: [null, 'pipe', 'pipe']
