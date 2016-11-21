@@ -531,15 +531,15 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	t.end();
 });
 
-test('if snapshot fails, prints a report', function (t) {
+test('if snapshot fails, prints a message', function (t) {
 	var saveSpy = sinon.spy();
 	var stateStub = sinon.stub().returns({
 		save: saveSpy
 	});
-	var reportStub = sinon.stub().returns('report');
+	var messageStub = sinon.stub().returns('message');
 	var matchStub = sinon.stub().returns({
 		pass: false,
-		report: reportStub
+		message: messageStub
 	});
 
 	t.plan(2);
@@ -554,7 +554,7 @@ test('if snapshot fails, prints a report', function (t) {
 		});
 	});
 
-	t.ok(reportStub.calledOnce);
+	t.ok(messageStub.calledOnce);
 
 	t.end();
 });
