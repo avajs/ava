@@ -64,6 +64,29 @@ test('Without Pool: test files can be forced to run in exclusive mode', function
 	});
 });
 
+test('TypeScript default not supported', function (t) {
+	var api = new Api();
+
+	return api.run(
+		[path.join(__dirname, 'fixture/typescript/simple.ts')]
+	).then(function (result) {
+		t.fail('should not get result here: ' + result);
+	}).catch(function (err) {
+		t.ok('should not found ts file by default, get err: ' + err);
+	});
+});
+
+test('TypeScript supported by set `extensions`', function (t) {
+	var api = new Api({extensions: ['ts']});
+	return api.run(
+		[path.join(__dirname, 'fixture/typescript/simple.ts')]
+	).then(function (result) {
+		t.is(result.testCount, 1);
+		t.is(result.passCount, 1);
+		t.is(result.failCount, 0);
+	});
+});
+
 generateTests('With Pool: ', function (options) {
 	options = options || {};
 	options.concurrency = 2;
