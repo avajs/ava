@@ -90,7 +90,7 @@
     "arr-flatten": "^1.0.1",
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
-    "arrify": "^1.0.0",
+    "arrify": "^1.0.1",
     "auto-bind": "^0.1.0",
     "ava-files": "^0.2.0",
     "ava-init": "^0.1.0",
