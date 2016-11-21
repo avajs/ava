@@ -502,6 +502,8 @@ test('snapshot makes a snapshot using a library and global options', function (t
 		pass: true
 	});
 
+	assert.title = 'Test name';
+
 	t.plan(4);
 
 	t.doesNotThrow(function () {
@@ -522,11 +524,13 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	));
 
 	t.match(matchStub.firstCall.thisValue, {
-		currentTestName: 'HelloWorld component',
+		currentTestName: 'Test name',
 		snapshotState: state
 	});
 
 	t.ok(saveSpy.calledOnce);
+
+	delete assert.title;
 
 	t.end();
 });
