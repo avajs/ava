@@ -89,7 +89,7 @@
     "arr-flatten": "^1.0.1",
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
-    "arrify": "^1.0.0",
+    "arrify": "^1.0.1",
     "auto-bind": "^0.1.0",
     "ava-files": "^0.2.0",
     "ava-init": "^0.1.0",
@@ -159,8 +159,6 @@
     "strip-ansi": "^3.0.1",
     "strip-bom": "^2.0.0",
     "time-require": "^0.1.2",
-    "ts-node": "^1.6.0",
-    "typescript": "^2.0.3",
     "unique-temp-dir": "^1.0.0",
     "update-notifier": "^1.0.0"
   },
@@ -186,6 +184,8 @@
     "source-map-fixtures": "^2.1.0",
     "tap": "^7.1.2",
     "touch": "^1.0.0",
+    "ts-node": "^1.6.0",
+    "typescript": "^2.0.3",
     "xo": "^0.17.0",
     "zen-observable": "^0.3.0"
   },
