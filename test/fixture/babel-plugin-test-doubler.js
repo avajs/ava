@@ -1,3 +1,4 @@
+'use strict';
 /*
  A Babel plugin that causes each AVA test to be duplicated with a new title.
 
@@ -11,28 +12,31 @@
   This is used by some integration tests to validate correct handling of Babel config options.
 */
 
-function plugin(babel) {
-	var t = babel.types;
-	var anonCount = 1;
+module.exports = babel => {
+	const t = babel.types;
+	const anonCount = 1;
 
 	return {
 		visitor: {
-			CallExpression: function (path) {
-				var node = path.node;
-				var callee = node.callee;
-				var args = node.arguments;
+			CallExpression: path => {
+				const node = path.node;
+				const callee = node.callee;
+				let args = node.arguments;
+
 				if (callee.type === 'Identifier' && callee.name === 'test') {
 					if (args.length === 1) {
-						args = [t.StringLiteral('repeated test: anonymous' + anonCount++), args[0]];
+						args = [t.StringLiteral(`repeated test: anonymous${anonCount++}`), args[0]];
 					} else if (args.length === 2 && args[0].type === 'StringLiteral') {
 						if (/^repeated test/.test(args[0].value)) {
 							return;
 						}
+
 						args = args.slice();
-						args[0] = t.StringLiteral('repeated test: ' + args[0].value);
+						args[0] = t.StringLiteral(`repeated test: ${args[0].value}`);
 					} else {
-						throw new Error('the plugin does not know how to handle this call to test');
+						throw new Error('The plugin does not know how to handle this call to test');
 					}
+
 					path.insertAfter(t.CallExpression(
 						t.Identifier('test'),
 						args
@@ -41,6 +45,4 @@ function plugin(babel) {
 			}
 		}
 	};
-}
-
-module.exports = plugin;
+};

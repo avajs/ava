@@ -1,5 +1,5 @@
-import test from '../../';
 import signalExit from 'signal-exit';
+import test from '../../';
 
 test.cb('long running', t => {
 	t.plan(1);

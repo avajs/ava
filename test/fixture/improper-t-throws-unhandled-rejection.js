@@ -4,7 +4,7 @@ test.cb(t => {
 	Promise.resolve().then(() => {
 		t.throws(throwSync());
 	});
-	
+
 	setTimeout(t.end, 20);
 });
 

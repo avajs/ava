@@ -141,7 +141,7 @@ test('babel require hook only applies to the test file', t => {
 test('throwing a anonymous function will report the function to the console', t => {
 	execCli('fixture/throw-anonymous-function.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /function \(\) \{\}/);
+		t.match(stderr, /\(\) => \{\}/);
 		// TODO(jamestalmage)
 		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();

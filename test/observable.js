@@ -1,7 +1,7 @@
 'use strict';
 const test = require('tap').test;
 const Test = require('../lib/test');
-const Observable = require('./fixture/observable');
+const Observable = require('zen-observable'); // eslint-disable-line import/order
 
 function ava(fn) {
 	const a = new Test(fn);

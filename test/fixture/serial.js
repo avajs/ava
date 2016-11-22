@@ -1,6 +1,6 @@
 import test from '../../';
 
-var tests = [];
+const tests = [];
 
 test.cb('first', t => {
 	setTimeout(() => {

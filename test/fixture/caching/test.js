@@ -1,3 +1,5 @@
-import test from '../../../'
+import test from '../../../';
 
-test(t => t.true(2 + 2 === 4));
+test(t => {
+	t.true(2 + 2 === 4);
+});
