@@ -35,7 +35,7 @@ test('uses babelConfig for babel options when babelConfig is an object', t => {
 	});
 
 	const babelConfig = {
-		presets: ['stage-2', 'es2015'],
+		presets: ['stage-2', 'es2015-node4'],
 		plugins: [customPlugin]
 	};
 
@@ -50,7 +50,7 @@ test('uses babelConfig for babel options when babelConfig is an object', t => {
 	t.false(options.ast);
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
-	t.strictDeepEqual(options.presets, ['stage-2', 'es2015']);
+	t.strictDeepEqual(options.presets, ['stage-2', 'es2015-node4']);
 	t.strictDeepEqual(options.plugins, [customPlugin, setup.powerAssert, throwsHelper, setup.rewrite, transformRuntime]);
 	t.end();
 });
@@ -65,7 +65,7 @@ test('should reuse existing source maps', t => {
 	});
 
 	const babelConfig = {
-		presets: ['stage-2', 'es2015'],
+		presets: ['stage-2', 'es2015-node4'],
 		plugins: [customPlugin]
 	};
 
@@ -79,7 +79,7 @@ test('should reuse existing source maps', t => {
 	t.true(options.sourceMaps);
 	t.false(options.ast);
 	t.true('inputSourceMap' in options);
-	t.strictDeepEqual(options.presets, ['stage-2', 'es2015']);
+	t.strictDeepEqual(options.presets, ['stage-2', 'es2015-node4']);
 	t.strictDeepEqual(options.plugins, [customPlugin, setup.powerAssert, throwsHelper, setup.rewrite, transformRuntime]);
 	t.end();
 });
@@ -94,7 +94,7 @@ test('should disable power-assert when powerAssert is false', t => {
 	});
 
 	const babelConfig = {
-		presets: ['stage-2', 'es2015'],
+		presets: ['stage-2', 'es2015-node4'],
 		plugins: [customPlugin]
 	};
 
