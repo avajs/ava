@@ -13,7 +13,7 @@ test('snapshot state gets created and returned', function (t) {
 			updateSnapshots: false
 		});
 
-    t.is(result, 'state');
+		t.is(result, 'state');
 	});
 
 	t.ok(stateStub.calledWith(
@@ -31,12 +31,12 @@ test('snapshot state is returned immediately if it already exists', function (t)
 
 	t.plan(3);
 
-  snapshotState.state = 'already made state';
+	snapshotState.state = 'already made state';
 
 	t.doesNotThrow(function () {
 		var result = snapshotState.get(stateSpy);
 
-    t.is(result, 'already made state');
+		t.is(result, 'already made state');
 	});
 
 	t.false(stateSpy.called);
