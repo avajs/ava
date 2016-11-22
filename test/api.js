@@ -861,12 +861,9 @@ function generateTests(prefix, apiCreator) {
 		});
 
 		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
-			.then(
-				function (result) {
-					t.is(result.passCount, 1);
-				},
-				t.threw
-			);
+			.then(result => {
+				t.is(result.passCount, 1);
+			}, t.threw);
 	});
 
 	test(prefix + 'Default babel config doesn\'t use .babelrc', function (t) {

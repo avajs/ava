@@ -1,35 +1,37 @@
 'use strict';
 require('loud-rejection/register'); // eslint-disable-line import/no-unassigned-import
-var path = require('path');
-var childProcess = require('child_process');
-var chalk = require('chalk');
-var arrify = require('arrify');
-var Promise = require('bluebird');
-var pify = require('pify');
-var inquirer = pify(require('inquirer'), Promise);
+const path = require('path');
+const childProcess = require('child_process');
+const chalk = require('chalk');
+const arrify = require('arrify');
+const Promise = require('bluebird');
+const pify = require('pify');
+const inquirer = pify(require('inquirer'));
 
-var cwd = path.resolve(__dirname, '../../');
+const cwd = path.resolve(__dirname, '../../');
 
 function fixture(fixtureName) {
 	if (!path.extname(fixtureName)) {
 		fixtureName += '.js';
 	}
+
 	return path.join(__dirname, fixtureName);
 }
 
 function exec(args) {
-	childProcess.spawnSync(process.execPath, ['./cli.js'].concat(arrify(args)), {
-		cwd: cwd,
+	childProcess.spawnSync(process.execPath, ['cli.js'].concat(args), {
+		cwd,
 		stdio: 'inherit'
 	});
 }
 
 function run(name, args, message, question) {
-	return new Promise(function (resolve, reject) {
-		console.log(chalk.cyan('**BEGIN ' + name + '**'));
+	return new Promise((resolve, reject) => {
+		console.log(chalk.cyan(`**BEGIN ${name}**`));
 		exec(args);
-		console.log(chalk.cyan('**END ' + name + '**\n'));
+		console.log(chalk.cyan(`**END ${name}**\n`));
 		console.log(arrify(message).join('\n') + '\n');
+
 		inquirer.prompt(
 			[{
 				type: 'confirm',
@@ -37,10 +39,11 @@ function run(name, args, message, question) {
 				message: question || 'Does it appear correctly',
 				default: false
 			}],
-			function (data) {
+			data => {
 				if (!data.confirmed) {
 					reject(new Error(arrify(args).join(' ') + ' failed'));
 				}
+
 				resolve();
 			}
 		);
@@ -49,10 +52,8 @@ function run(name, args, message, question) {
 
 // thunked version of run for promise handlers
 function thenRun() {
-	var args = Array.prototype.slice.call(arguments);
-	return function () {
-		return run.apply(null, args);
-	};
+	const args = Array.prototype.slice.call(arguments);
+	return () => run.apply(null, args);
 }
 
 run(

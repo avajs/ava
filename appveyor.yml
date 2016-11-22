@@ -2,12 +2,11 @@ environment:
   matrix:
     - nodejs_version: '6'
     - nodejs_version: '4'
-    - nodejs_version: '0.12'
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - set AVA_APPVEYOR=true
-  - npm install -g npm@3.x-latest
+  - npm install --global npm
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
   - npm prune

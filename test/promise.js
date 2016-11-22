@@ -1,57 +1,57 @@
 'use strict';
-var Promise = require('bluebird');
-var test = require('tap').test;
-var Test = require('../lib/test');
+const Promise = require('bluebird');
+const test = require('tap').test;
+const Test = require('../lib/test');
 
 function ava(fn) {
-	var a = new Test(fn);
+	const a = new Test(fn);
 	a.metadata = {callback: false};
 	return a;
 }
 
 ava.cb = function (fn) {
-	var a = new Test(fn);
+	const a = new Test(fn);
 	a.metadata = {callback: true};
 	return a;
 };
 
 function pass() {
-	return new Promise(function (resolve) {
+	return new Promise(resolve => {
 		setImmediate(resolve);
 	});
 }
 
 function fail() {
-	return new Promise(function (resolve, reject) {
-		setImmediate(function () {
+	return new Promise((resolve, reject) => {
+		setImmediate(() => {
 			reject(new Error('unicorn'));
 		});
 	});
 }
 
-test('returning a promise from a legacy async fn is an error', function (t) {
-	ava.cb(function (a) {
+test('returning a promise from a legacy async fn is an error', t => {
+	ava.cb(a => {
 		a.plan(1);
 
-		return Promise.resolve(true).then(function () {
+		return Promise.resolve(true).then(() => {
 			a.pass();
 			a.end();
 		});
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.match(result.reason.message, /Do not return promises/);
 		t.end();
 	});
 });
 
-test('assertion plan is tested after returned promise resolves', function (t) {
-	var start = Date.now();
-	ava(function (a) {
+test('assertion plan is tested after returned promise resolves', t => {
+	const start = Date.now();
+	ava(a => {
 		a.plan(2);
 
-		var defer = Promise.defer();
+		const defer = Promise.defer();
 
-		setTimeout(function () {
+		setTimeout(() => {
 			defer.resolve();
 		}, 500);
 
@@ -59,7 +59,7 @@ test('assertion plan is tested after returned promise resolves', function (t) {
 		a.pass();
 
 		return defer.promise;
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.planCount, 2);
 		t.is(result.result.assertCount, 2);
@@ -68,19 +68,19 @@ test('assertion plan is tested after returned promise resolves', function (t) {
 	});
 });
 
-test('missing assertion will fail the test', function (t) {
-	ava(function (a) {
+test('missing assertion will fail the test', t => {
+	ava(a => {
 		a.plan(2);
 
-		var defer = Promise.defer();
+		const defer = Promise.defer();
 
-		setTimeout(function () {
+		setTimeout(() => {
 			a.pass();
 			defer.resolve();
 		}, 200);
 
 		return defer.promise;
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.expected, 2);
 		t.is(result.reason.actual, 1);
@@ -88,24 +88,24 @@ test('missing assertion will fail the test', function (t) {
 	});
 });
 
-test('extra assertion will fail the test', function (t) {
-	ava(function (a) {
+test('extra assertion will fail the test', t => {
+	ava(a => {
 		a.plan(2);
 
-		var defer = Promise.defer();
+		const defer = Promise.defer();
 
-		setTimeout(function () {
+		setTimeout(() => {
 			a.pass();
 			a.pass();
 		}, 200);
 
-		setTimeout(function () {
+		setTimeout(() => {
 			a.pass();
 			defer.resolve();
 		}, 500);
 
 		return defer.promise;
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.expected, 2);
 		t.is(result.reason.actual, 3);
@@ -113,13 +113,13 @@ test('extra assertion will fail the test', function (t) {
 	});
 });
 
-test('handle throws with rejected promise', function (t) {
-	ava(function (a) {
+test('handle throws with rejected promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error());
+		const promise = Promise.reject(new Error());
 		return a.throws(promise);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
@@ -127,171 +127,171 @@ test('handle throws with rejected promise', function (t) {
 });
 
 // TODO(team): This is a very slow test, and I can't figure out why we need it - James
-test('handle throws with long running rejected promise', function (t) {
-	ava(function (a) {
+test('handle throws with long running rejected promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = new Promise(function (resolve, reject) {
-			setTimeout(function () {
+		const promise = new Promise((resolve, reject) => {
+			setTimeout(() => {
 				reject(new Error('abc'));
 			}, 2000);
 		});
 
 		return a.throws(promise, /abc/);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle throws with resolved promise', function (t) {
-	ava(function (a) {
+test('handle throws with resolved promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.resolve();
+		const promise = Promise.resolve();
 		return a.throws(promise);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle throws with regex', function (t) {
-	ava(function (a) {
+test('handle throws with regex', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error('abc'));
+		const promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, /abc/);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('throws with regex will fail if error message does not match', function (t) {
-	ava(function (a) {
+test('throws with regex will fail if error message does not match', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error('abc'));
+		const promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, /def/);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle throws with string', function (t) {
-	ava(function (a) {
+test('handle throws with string', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error('abc'));
+		const promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, 'abc');
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('throws with string argument will reject if message does not match', function (t) {
-	ava(function (a) {
+test('throws with string argument will reject if message does not match', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error('abc'));
+		const promise = Promise.reject(new Error('abc'));
 		return a.throws(promise, 'def');
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('does not handle throws with string reject', function (t) {
-	ava(function (a) {
+test('does not handle throws with string reject', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject('abc');
+		const promise = Promise.reject('abc');
 		return a.throws(promise, 'abc');
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle throws with false-positive promise', function (t) {
-	ava(function (a) {
+test('handle throws with false-positive promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.resolve(new Error());
+		const promise = Promise.resolve(new Error());
 		return a.throws(promise);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle notThrows with resolved promise', function (t) {
-	ava(function (a) {
+test('handle notThrows with resolved promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.resolve();
+		const promise = Promise.resolve();
 		return a.notThrows(promise);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle notThrows with rejected promise', function (t) {
-	ava(function (a) {
+test('handle notThrows with rejected promise', t => {
+	ava(a => {
 		a.plan(1);
 
-		var promise = Promise.reject(new Error());
+		const promise = Promise.reject(new Error());
 		return a.notThrows(promise);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('assert pass', function (t) {
-	ava(function (a) {
-		return pass().then(function () {
+test('assert pass', t => {
+	ava(a => {
+		return pass().then(() => {
 			a.pass();
 		});
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('assert fail', function (t) {
-	ava(function (a) {
-		return pass().then(function () {
+test('assert fail', t => {
+	ava(a => {
+		return pass().then(() => {
 			a.fail();
 		});
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('reject', function (t) {
-	ava(function (a) {
-		return fail().then(function () {
+test('reject', t => {
+	ava(a => {
+		return fail().then(() => {
 			a.pass();
 		});
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'Error');
 		t.is(result.reason.message, 'unicorn');
@@ -299,10 +299,8 @@ test('reject', function (t) {
 	});
 });
 
-test('reject with non-Error', function (t) {
-	ava(function () {
-		return Promise.reject('failure');
-	}).run().then(function (result) {
+test('reject with non-Error', t => {
+	ava(() => Promise.reject('failure')).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Promise rejected with: \'failure\'');

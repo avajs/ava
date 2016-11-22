@@ -4,38 +4,38 @@
 // This cli command will run a single file in the current process.
 // Intended to be used with iron-node for profiling purposes.
 
-var path = require('path');
-var EventEmitter = require('events').EventEmitter;
-var meow = require('meow');
-var Promise = require('bluebird');
-var pkgConf = require('pkg-conf');
-var findCacheDir = require('find-cache-dir');
-var uniqueTempDir = require('unique-temp-dir');
-var CachingPrecompiler = require('./lib/caching-precompiler');
-var globals = require('./lib/globals');
+const path = require('path');
+const EventEmitter = require('events');
+const meow = require('meow');
+const Promise = require('bluebird');
+const pkgConf = require('pkg-conf');
+const findCacheDir = require('find-cache-dir');
+const uniqueTempDir = require('unique-temp-dir');
+const CachingPrecompiler = require('./lib/caching-precompiler');
+const globals = require('./lib/globals');
 
-// Chrome gets upset when the `this` value is non-null for these functions.
+// Chrome gets upset when the `this` value is non-null for these functions
 globals.setTimeout = setTimeout.bind(null);
 globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
 
-var conf = pkgConf.sync('ava', {
+const conf = pkgConf.sync('ava', {
 	defaults: {
 		babel: 'default'
 	}
 });
 
-// Define a minimal set of options from the main CLI.
-var cli = meow([
-	'Usage',
-	'  $ iron-node node_modules/ava/profile.js <test-file>',
-	'',
-	'Options',
-	'  --fail-fast    Stop after first test failure',
-	'  --serial, -s   Run tests serially',
-	''
-], {
+// Define a minimal set of options from the main CLI
+const cli = meow(`
+	Usage
+	  $ iron-node node_modules/ava/profile.js <test-file>
+
+	Options
+	  --fail-fast   Stop after first test failure
+	  --serial, -s  Run tests serially
+
+`, {
 	string: [
 		'_'
 	],
@@ -55,36 +55,36 @@ if (cli.input.length !== 1) {
 	throw new Error('Specify a test file');
 }
 
-var file = path.resolve(cli.input[0]);
-var cacheDir = findCacheDir({
+const file = path.resolve(cli.input[0]);
+const cacheDir = findCacheDir({
 	name: 'ava',
 	files: [file]
 }) || uniqueTempDir();
 
-var precompiler = new CachingPrecompiler({
+const precompiler = new CachingPrecompiler({
 	path: cacheDir,
 	babel: conf.babel
 });
 
-var precompiled = {};
+const precompiled = {};
 precompiled[file] = precompiler.precompileFile(file);
 
-var opts = {
-	file: file,
+const opts = {
+	file,
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	tty: false,
-	cacheDir: cacheDir,
-	precompiled: precompiled
+	cacheDir,
+	precompiled
 };
 
-var events = new EventEmitter();
-var uncaughtExceptionCount = 0;
+const events = new EventEmitter();
+let uncaughtExceptionCount = 0;
 
-// Mock the behavior of a parent process.
-process.send = function (data) {
+// Mock the behavior of a parent process
+process.send = data => {
 	if (data && data.ava) {
-		var name = data.name.replace(/^ava-/, '');
+		const name = data.name.replace(/^ava-/, '');
 
 		if (events.listeners(name).length > 0) {
 			events.emit(name, data.data);
@@ -98,11 +98,11 @@ process.send = function (data) {
 	console.log('NON AVA EVENT:', data);
 };
 
-events.on('test', function (data) {
+events.on('test', data => {
 	console.log('TEST:', data.title, data.error);
 });
 
-events.on('results', function (data) {
+events.on('results', data => {
 	if (console.profileEnd) {
 		console.profileEnd();
 	}
@@ -110,27 +110,24 @@ events.on('results', function (data) {
 	console.log('RESULTS:', data.stats);
 
 	if (process.exit) {
-		// Delay is For Node 0.10 which emits uncaughtExceptions async.
-		setTimeout(function () {
-			process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
-		}, 20);
+		process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
 	}
 });
 
-events.on('stats', function () {
-	setImmediate(function () {
+events.on('stats', () => {
+	setImmediate(() => {
 		process.emit('ava-run', {});
 	});
 });
 
-events.on('uncaughtException', function (data) {
+events.on('uncaughtException', data => {
 	uncaughtExceptionCount++;
-	var stack = data && data.exception && data.exception.stack;
+	let stack = data && data.exception && data.exception.stack;
 	stack = stack || data;
 	console.log(stack);
 });
 
-// test-worker will read process.argv[2] for options
+// `test-worker` will read process.argv[2] for options
 process.argv[2] = JSON.stringify(opts);
 process.argv.length = 3;
 
@@ -138,6 +135,6 @@ if (console.profile) {
 	console.profile('AVA test-worker process');
 }
 
-setImmediate(function () {
+setImmediate(() => {
 	require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
 });

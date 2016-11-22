@@ -4,8 +4,8 @@ import test from '../../';
 function writeFullWidth(even, adjust) {
 	return async function (t) {
 		await delay(200);
-		var len = Math[even ? 'floor' : 'ceil']((process.stdout.columns + adjust) / 2);
-		for (var i = 0; i < len; i++) {
+		const len = Math[even ? 'floor' : 'ceil']((process.stdout.columns + adjust) / 2);
+		for (let i = 0; i < len; i++) {
 			process.stdout.write(String(i % 10));
 			await delay(1);
 		}
@@ -26,7 +26,7 @@ test.serial(writeFullWidth(false, 1));
 test.serial(writeFullWidth(true, -2));
 test.serial(writeFullWidth(false, -2));
 
-// line 4 (completes line 3 and ends the next line exactly complete width.
+// line 4 (completes line 3 and ends the next line exactly complete width)
 test.serial(writeFullWidth(true, 1));
 test.serial(writeFullWidth(false, 1));
 

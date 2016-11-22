@@ -1,57 +1,49 @@
 'use strict';
-var fs = require('fs');
-var path = require('path');
-var test = require('tap').test;
-var sinon = require('sinon');
-var proxyquire = require('proxyquire').noCallThru();
-var throwsHelper = require('babel-plugin-ava-throws-helper');
-var transformRuntime = require('babel-plugin-transform-runtime');
+const fs = require('fs');
+const path = require('path');
+const test = require('tap').test;
+const sinon = require('sinon');
+const proxyquire = require('proxyquire').noCallThru();
+const throwsHelper = require('babel-plugin-ava-throws-helper');
+const transformRuntime = require('babel-plugin-transform-runtime');
 
-function fixture(name) {
-	return path.join(__dirname, 'fixture', name);
-}
+const fixture = name => path.join(__dirname, 'fixture', name);
 
 function setUp() {
-	var customPlugin = sinon.stub().returns({visitor: {}});
-	var powerAssert = sinon.stub().returns({visitor: {}});
-	var rewrite = sinon.stub().returns({visitor: {}});
-
-	function createEspowerPlugin() {
-		return powerAssert;
-	}
-
-	function babelDetectiveWrap() {
-		return rewrite;
-	}
+	const customPlugin = sinon.stub().returns({visitor: {}});
+	const powerAssert = sinon.stub().returns({visitor: {}});
+	const rewrite = sinon.stub().returns({visitor: {}});
+	const createEspowerPlugin = () => powerAssert;
+	const babelDetectiveWrap = () => rewrite;
 
 	return {
-		customPlugin: customPlugin,
-		powerAssert: powerAssert,
-		rewrite: rewrite,
-		createEspowerPlugin: createEspowerPlugin,
-		babelDetectiveWrap: babelDetectiveWrap
+		customPlugin,
+		powerAssert,
+		rewrite,
+		createEspowerPlugin,
+		babelDetectiveWrap
 	};
 }
 
-test('uses babelConfig for babel options when babelConfig is an object', function (t) {
-	var setup = setUp();
-	var customPlugin = setup.customPlugin;
+test('uses babelConfig for babel options when babelConfig is an object', t => {
+	const setup = setUp();
+	const customPlugin = setup.customPlugin;
 
-	var babelConfigHelper = proxyquire('../lib/babel-config', {
+	const babelConfigHelper = proxyquire('../lib/babel-config', {
 		'babel-plugin-espower/create': setup.createEspowerPlugin,
 		'babel-plugin-detective/wrap-listener': setup.babelDetectiveWrap
 	});
 
-	var babelConfig = {
+	const babelConfig = {
 		presets: ['stage-2', 'es2015'],
 		plugins: [customPlugin]
 	};
 
-	var fixturePath = fixture('es2015.js');
-	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
+	const fixturePath = fixture('es2015.js');
+	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var powerAssert = true;
-	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
+	const powerAssert = true;
+	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -63,25 +55,25 @@ test('uses babelConfig for babel options when babelConfig is an object', functio
 	t.end();
 });
 
-test('should reuse existing source maps', function (t) {
-	var setup = setUp();
-	var customPlugin = setup.customPlugin;
+test('should reuse existing source maps', t => {
+	const setup = setUp();
+	const customPlugin = setup.customPlugin;
 
-	var babelConfigHelper = proxyquire('../lib/babel-config', {
+	const babelConfigHelper = proxyquire('../lib/babel-config', {
 		'babel-plugin-espower/create': setup.createEspowerPlugin,
 		'babel-plugin-detective/wrap-listener': setup.babelDetectiveWrap
 	});
 
-	var babelConfig = {
+	const babelConfig = {
 		presets: ['stage-2', 'es2015'],
 		plugins: [customPlugin]
 	};
 
-	var fixturePath = fixture('es2015-source-maps.js');
-	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
+	const fixturePath = fixture('es2015-source-maps.js');
+	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var powerAssert = true;
-	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
+	const powerAssert = true;
+	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.true('filename' in options);
 	t.true(options.sourceMaps);
@@ -92,25 +84,25 @@ test('should reuse existing source maps', function (t) {
 	t.end();
 });
 
-test('should disable power-assert when powerAssert is false', function (t) {
-	var setup = setUp();
-	var customPlugin = setup.customPlugin;
+test('should disable power-assert when powerAssert is false', t => {
+	const setup = setUp();
+	const customPlugin = setup.customPlugin;
 
-	var babelConfigHelper = proxyquire('../lib/babel-config', {
+	const babelConfigHelper = proxyquire('../lib/babel-config', {
 		'babel-plugin-espower/create': setup.createEspowerPlugin,
 		'babel-plugin-detective/wrap-listener': setup.babelDetectiveWrap
 	});
 
-	var babelConfig = {
+	const babelConfig = {
 		presets: ['stage-2', 'es2015'],
 		plugins: [customPlugin]
 	};
 
-	var fixturePath = fixture('es2015.js');
-	var fixtureSource = fs.readFileSync(fixturePath, 'utf8');
+	const fixturePath = fixture('es2015.js');
+	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
 
-	var powerAssert = false;
-	var options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
+	const powerAssert = false;
+	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
 	t.strictDeepEqual(options.plugins, [customPlugin, throwsHelper, setup.rewrite, transformRuntime]);
 	t.end();

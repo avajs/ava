@@ -3,29 +3,29 @@ var test = require('tap').test;
 var Promise = require('bluebird');
 var assert = require('../lib/assert');
 
-test('.pass()', function (t) {
-	t.doesNotThrow(function () {
+test('.pass()', t => {
+	t.doesNotThrow(() => {
 		assert.pass();
 	});
 
 	t.end();
 });
 
-test('.fail()', function (t) {
-	t.throws(function () {
+test('.fail()', t => {
+	t.throws(() => {
 		assert.fail();
 	});
 
 	t.end();
 });
 
-test('.truthy()', function (t) {
-	t.throws(function () {
+test('.truthy()', t => {
+	t.throws(() => {
 		assert.truthy(0);
 		assert.truthy(false);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.truthy(1);
 		assert.truthy(true);
 	});
@@ -33,13 +33,13 @@ test('.truthy()', function (t) {
 	t.end();
 });
 
-test('.falsy()', function (t) {
-	t.throws(function () {
+test('.falsy()', t => {
+	t.throws(() => {
 		assert.falsy(1);
 		assert.falsy(true);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.falsy(0);
 		assert.falsy(false);
 	});
@@ -47,87 +47,87 @@ test('.falsy()', function (t) {
 	t.end();
 });
 
-test('.true()', function (t) {
-	t.throws(function () {
+test('.true()', t => {
+	t.throws(() => {
 		assert.true(1);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.true(0);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.true(false);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.true('foo');
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.true(true);
 	});
 
 	t.end();
 });
 
-test('.false()', function (t) {
-	t.throws(function () {
+test('.false()', t => {
+	t.throws(() => {
 		assert.false(0);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.false(1);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.false(true);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.false('foo');
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.false(false);
 	});
 
 	t.end();
 });
 
-test('.is()', function (t) {
-	t.doesNotThrow(function () {
+test('.is()', t => {
+	t.doesNotThrow(() => {
 		assert.is('foo', 'foo');
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.is('foo', 'bar');
 	});
 
 	t.end();
 });
 
-test('.not()', function (t) {
-	t.doesNotThrow(function () {
+test('.not()', t => {
+	t.doesNotThrow(() => {
 		assert.not('foo', 'bar');
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.not('foo', 'foo');
 	});
 
 	t.end();
 });
 
-test('.deepEqual()', function (t) {
+test('.deepEqual()', t => {
 	// Tests starting here are to detect regressions in the underlying libraries
 	// used to test deep object equality
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({a: false}, {a: 0});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual({
 			a: 'a',
 			b: 'b'
@@ -137,7 +137,7 @@ test('.deepEqual()', function (t) {
 		});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual({
 			a: 'a',
 			b: 'b',
@@ -153,53 +153,48 @@ test('.deepEqual()', function (t) {
 		});
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual([1, 2, 3], [1, 2, 3]);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
-	t.throws(function () {
-		var fnA = function (a) {
-			return a;
-		};
-		var fnB = function (a) {
-			return a;
-		};
-
+	t.throws(() => {
+		const fnA = a => a;
+		const fnB = a => a;
 		assert.deepEqual(fnA, fnB);
 	});
 
-	t.doesNotThrow(function () {
-		var x1 = {z: 4};
-		var y1 = {x: x1};
+	t.doesNotThrow(() => {
+		const x1 = {z: 4};
+		const y1 = {x: x1};
 		x1.y = y1;
 
-		var x2 = {z: 4};
-		var y2 = {x: x2};
+		const x2 = {z: 4};
+		const y2 = {x: x2};
 		x2.y = y2;
 
 		assert.deepEqual(x1, x2);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		function Foo(a) {
 			this.a = a;
 		}
 
-		var x = new Foo(1);
-		var y = new Foo(1);
+		const x = new Foo(1);
+		const y = new Foo(1);
 
 		assert.deepEqual(x, y);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		function Foo(a) {
 			this.a = a;
 		}
@@ -208,13 +203,13 @@ test('.deepEqual()', function (t) {
 			this.a = a;
 		}
 
-		var x = new Foo(1);
-		var y = new Bar(1);
+		const x = new Foo(1);
+		const y = new Bar(1);
 
 		assert.deepEqual(x, y);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({
 			a: 'a',
 			b: 'b',
@@ -230,73 +225,73 @@ test('.deepEqual()', function (t) {
 		});
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({}, []);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({a: 1}, {a: 1, b: undefined});
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(new Date('1972-08-01'), null);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(new Date('1972-08-01'), undefined);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
 	});
 
-	t.throws(function () {
-		assert.deepEqual(function () {}, function () {});
+	t.throws(() => {
+		assert.deepEqual(() => {}, () => {});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(undefined, undefined);
 		assert.deepEqual({x: undefined}, {x: undefined});
 		assert.deepEqual({x: [undefined]}, {x: [undefined]});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(null, null);
 		assert.deepEqual({x: null}, {x: null});
 		assert.deepEqual({x: [null]}, {x: [null]});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(0, 0);
 		assert.deepEqual(1, 1);
 		assert.deepEqual(3.14, 3.14);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(0, 1);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(1, -1);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(3.14, 2.72);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(
 			[
 				{foo: {z: 100, y: 200, x: 300}},
@@ -313,7 +308,7 @@ test('.deepEqual()', function (t) {
 		);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(
 			{x: {a: 1, b: 2}, y: {c: 3, d: 4}},
 			{y: {d: 4, c: 3}, x: {b: 2, a: 1}}
@@ -322,28 +317,28 @@ test('.deepEqual()', function (t) {
 
 	// Regression test end here
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(['a', 'b'], ['a', 'b']);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual({a: 'a'}, {a: 'b'});
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual(['a', 'b'], ['a', 'a']);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	}, / 'c' ].*? 'd' ]/);
 
-	t.throws(function () {
-		var circular = ['a', 'b'];
+	t.throws(() => {
+		const circular = ['a', 'b'];
 		circular.push(circular);
 		assert.deepEqual([circular, 'c'], [circular, 'd']);
 	}, / 'c' ].*? 'd' ]/);
@@ -351,33 +346,33 @@ test('.deepEqual()', function (t) {
 	t.end();
 });
 
-test('.notDeepEqual()', function (t) {
-	t.doesNotThrow(function () {
+test('.notDeepEqual()', t => {
+	t.doesNotThrow(() => {
 		assert.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.notDeepEqual({a: 'a'}, {a: 'a'});
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.notDeepEqual(['a', 'b'], ['a', 'b']);
 	});
 
 	t.end();
 });
 
-test('.throws()', function (t) {
-	t.throws(function () {
-		assert.throws(function () {});
+test('.throws()', t => {
+	t.throws(() => {
+		assert.throws(() => {});
 	});
 
-	t.doesNotThrow(function () {
-		assert.throws(function () {
+	t.doesNotThrow(() => {
+		assert.throws(() => {
 			throw new Error('foo');
 		});
 	});
@@ -385,9 +380,9 @@ test('.throws()', function (t) {
 	t.end();
 });
 
-test('.throws() returns the thrown error', function (t) {
-	var expected = new Error();
-	var actual = assert.throws(function () {
+test('.throws() returns the thrown error', t => {
+	const expected = new Error();
+	const actual = assert.throws(() => {
 		throw expected;
 	});
 
@@ -396,19 +391,19 @@ test('.throws() returns the thrown error', function (t) {
 	t.end();
 });
 
-test('.throws() returns the rejection reason of promise', function (t) {
-	var expected = new Error();
+test('.throws() returns the rejection reason of promise', t => {
+	const expected = new Error();
 
-	return assert.throws(Promise.reject(expected)).then(function (actual) {
+	return assert.throws(Promise.reject(expected)).then(actual => {
 		t.is(actual, expected);
 		t.end();
 	});
 });
 
-test('.throws should throw if passed a bad value', function (t) {
+test('.throws should throw if passed a bad value', t => {
 	t.plan(1);
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.throws('not a function');
 	}, {
 		name: 'TypeError',
@@ -416,10 +411,10 @@ test('.throws should throw if passed a bad value', function (t) {
 	});
 });
 
-test('.notThrows should throw if passed a bad value', function (t) {
+test('.notThrows should throw if passed a bad value', t => {
 	t.plan(1);
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.notThrows('not a function');
 	}, {
 		name: 'TypeError',
@@ -427,13 +422,13 @@ test('.notThrows should throw if passed a bad value', function (t) {
 	});
 });
 
-test('.notThrows()', function (t) {
-	t.doesNotThrow(function () {
-		assert.notThrows(function () {});
+test('.notThrows()', t => {
+	t.doesNotThrow(() => {
+		assert.notThrows(() => {});
 	});
 
-	t.throws(function () {
-		assert.notThrows(function () {
+	t.throws(() => {
+		assert.notThrows(() => {
 			throw new Error('foo');
 		});
 	});
@@ -441,55 +436,55 @@ test('.notThrows()', function (t) {
 	t.end();
 });
 
-test('.regex()', function (t) {
-	t.doesNotThrow(function () {
+test('.regex()', t => {
+	t.doesNotThrow(() => {
 		assert.regex('abc', /^abc$/);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.regex('foo', /^abc$/);
 	});
 
 	t.end();
 });
 
-test('.notRegex()', function (t) {
-	t.doesNotThrow(function () {
+test('.notRegex()', t => {
+	t.doesNotThrow(() => {
 		assert.notRegex('abc', /def/);
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.notRegex('abc', /abc/);
 	});
 
 	t.end();
 });
 
-test('.ifError()', function (t) {
-	t.throws(function () {
+test('.ifError()', t => {
+	t.throws(() => {
 		assert.ifError(new Error());
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.ifError(null);
 	});
 
 	t.end();
 });
 
-test('.deepEqual() should not mask RangeError from underlying assert', function (t) {
-	var Circular = function () {
+test('.deepEqual() should not mask RangeError from underlying assert', t => {
+	const Circular = function () {
 		this.test = this;
 	};
 
-	var a = new Circular();
-	var b = new Circular();
+	const a = new Circular();
+	const b = new Circular();
 
-	t.throws(function () {
+	t.throws(() => {
 		assert.notDeepEqual(a, b);
 	});
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert.deepEqual(a, b);
 	});
 
