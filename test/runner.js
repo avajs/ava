@@ -5,14 +5,6 @@ const Runner = require('../lib/runner');
 const slice = Array.prototype.slice;
 const noop = () => {};
 
-test('must be called with new', t => {
-	t.throws(() => {
-		const runner = Runner;
-		runner();
-	}, {message: 'Class constructor Runner cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('nested tests and hooks aren\'t allowed', t => {
 	t.plan(1);
 

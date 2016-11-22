@@ -11,14 +11,6 @@ var testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
 var conf = pkgConf.sync('ava');
 var pkgDir = path.dirname(pkgConf.filepath(conf));
 
-test('must be called with new', function (t) {
-	t.throws(function () {
-		var api = Api;
-		api([path.join(__dirname, 'fixture/es2015.js')]);
-	}, {message: 'Class constructor Api cannot be invoked without \'new\''});
-	t.end();
-});
-
 generateTests('Without Pool: ', function (options) {
 	options = options || {};
 	options.powerAssert = true;

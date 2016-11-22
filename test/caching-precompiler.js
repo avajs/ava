@@ -21,14 +21,6 @@ test('creation with new', t => {
 	t.end();
 });
 
-test('must be called with new', t => {
-	t.throws(() => {
-		const cachingPrecompiler = CachingPrecompiler;
-		cachingPrecompiler({path: uniqueTempDir()});
-	}, {message: 'Class constructor CachingPrecompiler cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('adds files and source maps to the cache directory as needed', t => {
 	const tempDir = uniqueTempDir();
 	const precompiler = new CachingPrecompiler({path: tempDir});

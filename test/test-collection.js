@@ -78,14 +78,6 @@ function serialize(collection) {
 	return removeEmptyProps(serialized);
 }
 
-test('must be called with new', t => {
-	const testCollection = TestCollection;
-	t.throws(() => {
-		testCollection();
-	}, {message: 'Class constructor TestCollection cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('throws if no type is supplied', t => {
 	const collection = new TestCollection();
 	t.throws(() => {

@@ -794,14 +794,6 @@ test('rejections are just passed through - bail', t => {
 	});
 });
 
-test('must be called with new', t => {
-	t.throws(() => {
-		const concurrent = Concurrent;
-		concurrent([pass('a')]);
-	}, {message: 'Class constructor Concurrent cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('sequences of sequences', t => {
 	const result = new Concurrent([
 		new Concurrent([pass('a'), pass('b')]),

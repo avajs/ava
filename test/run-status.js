@@ -7,14 +7,6 @@ const RunStatus = require('../lib/run-status');
 
 const sep = ' ' + chalk.gray.dim(figures.pointerSmall) + ' ';
 
-test('requires new', t => {
-	const runStatus = RunStatus;
-	t.throws(() => {
-		runStatus({});
-	}, 'Class constructor RunStatus cannot be invoked without \'new\'');
-	t.end();
-});
-
 test('prefixTitle returns empty if prefixTitles == false', t => {
 	const runStatus = new RunStatus({prefixTitles: false});
 	t.is(runStatus.prefixTitle('test/run-status.js'), '');

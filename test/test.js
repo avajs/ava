@@ -47,14 +47,6 @@ ava.cb.failing = function (title, fn, contextRef, report) {
 	return t;
 };
 
-test('must be called with new', t => {
-	t.throws(() => {
-		const test = Test;
-		test();
-	}, {message: 'Class constructor Test cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('run test', t => {
 	const result = ava('foo', a => {
 		a.fail();

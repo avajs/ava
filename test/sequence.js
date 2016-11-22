@@ -802,14 +802,6 @@ test('rejections are just passed through - bail', t => {
 	});
 });
 
-test('must be called with new', t => {
-	t.throws(() => {
-		const sequence = Sequence;
-		sequence([pass('a')]);
-	}, {message: 'Class constructor Sequence cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('needs at least one sequence item', t => {
 	t.throws(() => {
 		new Sequence().run();

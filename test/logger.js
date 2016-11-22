@@ -3,14 +3,6 @@ var test = require('tap').test;
 var Logger = require('../lib/logger');
 var tap = require('../lib/reporters/tap');
 
-test('must be called with new', function (t) {
-	t.throws(function () {
-		var logger = Logger;
-		logger();
-	}, {message: 'Class constructor Logger cannot be invoked without \'new\''});
-	t.end();
-});
-
 test('only call start if supported by reporter', function (t) {
 	var tapReporter = tap();
 	var logger = new Logger(tapReporter);
