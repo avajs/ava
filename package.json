@@ -43,7 +43,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && nyc --cache --reporter=lcov --reporter=text tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
+    "test": "xo && nyc tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
@@ -64,9 +64,11 @@
     "fast",
     "tape",
     "tap",
+    "jest",
     "mocha",
     "qunit",
     "jasmine",
+    "testing",
     "tdd",
     "cli-app",
     "cli",
@@ -82,8 +84,7 @@
     "generators",
     "yield",
     "observable",
-    "observables",
-    "tap"
+    "observables"
   ],
   "dependencies": {
     "arr-flatten": "^1.0.1",
@@ -192,5 +193,12 @@
       "import/newline-after-import": "off",
       "no-use-extend-native/no-use-extend-native": "off"
     }
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   }
 }
