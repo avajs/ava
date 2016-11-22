@@ -497,7 +497,7 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	var state = {
 		save: saveSpy
 	};
-	var stateStub = sinon.stub().returns(state);
+	var stateGetter = sinon.stub().returns(state);
 	var matchStub = sinon.stub().returns({
 		pass: true
 	});
@@ -507,21 +507,10 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	t.plan(4);
 
 	t.doesNotThrow(function () {
-		assert.snapshot('tree', {
-			initializeSnapshotState: stateStub,
-			toMatchSnapshot: matchStub
-		}, {
-			file: 'hello/world.test.js',
-			updateSnapshots: false
-		});
+		assert.snapshot('tree', matchStub, stateGetter);
 	});
 
-	t.ok(stateStub.calledWith(
-		'hello/world.test.js',
-		false,
-		'hello/__snapshots__/world.test.js.snap',
-		true
-	));
+	t.ok(stateGetter.called);
 
 	t.match(matchStub.firstCall.thisValue, {
 		currentTestName: 'Test name',
@@ -537,9 +526,10 @@ test('snapshot makes a snapshot using a library and global options', function (t
 
 test('if snapshot fails, prints a message', function (t) {
 	var saveSpy = sinon.spy();
-	var stateStub = sinon.stub().returns({
+	var state = {
 		save: saveSpy
-	});
+	};
+	var stateGetter = sinon.stub().returns(state);
 	var messageStub = sinon.stub().returns('message');
 	var matchStub = sinon.stub().returns({
 		pass: false,
@@ -549,13 +539,7 @@ test('if snapshot fails, prints a message', function (t) {
 	t.plan(2);
 
 	t.throws(function () {
-		assert.snapshot('tree', {
-			initializeSnapshotState: stateStub,
-			toMatchSnapshot: matchStub
-		}, {
-			file: 'hello/world.test.js',
-			updateSnapshots: false
-		});
+		assert.snapshot('tree', matchStub, stateGetter);
 	});
 
 	t.ok(messageStub.calledOnce);
