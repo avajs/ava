@@ -89,7 +89,7 @@
     "arr-flatten": "^1.0.1",
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
-    "arrify": "^1.0.1",
+    "arrify": "^1.0.0",
     "auto-bind": "^0.1.0",
     "ava-files": "^0.2.0",
     "ava-init": "^0.1.0",
@@ -154,7 +154,7 @@
     "resolve-cwd": "^1.0.0",
     "semver": "^5.3.0",
     "set-immediate-shim": "^1.0.1",
-    "source-map-support": "^0.4.5",
+    "source-map-support": "^0.4.0",
     "stack-utils": "^0.4.0",
     "strip-ansi": "^3.0.1",
     "strip-bom": "^2.0.0",
@@ -192,8 +192,7 @@
   "xo": {
     "rules": {
       "import/newline-after-import": "off",
-      "no-use-extend-native/no-use-extend-native": "off",
-      "no-useless-escape": "off"
+      "no-use-extend-native/no-use-extend-native": "off"
     }
   }
 }
