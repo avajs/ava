@@ -1,3 +1,5 @@
+'use strict';
+
 var test = require('tap').test;
 var sinon = require('sinon');
 var snapshotState = require('../lib/snapshot-state');
