@@ -494,7 +494,7 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 
 test('snapshot makes a snapshot using a library and global options', function (t) {
 	var saveSpy = sinon.spy();
-	var state = { save: saveSpy };
+	var state = {save: saveSpy};
 	var stateGetter = sinon.stub().returns(state);
 	var matchStub = sinon.stub().returns({
 		pass: true
@@ -524,7 +524,7 @@ test('snapshot makes a snapshot using a library and global options', function (t
 
 test('if snapshot fails, prints a message', function (t) {
 	var saveSpy = sinon.spy();
-	var state = { save: saveSpy };
+	var state = {save: saveSpy};
 	var stateGetter = sinon.stub().returns(state);
 	var messageStub = sinon.stub().returns('message');
 	var matchStub = sinon.stub().returns({
@@ -545,7 +545,7 @@ test('if snapshot fails, prints a message', function (t) {
 
 test('if we provide a custom message to snapshot, it is going to use that in case of failure', function (t) {
 	var saveSpy = sinon.spy();
-	var state = { save: saveSpy };
+	var state = {save: saveSpy};
 	var stateGetter = sinon.stub().returns(state);
 	var messageStub = sinon.stub().returns('message');
 	var matchStub = sinon.stub().returns({
