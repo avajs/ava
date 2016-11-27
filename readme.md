@@ -64,10 +64,11 @@ test(t => {
 
 ### Add AVA to your project
 
-Install AVA globally and run it with `--init` to add AVA to your `package.json`:
+Install AVA globally and run it with `--init` to add AVA to your `package.json`.
+We recommend using [yarn](https://yarnpkg.com/) to speed up the installation process.
 
 ```console
-$ npm install --global ava
+$ yarn global add ava
 $ ava --init
 ```
 
@@ -80,7 +81,7 @@ Your `package.json` will then look like this:
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.15.0"
+    "ava": "^0.17.0"
   }
 }
 ```
@@ -92,7 +93,7 @@ Any arguments passed after `--init` are added as config to `package.json`.
 You can also install AVA directly:
 
 ```console
-$ npm install --save-dev ava
+$ yarn add --dev ava
 ```
 
 You'll have to configure the `test` script in your `package.json` to use `ava`
