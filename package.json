@@ -126,6 +126,7 @@
     "get-port": "^2.1.0",
     "has-flag": "^2.0.0",
     "ignore-by-default": "^1.0.0",
+    "indent-string": "^3.0.0",
     "is-ci": "^1.0.7",
     "is-generator-fn": "^1.0.0",
     "is-obj": "^1.0.0",
