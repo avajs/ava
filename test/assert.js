@@ -542,24 +542,3 @@ test('if snapshot fails, prints a message', function (t) {
 
 	t.end();
 });
-
-test('if we provide a custom message to snapshot, it is going to use that in case of failure', function (t) {
-	var saveSpy = sinon.spy();
-	var state = {save: saveSpy};
-	var stateGetter = sinon.stub().returns(state);
-	var messageStub = sinon.stub().returns('message');
-	var matchStub = sinon.stub().returns({
-		pass: false,
-		message: messageStub
-	});
-
-	t.plan(2);
-
-	t.throws(function () {
-		assert.snapshot('tree', 'message', matchStub, stateGetter);
-	});
-
-	t.false(messageStub.called);
-
-	t.end();
-});
