@@ -505,7 +505,7 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	t.plan(4);
 
 	t.doesNotThrow(function () {
-		assert.snapshot('tree', undefined, matchStub, stateGetter);
+		assert._snapshot('tree', undefined, matchStub, stateGetter);
 	});
 
 	t.ok(stateGetter.called);
@@ -535,7 +535,7 @@ test('if snapshot fails, prints a message', function (t) {
 	t.plan(2);
 
 	t.throws(function () {
-		assert.snapshot('tree', undefined, matchStub, stateGetter);
+		assert._snapshot('tree', undefined, matchStub, stateGetter);
 	});
 
 	t.ok(messageStub.calledOnce);
