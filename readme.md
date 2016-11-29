@@ -80,7 +80,7 @@ Your `package.json` will then look like this:
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.15.0"
+    "ava": "^0.17.0"
   }
 }
 ```
