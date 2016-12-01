@@ -400,3 +400,10 @@ test('workers ensure test files load the same version of ava', t => {
 		t.end();
 	});
 });
+
+test('run test in node_modules', t => {
+	execCli([], {dirname: 'fixture/test-in-node-modules'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
