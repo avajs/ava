@@ -153,18 +153,19 @@ $ ava --help
     ava [<file|directory|glob> ...]
 
   Options
-    --init             Add AVA to your project
-    --fail-fast        Stop after first test failure
-    --serial, -s       Run tests serially
-    --tap, -t          Generate TAP output
-    --verbose, -v      Enable verbose output
-    --no-cache         Disable the transpiler cache
-    --no-power-assert  Disable Power Assert
-    --match, -m        Only run tests with matching title (Can be repeated)
-    --watch, -w        Re-run tests when tests and source files change
-    --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
-    --timeout, -T      Set global timeout
-    --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
+    --init                 Add AVA to your project
+    --fail-fast            Stop after first test failure
+    --serial, -s           Run tests serially
+    --tap, -- [ ]          Generate TAP output
+    --verbose, -v          Enable verbose output
+    --no-cache             Disable the transpiler cache
+    --no-power-assert      Disable Power Assert
+    --match, -m            Only run tests with matching title (Can be repeated)
+    --watch, -w            Re-run tests when tests and source files change
+    --source, -S           Pattern to match source files so tests can be re-run (Can be repeated)
+    --timeout, -T          Set global timeout
+    --concurrency, -c      Maximum number of test files running at the same time (EXPERIMENTAL)
+    --update-snapshots, -u Update all snapshots
 
   Examples
     ava
@@ -963,6 +964,56 @@ Assert that `contents` does not match `regex`.
 ### `.ifError(error, [message])`
 
 Assert that `error` is falsy.
+
+### `.snapshot(contents, [message])`
+
+Make a snapshot of the stringified `contents`.
+
+## Snapshot testing
+
+Snapshot testing comes as another kind of assertion and uses [jest-snapshot](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) under the hood.
+
+When used with React, it looks very similar to Jest:
+
+```js
+// your component
+const HelloWorld = () => <h1>Hello World...!</h1>;
+
+export default HelloWorld;
+```
+
+```js
+// your test
+import test from 'ava';
+import render from 'react-test-renderer';
+
+import HelloWorld from './';
+
+test('HelloWorld component', t => {
+  const tree = render.create(<HelloWorld />).toJSON();
+  t.snapshot(tree);
+});
+```
+
+The first time you run this test, a snapshot file will be created in `__snapshots__` folder looking something like this:
+
+```
+exports[`HelloWorld component 1`] = `
+<h1>
+  Hello World...!
+</h1>
+`;
+```
+
+These snapshots should be committed together with your code so that everyone on the team shares current state of the app.
+
+Every time you run this test afterwards, it will check if the component render has changed. If it did, it will fail the test. Then you will have the choice to check your code - and if the change was intentional, you can use the `--update-snapshots` (or `-u`) flag to update the snapshots into their new version.
+
+That might look like this:
+
+`$ ava --update-snapshots`
+
+Note that snapshots can be used for much more than just testing components - you can equally well test any other (data) structure that you can stringify.
 
 ### Skipping assertions
 
