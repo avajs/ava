@@ -1,8 +1,7 @@
 'use strict';
-var test = require('tap').test;
-var Promise = require('bluebird');
-var sinon = require('sinon');
-var assert = require('../lib/assert');
+const test = require('tap').test;
+const sinon = require('sinon');
+const assert = require('../lib/assert');
 
 test('.pass()', t => {
 	t.doesNotThrow(() => {
@@ -492,19 +491,17 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 	t.end();
 });
 
-test('snapshot makes a snapshot using a library and global options', function (t) {
-	var saveSpy = sinon.spy();
-	var state = {save: saveSpy};
-	var stateGetter = sinon.stub().returns(state);
-	var matchStub = sinon.stub().returns({
-		pass: true
-	});
+test('snapshot makes a snapshot using a library and global options', t => {
+	const saveSpy = sinon.spy();
+	const state = {save: saveSpy};
+	const stateGetter = sinon.stub().returns(state);
+	const matchStub = sinon.stub().returns({pass: true});
 
 	assert.title = 'Test name';
 
 	t.plan(4);
 
-	t.doesNotThrow(function () {
+	t.doesNotThrow(() => {
 		assert._snapshot('tree', undefined, matchStub, stateGetter);
 	});
 
@@ -522,19 +519,19 @@ test('snapshot makes a snapshot using a library and global options', function (t
 	t.end();
 });
 
-test('if snapshot fails, prints a message', function (t) {
-	var saveSpy = sinon.spy();
-	var state = {save: saveSpy};
-	var stateGetter = sinon.stub().returns(state);
-	var messageStub = sinon.stub().returns('message');
-	var matchStub = sinon.stub().returns({
+test('if snapshot fails, prints a message', t => {
+	const saveSpy = sinon.spy();
+	const state = {save: saveSpy};
+	const stateGetter = sinon.stub().returns(state);
+	const messageStub = sinon.stub().returns('message');
+	const matchStub = sinon.stub().returns({
 		pass: false,
 		message: messageStub
 	});
 
 	t.plan(2);
 
-	t.throws(function () {
+	t.throws(() => {
 		assert._snapshot('tree', undefined, matchStub, stateGetter);
 	});
 

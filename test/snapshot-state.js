@@ -1,17 +1,16 @@
 'use strict';
+const path = require('path');
+const test = require('tap').test;
+const sinon = require('sinon');
+const snapshotState = require('../lib/snapshot-state');
 
-var path = require('path');
-var test = require('tap').test;
-var sinon = require('sinon');
-var snapshotState = require('../lib/snapshot-state');
-
-test('snapshot state gets created and returned', function (t) {
-	var stateStub = sinon.stub().returns('state');
+test('snapshot state gets created and returned', t => {
+	const stateStub = sinon.stub().returns('state');
 
 	t.plan(3);
 
-	t.doesNotThrow(function () {
-		var result = snapshotState.get(stateStub, {
+	t.doesNotThrow(() => {
+		const result = snapshotState.get(stateStub, {
 			file: path.join('hello', 'world.test.js'),
 			updateSnapshots: false
 		});
@@ -29,16 +28,15 @@ test('snapshot state gets created and returned', function (t) {
 	t.end();
 });
 
-test('snapshot state is returned immediately if it already exists', function (t) {
-	var stateSpy = sinon.spy();
+test('snapshot state is returned immediately if it already exists', t => {
+	const stateSpy = sinon.spy();
 
 	t.plan(3);
 
 	snapshotState.state = 'already made state';
 
-	t.doesNotThrow(function () {
-		var result = snapshotState.get(stateSpy);
-
+	t.doesNotThrow(() => {
+		const result = snapshotState.get(stateSpy);
 		t.is(result, 'already made state');
 	});
 
