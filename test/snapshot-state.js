@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var test = require('tap').test;
 var sinon = require('sinon');
 var snapshotState = require('../lib/snapshot-state');
@@ -11,7 +12,7 @@ test('snapshot state gets created and returned', function (t) {
 
 	t.doesNotThrow(function () {
 		var result = snapshotState.get(stateStub, {
-			file: 'hello/world.test.js',
+			file: path.join('hello', 'world.test.js'),
 			updateSnapshots: false
 		});
 
@@ -19,9 +20,9 @@ test('snapshot state gets created and returned', function (t) {
 	});
 
 	t.ok(stateStub.calledWith(
-		'hello/world.test.js',
+		path.join('hello', 'world.test.js'),
 		false,
-		'hello/__snapshots__/world.test.js.snap',
+		path.join('hello', '__snapshots__', 'world.test.js.snap'),
 		true
 	));
 
