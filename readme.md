@@ -1148,6 +1148,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 - [Awesome list](https://github.com/avajs/awesome-ava)
 - [JavaScript Air podcast episode](http://jsair.io/ava)
+- [AVA Casts](http://avacasts.com)
 
 ## Team
 
