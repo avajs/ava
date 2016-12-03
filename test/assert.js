@@ -162,10 +162,6 @@ test('.deepEqual()', t => {
 	});
 
 	t.throws(() => {
-		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
-	});
-
-	t.throws(() => {
 		const fnA = a => a;
 		const fnB = a => a;
 		assert.deepEqual(fnA, fnB);
