@@ -1,7 +1,7 @@
 'use strict';
-var test = require('tap').test;
-var Promise = require('bluebird');
-var assert = require('../lib/assert');
+const test = require('tap').test;
+const sinon = require('sinon');
+const assert = require('../lib/assert');
 
 test('.pass()', t => {
 	t.doesNotThrow(() => {
@@ -159,10 +159,6 @@ test('.deepEqual()', t => {
 
 	t.doesNotThrow(() => {
 		assert.deepEqual([1, 2, 3], [1, 2, 3]);
-	});
-
-	t.throws(() => {
-		assert.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
 	t.throws(() => {
@@ -487,6 +483,55 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 	t.doesNotThrow(() => {
 		assert.deepEqual(a, b);
 	});
+
+	t.end();
+});
+
+test('snapshot makes a snapshot using a library and global options', t => {
+	const saveSpy = sinon.spy();
+	const state = {save: saveSpy};
+	const stateGetter = sinon.stub().returns(state);
+	const matchStub = sinon.stub().returns({pass: true});
+
+	assert.title = 'Test name';
+
+	t.plan(4);
+
+	t.doesNotThrow(() => {
+		assert._snapshot('tree', undefined, matchStub, stateGetter);
+	});
+
+	t.ok(stateGetter.called);
+
+	t.match(matchStub.firstCall.thisValue, {
+		currentTestName: 'Test name',
+		snapshotState: state
+	});
+
+	t.ok(saveSpy.calledOnce);
+
+	delete assert.title;
+
+	t.end();
+});
+
+test('if snapshot fails, prints a message', t => {
+	const saveSpy = sinon.spy();
+	const state = {save: saveSpy};
+	const stateGetter = sinon.stub().returns(state);
+	const messageStub = sinon.stub().returns('message');
+	const matchStub = sinon.stub().returns({
+		pass: false,
+		message: messageStub
+	});
+
+	t.plan(2);
+
+	t.throws(() => {
+		assert._snapshot('tree', undefined, matchStub, stateGetter);
+	});
+
+	t.ok(messageStub.calledOnce);
 
 	t.end();
 });

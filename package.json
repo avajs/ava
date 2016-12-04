@@ -14,7 +14,7 @@
     {
       "name": "Vadim Demedes",
       "email": "vdemedes@gmail.com",
-      "url": "github.com/vdemedes"
+      "url": "github.com/vadimdemedes"
     },
     {
       "name": "James Talmage",
@@ -126,11 +126,13 @@
     "get-port": "^2.1.0",
     "has-flag": "^2.0.0",
     "ignore-by-default": "^1.0.0",
+    "indent-string": "^3.0.0",
     "is-ci": "^1.0.7",
     "is-generator-fn": "^1.0.0",
     "is-obj": "^1.0.0",
     "is-observable": "^0.2.0",
     "is-promise": "^2.1.0",
+    "jest-snapshot": "^17.0.3",
     "last-line-stream": "^1.0.0",
     "lodash.debounce": "^4.0.3",
     "lodash.difference": "^4.3.0",
@@ -170,13 +172,13 @@
     "coveralls": "^2.11.4",
     "delay": "^1.3.0",
     "execa": "^0.5.0",
-    "get-stream": "^2.0.0",
+    "get-stream": "^3.0.0",
     "git-branch": "^0.3.0",
     "has-ansi": "^2.0.0",
     "inquirer": "^1.0.2",
     "lolex": "^1.4.0",
     "mkdirp": "^0.5.1",
-    "nyc": "^9.0.1",
+    "nyc": "^10.0.0",
     "pify": "^2.3.0",
     "proxyquire": "^1.7.4",
     "rimraf": "^2.5.0",
@@ -197,7 +199,6 @@
     }
   },
   "nyc": {
-    "cache": true,
     "reporter": [
       "lcov",
       "text"
