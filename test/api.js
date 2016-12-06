@@ -496,7 +496,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		return api.run([path.join(__dirname, 'fixture/symlinkdir')])
+		return api.run([path.join(__dirname, 'fixture/symlink')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
