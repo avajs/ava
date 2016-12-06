@@ -491,12 +491,23 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'symlink paths', function (t) {
+	test(prefix + 'symlink to directory containing test files', function (t) {
 		t.plan(1);
 
 		var api = apiCreator();
 
 		return api.run([path.join(__dirname, 'fixture/symlink')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+
+	test(prefix + 'symlink to test file directly', function (t) {
+		t.plan(1);
+
+		var api = apiCreator();
+
+		return api.run([path.join(__dirname, 'fixture/symlinkfile')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
