@@ -491,6 +491,17 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+	test(prefix + 'symlink paths', function (t) {
+		t.plan(1);
+
+		var api = apiCreator();
+
+		return api.run([path.join(__dirname, 'fixture/symlinkdir')])
+			.then(function (result) {
+				t.is(result.passCount, 1);
+			});
+	});
+
 	test(prefix + 'search directories recursively for files', function (t) {
 		t.plan(2);
 
