@@ -6,6 +6,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - set AVA_APPVEYOR=true
+  - git config core.symlinks true
+  - git reset --hard
   - npm install --global npm
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
@@ -13,7 +15,7 @@ install:
 matrix:
   fast_finish: true
 build: off
-shallow_clone: true
+clone_depth: 1
 cache:
   - node_modules
   - '%APPDATA%\npm-cache'
