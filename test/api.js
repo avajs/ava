@@ -507,7 +507,7 @@ function generateTests(prefix, apiCreator) {
 
 		var api = apiCreator();
 
-		return api.run([path.join(__dirname, 'fixture/symlinkfile')])
+		return api.run([path.join(__dirname, 'fixture/symlinkfile.js')])
 			.then(function (result) {
 				t.is(result.passCount, 1);
 			});
