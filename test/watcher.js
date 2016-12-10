@@ -123,7 +123,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = sources => new Subject(logger, api, files, sources || []);
+	const start = sources => new Subject(logger, api, files, sources || [], ['js']);
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -153,6 +153,12 @@ group('chokidar', (beforeEach, test, group) => {
 				return debounce(times - 1);
 			}
 		});
+	};
+
+	// Default API options
+	var expectedApiOptions = {
+		extensions: ['js'],
+		runOnlyExclusive: false
 	};
 
 	test('watches for default source file changes, as well as test files', t => {
@@ -212,7 +218,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.ok(logger.reset.notCalled);
 		t.ok(logger.start.notCalled);
 		t.ok(api.run.calledOnce);
-		t.strictDeepEqual(api.run.firstCall.args, [files, {runOnlyExclusive: false}]);
+		t.strictDeepEqual(api.run.firstCall.args, [files, expectedApiOptions]);
 
 		// finish is only called after the run promise fulfils.
 		t.ok(logger.finish.notCalled);
@@ -290,7 +296,7 @@ group('chokidar', (beforeEach, test, group) => {
 				// reset is called before start
 				t.ok(logger.reset.firstCall.calledBefore(logger.start.firstCall));
 				// no explicit files are provided.
-				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 
 				// finish is only called after the run promise fulfils.
 				t.ok(logger.finish.calledOnce);
@@ -497,7 +503,7 @@ group('chokidar', (beforeEach, test, group) => {
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
 				// the test.js file is provided
-				t.strictDeepEqual(api.run.secondCall.args, [['test.js'], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [['test.js'], expectedApiOptions]);
 
 				// finish is only called after the run promise fulfils.
 				t.ok(logger.finish.calledOnce);
@@ -523,7 +529,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// the test files are provided
-			t.strictDeepEqual(api.run.secondCall.args, [['test-one.js', 'test-two.js'], {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [['test-one.js', 'test-two.js'], expectedApiOptions]);
 		});
 	});
 
@@ -537,7 +543,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// no explicit files are provided.
-			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 		});
 	});
 
@@ -563,7 +569,7 @@ group('chokidar', (beforeEach, test, group) => {
 		add('foo-baz.js');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			t.strictDeepEqual(api.run.secondCall.args, [['foo-bar.js', 'foo-baz.js'], {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [['foo-bar.js', 'foo-baz.js'], expectedApiOptions]);
 		});
 	});
 
@@ -589,7 +595,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.ok(api.run.calledTwice);
 			// foo-bar.js is excluded from being a test file, thus the initial tests
 			// are run.
-			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 		});
 	});
 
@@ -604,7 +610,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// foo.bar cannot be a test file, thus the initial tests are run.
-			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 		});
 	});
 
@@ -619,7 +625,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// _foo.bar cannot be a test file, thus the initial tests are run.
-			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 		});
 	});
 
@@ -641,7 +647,7 @@ group('chokidar', (beforeEach, test, group) => {
 					path.join('dir', 'nested', 'test.js'),
 					path.join('another-dir', 'nested', 'deeper', 'test.js')
 				],
-				{runOnlyExclusive: false}
+				expectedApiOptions
 			]);
 		});
 	});
@@ -668,7 +674,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.ok(api.run.calledTwice);
 			// dir/exclude/foo.js is excluded from being a test file, thus the initial
 			// tests are run.
-			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+			t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 		});
 	});
 
@@ -681,13 +687,13 @@ group('chokidar', (beforeEach, test, group) => {
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 
 				stdin.write(`\t${input}  \n`);
 				return delay();
 			}).then(() => {
 				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.thirdCall.args, [files, expectedApiOptions]);
 			});
 		});
 
@@ -889,7 +895,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-1.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], expectedApiOptions]);
 			});
 		});
 
@@ -900,7 +906,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 			});
 		});
 
@@ -914,7 +920,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledTwice);
 				t.strictDeepEqual(api.run.secondCall.args, [
 					[path.join('test', '2.js'), path.join('test', '1.js')],
-					{runOnlyExclusive: false}
+					expectedApiOptions
 				]);
 			});
 		});
@@ -927,7 +933,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-1.js');
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], expectedApiOptions]);
 			});
 		});
 
@@ -939,7 +945,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-3.js');
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '2.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '2.js')], expectedApiOptions]);
 			});
 		});
 
@@ -951,7 +957,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-4.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], expectedApiOptions]);
 			});
 		});
 
@@ -977,7 +983,7 @@ group('chokidar', (beforeEach, test, group) => {
 					t.ok(api.run.calledTwice);
 					// Expect all tests to be rerun since dep-2.js is not a tracked
 					// dependency.
-					t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+					t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 				});
 			});
 		});
@@ -995,7 +1001,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.run.returns(Promise.resolve(runStatus));
 			return debounce(3).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], expectedApiOptions]);
 
 				change('foo.bar');
 				return debounce();
@@ -1003,7 +1009,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledThrice);
 				// Expect all tests to be rerun since foo.bar is not a tracked
 				// dependency.
-				t.strictDeepEqual(api.run.thirdCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.thirdCall.args, [files, expectedApiOptions]);
 			});
 		});
 
@@ -1036,7 +1042,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledTwice);
 				// Since the excluded files are not tracked as a dependency, all tests
 				// are expected to be rerun.
-				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 			});
 		});
 
@@ -1050,7 +1056,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 			return debounce(1).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], expectedApiOptions]);
 			});
 		});
 
@@ -1073,13 +1079,13 @@ group('chokidar', (beforeEach, test, group) => {
 				// wouldn't even be picked up. However this lets us test dependency
 				// tracking without directly inspecting the internal state of the
 				// watcher.
-				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [files, expectedApiOptions]);
 
 				change('..foo.js');
 				return debounce();
 			}).then(() => {
 				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [[path.join('test', '2.js')], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.thirdCall.args, [[path.join('test', '2.js')], expectedApiOptions]);
 			});
 		});
 
@@ -1154,7 +1160,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2, t3, t4], {runOnlyExclusive: true}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2, t3, t4], {extensions: ['js'], runOnlyExclusive: true}]);
 			});
 		});
 
@@ -1166,7 +1172,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2, t4], {runOnlyExclusive: true}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2, t4], {extensions: ['js'], runOnlyExclusive: true}]);
 			});
 		});
 
@@ -1178,7 +1184,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t2);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[t1, t2], expectedApiOptions]);
 			});
 		});
 
@@ -1193,7 +1199,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t3, t4], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[t3, t4], expectedApiOptions]);
 			});
 		});
 
@@ -1207,7 +1213,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(4).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t3, t4], {runOnlyExclusive: false}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[t3, t4], expectedApiOptions]);
 			});
 		});
 	});

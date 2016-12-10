@@ -55,7 +55,8 @@ function Api(options) {
 	this.options = objectAssign({
 		cwd: process.cwd(),
 		resolveTestsFrom: process.cwd(),
-		match: []
+		match: [],
+		extensions: ['js']
 	}, options);
 
 	this.options.require = resolveModules(this.options.require);
@@ -81,8 +82,9 @@ Api.prototype._runFile = function (file, runStatus, execArgv) {
 
 Api.prototype.run = function (files, options) {
 	var self = this;
+	var extensions = (options && options.extensions) || this.options.extensions;
 
-	return new AvaFiles({cwd: this.options.resolveTestsFrom, files: files})
+	return new AvaFiles({cwd: this.options.resolveTestsFrom, files: files, extensions: extensions})
 		.findTestFiles()
 		.then(function (files) {
 			return self._run(files, options);
@@ -133,7 +135,8 @@ Api.prototype._setupPrecompiler = function (files) {
 	this.precompiler = new CachingPrecompiler({
 		path: cacheDir,
 		babel: this.options.babelConfig,
-		powerAssert: isPowerAssertEnabled
+		powerAssert: isPowerAssertEnabled,
+		extensions: this.options.extensions
 	});
 };
 
