@@ -400,3 +400,10 @@ test('workers ensure test files load the same version of ava', t => {
 		t.end();
 	});
 });
+
+test('run symlinked test files', t => {
+	execCli([], {dirname: 'fixture/symlink'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
