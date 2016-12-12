@@ -1,6 +1,6 @@
 'use strict';
 
-// iron-node does not work with forked processes
+// Iron-node does not work with forked processes
 // This cli command will run a single file in the current process.
 // Intended to be used with iron-node for profiling purposes.
 

@@ -630,7 +630,7 @@ test('arrays of macros', t => {
 test('match applies to arrays of macros', t => {
 	t.plan(3);
 
-	// foo
+	// Foo
 	function fooMacro() {
 		t.fail();
 	}

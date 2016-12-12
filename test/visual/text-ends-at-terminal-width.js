@@ -14,26 +14,26 @@ function writeFullWidth(even, adjust) {
 	};
 }
 
-// line 1 (exactly full width)
+// Line 1 (exactly full width)
 test.serial(writeFullWidth(true, 0));
 test.serial(writeFullWidth(false, 0));
 
-// line 2 (one extra char on line 3)
+// Line 2 (one extra char on line 3)
 test.serial(writeFullWidth(true, 1));
 test.serial(writeFullWidth(false, 1));
 
-// line 3 (ends one char short of complete width)
+// Line 3 (ends one char short of complete width)
 test.serial(writeFullWidth(true, -2));
 test.serial(writeFullWidth(false, -2));
 
-// line 4 (completes line 3 and ends the next line exactly complete width)
+// Line 4 (completes line 3 and ends the next line exactly complete width)
 test.serial(writeFullWidth(true, 1));
 test.serial(writeFullWidth(false, 1));
 
-// line 5 (exact complete width)
+// Line 5 (exact complete width)
 test.serial(writeFullWidth(true, 0));
 test.serial(writeFullWidth(false, 0));
 
-// line 6 (exact complete width)
+// Line 6 (exact complete width)
 test.serial(writeFullWidth(true, 0));
 test.serial(writeFullWidth(false, 0));

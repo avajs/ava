@@ -50,7 +50,7 @@ function run(name, args, message, question) {
 	});
 }
 
-// thunked version of run for promise handlers
+// Thunked version of run for promise handlers
 function thenRun() {
 	const args = Array.prototype.slice.call(arguments);
 	return () => run.apply(null, args);

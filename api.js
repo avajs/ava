@@ -287,7 +287,7 @@ Api.prototype._runWithoutPool = function (files, runStatus) {
 			return err.results;
 		})
 		.tap(function (results) {
-			// if no tests ran, make sure to tear down the child processes
+			// If no tests ran, make sure to tear down the child processes
 			if (results.length === 0) {
 				tests.forEach(function (test) {
 					test.send('teardown');
@@ -295,7 +295,7 @@ Api.prototype._runWithoutPool = function (files, runStatus) {
 			}
 		})
 		.then(function (results) {
-			// cancel debounced _onTimeout() from firing
+			// Cancel debounced _onTimeout() from firing
 			if (self.options.timeout) {
 				self._cancelTimeout(runStatus);
 			}
@@ -346,7 +346,7 @@ Api.prototype._runWithPool = function (files, runStatus, concurrency) {
 			// Filter out undefined results (usually result of caught exceptions)
 			results = results.filter(Boolean);
 
-			// cancel debounced _onTimeout() from firing
+			// Cancel debounced _onTimeout() from firing
 			if (self.options.timeout) {
 				self._cancelTimeout(runStatus);
 			}

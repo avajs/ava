@@ -12,7 +12,7 @@ var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
 
-// tap doesn't emulate a tty environment and thus process.stdout.columns is
+// Tap doesn't emulate a tty environment and thus process.stdout.columns is
 // undefined. Expect an 80 character wide line to be rendered.
 var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
 

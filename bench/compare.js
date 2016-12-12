@@ -10,7 +10,7 @@ let files = fs.readdirSync(path.join(__dirname, '.results'))
 		result['.file'] = path.basename(file, '.json');
 		return result;
 	})
-	// find the most recent benchmark runs
+	// Find the most recent benchmark runs
 	.sort((fileA, fileB) => fileB['.time'] - fileA['.time']);
 
 function average(data) {
@@ -31,7 +31,7 @@ function standardDeviation(values) {
 	return stdDev;
 }
 
-// only the 3 most recent runs
+// Only the 3 most recent runs
 files = files.slice(0, 3);
 
 function prepStats(times) {
@@ -39,7 +39,7 @@ function prepStats(times) {
 		.map(time => time.time)
 		.sort((timeA, timeB) => timeA - timeB);
 
-	// remove fastest and slowest
+	// Remove fastest and slowest
 	times = times.slice(1, times.length - 1);
 
 	const sum = times.reduce((a, b) => a + b, 0);

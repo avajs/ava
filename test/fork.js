@@ -105,7 +105,7 @@ test('fake timers do not break duration', t => {
 		});
 });
 
-/*
+/* ignore
 test('destructuring of `t` is allowed', t => {
 	fork(fixture('destructuring-public-api.js'))
 		.run({})

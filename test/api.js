@@ -121,7 +121,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.run(files)
 			.then(function () {
-				// if all lines were removed from expected output
+				// If all lines were removed from expected output
 				// actual output matches expected output
 				t.is(expected.length, 0);
 			});
@@ -132,7 +132,7 @@ function generateTests(prefix, apiCreator) {
 
 				t.true(index >= 0);
 
-				// remove line from expected output
+				// Remove line from expected output
 				expected.splice(index, 1);
 			});
 		});
@@ -154,7 +154,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.run(files)
 			.then(function () {
-				// if all lines were removed from expected output
+				// If all lines were removed from expected output
 				// actual output matches expected output
 				t.is(expected.length, 0);
 			});
@@ -165,7 +165,7 @@ function generateTests(prefix, apiCreator) {
 
 				t.true(index >= 0);
 
-				// remove line from expected output
+				// Remove line from expected output
 				expected.splice(index, 1);
 			});
 		});
@@ -189,7 +189,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.run(files)
 			.then(function () {
-				// if all lines were removed from expected output
+				// If all lines were removed from expected output
 				// actual output matches expected output
 				t.is(expected.length, 0);
 			});
@@ -200,7 +200,7 @@ function generateTests(prefix, apiCreator) {
 
 				t.true(index >= 0);
 
-				// remove line from expected output
+				// Remove line from expected output
 				expected.splice(index, 1);
 			});
 		});

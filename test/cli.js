@@ -16,7 +16,7 @@ const execa = require('execa');
 
 const cliPath = path.join(__dirname, '../cli.js');
 
-// for some reason chalk is disabled by default
+// For some reason chalk is disabled by default
 chalk.enabled = true;
 const colors = require('../lib/colors');
 

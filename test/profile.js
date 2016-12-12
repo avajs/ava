@@ -9,7 +9,7 @@ const profileScript = path.join(cwd, 'profile.js');
 const fixtureDir = path.join(cwd, 'test/fixture');
 
 function fixture(file) {
-	// add .js extension
+	// Add .js extension
 	file = /\.[a-z]{1,6}$/.test(file) ? file : `${file}.js`;
 	return path.relative(cwd, path.join(fixtureDir, file));
 }

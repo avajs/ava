@@ -122,14 +122,14 @@ function verify(parts, asPrefix) {
 // Checks whether a chain is a valid function name or a valid prefix with some member
 function exists(parts) {
 	if (verify(parts, false)) {
-		// valid function name
+		// Valid function name
 		return true;
 	}
 	if (!verify(parts, true)) {
-		// not valid prefix
+		// Not valid prefix
 		return false;
 	}
-	// valid prefix, check whether it has members
+	// Valid prefix, check whether it has members
 	for (const prefix of allParts) {
 		if (!parts.includes(prefix) && exists(parts.concat([prefix]))) {
 			return true;

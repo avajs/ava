@@ -144,7 +144,7 @@ group('chokidar', (beforeEach, test, group) => {
 	});
 
 	// Advance the clock to get past the debounce timeout, then wait for a promise
-	// to be resolved to get past the busy.then() delay
+	// to be resolved to get past the `busy.then()` delay
 	const debounce = times => {
 		times = times >= 0 ? times : 1;
 		clock.next();
@@ -214,7 +214,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.ok(api.run.calledOnce);
 		t.strictDeepEqual(api.run.firstCall.args, [files, {runOnlyExclusive: false}]);
 
-		// finish is only called after the run promise fulfils.
+		// Finish is only called after the run promise fulfils
 		t.ok(logger.finish.notCalled);
 		done();
 		return delay().then(() => {
@@ -283,16 +283,16 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(logger.reset.calledOnce);
 				t.ok(logger.start.calledOnce);
 				t.ok(api.run.calledTwice);
-				// clear is called before reset.
+				// Clear is called before reset
 				t.ok(logger.clear.firstCall.calledBefore(logger.reset.firstCall));
-				// reset is called before the second run.
+				// Reset is called before the second run
 				t.ok(logger.reset.firstCall.calledBefore(api.run.secondCall));
-				// reset is called before start
+				// Reset is called before start
 				t.ok(logger.reset.firstCall.calledBefore(logger.start.firstCall));
-				// no explicit files are provided.
+				// No explicit files are provided
 				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 
-				// finish is only called after the run promise fulfils.
+				// Finish is only called after the run promise fulfils
 				t.ok(logger.finish.calledOnce);
 				t.is(logger.finish.firstCall.args[0], runStatus);
 
@@ -496,10 +496,10 @@ group('chokidar', (beforeEach, test, group) => {
 			variant.fire('test.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				// the test.js file is provided
+				// The `test.js` file is provided
 				t.strictDeepEqual(api.run.secondCall.args, [['test.js'], {runOnlyExclusive: false}]);
 
-				// finish is only called after the run promise fulfils.
+				// Finish is only called after the run promise fulfills
 				t.ok(logger.finish.calledOnce);
 				t.is(logger.finish.firstCall.args[0], runStatus);
 
@@ -522,7 +522,7 @@ group('chokidar', (beforeEach, test, group) => {
 		change('test-two.js');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// the test files are provided
+			// The test files are provided
 			t.strictDeepEqual(api.run.secondCall.args, [['test-one.js', 'test-two.js'], {runOnlyExclusive: false}]);
 		});
 	});
@@ -536,7 +536,7 @@ group('chokidar', (beforeEach, test, group) => {
 		unlink('source.js');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// no explicit files are provided.
+			// No explicit files are provided
 			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 		});
 	});
@@ -587,8 +587,8 @@ group('chokidar', (beforeEach, test, group) => {
 		add('foo-baz.js');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// foo-bar.js is excluded from being a test file, thus the initial tests
-			// are run.
+			// `foo-bar.js` is excluded from being a test file, thus the initial tests
+			// are run
 			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 		});
 	});
@@ -603,7 +603,7 @@ group('chokidar', (beforeEach, test, group) => {
 		add('foo.bar');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// foo.bar cannot be a test file, thus the initial tests are run.
+			// `foo.bar` cannot be a test file, thus the initial tests are run
 			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 		});
 	});
@@ -618,7 +618,7 @@ group('chokidar', (beforeEach, test, group) => {
 		add('_foo.bar');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// _foo.bar cannot be a test file, thus the initial tests are run.
+			// `_foo.bar` cannot be a test file, thus the initial tests are run
 			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 		});
 	});
@@ -666,8 +666,8 @@ group('chokidar', (beforeEach, test, group) => {
 		add(path.join('dir', 'exclude', 'foo.js'));
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			// dir/exclude/foo.js is excluded from being a test file, thus the initial
-			// tests are run.
+			// `dir/exclude/foo.js` is excluded from being a test file, thus the initial
+			// tests are run
 			t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 		});
 	});
@@ -719,7 +719,7 @@ group('chokidar', (beforeEach, test, group) => {
 			add();
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
-				// Processing "rs" caused a new run.
+				// Processing "rs" caused a new run
 				t.ok(api.run.calledTwice);
 
 				// Try to advance the clock. This is *after* input was processed. The
@@ -736,9 +736,9 @@ group('chokidar', (beforeEach, test, group) => {
 
 				return delay();
 			}).then(() => {
-				// No new runs yet.
+				// No new runs yet
 				t.ok(api.run.calledTwice);
-				// Though the clock has advanced.
+				// Though the clock has advanced
 				t.is(clock.now - before, 10);
 				before = clock.now;
 
@@ -749,12 +749,12 @@ group('chokidar', (beforeEach, test, group) => {
 					};
 				}));
 
-				// Finish the previous run.
+				// Finish the previous run
 				previous();
 
 				return delay();
 			}).then(() => {
-				// There's only one new run.
+				// There's only one new run
 				t.ok(api.run.calledThrice);
 
 				stdin.write(input + '\n');
@@ -768,7 +768,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 				return delay();
 			}).then(() => {
-				// Again there's only one new run.
+				// Again there's only one new run
 				t.is(api.run.callCount, 4);
 
 				// Try to advance the clock. This is *after* input was processed. The
@@ -969,14 +969,14 @@ group('chokidar', (beforeEach, test, group) => {
 				t.plan(2);
 				seed(variant.sources);
 
-				// dep-2.js isn't treated as a source and therefore it's not tracked as
-				// a dependency for test/2.js. Pretend Chokidar detected a change to
+				// `dep-2.js` isn't treated as a source and therefore it's not tracked as
+				// a dependency for `test/2.js`. Pretend Chokidar detected a change to
 				// verify (normally Chokidar would also be ignoring this file but hey).
 				change('dep-2.js');
 				return debounce().then(() => {
 					t.ok(api.run.calledTwice);
-					// Expect all tests to be rerun since dep-2.js is not a tracked
-					// dependency.
+					// Expect all tests to be rerun since `dep-2.js` is not a tracked
+					// dependency
 					t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 				});
 			});
@@ -1001,8 +1001,8 @@ group('chokidar', (beforeEach, test, group) => {
 				return debounce();
 			}).then(() => {
 				t.ok(api.run.calledThrice);
-				// Expect all tests to be rerun since foo.bar is not a tracked
-				// dependency.
+				// Expect all tests to be rerun since `foo.bar` is not a tracked
+				// dependency
 				t.strictDeepEqual(api.run.thirdCall.args, [files, {runOnlyExclusive: false}]);
 			});
 		});
@@ -1010,7 +1010,7 @@ group('chokidar', (beforeEach, test, group) => {
 		test('uses default exclusion patterns', t => {
 			t.plan(2);
 
-			// Ensure each directory is treated as containing sources.
+			// Ensure each directory is treated as containing sources
 			seed(['**/*']);
 
 			// Synthesize an excluded file for each directory that's ignored by
@@ -1023,19 +1023,19 @@ group('chokidar', (beforeEach, test, group) => {
 				return `${relPath}.js`;
 			});
 
-			// Ensure test/1.js also depends on the excluded files.
+			// Ensure `test/1.js` also depends on the excluded files
 			emitDependencies(
 				path.join('test', '1.js'),
 				excludedFiles.map(relPath => path.resolve(relPath)).concat('dep-1.js')
 			);
 
-			// Modify all excluded files.
+			// Modify all excluded files
 			excludedFiles.forEach(change);
 
 			return debounce(excludedFiles.length).then(() => {
 				t.ok(api.run.calledTwice);
 				// Since the excluded files are not tracked as a dependency, all tests
-				// are expected to be rerun.
+				// are expected to be rerun
 				t.strictDeepEqual(api.run.secondCall.args, [files, {runOnlyExclusive: false}]);
 			});
 		});
@@ -1061,15 +1061,15 @@ group('chokidar', (beforeEach, test, group) => {
 			emitDependencies(path.join('test', '1.js'), [path.resolve('../outside.js')]);
 			emitDependencies(path.join('test', '2.js'), [path.resolve('..foo.js')]);
 			// Pretend Chokidar detected a change to verify (normally Chokidar would
-			// also be ignoring this file but hey).
+			// also be ignoring this file but hey)
 			change(path.join('..', 'outside.js'));
 
 			api.run.returns(Promise.resolve({failCount: 0}));
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				// If ../outside.js was tracked as a dependency of test/1.js this would
-				// have caused test/1.js to be rerun. Instead expect all tests to be
-				// rerun. This is somewhat artifical: normally changes to ../outside.js
+				// If `../outside.js` was tracked as a dependency of test/1.js this would
+				// have caused `test/1.js` to be rerun. Instead expect all tests to be
+				// rerun. This is somewhat artifical: normally changes to `../outside.js`
 				// wouldn't even be picked up. However this lets us test dependency
 				// tracking without directly inspecting the internal state of the
 				// watcher.
