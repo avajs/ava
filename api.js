@@ -2,6 +2,7 @@
 var EventEmitter = require('events').EventEmitter;
 var path = require('path');
 var util = require('util');
+var fs = require('fs');
 var commonPathPrefix = require('common-path-prefix');
 var uniqueTempDir = require('unique-temp-dir');
 var findCacheDir = require('find-cache-dir');
@@ -67,7 +68,8 @@ module.exports = Api;
 Api.prototype._runFile = function (file, runStatus, execArgv) {
 	var hash = this.precompiler.precompileFile(file);
 	var precompiled = {};
-	precompiled[file] = hash;
+	var resolvedfpath = fs.realpathSync(file);
+	precompiled[resolvedfpath] = hash;
 
 	var options = objectAssign({}, this.options, {
 		precompiled: precompiled
