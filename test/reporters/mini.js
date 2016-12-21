@@ -414,6 +414,21 @@ test('results with unhandled errors', function (t) {
 	t.end();
 });
 
+test('results when fail-fast is enabled', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'',
+		'  ' + colors.failFast('`--fail-fast` is on. Any number of tests may have been skipped')
+	]);
+	t.end();
+});
+
 test('results with 1 previous failure', function (t) {
 	var reporter = miniReporter();
 	reporter.todoCount = 1;
