@@ -93,26 +93,23 @@ type ContextualTestContext         = TestContext         & { context: any; };
 type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
 
 /**
- * Test Types
+ * Test Implementations
  */
 
-type Test                   = (t: TestContext)                   => SpecialReturnTypes | void;
-type CallbackTest           = (t: CallbackTestContext)           => void;
-type ContextualTest         = (t: ContextualTestContext)         => SpecialReturnTypes | void;
-type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
-
-/**
- * Macro Types
- */
-
-type Macro<T> = {
-	(t: T, ...args: Array<any>): void;
+type TestFunction<T, R> = {
+	(t: T, ...args: Array<any>): R;
 	title?: (providedTitle: string, ...args: Array<any>) => string;
 };
 
-type Macros<T> =
-	| Macro<T>
-	| Array<Macro<T>>;
+type TestImplementation<T, R> =
+	| TestFunction<T, R>
+	| Array<TestFunction<T, R>>;
+
+type Test                   = TestImplementation<TestContext, SpecialReturnTypes | void>;
+type CallbackTest           = TestImplementation<CallbackTestContext, void>;
+type ContextualTest         = TestImplementation<ContextualTestContext, SpecialReturnTypes | void>;
+type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, void>;
+
 
 /**
  * Method Types
@@ -121,8 +118,6 @@ type Macros<T> =
 type TestMethod = {
 	(              implementation: Test): void;
 	(name: string, implementation: Test): void;
-	(              implementation: Macros<TestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<TestContext>, ...args: Array<any>): void;
 
 	serial     : TestMethod;
 	before     : TestMethod;
@@ -140,8 +135,6 @@ type TestMethod = {
 type CallbackTestMethod = {
 	(              implementation: CallbackTest): void;
 	(name: string, implementation: CallbackTest): void;
-	(              implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
 
 	serial     : CallbackTestMethod;
 	before     : CallbackTestMethod;
@@ -159,8 +152,6 @@ type CallbackTestMethod = {
 type ContextualTestMethod = {
 	(              implementation: ContextualTest): void;
 	(name: string, implementation: ContextualTest): void;
-	(              implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
 	serial     : ContextualTestMethod;
 	before     : ContextualTestMethod;
@@ -178,8 +169,6 @@ type ContextualTestMethod = {
 type ContextualCallbackTestMethod = {
 	(              implementation: ContextualCallbackTest): void;
 	(name: string, implementation: ContextualCallbackTest): void;
-	(              implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
 
 	serial     : ContextualCallbackTestMethod;
 	before     : ContextualCallbackTestMethod;
@@ -201,8 +190,6 @@ type ContextualCallbackTestMethod = {
 declare module.exports: {
 	(              run: ContextualTest): void;
 	(name: string, run: ContextualTest): void;
-	(              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
-	(name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
 	beforeEach : TestMethod;
 	afterEach  : TestMethod;
