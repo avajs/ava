@@ -14,7 +14,7 @@ There are multiple options for configuring how AVA transpiles your tests using B
 
 ## AVA's default transpiler behavior
 
-By default, AVA transpiles your tests (and only your tests) using the [`es2015-node4`](https://github.com/jbach/babel-preset-es2015-node4) on Node.js 4 or [`node6`](https://github.com/salakar/babel-preset-node6) on Node.js 6 and higher, and [`stage-2`](http://babeljs.io/docs/plugins/preset-stage-2/) Babel presets. This is a great option for small modules where you do not desire a build step to transpile your source before deploying to `npm`.
+By default, AVA transpiles your tests (and only your tests) using the [`env`](https://github.com/babel/babel-preset-env)  and [`stage-2`](http://babeljs.io/docs/plugins/preset-stage-2/) Babel presets. This is a great option for small modules where you do not desire a build step to transpile your source before deploying to `npm`.
 
 ## Customizing how AVA transpiles your tests
 
