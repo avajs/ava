@@ -93,7 +93,7 @@
     "arrify": "^1.0.0",
     "auto-bind": "^0.1.0",
     "ava-files": "^1.0.0",
-    "ava-init": "^0.1.0",
+    "ava-init": "^0.2.0",
     "babel-code-frame": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-plugin-ava-throws-helper": "^0.1.0",
@@ -111,7 +111,7 @@
     "clean-stack": "^1.1.1",
     "clean-yaml-object": "^0.1.0",
     "cli-cursor": "^1.0.2",
-    "cli-spinners": "^0.3.0",
+    "cli-spinners": "^1.0.0",
     "cli-truncate": "^0.2.0",
     "co-with-promise": "^4.6.0",
     "common-path-prefix": "^1.0.0",
@@ -175,7 +175,7 @@
     "get-stream": "^3.0.0",
     "git-branch": "^0.3.0",
     "has-ansi": "^2.0.0",
-    "inquirer": "^1.0.2",
+    "inquirer": "^2.0.0",
     "lolex": "^1.4.0",
     "mkdirp": "^0.5.1",
     "nyc": "^10.0.0",
@@ -188,7 +188,7 @@
     "tap": "^8.0.0",
     "touch": "^1.0.0",
     "xo": "^0.17.0",
-    "zen-observable": "^0.3.0"
+    "zen-observable": "^0.4.0"
   },
   "xo": {
     "rules": {
