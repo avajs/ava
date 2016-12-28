@@ -162,6 +162,7 @@
     "strip-ansi": "^3.0.1",
     "strip-bom-buf": "^1.0.0",
     "time-require": "^0.1.2",
+    "typescript": "^2.1.4",
     "unique-temp-dir": "^1.0.0",
     "update-notifier": "^1.0.0"
   },
