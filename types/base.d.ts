@@ -43,11 +43,11 @@ export interface AssertContext {
 	/**
 	 * Assert that value is true.
 	 */
-	true(value: boolean, message?: string): void;
+	true(value: any, message?: string): void;
 	/**
 	 * Assert that value is false.
 	 */
-	false(value: boolean, message?: string): void;
+	false(value: any, message?: string): void;
 	/**
 	 * Assert that value is equal to expected.
 	 */
