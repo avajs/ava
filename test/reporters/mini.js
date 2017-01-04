@@ -383,6 +383,37 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results with unhandled errors', function (t) {
+	var reporter = miniReporter();
+	reporter.failCount = 2;
+
+	var err = new Error('failure one');
+	err.stack = beautifyStack(err.stack);
+
+	var runStatus = {
+		errors: [
+			{title: 'failed one', error: err},
+			{title: 'failed two'}
+		]
+	};
+
+	var output = reporter.finish(runStatus);
+	var expectedStack = colors.error('  failure two\n') + colors.errorStack('stack line with trailing whitespace');
+
+	compareLineOutput(t, output, [
+		'',
+		'  ' + chalk.red('2 failed'),
+		'',
+		'  ' + chalk.white('failed one'),
+		/failure/,
+		/test\/reporters\/mini\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		''
+	].concat(expectedStack.split('\n')));
+	t.end();
+});
+
 test('results with 1 previous failure', function (t) {
 	var reporter = miniReporter();
 	reporter.todoCount = 1;
