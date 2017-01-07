@@ -143,7 +143,6 @@
     "md5-hex": "^1.2.0",
     "meow": "^3.7.0",
     "ms": "^0.7.1",
-    "object-assign": "^4.0.1",
     "observable-to-promise": "^0.4.0",
     "option-chain": "^0.1.0",
     "package-hash": "^1.1.0",

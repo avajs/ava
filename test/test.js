@@ -9,13 +9,15 @@ const failingTestHint = 'Test was expected to fail, but succeeded, you should st
 
 function ava(title, fn, contextRef, report) {
 	const t = new Test(title, fn, contextRef, report);
+
 	t.metadata = {
 		callback: false
 	};
+
 	return t;
 }
 
-ava.failing = function (title, fn, contextRef, report) {
+ava.failing = (title, fn, contextRef, report) => {
 	const t = new Test(title, fn, contextRef, report);
 
 	t.metadata = {
@@ -26,7 +28,7 @@ ava.failing = function (title, fn, contextRef, report) {
 	return t;
 };
 
-ava.cb = function (title, fn, contextRef, report) {
+ava.cb = (title, fn, contextRef, report) => {
 	const t = new Test(title, fn, contextRef, report);
 
 	t.metadata = {
@@ -36,7 +38,7 @@ ava.cb = function (title, fn, contextRef, report) {
 	return t;
 };
 
-ava.cb.failing = function (title, fn, contextRef, report) {
+ava.cb.failing = (title, fn, contextRef, report) => {
 	const t = new Test(title, fn, contextRef, report);
 
 	t.metadata = {
@@ -69,11 +71,11 @@ test('title is optional', t => {
 test('callback is required', t => {
 	t.throws(() => {
 		ava();
-	}, /you must provide a callback/);
+	}, /You must provide a callback/);
 
 	t.throws(() => {
 		ava('title');
-	}, /you must provide a callback/);
+	}, /You must provide a callback/);
 
 	t.end();
 });
@@ -106,7 +108,6 @@ test('plan assertions', t => {
 		a.pass();
 		a.pass();
 	}).run();
-
 	t.is(result.passed, true);
 	t.is(result.result.planCount, 2);
 	t.is(result.result.assertCount, 2);

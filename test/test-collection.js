@@ -1,6 +1,5 @@
 'use strict';
 const test = require('tap').test;
-const objectAssign = require('object-assign');
 const TestCollection = require('../lib/test-collection');
 
 function defaults() {
@@ -15,7 +14,7 @@ function defaults() {
 }
 
 function metadata(opts) {
-	return objectAssign(defaults(), opts);
+	return Object.assign(defaults(), opts);
 }
 
 function mockTest(opts, title) {
@@ -311,13 +310,11 @@ test('foo', t => {
 		log.push(result.result.title);
 	}
 
-	function noop() {}
-
 	function add(title, opts) {
 		collection.add({
 			title,
 			metadata: metadata(opts),
-			fn: noop
+			fn: () => {}
 		});
 	}
 
