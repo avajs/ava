@@ -67,7 +67,7 @@ module.exports = Api;
 
 Api.prototype._runFile = function (file, runStatus, execArgv) {
 	var hash = this.precompiler.precompileFile(file);
-	var precompiled = {};
+	var precompiled = objectAssign({}, this._precompiledHelpers);
 	var resolvedfpath = fs.realpathSync(file);
 	precompiled[resolvedfpath] = hash;
 
@@ -139,7 +139,22 @@ Api.prototype._setupPrecompiler = function (files) {
 	});
 };
 
+Api.prototype._precompileHelpers = function () {
+	var self = this;
+
+	this._precompiledHelpers = {};
+
+	return new AvaFiles({cwd: this.options.resolveTestsFrom})
+		.findTestHelpers()
+		.map(function (file) { // eslint-disable-line array-callback-return
+			var hash = self.precompiler.precompileFile(file);
+			self._precompiledHelpers[file] = hash;
+		});
+};
+
 Api.prototype._run = function (files, options) {
+	var self = this;
+
 	options = options || {};
 
 	var runStatus = new RunStatus({
@@ -160,20 +175,23 @@ Api.prototype._run = function (files, options) {
 
 	this._setupPrecompiler(files);
 
-	if (this.options.timeout) {
-		this._setupTimeout(runStatus);
-	}
+	return this._precompileHelpers()
+		.then(function () {
+			if (self.options.timeout) {
+				self._setupTimeout(runStatus);
+			}
 
-	var overwatch;
-	if (this.options.concurrency > 0) {
-		var concurrency = this.options.serial ? 1 : this.options.concurrency;
-		overwatch = this._runWithPool(files, runStatus, concurrency);
-	} else {
-		// _runWithoutPool exists to preserve legacy behavior, specifically around `.only`
-		overwatch = this._runWithoutPool(files, runStatus);
-	}
+			var overwatch;
+			if (self.options.concurrency > 0) {
+				var concurrency = self.options.serial ? 1 : self.options.concurrency;
+				overwatch = self._runWithPool(files, runStatus, concurrency);
+			} else {
+				// _runWithoutPool exists to preserve legacy behavior, specifically around `.only`
+				overwatch = self._runWithoutPool(files, runStatus);
+			}
 
-	return overwatch;
+			return overwatch;
+		});
 };
 
 Api.prototype._computeForkExecArgs = function (files) {
