@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
-var path = require('path');
-var debug = require('debug')('ava');
+const path = require('path');
+const debug = require('debug')('ava');
 
 // Prefer the local installation of AVA.
-var resolveCwd = require('resolve-cwd');
-var localCLI = resolveCwd('ava/cli');
+const resolveCwd = require('resolve-cwd');
+const localCLI = resolveCwd('ava/cli');
 
 // Use path.relative() to detect local AVA installation,
 // because __filename's case is inconsistent on Windows
@@ -22,7 +22,7 @@ if (localCLI && path.relative(localCLI, __filename) !== '') {
 	try {
 		require('./lib/cli').run();
 	} catch (err) {
-		console.error('\n  ' + err.message);
+		console.error(`\n  ${err.message}`);
 		process.exit(1);
 	}
 }

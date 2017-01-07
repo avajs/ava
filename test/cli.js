@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const childProcess = require('child_process');
 const test = require('tap').test;
-global.Promise = require('bluebird');
 const getStream = require('get-stream');
 const figures = require('figures');
 const chalk = require('chalk');
