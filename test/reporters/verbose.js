@@ -381,6 +381,29 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results when fail-fast is enabled', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'',
+		'  ' + colors.failFast('`--fail-fast` is on. Any number of tests may have been skipped'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
 test('results with 1 previous failure', function (t) {
 	var reporter = createReporter();
 

@@ -145,7 +145,8 @@ Api.prototype._run = function (files, options) {
 	var runStatus = new RunStatus({
 		runOnlyExclusive: options.runOnlyExclusive,
 		prefixTitles: this.options.explicitTitles || files.length > 1,
-		base: path.relative('.', commonPathPrefix(files)) + path.sep
+		base: path.relative('.', commonPathPrefix(files)) + path.sep,
+		failFast: this.options.failFast
 	});
 
 	this.emit('test-run', runStatus, files);
