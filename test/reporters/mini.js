@@ -417,6 +417,8 @@ test('results with unhandled errors', function (t) {
 test('results when fail-fast is enabled', function (t) {
 	var reporter = miniReporter();
 	var runStatus = {
+		remainingCount: 1,
+		failCount: 1,
 		failFastEnabled: true
 	};
 
@@ -426,6 +428,32 @@ test('results when fail-fast is enabled', function (t) {
 		'',
 		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped')
 	]);
+	t.end();
+});
+
+test('results without fail-fast if no failing tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		remainingCount: 1,
+		failCount: 0,
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
+	t.end();
+});
+
+test('results without fail-fast if no skipped tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
 	t.end();
 });
 
