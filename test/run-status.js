@@ -66,3 +66,24 @@ test('successfully initializes without any options provided', t => {
 	t.is(runStatus.base, '');
 	t.end();
 });
+
+test('calculate remaining test count', t => {
+	const runStatus = new RunStatus();
+	runStatus.testCount = 10;
+
+	var results = [{
+		stats: {
+			passCount: 1,
+			failCount: 1,
+			skipCount: 1,
+			todoCount: 1,
+			knownFailureCount: 1
+		}
+	}];
+
+	runStatus.processResults(results);
+
+	t.is(runStatus.remainingCount, 5);
+	t.end();
+});
+
