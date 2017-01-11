@@ -33,7 +33,7 @@ test('Without Pool: test file with exclusive tests causes non-exclusive tests in
 	return api.run(files)
 		.then(result => {
 			t.ok(result.hasExclusive);
-			t.is(result.testCount, 2);
+			t.is(result.testCount, 5);
 			t.is(result.passCount, 2);
 			t.is(result.failCount, 0);
 		});
@@ -48,7 +48,7 @@ test('Without Pool: test files can be forced to run in exclusive mode', t => {
 		{runOnlyExclusive: true}
 	).then(result => {
 		t.ok(result.hasExclusive);
-		t.is(result.testCount, 0);
+		t.is(result.testCount, 1);
 		t.is(result.passCount, 0);
 		t.is(result.failCount, 0);
 	});

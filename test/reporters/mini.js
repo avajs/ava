@@ -424,7 +424,7 @@ test('results when fail-fast is enabled', function (t) {
 	compareLineOutput(t, output, [
 		'',
 		'',
-		'  ' + colors.failFast('`--fail-fast` is on. Any number of tests may have been skipped')
+		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped')
 	]);
 	t.end();
 });
@@ -589,3 +589,57 @@ test('stderr and stdout should call _update', function (t) {
 	reporter._update.restore();
 	t.end();
 });
+
+test('results when hasExclusive is enabled, but there are no known remaining tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		hasExclusive: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there is one remaining tests', function (t) {
+	var reporter = miniReporter();
+
+	var runStatus = {
+		hasExclusive: true,
+		testCount: 2,
+		passCount: 1,
+		remainingCount: 1
+	};
+
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run.'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there are multiple remaining tests', function (t) {
+	var reporter = miniReporter();
+
+	var runStatus = {
+		hasExclusive: true,
+		testCount: 3,
+		passCount: 1,
+		remainingCount: 2
+	};
+
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run.'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
