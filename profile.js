@@ -11,8 +11,22 @@ const Promise = require('bluebird');
 const pkgConf = require('pkg-conf');
 const findCacheDir = require('find-cache-dir');
 const uniqueTempDir = require('unique-temp-dir');
+const arrify = require('arrify');
+const resolveCwd = require('resolve-cwd');
 const CachingPrecompiler = require('./lib/caching-precompiler');
 const globals = require('./lib/globals');
+
+function resolveModules(modules) {
+	return arrify(modules).map(name => {
+		const modulePath = resolveCwd(name);
+
+		if (modulePath === null) {
+			throw new Error(`Could not resolve required module '${name}'`);
+		}
+
+		return modulePath;
+	});
+}
 
 // Chrome gets upset when the `this` value is non-null for these functions
 globals.setTimeout = setTimeout.bind(null);
@@ -75,7 +89,8 @@ const opts = {
 	serial: cli.flags.serial,
 	tty: false,
 	cacheDir,
-	precompiled
+	precompiled,
+	require: resolveModules(conf.require)
 };
 
 const events = new EventEmitter();
