@@ -504,13 +504,13 @@ test('.jsxEqual()', t => {
 	t.end();
 });
 
-test('.jsxNotEqual()', t => {
+test('.notJsxEqual()', t => {
 	t.throws(() => {
-		assert.jsxNotEqual(React.createElement('b', null), React.createElement('b', null));
+		assert.notJsxEqual(React.createElement('b', null), React.createElement('b', null));
 	});
 
 	t.doesNotThrow(() => {
-		assert.jsxNotEqual(React.createElement('b', null), React.createElement('i', null));
+		assert.notJsxEqual(React.createElement('b', null), React.createElement('i', null));
 	});
 
 	t.end();
