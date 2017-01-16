@@ -615,7 +615,7 @@ test('results when hasExclusive is enabled, but there is one remaining tests', f
 	var expectedOutput = [
 		'',
 		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run.'),
+		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
 		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
@@ -636,7 +636,7 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 	var expectedOutput = [
 		'',
 		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run.'),
+		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
 		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
