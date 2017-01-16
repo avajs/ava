@@ -499,7 +499,7 @@ test('results when hasExclusive is enabled, but there is one remaining tests', f
 		'  ' + chalk.green('1 test passed') + time,
 		'',
 		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run.'),
+		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
 		''
 	].join('\n');
 
@@ -522,7 +522,7 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 		'  ' + chalk.green('1 test passed') + time,
 		'',
 		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run.'),
+		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
 		''
 	].join('\n');
 
