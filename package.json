@@ -130,7 +130,7 @@
     "is-obj": "^1.0.0",
     "is-observable": "^0.2.0",
     "is-promise": "^2.1.0",
-    "jest-snapshot": "^17.0.3",
+    "jest-snapshot": "^18.1.0",
     "last-line-stream": "^1.0.0",
     "lodash.debounce": "^4.0.3",
     "lodash.difference": "^4.3.0",
