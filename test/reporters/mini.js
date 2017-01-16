@@ -27,6 +27,9 @@ process.stdout.columns = 5000;
 const fullWidthLine = chalk.gray.dim('\u2500'.repeat(5000));
 
 function miniReporter(options) {
+	if (options === undefined) {
+		options = {color: true};
+	}
 	const reporter = new MiniReporter(options);
 	reporter.start = () => '';
 	return reporter;
@@ -35,7 +38,7 @@ function miniReporter(options) {
 process.stderr.setMaxListeners(50);
 
 test('start', t => {
-	const reporter = new MiniReporter();
+	const reporter = new MiniReporter({color: true});
 
 	t.is(reporter.start(), ' \n ' + graySpinner + ' ');
 	reporter.clearInterval();
@@ -432,7 +435,7 @@ test('results with errors and disabled code excerpts', t => {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({color: true, basePath: path.dirname(err2Path)});
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -495,7 +498,7 @@ test('results with errors and broken code excerpts', t => {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({color: true, basePath: path.dirname(err2Path)});
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -559,7 +562,7 @@ test('results with errors and disabled assert output', t => {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({basePath: path.dirname(err1Path)});
+	const reporter = miniReporter({color: true, basePath: path.dirname(err1Path)});
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -731,7 +734,7 @@ test('results with watching enabled', t => {
 	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 	const time = ' ' + chalk.grey.dim('[17:19:12]');
 
-	const reporter = miniReporter({watching: true});
+	const reporter = miniReporter({color: true, watching: true});
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
@@ -903,5 +906,29 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 		'\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('result when no-color flag is set', t => {
+	const reporter = miniReporter({
+		color: false
+	});
+
+	const runStatus = {
+		hasExclusive: true,
+		testCount: 3,
+		passCount: 1,
+		failCount: 0,
+		remainingCount: 2
+	};
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'',
+		'',
+		'  The .only() modifier is used in some tests. 2 tests were not run',
+		'\n'
+	].join('\n');
+	t.is(output, expectedOutput);
 	t.end();
 });
