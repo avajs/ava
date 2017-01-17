@@ -18,6 +18,8 @@ var codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
 
+var stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
+
 // Tap doesn't emulate a tty environment and thus process.stdout.columns is
 // undefined. Expect an 80 character wide line to be rendered.
 var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
@@ -363,9 +365,7 @@ test('results with errors', function (t) {
 	error1.expectedType = 'string';
 
 	var error2 = new Error('error two message');
-	// TODO: Figure out how to make it pass with \t\n at the end
-	error2.stack = 'stack line with trailing whitespace';
-	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	error2.source = {file: tempWrite.sync('b();'), line: 1};
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
@@ -395,8 +395,9 @@ test('results with errors', function (t) {
 		indentString(codeExcerpt(error1.source.file, error1.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error1), 2).split('\n'),
-		/Error: error one message/,
-		/test\/reporters\/verbose\.js/,
+		/error one message/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -407,7 +408,9 @@ test('results with errors', function (t) {
 		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
-		'  ' + colors.stack('stack line with trailing whitespace')
+		/error two message/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });
@@ -422,9 +425,7 @@ test('results with errors and disabled code excerpts', function (t) {
 	error1.expectedType = 'string';
 
 	var error2 = new Error('error two message');
-	// TODO: Figure out how to make it pass with \t\n at the end
-	error2.stack = 'stack line with trailing whitespace';
-	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	error2.source = {file: tempWrite.sync('b();'), line: 1};
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
@@ -451,8 +452,9 @@ test('results with errors and disabled code excerpts', function (t) {
 		'  ' + chalk.red('1. fail one'),
 		'',
 		indentString(formatAssertError(error1), 2).split('\n'),
-		/Error: error one message/,
-		/test\/reporters\/verbose\.js/,
+		/error one message/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -463,7 +465,9 @@ test('results with errors and disabled code excerpts', function (t) {
 		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
-		'  ' + colors.stack('stack line with trailing whitespace')
+		/error two message/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });
@@ -479,9 +483,7 @@ test('results with errors and disabled assert output', function (t) {
 	error1.expectedType = 'string';
 
 	var error2 = new Error('error two message');
-	// TODO: Figure out how to make it pass with \t\n at the end
-	error2.stack = 'stack line with trailing whitespace';
-	// error2.stack = 'stack line with trailing whitespace\t\n';
+	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	error2.source = {file: tempWrite.sync('b();'), line: 1};
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
@@ -510,8 +512,9 @@ test('results with errors and disabled assert output', function (t) {
 		'',
 		indentString(codeExcerpt(error1.source.file, error1.source.line), 2).split('\n'),
 		'',
-		/Error: error one message/,
-		/test\/reporters\/verbose\.js/,
+		/error one message/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -522,7 +525,9 @@ test('results with errors and disabled assert output', function (t) {
 		indentString(codeExcerpt(error2.source.file, error2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
-		'  ' + colors.stack('stack line with trailing whitespace')
+		/error two message/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });

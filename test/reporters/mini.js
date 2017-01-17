@@ -20,6 +20,7 @@ var codeExcerpt = require('../../lib/code-excerpt');
 chalk.enabled = true;
 
 var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
+var stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
 
 // Needed because tap doesn't emulate a tty environment and thus this is
 // undefined, making `cli-truncate` append '...' to test titles
@@ -360,9 +361,7 @@ test('results with errors', function (t) {
 	err1.expectedType = 'string';
 
 	var err2 = new Error('failure two');
-	// TODO: Figure out how to make it pass with the original string
-	err2.stack = 'stack line with trailing whitespace';
-	// err2.stack = 'first line is stripped\nstack line with trailing whitespace\t\n';
+	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	err2.source = {file: tempWrite.sync('b();'), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -395,7 +394,9 @@ test('results with errors', function (t) {
 		indentString(codeExcerpt(err1.source.file, err1.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err1), 2).split('\n'),
-		/test\/reporters\/mini\.js/,
+		/failure one/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -406,7 +407,9 @@ test('results with errors', function (t) {
 		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		'  ' + chalk.grey('stack line with trailing whitespace')
+		/failure two/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });
@@ -421,9 +424,7 @@ test('results with errors and disabled code excerpts', function (t) {
 	err1.expectedType = 'string';
 
 	var err2 = new Error('failure two');
-	// TODO: Figure out how to make it pass with the original string
-	err2.stack = 'stack line with trailing whitespace';
-	// err2.stack = 'first line is stripped\nstack line with trailing whitespace\t\n';
+	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	err2.source = {file: tempWrite.sync('b();'), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -453,7 +454,9 @@ test('results with errors and disabled code excerpts', function (t) {
 		'  ' + chalk.bold.white('failed one'),
 		'',
 		indentString(formatAssertError(err1), 2).split('\n'),
-		/test\/reporters\/mini\.js/,
+		/failure one/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -464,7 +467,9 @@ test('results with errors and disabled code excerpts', function (t) {
 		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		'  ' + chalk.grey('stack line with trailing whitespace')
+		/failure two/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });
@@ -480,9 +485,7 @@ test('results with errors and disabled assert output', function (t) {
 	err1.expectedType = 'string';
 
 	var err2 = new Error('failure two');
-	// TODO: Figure out how to make it pass with the original string
-	err2.stack = 'stack line with trailing whitespace';
-	// err2.stack = 'first line is stripped\nstack line with trailing whitespace\t\n';
+	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	err2.source = {file: tempWrite.sync('b();'), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -514,7 +517,9 @@ test('results with errors and disabled assert output', function (t) {
 		'',
 		indentString(codeExcerpt(err1.source.file, err1.source.line), 2).split('\n'),
 		'',
-		/test\/reporters\/mini\.js/,
+		/failure one/,
+		'',
+		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
@@ -525,7 +530,9 @@ test('results with errors and disabled assert output', function (t) {
 		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		'  ' + chalk.grey('stack line with trailing whitespace')
+		/failure two/,
+		'',
+		stackLineRegex
 	]));
 	t.end();
 });
@@ -545,20 +552,16 @@ test('results with unhandled errors', function (t) {
 	};
 
 	var output = reporter.finish(runStatus);
-	var expectedStack = colors.error('  failure two\n') + colors.errorStack('stack line with trailing whitespace');
-
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.red('2 failed'),
 		'',
 		'  ' + chalk.bold.white('failed one'),
 		'',
-		// /failure/,
-		/test\/reporters\/mini\.js/,
-		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		/failure one/,
 		'',
-		''
-	].concat(expectedStack.split('\n')));
+		stackLineRegex
+	]);
 	t.end();
 });
 
