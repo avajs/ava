@@ -20,10 +20,6 @@ chalk.enabled = true;
 
 var stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
 
-// Tap doesn't emulate a tty environment and thus process.stdout.columns is
-// undefined. Expect an 80 character wide line to be rendered.
-var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
-
 lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 var time = ' ' + chalk.grey.dim('[17:19:12]');
 
@@ -635,8 +631,12 @@ test('results with 2 previous failures', function (t) {
 test('full-width line when sectioning', function (t) {
 	var reporter = createReporter();
 
+	const prevColumns = process.stdout.columns;
+	process.stdout.columns = 80;
 	var output = reporter.section();
-	t.is(output, fullWidthLine);
+	process.stdout.columns = prevColumns;
+
+	t.is(output, chalk.gray.dim(repeating('\u2500', 80)));
 	t.end();
 });
 
