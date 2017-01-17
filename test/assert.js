@@ -543,24 +543,3 @@ test('snapshot makes a snapshot using a library and global options', t => {
 
 	t.end();
 });
-
-test('if snapshot fails, prints a message', t => {
-	const saveSpy = sinon.spy();
-	const state = {save: saveSpy};
-	const stateGetter = sinon.stub().returns(state);
-	const messageStub = sinon.stub().returns('message');
-	const matchStub = sinon.stub().returns({
-		pass: false,
-		message: messageStub
-	});
-
-	t.plan(2);
-
-	t.throws(() => {
-		assert._snapshot('tree', undefined, matchStub, stateGetter);
-	});
-
-	t.ok(messageStub.calledOnce);
-
-	t.end();
-});
