@@ -697,7 +697,7 @@ function generateTests(prefix, apiCreator) {
 
 		const api = apiCreator({
 			babelConfig: {
-				presets: ['react', 'es2015-node4', 'stage-2']
+				presets: ['react', ['env', {targets: {node: 'current'}}], 'stage-2']
 			}
 		});
 
@@ -878,7 +878,7 @@ function generateTests(prefix, apiCreator) {
 
 		const api = apiCreator({
 			babelConfig: {
-				presets: ['es2015-node4', 'stage-2'],
+				presets: [['env', {targets: {node: 'current'}}], 'stage-2'],
 				plugins: [testCapitalizerPlugin]
 			},
 			cacheEnabled: false

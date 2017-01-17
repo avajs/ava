@@ -47,7 +47,7 @@
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
-    "make-ts": "babel-node --presets=babel-preset-es2015-node4 --plugins=transform-runtime types/make.js"
+    "make-ts": "babel-node types/make.js"
   },
   "files": [
     "lib",
@@ -100,8 +100,7 @@
     "babel-plugin-detective": "^2.0.0",
     "babel-plugin-espower": "^2.3.1",
     "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-es2015-node4": "^2.1.0",
-    "babel-preset-node6": "^11.0.0",
+    "babel-preset-env": "^1.1.4",
     "babel-preset-stage-2": "^6.17.0",
     "babel-runtime": "^6.11.6",
     "bluebird": "^3.0.0",
@@ -155,7 +154,6 @@
     "repeating": "^2.0.0",
     "require-precompiled": "^0.1.0",
     "resolve-cwd": "^1.0.0",
-    "semver": "^5.3.0",
     "source-map-support": "^0.4.0",
     "stack-utils": "^0.4.0",
     "strip-ansi": "^3.0.1",
@@ -199,6 +197,21 @@
     "reporter": [
       "lcov",
       "text"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-runtime"
     ]
   }
 }
