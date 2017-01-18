@@ -43,10 +43,6 @@ type AssertContext = {
 	truthy(value: mixed, message?: string): void;
 	// Assert that value is falsy.
 	falsy(value: mixed, message?: string): void;
-	// DEPRECATED, use `truthy`. Assert that value is truthy.
-	ok(value: mixed, message?: string): void;
-	// DEPRECATED, use `falsy`. Assert that value is falsy.
-	notOk(value: mixed, message?: string): void;
 	// Assert that value is true.
 	true(value: mixed, message?: string): void;
 	// Assert that value is false.
@@ -59,12 +55,6 @@ type AssertContext = {
 	deepEqual<U>(value: U, expected: U, message?: string): void;
 	// Assert that value is not deep equal to expected.
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that function throws an error or promise rejects.
-	// DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
-	// @param error Can be a constructor, regex, error message or validation function.
-	same<U>(value: U, expected: U, message?: string): void;
-	// DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
-	notSame<U>(value: U, expected: U, message?: string): void;
 	// Assert that function throws an error or promise rejects.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
