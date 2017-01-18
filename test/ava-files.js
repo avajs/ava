@@ -1,3 +1,4 @@
+'use strict';
 const path = require('path');
 const tap = require('tap');
 const AvaFiles = require('../lib/ava-files');
