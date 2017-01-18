@@ -693,11 +693,11 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} power-assert support`, t => {
-		t.plan(4);
+		t.plan(3);
 
 		const api = apiCreator({
 			babelConfig: {
-				presets: ['react', 'es2015-node4', 'stage-2']
+				presets: ['react', '@ava/stage-4']
 			}
 		});
 
@@ -715,11 +715,6 @@ function generateTests(prefix, apiCreator) {
 
 				t.match(
 					result.errors[2].error.message,
-					/t\.true\(o === \{ ...o \}\)\s*\n\s+\|\s*\n\s+Object\{\}/m
-				);
-
-				t.match(
-					result.errors[3].error.message,
 					/t\.true\(<div \/> === <span \/>\)/m
 				);
 			});
@@ -878,7 +873,7 @@ function generateTests(prefix, apiCreator) {
 
 		const api = apiCreator({
 			babelConfig: {
-				presets: ['es2015-node4', 'stage-2'],
+				presets: ['@ava/stage-4'],
 				plugins: [testCapitalizerPlugin]
 			},
 			cacheEnabled: false

@@ -40,7 +40,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Enforces writing atomic tests
 - No implicit globals
 - [Isolated environment for each test file](#process-isolation)
-- [Write your tests in ES2015](#es2015-support)
+- [Write your tests in ES2017](#es2017-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
@@ -266,7 +266,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
-See the [ES2015 support](#es2015-support) section for details on the `babel` option.
+See the [ES2017 support](#es2017-support) section for details on the `babel` option.
 
 ## Documentation
 
@@ -671,21 +671,17 @@ test(t => {
 });
 ```
 
-### ES2015 support
+### ES2017 support
 
-AVA comes with built-in support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](https://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) presets, as well as the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
+AVA comes with built-in support for ES2017 through [Babel 6](https://babeljs.io). Just write your tests in ES2017. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) preset, as well as [custom transforms](https://github.com/avajs/babel-preset-transform-test-files) for test and helper files.
 
 The corresponding Babel config for AVA's setup is as follows:
 
 ```json
 {
   "presets": [
-    "es2015",
-    "stage-2"
-  ],
-  "plugins": [
-    "espower",
-    "transform-runtime"
+    "@ava/stage-4",
+    "@ava/transform-test-files"
   ]
 }
 ```

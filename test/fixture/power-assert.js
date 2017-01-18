@@ -11,11 +11,6 @@ test.serial(t => {
 });
 
 test.serial(t => {
-	const o = {};
-	t.true(o === {...o});
-});
-
-test.serial(t => {
 	const React = {
 		createElement: type => type
 	};

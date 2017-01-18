@@ -83,7 +83,6 @@ test('uses default babel options when babelConfig === "default"', t => {
 	t.true('inputSourceMap' in options);
 	t.false(options.babelrc);
 	t.true(Array.isArray(options.presets));
-	t.true(Array.isArray(options.plugins));
 	t.end();
 });
 
