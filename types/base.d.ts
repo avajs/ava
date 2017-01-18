@@ -33,14 +33,6 @@ export interface AssertContext {
 	 */
 	falsy(value: any, message?: string): void;
 	/**
-	 * DEPRECATED, use `truthy`. Assert that value is truthy.
-	 */
-	ok(value: any, message?: string): void;
-	/**
-	 * DEPRECATED, use `falsy`. Assert that value is falsy.
-	 */
-	notOk(value: any, message?: string): void;
-	/**
 	 * Assert that value is true.
 	 */
 	true(value: any, message?: string): void;
@@ -64,16 +56,6 @@ export interface AssertContext {
 	 * Assert that value is not deep equal to expected.
 	 */
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	/**
-	 * Assert that function throws an error or promise rejects.
-	 * DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
-	 * @param error Can be a constructor, regex, error message or validation function.
-	 */
-	same<U>(value: U, expected: U, message?: string): void;
- 	/**
- 	 * DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
- 	 */
- 	notSame<U>(value: U, expected: U, message?: string): void;
  	/**
  	 * Assert that function throws an error or promise rejects.
  	 * @param error Can be a constructor, regex, error message or validation function.
