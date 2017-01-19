@@ -8,7 +8,7 @@ const lolex = require('lolex');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const test = require('tap').test;
-const AvaFiles = require('ava-files');
+const AvaFiles = require('../lib/ava-files');
 
 const setImmediate = require('../lib/globals').setImmediate;
 
@@ -61,7 +61,7 @@ group('chokidar', (beforeEach, test, group) => {
 						debug.apply(null, args);
 					};
 				},
-				'ava-files': avaFiles
+				'./ava-files': avaFiles
 			});
 	}
 

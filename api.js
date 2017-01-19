@@ -7,7 +7,6 @@ const uniqueTempDir = require('unique-temp-dir');
 const findCacheDir = require('find-cache-dir');
 const resolveCwd = require('resolve-cwd');
 const debounce = require('lodash.debounce');
-const AvaFiles = require('ava-files');
 const autoBind = require('auto-bind');
 const Promise = require('bluebird');
 const getPort = require('get-port');
@@ -16,6 +15,7 @@ const ms = require('ms');
 const CachingPrecompiler = require('./lib/caching-precompiler');
 const RunStatus = require('./lib/run-status');
 const AvaError = require('./lib/ava-error');
+const AvaFiles = require('./lib/ava-files');
 const fork = require('./lib/fork');
 
 function resolveModules(modules) {
