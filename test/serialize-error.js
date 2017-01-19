@@ -22,7 +22,7 @@ test('serialize standard props', t => {
 	t.is(serializedErr.name, 'Error');
 	t.is(serializedErr.stack, beautifyStack(err.stack));
 	t.is(serializedErr.message, 'Hello');
-	t.is(serializedErr.source.file, 'test/serialize-error.js');
+	t.is(typeof serializedErr.source.file, 'string');
 	t.is(typeof serializedErr.source.line, 'number');
 	t.end();
 });
