@@ -353,7 +353,8 @@ test('results with passing tests and exceptions', function (t) {
 test('results with errors', function (t) {
 	var err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	err1.source = {file: tempWrite.sync('a();'), line: 1};
+	var err1Path = tempWrite.sync('a();');
+	err1.source = {file: path.basename(err1Path), line: 1};
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -362,14 +363,15 @@ test('results with errors', function (t) {
 
 	var err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	err2.source = {file: tempWrite.sync('b();'), line: 1};
+	var err2Path = tempWrite.sync('b();');
+	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err1.source.file)});
+	var reporter = miniReporter({basePath: path.dirname(err1Path)});
 	reporter.failCount = 1;
 
 	var runStatus = {
@@ -389,9 +391,9 @@ test('results with errors', function (t) {
 		'  ' + chalk.red('1 failed'),
 		'',
 		'  ' + chalk.bold.white('failed one'),
-		'  ' + chalk.grey(`${path.basename(err1.source.file)}:${err1.source.line}`),
+		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1.source.file, err1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err1Path, err1.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err1), 2).split('\n'),
 		/failure one/,
@@ -402,9 +404,9 @@ test('results with errors', function (t) {
 		'',
 		'',
 		'  ' + chalk.bold.white('failed two'),
-		'  ' + chalk.grey(`${path.basename(err2.source.file)}:${err2.source.line}`),
+		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/,
@@ -425,14 +427,15 @@ test('results with errors and disabled code excerpts', function (t) {
 
 	var err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	err2.source = {file: tempWrite.sync('b();'), line: 1};
+	var err2Path = tempWrite.sync('b();');
+	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err2.source.file)});
+	var reporter = miniReporter({basePath: path.dirname(err2Path)});
 	reporter.failCount = 1;
 
 	var runStatus = {
@@ -462,9 +465,9 @@ test('results with errors and disabled code excerpts', function (t) {
 		'',
 		'',
 		'  ' + chalk.bold.white('failed two'),
-		'  ' + chalk.grey(`${path.basename(err2.source.file)}:${err2.source.line}`),
+		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/,
@@ -477,7 +480,8 @@ test('results with errors and disabled code excerpts', function (t) {
 test('results with errors and disabled assert output', function (t) {
 	var err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	err1.source = {file: tempWrite.sync('a();'), line: 1};
+	var err1Path = tempWrite.sync('a();');
+	err1.source = {file: path.basename(err1Path), line: 1};
 	err1.showOutput = false;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -486,14 +490,15 @@ test('results with errors and disabled assert output', function (t) {
 
 	var err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	err2.source = {file: tempWrite.sync('b();'), line: 1};
+	var err2Path = tempWrite.sync('b();');
+	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err1.source.file)});
+	var reporter = miniReporter({basePath: path.dirname(err1Path)});
 	reporter.failCount = 1;
 
 	var runStatus = {
@@ -513,9 +518,9 @@ test('results with errors and disabled assert output', function (t) {
 		'  ' + chalk.red('1 failed'),
 		'',
 		'  ' + chalk.bold.white('failed one'),
-		'  ' + chalk.grey(`${path.basename(err1.source.file)}:${err1.source.line}`),
+		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1.source.file, err1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err1Path, err1.source.line), 2).split('\n'),
 		'',
 		/failure one/,
 		'',
@@ -525,9 +530,9 @@ test('results with errors and disabled assert output', function (t) {
 		'',
 		'',
 		'  ' + chalk.bold.white('failed two'),
-		'  ' + chalk.grey(`${path.basename(err2.source.file)}:${err2.source.line}`),
+		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2.source.file, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/,
