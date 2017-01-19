@@ -1,5 +1,4 @@
 'use strict';
-
 const indentString = require('indent-string');
 const prettyFormat = require('pretty-format');
 const chalk = require('chalk');
