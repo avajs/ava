@@ -55,7 +55,7 @@ function generatePrefixed(prefix) {
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (prefix.includes(parts, 'todo')) {
+			if (parts.includes('todo')) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
