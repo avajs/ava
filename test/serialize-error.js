@@ -3,20 +3,11 @@
 const prettyFormat = require('pretty-format');
 const reactElementPlugin = require('pretty-format/plugins/ReactElement');
 const reactTestPlugin = require('pretty-format/plugins/ReactTestComponent');
-const renderer = require('react-test-renderer');
 const test = require('tap').test;
 const beautifyStack = require('../lib/beautify-stack');
 const serialize = require('../lib/serialize-error');
 
-function isReactElement(obj) {
-	return obj.type && obj.ref !== undefined && obj.props;
-}
-
 function serializeValue(value) {
-	if (isReactElement(value)) {
-		value = renderer.create(value).toJSON();
-	}
-
 	return prettyFormat(value, {
 		plugins: [reactTestPlugin, reactElementPlugin],
 		highlight: true
