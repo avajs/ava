@@ -696,7 +696,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.run.returns(Promise.resolve({failCount: 0}));
 			start().observeStdin(stdin);
 
-			stdin.write(input + '\n');
+			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
 				t.ok(logger.clear.notCalled);
@@ -732,7 +732,7 @@ group('chokidar', (beforeEach, test, group) => {
 				// Advance clock *before* input is received. Note that the previous run
 				// hasn't finished yet.
 				clock.next();
-				stdin.write(input + '\n');
+				stdin.write(`${input}\n`);
 
 				return delay();
 			}).then(() => {
@@ -757,7 +757,7 @@ group('chokidar', (beforeEach, test, group) => {
 				// There's only one new run
 				t.ok(api.run.calledThrice);
 
-				stdin.write(input + '\n');
+				stdin.write(`${input}\n`);
 				return delay();
 			}).then(() => {
 				add();

@@ -63,7 +63,7 @@ generateTests('With Pool: ', options => {
 });
 
 function generateTests(prefix, apiCreator) {
-	test(prefix + 'ES2015 support', t => {
+	test(`${prefix} ES2015 support`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -74,7 +74,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'precompile helpers', t => {
+	test(`${prefix} precompile helpers`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -85,7 +85,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'generators support', t => {
+	test(`${prefix} generators support`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -96,7 +96,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'async/await support', t => {
+	test(`${prefix} async/await support`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -107,10 +107,10 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'test title prefixes — multiple files', t => {
+	test(`${prefix} test title prefixes — multiple files`, t => {
 		t.plan(6);
 
-		const separator = ' ' + figures.pointerSmall + ' ';
+		const separator = ` ${figures.pointerSmall} `;
 		const files = [
 			path.join(__dirname, 'fixture/async-await.js'),
 			path.join(__dirname, 'fixture/es2015.js'),
@@ -147,10 +147,10 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'test title prefixes — single file', t => {
+	test(`${prefix} test title prefixes — single file`, t => {
 		t.plan(2);
 
-		const separator = ' ' + figures.pointerSmall + ' ';
+		const separator = ` ${figures.pointerSmall} `;
 		const files = [
 			path.join(__dirname, 'fixture/generators.js')
 		];
@@ -180,10 +180,10 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'test title prefixes — single file (explicit)', t => {
+	test(`${prefix} test title prefixes — single file (explicit)`, t => {
 		t.plan(2);
 
-		const separator = ' ' + figures.pointerSmall + ' ';
+		const separator = ` ${figures.pointerSmall} `;
 		const files = [
 			path.join(__dirname, 'fixture/generators.js')
 		];
@@ -215,7 +215,7 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'display filename prefixes for failed test stack traces', t => {
+	test(`${prefix} display filename prefixes for failed test stack traces`, t => {
 		t.plan(3);
 
 		const files = [
@@ -235,7 +235,7 @@ function generateTests(prefix, apiCreator) {
 
 	// This is a seperate test because we can't ensure the order of the errors (to match them), and this is easier than
 	// sorting.
-	test(prefix + 'display filename prefixes for failed test stack traces in subdirs', t => {
+	test(`${prefix} display filename prefixes for failed test stack traces in subdirs`, t => {
 		t.plan(3);
 
 		const files = [
@@ -253,7 +253,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'fail-fast mode', t => {
+	test(`${prefix} fail-fast mode`, t => {
 		t.plan(5);
 
 		const api = apiCreator({
@@ -287,7 +287,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'serial execution mode', t => {
+	test(`${prefix} serial execution mode`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
@@ -302,7 +302,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'circular references on assertions do not break process.send', t => {
+	test(`${prefix} circular references on assertions do not break process.send`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -314,7 +314,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'run from package.json folder by default', t => {
+	test(`${prefix} run from package.json folder by default`, t => {
 		t.plan(1);
 		const api = apiCreator();
 
@@ -324,7 +324,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'change process.cwd() to a test\'s directory with pkgDir', t => {
+	test(`${prefix} change process.cwd() to a test's directory with pkgDir`, t => {
 		t.plan(1);
 
 		const fullPath = path.join(__dirname, 'fixture/process-cwd-pkgdir.js');
@@ -336,7 +336,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'unhandled promises will throw an error', t => {
+	test(`${prefix} unhandled promises will throw an error`, t => {
 		t.plan(3);
 
 		const api = apiCreator();
@@ -354,7 +354,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'uncaught exception will throw an error', t => {
+	test(`${prefix} uncaught exception will throw an error`, t => {
 		t.plan(3);
 
 		const api = apiCreator();
@@ -372,7 +372,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'errors can occur without messages', t => {
+	test(`${prefix} errors can occur without messages`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -384,7 +384,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'stack traces for exceptions are corrected using a source map file', t => {
+	test(`${prefix} stack traces for exceptions are corrected using a source map file`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -405,7 +405,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'stack traces for exceptions are corrected using a source map file in what looks like a browser env', t => {
+	test(`${prefix} stack traces for exceptions are corrected using a source map file in what looks like a browser env`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -426,7 +426,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'stack traces for exceptions are corrected using a source map file (cache off)', t => {
+	test(`${prefix} stack traces for exceptions are corrected using a source map file (cache off)`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -447,7 +447,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on)', t => {
+	test(`${prefix} stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on)`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -468,7 +468,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off)', t => {
+	test(`${prefix} stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off)`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -489,7 +489,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'absolute paths', t => {
+	test(`${prefix} absolute paths`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -500,7 +500,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'symlink to directory containing test files', t => {
+	test(`${prefix} symlink to directory containing test files`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -511,7 +511,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'symlink to test file directly', t => {
+	test(`${prefix} symlink to test file directly`, t => {
 		t.plan(1);
 
 		const api = apiCreator();
@@ -522,7 +522,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'search directories recursively for files', t => {
+	test(`${prefix} search directories recursively for files`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -534,7 +534,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'titles of both passing and failing tests and AssertionErrors are returned', t => {
+	test(`${prefix} titles of both passing and failing tests and AssertionErrors are returned`, t => {
 		t.plan(3);
 
 		const api = apiCreator();
@@ -547,7 +547,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'empty test files cause an AvaError to be emitted', t => {
+	test(`${prefix} empty test files cause an AvaError to be emitted`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -562,7 +562,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/empty.js')]);
 	});
 
-	test(prefix + 'test file with no tests causes an AvaError to be emitted', t => {
+	test(`${prefix} test file with no tests causes an AvaError to be emitted`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -577,7 +577,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/no-tests.js')]);
 	});
 
-	test(prefix + 'test file that immediately exits with 0 exit code', t => {
+	test(`${prefix} test file that immediately exits with 0 exit code`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -592,7 +592,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/immediate-0-exit.js')]);
 	});
 
-	test(prefix + 'test file that immediately exits with 3 exit code', t => {
+	test(`${prefix} test file that immediately exits with 3 exit code`, t => {
 		t.plan(3);
 
 		const api = apiCreator();
@@ -608,7 +608,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/immediate-3-exit.js')]);
 	});
 
-	test(prefix + 'testing nonexistent files causes an AvaError to be emitted', t => {
+	test(`${prefix} testing nonexistent files causes an AvaError to be emitted`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -623,7 +623,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/broken.js')]);
 	});
 
-	test(prefix + 'test file in node_modules is ignored', t => {
+	test(`${prefix} test file in node_modules is ignored`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -638,7 +638,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
 	});
 
-	test(prefix + 'test file in fixtures is ignored', t => {
+	test(`${prefix} test file in fixtures is ignored`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -653,7 +653,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')]);
 	});
 
-	test(prefix + 'test file in helpers is ignored', t => {
+	test(`${prefix} test file in helpers is ignored`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -668,7 +668,7 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')]);
 	});
 
-	test(prefix + 'Node.js-style --require CLI argument', t => {
+	test(`${prefix} Node.js-style --require CLI argument`, t => {
 		t.plan(1);
 
 		const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
@@ -683,7 +683,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'Node.js-style --require CLI argument module not found', t => {
+	test(`${prefix} Node.js-style --require CLI argument module not found`, t => {
 		t.plan(1);
 
 		t.throws(() => {
@@ -692,7 +692,7 @@ function generateTests(prefix, apiCreator) {
 		}, /^Could not resolve required module 'foo-bar'$/);
 	});
 
-	test(prefix + 'power-assert support', t => {
+	test(`${prefix} power-assert support`, t => {
 		t.plan(4);
 
 		const api = apiCreator({
@@ -725,7 +725,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'caching is enabled by default', t => {
+	test(`${prefix} caching is enabled by default`, t => {
 		t.plan(3);
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
@@ -751,7 +751,7 @@ function generateTests(prefix, apiCreator) {
 		}
 	});
 
-	test(prefix + 'caching can be disabled', t => {
+	test(`${prefix} caching can be disabled`, t => {
 		t.plan(1);
 		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
@@ -767,7 +767,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'test file with only skipped tests does not create a failure', t => {
+	test(`${prefix} test file with only skipped tests does not create a failure`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -779,7 +779,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'resets state before running', t => {
+	test(`${prefix} resets state before running`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -792,7 +792,7 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'emits dependencies for test files', t => {
+	test(`${prefix} emits dependencies for test files`, t => {
 		t.plan(8);
 
 		const api = new Api({
@@ -827,7 +827,7 @@ function generateTests(prefix, apiCreator) {
 		return result.catch(() => {});
 	});
 
-	test(prefix + 'emits stats for test files', t => {
+	test(`${prefix} emits stats for test files`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -849,7 +849,7 @@ function generateTests(prefix, apiCreator) {
 		]);
 	});
 
-	test(prefix + 'verify test count', t => {
+	test(`${prefix} verify test count`, t => {
 		t.plan(8);
 
 		const api = apiCreator();
@@ -873,7 +873,7 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'Custom Babel Plugin Support', t => {
+	test(`${prefix} Custom Babel Plugin Support`, t => {
 		t.plan(2);
 
 		const api = apiCreator({
@@ -896,7 +896,7 @@ function generateTests(prefix, apiCreator) {
 			}, t.threw);
 	});
 
-	test(prefix + 'Default babel config doesn\'t use .babelrc', t => {
+	test(`${prefix} Default babel config doesn't use .babelrc`, t => {
 		t.plan(2);
 
 		const api = apiCreator();
@@ -913,7 +913,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'babelConfig:"inherit" uses .babelrc', t => {
+	test(`${prefix} babelConfig:"inherit" uses .babelrc`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
@@ -933,7 +933,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'babelConfig:{babelrc:true} uses .babelrc', t => {
+	test(`${prefix} babelConfig:{babelrc:true} uses .babelrc`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
@@ -953,7 +953,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc', t => {
+	test(`${prefix} babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
@@ -976,7 +976,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc', t => {
+	test(`${prefix} babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc`, t => {
 		t.plan(2);
 
 		const api = new Api({
@@ -999,7 +999,7 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(prefix + 'using --match with no matching tests causes an AvaError to be emitted', t => {
+	test(`${prefix} using --match with no matching tests causes an AvaError to be emitted`, t => {
 		t.plan(2);
 
 		const api = apiCreator({
@@ -1023,7 +1023,7 @@ function generateTests(prefix, apiCreator) {
 		]);
 	});
 
-	test(prefix + 'using --match with matching tests will only report those passing tests', t => {
+	test(`${prefix} using --match with matching tests will only report those passing tests`, t => {
 		t.plan(2);
 
 		const api = apiCreator({
@@ -1050,7 +1050,7 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(prefix + 'errors thrown when running files are emitted', t => {
+	test(`${prefix} errors thrown when running files are emitted`, t => {
 		t.plan(3);
 
 		const api = apiCreator();
@@ -1071,7 +1071,7 @@ function generateTests(prefix, apiCreator) {
 }
 
 function generatePassDebugTests(execArgv, expectedInspectIndex) {
-	test('pass ' + execArgv.join(' ') + ' to fork', t => {
+	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		t.plan(expectedInspectIndex === -1 ? 3 : 2);
 
 		const api = new Api({testOnlyExecArgv: execArgv});
@@ -1089,7 +1089,7 @@ function generatePassDebugTests(execArgv, expectedInspectIndex) {
 }
 
 function generatePassDebugIntegrationTests(execArgv) {
-	test('pass ' + execArgv.join(' ') + ' to fork', t => {
+	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		t.plan(1);
 
 		const api = new Api({testOnlyExecArgv: execArgv});

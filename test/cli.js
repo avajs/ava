@@ -308,7 +308,7 @@ test('--match works', t => {
 });
 
 ['--tap', '-t'].forEach(tapFlag => {
-	test(tapFlag + ' should produce TAP output', t => {
+	test(`${tapFlag} should produce TAP output`, t => {
 		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, err => {
 			t.ok(!err);
 			t.end();

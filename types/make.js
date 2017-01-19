@@ -40,12 +40,14 @@ function generatePrefixed(prefix) {
 			continue;
 		}
 
-		// If `parts` is not sorted, we alias it to the sorted chain.
+		// If `parts` is not sorted, we alias it to the sorted chain
 		if (!isSorted(parts)) {
 			const chain = parts.sort().join('.');
+
 			if (exists(parts)) {
-				output += '\texport const ' + part + ': typeof test.' + chain + ';\n';
+				output += `\texport const ${part}: typeof test.${chain};\n`;
 			}
+
 			continue;
 		}
 
@@ -57,10 +59,10 @@ function generatePrefixed(prefix) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
-				output += '\t' + writeFunction(part, 'name: string, implementation: ' + type);
-				output += '\t' + writeFunction(part, 'implementation: ' + type);
-				output += '\t' + writeFunction(part, 'name: string, implementation: Macros<' + type + 'Context>, ...args: any[]');
-				output += '\t' + writeFunction(part, 'implementation: Macros<' + type + 'Context>, ...args: any[]');
+				output += '\t' + writeFunction(part, `name: string, implementation: ${type}`);
+				output += '\t' + writeFunction(part, `implementation: ${type}`);
+				output += '\t' + writeFunction(part, `name: string, implementation: Macros<${type}Context>, ...args: any[]`);
+				output += '\t' + writeFunction(part, `implementation: Macros<${type}Context>, ...args: any[]`);
 			}
 		}
 
@@ -71,11 +73,13 @@ function generatePrefixed(prefix) {
 		return children;
 	}
 
-	return 'export namespace ' + ['test'].concat(prefix).join('.') + ' {\n' + output + '}\n' + children;
+	const namespace = ['test'].concat(prefix).join('.');
+
+	return `export namespace ${namespace} {\n${output}}\n${children}`;
 }
 
 function writeFunction(name, args) {
-	return 'export function ' + name + '(' + args + '): void;\n';
+	return `export function ${name}(${args}): void;\n`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
@@ -107,11 +111,13 @@ function verify(parts, asPrefix) {
 		if (has('after') || has('afterEach')) {
 			return true;
 		}
+
 		if (!verify(parts.concat(['after']), false) && !verify(parts.concat(['afterEach']), false)) {
 			// If `after` nor `afterEach` cannot be added to this prefix,
 			// `always` is not allowed here.
 			return false;
 		}
+
 		// Only allowed as a prefix
 		return asPrefix;
 	}
@@ -125,16 +131,19 @@ function exists(parts) {
 		// Valid function name
 		return true;
 	}
+
 	if (!verify(parts, true)) {
 		// Not valid prefix
 		return false;
 	}
+
 	// Valid prefix, check whether it has members
 	for (const prefix of allParts) {
 		if (!parts.includes(prefix) && exists(parts.concat([prefix]))) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -155,11 +164,11 @@ function testType(parts) {
 	let type = 'Test';
 
 	if (has('cb')) {
-		type = 'Callback' + type;
+		type = `Callback${type}`;
 	}
 
 	if (!has('before') && !has('after')) {
-		type = 'Contextual' + type;
+		type = `Contextual${type}`;
 	}
 
 	return type;

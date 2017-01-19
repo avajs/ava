@@ -13,8 +13,7 @@ test('nested tests and hooks aren\'t allowed', t => {
 	runner.test(() => {
 		t.throws(() => {
 			runner.test(noop);
-		}, {message: 'All tests and hooks must be declared synchronously in your ' +
-		'test file, and cannot be nested within other tests or hooks.'});
+		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 	});
 
 	runner.run({}).then(() => {
@@ -33,8 +32,7 @@ test('tests must be declared synchronously', t => {
 
 	t.throws(() => {
 		runner.test(noop);
-	}, {message: 'All tests and hooks must be declared synchronously in your ' +
-	'test file, and cannot be nested within other tests or hooks.'});
+	}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 
 	t.end();
 });
@@ -574,7 +572,7 @@ test('match applies to macros', t => {
 		t.is(avaT.title, 'foobar');
 	}
 
-	macroFn.title = (title, firstArg) => firstArg + 'bar';
+	macroFn.title = (title, firstArg) => `${firstArg}bar`;
 
 	const runner = new Runner({
 		match: ['foobar']
@@ -634,17 +632,17 @@ test('match applies to arrays of macros', t => {
 	function fooMacro() {
 		t.fail();
 	}
-	fooMacro.title = (title, firstArg) => firstArg + 'foo';
+	fooMacro.title = (title, firstArg) => `${firstArg}foo`;
 
 	function barMacro(avaT) {
 		t.is(avaT.title, 'foobar');
 	}
-	barMacro.title = (title, firstArg) => firstArg + 'bar';
+	barMacro.title = (title, firstArg) => `${firstArg}bar`;
 
 	function bazMacro() {
 		t.fail();
 	}
-	bazMacro.title = firstArg => firstArg + 'baz';
+	bazMacro.title = firstArg => `${firstArg}baz`;
 
 	const runner = new Runner({
 		match: ['foobar']
