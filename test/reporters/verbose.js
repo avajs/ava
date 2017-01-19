@@ -384,6 +384,7 @@ test('results with errors', function (t) {
 test('results when fail-fast is enabled', function (t) {
 	var reporter = verboseReporter();
 	var runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
 	runStatus.tests = [{
@@ -397,6 +398,46 @@ test('results when fail-fast is enabled', function (t) {
 		'',
 		'',
 		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results without fail-fast if no failing tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 0;
+	runStatus.passCount = 1;
+	runStatus.failFastEnabled = true;
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results without fail-fast if no skipped tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
 		''
 	].join('\n');
 
