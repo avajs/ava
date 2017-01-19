@@ -11,9 +11,10 @@ tap.afterEach(done => {
 	done();
 });
 
-function fixture(...args) {
-	args.unshift(__dirname, 'fixture/ava-files');
-	return path.join(...args);
+function fixture() {
+	const args = Array.prototype.slice.call(arguments);
+	args.unshift(__dirname, 'fixture', 'ava-files');
+	return path.join.apply(path, args);
 }
 
 test('requires new', t => {

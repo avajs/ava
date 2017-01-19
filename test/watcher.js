@@ -61,7 +61,7 @@ group('chokidar', (beforeEach, test, group) => {
 						debug.apply(null, args);
 					};
 				},
-				'ava-files': avaFiles
+				'./ava-files': avaFiles
 			});
 	}
 
