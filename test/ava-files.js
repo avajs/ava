@@ -6,8 +6,8 @@ const AvaFiles = require('../lib/ava-files');
 const test = tap.test;
 
 tap.afterEach(done => {
-	// We changed the CWD in some of the tests.
-	process.chdir(path.join(__dirname, '..'));
+	// We changed the CWD in some of the tests
+	process.chdir(path.resolve(__dirname, '..'));
 	done();
 });
 
@@ -16,14 +16,6 @@ function fixture() {
 	args.unshift(__dirname, 'fixture', 'ava-files');
 	return path.join.apply(path, args);
 }
-
-test('requires new', t => {
-	const avaFiles = AvaFiles;
-	t.throws(function () {
-		avaFiles(['**/foo*']);
-	}, 'Class constructor AvaFiles cannot be invoked without \'new\'');
-	t.end();
-});
 
 test('ignores relativeness in patterns', t => {
 	const avaFiles = new AvaFiles({files: ['./foo']});
@@ -37,11 +29,11 @@ test('testMatcher', t => {
 	const avaFiles = new AvaFiles({files: ['**/foo*']});
 
 	function isTest(file) {
-		t.true(avaFiles.isTest(file), file + ' should be a test');
+		t.true(avaFiles.isTest(file), `${file} should be a test`);
 	}
 
 	function notTest(file) {
-		t.false(avaFiles.isTest(file), file + ' should not be a test');
+		t.false(avaFiles.isTest(file), `${file} should not be a test`);
 	}
 
 	isTest('foo-bar.js');
@@ -65,11 +57,11 @@ test('sourceMatcher - defaults', t => {
 	const avaFiles = new AvaFiles({files: ['**/foo*']});
 
 	function isSource(file) {
-		t.true(avaFiles.isSource(file), file + ' should be a source');
+		t.true(avaFiles.isSource(file), `${file} should be a source`);
 	}
 
 	function notSource(file) {
-		t.false(avaFiles.isSource(file), file + ' should not be a source');
+		t.false(avaFiles.isSource(file), `${file} should not be a source`);
 	}
 
 	isSource('foo-bar.js');
@@ -149,9 +141,7 @@ test('findFiles - finds the correct files by default', t => {
 		'test.js',
 		'test/baz.js',
 		'test/deep/deep.js'
-	].map(function (file) {
-		return path.join(fixtureDir, file);
-	}).sort();
+	].map(file => path.join(fixtureDir, file)).sort();
 
 	const avaFiles = new AvaFiles();
 
