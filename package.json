@@ -47,7 +47,7 @@
     "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
-    "make-ts": "babel-node --presets=babel-preset-es2015-node4 --plugins=transform-runtime types/make.js"
+    "make-ts": "node types/make.js"
   },
   "files": [
     "lib",
@@ -168,7 +168,6 @@
     "update-notifier": "^1.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.10.1",
     "babel-preset-react": "^6.5.0",
     "cli-table2": "^0.2.0",
     "coveralls": "^2.11.4",

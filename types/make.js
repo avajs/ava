@@ -16,7 +16,7 @@ const path = require('path');
 const fs = require('fs');
 const runner = require('../lib/runner');
 
-const arrayHas = parts => part => parts.includes(part);
+const arrayHas = parts => part => parts.indexOf(part) > -1;
 
 const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 
@@ -35,7 +35,7 @@ function generatePrefixed(prefix) {
 	for (const part of allParts) {
 		const parts = prefix.concat([part]);
 
-		if (prefix.includes(part) || !verify(parts, true)) {
+		if (prefix.indexOf(part) > -1 || !verify(parts, true)) {
 			// Function already in prefix or not allowed here
 			continue;
 		}
@@ -55,7 +55,7 @@ function generatePrefixed(prefix) {
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (parts.includes('todo')) {
+			if (parts.indexOf('todo') > -1) {
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
@@ -139,7 +139,7 @@ function exists(parts) {
 
 	// Valid prefix, check whether it has members
 	for (const prefix of allParts) {
-		if (!parts.includes(prefix) && exists(parts.concat([prefix]))) {
+		if (parts.indexOf(prefix) === -1 && exists(parts.concat([prefix]))) {
 			return true;
 		}
 	}
