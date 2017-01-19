@@ -746,7 +746,25 @@ test('returns description based on error itself if no stack available', function
 	var expectedOutput = [
 		'\n  ' + colors.error('1 exception'),
 		'\n  ' + colors.title('Uncaught Exception'),
-		'  ' + colors.stack(JSON.stringify({error: err1})),
+		'  ' + colors.stack('Threw non-error: ' + JSON.stringify({error: err1})),
+		'\n\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('shows "non-error" hint for invalid throws', function (t) {
+	var reporter = miniReporter();
+	reporter.exceptionCount = 1;
+	var err = {type: 'exception', message: 'function fooFn() {}', stack: 'function fooFn() {}'};
+	var runStatus = {
+		errors: [err]
+	};
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'\n  ' + colors.error('1 exception'),
+		'\n  ' + colors.title('Uncaught Exception'),
+		'  ' + colors.stack('Threw non-error: function fooFn() {}'),
 		'\n\n'
 	].join('\n');
 	t.is(actualOutput, expectedOutput);
@@ -821,4 +839,3 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 	t.is(actualOutput, expectedOutput);
 	t.end();
 });
-
