@@ -10,7 +10,7 @@ If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](htt
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [#751](https://github.com/avajs/ava/issues/751).
 
-AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these variables](https://github.com/watson/is-ci/blob/master/index.js).
+AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these variables](https://github.com/watson/ci-info/blob/master/index.js).
 
 ## AVA and connected client limits
 
