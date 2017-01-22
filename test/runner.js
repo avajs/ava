@@ -1,62 +1,50 @@
 'use strict';
-var test = require('tap').test;
-var Runner = require('../lib/runner');
+const test = require('tap').test;
+const Runner = require('../lib/runner');
 
-var slice = Array.prototype.slice;
-var noop = function () {};
+const slice = Array.prototype.slice;
+const noop = () => {};
 
-test('must be called with new', function (t) {
-	t.throws(function () {
-		var runner = Runner;
-		runner();
-	}, {message: 'Class constructor Runner cannot be invoked without \'new\''});
-	t.end();
-});
-
-test('nested tests and hooks aren\'t allowed', function (t) {
+test('nested tests and hooks aren\'t allowed', t => {
 	t.plan(1);
 
-	var runner = new Runner();
+	const runner = new Runner();
 
-	runner.test(function () {
-		t.throws(function () {
+	runner.test(() => {
+		t.throws(() => {
 			runner.test(noop);
-		}, {message: 'All tests and hooks must be declared synchronously in your ' +
-		'test file, and cannot be nested within other tests or hooks.'});
+		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.end();
 	});
 });
 
-test('tests must be declared synchronously', function (t) {
+test('tests must be declared synchronously', t => {
 	t.plan(1);
 
-	var runner = new Runner();
+	const runner = new Runner();
 
-	runner.test(function () {
-		return Promise.resolve();
-	});
+	runner.test(() => Promise.resolve());
 
 	runner.run({});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test(noop);
-	}, {message: 'All tests and hooks must be declared synchronously in your ' +
-	'test file, and cannot be nested within other tests or hooks.'});
+	}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 
 	t.end();
 });
 
-test('runner emits a "test" event', function (t) {
-	var runner = new Runner();
+test('runner emits a "test" event', t => {
+	const runner = new Runner();
 
-	runner.test('foo', function (a) {
+	runner.test('foo', a => {
 		a.pass();
 	});
 
-	runner.on('test', function (props) {
+	runner.on('test', props => {
 		t.ifError(props.error);
 		t.is(props.title, 'foo');
 		t.not(props.duration, undefined);
@@ -66,37 +54,37 @@ test('runner emits a "test" event', function (t) {
 	runner.run({});
 });
 
-test('run serial tests before concurrent ones', function (t) {
-	var runner = new Runner();
-	var arr = [];
+test('run serial tests before concurrent ones', t => {
+	const runner = new Runner();
+	const arr = [];
 
-	runner.test(function (a) {
+	runner.test(a => {
 		arr.push('c');
 		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(a => {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.serial(function (a) {
+	runner.serial(a => {
 		arr.push('b');
 		a.end();
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.strictDeepEqual(arr, ['a', 'b', 'c']);
 		t.end();
 	});
 });
 
-test('anything can be skipped', function (t) {
-	var runner = new Runner();
-	var arr = [];
+test('anything can be skipped', t => {
+	const runner = new Runner();
+	const arr = [];
 
 	function pusher(title) {
-		return function () {
+		return () => {
 			arr.push(title);
 		};
 	}
@@ -119,7 +107,7 @@ test('anything can be skipped', function (t) {
 	runner.serial(pusher('serial'));
 	runner.serial.skip(pusher('serial.skip'));
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
 		t.strictDeepEqual(arr, [
 			'before',
@@ -135,8 +123,8 @@ test('anything can be skipped', function (t) {
 	});
 });
 
-test('include skipped tests in results', function (t) {
-	var runner = new Runner();
+test('include skipped tests in results', t => {
+	const runner = new Runner();
 
 	runner.before('before', noop);
 	runner.before.skip('before.skip', noop);
@@ -153,13 +141,13 @@ test('include skipped tests in results', function (t) {
 	runner.afterEach('afterEach', noop);
 	runner.afterEach.skip('afterEach.skip', noop);
 
-	var titles = [];
+	const titles = [];
 
-	runner.on('test', function (test) {
+	runner.on('test', test => {
 		titles.push(test.title);
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.strictDeepEqual(titles, [
 			'before',
 			'before.skip',
@@ -177,10 +165,10 @@ test('include skipped tests in results', function (t) {
 	});
 });
 
-test('test types and titles', function (t) {
+test('test types and titles', t => {
 	t.plan(10);
 
-	var fn = function (a) {
+	const fn = a => {
 		a.pass();
 	};
 
@@ -188,7 +176,7 @@ test('test types and titles', function (t) {
 		a.pass();
 	}
 
-	var runner = new Runner();
+	const runner = new Runner();
 	runner.before(named);
 	runner.beforeEach(fn);
 	runner.after(fn);
@@ -196,9 +184,9 @@ test('test types and titles', function (t) {
 	runner.test('test', fn);
 
 	// See https://github.com/avajs/ava/issues/1027
-	var supportsFunctionNames = noop.name === 'noop';
+	const supportsFunctionNames = noop.name === 'noop';
 
-	var tests = [
+	const tests = [
 		{
 			type: 'before',
 			title: 'named'
@@ -221,9 +209,8 @@ test('test types and titles', function (t) {
 		}
 	];
 
-	runner.on('test', function (props) {
-		var test = tests.shift();
-
+	runner.on('test', props => {
+		const test = tests.shift();
 		t.is(props.title, test.title);
 		t.is(props.type, test.type);
 	});
@@ -231,25 +218,25 @@ test('test types and titles', function (t) {
 	runner.run({}).then(t.end);
 });
 
-test('skip test', function (t) {
+test('skip test', t => {
 	t.plan(5);
 
-	var runner = new Runner();
-	var arr = [];
+	const runner = new Runner();
+	const arr = [];
 
-	runner.test(function () {
+	runner.test(() => {
 		arr.push('a');
 	});
 
-	runner.skip(function () {
+	runner.skip(() => {
 		arr.push('b');
 	});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.skip('should be a todo');
 	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.testCount, 2);
 		t.is(stats.passCount, 1);
 		t.is(stats.skipCount, 1);
@@ -258,37 +245,37 @@ test('skip test', function (t) {
 	});
 });
 
-test('test throws when given no function', function (t) {
+test('test throws when given no function', t => {
 	t.plan(1);
 
-	var runner = new Runner();
+	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test();
 	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
 });
 
-test('todo test', function (t) {
+test('todo test', t => {
 	t.plan(6);
 
-	var runner = new Runner();
-	var arr = [];
+	const runner = new Runner();
+	const arr = [];
 
-	runner.test(function () {
+	runner.test(() => {
 		arr.push('a');
 	});
 
 	runner.todo('todo');
 
-	t.throws(function () {
-		runner.todo('todo', function () {});
+	t.throws(() => {
+		runner.todo('todo', () => {});
 	}, {message: '`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.'});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.todo();
 	}, {message: '`todo` tests require a title'});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.testCount, 2);
 		t.is(stats.passCount, 1);
 		t.is(stats.todoCount, 1);
@@ -297,21 +284,21 @@ test('todo test', function (t) {
 	});
 });
 
-test('only test', function (t) {
+test('only test', t => {
 	t.plan(3);
 
-	var runner = new Runner();
-	var arr = [];
+	const runner = new Runner();
+	const arr = [];
 
-	runner.test(function () {
+	runner.test(() => {
 		arr.push('a');
 	});
 
-	runner.only(function () {
+	runner.only(() => {
 		arr.push('b');
 	});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.testCount, 1);
 		t.is(stats.passCount, 1);
 		t.strictDeepEqual(arr, ['b']);
@@ -319,8 +306,9 @@ test('only test', function (t) {
 	});
 });
 
-test('throws if you try to set a hook as exclusive', function (t) {
-	var runner = new Runner();
+<<<<<<< HEAD
+test('throws if you try to set a hook as exclusive', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.beforeEach.only('', noop);
@@ -329,8 +317,8 @@ test('throws if you try to set a hook as exclusive', function (t) {
 	t.end();
 });
 
-test('throws if you try to set a before hook as always', function (t) {
-	var runner = new Runner();
+test('throws if you try to set a before hook as always', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.before.always('', noop);
@@ -339,8 +327,8 @@ test('throws if you try to set a before hook as always', function (t) {
 	t.end();
 });
 
-test('throws if you try to set a test as always', function (t) {
-	var runner = new Runner();
+test('throws if you try to set a test as always', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.test.always('', noop);
@@ -349,8 +337,8 @@ test('throws if you try to set a test as always', function (t) {
 	t.end();
 });
 
-test('throws if you give a function to todo', function (t) {
-	var runner = new Runner();
+test('throws if you give a function to todo', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.test.todo('todo with function', noop);
@@ -360,8 +348,8 @@ test('throws if you give a function to todo', function (t) {
 	t.end();
 });
 
-test('throws if todo has no title', function (t) {
-	var runner = new Runner();
+test('throws if todo has no title', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.test.todo();
@@ -370,10 +358,10 @@ test('throws if todo has no title', function (t) {
 	t.end();
 });
 
-test('throws if todo has failing, skip, or only', function (t) {
-	var runner = new Runner();
+test('throws if todo has failing, skip, or only', t => {
+	const runner = new Runner();
 
-	var errorMessage = '`todo` tests are just for documentation and cannot be' +
+	const errorMessage = '`todo` tests are just for documentation and cannot be' +
 		' used with skip, only, or failing';
 
 	t.throws(function () {
@@ -391,10 +379,10 @@ test('throws if todo has failing, skip, or only', function (t) {
 	t.end();
 });
 
-test('throws if todo isn\'t a test', function (t) {
-	var runner = new Runner();
+test('throws if todo isn\'t a test', t => {
+	const runner = new Runner();
 
-	var errorMessage = '`todo` is only for documentation of future tests and' +
+	const errorMessage = '`todo` is only for documentation of future tests and' +
 		' cannot be used with hooks';
 
 	t.throws(function () {
@@ -416,8 +404,8 @@ test('throws if todo isn\'t a test', function (t) {
 	t.end();
 });
 
-test('throws if test has skip and only', function (t) {
-	var runner = new Runner();
+test('throws if test has skip and only', t => {
+	const runner = new Runner();
 
 	t.throws(function () {
 		runner.test.only.skip('test', noop);
@@ -426,10 +414,10 @@ test('throws if test has skip and only', function (t) {
 	t.end();
 });
 
-test('throws if failing is used on non-tests', function (t) {
-	var runner = new Runner();
+test('throws if failing is used on non-tests', t => {
+	const runner = new Runner();
 
-	var errorMessage = '`failing` is only for tests and cannot be used with hooks';
+	const errorMessage = '`failing` is only for tests and cannot be used with hooks';
 
 	t.throws(function () {
 		runner.beforeEach.failing('', noop);
@@ -450,10 +438,10 @@ test('throws if failing is used on non-tests', function (t) {
 	t.end();
 });
 
-test('throws if only is used on non-tests', function (t) {
-	var runner = new Runner();
+test('throws if only is used on non-tests', t => {
+	const runner = new Runner();
 
-	var errorMessage = '`only` is only for tests and cannot be used with hooks';
+	const errorMessage = '`only` is only for tests and cannot be used with hooks';
 
 	t.throws(function () {
 		runner.beforeEach.only(noop);
@@ -474,10 +462,10 @@ test('throws if only is used on non-tests', function (t) {
 	t.end();
 });
 
-test('validate accepts skipping failing tests', function (t) {
+test('validate accepts skipping failing tests', t => {
 	t.plan(2);
 
-	var runner = new Runner();
+	const runner = new Runner();
 
 	runner.test.skip.failing('skip failing', noop);
 
@@ -488,44 +476,44 @@ test('validate accepts skipping failing tests', function (t) {
 	});
 });
 
-test('runOnlyExclusive option test', function (t) {
+test('runOnlyExclusive option test', t => {
 	t.plan(1);
 
-	var runner = new Runner();
-	var options = {runOnlyExclusive: true};
-	var arr = [];
+	const runner = new Runner();
+	const options = {runOnlyExclusive: true};
+	const arr = [];
 
-	runner.test(function () {
+	runner.test(() => {
 		arr.push('a');
 	});
 
-	runner.run(options).then(function (stats) {
+	runner.run(options).then(stats => {
 		t.is(stats, null);
 		t.end();
 	});
 });
 
-test('options.serial forces all tests to be serial', function (t) {
+test('options.serial forces all tests to be serial', t => {
 	t.plan(1);
 
-	var runner = new Runner({serial: true});
-	var arr = [];
+	const runner = new Runner({serial: true});
+	const arr = [];
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			arr.push(1);
 			a.end();
 		}, 200);
 	});
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			arr.push(2);
 			a.end();
 		}, 100);
 	});
 
-	runner.test(function () {
+	runner.test(() => {
 		t.strictDeepEqual(arr, [1, 2]);
 		t.end();
 	});
@@ -533,114 +521,114 @@ test('options.serial forces all tests to be serial', function (t) {
 	runner.run({});
 });
 
-test('options.bail will bail out', function (t) {
+test('options.bail will bail out', t => {
 	t.plan(1);
 
-	var runner = new Runner({bail: true});
+	const runner = new Runner({bail: true});
 
-	runner.test(function (a) {
+	runner.test(a => {
 		t.pass();
 		a.fail();
 	});
 
-	runner.test(function () {
+	runner.test(() => {
 		t.fail();
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.end();
 	});
 });
 
-test('options.bail will bail out (async)', function (t) {
+test('options.bail will bail out (async)', t => {
 	t.plan(2);
 
-	var runner = new Runner({bail: true});
-	var tests = [];
+	const runner = new Runner({bail: true});
+	const tests = [];
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			tests.push(1);
 			a.fail();
 			a.end();
 		}, 100);
 	});
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			tests.push(2);
 			a.end();
 		}, 300);
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.strictDeepEqual(tests, [1]);
 		// With concurrent tests there is no stopping the second `setTimeout` callback from happening.
 		// See the `bail + serial` test below for comparison
-		setTimeout(function () {
+		setTimeout(() => {
 			t.strictDeepEqual(tests, [1, 2]);
 			t.end();
 		}, 250);
 	});
 });
 
-test('options.bail + serial - tests will never happen (async)', function (t) {
+test('options.bail + serial - tests will never happen (async)', t => {
 	t.plan(2);
 
-	var runner = new Runner({
+	const runner = new Runner({
 		bail: true,
 		serial: true
 	});
-	var tests = [];
+	const tests = [];
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			tests.push(1);
 			a.fail();
 			a.end();
 		}, 100);
 	});
 
-	runner.cb(function (a) {
-		setTimeout(function () {
+	runner.cb(a => {
+		setTimeout(() => {
 			tests.push(2);
 			a.end();
 		}, 300);
 	});
 
-	runner.run({}).then(function () {
+	runner.run({}).then(() => {
 		t.strictDeepEqual(tests, [1]);
-		setTimeout(function () {
+		setTimeout(() => {
 			t.strictDeepEqual(tests, [1]);
 			t.end();
 		}, 250);
 	});
 });
 
-test('options.match will not run tests with non-matching titles', function (t) {
+test('options.match will not run tests with non-matching titles', t => {
 	t.plan(5);
 
-	var runner = new Runner({
+	const runner = new Runner({
 		match: ['*oo', '!foo']
 	});
 
-	runner.test('mhm. grass tasty. moo', function () {
+	runner.test('mhm. grass tasty. moo', () => {
 		t.pass();
 	});
 
-	runner.test('juggaloo', function () {
+	runner.test('juggaloo', () => {
 		t.pass();
 	});
 
-	runner.test('foo', function () {
+	runner.test('foo', () => {
 		t.fail();
 	});
 
-	runner.test(function () {
+	runner.test(() => {
 		t.fail();
 	});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.skipCount, 0);
 		t.is(stats.passCount, 2);
 		t.is(stats.testCount, 2);
@@ -648,24 +636,24 @@ test('options.match will not run tests with non-matching titles', function (t) {
 	});
 });
 
-test('options.match hold no effect on hooks with titles', function (t) {
+test('options.match hold no effect on hooks with titles', t => {
 	t.plan(4);
 
-	var runner = new Runner({
+	const runner = new Runner({
 		match: ['!before*']
 	});
 
-	var actual;
+	let actual;
 
-	runner.before('before hook with title', function () {
+	runner.before('before hook with title', () => {
 		actual = 'foo';
 	});
 
-	runner.test('after', function () {
+	runner.test('after', () => {
 		t.is(actual, 'foo');
 	});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.skipCount, 0);
 		t.is(stats.passCount, 1);
 		t.is(stats.testCount, 1);
@@ -673,22 +661,22 @@ test('options.match hold no effect on hooks with titles', function (t) {
 	});
 });
 
-test('options.match overrides .only', function (t) {
+test('options.match overrides .only', t => {
 	t.plan(5);
 
-	var runner = new Runner({
+	const runner = new Runner({
 		match: ['*oo']
 	});
 
-	runner.test('moo', function () {
+	runner.test('moo', () => {
 		t.pass();
 	});
 
-	runner.test.only('boo', function () {
+	runner.test.only('boo', () => {
 		t.pass();
 	});
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.skipCount, 0);
 		t.is(stats.passCount, 2);
 		t.is(stats.testCount, 2);
@@ -696,32 +684,32 @@ test('options.match overrides .only', function (t) {
 	});
 });
 
-test('macros: Additional args will be spread as additional args on implementation function', function (t) {
+test('macros: Additional args will be spread as additional args on implementation function', t => {
 	t.plan(3);
 
-	var runner = new Runner();
+	const runner = new Runner();
 
 	runner.test('test1', function () {
 		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 	}, 'foo', 'bar');
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.passCount, 1);
 		t.is(stats.testCount, 1);
 		t.end();
 	});
 });
 
-test('macros: Customize test names attaching a `title` function', function (t) {
+test('macros: Customize test names attaching a `title` function', t => {
 	t.plan(8);
 
-	var expectedTitles = [
+	const expectedTitles = [
 		'defaultA',
 		'suppliedB',
 		'defaultC'
 	];
 
-	var expectedArgs = [
+	const expectedArgs = [
 		['A'],
 		['B'],
 		['C']
@@ -732,56 +720,52 @@ test('macros: Customize test names attaching a `title` function', function (t) {
 		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
 	}
 
-	macroFn.title = function (title, firstArg) {
-		return (title || 'default') + firstArg;
-	};
+	macroFn.title = (title, firstArg) => (title || 'default') + firstArg;
 
-	var runner = new Runner();
+	const runner = new Runner();
 
 	runner.test(macroFn, 'A');
 	runner.test('supplied', macroFn, 'B');
 	runner.test(macroFn, 'C');
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.passCount, 3);
 		t.is(stats.testCount, 3);
 		t.end();
 	});
 });
 
-test('match applies to macros', function (t) {
+test('match applies to macros', t => {
 	t.plan(3);
 
 	function macroFn(avaT) {
 		t.is(avaT.title, 'foobar');
 	}
 
-	macroFn.title = function (title, firstArg) {
-		return firstArg + 'bar';
-	};
+	macroFn.title = (title, firstArg) => `${firstArg}bar`;
 
-	var runner = new Runner({
+	const runner = new Runner({
 		match: ['foobar']
 	});
 
 	runner.test(macroFn, 'foo');
 	runner.test(macroFn, 'bar');
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.passCount, 1);
 		t.is(stats.testCount, 1);
 		t.end();
 	});
 });
 
-test('arrays of macros', function (t) {
-	var expectedArgsA = [
+test('arrays of macros', t => {
+	const expectedArgsA = [
 		['A'],
 		['B'],
 		['C']
 	];
 
-	var expectedArgsB = [
+	const expectedArgsB = [
 		['A'],
 		['B'],
 		['D']
@@ -795,14 +779,14 @@ test('arrays of macros', function (t) {
 		t.deepEqual(slice.call(arguments, 1), expectedArgsB.shift());
 	}
 
-	var runner = new Runner();
+	const runner = new Runner();
 
 	runner.test([macroFnA, macroFnB], 'A');
 	runner.test([macroFnA, macroFnB], 'B');
 	runner.test(macroFnA, 'C');
 	runner.test(macroFnB, 'D');
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.passCount, 6);
 		t.is(stats.testCount, 6);
 		t.is(expectedArgsA.length, 0);
@@ -811,39 +795,33 @@ test('arrays of macros', function (t) {
 	});
 });
 
-test('match applies to arrays of macros', function (t) {
+test('match applies to arrays of macros', t => {
 	t.plan(3);
 
-	// foo
+	// Foo
 	function fooMacro() {
 		t.fail();
 	}
-	fooMacro.title = function (title, firstArg) {
-		return firstArg + 'foo';
-	};
+	fooMacro.title = (title, firstArg) => `${firstArg}foo`;
 
 	function barMacro(avaT) {
 		t.is(avaT.title, 'foobar');
 	}
-	barMacro.title = function (title, firstArg) {
-		return firstArg + 'bar';
-	};
+	barMacro.title = (title, firstArg) => `${firstArg}bar`;
 
 	function bazMacro() {
 		t.fail();
 	}
-	bazMacro.title = function (firstArg) {
-		return firstArg + 'baz';
-	};
+	bazMacro.title = firstArg => `${firstArg}baz`;
 
-	var runner = new Runner({
+	const runner = new Runner({
 		match: ['foobar']
 	});
 
 	runner.test([fooMacro, barMacro, bazMacro], 'foo');
 	runner.test([fooMacro, barMacro, bazMacro], 'bar');
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.passCount, 1);
 		t.is(stats.testCount, 1);
 		t.end();

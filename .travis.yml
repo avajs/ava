@@ -1,11 +1,15 @@
 language: node_js
 node_js:
+  - '7'
   - '6'
-  - '5'
   - '4'
-  - '0.12'
-  - '0.10'
+cache:
+  directories:
+    - $HOME/.npm
+    - node_modules
 before_install:
-  - 'npm install -g npm@latest'
+  - 'npm install --global npm'
+before_script:
+  - 'npm prune'
 after_success:
   - '[ -z "$COVERALLS_REPO_TOKEN" ] && tap --coverage-report=text-lcov | ./node_modules/.bin/coveralls'

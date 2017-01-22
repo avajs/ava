@@ -1,39 +1,33 @@
 'use strict';
+const path = require('path');
+const fs = require('fs');
+const Table = require('cli-table2');
+const chalk = require('chalk');
 
-var path = require('path');
-var fs = require('fs');
-var Table = require('cli-table2');
-var chalk = require('chalk');
-
-var files = fs.readdirSync(path.join(__dirname, '.results'))
-	.map(function (file) {
-		var result = JSON.parse(fs.readFileSync(path.join(__dirname, '.results', file), 'utf8'));
+let files = fs.readdirSync(path.join(__dirname, '.results'))
+	.map(file => {
+		const result = JSON.parse(fs.readFileSync(path.join(__dirname, '.results', file), 'utf8'));
 		result['.file'] = path.basename(file, '.json');
 		return result;
 	})
-	// find the most recent benchmark runs
-	.sort(function (fileA, fileB) {
-		return fileB['.time'] - fileA['.time'];
-	});
+	// Find the most recent benchmark runs
+	.sort((fileA, fileB) => fileB['.time'] - fileA['.time']);
 
 function average(data) {
-	var sum = data.reduce(function (sum, value) {
-		return sum + value;
-	}, 0);
-
-	var avg = sum / data.length;
+	const sum = data.reduce((sum, value) => sum + value, 0);
+	const avg = sum / data.length;
 	return avg;
 }
 
 function standardDeviation(values) {
-	var avg = average(values);
-	var squareDiffs = values.map(function (value) {
-		var diff = value - avg;
-		var sqrDiff = diff * diff;
+	const avg = average(values);
+	const squareDiffs = values.map(value => {
+		const diff = value - avg;
+		const sqrDiff = diff * diff;
 		return sqrDiff;
 	});
-	var avgSquareDiff = average(squareDiffs);
-	var stdDev = Math.sqrt(avgSquareDiff);
+	const avgSquareDiff = average(squareDiffs);
+	const stdDev = Math.sqrt(avgSquareDiff);
 	return stdDev;
 }
 
@@ -42,19 +36,13 @@ files = files.slice(0, 3);
 
 function prepStats(times) {
 	times = times
-		.map(function (time) {
-			return time.time;
-		})
-		.sort(function (timeA, timeB) {
-			return timeA - timeB;
-		});
+		.map(time => time.time)
+		.sort((timeA, timeB) => timeA - timeB);
 
-	// remove fastest and slowest
+	// Remove fastest and slowest
 	times = times.slice(1, times.length - 1);
 
-	var sum = times.reduce(function (a, b) {
-		return a + b;
-	}, 0);
+	const sum = times.reduce((a, b) => a + b, 0);
 
 	return {
 		mean: Math.round((sum / times.length) * 1000) / 1000,
@@ -65,60 +53,59 @@ function prepStats(times) {
 	};
 }
 
-var results = {};
-var fileNames = files.map(function (file) {
-	return file['.file'];
-});
-var stats = ['mean', 'stdDev', 'median', 'min', 'max'];
+const results = {};
+const fileNames = files.map(file => file['.file']);
+const stats = ['mean', 'stdDev', 'median', 'min', 'max'];
 
-files.forEach(function (file) {
+files.forEach(file => {
 	Object.keys(file)
-		.filter(function (key) {
-			return !/^\./.test(key);
-		})
-		.forEach(function (key) {
+		.filter(key => !/^\./.test(key))
+		.forEach(key => {
 			results[key] = results[key] || {};
 			results[key][file['.file']] = prepStats(file[key]);
 		});
 });
 
-var table = new Table();
+const table = new Table();
 table.push(
-	[''].concat(stats.map(function (stat) {
+	[''].concat(stats.map(stat => {
 		return {
 			content: stat,
 			colSpan: fileNames.length,
 			hAlign: 'center'
 		};
 	})),
-	stats.reduce(function (arr) {
-		return arr.concat(fileNames);
-	}, ['args'])
+	stats.reduce(arr => arr.concat(fileNames), ['args'])
 );
 
 Object.keys(results)
-	.forEach(function (key) {
-		table.push(stats.reduce(function (arr, stat) {
-			var min = Infinity;
-			var max = -Infinity;
+	.forEach(key => {
+		table.push(stats.reduce((arr, stat) => {
+			let min = Infinity;
+			let max = -Infinity;
 
-			var statGroup = fileNames.map(function (fileName) {
-				var result = results[key][fileName];
+			const statGroup = fileNames.map(fileName => {
+				let result = results[key][fileName];
 				result = result && result[stat];
+
 				if (result) {
 					min = Math.min(min, result);
 					max = Math.max(max, result);
 					return result;
 				}
+
 				return '';
 			});
-			return arr.concat(statGroup.map(function (stat) {
+
+			return arr.concat(statGroup.map(stat => {
 				if (stat === min) {
 					return chalk.green(stat);
 				}
+
 				if (stat === max) {
 					return chalk.red(stat);
 				}
+
 				return stat;
 			}));
 		}, [key]));

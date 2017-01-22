@@ -383,6 +383,80 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results with unhandled errors', function (t) {
+	var reporter = miniReporter();
+	reporter.failCount = 2;
+
+	var err = new Error('failure one');
+	err.stack = beautifyStack(err.stack);
+
+	var runStatus = {
+		errors: [
+			{title: 'failed one', error: err},
+			{title: 'failed two'}
+		]
+	};
+
+	var output = reporter.finish(runStatus);
+	var expectedStack = colors.error('  failure two\n') + colors.errorStack('stack line with trailing whitespace');
+
+	compareLineOutput(t, output, [
+		'',
+		'  ' + chalk.red('2 failed'),
+		'',
+		'  ' + chalk.white('failed one'),
+		/failure/,
+		/test\/reporters\/mini\.js/,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		''
+	].concat(expectedStack.split('\n')));
+	t.end();
+});
+
+test('results when fail-fast is enabled', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		remainingCount: 1,
+		failCount: 1,
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'',
+		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped')
+	]);
+	t.end();
+});
+
+test('results without fail-fast if no failing tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		remainingCount: 1,
+		failCount: 0,
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
+	t.end();
+});
+
+test('results without fail-fast if no skipped tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
+	t.end();
+});
+
 test('results with 1 previous failure', function (t) {
 	var reporter = miniReporter();
 	reporter.todoCount = 1;
@@ -543,3 +617,57 @@ test('stderr and stdout should call _update', function (t) {
 	reporter._update.restore();
 	t.end();
 });
+
+test('results when hasExclusive is enabled, but there are no known remaining tests', function (t) {
+	var reporter = miniReporter();
+	var runStatus = {
+		hasExclusive: true
+	};
+
+	var output = reporter.finish(runStatus);
+	t.is(output, '\n\n');
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there is one remaining tests', function (t) {
+	var reporter = miniReporter();
+
+	var runStatus = {
+		hasExclusive: true,
+		testCount: 2,
+		passCount: 1,
+		remainingCount: 1
+	};
+
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there are multiple remaining tests', function (t) {
+	var reporter = miniReporter();
+
+	var runStatus = {
+		hasExclusive: true,
+		testCount: 3,
+		passCount: 1,
+		remainingCount: 2
+	};
+
+	var actualOutput = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
+		'\n'
+	].join('\n');
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+

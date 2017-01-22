@@ -1,159 +1,159 @@
 'use strict';
-var test = require('tap').test;
-var Test = require('../lib/test');
-var Observable = require('./fixture/observable');
+const test = require('tap').test;
+const Test = require('../lib/test');
+const Observable = require('zen-observable'); // eslint-disable-line import/order
 
 function ava(fn) {
-	var a = new Test(fn);
+	const a = new Test(fn);
 	a.metadata = {callback: false};
 	return a;
 }
 
 ava.cb = function (fn) {
-	var a = new Test(fn);
+	const a = new Test(fn);
 	a.metadata = {callback: true};
 	return a;
 };
 
-test('returning an observable from a legacy async fn is an error', function (t) {
-	ava.cb(function (a) {
+test('returning an observable from a legacy async fn is an error', t => {
+	ava.cb(a => {
 		a.plan(2);
 
-		var observable = Observable.of();
+		const observable = Observable.of();
 
-		setTimeout(function () {
+		setTimeout(() => {
 			a.pass();
 			a.pass();
 			a.end();
 		}, 200);
 
 		return observable;
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.match(result.reason.message, /Do not return observables/);
 		t.end();
 	});
 });
 
-test('handle throws with thrown observable', function (t) {
-	ava(function (a) {
+test('handle throws with thrown observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
+		const observable = new Observable(observer => {
 			observer.error(new Error());
 		});
 
 		return a.throws(observable);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle throws with long running thrown observable', function (t) {
-	ava(function (a) {
+test('handle throws with long running thrown observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
-			setTimeout(function () {
+		const observable = new Observable(observer => {
+			setTimeout(() => {
 				observer.error(new Error('abc'));
 			}, 2000);
 		});
 
 		return a.throws(observable, /abc/);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle throws with completed observable', function (t) {
-	ava(function (a) {
+test('handle throws with completed observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = Observable.of();
+		const observable = Observable.of();
 		return a.throws(observable);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle throws with regex', function (t) {
-	ava(function (a) {
+test('handle throws with regex', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
+		const observable = new Observable(observer => {
 			observer.error(new Error('abc'));
 		});
 
 		return a.throws(observable, /abc/);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle throws with string', function (t) {
-	ava(function (a) {
+test('handle throws with string', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
+		const observable = new Observable(observer => {
 			observer.error(new Error('abc'));
 		});
 
 		return a.throws(observable, 'abc');
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle throws with false-positive observable', function (t) {
-	ava(function (a) {
+test('handle throws with false-positive observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
+		const observable = new Observable(observer => {
 			observer.next(new Error());
 			observer.complete();
 		});
 
 		return a.throws(observable);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();
 	});
 });
 
-test('handle notThrows with completed observable', function (t) {
-	ava(function (a) {
+test('handle notThrows with completed observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = Observable.of();
+		const observable = Observable.of();
 		return a.notThrows(observable);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, true);
 		t.is(result.result.assertCount, 1);
 		t.end();
 	});
 });
 
-test('handle notThrows with thrown observable', function (t) {
-	ava(function (a) {
+test('handle notThrows with thrown observable', t => {
+	ava(a => {
 		a.plan(1);
 
-		var observable = new Observable(function (observer) {
+		const observable = new Observable(observer => {
 			observer.error(new Error());
 		});
 
 		return a.notThrows(observable);
-	}).run().then(function (result) {
+	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.end();

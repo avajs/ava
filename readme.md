@@ -2,7 +2,7 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![Dependency Status](https://dependencyci.com/github/avajs/ava/badge)](https://dependencyci.com/github/avajs/ava) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava)
+[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![Dependency Status](https://dependencyci.com/github/avajs/ava/badge)](https://dependencyci.com/github/avajs/ava) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 sec to 11 sec. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
@@ -18,6 +18,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 
 - [Usage](#usage)
 - [CLI Usage](#cli)
+- [Debugging](#debugging)
 - [Reporters](#reporters)
 - [Configuration](#configuration)
 - [Documentation](#documentation)
@@ -39,7 +40,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Enforces writing atomic tests
 - No implicit globals
 - [Isolated environment for each test file](#process-isolation)
-- [Write your tests in ES2015](#es2015-support)
+- [Write your tests in ES2017](#es2017-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
@@ -63,9 +64,17 @@ test(t => {
 
 ### Add AVA to your project
 
-Install AVA globally and run it with `--init` to add AVA to your `package.json`:
+Install AVA globally and run it with `--init` to add AVA to your `package.json`. [Yarn](https://yarnpkg.com/) currently provides significant speed improvements over npm during the installation process. Consider [using Yarn](https://yarnpkg.com/en/docs/install) if the installation is too slow for your needs.
+
 
 ```console
+$ yarn global add ava
+$ ava --init
+```
+
+If you prefer using npm:
+
+```
 $ npm install --global ava
 $ ava --init
 ```
@@ -79,7 +88,7 @@ Your `package.json` will then look like this:
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.15.0"
+    "ava": "^0.17.0"
   }
 }
 ```
@@ -89,6 +98,12 @@ Any arguments passed after `--init` are added as config to `package.json`.
 #### Manual installation
 
 You can also install AVA directly:
+
+```console
+$ yarn add --dev ava
+```
+
+Alternatively using npm:
 
 ```console
 $ npm install --save-dev ava
@@ -138,18 +153,19 @@ $ ava --help
     ava [<file|directory|glob> ...]
 
   Options
-    --init             Add AVA to your project
-    --fail-fast        Stop after first test failure
-    --serial, -s       Run tests serially
-    --tap, -t          Generate TAP output
-    --verbose, -v      Enable verbose output
-    --no-cache         Disable the transpiler cache
-    --no-power-assert  Disable Power Assert
-    --match, -m        Only run tests with matching title (Can be repeated)
-    --watch, -w        Re-run tests when tests and source files change
-    --source, -S       Pattern to match source files so tests can be re-run (Can be repeated)
-    --timeout, -T      Set global timeout
-    --concurrency, -c  Maximum number of test files running at the same time (EXPERIMENTAL)
+    --init                  Add AVA to your project
+    --fail-fast             Stop after first test failure
+    --serial, -s            Run tests serially
+    --tap, -- [ ]           Generate TAP output
+    --verbose, -v           Enable verbose output
+    --no-cache              Disable the transpiler cache
+    --no-power-assert       Disable Power Assert
+    --match, -m             Only run tests with matching title (Can be repeated)
+    --watch, -w             Re-run tests when tests and source files change
+    --source, -S            Pattern to match source files so tests can be re-run (Can be repeated)
+    --timeout, -T           Set global timeout
+    --concurrency, -c       Maximum number of test files running at the same time (EXPERIMENTAL)
+    --update-snapshots, -u  Update all snapshots
 
   Examples
     ava
@@ -168,6 +184,21 @@ $ ava --help
 Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are *always* ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+
+## Debugging
+
+AVA runs tests in child processes, so to debug tests, you need to do this workaround:
+
+```console
+$ node --inspect node_modules/ava/profile.js some/test/file.js
+```
+
+### Debugger-specific tips
+
+- [Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
+- [WebStorm](docs/recipes/debugging-with-webstorm.md)
+
 
 ## Reporters
 
@@ -235,7 +266,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
-See the [ES2015 support](#es2015-support) section for details on the `babel` option.
+See the [ES2017 support](#es2017-support) section for details on the `babel` option.
 
 ## Documentation
 
@@ -247,11 +278,13 @@ If you're unable to use promises or observables, you may enable "callback mode" 
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
-Test files are run from their current directory, so [`process.cwd()`](https://nodejs.org/api/process.html#process_process_cwd) is always the same as [`__dirname`](https://nodejs.org/api/globals.html#globals_dirname). You can just use relative paths instead of doing `path.join(__dirname, 'relative/path')`.
+AVA tries to run test files with their current working directory set to the directory that contains your `package.json` file.
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument. By convention this argument is named `t`.
+To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument.
+
+**Note:** In order for the [enhanced assertion messages](#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
 ```js
 import test from 'ava';
@@ -638,21 +671,17 @@ test(t => {
 });
 ```
 
-### ES2015 support
+### ES2017 support
 
-AVA comes with built-in support for ES2015 through [Babel 6](https://babeljs.io). Just write your tests in ES2015. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with the [`es2015`](https://babeljs.io/docs/plugins/preset-es2015/) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) presets, as well as the [`espower`](https://github.com/power-assert-js/babel-plugin-espower) and [`transform-runtime`](https://babeljs.io/docs/plugins/transform-runtime/) plugins.
+AVA comes with built-in support for ES2017 through [Babel 6](https://babeljs.io). Just write your tests in ES2017. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) and [`stage-2`](https://babeljs.io/docs/plugins/preset-stage-2/) preset, as well as [custom transforms](https://github.com/avajs/babel-preset-transform-test-files) for test and helper files.
 
 The corresponding Babel config for AVA's setup is as follows:
 
 ```json
 {
   "presets": [
-    "es2015",
-    "stage-2"
-  ],
-  "plugins": [
-    "espower",
-    "transform-runtime"
+    "@ava/stage-4",
+    "@ava/transform-test-files"
   ]
 }
 ```
@@ -702,7 +731,7 @@ See AVA's [TypeScript recipe](docs/recipes/typescript.md) for a more detailed ex
 
 ### Transpiling imported modules
 
-AVA currently only transpiles the tests you ask it to run. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
+AVA currently only transpiles the tests you ask it to run, as well as test helpers (files starting with `_` or in `helpers` directory) inside the test directory. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
 If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](#configuration).
 
@@ -887,13 +916,38 @@ Assert that `value` is not deep equal to `expected`.
 
 Assert that `function` throws an error, or `promise` rejects with an error.
 
-`error` can be a constructor, regex, error message or validation function.
+`error` can be an error constructor, error message, regex matched against the error message, or validation function.
 
-Returns the error thrown by `function` or the rejection reason of `promise`.
+Returns the error thrown by `function` or a promise for the rejection reason of the specified `promise`.
+
+Example:
+
+```js
+const fn = () => {
+	throw new TypeError('🦄');
+};
+
+test('throws', t => {
+	const error = t.throws(() => {
+		fn();
+	}, TypeError);
+
+	t.is(error.message, '🦄');
+});
+```
+
+```js
+const promise = Promise.reject(new TypeError('🦄'));
+
+test('rejects', async t => {
+	const error = await t.throws(promise);
+	t.is(error.message, '🦄');
+});
+```
 
 ### `.notThrows(function|promise, [message])`
 
-Assert that `function` doesn't throw an `error` or `promise` resolves.
+Assert that `function` does not throw an error or that `promise` does not reject with an error.
 
 ### `.regex(contents, regex, [message])`
 
@@ -906,6 +960,56 @@ Assert that `contents` does not match `regex`.
 ### `.ifError(error, [message])`
 
 Assert that `error` is falsy.
+
+### `.snapshot(contents, [message])`
+
+Make a snapshot of the stringified `contents`.
+
+## Snapshot testing
+
+Snapshot testing comes as another kind of assertion and uses [jest-snapshot](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) under the hood.
+
+When used with React, it looks very similar to Jest:
+
+```js
+// your component
+const HelloWorld = () => <h1>Hello World...!</h1>;
+
+export default HelloWorld;
+```
+
+```js
+// your test
+import test from 'ava';
+import render from 'react-test-renderer';
+
+import HelloWorld from './';
+
+test('HelloWorld component', t => {
+  const tree = render.create(<HelloWorld />).toJSON();
+  t.snapshot(tree);
+});
+```
+
+The first time you run this test, a snapshot file will be created in `__snapshots__` folder looking something like this:
+
+```
+exports[`HelloWorld component 1`] = `
+<h1>
+  Hello World...!
+</h1>
+`;
+```
+
+These snapshots should be committed together with your code so that everyone on the team shares current state of the app.
+
+Every time you run this test afterwards, it will check if the component render has changed. If it did, it will fail the test. Then you will have the choice to check your code - and if the change was intentional, you can use the `--update-snapshots` (or `-u`) flag to update the snapshots into their new version.
+
+That might look like this:
+
+`$ ava --update-snapshots`
+
+Note that snapshots can be used for much more than just testing components - you can equally well test any other (data) structure that you can stringify.
 
 ### Skipping assertions
 
@@ -970,14 +1074,6 @@ Running tests concurrently comes with some challenges, doing file IO is one.
 
 Usually, serial tests create temp directories in the current test directory and clean them up at the end. This won't work when you run tests concurrently as tests will conflict with each other. The correct way to do it is to use a new temp directory for each test. The [`tempfile`](https://github.com/sindresorhus/tempfile) and [`temp-write`](https://github.com/sindresorhus/temp-write) modules can be helpful.
 
-### Debugging
-
-AVA runs tests concurrently by default, which is suboptimal when you need to debug something. Instead, run tests serially with the `--serial` option:
-
-```console
-$ ava --serial
-```
-
 ### Code coverage
 
 You can't use [`istanbul`](https://github.com/gotwarlost/istanbul) for code coverage as AVA [spawns the test files](#process-isolation). You can use [`nyc`](https://github.com/bcoe/nyc) instead, which is basically `istanbul` with support for subprocesses.
@@ -1021,6 +1117,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Configuring Babel](docs/recipes/babelrc.md)
 - [Testing React components](docs/recipes/react.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
+- [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 
 ## Support
@@ -1047,12 +1144,13 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 - [Awesome list](https://github.com/avajs/awesome-ava)
 - [JavaScript Air podcast episode](http://jsair.io/ava)
+- [AVA Casts](http://avacasts.com)
 
 ## Team
 
-[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage) | [![Mark Wubben](https://avatars.githubusercontent.com/u/33538?s=130)](https://novemberborn.net) | [![Juan Soto](https://avatars.githubusercontent.com/u/8217766?s=130)](https://juansoto.me) | [![Jeroen Engels](https://avatars.githubusercontent.com/u/3869412?s=130)](https://github.com/jfmengels)
+[![Sindre Sorhus](https://avatars.githubusercontent.com/u/170270?s=130)](http://sindresorhus.com) | [![Vadim Demedes](https://avatars.githubusercontent.com/u/697676?s=130)](https://github.com/vadimdemedes) | [![James Talmage](https://avatars.githubusercontent.com/u/4082216?s=130)](https://github.com/jamestalmage) | [![Mark Wubben](https://avatars.githubusercontent.com/u/33538?s=130)](https://novemberborn.net) | [![Juan Soto](https://avatars.githubusercontent.com/u/8217766?s=130)](https://juansoto.me) | [![Jeroen Engels](https://avatars.githubusercontent.com/u/3869412?s=130)](https://github.com/jfmengels)
 ---|---|---|---|---|---|---
-[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](http://juansoto.me) | [Jeroen Engels](https://github.com/jfmengels)
+[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](http://juansoto.me) | [Jeroen Engels](https://github.com/jfmengels)
 
 ### Former
 

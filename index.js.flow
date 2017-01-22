@@ -43,14 +43,10 @@ type AssertContext = {
 	truthy(value: mixed, message?: string): void;
 	// Assert that value is falsy.
 	falsy(value: mixed, message?: string): void;
-	// DEPRECATED, use `truthy`. Assert that value is truthy.
-	ok(value: mixed, message?: string): void;
-	// DEPRECATED, use `falsy`. Assert that value is falsy.
-	notOk(value: mixed, message?: string): void;
 	// Assert that value is true.
-	true(value: boolean, message?: string): void;
+	true(value: mixed, message?: string): void;
 	// Assert that value is false.
-	false(value: boolean, message?: string): void;
+	false(value: mixed, message?: string): void;
 	// Assert that value is equal to expected.
 	is<U>(value: U, expected: U, message?: string): void;
 	// Assert that value is not equal to expected.
@@ -59,12 +55,6 @@ type AssertContext = {
 	deepEqual<U>(value: U, expected: U, message?: string): void;
 	// Assert that value is not deep equal to expected.
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that function throws an error or promise rejects.
-	// DEPRECATED, use `deepEqual`. Assert that value is deep equal to expected.
-	// @param error Can be a constructor, regex, error message or validation function.
-	same<U>(value: U, expected: U, message?: string): void;
-	// DEPRECATED use `notDeepEqual`. Assert that value is not deep equal to expected.
-	notSame<U>(value: U, expected: U, message?: string): void;
 	// Assert that function throws an error or promise rejects.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
@@ -93,26 +83,23 @@ type ContextualTestContext         = TestContext         & { context: any; };
 type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
 
 /**
- * Test Types
+ * Test Implementations
  */
 
-type Test                   = (t: TestContext)                   => SpecialReturnTypes | void;
-type CallbackTest           = (t: CallbackTestContext)           => void;
-type ContextualTest         = (t: ContextualTestContext)         => SpecialReturnTypes | void;
-type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
-
-/**
- * Macro Types
- */
-
-type Macro<T> = {
-	(t: T, ...args: Array<any>): void;
+type TestFunction<T, R> = {
+	(t: T, ...args: Array<any>): R;
 	title?: (providedTitle: string, ...args: Array<any>) => string;
 };
 
-type Macros<T> =
-	| Macro<T>
-	| Array<Macro<T>>;
+type TestImplementation<T, R> =
+	| TestFunction<T, R>
+	| Array<TestFunction<T, R>>;
+
+type Test                   = TestImplementation<TestContext, SpecialReturnTypes | void>;
+type CallbackTest           = TestImplementation<CallbackTestContext, void>;
+type ContextualTest         = TestImplementation<ContextualTestContext, SpecialReturnTypes | void>;
+type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, void>;
+
 
 /**
  * Method Types
@@ -121,8 +108,6 @@ type Macros<T> =
 type TestMethod = {
 	(              implementation: Test): void;
 	(name: string, implementation: Test): void;
-	(              implementation: Macros<TestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<TestContext>, ...args: Array<any>): void;
 
 	serial     : TestMethod;
 	before     : TestMethod;
@@ -140,8 +125,6 @@ type TestMethod = {
 type CallbackTestMethod = {
 	(              implementation: CallbackTest): void;
 	(name: string, implementation: CallbackTest): void;
-	(              implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<CallbackTestContext>, ...args: Array<any>): void;
 
 	serial     : CallbackTestMethod;
 	before     : CallbackTestMethod;
@@ -159,8 +142,6 @@ type CallbackTestMethod = {
 type ContextualTestMethod = {
 	(              implementation: ContextualTest): void;
 	(name: string, implementation: ContextualTest): void;
-	(              implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
 	serial     : ContextualTestMethod;
 	before     : ContextualTestMethod;
@@ -178,8 +159,6 @@ type ContextualTestMethod = {
 type ContextualCallbackTestMethod = {
 	(              implementation: ContextualCallbackTest): void;
 	(name: string, implementation: ContextualCallbackTest): void;
-	(              implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
-	(name: string, implementation: Macros<ContextualCallbackTestContext>, ...args: Array<any>): void;
 
 	serial     : ContextualCallbackTestMethod;
 	before     : ContextualCallbackTestMethod;
@@ -201,8 +180,6 @@ type ContextualCallbackTestMethod = {
 declare module.exports: {
 	(              run: ContextualTest): void;
 	(name: string, run: ContextualTest): void;
-	(              run: Macros<ContextualTestContext>, ...args: Array<any>): void;
-	(name: string, run: Macros<ContextualTestContext>, ...args: Array<any>): void;
 
 	beforeEach : TestMethod;
 	afterEach  : TestMethod;

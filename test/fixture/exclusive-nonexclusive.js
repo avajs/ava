@@ -1,9 +1,9 @@
 import test from '../../';
 
 test.only(t => {
-  t.pass();
+	t.pass();
 });
 
 test(t => {
-  t.fail();
+	t.fail();
 });

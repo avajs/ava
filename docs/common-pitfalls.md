@@ -10,7 +10,7 @@ If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](htt
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [#751](https://github.com/avajs/ava/issues/751).
 
-AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these variables](https://github.com/watson/is-ci/blob/master/index.js).
+AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI environment or not using [these variables](https://github.com/watson/ci-info/blob/master/index.js).
 
 ## AVA and connected client limits
 
@@ -62,6 +62,16 @@ test(async t => {
 ### Attributing uncaught exceptions to tests
 
 AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
+
+### Why are the enhanced assertion messages not shown?
+
+Ensure that the first parameter passed into your test is named `t`. This is a requirement of [`power-assert`](https://github.com/power-assert-js/power-assert), the library that provides the enhanced messages.
+
+```js
+test(t => {
+	t.is(1, 1);
+});
+```
 
 ---
 

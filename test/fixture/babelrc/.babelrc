@@ -1,4 +1,4 @@
 {
-  "presets": ["es2015", "stage-2"],
+  "presets": ["@ava/stage-4"],
   "plugins": ["../babel-plugin-test-doubler"]
 }

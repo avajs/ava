@@ -1,1 +1,1 @@
-require.extensions['.custom'] = require.extensions['.js']
+require.extensions['.custom'] = require.extensions['.js'];

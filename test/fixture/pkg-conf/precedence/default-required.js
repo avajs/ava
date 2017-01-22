@@ -1,1 +1,2 @@
-module.exports = "bar";
+'use strict';
+module.exports = 'bar';

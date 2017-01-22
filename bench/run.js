@@ -1,36 +1,36 @@
 'use strict';
-var childProcess = require('child_process');
-var path = require('path');
-var fs = require('fs');
-var arrify = require('arrify');
-var Promise = require('bluebird');
-var mkdirp = require('mkdirp');
-var branch = require('git-branch').sync(path.join(__dirname, '..'));
+const childProcess = require('child_process');
+const path = require('path');
+const fs = require('fs');
+const arrify = require('arrify');
+const Promise = require('bluebird');
+const mkdirp = require('mkdirp');
+const branch = require('git-branch').sync(path.join(__dirname, '..'));
 
-var cliPath = require.resolve('../cli');
+const cliPath = require.resolve('../cli');
 
 function runTests(_args) {
-	return new Promise(function (resolve) {
-		var args = [cliPath]
-			.concat(arrify(_args));
-		var start = Date.now();
+	return new Promise(resolve => {
+		const args = [cliPath].concat(arrify(_args));
+		const start = Date.now();
+
 		childProcess.execFile(process.execPath, args, {
 			cwd: __dirname,
 			maxBuffer: 100000 * 200
-		}, function (err, stdout, stderr) {
-			var end = Date.now();
+		}, (err, stdout, stderr) => {
+			const end = Date.now();
 			resolve({
 				args: arrify(_args),
 				time: end - start,
-				err: err,
-				stdout: stdout,
-				stderr: stderr
+				err,
+				stdout,
+				stderr
 			});
 		});
 	});
 }
 
-var list;
+let list;
 
 if (process.argv.length === 2) {
 	list = [
@@ -47,61 +47,66 @@ if (process.argv.length === 2) {
 		'concurrent/async-timeout.js',
 		'concurrent/sync.js',
 		['concurrent/*.js', 'serial/*.js']
-	].map(function (definition) {
+	].map(definition => {
 		if (Array.isArray(definition) || typeof definition === 'string') {
 			definition = {
 				shouldFail: false,
 				args: definition
 			};
 		}
+
 		return definition;
 	});
 } else {
 	list = [];
-	var currentArgs = [];
-	var shouldFail = false;
-	process.argv.slice(2).forEach(function (arg) {
+	let currentArgs = [];
+	let shouldFail = false;
+
+	process.argv.slice(2).forEach(arg => {
 		if (arg === '--') {
 			list.push({
 				args: currentArgs,
-				shouldFail: shouldFail
+				shouldFail
 			});
 			currentArgs = [];
 			shouldFail = false;
 			return;
 		}
+
 		if (arg === '--should-fail') {
 			shouldFail = true;
 			return;
 		}
+
 		currentArgs.push(arg);
 	});
+
 	if (currentArgs.length > 0) {
 		list.push({
 			args: currentArgs,
-			shouldFail: shouldFail
+			shouldFail
 		});
 	}
 }
 
-list.forEach(function (definition) {
+list.forEach(definition => {
 	definition.args = ['--verbose'].concat(definition.args);
 });
 
-var combined = [];
-for (var i = 0; i < 11; i++) {
+let combined = [];
+for (let i = 0; i < 11; i++) {
 	combined = combined.concat(list);
 }
 
-var results = {};
+const results = {};
 
-Promise.each(combined, function (definition) {
-	var args = definition.args;
+Promise.each(combined, definition => {
+	const args = definition.args;
 
-	return runTests(args).then(function (result) {
-		var key = result.args.join(' ');
-		var passedOrFaild = result.err ? 'failed' : 'passed';
-		var seconds = result.time / 1000;
+	return runTests(args).then(result => {
+		const key = result.args.join(' ');
+		const passedOrFaild = result.err ? 'failed' : 'passed';
+		const seconds = result.time / 1000;
 
 		console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
 
@@ -119,12 +124,12 @@ Promise.each(combined, function (definition) {
 			time: seconds
 		});
 	});
-}).then(function () {
+}).then(() => {
 	mkdirp.sync(path.join(__dirname, '.results'));
 	results['.time'] = Date.now();
 
 	fs.writeFileSync(
-		path.join(__dirname, '.results', branch + '.json'),
+		path.join(__dirname, '.results', `${branch}.json`),
 		JSON.stringify(results, null, 4)
 	);
 });

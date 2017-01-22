@@ -12,7 +12,7 @@ var compareLineOutput = require('../helper/compare-line-output');
 
 chalk.enabled = true;
 
-// tap doesn't emulate a tty environment and thus process.stdout.columns is
+// Tap doesn't emulate a tty environment and thus process.stdout.columns is
 // undefined. Expect an 80 character wide line to be rendered.
 var fullWidthLine = chalk.gray.dim(repeating('\u2500', 80));
 
@@ -381,6 +381,70 @@ test('results with errors', function (t) {
 	t.end();
 });
 
+test('results when fail-fast is enabled', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'',
+		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results without fail-fast if no failing tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 0;
+	runStatus.passCount = 1;
+	runStatus.failFastEnabled = true;
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results without fail-fast if no skipped tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
 test('results with 1 previous failure', function (t) {
 	var reporter = createReporter();
 
@@ -441,6 +505,69 @@ test('reporter.stdout and reporter.stderr both use process.stderr.write', functi
 	reporter.stderr('result');
 	t.is(stub.callCount, 2);
 	process.stderr.write.restore();
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there are no known remaining tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.hasExclusive = true;
+	runStatus.passCount = 1;
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there is one remaining tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.hasExclusive = true;
+	runStatus.testCount = 2;
+	runStatus.passCount = 1;
+	runStatus.failCount = 0;
+	runStatus.remainingCount = 1;
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when hasExclusive is enabled, but there are multiple remaining tests', function (t) {
+	var reporter = verboseReporter();
+	var runStatus = createRunStatus();
+	runStatus.hasExclusive = true;
+	runStatus.testCount = 3;
+	runStatus.passCount = 1;
+	runStatus.failCount = 0;
+	runStatus.remainingCount = 2;
+
+	var output = reporter.finish(runStatus);
+	var expectedOutput = [
+		'',
+		'  ' + chalk.green('1 test passed') + time,
+		'',
+		'',
+		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
 	t.end();
 });
 

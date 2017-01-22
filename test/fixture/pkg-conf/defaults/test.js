@@ -1,4 +1,4 @@
-import test from '../../../../'
+import test from '../../../../';
 
 const opts = JSON.parse(process.argv[2]);
 
