@@ -306,7 +306,6 @@ test('only test', t => {
 	});
 });
 
-<<<<<<< HEAD
 test('throws if you try to set a hook as exclusive', t => {
 	const runner = new Runner();
 
