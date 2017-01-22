@@ -349,6 +349,145 @@ test('throws if you try to set a test as always', function (t) {
 	t.end();
 });
 
+test('throws if you give a function to todo', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.test.todo('todo with function', noop);
+	}, '`todo` tests are not allowed to have an implementation. Use ' +
+	'`test.skip()` for tests with an implementation.');
+
+	t.end();
+});
+
+test('throws if todo has no title', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.test.todo();
+	}, '`todo` tests require a title');
+
+	t.end();
+});
+
+test('throws if todo has failing, skip, or only', function (t) {
+	var runner = new Runner();
+
+	var errorMessage = '`todo` tests are just for documentation and cannot be' +
+		' used with skip, only, or failing';
+
+	t.throws(function () {
+		runner.test.failing.todo('test');
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.test.skip.todo('test');
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.test.only.todo('test');
+	}, errorMessage);
+
+	t.end();
+});
+
+test('throws if todo isn\'t a test', function (t) {
+	var runner = new Runner();
+
+	var errorMessage = '`todo` is only for documentation of future tests and' +
+		' cannot be used with hooks';
+
+	t.throws(function () {
+		runner.before.todo('test');
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.beforeEach.todo('test');
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.after.todo('test');
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.afterEach.todo('test');
+	}, errorMessage);
+
+	t.end();
+});
+
+test('throws if test has skip and only', function (t) {
+	var runner = new Runner();
+
+	t.throws(function () {
+		runner.test.only.skip('test', noop);
+	}, '`only` tests cannot be skipped');
+
+	t.end();
+});
+
+test('throws if failing is used on non-tests', function (t) {
+	var runner = new Runner();
+
+	var errorMessage = '`failing` is only for tests and cannot be used with hooks';
+
+	t.throws(function () {
+		runner.beforeEach.failing('', noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.before.failing('', noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.afterEach.failing('', noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.after.failing('', noop);
+	}, errorMessage);
+
+	t.end();
+});
+
+test('throws if only is used on non-tests', function (t) {
+	var runner = new Runner();
+
+	var errorMessage = '`only` is only for tests and cannot be used with hooks';
+
+	t.throws(function () {
+		runner.beforeEach.only(noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.before.only(noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.afterEach.only(noop);
+	}, errorMessage);
+
+	t.throws(function () {
+		runner.after.only(noop);
+	}, errorMessage);
+
+	t.end();
+});
+
+test('validate accepts skipping failing tests', function (t) {
+	t.plan(2);
+
+	var runner = new Runner();
+
+	runner.test.skip.failing('skip failing', noop);
+
+	runner.run({}).then(function (stats) {
+		t.is(stats.testCount, 1);
+		t.is(stats.skipCount, 1);
+		t.end();
+	});
+});
+
 test('runOnlyExclusive option test', function (t) {
 	t.plan(1);
 
