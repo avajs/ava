@@ -300,6 +300,16 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	});
 });
 
+['--watch', '-w'].forEach(watchFlag => {
+	test(`bails when CI is used while ${watchFlag} is given`, t => {
+		execCli([watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'AVA will not run with the --watch (-w) option in CI, because CI processes should terminate, and with the --watch option, AVA will never terminate.');
+			t.end();
+		});
+	});
+});
+
 test('--match works', t => {
 	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'fixture/matcher-skip.js'], err => {
 		t.ifError(err);
