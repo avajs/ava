@@ -83,6 +83,10 @@ Dependency tracking works for required modules. Custom extensions and transpiler
 
 The [`.only` modifier] disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
 
+## Watch mode and CI
+
+If you run AVA in your CI with watch mode, the execution will exit with a error. AVA will not run with the `--watch` (`-w`) option in CI, because CI processes should terminate, and with the `--watch` option, AVA will never terminate.
+
 ## Manually rerunning all tests
 
 You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed by <kbd>Enter</kbd>.
