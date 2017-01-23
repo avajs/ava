@@ -688,7 +688,7 @@ test('macros: Additional args will be spread as additional args on implementatio
 
 	const runner = new Runner();
 
-	runner.test('test1', () => {
+	runner.test('test1', function () {
 		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 	}, 'foo', 'bar');
 
