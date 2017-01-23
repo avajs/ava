@@ -170,6 +170,7 @@
     "git-branch": "^0.3.0",
     "has-ansi": "^2.0.0",
     "inquirer": "^2.0.0",
+    "is-array-sorted": "^1.0.0",
     "lolex": "^1.4.0",
     "mkdirp": "^0.5.1",
     "nyc": "^10.0.0",

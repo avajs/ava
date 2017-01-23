@@ -14,9 +14,10 @@
 
 const path = require('path');
 const fs = require('fs');
+const isArraySorted = require('is-array-sorted');
 const runner = require('../lib/runner');
 
-const arrayHas = parts => part => parts.indexOf(part) > -1;
+const arrayHas = parts => part => parts.indexOf(part) !== -1;
 
 const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 
@@ -35,13 +36,13 @@ function generatePrefixed(prefix) {
 	for (const part of allParts) {
 		const parts = prefix.concat([part]);
 
-		if (prefix.indexOf(part) > -1 || !verify(parts, true)) {
+		if (prefix.indexOf(part) !== -1 || !verify(parts, true)) {
 			// Function already in prefix or not allowed here
 			continue;
 		}
 
 		// If `parts` is not sorted, we alias it to the sorted chain
-		if (!isSorted(parts)) {
+		if (!isArraySorted(parts)) {
 			const chain = parts.sort().join('.');
 
 			if (exists(parts)) {
@@ -55,7 +56,7 @@ function generatePrefixed(prefix) {
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (parts.indexOf('todo') > -1) {
+			if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
 				const type = testType(parts);
@@ -145,17 +146,6 @@ function exists(parts) {
 	}
 
 	return false;
-}
-
-// Checks that an array is sorted
-function isSorted(a) {
-	for (let i = 1; i < a.length; i++) {
-		if (a[i - 1] >= a[i]) {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 // Returns the type name of for the test implementation
