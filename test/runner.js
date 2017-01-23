@@ -309,7 +309,7 @@ test('only test', t => {
 test('throws if you try to set a hook as exclusive', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.beforeEach.only('', noop);
 	}, {message: '`only` is only for tests and cannot be used with hooks'});
 
@@ -319,7 +319,7 @@ test('throws if you try to set a hook as exclusive', t => {
 test('throws if you try to set a before hook as always', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.before.always('', noop);
 	}, {message: '`always` can only be used with `after` and `afterEach`'});
 
@@ -329,7 +329,7 @@ test('throws if you try to set a before hook as always', t => {
 test('throws if you try to set a test as always', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.always('', noop);
 	}, {message: '`always` can only be used with `after` and `afterEach`'});
 
@@ -339,10 +339,10 @@ test('throws if you try to set a test as always', t => {
 test('throws if you give a function to todo', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.todo('todo with function', noop);
-	}, '`todo` tests are not allowed to have an implementation. Use ' +
-	'`test.skip()` for tests with an implementation.');
+	}, {message: '`todo` tests are not allowed to have an implementation. Use ' +
+	'`test.skip()` for tests with an implementation.'});
 
 	t.end();
 });
@@ -350,9 +350,9 @@ test('throws if you give a function to todo', t => {
 test('throws if todo has no title', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.todo();
-	}, '`todo` tests require a title');
+	}, {message: '`todo` tests require a title'});
 
 	t.end();
 });
@@ -363,17 +363,17 @@ test('throws if todo has failing, skip, or only', t => {
 	const errorMessage = '`todo` tests are just for documentation and cannot be' +
 		' used with skip, only, or failing';
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.failing.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.skip.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.only.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
 	t.end();
 });
@@ -384,21 +384,21 @@ test('throws if todo isn\'t a test', t => {
 	const errorMessage = '`todo` is only for documentation of future tests and' +
 		' cannot be used with hooks';
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.before.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.beforeEach.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.after.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.afterEach.todo('test');
-	}, errorMessage);
+	}, {message: errorMessage});
 
 	t.end();
 });
@@ -406,9 +406,9 @@ test('throws if todo isn\'t a test', t => {
 test('throws if test has skip and only', t => {
 	const runner = new Runner();
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.test.only.skip('test', noop);
-	}, '`only` tests cannot be skipped');
+	}, {message: '`only` tests cannot be skipped'});
 
 	t.end();
 });
@@ -418,21 +418,21 @@ test('throws if failing is used on non-tests', t => {
 
 	const errorMessage = '`failing` is only for tests and cannot be used with hooks';
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.beforeEach.failing('', noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.before.failing('', noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.afterEach.failing('', noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.after.failing('', noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
 	t.end();
 });
@@ -442,21 +442,21 @@ test('throws if only is used on non-tests', t => {
 
 	const errorMessage = '`only` is only for tests and cannot be used with hooks';
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.beforeEach.only(noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.before.only(noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.afterEach.only(noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
-	t.throws(function () {
+	t.throws(() => {
 		runner.after.only(noop);
-	}, errorMessage);
+	}, {message: errorMessage});
 
 	t.end();
 });
@@ -688,7 +688,7 @@ test('macros: Additional args will be spread as additional args on implementatio
 
 	const runner = new Runner();
 
-	runner.test('test1', function () {
+	runner.test('test1', () => {
 		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 	}, 'foo', 'bar');
 
