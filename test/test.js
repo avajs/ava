@@ -553,7 +553,7 @@ test('waits for t.throws to reject after the promise returned from the test reso
 test('multiple resolving and rejecting promises passed to t.throws/t.notThrows', t => {
 	ava(a => {
 		a.plan(6);
-		for (let i = 0; i < 3; ++i) {
+		for (let i = 0; i < 3; i++) {
 			a.throws(delay.reject(10, new Error('foo')), 'foo');
 			a.notThrows(delay(10), 'foo');
 		}

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict';
-
 const path = require('path');
 const debug = require('debug')('ava');
 
@@ -8,7 +7,7 @@ const debug = require('debug')('ava');
 const resolveCwd = require('resolve-cwd');
 const localCLI = resolveCwd('ava/cli');
 
-// Use path.relative() to detect local AVA installation,
+// Use `path.relative()` to detect local AVA installation,
 // because __filename's case is inconsistent on Windows
 // see https://github.com/nodejs/node/issues/6624
 if (localCLI && path.relative(localCLI, __filename) !== '') {

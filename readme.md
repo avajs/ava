@@ -74,7 +74,7 @@ $ ava --init
 
 If you prefer using npm:
 
-```
+```console
 $ npm install --global ava
 $ ava --init
 ```
@@ -109,8 +109,7 @@ Alternatively using npm:
 $ npm install --save-dev ava
 ```
 
-You'll have to configure the `test` script in your `package.json` to use `ava`
-(see above).
+You'll have to configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
@@ -156,7 +155,7 @@ $ ava --help
     --init                  Add AVA to your project
     --fail-fast             Stop after first test failure
     --serial, -s            Run tests serially
-    --tap, -- [ ]           Generate TAP output
+    --tap, -t               Generate TAP output
     --verbose, -v           Enable verbose output
     --no-cache              Disable the transpiler cache
     --no-power-assert       Disable Power Assert
@@ -165,7 +164,7 @@ $ ava --help
     --source, -S            Pattern to match source files so tests can be re-run (Can be repeated)
     --timeout, -T           Set global timeout
     --concurrency, -c       Maximum number of test files running at the same time (EXPERIMENTAL)
-    --update-snapshots, -u  Update all snapshots
+    --update-snapshots, -u  Update snapshots
 
   Examples
     ava
@@ -274,7 +273,7 @@ Tests are run concurrently. You can specify synchronous and asynchronous tests. 
 
 We *highly* recommend the use of [async functions](#async-function-support). They make asynchronous code concise and readable, and they implicitly return a promise so you don't have to.
 
-If you're unable to use promises or observables, you may enable "callback mode" by defining your test with `test.cb([title], fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs.
+If you're unable to use promises or observables, you may enable "callback mode" by defining your test with `test.cb([title], fn)`. Tests declared this way **must** be manually ended with `t.end()`. This mode is mainly intended for testing callback-style APIs. However, we would strongly recommend [promisifying](https://github.com/sindresorhus/pify) callback-style APIs instead of using "callback mode", as this results in more correct and readable tests.
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
@@ -350,7 +349,7 @@ test(t => {
 	for (let i = 0; i < 3; i++) {
 		t.true(i < 3);
 	}
-}); // fails, 3 assertions are executed which is too many
+}); // Fails, 3 assertions are executed which is too many
 
 test(t => {
 	t.plan(1);
@@ -358,14 +357,14 @@ test(t => {
 	someAsyncFunction(() => {
 		t.pass();
 	});
-}); // fails, the test ends synchronously before the assertion is executed
+}); // Fails, the test ends synchronously before the assertion is executed
 ```
 
 ### Running tests serially
 
 By default tests are run concurrently, which is awesome. Sometimes though you have to write tests that cannot run concurrently.
 
-In these rare cases you can use the `.serial` modifier. It'll force those tests to run serially *before* the concurrent ones.
+In these rare cases you can use the `.serial` modifier. It will force those tests to run serially *before* the concurrent ones.
 
 ```js
 test.serial(t => {
@@ -454,12 +453,12 @@ test.only('boo will run but not exclusively', t => {
 	t.pass();
 });
 
-// won't run, no title
+// Won't run, no title
 test(function (t) {
 	t.fail();
 });
 
-// won't run, no explicit title
+// Won't run, no explicit title
 test(function foo(t) {
 	t.fail();
 });
@@ -494,7 +493,7 @@ This allows you to merge `.failing` tests before a fix is implemented without br
 ```js
 // See: github.com/user/repo/issues/1234
 test.failing('demonstrate some bug', t => {
-	t.fail(); // test will count as passed
+	t.fail(); // Test will count as passed
 });
 ```
 
@@ -514,35 +513,35 @@ Like `test()` these methods take an optional title and a callback function. The 
 
 ```js
 test.before(t => {
-	// this runs before all tests
+	// This runs before all tests
 });
 
 test.before(t => {
-	// this runs after the above, but before tests
+	// This runs after the above, but before tests
 });
 
 test.after('cleanup', t => {
-	// this runs after all tests
+	// This runs after all tests
 });
 
 test.after.always('guaranteed cleanup', t => {
-	// this will always run, regardless of earlier failures
+	// This will always run, regardless of earlier failures
 });
 
 test.beforeEach(t => {
-	// this runs before each test
+	// This runs before each test
 });
 
 test.afterEach(t => {
-	// this runs after each test
+	// This runs after each test
 });
 
 test.afterEach.always(t => {
-	// this runs after each test and other test hooks, even if they failed
+	// This runs after each test and other test hooks, even if they failed
 });
 
 test(t => {
-	// regular test
+	// Regular test
 });
 ```
 
@@ -690,15 +689,15 @@ You can customize how AVA transpiles the test files through the `babel` option i
 
 ```json
 {
-	"ava": {
-		 "babel": {
-			 "presets": [
-					"es2015",
-					"stage-0",
-					"react"
-			 ]
-		 }
-	},
+  "ava": {
+     "babel": {
+       "presets": [
+          "es2015",
+          "stage-0",
+          "react"
+       ]
+     }
+  }
 }
 ```
 
@@ -706,16 +705,16 @@ You can also use the special `"inherit"` keyword. This makes AVA defer to the Ba
 
 ```json
 {
-	"babel": {
-		"presets": [
-			"es2015",
-			"stage-0",
-			"react"
-		]
-	},
-	"ava": {
-		"babel": "inherit"
-	},
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react"
+    ]
+  },
+  "ava": {
+    "babel": "inherit"
+  }
 }
 ```
 
@@ -770,7 +769,7 @@ test(async function (t) {
 	t.true(value);
 });
 
-// async arrow function
+// Async arrow function
 test(async t => {
 	const value = await promiseFn();
 	t.true(value);
@@ -788,7 +787,7 @@ test(t => {
 	t.plan(3);
 	return Observable.of(1, 2, 3, 4, 5, 6)
 		.filter(n => {
-			// only even numbers
+			// Only even numbers
 			return n % 2 === 0;
 		})
 		.map(() => t.pass());
@@ -801,7 +800,7 @@ AVA supports using `t.end` as the final callback when using node-style error-fir
 
 ```js
 test.cb(t => {
-	// t.end automatically checks for error as first argument
+	// `t.end` automatically checks for error as first argument
 	fs.readFile('data.txt', t.end);
 });
 ```
@@ -814,7 +813,7 @@ AVA resets a timer after each test, forcing tests to quit if no new test results
 
 You can set timeouts in a human-readable way:
 
-```
+```console
 $ ava --timeout=10s # 10 seconds
 $ ava --timeout=2m # 2 minutes
 $ ava --timeout=100 # 100 milliseconds
@@ -866,7 +865,7 @@ Assertions are mixed into the [execution object](#t) provided to each test imple
 
 ```js
 test(t => {
-	t.truthy('unicorn'); // assertion
+	t.truthy('unicorn'); // Assertion
 });
 ```
 
@@ -972,14 +971,14 @@ Snapshot testing comes as another kind of assertion and uses [jest-snapshot](htt
 When used with React, it looks very similar to Jest:
 
 ```js
-// your component
+// Your component
 const HelloWorld = () => <h1>Hello World...!</h1>;
 
 export default HelloWorld;
 ```
 
 ```js
-// your test
+// Your test
 import test from 'ava';
 import render from 'react-test-renderer';
 
@@ -1007,7 +1006,9 @@ Every time you run this test afterwards, it will check if the component render h
 
 That might look like this:
 
-`$ ava --update-snapshots`
+```console
+$ ava --update-snapshots
+```
 
 Note that snapshots can be used for much more than just testing components - you can equally well test any other (data) structure that you can stringify.
 
@@ -1018,7 +1019,7 @@ Any assertion can be skipped using the `skip` modifier. Skipped assertions are s
 ```js
 test(t => {
 	t.plan(2);
-	t.skip.is(foo(), 5); // no need to change your plan count when skipping
+	t.skip.is(foo(), 5); // No need to change your plan count when skipping
 	t.is(1, 1);
 });
 ```
@@ -1128,23 +1129,20 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Related
 
+- [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) - Lint rules for AVA tests
 - [sublime-ava](https://github.com/avajs/sublime-ava) - Snippets for AVA tests
 - [atom-ava](https://github.com/avajs/atom-ava) - Snippets for AVA tests
 - [vscode-ava](https://github.com/samverschueren/vscode-ava) - Snippets for AVA tests
-- [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) - Lint rules for AVA tests
 - [gulp-ava](https://github.com/avajs/gulp-ava) - Run tests with gulp
 - [grunt-ava](https://github.com/avajs/grunt-ava) - Run tests with grunt
-- [fly-ava](https://github.com/pine/fly-ava) - Run tests with fly
-- [start-ava](https://github.com/start-runner/ava) - Run tests with start
-
-[More...](https://github.com/avajs/awesome-ava#packages)
+- [More…](https://github.com/avajs/awesome-ava#packages)
 
 ## Links
 
 - [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
 - [Awesome list](https://github.com/avajs/awesome-ava)
-- [JavaScript Air podcast episode](http://jsair.io/ava)
 - [AVA Casts](http://avacasts.com)
+- [More…](https://github.com/avajs/awesome-ava)
 
 ## Team
 

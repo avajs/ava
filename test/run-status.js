@@ -71,7 +71,7 @@ test('calculate remaining test count', t => {
 	const runStatus = new RunStatus();
 	runStatus.testCount = 10;
 
-	var results = [{
+	const results = [{
 		stats: {
 			passCount: 1,
 			failCount: 1,
