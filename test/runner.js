@@ -234,7 +234,7 @@ test('skip test', t => {
 
 	t.throws(() => {
 		runner.skip('should be a todo');
-	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
+	}, TypeError, 'Expected an implementation. Use `test.todo()` for tests without an implementation.');
 
 	runner.run({}).then(stats => {
 		t.is(stats.testCount, 2);
@@ -252,7 +252,7 @@ test('test throws when given no function', t => {
 
 	t.throws(() => {
 		runner.test();
-	}, {message: 'Expected an implementation. Use `test.todo()` for tests without an implementation.'});
+	}, TypeError, 'Expected an implementation. Use `test.todo()` for tests without an implementation.');
 });
 
 test('todo test', t => {
@@ -269,11 +269,11 @@ test('todo test', t => {
 
 	t.throws(() => {
 		runner.todo('todo', () => {});
-	}, {message: '`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.'});
+	}, TypeError, '`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.');
 
 	t.throws(() => {
 		runner.todo();
-	}, {message: '`todo` tests require a title'});
+	}, TypeError, '`todo` tests require a title');
 
 	runner.run({}).then(stats => {
 		t.is(stats.testCount, 2);
@@ -311,7 +311,7 @@ test('throws if you try to set a hook as exclusive', t => {
 
 	t.throws(() => {
 		runner.beforeEach.only('', noop);
-	}, {message: '`only` is only for tests and cannot be used with hooks'});
+	}, TypeError, '`only` is only for tests and cannot be used with hooks');
 
 	t.end();
 });
@@ -321,7 +321,7 @@ test('throws if you try to set a before hook as always', t => {
 
 	t.throws(() => {
 		runner.before.always('', noop);
-	}, {message: '`always` can only be used with `after` and `afterEach`'});
+	}, TypeError, '`always` can only be used with `after` and `afterEach`');
 
 	t.end();
 });
@@ -331,7 +331,7 @@ test('throws if you try to set a test as always', t => {
 
 	t.throws(() => {
 		runner.test.always('', noop);
-	}, {message: '`always` can only be used with `after` and `afterEach`'});
+	}, TypeError, '`always` can only be used with `after` and `afterEach`');
 
 	t.end();
 });
@@ -341,8 +341,8 @@ test('throws if you give a function to todo', t => {
 
 	t.throws(() => {
 		runner.test.todo('todo with function', noop);
-	}, {message: '`todo` tests are not allowed to have an implementation. Use ' +
-	'`test.skip()` for tests with an implementation.'});
+	}, TypeError, '`todo` tests are not allowed to have an implementation. Use ' +
+	'`test.skip()` for tests with an implementation.');
 
 	t.end();
 });
@@ -352,7 +352,7 @@ test('throws if todo has no title', t => {
 
 	t.throws(() => {
 		runner.test.todo();
-	}, {message: '`todo` tests require a title'});
+	}, TypeError, '`todo` tests require a title');
 
 	t.end();
 });
@@ -365,15 +365,15 @@ test('throws if todo has failing, skip, or only', t => {
 
 	t.throws(() => {
 		runner.test.failing.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.test.skip.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.test.only.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.end();
 });
@@ -386,19 +386,19 @@ test('throws if todo isn\'t a test', t => {
 
 	t.throws(() => {
 		runner.before.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.beforeEach.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.after.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.afterEach.todo('test');
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.end();
 });
@@ -408,7 +408,7 @@ test('throws if test has skip and only', t => {
 
 	t.throws(() => {
 		runner.test.only.skip('test', noop);
-	}, {message: '`only` tests cannot be skipped'});
+	}, TypeError, '`only` tests cannot be skipped');
 
 	t.end();
 });
@@ -420,19 +420,19 @@ test('throws if failing is used on non-tests', t => {
 
 	t.throws(() => {
 		runner.beforeEach.failing('', noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.before.failing('', noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.afterEach.failing('', noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.after.failing('', noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.end();
 });
@@ -444,19 +444,19 @@ test('throws if only is used on non-tests', t => {
 
 	t.throws(() => {
 		runner.beforeEach.only(noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.before.only(noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.afterEach.only(noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.throws(() => {
 		runner.after.only(noop);
-	}, {message: errorMessage});
+	}, TypeError, errorMessage);
 
 	t.end();
 });
