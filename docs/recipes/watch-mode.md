@@ -85,7 +85,7 @@ The [`.only` modifier] disables watch mode's dependency tracking algorithm. When
 
 ## Watch mode and CI
 
-If you run AVA in your CI with watch mode, the execution will exit with a error. AVA will not run with the `--watch` (`-w`) option in CI, because CI processes should terminate, and with the `--watch` option, AVA will never terminate.
+If you run AVA in your CI with watch mode, the execution will exit with an error (`Error : Watch mode is not available in CI, as it prevents AVA from terminating.`). AVA will not run with the `--watch` (`-w`) option in CI, because CI processes should terminate, and with the `--watch` option, AVA will never terminate.
 
 ## Manually rerunning all tests
 
