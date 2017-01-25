@@ -361,7 +361,7 @@ test('throws if todo has failing, skip, or only', t => {
 	const runner = new Runner();
 
 	const errorMessage = '`todo` tests are just for documentation and cannot be' +
-		' used with skip, only, or failing';
+		' used with `skip`, `only`, or `failing`';
 
 	t.throws(() => {
 		runner.test.failing.todo('test');
