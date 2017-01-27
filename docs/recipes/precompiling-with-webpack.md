@@ -11,7 +11,7 @@ module.exports = {
     path: '_build',
     filename: 'tests.js'
   },
-  externals: nodeModules,
+  externals: nodeExternals,
   module: {
     rules: [
       { test: /\.(js|jsx)$/, use: 'babel-loader' }
