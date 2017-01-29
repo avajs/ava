@@ -1,7 +1,5 @@
 'use strict';
-const renderer = require('react-test-renderer');
 const test = require('tap').test;
-const React = require('react');
 const sinon = require('sinon');
 const assert = require('../lib/assert');
 
@@ -484,38 +482,6 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 
 	t.doesNotThrow(() => {
 		assert.deepEqual(a, b);
-	});
-
-	t.end();
-});
-
-test('.jsxEqual()', t => {
-	t.throws(() => {
-		const actual = renderer.create(React.createElement('b', null)).toJSON();
-		const expected = renderer.create(React.createElement('i', null)).toJSON();
-		assert.jsxEqual(actual, expected);
-	});
-
-	t.doesNotThrow(() => {
-		const actual = renderer.create(React.createElement('b', null)).toJSON();
-		const expected = renderer.create(React.createElement('b', null)).toJSON();
-		assert.jsxEqual(actual, expected);
-	});
-
-	t.end();
-});
-
-test('.notJsxEqual()', t => {
-	t.throws(() => {
-		const actual = renderer.create(React.createElement('b', null)).toJSON();
-		const expected = renderer.create(React.createElement('b', null)).toJSON();
-		assert.notJsxEqual(actual, expected);
-	});
-
-	t.doesNotThrow(() => {
-		const actual = renderer.create(React.createElement('b', null)).toJSON();
-		const expected = renderer.create(React.createElement('i', null)).toJSON();
-		assert.notJsxEqual(actual, expected);
 	});
 
 	t.end();
