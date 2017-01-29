@@ -17,7 +17,6 @@ const cliPath = path.join(__dirname, '../cli.js');
 
 // For some reason chalk is disabled by default
 chalk.enabled = true;
-const colors = require('../lib/colors');
 
 function execCli(args, opts, cb) {
 	let dirname;
@@ -75,8 +74,8 @@ test('disallow invalid babel config shortcuts', t => {
 		t.ok(err);
 
 		let expectedOutput = '\n  ';
-		expectedOutput += colors.error(figures.cross) + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
+		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
+		expectedOutput += ' See https://github.com/avajs/ava#es2015-support for allowed values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
