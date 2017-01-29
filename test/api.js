@@ -310,8 +310,6 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
 			.then(result => {
 				t.is(result.failCount, 1);
-				// NOTE: error's message is empty due to lib/assert.js:22
-				// t.match(result.errors[0].error.message, /'c'.*?'d'/);
 			});
 	});
 

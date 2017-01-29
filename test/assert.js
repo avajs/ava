@@ -334,16 +334,12 @@ test('.deepEqual()', t => {
 	t.throws(() => {
 		assert.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
-	// NOTE: error's message is empty due to lib/assert.js:22
-	// }, / 'c' ].*? 'd' ]/);
 
 	t.throws(() => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
 		assert.deepEqual([circular, 'c'], [circular, 'd']);
 	});
-	// NOTE: error's message is empty due to lib/assert.js:22
-	// }, / 'c' ].*? 'd' ]/);
 
 	t.end();
 });
