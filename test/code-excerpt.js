@@ -33,9 +33,9 @@ test('truncate lines', t => {
 
 	const excerpt = codeExcerpt(path, 2, {maxWidth: 14});
 	const expected = [
-		` ${chalk.grey('1:')} function a(…`,
-		chalk.bgRed(` 2:   alert();  `),
-		` ${chalk.grey('3:')} }           `
+		` ${chalk.grey('1:')} functio…`,
+		chalk.bgRed(` 2:   alert…`),
+		` ${chalk.grey('3:')} }       `
 	].join('\n');
 
 	t.is(excerpt, expected);
