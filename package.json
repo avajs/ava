@@ -88,7 +88,7 @@
   ],
   "dependencies": {
     "@ava/babel-preset-stage-4": "^1.0.0",
-    "@ava/babel-preset-transform-test-files": "^1.0.0",
+    "@ava/babel-preset-transform-test-files": "github:avajs/babel-preset-transform-test-files#magic-assert",
     "arr-flatten": "^1.0.1",
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
