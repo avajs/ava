@@ -1,7 +1,6 @@
 'use strict';
 
 const prettyFormat = require('pretty-format');
-const reactElementPlugin = require('pretty-format/plugins/ReactElement');
 const reactTestPlugin = require('pretty-format/plugins/ReactTestComponent');
 const test = require('tap').test;
 const beautifyStack = require('../lib/beautify-stack');
@@ -9,7 +8,7 @@ const serialize = require('../lib/serialize-error');
 
 function serializeValue(value) {
 	return prettyFormat(value, {
-		plugins: [reactTestPlugin, reactElementPlugin],
+		plugins: [reactTestPlugin],
 		highlight: true
 	});
 }
