@@ -514,3 +514,48 @@ test('snapshot makes a snapshot using a library and global options', t => {
 
 	t.end();
 });
+
+test('snapshot handles jsx tree', t => {
+	const saveSpy = sinon.spy();
+	const state = {save: saveSpy};
+	const stateGetter = sinon.stub().returns(state);
+	const matchStub = sinon.stub().returns({pass: true});
+
+	assert.title = 'Test name';
+
+	t.plan(5);
+
+	t.doesNotThrow(() => {
+		const tree = {
+			type: 'h1',
+			children: ['Hello'],
+			props: {}
+		};
+
+		Object.defineProperty(tree, '$$typeof', {value: Symbol.for('react.test.json')});
+
+		assert._snapshot(tree, undefined, matchStub, stateGetter);
+	});
+
+	t.ok(stateGetter.called);
+
+	const savedTree = JSON.parse(matchStub.firstCall.args[0]);
+	t.deepEqual(savedTree, {
+		jsx: {
+			type: 'h1',
+			children: ['Hello'],
+			props: {}
+		}
+	});
+
+	t.match(matchStub.firstCall.thisValue, {
+		currentTestName: 'Test name',
+		snapshotState: state
+	});
+
+	t.ok(saveSpy.calledOnce);
+
+	delete assert.title;
+
+	t.end();
+});
