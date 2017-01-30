@@ -255,6 +255,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     "failFast": true,
     "tap": true,
     "powerAssert": false,
+	"extensions": [".js"],
     "require": [
       "babel-register"
     ],
