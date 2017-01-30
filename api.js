@@ -72,7 +72,7 @@ class Api extends EventEmitter {
 	run(files, options) {
 		return new AvaFiles({
 			cwd: this.options.resolveTestsFrom,
-			extenstions: this.options.extenstions,
+			extensions: this.options.extensions,
 			files
 		})
 			.findTestFiles()
@@ -125,7 +125,7 @@ class Api extends EventEmitter {
 
 		return new AvaFiles({
 			cwd: this.options.resolveTestsFrom,
-			extenstions: this.options.extenstions
+			extensions: this.options.extensions
 		})
 			.findTestHelpers()
 			.map(file => { // eslint-disable-line array-callback-return
