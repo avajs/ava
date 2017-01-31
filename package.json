@@ -149,7 +149,6 @@
     "package-hash": "^1.2.0",
     "pkg-conf": "^2.0.0",
     "plur": "^2.0.0",
-    "pretty-format": "github:vadimdemedes/pretty-format#colors",
     "pretty-ms": "^2.0.0",
     "repeating": "^2.0.0",
     "require-precompiled": "^0.1.0",

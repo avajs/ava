@@ -1,6 +1,6 @@
 'use strict';
 const indentString = require('indent-string');
-const prettyFormat = require('pretty-format');
+const prettyFormat = require('@ava/pretty-format');
 const chalk = require('chalk');
 const test = require('tap').test;
 const format = require('../lib/format-assert-error');

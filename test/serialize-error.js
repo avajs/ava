@@ -1,7 +1,7 @@
 'use strict';
 
-const prettyFormat = require('pretty-format');
-const reactTestPlugin = require('pretty-format/plugins/ReactTestComponent');
+const prettyFormat = require('@ava/pretty-format');
+const reactTestPlugin = require('@ava/pretty-format/plugins/ReactTestComponent');
 const test = require('tap').test;
 const beautifyStack = require('../lib/beautify-stack');
 const serialize = require('../lib/serialize-error');
