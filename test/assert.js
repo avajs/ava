@@ -541,7 +541,7 @@ test('snapshot handles jsx tree', t => {
 
 	const savedTree = JSON.parse(matchStub.firstCall.args[0]);
 	t.deepEqual(savedTree, {
-		jsx: {
+		__ava_react_jsx: { // eslint-disable-line camelcase
 			type: 'h1',
 			children: ['Hello'],
 			props: {}
