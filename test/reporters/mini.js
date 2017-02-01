@@ -477,6 +477,70 @@ test('results with errors and disabled code excerpts', function (t) {
 	t.end();
 });
 
+test('results with errors and broken code excerpts', function (t) {
+	var err1 = new Error('failure one');
+	err1.stack = beautifyStack(err1.stack);
+	var err1Path = tempWrite.sync('a();');
+	err1.source = {file: path.basename(err1Path), line: 10};
+	err1.showOutput = true;
+	err1.actual = JSON.stringify('abc');
+	err1.actualType = 'string';
+	err1.expected = JSON.stringify('abd');
+	err1.expectedType = 'string';
+
+	var err2 = new Error('failure two');
+	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
+	var err2Path = tempWrite.sync('b();');
+	err2.source = {file: path.basename(err2Path), line: 1};
+	err2.showOutput = true;
+	err2.actual = JSON.stringify([1]);
+	err2.actualType = 'array';
+	err2.expected = JSON.stringify([2]);
+	err2.expectedType = 'array';
+
+	var reporter = miniReporter({basePath: path.dirname(err2Path)});
+	reporter.failCount = 1;
+
+	var runStatus = {
+		errors: [{
+			title: 'failed one',
+			error: err1
+		}, {
+			title: 'failed two',
+			error: err2
+		}]
+	};
+
+	var output = reporter.finish(runStatus);
+
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 failed'),
+		'',
+		'  ' + chalk.bold.white('failed one'),
+		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
+		'',
+		indentString(formatAssertError(err1), 2).split('\n'),
+		/failure one/,
+		'',
+		stackLineRegex,
+		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'',
+		'',
+		'',
+		'  ' + chalk.bold.white('failed two'),
+		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
+		'',
+		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(err2), 2).split('\n'),
+		/failure two/,
+		'',
+		stackLineRegex
+	]));
+	t.end();
+});
+
 test('results with errors and disabled assert output', function (t) {
 	var err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
