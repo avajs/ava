@@ -67,11 +67,11 @@ In AVA there's a distinction between *source files* and *test files*. As you can
 
 By default AVA watches for changes to the test files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key. This is the recommended way, though you could also use the [`--source` CLI flag].
+You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key.
 
 You can specify patterns to match files in the folders that would otherwise be ignored, e.g. use `node_modules/some-dependency/*.js` to specify all `.js` files in `node_modules/some-dependency` as a source, even though normally all files in `node_modules` are ignored. Note that you need to specify an exact directory; `{bower_components,node_modules}/**/*.js` won't work.
 
-If your tests write to disk they may trigger the watcher to rerun your tests. If this occurs you will need to use the `--source` flag.
+If your tests write to disk they may trigger the watcher to rerun your tests. Configure patterns for the source files to avoid this.
 
 ## Dependency tracking
 
@@ -113,7 +113,6 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
-[`--source` CLI flag]: https://github.com/avajs/ava#cli
 [`.only` modifier]: https://github.com/avajs/ava#running-specific-tests
 [`ava` section of your `package.json`]: https://github.com/avajs/ava#configuration
 [added them in your `package.json`]: https://github.com/avajs/ava#configuration
