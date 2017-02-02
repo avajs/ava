@@ -1,10 +1,10 @@
 'use strict';
 const test = require('tap').test;
 const Logger = require('../lib/logger');
-const tap = require('../lib/reporters/tap');
+const TapReporter = require('../lib/reporters/tap');
 
 test('only call start if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.start = undefined;
 	logger.start();
@@ -12,7 +12,7 @@ test('only call start if supported by reporter', t => {
 });
 
 test('only write if start is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.start = undefined;
 	logger.write = t.fail;
@@ -21,7 +21,7 @@ test('only write if start is supported by reporter', t => {
 });
 
 test('only call reset if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.reset = undefined;
 	logger.reset();
@@ -29,7 +29,7 @@ test('only call reset if supported by reporter', t => {
 });
 
 test('only write if reset is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.reset = undefined;
 	logger.write = t.fail;
@@ -38,7 +38,7 @@ test('only write if reset is supported by reporter', t => {
 });
 
 test('only call section if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.section = undefined;
 	logger.section();
@@ -46,7 +46,7 @@ test('only call section if supported by reporter', t => {
 });
 
 test('only write if section is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.section = undefined;
 	logger.write = t.fail;
@@ -55,7 +55,7 @@ test('only write if section is supported by reporter', t => {
 });
 
 test('only call clear if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.clear = undefined;
 	logger.clear();
@@ -63,7 +63,7 @@ test('only call clear if supported by reporter', t => {
 });
 
 test('only write if clear is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.clear = undefined;
 	logger.write = t.fail;
@@ -72,7 +72,7 @@ test('only write if clear is supported by reporter', t => {
 });
 
 test('return false if clear is not supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.clear = undefined;
 	t.false(logger.clear());
@@ -80,7 +80,7 @@ test('return false if clear is not supported by reporter', t => {
 });
 
 test('return true if clear is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.clear = () => {};
 	t.true(logger.clear());
@@ -88,7 +88,7 @@ test('return true if clear is supported by reporter', t => {
 });
 
 test('writes the reporter reset result', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.reset = () => 'test reset';
 	logger.write = str => {
@@ -99,7 +99,7 @@ test('writes the reporter reset result', t => {
 });
 
 test('only call unhandledError if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.unhandledError = undefined;
 	logger.unhandledError();
@@ -107,7 +107,7 @@ test('only call unhandledError if supported by reporter', t => {
 });
 
 test('only write if unhandledError is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.unhandledError = undefined;
 	logger.write = t.fail;
@@ -116,7 +116,7 @@ test('only write if unhandledError is supported by reporter', t => {
 });
 
 test('only call finish if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.finish = undefined;
 	logger.finish();
@@ -124,7 +124,7 @@ test('only call finish if supported by reporter', t => {
 });
 
 test('only write if finish is supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.finish = undefined;
 	logger.write = t.fail;
@@ -133,7 +133,7 @@ test('only write if finish is supported by reporter', t => {
 });
 
 test('only call write if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.write = undefined;
 	logger.write();
@@ -141,7 +141,7 @@ test('only call write if supported by reporter', t => {
 });
 
 test('only call stdout if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.stdout = undefined;
 	logger.stdout();
@@ -149,7 +149,7 @@ test('only call stdout if supported by reporter', t => {
 });
 
 test('don\'t alter data when calling stdout', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.stdout = function (data) {
 		t.equal(data, 'test data');
@@ -159,7 +159,7 @@ test('don\'t alter data when calling stdout', t => {
 });
 
 test('only call stderr if supported by reporter', t => {
-	const tapReporter = tap();
+	const tapReporter = new TapReporter();
 	const logger = new Logger(tapReporter);
 	tapReporter.stderr = undefined;
 	logger.stderr();

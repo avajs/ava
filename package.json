@@ -189,6 +189,7 @@
     "zen-observable": "^0.4.0"
   },
   "xo": {
+    "esnext": true,
     "rules": {
       "import/newline-after-import": "off",
       "no-use-extend-native/no-use-extend-native": "off"

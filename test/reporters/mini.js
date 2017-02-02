@@ -1,58 +1,56 @@
 'use strict';
-var path = require('path');
-var indentString = require('indent-string');
-var tempWrite = require('temp-write');
-var flatten = require('arr-flatten');
-var chalk = require('chalk');
-var sinon = require('sinon');
-var test = require('tap').test;
-var cross = require('figures').cross;
-var lolex = require('lolex');
-var repeating = require('repeating');
-var AvaError = require('../../lib/ava-error');
-var _miniReporter = require('../../lib/reporters/mini');
-var beautifyStack = require('../../lib/beautify-stack');
-var colors = require('../../lib/colors');
-var compareLineOutput = require('../helper/compare-line-output');
-var formatAssertError = require('../../lib/format-assert-error');
-var codeExcerpt = require('../../lib/code-excerpt');
+const path = require('path');
+const indentString = require('indent-string');
+const tempWrite = require('temp-write');
+const flatten = require('arr-flatten');
+const chalk = require('chalk');
+const sinon = require('sinon');
+const test = require('tap').test;
+const cross = require('figures').cross;
+const lolex = require('lolex');
+const repeating = require('repeating');
+const AvaError = require('../../lib/ava-error');
+const MiniReporter = require('../../lib/reporters/mini');
+const beautifyStack = require('../../lib/beautify-stack');
+const colors = require('../../lib/colors');
+const compareLineOutput = require('../helper/compare-line-output');
+const formatAssertError = require('../../lib/format-assert-error');
+const codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
 
-var graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
-var stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
+const graySpinner = chalk.gray.dim(process.platform === 'win32' ? '-' : '⠋');
+const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
 
 // Needed because tap doesn't emulate a tty environment and thus this is
-// undefined, making `cli-truncate` append '...' to test titles
+// `undefined`, making `cli-truncate` append '...' to test titles
 process.stdout.columns = 5000;
-var fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
+const fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
 
 function miniReporter(options) {
-	var reporter = _miniReporter(options);
-	reporter.start = function () {
-		return '';
-	};
+	const reporter = new MiniReporter(options);
+	reporter.start = () => '';
 	return reporter;
 }
 
 process.stderr.setMaxListeners(50);
 
-test('start', function (t) {
-	var reporter = _miniReporter();
+test('start', t => {
+	const reporter = new MiniReporter();
 
 	t.is(reporter.start(), ' \n ' + graySpinner + ' ');
 	reporter.clearInterval();
 	t.end();
 });
 
-test('passing test', function (t) {
-	var reporter = miniReporter();
+test('passing test', t => {
+	const reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	const actualOutput = reporter.test({
 		title: 'passed'
 	});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
@@ -63,15 +61,15 @@ test('passing test', function (t) {
 	t.end();
 });
 
-test('known failure test', function (t) {
-	var reporter = miniReporter();
+test('known failure test', t => {
+	const reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	const actualOutput = reporter.test({
 		title: 'known failure',
 		failing: true
 	});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
@@ -83,17 +81,17 @@ test('known failure test', function (t) {
 	t.end();
 });
 
-test('failing test', function (t) {
-	var reporter = miniReporter();
+test('failing test', t => {
+	const reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	const actualOutput = reporter.test({
 		title: 'failed',
 		error: {
 			message: 'assertion failed'
 		}
 	});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
@@ -104,10 +102,10 @@ test('failing test', function (t) {
 	t.end();
 });
 
-test('failed known failure test', function (t) {
-	var reporter = miniReporter();
+test('failed known failure test', t => {
+	const reporter = miniReporter();
 
-	var actualOutput = reporter.test({
+	const actualOutput = reporter.test({
 		title: 'known failure',
 		failing: true,
 		error: {
@@ -115,7 +113,7 @@ test('failed known failure test', function (t) {
 		}
 	});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('known failure'),
 		'',
@@ -126,8 +124,8 @@ test('failed known failure test', function (t) {
 	t.end();
 });
 
-test('passing test after failing', function (t) {
-	var reporter = miniReporter();
+test('passing test after failing', t => {
+	const reporter = miniReporter();
 
 	reporter.test({
 		title: 'failed',
@@ -136,9 +134,9 @@ test('passing test after failing', function (t) {
 		}
 	});
 
-	var actualOutput = reporter.test({title: 'passed'});
+	const actualOutput = reporter.test({title: 'passed'});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' passed',
 		'',
@@ -150,19 +148,19 @@ test('passing test after failing', function (t) {
 	t.end();
 });
 
-test('failing test after passing', function (t) {
-	var reporter = miniReporter();
+test('failing test after passing', t => {
+	const reporter = miniReporter();
 
 	reporter.test({title: 'passed'});
 
-	var actualOutput = reporter.test({
+	const actualOutput = reporter.test({
 		title: 'failed',
 		error: {
 			message: 'assertion failed'
 		}
 	});
 
-	var expectedOutput = [
+	const expectedOutput = [
 		' ',
 		' ' + graySpinner + ' ' + chalk.red('failed'),
 		'',
@@ -174,10 +172,10 @@ test('failing test after passing', function (t) {
 	t.end();
 });
 
-test('skipped test', function (t) {
-	var reporter = miniReporter();
+test('skipped test', t => {
+	const reporter = miniReporter();
 
-	var output = reporter.test({
+	const output = reporter.test({
 		title: 'skipped',
 		skip: true
 	});
@@ -186,10 +184,10 @@ test('skipped test', function (t) {
 	t.end();
 });
 
-test('todo test', function (t) {
-	var reporter = miniReporter();
+test('todo test', t => {
+	const reporter = miniReporter();
 
-	var output = reporter.test({
+	const output = reporter.test({
 		title: 'todo',
 		skip: true,
 		todo: true
@@ -199,13 +197,13 @@ test('todo test', function (t) {
 	t.end();
 });
 
-test('results with passing tests', function (t) {
-	var reporter = miniReporter();
+test('results with passing tests', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
-	var expectedOutput = [
+	const actualOutput = reporter.finish({});
+	const expectedOutput = [
 		'\n  ' + chalk.green('1 passed'),
 		'\n'
 	].join('\n');
@@ -214,20 +212,20 @@ test('results with passing tests', function (t) {
 	t.end();
 });
 
-test('results with passing known failure tests', function (t) {
-	var reporter = miniReporter();
+test('results with passing known failure tests', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 1;
 	reporter.knownFailureCount = 1;
 	reporter.failCount = 0;
 
-	var runStatus = {
+	const runStatus = {
 		knownFailures: [{
 			title: 'known failure',
 			failing: true
 		}]
 	};
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'\n  ' + chalk.green('1 passed'),
 		'  ' + chalk.red('1 known failure'),
 		'',
@@ -239,14 +237,14 @@ test('results with passing known failure tests', function (t) {
 	t.end();
 });
 
-test('results with skipped tests', function (t) {
-	var reporter = miniReporter();
+test('results with skipped tests', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.skipCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
-	var expectedOutput = [
+	const actualOutput = reporter.finish({});
+	const expectedOutput = [
 		'\n  ' + chalk.yellow('1 skipped'),
 		'\n'
 	].join('\n');
@@ -255,14 +253,14 @@ test('results with skipped tests', function (t) {
 	t.end();
 });
 
-test('results with todo tests', function (t) {
-	var reporter = miniReporter();
+test('results with todo tests', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.todoCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
-	var expectedOutput = [
+	const actualOutput = reporter.finish({});
+	const expectedOutput = [
 		'\n  ' + chalk.blue('1 todo'),
 		'\n'
 	].join('\n');
@@ -271,12 +269,12 @@ test('results with todo tests', function (t) {
 	t.end();
 });
 
-test('results with passing skipped tests', function (t) {
-	var reporter = miniReporter();
+test('results with passing skipped tests', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 1;
 	reporter.skipCount = 1;
 
-	var output = reporter.finish({}).split('\n');
+	const output = reporter.finish({}).split('\n');
 
 	t.is(output[0], '');
 	t.is(output[1], '  ' + chalk.green('1 passed'));
@@ -285,23 +283,23 @@ test('results with passing skipped tests', function (t) {
 	t.end();
 });
 
-test('results with passing tests and rejections', function (t) {
-	var reporter = miniReporter();
+test('results with passing tests and rejections', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 1;
 	reporter.rejectionCount = 1;
 
-	var err1 = new Error('failure one');
+	const err1 = new Error('failure one');
 	err1.type = 'rejection';
 	err1.stack = beautifyStack(err1.stack);
-	var err2 = new Error('failure two');
+	const err2 = new Error('failure two');
 	err2.type = 'rejection';
 	err2.stack = 'stack line with trailing whitespace\t\n';
 
-	var runStatus = {
+	const runStatus = {
 		errors: [err1, err2]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.green('1 passed'),
@@ -318,23 +316,23 @@ test('results with passing tests and rejections', function (t) {
 	t.end();
 });
 
-test('results with passing tests and exceptions', function (t) {
-	var reporter = miniReporter();
+test('results with passing tests and exceptions', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 1;
 	reporter.exceptionCount = 2;
 
-	var err = new Error('failure');
+	const err = new Error('failure');
 	err.type = 'exception';
 	err.stack = beautifyStack(err.stack);
 
-	var avaErr = new AvaError('A futuristic test runner');
+	const avaErr = new AvaError('A futuristic test runner');
 	avaErr.type = 'exception';
 
-	var runStatus = {
+	const runStatus = {
 		errors: [err, avaErr]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.green('1 passed'),
@@ -350,10 +348,10 @@ test('results with passing tests and exceptions', function (t) {
 	t.end();
 });
 
-test('results with errors', function (t) {
-	var err1 = new Error('failure one');
+test('results with errors', t => {
+	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	var err1Path = tempWrite.sync('a();');
+	const err1Path = tempWrite.sync('a();');
 	err1.source = {file: path.basename(err1Path), line: 1};
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
@@ -361,9 +359,9 @@ test('results with errors', function (t) {
 	err1.expected = JSON.stringify('abd');
 	err1.expectedType = 'string';
 
-	var err2 = new Error('failure two');
+	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	var err2Path = tempWrite.sync('b();');
+	const err2Path = tempWrite.sync('b();');
 	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -371,10 +369,10 @@ test('results with errors', function (t) {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err1Path)});
+	const reporter = miniReporter({basePath: path.dirname(err1Path)});
 	reporter.failCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		errors: [{
 			title: 'failed one',
 			error: err1
@@ -384,7 +382,7 @@ test('results with errors', function (t) {
 		}]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 
 	compareLineOutput(t, output, flatten([
 		'',
@@ -416,8 +414,8 @@ test('results with errors', function (t) {
 	t.end();
 });
 
-test('results with errors and disabled code excerpts', function (t) {
-	var err1 = new Error('failure one');
+test('results with errors and disabled code excerpts', t => {
+	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
@@ -425,9 +423,9 @@ test('results with errors and disabled code excerpts', function (t) {
 	err1.expected = JSON.stringify('abd');
 	err1.expectedType = 'string';
 
-	var err2 = new Error('failure two');
+	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	var err2Path = tempWrite.sync('b();');
+	const err2Path = tempWrite.sync('b();');
 	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -435,10 +433,10 @@ test('results with errors and disabled code excerpts', function (t) {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({basePath: path.dirname(err2Path)});
 	reporter.failCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		errors: [{
 			title: 'failed one',
 			error: err1
@@ -448,7 +446,7 @@ test('results with errors and disabled code excerpts', function (t) {
 		}]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 
 	compareLineOutput(t, output, flatten([
 		'',
@@ -477,10 +475,10 @@ test('results with errors and disabled code excerpts', function (t) {
 	t.end();
 });
 
-test('results with errors and broken code excerpts', function (t) {
-	var err1 = new Error('failure one');
+test('results with errors and broken code excerpts', t => {
+	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	var err1Path = tempWrite.sync('a();');
+	const err1Path = tempWrite.sync('a();');
 	err1.source = {file: path.basename(err1Path), line: 10};
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
@@ -488,9 +486,9 @@ test('results with errors and broken code excerpts', function (t) {
 	err1.expected = JSON.stringify('abd');
 	err1.expectedType = 'string';
 
-	var err2 = new Error('failure two');
+	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	var err2Path = tempWrite.sync('b();');
+	const err2Path = tempWrite.sync('b();');
 	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -498,10 +496,10 @@ test('results with errors and broken code excerpts', function (t) {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({basePath: path.dirname(err2Path)});
 	reporter.failCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		errors: [{
 			title: 'failed one',
 			error: err1
@@ -511,7 +509,7 @@ test('results with errors and broken code excerpts', function (t) {
 		}]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 
 	compareLineOutput(t, output, flatten([
 		'',
@@ -541,10 +539,10 @@ test('results with errors and broken code excerpts', function (t) {
 	t.end();
 });
 
-test('results with errors and disabled assert output', function (t) {
-	var err1 = new Error('failure one');
+test('results with errors and disabled assert output', t => {
+	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	var err1Path = tempWrite.sync('a();');
+	const err1Path = tempWrite.sync('a();');
 	err1.source = {file: path.basename(err1Path), line: 1};
 	err1.showOutput = false;
 	err1.actual = JSON.stringify('abc');
@@ -552,9 +550,9 @@ test('results with errors and disabled assert output', function (t) {
 	err1.expected = JSON.stringify('abd');
 	err1.expectedType = 'string';
 
-	var err2 = new Error('failure two');
+	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	var err2Path = tempWrite.sync('b();');
+	const err2Path = tempWrite.sync('b();');
 	err2.source = {file: path.basename(err2Path), line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
@@ -562,10 +560,10 @@ test('results with errors and disabled assert output', function (t) {
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	var reporter = miniReporter({basePath: path.dirname(err1Path)});
+	const reporter = miniReporter({basePath: path.dirname(err1Path)});
 	reporter.failCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		errors: [{
 			title: 'failed one',
 			error: err1
@@ -575,7 +573,7 @@ test('results with errors and disabled assert output', function (t) {
 		}]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 
 	compareLineOutput(t, output, flatten([
 		'',
@@ -606,21 +604,21 @@ test('results with errors and disabled assert output', function (t) {
 	t.end();
 });
 
-test('results with unhandled errors', function (t) {
-	var reporter = miniReporter();
+test('results with unhandled errors', t => {
+	const reporter = miniReporter();
 	reporter.failCount = 2;
 
-	var err = new Error('failure one');
+	const err = new Error('failure one');
 	err.stack = beautifyStack(err.stack);
 
-	var runStatus = {
+	const runStatus = {
 		errors: [
 			{title: 'failed one', error: err},
 			{title: 'failed two'}
 		]
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'  ' + chalk.red('2 failed'),
@@ -634,15 +632,15 @@ test('results with unhandled errors', function (t) {
 	t.end();
 });
 
-test('results when fail-fast is enabled', function (t) {
-	var reporter = miniReporter();
-	var runStatus = {
+test('results when fail-fast is enabled', t => {
+	const reporter = miniReporter();
+	const runStatus = {
 		remainingCount: 1,
 		failCount: 1,
 		failFastEnabled: true
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'',
@@ -651,41 +649,41 @@ test('results when fail-fast is enabled', function (t) {
 	t.end();
 });
 
-test('results without fail-fast if no failing tests', function (t) {
-	var reporter = miniReporter();
-	var runStatus = {
+test('results without fail-fast if no failing tests', t => {
+	const reporter = miniReporter();
+	const runStatus = {
 		remainingCount: 1,
 		failCount: 0,
 		failFastEnabled: true
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	t.is(output, '\n\n');
 	t.end();
 });
 
-test('results without fail-fast if no skipped tests', function (t) {
-	var reporter = miniReporter();
-	var runStatus = {
+test('results without fail-fast if no skipped tests', t => {
+	const reporter = miniReporter();
+	const runStatus = {
 		remainingCount: 0,
 		failCount: 1,
 		failFastEnabled: true
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	t.is(output, '\n\n');
 	t.end();
 });
 
-test('results with 1 previous failure', function (t) {
-	var reporter = miniReporter();
+test('results with 1 previous failure', t => {
+	const reporter = miniReporter();
 	reporter.todoCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		previousFailCount: 1
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'  ' + colors.todo('1 todo'),
@@ -694,15 +692,15 @@ test('results with 1 previous failure', function (t) {
 	t.end();
 });
 
-test('results with 2 previous failures', function (t) {
-	var reporter = miniReporter();
+test('results with 2 previous failures', t => {
+	const reporter = miniReporter();
 	reporter.todoCount = 1;
 
-	var runStatus = {
+	const runStatus = {
 		previousFailCount: 2
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
 		'  ' + colors.todo('1 todo'),
@@ -711,35 +709,35 @@ test('results with 2 previous failures', function (t) {
 	t.end();
 });
 
-test('empty results after reset', function (t) {
-	var reporter = miniReporter();
+test('empty results after reset', t => {
+	const reporter = miniReporter();
 
 	reporter.failCount = 1;
 	reporter.reset();
 
-	var output = reporter.finish({});
+	const output = reporter.finish({});
 	t.is(output, '\n\n');
 	t.end();
 });
 
-test('full-width line when sectioning', function (t) {
-	var reporter = miniReporter();
+test('full-width line when sectioning', t => {
+	const reporter = miniReporter();
 
-	var output = reporter.section();
+	const output = reporter.section();
 	t.is(output, '\n' + fullWidthLine);
 	t.end();
 });
 
-test('results with watching enabled', function (t) {
+test('results with watching enabled', t => {
 	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
-	var time = ' ' + chalk.grey.dim('[17:19:12]');
+	const time = ' ' + chalk.grey.dim('[17:19:12]');
 
-	var reporter = miniReporter({watching: true});
+	const reporter = miniReporter({watching: true});
 	reporter.passCount = 1;
 	reporter.failCount = 0;
 
-	var actualOutput = reporter.finish({});
-	var expectedOutput = [
+	const actualOutput = reporter.finish({});
+	const expectedOutput = [
 		'\n  ' + chalk.green('1 passed') + time,
 		'\n'
 	].join('\n');
@@ -748,36 +746,36 @@ test('results with watching enabled', function (t) {
 	t.end();
 });
 
-test('increases number of rejections', function (t) {
-	var reporter = miniReporter();
+test('increases number of rejections', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.rejectionCount = 0;
-	var err = new Error('failure one');
+	const err = new Error('failure one');
 	err.type = 'rejection';
 	reporter.unhandledError(err);
 	t.is(reporter.rejectionCount, 1);
 	t.end();
 });
 
-test('increases number of exceptions', function (t) {
-	var reporter = miniReporter();
+test('increases number of exceptions', t => {
+	const reporter = miniReporter();
 	reporter.passCount = 0;
 	reporter.exceptionCount = 0;
-	var err = new Error('failure one');
+	const err = new Error('failure one');
 	err.type = 'exception';
 	reporter.unhandledError(err);
 	t.is(reporter.exceptionCount, 1);
 	t.end();
 });
 
-test('silently handles errors without body', function (t) {
-	var reporter = miniReporter();
+test('silently handles errors without body', t => {
+	const reporter = miniReporter();
 	reporter.failCount = 1;
-	var runStatus = {
+	const runStatus = {
 		errors: [{}, {}]
 	};
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'\n  ' + colors.error('1 failed'),
 		'\n'
 	].join('\n');
@@ -785,16 +783,16 @@ test('silently handles errors without body', function (t) {
 	t.end();
 });
 
-test('does not handle errors with body in rejections', function (t) {
-	var reporter = miniReporter();
+test('does not handle errors with body in rejections', t => {
+	const reporter = miniReporter();
 	reporter.rejectionCount = 1;
-	var runStatus = {
+	const runStatus = {
 		errors: [{
 			title: 'failed test'
 		}]
 	};
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'\n  ' + colors.error('1 rejection'),
 		'\n'
 	].join('\n');
@@ -802,17 +800,17 @@ test('does not handle errors with body in rejections', function (t) {
 	t.end();
 });
 
-test('returns description based on error itself if no stack available', function (t) {
-	var reporter = miniReporter();
+test('returns description based on error itself if no stack available', t => {
+	const reporter = miniReporter();
 	reporter.exceptionCount = 1;
-	var err1 = new Error('failure one');
-	var runStatus = {
+	const err1 = new Error('failure one');
+	const runStatus = {
 		errors: [{
 			error: err1
 		}]
 	};
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'\n  ' + colors.error('1 exception'),
 		'\n  ' + colors.title('Uncaught Exception'),
 		'  ' + colors.stack('Threw non-error: ' + JSON.stringify({error: err1})),
@@ -822,15 +820,15 @@ test('returns description based on error itself if no stack available', function
 	t.end();
 });
 
-test('shows "non-error" hint for invalid throws', function (t) {
-	var reporter = miniReporter();
+test('shows "non-error" hint for invalid throws', t => {
+	const reporter = miniReporter();
 	reporter.exceptionCount = 1;
-	var err = {type: 'exception', message: 'function fooFn() {}', stack: 'function fooFn() {}'};
-	var runStatus = {
+	const err = {type: 'exception', message: 'function fooFn() {}', stack: 'function fooFn() {}'};
+	const runStatus = {
 		errors: [err]
 	};
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'\n  ' + colors.error('1 exception'),
 		'\n  ' + colors.title('Uncaught Exception'),
 		'  ' + colors.stack('Threw non-error: function fooFn() {}'),
@@ -840,15 +838,15 @@ test('shows "non-error" hint for invalid throws', function (t) {
 	t.end();
 });
 
-test('returns empty string (used in watcher in order to separate different test runs)', function (t) {
-	var reporter = miniReporter();
+test('returns empty string (used in watcher in order to separate different test runs)', t => {
+	const reporter = miniReporter();
 	t.is(reporter.clear(), '');
 	t.end();
 });
 
-test('stderr and stdout should call _update', function (t) {
-	var reporter = miniReporter();
-	var spy = sinon.spy(reporter, '_update');
+test('stderr and stdout should call _update', t => {
+	const reporter = miniReporter();
+	const spy = sinon.spy(reporter, '_update');
 	reporter.stdout();
 	reporter.stderr();
 	t.is(spy.callCount, 2);
@@ -856,29 +854,29 @@ test('stderr and stdout should call _update', function (t) {
 	t.end();
 });
 
-test('results when hasExclusive is enabled, but there are no known remaining tests', function (t) {
-	var reporter = miniReporter();
-	var runStatus = {
+test('results when hasExclusive is enabled, but there are no known remaining tests', t => {
+	const reporter = miniReporter();
+	const runStatus = {
 		hasExclusive: true
 	};
 
-	var output = reporter.finish(runStatus);
+	const output = reporter.finish(runStatus);
 	t.is(output, '\n\n');
 	t.end();
 });
 
-test('results when hasExclusive is enabled, but there is one remaining tests', function (t) {
-	var reporter = miniReporter();
+test('results when hasExclusive is enabled, but there is one remaining tests', t => {
+	const reporter = miniReporter();
 
-	var runStatus = {
+	const runStatus = {
 		hasExclusive: true,
 		testCount: 2,
 		passCount: 1,
 		remainingCount: 1
 	};
 
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'',
 		'',
 		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
@@ -888,18 +886,18 @@ test('results when hasExclusive is enabled, but there is one remaining tests', f
 	t.end();
 });
 
-test('results when hasExclusive is enabled, but there are multiple remaining tests', function (t) {
-	var reporter = miniReporter();
+test('results when hasExclusive is enabled, but there are multiple remaining tests', t => {
+	const reporter = miniReporter();
 
-	var runStatus = {
+	const runStatus = {
 		hasExclusive: true,
 		testCount: 3,
 		passCount: 1,
 		remainingCount: 2
 	};
 
-	var actualOutput = reporter.finish(runStatus);
-	var expectedOutput = [
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = [
 		'',
 		'',
 		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),

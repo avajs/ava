@@ -468,7 +468,7 @@ test('validate accepts skipping failing tests', t => {
 
 	runner.test.skip.failing('skip failing', noop);
 
-	runner.run({}).then(function (stats) {
+	runner.run({}).then(stats => {
 		t.is(stats.testCount, 1);
 		t.is(stats.skipCount, 1);
 		t.end();

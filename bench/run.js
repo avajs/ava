@@ -62,7 +62,7 @@ if (process.argv.length === 2) {
 	let currentArgs = [];
 	let shouldFail = false;
 
-	process.argv.slice(2).forEach(arg => {
+	for (const arg of process.argv.slice(2)) {
 		if (arg === '--') {
 			list.push({
 				args: currentArgs,
@@ -70,16 +70,16 @@ if (process.argv.length === 2) {
 			});
 			currentArgs = [];
 			shouldFail = false;
-			return;
+			continue;
 		}
 
 		if (arg === '--should-fail') {
 			shouldFail = true;
-			return;
+			continue;
 		}
 
 		currentArgs.push(arg);
-	});
+	}
 
 	if (currentArgs.length > 0) {
 		list.push({
@@ -89,9 +89,9 @@ if (process.argv.length === 2) {
 	}
 }
 
-list.forEach(definition => {
+for (const definition of list) {
 	definition.args = ['--verbose'].concat(definition.args);
-});
+}
 
 let combined = [];
 for (let i = 0; i < 11; i++) {
