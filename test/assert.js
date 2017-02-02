@@ -1,6 +1,8 @@
 'use strict';
+const path = require('path');
+const uniqueTempDir = require('unique-temp-dir');
 const test = require('tap').test;
-const sinon = require('sinon');
+const Snapshot = require('../lib/snapshot');
 const assert = require('../lib/assert');
 
 test('.pass()', t => {
@@ -487,43 +489,35 @@ test('.deepEqual() should not mask RangeError from underlying assert', t => {
 	t.end();
 });
 
-test('snapshot makes a snapshot using a library and global options', t => {
-	const saveSpy = sinon.spy();
-	const state = {save: saveSpy};
-	const stateGetter = sinon.stub().returns(state);
-	const matchStub = sinon.stub().returns({pass: true});
-
-	assert.title = 'Test name';
-
+test('.snapshot()', t => {
 	t.plan(4);
 
+	const snapshot = new Snapshot(path.join(uniqueTempDir(), 'test.js'));
+	t.deepEqual(snapshot.tests, {});
+
+	assert.title = 'test title';
+
 	t.doesNotThrow(() => {
-		assert._snapshot('tree', undefined, matchStub, stateGetter);
+		assert._snapshot('tree', undefined, snapshot);
 	});
 
-	t.ok(stateGetter.called);
-
-	t.match(matchStub.firstCall.thisValue, {
-		currentTestName: 'Test name',
-		snapshotState: state
+	t.throws(() => {
+		assert._snapshot('grass', undefined, snapshot);
 	});
 
-	t.ok(saveSpy.calledOnce);
+	t.deepEqual(snapshot.tests, {'test title': 'tree'});
 
 	delete assert.title;
-
 	t.end();
 });
 
-test('snapshot handles jsx tree', t => {
-	const saveSpy = sinon.spy();
-	const state = {save: saveSpy};
-	const stateGetter = sinon.stub().returns(state);
-	const matchStub = sinon.stub().returns({pass: true});
+test('.snapshot() handles JSX', t => {
+	t.plan(4);
 
-	assert.title = 'Test name';
+	const snapshot = new Snapshot(path.join(uniqueTempDir(), 'test.js'));
+	t.deepEqual(snapshot.tests, {});
 
-	t.plan(5);
+	assert.title = 'test title';
 
 	t.doesNotThrow(() => {
 		const tree = {
@@ -534,28 +528,31 @@ test('snapshot handles jsx tree', t => {
 
 		Object.defineProperty(tree, '$$typeof', {value: Symbol.for('react.test.json')});
 
-		assert._snapshot(tree, undefined, matchStub, stateGetter);
+		assert._snapshot(tree, undefined, snapshot);
 	});
 
-	t.ok(stateGetter.called);
-
-	const savedTree = JSON.parse(matchStub.firstCall.args[0]);
-	t.deepEqual(savedTree, {
-		__ava_react_jsx: { // eslint-disable-line camelcase
-			type: 'h1',
+	t.throws(() => {
+		const tree = {
+			type: 'div',
 			children: ['Hello'],
 			props: {}
+		};
+
+		Object.defineProperty(tree, '$$typeof', {value: Symbol.for('react.test.json')});
+
+		assert._snapshot(tree, undefined, snapshot);
+	});
+
+	t.deepEqual(snapshot.tests, {
+		'test title': {
+			__ava_react_jsx: { // eslint-disable-line camelcase
+				type: 'h1',
+				children: ['Hello'],
+				props: {}
+			}
 		}
 	});
 
-	t.match(matchStub.firstCall.thisValue, {
-		currentTestName: 'Test name',
-		snapshotState: state
-	});
-
-	t.ok(saveSpy.calledOnce);
-
 	delete assert.title;
-
 	t.end();
 });
