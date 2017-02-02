@@ -170,3 +170,36 @@ test('findTestHelpers - finds the test helpers', t => {
 		t.end();
 	});
 });
+
+test('findFiles - filter extensions by default', t => {
+	const fixtureDir = fixture('extensions');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'someFile.js'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles();
+
+	avaFiles.findTestHelpers().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});
+
+test('findFiles - honors extensions', t => {
+	const fixtureDir = fixture('extensions');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'someFile.js',
+		'otherFile.jsx'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles({extensions: ['.js', '.jsx']});
+
+	avaFiles.findTestHelpers().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});

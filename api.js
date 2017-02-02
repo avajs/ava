@@ -70,7 +70,11 @@ class Api extends EventEmitter {
 		return emitter;
 	}
 	run(files, options) {
-		return new AvaFiles({cwd: this.options.resolveTestsFrom, files})
+		return new AvaFiles({
+			cwd: this.options.resolveTestsFrom,
+			extensions: this.options.extensions,
+			files
+		})
 			.findTestFiles()
 			.then(files => this._run(files, options));
 	}
@@ -119,7 +123,10 @@ class Api extends EventEmitter {
 	_precompileHelpers() {
 		this._precompiledHelpers = {};
 
-		return new AvaFiles({cwd: this.options.resolveTestsFrom})
+		return new AvaFiles({
+			cwd: this.options.resolveTestsFrom,
+			extensions: this.options.extensions
+		})
 			.findTestHelpers()
 			.map(file => { // eslint-disable-line array-callback-return
 				const hash = this.precompiler.precompileFile(file);
