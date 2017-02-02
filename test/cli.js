@@ -12,11 +12,15 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
+const colors = require('../lib/colors');
 
 const cliPath = path.join(__dirname, '../cli.js');
 
 // For some reason chalk is disabled by default
 chalk.enabled = true;
+for (const key of Object.keys(colors)) {
+	colors[key].enabled = true;
+}
 
 function execCli(args, opts, cb) {
 	let dirname;
@@ -70,12 +74,12 @@ function execCli(args, opts, cb) {
 }
 
 test('disallow invalid babel config shortcuts', t => {
-	execCli('es2015.js', {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
+	execCli(['--color', 'es2015.js'], {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
 		t.ok(err);
 
 		let expectedOutput = '\n  ';
-		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava#es2015-support for allowed values.';
+		expectedOutput += colors.error(figures.cross) + ' Unexpected Babel configuration for AVA.';
+		expectedOutput += ' See ' + chalk.underline('https://github.com/avajs/ava#es2015-support') + ' for allowed values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
