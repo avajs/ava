@@ -43,8 +43,8 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && nyc tap --no-cov --timeout=150 test/*.js test/reporters/*.js",
-    "test-win": "tap --no-cov --reporter=classic --timeout=150 test/*.js test/reporters/*.js",
+    "test": "xo && nyc tap --no-cov --timeout=150 --jobs=4 test/*.js test/reporters/*.js",
+    "test-win": "tap --no-cov --reporter=classic --timeout=150 --jobs=4 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
     "make-ts": "node types/make.js"
