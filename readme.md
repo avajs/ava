@@ -14,6 +14,7 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
 
+
 ## Contents
 
 - [Usage](#usage)
@@ -24,6 +25,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Documentation](#documentation)
 - [API](#api)
 - [Assertions](#assertions)
+- [Snapshot testing](#snapshot-testing)
 - [Tips](#tips)
 - [FAQ](#faq)
 - [Recipes](#recipes)
@@ -32,6 +34,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Links](#links)
 - [Team](#team)
 
+
 ## Why AVA?
 
 - Minimal and fast
@@ -39,6 +42,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
+- [Magic assert](#magic-assert)
 - [Isolated environment for each test file](#process-isolation)
 - [Write your tests in ES2017](#es2017-support)
 - [Promise support](#promise-support)
@@ -47,8 +51,8 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
 - [TAP reporter](#tap-reporter)
-- [Clean stack traces](#clean-stack-traces)
 - [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
+
 
 ## Test syntax
 
@@ -88,7 +92,7 @@ Your `package.json` will then look like this:
     "test": "ava"
   },
   "devDependencies": {
-    "ava": "^0.17.0"
+    "ava": "^0.18.0"
   }
 }
 ```
@@ -224,11 +228,15 @@ $ ava --tap | tap-nyan
 
 Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
 
+### Magic assert
+
+AVA adds code excerpts and clean diffs for actual and expected values. If values in the assertion are objects or arrays, only a diff is displayed, to remove the noise and focus on the problem. The diff is syntax-highlighted too! If you are comparing strings, both single and multi line, AVA displays a different kind of output, highlighting the added or missing characters.
+
+![](media/magic-assert-combined.png)
+
 ### Clean stack traces
 
-AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster.
-
-<img src="media/stack-traces.png" width="300">
+AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster, as seen above.
 
 
 ## Configuration
@@ -981,27 +989,31 @@ export default HelloWorld;
 import test from 'ava';
 import render from 'react-test-renderer';
 
-import HelloWorld from './';
+import HelloWorld from '.';
 
 test('HelloWorld component', t => {
-  const tree = render.create(<HelloWorld />).toJSON();
-  t.snapshot(tree);
+	const tree = render.create(<HelloWorld />).toJSON();
+	t.snapshot(tree);
 });
 ```
 
 The first time you run this test, a snapshot file will be created in `__snapshots__` folder looking something like this:
 
-```
+```js
 exports[`HelloWorld component 1`] = `
 <h1>
-  Hello World...!
+	Hello World...!
 </h1>
 `;
 ```
 
 These snapshots should be committed together with your code so that everyone on the team shares current state of the app.
 
-Every time you run this test afterwards, it will check if the component render has changed. If it did, it will fail the test. Then you will have the choice to check your code - and if the change was intentional, you can use the `--update-snapshots` (or `-u`) flag to update the snapshots into their new version.
+Every time you run this test afterwards, it will check if the component render has changed. If it did, it will fail the test.
+
+<img src="media/snapshot-testing.png" width="814">
+
+Then you will have the choice to check your code - and if the change was intentional, you can use the `--update-snapshots` (or `-u`) flag to update the snapshots into their new version.
 
 That might look like this:
 
