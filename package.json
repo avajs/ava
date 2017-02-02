@@ -150,7 +150,6 @@
     "pkg-conf": "^2.0.0",
     "plur": "^2.0.0",
     "pretty-ms": "^2.0.0",
-    "repeating": "^2.0.0",
     "require-precompiled": "^0.1.0",
     "resolve-cwd": "^1.0.0",
     "slash": "^1.0.0",

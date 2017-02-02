@@ -8,7 +8,6 @@ const chalk = require('chalk');
 const sinon = require('sinon');
 const test = require('tap').test;
 const lolex = require('lolex');
-const repeating = require('repeating');
 const beautifyStack = require('../../lib/beautify-stack');
 const colors = require('../../lib/colors');
 const VerboseReporter = require('../../lib/reporters/verbose');
@@ -710,7 +709,7 @@ test('full-width line when sectioning', t => {
 	const output = reporter.section();
 	process.stdout.columns = prevColumns;
 
-	t.is(output, chalk.gray.dim(repeating('\u2500', 80)));
+	t.is(output, chalk.gray.dim('\u2500'.repeat(80)));
 	t.end();
 });
 

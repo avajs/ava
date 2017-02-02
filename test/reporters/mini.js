@@ -8,7 +8,6 @@ const sinon = require('sinon');
 const test = require('tap').test;
 const cross = require('figures').cross;
 const lolex = require('lolex');
-const repeating = require('repeating');
 const AvaError = require('../../lib/ava-error');
 const MiniReporter = require('../../lib/reporters/mini');
 const beautifyStack = require('../../lib/beautify-stack');
@@ -25,7 +24,7 @@ const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
 // Needed because tap doesn't emulate a tty environment and thus this is
 // `undefined`, making `cli-truncate` append '...' to test titles
 process.stdout.columns = 5000;
-const fullWidthLine = chalk.gray.dim(repeating('\u2500', 5000));
+const fullWidthLine = chalk.gray.dim('\u2500'.repeat(5000));
 
 function miniReporter(options) {
 	const reporter = new MiniReporter(options);
