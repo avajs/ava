@@ -303,14 +303,13 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} circular references on assertions do not break process.send`, t => {
-		t.plan(2);
+		t.plan(1);
 
 		const api = apiCreator();
 
 		return api.run([path.join(__dirname, 'fixture/circular-reference-on-assertion.js')])
 			.then(result => {
 				t.is(result.failCount, 1);
-				t.match(result.errors[0].error.message, /'c'.*?'d'/);
 			});
 	});
 
@@ -690,34 +689,6 @@ function generateTests(prefix, apiCreator) {
 			/* eslint no-new: 0 */
 			apiCreator({require: ['foo-bar']});
 		}, /^Could not resolve required module 'foo-bar'$/);
-	});
-
-	test(`${prefix} power-assert support`, t => {
-		t.plan(3);
-
-		const api = apiCreator({
-			babelConfig: {
-				presets: ['react', '@ava/stage-4']
-			}
-		});
-
-		return api.run([path.join(__dirname, 'fixture/power-assert.js')])
-			.then(result => {
-				t.match(
-					result.errors[0].error.message,
-					/t\.true\(a === 'bar'\)\s*\n\s+\|\s*\n\s+"foo"/m
-				);
-
-				t.match(
-					result.errors[1].error.message,
-					/with message\s+t\.true\(a === 'foo', 'with message'\)\s*\n\s+\|\s*\n\s+"bar"/m
-				);
-
-				t.match(
-					result.errors[2].error.message,
-					/t\.true\(<div \/> === <span \/>\)/m
-				);
-			});
 	});
 
 	test(`${prefix} caching is enabled by default`, t => {
