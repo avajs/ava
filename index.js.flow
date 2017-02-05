@@ -31,7 +31,7 @@ type ErrorValidator =
 	| ((error: any) => boolean);
 
 /**
- * Asertion Types
+ * Assertion Types
  */
 
 type AssertContext = {
@@ -57,11 +57,15 @@ type AssertContext = {
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
 	// Assert that function throws an error or promise rejects.
 	// @param error Can be a constructor, regex, error message or validation function.
-	throws(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<mixed>;
-	throws(value: () => void, error?: ErrorValidator, message?: string): mixed;
+	throws: {
+		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<Error>;
+		(value: () => mixed, error?: ErrorValidator, message?: string): Error;
+	};
 	// Assert that function doesn't throw an error or promise resolves.
-	notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
-	notThrows(value: () => void, message?: string): void;
+	notThrows: {
+		notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
+		notThrows(value: () => mixed, message?: string): void;
+	};
 	// Assert that contents matches regex.
 	regex(contents: string, regex: RegExp, message?: string): void;
 	// Assert that contents does not match regex.
