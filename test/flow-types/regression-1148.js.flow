@@ -1,0 +1,19 @@
+/* @flow */
+
+const test = require('../../');
+
+test(t => {
+	t.throws(() => { throw new Error(); });
+	t.throws(Promise.reject(new Error()));
+
+	t.notThrows(() => { return; });
+	t.notThrows(Promise.resolve('Success'));
+
+	const error = t.throws(() => { throw new Error(); });
+	const message: string = error.message;
+
+	const promise = t.throws(Promise.reject(new Error()));
+	promise.then(error => {
+		const message: string = error.message;
+	})
+});

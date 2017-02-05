@@ -1,0 +1,7 @@
+[ignore]
+<PROJECT_ROOT>/node_modules/.*
+<PROJECT_ROOT>/.*\.js$
+
+[options]
+emoji=true
+suppress_comment=\\(.\\|\n\\)*\\$ExpectError
