@@ -643,7 +643,24 @@ test('results when fail-fast is enabled', t => {
 	compareLineOutput(t, output, [
 		'',
 		'',
-		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped')
+		'  ' + colors.information('`--fail-fast` is on. At least 1 test was skipped.')
+	]);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped tests', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 2,
+		failCount: 1,
+		failFastEnabled: true
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'',
+		'  ' + colors.information('`--fail-fast` is on. At least 2 tests were skipped.')
 	]);
 	t.end();
 });

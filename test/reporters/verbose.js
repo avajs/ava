@@ -617,7 +617,31 @@ test('results when fail-fast is enabled', t => {
 		'  ' + chalk.red('1 test failed') + time,
 		'',
 		'',
-		'  ' + colors.information('`--fail-fast` is on. Any number of tests may have been skipped'),
+		'  ' + colors.information('`--fail-fast` is on. At least 1 test was skipped.'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped tests', t => {
+	const reporter = new VerboseReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 2;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'',
+		'  ' + colors.information('`--fail-fast` is on. At least 2 tests were skipped.'),
 		''
 	].join('\n');
 
