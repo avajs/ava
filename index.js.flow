@@ -63,8 +63,8 @@ type AssertContext = {
 	};
 	// Assert that function doesn't throw an error or promise resolves.
 	notThrows: {
-		notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
-		notThrows(value: () => mixed, message?: string): void;
+		<U>(value: PromiseLike<U>, message?: string): Promise<U>;
+		(value: () => mixed, message?: string): void;
 	};
 	// Assert that contents matches regex.
 	regex(contents: string, regex: RegExp, message?: string): void;
