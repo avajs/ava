@@ -72,6 +72,10 @@ export interface AssertContext {
 	 */
 	regex(contents: string, regex: RegExp, message?: string): void;
 	/**
+	 * Assert that contents matches a snapshot.
+	 */
+	snapshot(contents: any): void;
+	/**
 	 * Assert that contents does not match regex.
 	 */
 	notRegex(contents: string, regex: RegExp, message?: string): void;
