@@ -23,6 +23,9 @@ lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
 const time = ' ' + chalk.grey.dim('[17:19:12]');
 
 function createReporter(options) {
+	if (options === undefined) {
+		options = {color: true};
+	}
 	const reporter = new VerboseReporter(options);
 	return reporter;
 }
@@ -378,7 +381,7 @@ test('results with errors', t => {
 	error2.expected = JSON.stringify([2]);
 	error2.expectedType = 'array';
 
-	const reporter = createReporter({basePath: path.dirname(err1Path)});
+	const reporter = createReporter({color: true, basePath: path.dirname(err1Path)});
 	const runStatus = createRunStatus();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
@@ -439,7 +442,7 @@ test('results with errors and disabled code excerpts', t => {
 	error2.expected = JSON.stringify([2]);
 	error2.expectedType = 'array';
 
-	const reporter = createReporter({basePath: path.dirname(err2Path)});
+	const reporter = createReporter({color: true, basePath: path.dirname(err2Path)});
 	const runStatus = createRunStatus();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
@@ -499,7 +502,7 @@ test('results with errors and disabled code excerpts', t => {
 	error2.expected = JSON.stringify([2]);
 	error2.expectedType = 'array';
 
-	const reporter = createReporter({basePath: path.dirname(err2Path)});
+	const reporter = createReporter({color: true, basePath: path.dirname(err2Path)});
 	const runStatus = createRunStatus();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
@@ -560,7 +563,7 @@ test('results with errors and disabled assert output', t => {
 	error2.expected = JSON.stringify([2]);
 	error2.expectedType = 'array';
 
-	const reporter = createReporter({basePath: path.dirname(err1Path)});
+	const reporter = createReporter({color: true, basePath: path.dirname(err1Path)});
 	const runStatus = createRunStatus();
 	runStatus.failCount = 1;
 	runStatus.tests = [{
@@ -602,7 +605,7 @@ test('results with errors and disabled assert output', t => {
 });
 
 test('results when fail-fast is enabled', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.remainingCount = 1;
 	runStatus.failCount = 1;
@@ -650,7 +653,7 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 });
 
 test('results without fail-fast if no failing tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.remainingCount = 1;
 	runStatus.failCount = 0;
@@ -669,7 +672,7 @@ test('results without fail-fast if no failing tests', t => {
 });
 
 test('results without fail-fast if no skipped tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.remainingCount = 0;
 	runStatus.failCount = 1;
@@ -739,7 +742,7 @@ test('full-width line when sectioning', t => {
 
 test('write calls console.error', t => {
 	const stub = sinon.stub(console, 'error');
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	reporter.write('result');
 	t.true(stub.called);
 	console.error.restore();
@@ -747,7 +750,7 @@ test('write calls console.error', t => {
 });
 
 test('reporter.stdout and reporter.stderr both use process.stderr.write', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const stub = sinon.stub(process.stderr, 'write');
 	reporter.stdout('result');
 	reporter.stderr('result');
@@ -757,7 +760,7 @@ test('reporter.stdout and reporter.stderr both use process.stderr.write', t => {
 });
 
 test('results when hasExclusive is enabled, but there are no known remaining tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.hasExclusive = true;
 	runStatus.passCount = 1;
@@ -774,7 +777,7 @@ test('results when hasExclusive is enabled, but there are no known remaining tes
 });
 
 test('results when hasExclusive is enabled, but there is one remaining tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.hasExclusive = true;
 	runStatus.testCount = 2;
@@ -797,7 +800,7 @@ test('results when hasExclusive is enabled, but there is one remaining tests', t
 });
 
 test('results when hasExclusive is enabled, but there are multiple remaining tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = createReporter();
 	const runStatus = createRunStatus();
 	runStatus.hasExclusive = true;
 	runStatus.testCount = 3;
@@ -812,6 +815,29 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 		'',
 		'',
 		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
+		''
+	].join('\n');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('result when no-color flag is set', t => {
+	const reporter = new VerboseReporter({color: false});
+	const runStatus = createRunStatus();
+	runStatus.hasExclusive = true;
+	runStatus.testCount = 3;
+	runStatus.passCount = 1;
+	runStatus.failCount = 0;
+	runStatus.remainingCount = 2;
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'',
+		'  1 test passed [17:19:12]',
+		'',
+		'',
+		'  The .only() modifier is used in some tests. 2 tests were not run',
 		''
 	].join('\n');
 

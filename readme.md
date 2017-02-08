@@ -164,6 +164,7 @@ $ ava --help
     --verbose, -v           Enable verbose output
     --no-cache              Disable the transpiler cache
     --no-power-assert       Disable Power Assert
+    --no-color              Disable color output
     --match, -m             Only run tests with matching title (Can be repeated)
     --watch, -w             Re-run tests when tests and source files change
     --timeout, -T           Set global timeout
