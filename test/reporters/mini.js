@@ -406,9 +406,7 @@ test('results with errors', t => {
 		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		/failure two/,
-		'',
-		stackLineRegex
+		/failure two/
 	]));
 	t.end();
 });
@@ -467,9 +465,7 @@ test('results with errors and disabled code excerpts', t => {
 		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		/failure two/,
-		'',
-		stackLineRegex
+		/failure two/
 	]));
 	t.end();
 });
@@ -531,9 +527,7 @@ test('results with errors and broken code excerpts', t => {
 		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		/failure two/,
-		'',
-		stackLineRegex
+		/failure two/
 	]));
 	t.end();
 });
@@ -596,9 +590,7 @@ test('results with errors and disabled assert output', t => {
 		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
-		/failure two/,
-		'',
-		stackLineRegex
+		/failure two/
 	]));
 	t.end();
 });
