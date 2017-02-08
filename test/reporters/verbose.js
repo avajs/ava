@@ -629,7 +629,7 @@ test('results when fail-fast is enabled', t => {
 });
 
 test('results when fail-fast is enabled with multiple skipped tests', t => {
-	const reporter = new VerboseReporter();
+	const reporter = new VerboseReporter({color: true});
 	const runStatus = createRunStatus();
 	runStatus.remainingCount = 2;
 	runStatus.failCount = 1;
