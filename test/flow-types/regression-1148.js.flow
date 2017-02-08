@@ -1,6 +1,6 @@
 /* @flow */
 
-const test = require('../../');
+const test = require('../../index.js.flow');
 
 test(t => {
 	t.throws(() => { throw new Error(); });

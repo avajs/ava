@@ -1,6 +1,6 @@
 /* @flow */
 
-const test = require('../../');
+const test = require('../../index.js.flow');
 
 test('Named test', t => {
 	t.pass('Success');
