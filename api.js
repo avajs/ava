@@ -119,6 +119,11 @@ class Api extends EventEmitter {
 	_precompileHelpers() {
 		this._precompiledHelpers = {};
 
+		// Assumes the tests only load helpers from within the `resolveTestsFrom`
+		// directory. Without arguments this is the `projectDir`, else it's
+		// `process.cwd()` which may be nested too deeply. This will be solved
+		// as we implement RFC 001 and move helper compilation into the worker
+		// processes, avoiding the need for precompilation.
 		return new AvaFiles({cwd: this.options.resolveTestsFrom})
 			.findTestHelpers()
 			.map(file => { // eslint-disable-line array-callback-return
