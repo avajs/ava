@@ -2,139 +2,195 @@
 const fs = require('fs');
 const path = require('path');
 const test = require('tap').test;
-const sinon = require('sinon');
-const proxyquire = require('proxyquire').noCallThru();
+const mkdirp = require('mkdirp');
+const uniqueTempDir = require('unique-temp-dir');
+const configManager = require('hullabaloo-config-manager');
+
+const babelConfigHelper = require('../lib/babel-config');
 
 const fixture = name => path.join(__dirname, 'fixture', name);
 
-function setUp() {
-	const customPlugin = sinon.stub().returns({visitor: {}});
-	const stage4 = sinon.stub().returns({plugins: []});
-	const transformTestfiles = sinon.stub().returns({plugins: []});
-
-	return {
-		customPlugin,
-		stage4,
-		transformTestfiles
-	};
-}
-
-test('uses stage-4 preset when babelConfig is "default"', t => {
-	const setup = setUp();
-
-	const babelConfigHelper = proxyquire('../lib/babel-config', {
-		'@ava/babel-preset-stage-4': setup.stage4,
-		'@ava/babel-preset-transform-test-files': setup.transformTestfiles
-	});
-
-	const babelConfig = 'default';
-
-	const fixturePath = fixture('es2015.js');
-	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
-
+test('uses default presets when userOptions is "default"', t => {
+	const userOptions = 'default';
 	const powerAssert = true;
-	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
-	t.true('filename' in options);
-	t.true(options.sourceMaps);
-	t.false(options.ast);
-	t.true('inputSourceMap' in options);
-	t.false(options.babelrc);
-	const babel = {};
-	t.strictEqual(options.presets[0](babel), setup.stage4());
-	options.presets[1](babel);
-	t.strictDeepEqual(setup.transformTestfiles.args[0], [babel, {powerAssert}]);
-	t.end();
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+		.then(result => {
+			const options = result.getOptions();
+
+			t.false(options.babelrc);
+			t.same(options.presets, [
+				require.resolve('@ava/babel-preset-stage-4'),
+				[
+					require.resolve('@ava/babel-preset-transform-test-files'),
+					{powerAssert}
+				]
+			]);
+		});
 });
 
-test('uses babelConfig for babel options when babelConfig is an object', t => {
-	const setup = setUp();
-	const customPlugin = setup.customPlugin;
-
-	const babelConfigHelper = proxyquire('../lib/babel-config', {
-		'@ava/babel-preset-stage-4': setup.stage4,
-		'@ava/babel-preset-transform-test-files': setup.transformTestfiles
-	});
-
-	const babelConfig = {
-		presets: ['stage-2'],
-		plugins: [customPlugin]
-	};
-
-	const fixturePath = fixture('es2015.js');
-	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
-
+test('uses options from babelrc when userOptions is "inherit"', t => {
+	const userOptions = 'inherit';
 	const powerAssert = true;
-	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
-	t.true('filename' in options);
-	t.true(options.sourceMaps);
-	t.false(options.ast);
-	t.true('inputSourceMap' in options);
-	t.false(options.babelrc);
-	t.strictDeepEqual(options.presets.slice(0, 1), ['stage-2']);
-	const babel = {};
-	options.presets[1](babel);
-	t.strictDeepEqual(setup.transformTestfiles.args[0], [babel, {powerAssert}]);
-	t.strictDeepEqual(options.plugins, [customPlugin]);
-	t.end();
+	const projectDir = fixture('babelrc');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+		.then(result => {
+			const options = result.getOptions();
+
+			t.false(options.babelrc);
+			t.same(options.plugins, [require.resolve(fixture('babel-plugin-test-doubler'))]);
+			t.same(options.presets, [require.resolve('@ava/babel-preset-stage-4')]);
+			const envOptions = options.env[configManager.currentEnv()];
+			t.same(envOptions, {
+				presets: [
+					[
+						require.resolve('@ava/babel-preset-transform-test-files'),
+						{powerAssert}
+					]
+				]
+			});
+		});
 });
 
-test('should reuse existing source maps', t => {
-	const setup = setUp();
-	const customPlugin = setup.customPlugin;
-
-	const babelConfigHelper = proxyquire('../lib/babel-config', {
-		'@ava/babel-preset-stage-4': setup.stage4,
-		'@ava/babel-preset-transform-test-files': setup.transformTestfiles
-	});
-
-	const babelConfig = {
-		presets: ['stage-2'],
-		plugins: [customPlugin]
+test('uses userOptions for babel options when userOptions is an object', t => {
+	const custom = require.resolve(fixture('empty'));
+	const userOptions = {
+		presets: [custom],
+		plugins: [custom]
 	};
-
-	const fixturePath = fixture('es2015-source-maps.js');
-	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
-
 	const powerAssert = true;
-	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
-	t.true('filename' in options);
-	t.true(options.sourceMaps);
-	t.false(options.ast);
-	t.true('inputSourceMap' in options);
-	t.strictDeepEqual(options.presets.slice(0, 1), ['stage-2']);
-	const babel = {};
-	options.presets[1](babel);
-	t.strictDeepEqual(setup.transformTestfiles.args[0], [babel, {powerAssert}]);
-	t.strictDeepEqual(options.plugins, [customPlugin]);
-	t.end();
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+		.then(result => {
+			const options = result.getOptions();
+
+			t.false(options.babelrc);
+			t.same(options.presets, userOptions.presets);
+			t.same(options.plugins, userOptions.plugins);
+			t.same(options.env.development.presets, [
+				[
+					require.resolve('@ava/babel-preset-transform-test-files'),
+					{powerAssert}
+				]
+			]);
+		});
 });
 
 test('should disable power-assert when powerAssert is false', t => {
-	const setup = setUp();
-	const customPlugin = setup.customPlugin;
-
-	const babelConfigHelper = proxyquire('../lib/babel-config', {
-		'@ava/babel-preset-stage-4': setup.stage4,
-		'@ava/babel-preset-transform-test-files': setup.transformTestfiles
-	});
-
-	const babelConfig = {
-		presets: ['stage-2'],
-		plugins: [customPlugin]
-	};
-
-	const fixturePath = fixture('es2015.js');
-	const fixtureSource = fs.readFileSync(fixturePath, 'utf8');
-
+	const userOptions = 'default';
 	const powerAssert = false;
-	const options = babelConfigHelper.build(babelConfig, powerAssert, fixturePath, fixtureSource);
 
-	t.strictDeepEqual(options.presets.slice(0, 1), ['stage-2']);
-	const babel = {};
-	options.presets[1](babel);
-	t.strictDeepEqual(setup.transformTestfiles.args[0], [babel, {powerAssert}]);
-	t.end();
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+		.then(result => {
+			const options = result.getOptions();
+
+			t.false(options.babelrc);
+			t.same(options.presets, [
+				require.resolve('@ava/babel-preset-stage-4'),
+				[
+					require.resolve('@ava/babel-preset-transform-test-files'),
+					{powerAssert}
+				]
+			]);
+		});
+});
+
+test('caches and uses results', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+		.then(result => {
+			const files = fs.readdirSync(cacheDir);
+			t.is(files.length, 2);
+			t.is(files.filter(f => /\.babel-options\.js$/.test(f)).length, 1);
+			t.is(files.filter(f => /\.verifier\.bin$/.test(f)).length, 1);
+
+			const firstCacheKeys = result.cacheKeys;
+			const stats = files.map(f => fs.statSync(path.join(cacheDir, f)));
+			delete stats[0].atime;
+			delete stats[1].atime;
+
+			return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+				.then(result => {
+					const newStats = files.map(f => fs.statSync(path.join(cacheDir, f)));
+					delete newStats[0].atime;
+					delete newStats[1].atime;
+
+					t.same(newStats, stats);
+					t.same(result.cacheKeys, firstCacheKeys);
+				});
+		});
+});
+
+test('discards cache if userOptions change', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	const userOptions = {};
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
+		.then(result => {
+			const files = fs.readdirSync(cacheDir);
+			const contents = files.map(f => fs.readFileSync(path.join(cacheDir, f), 'utf8'));
+			const firstCacheKeys = result.cacheKeys;
+
+			userOptions.foo = 'bar';
+			return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
+				.then(result => {
+					t.notSame(files.map(f => fs.readFileSync(path.join(cacheDir, f), 'utf8')), contents);
+					t.notSame(result.cacheKeys, firstCacheKeys);
+				});
+		});
+});
+
+test('updates cached verifier if dependency hashes change', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	const depFile = path.join(projectDir, 'plugin.js');
+
+	mkdirp.sync(cacheDir);
+	fs.writeFileSync(depFile, 'foo');
+
+	const userOptions = {
+		plugins: ['./plugin.js']
+	};
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
+		.then(result => {
+			const verifierFile = fs.readdirSync(cacheDir).find(f => /\.verifier\.bin$/.test(f));
+			const contents = fs.readFileSync(path.join(cacheDir, verifierFile), 'utf8');
+			const firstCacheKeys = result.cacheKeys;
+
+			fs.writeFileSync(depFile, 'bar');
+			return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
+				.then(result => {
+					t.notSame(contents, fs.readFileSync(path.join(cacheDir, verifierFile), 'utf8'));
+					t.notSame(result.cacheKeys.dependencies, firstCacheKeys.dependencies);
+					t.same(result.cacheKeys.sources, firstCacheKeys.sources);
+				});
+		});
+});
+
+test('crashes if cached files cannot be read', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+
+	t.plan(1);
+	return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+		.then(() => {
+			for (const f of fs.readdirSync(cacheDir)) {
+				fs.unlinkSync(path.join(cacheDir, f));
+				fs.mkdirSync(path.join(cacheDir, f));
+			}
+
+			return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+				.catch(err => {
+					t.is(err.code, 'EISDIR');
+				});
+		});
 });

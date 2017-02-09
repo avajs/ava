@@ -12,6 +12,7 @@ const Promise = require('bluebird');
 const getPort = require('get-port');
 const arrify = require('arrify');
 const ms = require('ms');
+const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
 const RunStatus = require('./lib/run-status');
 const AvaError = require('./lib/ava-error');
@@ -105,13 +106,14 @@ class Api extends EventEmitter {
 		this.options.cacheDir = cacheDir;
 
 		const isPowerAssertEnabled = this.options.powerAssert !== false;
-		this.precompiler = new CachingPrecompiler({
-			path: cacheDir,
-			babel: this.options.babelConfig,
-			powerAssert: isPowerAssertEnabled
-		});
-
-		return Promise.resolve();
+		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, isPowerAssertEnabled)
+			.then(result => {
+				this.precompiler = new CachingPrecompiler({
+					path: cacheDir,
+					getBabelOptions: result.getOptions,
+					babelCacheKeys: result.cacheKeys
+				});
+			});
 	}
 	_precompileHelpers() {
 		this._precompiledHelpers = {};

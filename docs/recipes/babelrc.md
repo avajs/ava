@@ -70,6 +70,8 @@ Using the `"inherit"` shortcut will cause your tests to be transpiled the same a
 
 In the above example, both tests and sources will be transpiled using the [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) and [`react`](http://babeljs.io/docs/plugins/preset-react/) presets.
 
+AVA will only look for a `.babelrc` file in the same directory as the `package.json` file. If not found then it assumes your Babel config lives in the `package.json` file.
+
 ## Extend your source transpilation configuration
 
 When specifying the Babel config for your tests, you can set the `babelrc` option to `true`. This will merge the specified plugins with those from your [`babelrc`](http://babeljs.io/docs/usage/babelrc/).
@@ -93,6 +95,8 @@ When specifying the Babel config for your tests, you can set the `babelrc` optio
 ```
 
 In the above example, *sources* are compiled use [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) and [`react`](http://babeljs.io/docs/plugins/preset-react/), *tests* use those same plugins, plus the additional `custom` plugins specified.
+
+AVA will only look for a `.babelrc` file in the same directory as the `package.json` file. If not found then it assumes your Babel config lives in the `package.json` file.
 
 ## Extend an alternate config file.
 
