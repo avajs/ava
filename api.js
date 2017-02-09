@@ -110,6 +110,8 @@ class Api extends EventEmitter {
 			babel: this.options.babelConfig,
 			powerAssert: isPowerAssertEnabled
 		});
+
+		return Promise.resolve();
 	}
 	_precompileHelpers() {
 		this._precompiledHelpers = {};
@@ -144,9 +146,8 @@ class Api extends EventEmitter {
 			return Promise.resolve(runStatus);
 		}
 
-		this._setupPrecompiler(files);
-
-		return this._precompileHelpers()
+		return this._setupPrecompiler(files)
+			.then(() => this._precompileHelpers())
 			.then(() => {
 				if (this.options.timeout) {
 					this._setupTimeout(runStatus);
