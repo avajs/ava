@@ -21,7 +21,7 @@ function apiCreator(options) {
 	return instance;
 }
 
-generateTests('Without Pool: ', options => apiCreator(options || {}));
+generateTests('Without Pool:', options => apiCreator(options || {}));
 
 // The following two tests are only run against "Without Pool" behavior as they test the exclusive test features. These features are currently not expected to work correctly in the limited process pool. When the limited process pool behavior is finalized this test file will be updated. See: https://github.com/avajs/ava/pull/791#issuecomment-216293302
 test('Without Pool: test file with exclusive tests causes non-exclusive tests in other files to be ignored', t => {
@@ -59,7 +59,7 @@ test('Without Pool: test files can be forced to run in exclusive mode', t => {
 	});
 });
 
-generateTests('With Pool: ', options => {
+generateTests('With Pool:', options => {
 	options = options || {};
 	options.concurrency = 2;
 	return apiCreator(options);
