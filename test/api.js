@@ -14,7 +14,11 @@ function apiCreator(options) {
 	options.powerAssert = true;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
-	return new Api(options);
+	const instance = new Api(options);
+	if (!options.precompileHelpers) {
+		instance._precompileHelpers = () => Promise.resolve();
+	}
+	return instance;
 }
 
 generateTests('Without Pool: ', options => apiCreator(options || {}));
@@ -76,9 +80,12 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} precompile helpers`, t => {
 		t.plan(1);
 
-		const api = apiCreator();
+		const api = apiCreator({
+			precompileHelpers: true,
+			resolveTestsFrom: path.join(__dirname, 'fixture/precompile-helpers')
+		});
 
-		return api.run([path.join(__dirname, 'fixture/precompile-helpers/test/test.js')])
+		return api.run()
 			.then(result => {
 				t.is(result.passCount, 1);
 			});
