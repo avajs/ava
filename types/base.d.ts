@@ -74,7 +74,7 @@ export interface AssertContext {
 	/**
 	 * Assert that contents matches a snapshot.
 	 */
-	snapshot(contents: any): void;
+	snapshot(contents: any, message?: string): void;
 	/**
 	 * Assert that contents does not match regex.
 	 */
