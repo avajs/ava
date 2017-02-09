@@ -146,7 +146,7 @@
     "multimatch": "^2.1.0",
     "observable-to-promise": "^0.4.0",
     "option-chain": "^0.1.0",
-    "package-hash": "^1.2.0",
+    "package-hash": "^2.0.0",
     "pkg-conf": "^2.0.0",
     "plur": "^2.0.0",
     "pretty-ms": "^2.0.0",
