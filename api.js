@@ -49,12 +49,7 @@ class Api extends EventEmitter {
 		super();
 		autoBind(this);
 
-		this.options = Object.assign({
-			cwd: process.cwd(),
-			resolveTestsFrom: process.cwd(),
-			match: []
-		}, options);
-
+		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
 	}
 	_runFile(file, runStatus, execArgv) {

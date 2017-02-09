@@ -4,19 +4,20 @@ const fs = require('fs');
 const figures = require('figures');
 const rimraf = require('rimraf');
 const test = require('tap').test;
-const pkgConf = require('pkg-conf');
 const Api = require('../api');
 const testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
 
-const conf = pkgConf.sync('ava');
-const pkgDir = path.dirname(pkgConf.filepath(conf));
+const ROOT_DIR = path.join(__dirname, '..');
 
-generateTests('Without Pool: ', options => {
+function apiCreator(options) {
 	options = options || {};
 	options.powerAssert = true;
-	options.pkgDir = options.pkgDir || pkgDir;
+	options.projectDir = options.projectDir || ROOT_DIR;
+	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	return new Api(options);
-});
+}
+
+generateTests('Without Pool: ', options => apiCreator(options || {}));
 
 // The following two tests are only run against "Without Pool" behavior as they test the exclusive test features. These features are currently not expected to work correctly in the limited process pool. When the limited process pool behavior is finalized this test file will be updated. See: https://github.com/avajs/ava/pull/791#issuecomment-216293302
 test('Without Pool: test file with exclusive tests causes non-exclusive tests in other files to be ignored', t => {
@@ -28,7 +29,7 @@ test('Without Pool: test file with exclusive tests causes non-exclusive tests in
 		path.join(__dirname, 'fixture/one-pass-one-fail.js')
 	];
 
-	const api = new Api();
+	const api = apiCreator({});
 
 	return api.run(files)
 		.then(result => {
@@ -42,7 +43,7 @@ test('Without Pool: test file with exclusive tests causes non-exclusive tests in
 test('Without Pool: test files can be forced to run in exclusive mode', t => {
 	t.plan(4);
 
-	const api = new Api();
+	const api = apiCreator();
 	return api.run(
 		[path.join(__dirname, 'fixture/es2015.js')],
 		{runOnlyExclusive: true}
@@ -57,9 +58,7 @@ test('Without Pool: test files can be forced to run in exclusive mode', t => {
 generateTests('With Pool: ', options => {
 	options = options || {};
 	options.concurrency = 2;
-	options.powerAssert = true;
-	options.pkgDir = options.pkgDir || pkgDir;
-	return new Api(options);
+	return apiCreator(options);
 });
 
 function generateTests(prefix, apiCreator) {
@@ -323,11 +322,11 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(`${prefix} change process.cwd() to a test's directory with pkgDir`, t => {
+	test(`${prefix} control worker's process.cwd() with projectDir option`, t => {
 		t.plan(1);
 
 		const fullPath = path.join(__dirname, 'fixture/process-cwd-pkgdir.js');
-		const api = apiCreator({pkgDir: path.dirname(fullPath)});
+		const api = apiCreator({projectDir: path.dirname(fullPath)});
 
 		return api.run([fullPath])
 			.then(result => {
@@ -761,7 +760,7 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} emits dependencies for test files`, t => {
 		t.plan(8);
 
-		const api = new Api({
+		const api = apiCreator({
 			require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
 		});
 
@@ -945,7 +944,7 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc`, t => {
 		t.plan(2);
 
-		const api = new Api({
+		const api = apiCreator({
 			babelConfig: {
 				plugins: [testCapitalizerPlugin],
 				extends: path.join(__dirname, 'fixture/babelrc/.alt-babelrc')
@@ -1040,7 +1039,7 @@ function generatePassDebugTests(execArgv, expectedInspectIndex) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		t.plan(expectedInspectIndex === -1 ? 3 : 2);
 
-		const api = new Api({testOnlyExecArgv: execArgv});
+		const api = apiCreator({testOnlyExecArgv: execArgv});
 		return api._computeForkExecArgs(['foo.js'])
 			.then(result => {
 				t.true(result.length === 1);
@@ -1058,7 +1057,7 @@ function generatePassDebugIntegrationTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		t.plan(1);
 
-		const api = new Api({testOnlyExecArgv: execArgv});
+		const api = apiCreator({testOnlyExecArgv: execArgv});
 		return api.run([path.join(__dirname, 'fixture/debug-arg.js')])
 			.then(result => {
 				t.is(result.passCount, 1);
