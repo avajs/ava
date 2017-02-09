@@ -82,6 +82,7 @@ test('sourceMatcher - defaults', t => {
 	isSource('bar.js');
 	isSource('bar/bar.js');
 	notSource('node_modules/foo.js');
+	notSource('.gitignore/foo.js');
 	t.end();
 });
 
@@ -93,6 +94,17 @@ test('sourceMatcher - allow matching specific node_modules directories', t => {
 
 	t.true(avaFiles.isSource('node_modules/foo/foo.js'));
 	t.false(avaFiles.isSource('node_modules/bar/foo.js'));
+	t.end();
+});
+
+test('sourceMatcher - allow matching specific node_modules directories', t => {
+	const avaFiles = new AvaFiles({
+		files: ['**/foo*'],
+		sources: ['.gitignore/foo/**']
+	});
+
+	t.true(avaFiles.isSource('.gitignore/foo/foo.js'));
+	t.false(avaFiles.isSource('.gitignore/bar/foo.js'));
 	t.end();
 });
 
