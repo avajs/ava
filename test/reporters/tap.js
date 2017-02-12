@@ -209,12 +209,12 @@ test('write should call console.log', t => {
 
 test('stdout and stderr should call process.stderr.write', t => {
 	const reporter = new TapReporter();
-	const spy = sinon.spy(process.stderr, 'write');
+	const stub = sinon.stub(process.stderr, 'write');
 
 	reporter.stdout('result');
 	reporter.stderr('result');
 
-	t.is(spy.callCount, 2);
 	process.stderr.write.restore();
+	t.is(stub.callCount, 2);
 	t.end();
 });
