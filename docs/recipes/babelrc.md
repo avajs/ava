@@ -113,4 +113,4 @@ If, for some reason, your Babel config is not specified in one of the default lo
 }
 ```
 
-The above uses `babel-test-config.json` as the transpilition config for *sources*, and as the base config for *tests*. For *tests*, it extends that base config with the custom plugins and presets specified.
+The above uses `babel-test-config.json` as the transpilation config for *sources*, and as the base config for *tests*. For *tests*, it extends that base config with the custom plugins and presets specified.
