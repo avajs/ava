@@ -10,7 +10,6 @@ There are multiple options for configuring how AVA transpiles your tests using B
  - [Transpiling tests and sources the same way](#transpiling-tests-and-sources-the-same-way)
  - [Extend your source transpilation configuration](#extend-your-source-transpilation-configuration)
  - [Extend an alternate config file (i.e. not `.babelrc`)](#extend-an-alternate-config-file)
- - [Notes](#notes)
 
 ## AVA's default transpiler behavior
 
@@ -115,13 +114,3 @@ If, for some reason, your Babel config is not specified in one of the default lo
 ```
 
 The above uses `babel-test-config.json` as the transpilition config for *sources*, and as the base config for *tests*. For *tests*, it extends that base config with the custom plugins and presets specified.
-
-## Notes
-
-AVA *always* adds a few custom Babel plugins when transpiling your plugins. They serve a variety of functions:
-
- * Enable `power-assert` support.
- * Rewrite require paths internal AVA dependencies like `babel-runtime` (important if you are still using `npm@2`).
- * [`ava-throws-helper`](https://github.com/avajs/babel-plugin-ava-throws-helper) helps AVA [detect and report](https://github.com/avajs/ava/pull/742) improper use of the `t.throws` assertion.
- * Generate test metadata to determine which files should be run first (*future*).
- * Static analysis of dependencies for precompilation (*future*).
