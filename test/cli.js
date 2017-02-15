@@ -412,3 +412,17 @@ test('workers ensure test files load the same version of ava', t => {
 		t.end();
 	});
 });
+
+test('worker errors are treated as uncaught exceptions', t => {
+	execCli(['--no-color', '--verbose', 'test.js'], {dirname: 'fixture/trigger-worker-exception'}, (_, __, stderr) => {
+		t.match(stderr, /Forced error/);
+		t.end();
+	});
+});
+
+test('uncaught exceptions are raised for worker errors even if the error cannot be serialized', t => {
+	execCli(['--no-color', '--verbose', 'test-fallback.js'], {dirname: 'fixture/trigger-worker-exception'}, (_, __, stderr) => {
+		t.match(stderr, /Runner failed with an unserializable exception/);
+		t.end();
+	});
+});
