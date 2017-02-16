@@ -1,4 +1,5 @@
 'use strict';
+const fs = require('fs');
 const tempWrite = require('temp-write');
 const chalk = require('chalk');
 const test = require('tap').test;
@@ -58,5 +59,14 @@ test('format line numbers', t => {
 	].join('\n');
 
 	t.is(excerpt, expected);
+	t.end();
+});
+
+test('noop if file cannot be read', t => {
+	const file = tempWrite.sync('');
+	fs.unlinkSync(file);
+
+	const excerpt = codeExcerpt(file, 10);
+	t.is(excerpt, null);
 	t.end();
 });
