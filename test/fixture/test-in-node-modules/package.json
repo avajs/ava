@@ -1,0 +1,9 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "ava": {
+    "files": [
+      "./node_modules/module-name/test.js"
+    ]
+  }
+}
