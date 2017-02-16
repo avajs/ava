@@ -1,5 +1,4 @@
 'use strict';
-const path = require('path');
 const indentString = require('indent-string');
 const tempWrite = require('temp-write');
 const flatten = require('arr-flatten');
@@ -354,7 +353,7 @@ test('results with errors', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: path.basename(err1Path), line: 1};
+	err1.source = {file: err1Path, line: 1};
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -364,14 +363,14 @@ test('results with errors', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: path.basename(err2Path), line: 1};
+	err2.source = {file: err2Path, line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({basePath: path.dirname(err1Path)});
+	const reporter = miniReporter();
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -426,14 +425,14 @@ test('results with errors and disabled code excerpts', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: path.basename(err2Path), line: 1};
+	err2.source = {file: err2Path, line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({color: true, basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -477,7 +476,7 @@ test('results with errors and broken code excerpts', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: path.basename(err1Path), line: 10};
+	err1.source = {file: err1Path, line: 10};
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -487,14 +486,14 @@ test('results with errors and broken code excerpts', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: path.basename(err2Path), line: 1};
+	err2.source = {file: err2Path, line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({color: true, basePath: path.dirname(err2Path)});
+	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
 
 	const runStatus = {
@@ -539,7 +538,7 @@ test('results with errors and disabled assert output', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: path.basename(err1Path), line: 1};
+	err1.source = {file: err1Path, line: 1};
 	err1.showOutput = false;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -549,14 +548,14 @@ test('results with errors and disabled assert output', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: path.basename(err2Path), line: 1};
+	err2.source = {file: err2Path, line: 1};
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
 	err2.expected = JSON.stringify([2]);
 	err2.expectedType = 'array';
 
-	const reporter = miniReporter({color: true, basePath: path.dirname(err1Path)});
+	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
 
 	const runStatus = {

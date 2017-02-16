@@ -1,10 +1,18 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const prettyFormat = require('@ava/pretty-format');
 const reactTestPlugin = require('@ava/pretty-format/plugins/ReactTestComponent');
+const sourceMapFixtures = require('source-map-fixtures');
+const sourceMapSupport = require('source-map-support');
+const uniqueTempDir = require('unique-temp-dir');
 const test = require('tap').test;
 const beautifyStack = require('../lib/beautify-stack');
 const serialize = require('../lib/serialize-error');
+
+// Needed to test stack traces from source map fixtures.
+sourceMapSupport.install({environment: 'node'});
 
 function serializeValue(value) {
 	return prettyFormat(value, {
@@ -24,6 +32,48 @@ test('serialize standard props', t => {
 	t.is(typeof serializedErr.source.file, 'string');
 	t.is(typeof serializedErr.source.line, 'number');
 	t.end();
+});
+
+test('source file is an absolute path', t => {
+	const err = new Error('Hello');
+	const serializedErr = serialize(err);
+
+	t.is(serializedErr.source.file, __filename);
+	t.end();
+});
+
+test('source file is an absolute path, after source map correction', t => {
+	const fixture = sourceMapFixtures.mapFile('throws');
+	try {
+		fixture.require().run();
+		t.fail('Fixture should have thrown');
+	} catch (err) {
+		const serializedErr = serialize(err);
+		t.is(serializedErr.source.file, fixture.sourceFile);
+		t.end();
+	}
+});
+
+test('source file is an absolute path, after source map correction, even if already absolute', t => {
+	const fixture = sourceMapFixtures.mapFile('throws');
+	const map = JSON.parse(fs.readFileSync(fixture.file + '.map'));
+
+	const tmp = uniqueTempDir({create: true});
+	const sourceRoot = path.join(tmp, 'src');
+	const expectedSourceFile = path.join(sourceRoot, map.file);
+
+	const tmpFile = path.join(tmp, path.basename(fixture.file));
+	fs.writeFileSync(tmpFile, fs.readFileSync(fixture.file));
+	fs.writeFileSync(tmpFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
+
+	try {
+		require(tmpFile).run(); // eslint-disable-line import/no-dynamic-require
+		t.fail('Fixture should have thrown');
+	} catch (err) {
+		const serializedErr = serialize(err);
+		t.is(serializedErr.source.file, expectedSourceFile);
+		t.end();
+	}
 });
 
 test('serialize statements', t => {
