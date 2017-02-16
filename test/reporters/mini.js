@@ -34,6 +34,15 @@ function miniReporter(options) {
 	return reporter;
 }
 
+function source(file, line) {
+	return {
+		file,
+		line: line || 1,
+		isWithinProject: true,
+		isDependency: false
+	};
+}
+
 process.stderr.setMaxListeners(50);
 
 test('start', t => {
@@ -353,7 +362,7 @@ test('results with errors', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: err1Path, line: 1};
+	err1.source = source(err1Path);
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -363,7 +372,7 @@ test('results with errors', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: err2Path, line: 1};
+	err2.source = source(err2Path);
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
@@ -392,7 +401,7 @@ test('results with errors', t => {
 		'  ' + chalk.bold.white('failed one'),
 		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1Path, err1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err1.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err1), 2).split('\n'),
 		/failure one/,
@@ -405,7 +414,7 @@ test('results with errors', t => {
 		'  ' + chalk.bold.white('failed two'),
 		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/
@@ -425,7 +434,7 @@ test('results with errors and disabled code excerpts', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: err2Path, line: 1};
+	err2.source = source(err2Path);
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
@@ -464,7 +473,7 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.bold.white('failed two'),
 		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/
@@ -476,7 +485,7 @@ test('results with errors and broken code excerpts', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: err1Path, line: 10};
+	err1.source = source(err1Path, 10);
 	err1.showOutput = true;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -486,7 +495,7 @@ test('results with errors and broken code excerpts', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: err2Path, line: 1};
+	err2.source = source(err2Path);
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
@@ -526,7 +535,7 @@ test('results with errors and broken code excerpts', t => {
 		'  ' + chalk.bold.white('failed two'),
 		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/
@@ -538,7 +547,7 @@ test('results with errors and disabled assert output', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
-	err1.source = {file: err1Path, line: 1};
+	err1.source = source(err1Path);
 	err1.showOutput = false;
 	err1.actual = JSON.stringify('abc');
 	err1.actualType = 'string';
@@ -548,7 +557,7 @@ test('results with errors and disabled assert output', t => {
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	err2.source = {file: err2Path, line: 1};
+	err2.source = source(err2Path);
 	err2.showOutput = true;
 	err2.actual = JSON.stringify([1]);
 	err2.actualType = 'array';
@@ -577,7 +586,7 @@ test('results with errors and disabled assert output', t => {
 		'  ' + chalk.bold.white('failed one'),
 		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1Path, err1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err1.source), 2).split('\n'),
 		'',
 		/failure one/,
 		'',
@@ -589,7 +598,7 @@ test('results with errors and disabled assert output', t => {
 		'  ' + chalk.bold.white('failed two'),
 		'  ' + chalk.grey(`${err2.source.file}:${err2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, err2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(err2), 2).split('\n'),
 		/failure two/

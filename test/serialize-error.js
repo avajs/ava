@@ -6,6 +6,7 @@ const prettyFormat = require('@ava/pretty-format');
 const reactTestPlugin = require('@ava/pretty-format/plugins/ReactTestComponent');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
+const tempWrite = require('temp-write');
 const uniqueTempDir = require('unique-temp-dir');
 const test = require('tap').test;
 const beautifyStack = require('../lib/beautify-stack');
@@ -29,6 +30,8 @@ test('serialize standard props', t => {
 	t.is(serializedErr.name, 'Error');
 	t.is(serializedErr.stack, beautifyStack(err.stack));
 	t.is(serializedErr.message, 'Hello');
+	t.is(typeof serializedErr.source.isDependency, 'boolean');
+	t.is(typeof serializedErr.source.isWithinProject, 'boolean');
 	t.is(typeof serializedErr.source.file, 'string');
 	t.is(typeof serializedErr.source.line, 'number');
 	t.end();
@@ -74,6 +77,43 @@ test('source file is an absolute path, after source map correction, even if alre
 		t.is(serializedErr.source.file, expectedSourceFile);
 		t.end();
 	}
+});
+
+test('determines whether source file is within the project', t => {
+	const file = tempWrite.sync('module.exports = () => { throw new Error("hello") }');
+	try {
+		require(file)(); // eslint-disable-line import/no-dynamic-require
+		t.fail('Should have thrown');
+	} catch (err) {
+		const serializedErr = serialize(err);
+		t.is(serializedErr.source.file, file);
+		t.is(serializedErr.source.isWithinProject, false);
+	}
+
+	const err = new Error('Hello');
+	const serializedErr = serialize(err);
+	t.is(serializedErr.source.file, __filename);
+	t.is(serializedErr.source.isWithinProject, true);
+	t.end();
+});
+
+test('determines whether source file, if within the project, is a dependency', t => {
+	const fixture = sourceMapFixtures.mapFile('throws');
+	try {
+		fixture.require().run();
+		t.fail('Fixture should have thrown');
+	} catch (err) {
+		const serializedErr = serialize(err);
+		t.is(serializedErr.source.file, fixture.sourceFile);
+		t.is(serializedErr.source.isWithinProject, true);
+		t.is(serializedErr.source.isDependency, true);
+	}
+
+	const err = new Error('Hello');
+	const serializedErr = serialize(err);
+	t.is(serializedErr.source.file, __filename);
+	t.is(serializedErr.source.isDependency, false);
+	t.end();
 });
 
 test('serialize statements', t => {

@@ -44,6 +44,15 @@ function barFunc() {
 	throw new Error();
 }
 
+function source(file, line) {
+	return {
+		file,
+		line: line || 1,
+		isWithinProject: true,
+		isDependency: false
+	};
+}
+
 test('beautify stack - removes uninteresting lines', t => {
 	try {
 		fooFunc();
@@ -363,7 +372,7 @@ test('results with errors', t => {
 	const error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
 	const err1Path = tempWrite.sync('a()');
-	error1.source = {file: err1Path, line: 1};
+	error1.source = source(err1Path);
 	error1.showOutput = true;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
@@ -373,7 +382,7 @@ test('results with errors', t => {
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
-	error2.source = {file: err2Path, line: 1};
+	error2.source = source(err2Path);
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
@@ -399,7 +408,7 @@ test('results with errors', t => {
 		'  ' + chalk.bold.white('fail one'),
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1Path, error1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error1.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error1), 2).split('\n'),
 		/error one message/,
@@ -412,7 +421,7 @@ test('results with errors', t => {
 		'  ' + chalk.bold.white('fail two'),
 		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, error2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
 		/error two message/
@@ -432,7 +441,7 @@ test('results with errors and disabled code excerpts', t => {
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
-	error2.source = {file: err2Path, line: 1};
+	error2.source = source(err2Path);
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
@@ -468,7 +477,7 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.bold.white('fail two'),
 		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, error2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
 		/error two message/
@@ -480,7 +489,7 @@ test('results with errors and disabled code excerpts', t => {
 	const error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
 	const err1Path = tempWrite.sync('a();');
-	error1.source = {file: err1Path, line: 10};
+	error1.source = source(err1Path, 10);
 	error1.showOutput = true;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
@@ -490,7 +499,7 @@ test('results with errors and disabled code excerpts', t => {
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
-	error2.source = {file: err2Path, line: 1};
+	error2.source = source(err2Path);
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
@@ -527,7 +536,7 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.bold.white('fail two'),
 		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, error2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
 		/error two message/
@@ -539,7 +548,7 @@ test('results with errors and disabled assert output', t => {
 	const error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
 	const err1Path = tempWrite.sync('a();');
-	error1.source = {file: err1Path, line: 1};
+	error1.source = source(err1Path);
 	error1.showOutput = false;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
@@ -549,7 +558,7 @@ test('results with errors and disabled assert output', t => {
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
-	error2.source = {file: err2Path, line: 1};
+	error2.source = source(err2Path);
 	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
@@ -575,7 +584,7 @@ test('results with errors and disabled assert output', t => {
 		'  ' + chalk.bold.white('fail one'),
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
 		'',
-		indentString(codeExcerpt(err1Path, error1.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error1.source), 2).split('\n'),
 		'',
 		/error one message/,
 		'',
@@ -587,7 +596,7 @@ test('results with errors and disabled assert output', t => {
 		'  ' + chalk.bold.white('fail two'),
 		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
 		'',
-		indentString(codeExcerpt(err2Path, error2.source.line), 2).split('\n'),
+		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		indentString(formatAssertError(error2), 2).split('\n'),
 		/error two message/
