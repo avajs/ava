@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+const os = require('os');
 const indentString = require('indent-string');
 const tempWrite = require('temp-write');
 const flatten = require('arr-flatten');
@@ -939,5 +940,45 @@ test('result when no-color flag is set', t => {
 		'\n'
 	].join('\n');
 	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results with errors when failure is a file under an unrelated path', t => {
+	const err1 = new Error('failure one');
+	err1.stack = beautifyStack(err1.stack);
+	const err1Path = tempWrite.sync('a();');
+	err1.source = {file: err1Path, line: 1};
+	err1.showOutput = true;
+	err1.actual = JSON.stringify('abc');
+	err1.actualType = 'string';
+	err1.expected = JSON.stringify('abd');
+	err1.expectedType = 'string';
+
+	const reporter = miniReporter({basePath: path.join(os.tmpdir(), 'foo')});
+	reporter.failCount = 1;
+
+	const runStatus = {
+		errors: [{
+			title: 'failed one',
+			error: err1
+		}]
+	};
+
+	const output = reporter.finish(runStatus);
+
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 failed'),
+		'',
+		'  ' + chalk.bold.white('failed one'),
+		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
+		'',
+		indentString(codeExcerpt(err1Path, err1.source.line), 2).split('\n'),
+		'',
+		indentString(formatAssertError(err1), 2).split('\n'),
+		/failure one/,
+		'',
+		stackLineRegex
+	]));
 	t.end();
 });
