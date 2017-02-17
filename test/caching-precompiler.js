@@ -4,6 +4,7 @@ const path = require('path');
 const test = require('tap').test;
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 const babel = require('babel-core');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
@@ -78,5 +79,25 @@ test('should reuse existing source maps', t => {
 	precompiler.precompileFile(fixture('es2015-source-maps.js'));
 	const options = babel.transform.lastCall.args[1];
 	t.ok(options.inputSourceMap);
+	t.end();
+});
+
+test('disables babel cache', t => {
+	t.plan(2);
+
+	const tempDir = uniqueTempDir();
+	const CachingPrecompiler = proxyquire('../lib/caching-precompiler', {
+		'babel-core': Object.assign({}, babel, {
+			transform(code, options) {
+				t.same(process.env.BABEL_DISABLE_CACHE, '1');
+				return babel.transform(code, options);
+			}
+		})
+	});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
+
+	process.env.BABEL_DISABLE_CACHE = 'foo';
+	precompiler.precompileFile(fixture('es2015.js'));
+	t.same(process.env.BABEL_DISABLE_CACHE, 'foo');
 	t.end();
 });
