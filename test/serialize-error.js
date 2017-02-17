@@ -17,6 +17,7 @@ sourceMapSupport.install({environment: 'node'});
 
 function serializeValue(value) {
 	return prettyFormat(value, {
+		callToJSON: false,
 		plugins: [reactTestPlugin],
 		highlight: true
 	});
@@ -181,5 +182,31 @@ test('skip actual and expected if output is off', t => {
 	t.notOk(serializedErr.expected);
 	t.notOk(serializedErr.actualType);
 	t.notOk(serializedErr.expectedType);
+	t.end();
+});
+
+test('does not call toJSON() when serializing actual and expected', t => {
+	const err = Object.assign(new Error(), {
+		showOutput: true,
+		actual: {
+			foo: 'bar',
+			toJSON() {
+				return {
+					foo: 'BAR'
+				};
+			}
+		},
+		expected: {
+			foo: 'thud',
+			toJSON() {
+				return {
+					foo: 'BAR'
+				};
+			}
+		}
+	});
+
+	const serializedErr = serialize(err);
+	t.notSame(serializedErr.actual, serializedErr.expected);
 	t.end();
 });
