@@ -89,7 +89,7 @@
   "dependencies": {
     "@ava/babel-preset-stage-4": "^1.0.0",
     "@ava/babel-preset-transform-test-files": "^2.0.0",
-    "@ava/pretty-format": "^1.0.0",
+    "@ava/pretty-format": "^1.1.0",
     "arr-flatten": "^1.0.1",
     "array-union": "^1.0.1",
     "array-uniq": "^1.0.2",
