@@ -422,7 +422,7 @@ test('worker errors are treated as uncaught exceptions', t => {
 
 test('uncaught exceptions are raised for worker errors even if the error cannot be serialized', t => {
 	execCli(['--no-color', '--verbose', 'test-fallback.js'], {dirname: 'fixture/trigger-worker-exception'}, (_, __, stderr) => {
-		t.match(stderr, /Runner failed with an unserializable exception/);
+		t.match(stderr, /Failed to serialize uncaught exception/);
 		t.end();
 	});
 });
