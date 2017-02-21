@@ -26,4 +26,4 @@ module.exports = {
 
 The important bits are `target: 'node'`, which ignores Node.js-specific `require`s (e.g. `fs`, `path`, etc.) and `externals: nodeModules` which prevents webpack from trying to bundle external Node.js libraries which it may choke on.
 
-You can now run `$ ava _buid/tests.js` to run the tests contained in this output.
+You can now run `$ ava _build/tests.js` to run the tests contained in this output.
