@@ -7,15 +7,15 @@ const CachingPrecompiler = require('../lib/caching-precompiler');
 const cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
 const precompiler = new CachingPrecompiler({path: cacheDir});
 
-function fork(testPath) {
+function fork(testPath, options) {
 	const hash = precompiler.precompileFile(testPath);
 	const precompiled = {};
 	precompiled[testPath] = hash;
 
-	return _fork(testPath, {
+	return _fork(testPath, Object.assign({
 		cacheDir,
 		precompiled
-	});
+	}, options));
 }
 
 function fixture(name) {
@@ -124,4 +124,21 @@ test('babelrc is ignored', t => {
 			t.is(info.stats.passCount, 1);
 			t.end();
 		});
+});
+
+test('color support is initialized correctly', t => {
+	t.plan(1);
+
+	return Promise.all([
+		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
+		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
+		fork(fixture('chalk-disabled.js'), {}).run({})
+	]).then(info => {
+		info.forEach(info => {
+			if (info.stats.failCount > 0) {
+				throw new Error(`${info.file} failed`);
+			}
+		});
+		t.is(info.length, 3);
+	});
 });
