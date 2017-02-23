@@ -129,13 +129,13 @@ test('improper use of t.throws from within an async callback will be reported to
 	});
 });
 
-test('babel require hook only applies to the test file', t => {
+test('babel require hook only does not apply to source files', t => {
 	t.plan(3);
 
 	execCli('fixture/babel-hook.js', (err, stdout, stderr) => {
 		t.ok(err);
 		t.is(err.code, 1);
-		t.match(stderr, /Unexpected token/);
+		t.match(stderr, /Unexpected (token|reserved word)/);
 		t.end();
 	});
 });

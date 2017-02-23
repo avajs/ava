@@ -1,1 +1,1 @@
-module.export = async () => {};
+export default () => {};
