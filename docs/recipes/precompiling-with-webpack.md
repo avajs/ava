@@ -1,6 +1,6 @@
 ## Precompiling source files with webpack
 
-The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe shows how to do this using webpack.
+The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe shows how to do this using webpack. (This example uses webpack 2.0.)
 
 ###### webpack.config.js
 
