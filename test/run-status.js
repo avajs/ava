@@ -116,24 +116,3 @@ test('handle non-object exceptions', t => {
 
 	runStatus.handleExceptions({file: 'bar.js', exception: /ab/g});
 });
-
-test('remove non-string error properties from error-like objects', t => {
-	const runStatus = new RunStatus();
-
-	runStatus.on('error', err => {
-		t.deepEqual(err, {
-			file: 'bar.js',
-			message: 'err msg',
-			type: 'rejection'
-		});
-		t.end();
-	});
-
-	const err = {
-		message: 'err msg',
-		stack: {},
-		name: ['baz']
-	};
-
-	runStatus.handleRejections({file: 'bar.js', rejections: [err]});
-});
