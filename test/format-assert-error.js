@@ -72,7 +72,7 @@ test('diff strings', t => {
 
 	t.is(format(err), [
 		'Difference:\n',
-		`ab${chalk.bgRed.black('c')}${chalk.bgGreen.black('d')}\n`
+		`${chalk.red('ab')}${chalk.bgRed.black('c')}${chalk.bgGreen.black('d')}\n`
 	].join('\n'));
 	t.end();
 });
