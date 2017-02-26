@@ -115,6 +115,7 @@
     "currently-unhandled": "^0.4.1",
     "debug": "^2.2.0",
     "diff": "^3.0.1",
+    "diff-match-patch": "^1.0.0",
     "dot-prop": "^4.1.0",
     "empower-core": "^0.6.1",
     "equal-length": "^1.0.0",
