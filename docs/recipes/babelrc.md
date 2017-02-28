@@ -36,11 +36,11 @@ You might run into issues when relying on ES2015-features your current environme
 
 ```json
 {
-	"ava": {
+  "ava": {
     "require": [
-			"babel-register",
-			"babel-polyfill"
-		]
+      "babel-register",
+      "babel-polyfill"
+    ]
   }
 }
 ```
