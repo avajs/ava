@@ -30,6 +30,21 @@ You can override the default Babel configuration AVA uses for test transpilation
 }
 ```
 
+## Provide ES2015 Polyfills to your tests
+
+You might run into issues when relying on ES2015-features your current environment do not support. Since Ava isn't providing any polyfills per default you might want to enable them by adding `babel-polyfill` manually to the `require` section:
+
+```json
+{
+	"ava": {
+    "require": [
+			"babel-register",
+			"babel-polyfill"
+		]
+  }
+}
+```
+
 ## Transpiling Sources
 
 To transpile your sources, you will need to define a [`babel config` ](http://babeljs.io/docs/usage/babelrc/) in `package.json` or a `.babelrc` file. Also, you will need to tell AVA to load [`babel-register`](http://babeljs.io/docs/usage/require/) in every forked process, by adding it to the `require` section of your AVA config:
