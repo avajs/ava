@@ -13,6 +13,7 @@ const findCacheDir = require('find-cache-dir');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
+const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
 const globals = require('./lib/globals');
 
@@ -75,81 +76,85 @@ const cacheDir = findCacheDir({
 	files: [file]
 }) || uniqueTempDir();
 
-const precompiler = new CachingPrecompiler({
-	path: cacheDir,
-	babel: conf.babel
-});
+babelConfigHelper.build(process.cwd(), cacheDir, conf.babel, true)
+	.then(result => {
+		const precompiler = new CachingPrecompiler({
+			path: cacheDir,
+			getBabelOptions: result.getOptions,
+			babelCacheKeys: result.cacheKeys
+		});
 
-const precompiled = {};
-precompiled[file] = precompiler.precompileFile(file);
+		const precompiled = {};
+		precompiled[file] = precompiler.precompileFile(file);
 
-const opts = {
-	file,
-	failFast: cli.flags.failFast,
-	serial: cli.flags.serial,
-	tty: false,
-	cacheDir,
-	precompiled,
-	require: resolveModules(conf.require)
-};
+		const opts = {
+			file,
+			failFast: cli.flags.failFast,
+			serial: cli.flags.serial,
+			tty: false,
+			cacheDir,
+			precompiled,
+			require: resolveModules(conf.require)
+		};
 
-const events = new EventEmitter();
-let uncaughtExceptionCount = 0;
+		const events = new EventEmitter();
+		let uncaughtExceptionCount = 0;
 
-// Mock the behavior of a parent process
-process.send = data => {
-	if (data && data.ava) {
-		const name = data.name.replace(/^ava-/, '');
+		// Mock the behavior of a parent process
+		process.send = data => {
+			if (data && data.ava) {
+				const name = data.name.replace(/^ava-/, '');
 
-		if (events.listeners(name).length > 0) {
-			events.emit(name, data.data);
-		} else {
-			console.log('UNHANDLED AVA EVENT:', name, data.data);
+				if (events.listeners(name).length > 0) {
+					events.emit(name, data.data);
+				} else {
+					console.log('UNHANDLED AVA EVENT:', name, data.data);
+				}
+
+				return;
+			}
+
+			console.log('NON AVA EVENT:', data);
+		};
+
+		events.on('test', data => {
+			console.log('TEST:', data.title, data.error);
+		});
+
+		events.on('results', data => {
+			if (console.profileEnd) {
+				console.profileEnd();
+			}
+
+			console.log('RESULTS:', data.stats);
+
+			if (process.exit) {
+				process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
+			}
+		});
+
+		events.on('stats', () => {
+			setImmediate(() => {
+				process.emit('ava-run', {});
+			});
+		});
+
+		events.on('uncaughtException', data => {
+			uncaughtExceptionCount++;
+			let stack = data && data.exception && data.exception.stack;
+			stack = stack || data;
+			console.log(stack);
+		});
+
+		// `test-worker` will read process.argv[2] for options
+		process.argv[2] = JSON.stringify(opts);
+		process.argv.length = 3;
+
+		if (console.profile) {
+			console.profile('AVA test-worker process');
 		}
 
-		return;
-	}
-
-	console.log('NON AVA EVENT:', data);
-};
-
-events.on('test', data => {
-	console.log('TEST:', data.title, data.error);
-});
-
-events.on('results', data => {
-	if (console.profileEnd) {
-		console.profileEnd();
-	}
-
-	console.log('RESULTS:', data.stats);
-
-	if (process.exit) {
-		process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
-	}
-});
-
-events.on('stats', () => {
-	setImmediate(() => {
-		process.emit('ava-run', {});
+		setImmediate(() => {
+			require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
+		});
 	});
-});
-
-events.on('uncaughtException', data => {
-	uncaughtExceptionCount++;
-	let stack = data && data.exception && data.exception.stack;
-	stack = stack || data;
-	console.log(stack);
-});
-
-// `test-worker` will read process.argv[2] for options
-process.argv[2] = JSON.stringify(opts);
-process.argv.length = 3;
-
-if (console.profile) {
-	console.profile('AVA test-worker process');
-}
-
-setImmediate(() => {
-	require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
-});

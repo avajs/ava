@@ -4,6 +4,7 @@ const path = require('path');
 const test = require('tap').test;
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 const babel = require('babel-core');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
@@ -12,18 +13,26 @@ const fixture = name => path.join(__dirname, 'fixture', name);
 const endsWithJs = filename => /\.js$/.test(filename);
 const endsWithMap = filename => /\.js\.map$/.test(filename);
 
+function getBabelOptions() {
+	return {
+		babelrc: false
+	};
+}
+
+const babelCacheKeys = {};
+
 sinon.spy(babel, 'transform');
 
 test('creation with new', t => {
 	const tempDir = uniqueTempDir();
-	const precompiler = new CachingPrecompiler({path: tempDir});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 	t.is(precompiler.cacheDirPath, tempDir);
 	t.end();
 });
 
 test('adds files and source maps to the cache directory as needed', t => {
 	const tempDir = uniqueTempDir();
-	const precompiler = new CachingPrecompiler({path: tempDir});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
 	t.false(fs.existsSync(tempDir), 'cache directory is not created before it is needed');
 
@@ -39,7 +48,7 @@ test('adds files and source maps to the cache directory as needed', t => {
 
 test('adds a map file comment to the cached files', t => {
 	const tempDir = uniqueTempDir();
-	const precompiler = new CachingPrecompiler({path: tempDir});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
 	precompiler.precompileFile(fixture('es2015.js'));
 
@@ -63,59 +72,32 @@ test('adds a map file comment to the cached files', t => {
 	t.end();
 });
 
-test('uses default babel options when babelConfig === "default"', t => {
+test('should reuse existing source maps', t => {
 	const tempDir = uniqueTempDir();
-	const precompiler = new CachingPrecompiler({
-		path: tempDir,
-		babel: 'default'
-	});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
-	babel.transform.reset();
-
-	precompiler.precompileFile(fixture('es2015.js'));
-
-	t.true(babel.transform.calledOnce);
-	const options = babel.transform.firstCall.args[1];
-
-	t.true('filename' in options);
-	t.true(options.sourceMaps);
-	t.false(options.ast);
-	t.true('inputSourceMap' in options);
-	t.false(options.babelrc);
-	t.true(Array.isArray(options.presets));
+	precompiler.precompileFile(fixture('es2015-source-maps.js'));
+	const options = babel.transform.lastCall.args[1];
+	t.ok(options.inputSourceMap);
 	t.end();
 });
 
-test('allows babel config from package.json/babel when babelConfig === "inherit"', t => {
+test('disables babel cache', t => {
+	t.plan(2);
+
 	const tempDir = uniqueTempDir();
-	const precompiler = new CachingPrecompiler({
-		path: tempDir,
-		babel: 'inherit'
+	const CachingPrecompiler = proxyquire('../lib/caching-precompiler', {
+		'babel-core': Object.assign({}, babel, {
+			transform(code, options) {
+				t.same(process.env.BABEL_DISABLE_CACHE, '1');
+				return babel.transform(code, options);
+			}
+		})
 	});
+	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
-	babel.transform.reset();
-
+	process.env.BABEL_DISABLE_CACHE = 'foo';
 	precompiler.precompileFile(fixture('es2015.js'));
-
-	t.true(babel.transform.calledOnce);
-	const options = babel.transform.firstCall.args[1];
-
-	t.true('filename' in options);
-	t.true(options.sourceMaps);
-	t.false(options.ast);
-	t.true('inputSourceMap' in options);
-	t.true(options.babelrc);
-	t.end();
-});
-
-test('does not modify plugins array in babelConfig', t => {
-	const plugins = [];
-	const precompiler = new CachingPrecompiler({
-		path: uniqueTempDir(),
-		plugins
-	});
-
-	precompiler.precompileFile(fixture('es2015.js'));
-	t.strictDeepEqual(plugins, []);
+	t.same(process.env.BABEL_DISABLE_CACHE, 'foo');
 	t.end();
 });

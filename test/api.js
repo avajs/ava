@@ -5,12 +5,13 @@ const figures = require('figures');
 const rimraf = require('rimraf');
 const test = require('tap').test;
 const Api = require('../api');
-const testCapitalizerPlugin = require('./fixture/babel-plugin-test-capitalizer');
+const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
 const ROOT_DIR = path.join(__dirname, '..');
 
 function apiCreator(options) {
 	options = options || {};
+	options.babelConfig = options.babelConfig || 'default';
 	options.powerAssert = true;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
@@ -667,10 +668,15 @@ function generateTests(prefix, apiCreator) {
 		return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-				t.is(files.length, 2);
-				t.is(files.filter(endsWithJs).length, 1);
+				t.ok(files.length, 4);
+				t.is(files.filter(endsWithBin).length, 1);
+				t.is(files.filter(endsWithJs).length, 2);
 				t.is(files.filter(endsWithMap).length, 1);
 			});
+
+		function endsWithBin(filename) {
+			return /\.bin$/.test(filename);
+		}
 
 		function endsWithJs(filename) {
 			return /\.js$/.test(filename);
@@ -805,7 +811,8 @@ function generateTests(prefix, apiCreator) {
 				presets: ['@ava/stage-4'],
 				plugins: [testCapitalizerPlugin]
 			},
-			cacheEnabled: false
+			cacheEnabled: false,
+			projectDir: __dirname
 		});
 
 		api.on('test-run', runStatus => {
@@ -823,7 +830,9 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} Default babel config doesn't use .babelrc`, t => {
 		t.plan(2);
 
-		const api = apiCreator();
+		const api = apiCreator({
+			projectDir: path.join(__dirname, 'fixture/babelrc')
+		});
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
@@ -831,7 +840,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run()
 			.then(result => {
 				t.is(result.passCount, 1);
 			});
@@ -842,7 +851,8 @@ function generateTests(prefix, apiCreator) {
 
 		const api = apiCreator({
 			babelConfig: 'inherit',
-			cacheEnabled: false
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
 
 		api.on('test-run', runStatus => {
@@ -851,7 +861,7 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run()
 			.then(result => {
 				t.is(result.passCount, 2);
 			});
@@ -862,16 +872,17 @@ function generateTests(prefix, apiCreator) {
 
 		const api = apiCreator({
 			babelConfig: {babelrc: true},
-			cacheEnabled: false
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+				t.ok(data.title === 'foo' || data.title === 'repeated test: foo');
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run()
 			.then(result => {
 				t.is(result.passCount, 2);
 			});
@@ -885,41 +896,43 @@ function generateTests(prefix, apiCreator) {
 				plugins: [testCapitalizerPlugin],
 				babelrc: true
 			},
-			cacheEnabled: false
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok((data.title === 'FOO') || /^repeated test:/.test(data.title));
+				t.ok(data.title === 'FOO' || data.title === 'repeated test: FOO');
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run()
 			.then(result => {
 				t.is(result.passCount, 2);
 			});
 	});
 
 	test(`${prefix} babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc`, t => {
-		t.plan(2);
+		t.plan(3);
 
 		const api = apiCreator({
 			babelConfig: {
 				plugins: [testCapitalizerPlugin],
 				extends: path.join(__dirname, 'fixture/babelrc/.alt-babelrc')
 			},
-			cacheEnabled: false
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.is(data.title, 'BAR');
+				t.ok(data.title === 'BAR' || data.title === 'repeated test: BAR');
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/babelrc/test.js')])
+		return api.run()
 			.then(result => {
-				t.is(result.passCount, 1);
+				t.is(result.passCount, 2);
 			});
 	});
 

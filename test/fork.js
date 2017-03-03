@@ -5,7 +5,16 @@ const _fork = require('../lib/fork.js');
 const CachingPrecompiler = require('../lib/caching-precompiler');
 
 const cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
-const precompiler = new CachingPrecompiler({path: cacheDir});
+const precompiler = new CachingPrecompiler({
+	babelCacheKeys: {},
+	getBabelOptions() {
+		return {
+			babelrc: false,
+			presets: [require.resolve('@ava/babel-preset-stage-4')]
+		};
+	},
+	path: cacheDir
+});
 
 function fork(testPath) {
 	const hash = precompiler.precompileFile(testPath);
