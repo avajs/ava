@@ -210,3 +210,14 @@ test('does not call toJSON() when serializing actual and expected', t => {
 	t.notSame(serializedErr.actual, serializedErr.expected);
 	t.end();
 });
+
+test('remove non-string error properties', t => {
+	const err = {
+		name: [42],
+		stack: /re/g
+	};
+	const serializedErr = serialize(err);
+	t.is(serializedErr.name, undefined);
+	t.is(serializedErr.stack, undefined);
+	t.end();
+});
