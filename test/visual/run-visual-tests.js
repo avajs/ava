@@ -4,9 +4,7 @@ const path = require('path');
 const childProcess = require('child_process');
 const chalk = require('chalk');
 const arrify = require('arrify');
-const Promise = require('bluebird');
-const pify = require('pify');
-const inquirer = pify(require('inquirer'));
+const inquirer = require('inquirer');
 
 const cwd = path.resolve(__dirname, '../../');
 
@@ -26,28 +24,22 @@ function exec(args) {
 }
 
 function run(name, args, message, question) {
-	return new Promise((resolve, reject) => {
-		console.log(chalk.cyan(`**BEGIN ${name}**`));
-		exec(args);
-		console.log(chalk.cyan(`**END ${name}**\n`));
-		console.log(arrify(message).join('\n') + '\n');
+	console.log(chalk.cyan(`**BEGIN ${name}**`));
+	exec(args);
+	console.log(chalk.cyan(`**END ${name}**\n`));
+	console.log(arrify(message).join('\n') + '\n');
 
-		inquirer.prompt(
-			[{
-				type: 'confirm',
-				name: 'confirmed',
-				message: question || 'Does it appear correctly',
-				default: false
-			}],
-			data => {
-				if (!data.confirmed) {
-					reject(new Error(arrify(args).join(' ') + ' failed'));
-				}
-
-				resolve();
+	return inquirer.prompt([{
+		type: 'confirm',
+		name: 'confirmed',
+		message: question || 'Does it appear correctly',
+		default: false
+	}])
+		.then(data => {
+			if (!data.confirmed) {
+				throw new Error(arrify(args).join(' ') + ' failed');
 			}
-		);
-	});
+		});
 }
 
 // Thunked version of run for promise handlers

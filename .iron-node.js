@@ -3,7 +3,5 @@ module.exports = {
 		openDevToolsDetached: true,
 		hideMainWindow: true
 	},
-	workSpaceDirectory: function () {
-		return __dirname;
-	}
+	workSpaceDirectory: () => __dirname
 };
