@@ -1,5 +1,3 @@
-export default test;
-
 export type ErrorValidator
 	= (new (...args: any[]) => any)
 	| RegExp
@@ -11,9 +9,9 @@ export interface Observable {
 }
 
 export type Test = (t: TestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
-export type ContextualTest = (t: ContextualTestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
+export type ContextualTest<T> = (t: ContextualTestContext<T>) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type CallbackTest = (t: CallbackTestContext) => void;
-export type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
+export type ContextualCallbackTest<T> = (t: ContextualCallbackTestContext<T>) => void;
 
 export interface AssertContext {
 	/**
@@ -99,11 +97,11 @@ export interface CallbackTestContext extends TestContext {
 	 */
 	end(): void;
 }
-export interface ContextualTestContext extends TestContext {
-	context: any;
+export interface ContextualTestContext<T> extends TestContext {
+	context: T;
 }
-export interface ContextualCallbackTestContext extends CallbackTestContext {
-	context: any;
+export interface ContextualCallbackTestContext<T> extends CallbackTestContext {
+	context: T;
 }
 
 export interface Macro<T> {
@@ -112,7 +110,11 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-export function test(name: string, run: ContextualTest): void;
-export function test(run: ContextualTest): void;
-export function test(name: string, run: Macros<ContextualTestContext>, ...args: any[]): void;
-export function test(run: Macros<ContextualTestContext>, ...args: any[]): void;
+export function contextualize<T>(context: T | (() => T)): ITest<T>;
+
+export interface ITest<T> {
+    (name: string, run: ContextualTest<T>): void;
+    (run: ContextualTest<T>): void;
+    (name: string, run: Macros<ContextualTestContext<T>>, ...args: any[]): void;
+    (run: Macros<ContextualTestContext<T>>, ...args: any[]): void;
+}

@@ -24,8 +24,35 @@ const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 // All suported function names
 const allParts = Object.keys(runner._chainableMethods).filter(name => name !== 'test');
 
-const output = base + generatePrefixed([]);
+const output = [
+	base,
+	testFunctionDeclarations(),
+	generatePrefixed([])
+].join('\n');
+
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
+
+function testFunctionDeclarations() {
+	const testInterfaceDeclaration = 'export interface ITest<T> {';
+	const testInterfaceStart = base.indexOf(testInterfaceDeclaration);
+	if (testInterfaceStart === -1) {
+		throw new Error(`Couldn't find ${testInterfaceDeclaration} in base definitions.`);
+	}
+	const testInterfaceEnd = base.indexOf('}', testInterfaceStart);
+	if (testInterfaceEnd === -1) {
+		throw new Error(`Expected token '}'.`);
+	}
+	const lines = base
+		.substring(testInterfaceStart + testInterfaceDeclaration.length, testInterfaceEnd)
+		.trim()
+		.split('\n')
+		.map(line => line.trim().replace(/<T>/g, '<any>'))
+		.map(signature => `export function test${signature}`);
+
+	lines.unshift('export default test;');
+
+	return lines.join('\n');
+}
 
 // Generates type definitions, for the specified prefix
 // The prefix is an array of function names
@@ -59,11 +86,11 @@ function generatePrefixed(prefix) {
 			if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
 				output += '\t' + writeFunction(part, 'name: string', 'void');
 			} else {
-				const type = testType(parts);
-				output += '\t' + writeFunction(part, `name: string, implementation: ${type}`);
-				output += '\t' + writeFunction(part, `implementation: ${type}`);
-				output += '\t' + writeFunction(part, `name: string, implementation: Macros<${type}Context>, ...args: any[]`);
-				output += '\t' + writeFunction(part, `implementation: Macros<${type}Context>, ...args: any[]`);
+				const types = testTypes(parts);
+				output += '\t' + writeFunction(part, `name: string, implementation: ${types.type}`);
+				output += '\t' + writeFunction(part, `implementation: ${types.type}`);
+				output += '\t' + writeFunction(part, `name: string, implementation: Macros<${types.contextType}>, ...args: any[]`);
+				output += '\t' + writeFunction(part, `implementation: Macros<${types.contextType}>, ...args: any[]`);
 			}
 		}
 
@@ -148,8 +175,8 @@ function exists(parts) {
 	return false;
 }
 
-// Returns the type name of for the test implementation
-function testType(parts) {
+// Returns the type names for the test implementation
+function testTypes(parts) {
 	const has = arrayHas(parts);
 	let type = 'Test';
 
@@ -157,9 +184,20 @@ function testType(parts) {
 		type = `Callback${type}`;
 	}
 
-	if (!has('before') && !has('after')) {
+	const isContextual = !has('before') && !has('after');
+	if (isContextual) {
 		type = `Contextual${type}`;
 	}
 
-	return type;
+	let contextType = `${type}Context`;
+
+	if (isContextual) {
+		type = `${type}<any>`;
+		contextType = `${contextType}<any>`;
+	}
+
+	return {
+		type: type,
+		contextType: contextType
+	};
 }

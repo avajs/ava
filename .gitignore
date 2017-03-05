@@ -3,3 +3,6 @@ node_modules
 coverage
 bench/.results
 types/generated.d.ts
+
+# VS Code configuration
+.vscode
