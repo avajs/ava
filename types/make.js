@@ -197,7 +197,7 @@ function testTypes(parts) {
 	}
 
 	return {
-		type: type,
-		contextType: contextType
+		type,
+		contextType
 	};
 }
