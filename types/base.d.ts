@@ -110,8 +110,6 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-export function contextualize<T>(context: T | (() => T)): ITest<T>;
-
 export interface ITest<T> {
     (name: string, run: ContextualTest<T>): void;
     (run: ContextualTest<T>): void;
