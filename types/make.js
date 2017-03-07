@@ -46,7 +46,7 @@ function testFunctionDeclarations() {
 		.substring(testInterfaceStart + testInterfaceDeclaration.length, testInterfaceEnd)
 		.trim()
 		.split('\n')
-		.map(line => line.trim().replace(/<T>/g, '<any>'))
+		.map(line => line.trim().replace(/<T>/g, '<{ context: any }>'))
 		.map(signature => `export function test${signature}`);
 
 	lines.unshift('export default test;');
@@ -184,16 +184,16 @@ function testTypes(parts) {
 		type = `Callback${type}`;
 	}
 
-	const isContextual = !has('before') && !has('after');
-	if (isContextual) {
-		type = `Contextual${type}`;
+	const isGeneric = !has('before') && !has('after');
+	if (isGeneric) {
+		type = `Generic${type}`;
 	}
 
 	let contextType = `${type}Context`;
 
-	if (isContextual) {
-		type = `${type}<any>`;
-		contextType = `${contextType}<any>`;
+	if (isGeneric) {
+		type = `${type}<{ context: any }>`;
+		contextType = `${contextType}<{ context: any }>`;
 	}
 
 	return {

@@ -7,11 +7,10 @@ export type ErrorValidator
 export interface Observable {
 	subscribe(observer: (value: {}) => void): void;
 }
-
 export type Test = (t: TestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
-export type ContextualTest<T> = (t: ContextualTestContext<T>) => PromiseLike<void> | Iterator<any> | Observable | void;
+export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type CallbackTest = (t: CallbackTestContext) => void;
-export type ContextualCallbackTest<T> = (t: ContextualCallbackTestContext<T>) => void;
+export type GenericCallbackTest<T> = (t: GenericCallbackTestContext<T>) => void;
 
 export interface AssertContext {
 	/**
@@ -97,12 +96,9 @@ export interface CallbackTestContext extends TestContext {
 	 */
 	end(): void;
 }
-export interface ContextualTestContext<T> extends TestContext {
-	context: T;
-}
-export interface ContextualCallbackTestContext<T> extends CallbackTestContext {
-	context: T;
-}
+
+export type GenericTestContext<T> = TestContext & T;
+export type GenericCallbackTestContext<T> = CallbackTestContext & T;
 
 export interface Macro<T> {
 	(t: T, ...args: any[]): void;
@@ -111,8 +107,8 @@ export interface Macro<T> {
 export type Macros<T> = Macro<T> | Macro<T>[];
 
 export interface ITest<T> {
-    (name: string, run: ContextualTest<T>): void;
-    (run: ContextualTest<T>): void;
-    (name: string, run: Macros<ContextualTestContext<T>>, ...args: any[]): void;
-    (run: Macros<ContextualTestContext<T>>, ...args: any[]): void;
+    (name: string, run: GenericTest<T>): void;
+    (run: GenericTest<T>): void;
+    (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+    (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
