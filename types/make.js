@@ -104,7 +104,7 @@ function generatePrefixed(prefix) {
 			if (arrayHas(parts)('todo')) {
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: DefineContextualTest<T>`
+				output += `\t${part}: DefineTest<T>`
 				if (verifyNamespace(parts)) {
 					output += ` & test_${parts.join('_')}<T>;\n`;
 				} else {
@@ -123,7 +123,7 @@ function generatePrefixed(prefix) {
 	const typeBody = `{\n${output}}\n${children}`;
 
 	if (prefix.length === 0) {
-		return `type defineTest<T> = DefineContextualTest<T> & ${typeBody}`;
+		return `export type defineTest<T> = DefineTest<T> & ${typeBody}`;
 	} else {
 		const namespace = ['test'].concat(prefix).join('_');
 		return `type ${namespace}<T> = ${typeBody}`;
