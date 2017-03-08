@@ -90,6 +90,7 @@ function generatePrefixed(prefix) {
 				output += `\t${part}: TestFunctionCore<T>`;
 
 				if (hasChildren(parts)) {
+					// this chain can be continued, make the property an intersection type with the chain continuation
 					const joined = parts.join('_');
 					output += ` & test_${joined}<T>`;
 				}
@@ -112,7 +113,7 @@ function generatePrefixed(prefix) {
 		return `export type TestFunction<T> = TestFunctionCore<T> & ${typeBody}`;
 	}
 	const namespace = ['test'].concat(prefix).join('_');
-	return `type ${namespace}<T> = ${typeBody}`;
+	return `interface ${namespace}<T> ${typeBody}`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
@@ -158,7 +159,9 @@ function verify(parts, asPrefix) {
 	return true;
 }
 
+// Returns true if a chain can have any child properties
 function hasChildren(parts) {
+	// concatenate the chain with each other part, and see if any concatenations are valid functions
 	const validChildren = allParts
 		.filter(newPart => parts.indexOf(newPart) === -1)
 		.map(newPart => parts.concat([newPart]))
