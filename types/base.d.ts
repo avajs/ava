@@ -12,6 +12,12 @@ export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | I
 export type CallbackTest = (t: CallbackTestContext) => void;
 export type GenericCallbackTest<T> = (t: GenericCallbackTestContext<T>) => void;
 
+type Context<T> = { context: T };
+type AnyContext = Context<any>;
+
+export type ContextualTest = GenericTest<AnyContext>;
+export type ContextualCallbackTest = GenericCallbackTest<AnyContext>;
+
 export interface AssertContext {
 	/**
 	 * Passing assertion.
@@ -106,9 +112,11 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-export interface ITest<T> {
+export interface DefineTest<T> {
     (name: string, run: GenericTest<T>): void;
     (run: GenericTest<T>): void;
     (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
+
+export type DefineContextualTest<T> = DefineTest<Context<T>>;

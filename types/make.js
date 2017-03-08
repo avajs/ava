@@ -24,6 +24,8 @@ const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 // All suported function names
 const allParts = Object.keys(runner._chainableMethods).filter(name => name !== 'test');
 
+// The output consists of the base declarations, the actual 'test' function declarations,
+// and the namespaced chainable methods.
 const output = [
 	base,
 	testFunctionDeclarations(),
@@ -32,21 +34,22 @@ const output = [
 
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
 
+// Returns the declarations for the 'test' function overloads
 function testFunctionDeclarations() {
-	const testInterfaceDeclaration = 'export interface ITest<T> {';
-	const testInterfaceStart = base.indexOf(testInterfaceDeclaration);
-	if (testInterfaceStart === -1) {
-		throw new Error(`Couldn't find ${testInterfaceDeclaration} in base definitions.`);
+	const defineTestDeclaration = 'export interface DefineTest<T> {';
+	const defineTestStart = base.indexOf(defineTestDeclaration);
+	if (defineTestStart === -1) {
+		throw new Error(`Couldn't find ${defineTestDeclaration} in base definitions.`);
 	}
-	const testInterfaceEnd = base.indexOf('}', testInterfaceStart);
-	if (testInterfaceEnd === -1) {
+	const defineTestEnd = base.indexOf('}', defineTestStart);
+	if (defineTestEnd === -1) {
 		throw new Error(`Expected token '}'.`);
 	}
 	const lines = base
-		.substring(testInterfaceStart + testInterfaceDeclaration.length, testInterfaceEnd)
+		.substring(defineTestStart + defineTestDeclaration.length, defineTestEnd)
 		.trim()
 		.split('\n')
-		.map(line => line.trim().replace(/<T>/g, '<{ context: any }>'))
+		.map(line => line.trim().replace(/<T>/g, '<AnyContext>'))
 		.map(signature => `export function test${signature}`);
 
 	lines.unshift('export default test;');
@@ -192,8 +195,8 @@ function testTypes(parts) {
 	let contextType = `${type}Context`;
 
 	if (isGeneric) {
-		type = `${type}<{ context: any }>`;
-		contextType = `${contextType}<{ context: any }>`;
+		type = `${type}<AnyContext>`;
+		contextType = `${contextType}<AnyContext>`;
 	}
 
 	return {
