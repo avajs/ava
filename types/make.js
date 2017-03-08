@@ -54,7 +54,11 @@ function testFunctionDeclarations() {
 
 	lines.unshift('export default test;');
 
-	return lines.join('\n');
+	return [
+		'export default test;',
+		'export const test: defineTest;'
+	].join('\n');
+	// return lines.join('\n');
 }
 
 // Generates type definitions, for the specified prefix
@@ -93,15 +97,8 @@ function generatePrefixed(prefix) {
 		// but not a valid function name.
 		if (verify(parts, false)) {
 			if (arrayHas(parts)('todo')) {
-			// if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
-				// output += '\t' + writeFunction(part, 'name: string', 'void');
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				const types = testTypes(parts);
-				// output += '\t' + writeFunction(part, `name: string, implementation: ${types.type}`);
-				// output += '\t' + writeFunction(part, `implementation: ${types.type}`);
-				// output += '\t' + writeFunction(part, `name: string, implementation: Macros<${types.contextType}>, ...args: any[]`);
-				// output += '\t' + writeFunction(part, `implementation: Macros<${types.contextType}>, ...args: any[]`);
 				output += `\t${part}: DefineContextualTest<any>`
 				if (verifyNamespace(parts)) {
 					output += ` & test_${parts.join('_')};\n`;
@@ -118,11 +115,14 @@ function generatePrefixed(prefix) {
 		return children;
 	}
 
-	const namespace = ['test'].concat(prefix).join('_');
+	const typeBody = `{\n${output}}\n${children}`;
 
-	children = children.replace(`& ${namespace};`, `/* & ${namespace} */;`); 
-
-	return `type ${namespace} = {\n${output}}\n${children}`;
+	if (prefix.length === 0) {
+		return `type defineTest = DefineContextualTest<any> & ${typeBody}`;
+	} else {
+		const namespace = ['test'].concat(prefix).join('_');
+		return `type ${namespace} = ${typeBody}`;
+	}
 }
 
 function writeFunction(name, args) {
