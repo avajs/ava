@@ -30,15 +30,18 @@ You can override the default Babel configuration AVA uses for test transpilation
 }
 ```
 
-## Provide ES2015 Polyfills to your tests
+## Use Babel Polyfills
 
-You might run into issues when relying on ES2015-features your current environment do not support. Since Ava isn't providing any polyfills per default you might want to enable them by adding `babel-polyfill` manually to the `require` section:
+AVA lets you write your tests using new JavaScript syntax, even on Node.js versions that otherwise wouldn't support it. However, it doesn't add or modify built-ins of your current environment. Using AVA would, for example, not provide modern features such as `Array.prototype.includes()` to an underlying NodeJ.js 4 environment.
+
+By loading [Babel's Polyfill module](https://babeljs.io/docs/usage/polyfill/) you're able to opt these features in. Note that this will modify the environment, which may influence how your program itself behaves.
+
+You can enable `babel-polyfill` by adding it to AVA's require options:
 
 ```json
 {
   "ava": {
     "require": [
-      "babel-register",
       "babel-polyfill"
     ]
   }
