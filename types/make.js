@@ -56,7 +56,7 @@ function testFunctionDeclarations() {
 
 	return [
 		'export default test;',
-		'export const test: defineTest;'
+		'export const test: defineTest<AnyContext>;'
 	].join('\n');
 	// return lines.join('\n');
 }
@@ -77,12 +77,17 @@ function generatePrefixed(prefix) {
 
 		// If `parts` is not sorted, we alias it to the sorted chain
 		if (!isArraySorted(parts)) {
-			let chain = parts.sort().join('_');
 			if (exists(parts)) {
-				if (!verifyNamespace(parts)) {
+				parts.sort();
+
+				let chain;
+				if (verifyNamespace(parts)) {
+					chain = parts.join('_') + '<T>';
+				} else {
 					// this is a single function, not a namespace, so there's no type associated
+					// and we need to dereference it as a property type
 					const last = parts.pop();
-					chain = `${parts.join('_')}['${last}']`;
+					chain = `${parts.join('_')}<T>['${last}']`;
 				}
 
 
@@ -99,9 +104,9 @@ function generatePrefixed(prefix) {
 			if (arrayHas(parts)('todo')) {
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: DefineContextualTest<any>`
+				output += `\t${part}: DefineContextualTest<T>`
 				if (verifyNamespace(parts)) {
-					output += ` & test_${parts.join('_')};\n`;
+					output += ` & test_${parts.join('_')}<T>;\n`;
 				} else {
 					output += ';\n';
 				}
@@ -118,10 +123,10 @@ function generatePrefixed(prefix) {
 	const typeBody = `{\n${output}}\n${children}`;
 
 	if (prefix.length === 0) {
-		return `type defineTest = DefineContextualTest<any> & ${typeBody}`;
+		return `type defineTest<T> = DefineContextualTest<T> & ${typeBody}`;
 	} else {
 		const namespace = ['test'].concat(prefix).join('_');
-		return `type ${namespace} = ${typeBody}`;
+		return `type ${namespace}<T> = ${typeBody}`;
 	}
 }
 
