@@ -69,7 +69,8 @@ function generatePrefixed(prefix) {
 					// this is a single function, not a namespace, so there's no type associated
 					// and we need to dereference it as a property type
 					const last = parts.pop();
-					chain = `${parts.join('_')}<T>['${last}']`;
+					const joined = parts.join('_');
+					chain = `${joined}<T>['${last}']`;
 				}
 
 				output += `\t${part}: test_${chain};\n`;
@@ -83,15 +84,16 @@ function generatePrefixed(prefix) {
 		// but not a valid function name.
 		if (verify(parts, false)) {
 			if (arrayHas(parts)('todo')) {
-				// todo functions don't have a function argument, just a string
+				// 'todo' functions don't have a function argument, just a string
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: TestFunctionCore<T>`
+				output += `\t${part}: TestFunctionCore<T>`;
 
 				if (hasChildren(parts)) {
-					output += ` & test_${parts.join('_')}<T>`;
+					const joined = parts.join('_');
+					output += ` & test_${joined}<T>`;
 				}
-				
+	
 				output += ';\n';
 			}
 		}
@@ -106,11 +108,11 @@ function generatePrefixed(prefix) {
 	const typeBody = `{\n${output}}\n${children}`;
 
 	if (prefix.length === 0) {
+		// no prefix, so this is the type for the default export
 		return `export type TestFunction<T> = TestFunctionCore<T> & ${typeBody}`;
-	} else {
-		const namespace = ['test'].concat(prefix).join('_');
-		return `type ${namespace}<T> = ${typeBody}`;
 	}
+	const namespace = ['test'].concat(prefix).join('_');
+	return `type ${namespace}<T> = ${typeBody}`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
