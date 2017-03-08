@@ -112,11 +112,11 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-export interface DefineTest<T> {
+interface TestFunctionCore<T> {
     (name: string, run: GenericTest<T>): void;
     (run: GenericTest<T>): void;
     (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
 
-export type DefineContextualTest<T> = DefineTest<Context<T>>;
+// export type DefineContextualTest<T> = DefineTest<Context<T>>;

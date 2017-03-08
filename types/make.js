@@ -36,7 +36,7 @@ fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
 
 // Returns the declarations for the 'test' function overloads
 function testFunctionDeclarations() {
-	const defineTestDeclaration = 'export interface DefineTest<T> {';
+	const defineTestDeclaration = 'interface TestFunctionCore<T> {';
 	const defineTestStart = base.indexOf(defineTestDeclaration);
 	if (defineTestStart === -1) {
 		throw new Error(`Couldn't find ${defineTestDeclaration} in base definitions.`);
@@ -56,7 +56,8 @@ function testFunctionDeclarations() {
 
 	return [
 		'export default test;',
-		'export const test: defineTest<AnyContext>;'
+		'export const test: ContextualTestFunction<any>;',
+		'export type ContextualTestFunction<T> = TestFunction<Context<T>>;'
 	].join('\n');
 	// return lines.join('\n');
 }
@@ -104,7 +105,7 @@ function generatePrefixed(prefix) {
 			if (arrayHas(parts)('todo')) {
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: DefineTest<T>`
+				output += `\t${part}: TestFunctionCore<T>`
 				if (verifyNamespace(parts)) {
 					output += ` & test_${parts.join('_')}<T>;\n`;
 				} else {
@@ -123,7 +124,7 @@ function generatePrefixed(prefix) {
 	const typeBody = `{\n${output}}\n${children}`;
 
 	if (prefix.length === 0) {
-		return `export type defineTest<T> = DefineTest<T> & ${typeBody}`;
+		return `export type TestFunction<T> = TestFunctionCore<T> & ${typeBody}`;
 	} else {
 		const namespace = ['test'].concat(prefix).join('_');
 		return `type ${namespace}<T> = ${typeBody}`;
