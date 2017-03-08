@@ -65,7 +65,7 @@ export interface AssertContext {
 	/**
 	 * Assert that function doesn't throw an error or promise resolves.
 	 */
-	notThrows<U>(value: PromiseLike<U>, message?: string): Promise<U>;
+	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
 	notThrows(value: () => void, message?: string): void;
 	/**
 	 * Assert that contents matches regex.
