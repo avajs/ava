@@ -73,10 +73,16 @@ function generatePrefixed(prefix) {
 
 		// If `parts` is not sorted, we alias it to the sorted chain
 		if (!isArraySorted(parts)) {
-			const chain = parts.sort().join('.');
-
+			let chain = parts.sort().join('_');
 			if (exists(parts)) {
-				output += `\texport const ${part}: typeof test.${chain};\n`;
+				if (!verifyNamespace(parts)) {
+					// this is a single function, not a namespace, so there's no type associated
+					const last = parts.pop();
+					chain = `${parts.join('_')}['${last}']`;
+				}
+
+
+				output += `\t${part}: test_${chain};\n`;
 			}
 
 			continue;
@@ -86,14 +92,22 @@ function generatePrefixed(prefix) {
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
-				output += '\t' + writeFunction(part, 'name: string', 'void');
+			if (arrayHas(parts)('todo')) {
+			// if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
+				// output += '\t' + writeFunction(part, 'name: string', 'void');
+				output += `\t${part}: (name: string) => void;\n`;
 			} else {
 				const types = testTypes(parts);
-				output += '\t' + writeFunction(part, `name: string, implementation: ${types.type}`);
-				output += '\t' + writeFunction(part, `implementation: ${types.type}`);
-				output += '\t' + writeFunction(part, `name: string, implementation: Macros<${types.contextType}>, ...args: any[]`);
-				output += '\t' + writeFunction(part, `implementation: Macros<${types.contextType}>, ...args: any[]`);
+				// output += '\t' + writeFunction(part, `name: string, implementation: ${types.type}`);
+				// output += '\t' + writeFunction(part, `implementation: ${types.type}`);
+				// output += '\t' + writeFunction(part, `name: string, implementation: Macros<${types.contextType}>, ...args: any[]`);
+				// output += '\t' + writeFunction(part, `implementation: Macros<${types.contextType}>, ...args: any[]`);
+				output += `\t${part}: DefineContextualTest<any>`
+				if (verifyNamespace(parts)) {
+					output += ` & test_${parts.join('_')};\n`;
+				} else {
+					output += ';\n';
+				}
 			}
 		}
 
@@ -104,13 +118,15 @@ function generatePrefixed(prefix) {
 		return children;
 	}
 
-	const namespace = ['test'].concat(prefix).join('.');
+	const namespace = ['test'].concat(prefix).join('_');
 
-	return `export namespace ${namespace} {\n${output}}\n${children}`;
+	children = children.replace(`& ${namespace};`, `/* & ${namespace} */;`); 
+
+	return `type ${namespace} = {\n${output}}\n${children}`;
 }
 
 function writeFunction(name, args) {
-	return `export function ${name}(${args}): void;\n`;
+	return `${name}(${args}): void;\n`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
@@ -154,6 +170,15 @@ function verify(parts, asPrefix) {
 	}
 
 	return true;
+}
+
+function verifyNamespace(parts) {
+	const validExtensions = allParts
+		.filter(bit => parts.indexOf(bit) === -1)
+		.map(bit => parts.concat([bit]))
+		.filter(longer => verify(longer, false));
+
+	return validExtensions.length > 0;
 }
 
 // Checks whether a chain is a valid function name or a valid prefix with some member
