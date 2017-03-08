@@ -264,7 +264,7 @@ test('handle throws without error', t => {
 
 	t.is(result.passed, false);
 	t.ok(result.reason);
-	t.is(actual, null);
+	t.is(actual, undefined);
 	t.end();
 });
 
@@ -575,9 +575,10 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 		}, 5);
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.operator, 'plan');
+		t.is(result.reason.assertion, 'plan');
 		t.is(result.reason.actual, 3);
 		t.is(result.reason.expected, 2);
+		t.is(result.reason.operator, '===');
 		t.end();
 	});
 });
@@ -592,9 +593,10 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 		}, 5);
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.operator, 'plan');
+		t.is(result.reason.assertion, 'plan');
 		t.is(result.reason.actual, 2);
 		t.is(result.reason.expected, 3);
+		t.is(result.reason.operator, '===');
 		t.end();
 	});
 });

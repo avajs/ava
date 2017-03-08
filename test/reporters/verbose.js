@@ -373,7 +373,6 @@ test('results with errors', t => {
 	error1.stack = beautifyStack(error1.stack);
 	const err1Path = tempWrite.sync('a()');
 	error1.source = source(err1Path);
-	error1.showOutput = true;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
 	error1.expected = JSON.stringify('abd');
@@ -383,7 +382,6 @@ test('results with errors', t => {
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
 	error2.expected = JSON.stringify([2]);
@@ -432,7 +430,6 @@ test('results with errors', t => {
 test('results with errors and disabled code excerpts', t => {
 	const error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
-	error1.showOutput = true;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
 	error1.expected = JSON.stringify('abd');
@@ -442,7 +439,6 @@ test('results with errors and disabled code excerpts', t => {
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
 	error2.expected = JSON.stringify([2]);
@@ -490,7 +486,6 @@ test('results with errors and disabled code excerpts', t => {
 	error1.stack = beautifyStack(error1.stack);
 	const err1Path = tempWrite.sync('a();');
 	error1.source = source(err1Path, 10);
-	error1.showOutput = true;
 	error1.actual = JSON.stringify('abc');
 	error1.actualType = 'string';
 	error1.expected = JSON.stringify('abd');
@@ -500,7 +495,6 @@ test('results with errors and disabled code excerpts', t => {
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.showOutput = true;
 	error2.actual = JSON.stringify([1]);
 	error2.actualType = 'array';
 	error2.expected = JSON.stringify([2]);
@@ -526,66 +520,6 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
 		'',
 		indentString(formatAssertError(error1), 2).split('\n'),
-		/error one message/,
-		'',
-		stackLineRegex,
-		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
-		'',
-		'',
-		'',
-		'  ' + chalk.bold.white('fail two'),
-		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
-		'',
-		indentString(codeExcerpt(error2.source), 2).split('\n'),
-		'',
-		indentString(formatAssertError(error2), 2).split('\n'),
-		/error two message/
-	]));
-	t.end();
-});
-
-test('results with errors and disabled assert output', t => {
-	const error1 = new Error('error one message');
-	error1.stack = beautifyStack(error1.stack);
-	const err1Path = tempWrite.sync('a();');
-	error1.source = source(err1Path);
-	error1.showOutput = false;
-	error1.actual = JSON.stringify('abc');
-	error1.actualType = 'string';
-	error1.expected = JSON.stringify('abd');
-	error1.expectedType = 'string';
-
-	const error2 = new Error('error two message');
-	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
-	const err2Path = tempWrite.sync('b();');
-	error2.source = source(err2Path);
-	error2.showOutput = true;
-	error2.actual = JSON.stringify([1]);
-	error2.actualType = 'array';
-	error2.expected = JSON.stringify([2]);
-	error2.expectedType = 'array';
-
-	const reporter = createReporter({color: true});
-	const runStatus = createRunStatus();
-	runStatus.failCount = 1;
-	runStatus.tests = [{
-		title: 'fail one',
-		error: error1
-	}, {
-		title: 'fail two',
-		error: error2
-	}];
-
-	const output = reporter.finish(runStatus);
-	compareLineOutput(t, output, flatten([
-		'',
-		'  ' + chalk.red('1 test failed') + time,
-		'',
-		'  ' + chalk.bold.white('fail one'),
-		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
-		'',
-		indentString(codeExcerpt(error1.source), 2).split('\n'),
-		'',
 		/error one message/,
 		'',
 		stackLineRegex,

@@ -36,6 +36,7 @@ test('failing test', t => {
 		error: {
 			name: 'AssertionError',
 			message: 'false == true',
+			assertion: 'true',
 			operator: '==',
 			expected: 'true',
 			actual: 'false',
@@ -48,6 +49,7 @@ not ok 1 - failing
   ---
     name: AssertionError
     message: false == true
+    assertion: 'true'
     operator: ==
     actual: 'false'
     expected: 'true'
