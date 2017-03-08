@@ -118,5 +118,3 @@ interface TestFunctionCore<T> {
     (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
-
-// export type DefineContextualTest<T> = DefineTest<Context<T>>;

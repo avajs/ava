@@ -34,32 +34,13 @@ const output = [
 
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
 
-// Returns the declarations for the 'test' function overloads
+// Returns the declarations for the 'test' function and core types
 function testFunctionDeclarations() {
-	const defineTestDeclaration = 'interface TestFunctionCore<T> {';
-	const defineTestStart = base.indexOf(defineTestDeclaration);
-	if (defineTestStart === -1) {
-		throw new Error(`Couldn't find ${defineTestDeclaration} in base definitions.`);
-	}
-	const defineTestEnd = base.indexOf('}', defineTestStart);
-	if (defineTestEnd === -1) {
-		throw new Error(`Expected token '}'.`);
-	}
-	const lines = base
-		.substring(defineTestStart + defineTestDeclaration.length, defineTestEnd)
-		.trim()
-		.split('\n')
-		.map(line => line.trim().replace(/<T>/g, '<AnyContext>'))
-		.map(signature => `export function test${signature}`);
-
-	lines.unshift('export default test;');
-
 	return [
 		'export default test;',
 		'export const test: ContextualTestFunction<any>;',
 		'export type ContextualTestFunction<T> = TestFunction<Context<T>>;'
 	].join('\n');
-	// return lines.join('\n');
 }
 
 // Generates type definitions, for the specified prefix
@@ -82,7 +63,7 @@ function generatePrefixed(prefix) {
 				parts.sort();
 
 				let chain;
-				if (verifyNamespace(parts)) {
+				if (hasChildren(parts)) {
 					chain = parts.join('_') + '<T>';
 				} else {
 					// this is a single function, not a namespace, so there's no type associated
@@ -90,7 +71,6 @@ function generatePrefixed(prefix) {
 					const last = parts.pop();
 					chain = `${parts.join('_')}<T>['${last}']`;
 				}
-
 
 				output += `\t${part}: test_${chain};\n`;
 			}
@@ -103,14 +83,16 @@ function generatePrefixed(prefix) {
 		// but not a valid function name.
 		if (verify(parts, false)) {
 			if (arrayHas(parts)('todo')) {
+				// todo functions don't have a function argument, just a string
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
 				output += `\t${part}: TestFunctionCore<T>`
-				if (verifyNamespace(parts)) {
-					output += ` & test_${parts.join('_')}<T>;\n`;
-				} else {
-					output += ';\n';
+
+				if (hasChildren(parts)) {
+					output += ` & test_${parts.join('_')}<T>`;
 				}
+				
+				output += ';\n';
 			}
 		}
 
@@ -129,10 +111,6 @@ function generatePrefixed(prefix) {
 		const namespace = ['test'].concat(prefix).join('_');
 		return `type ${namespace}<T> = ${typeBody}`;
 	}
-}
-
-function writeFunction(name, args) {
-	return `${name}(${args}): void;\n`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
@@ -178,13 +156,13 @@ function verify(parts, asPrefix) {
 	return true;
 }
 
-function verifyNamespace(parts) {
-	const validExtensions = allParts
-		.filter(bit => parts.indexOf(bit) === -1)
-		.map(bit => parts.concat([bit]))
+function hasChildren(parts) {
+	const validChildren = allParts
+		.filter(newPart => parts.indexOf(newPart) === -1)
+		.map(newPart => parts.concat([newPart]))
 		.filter(longer => verify(longer, false));
 
-	return validExtensions.length > 0;
+	return validChildren.length > 0;
 }
 
 // Checks whether a chain is a valid function name or a valid prefix with some member
@@ -207,31 +185,4 @@ function exists(parts) {
 	}
 
 	return false;
-}
-
-// Returns the type names for the test implementation
-function testTypes(parts) {
-	const has = arrayHas(parts);
-	let type = 'Test';
-
-	if (has('cb')) {
-		type = `Callback${type}`;
-	}
-
-	const isGeneric = !has('before') && !has('after');
-	if (isGeneric) {
-		type = `Generic${type}`;
-	}
-
-	let contextType = `${type}Context`;
-
-	if (isGeneric) {
-		type = `${type}<AnyContext>`;
-		contextType = `${contextType}<AnyContext>`;
-	}
-
-	return {
-		type,
-		contextType
-	};
 }
