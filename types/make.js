@@ -93,7 +93,7 @@ function generatePrefixed(prefix) {
 					const joined = parts.join('_');
 					output += ` & test_${joined}<T>`;
 				}
-	
+
 				output += ';\n';
 			}
 		}
