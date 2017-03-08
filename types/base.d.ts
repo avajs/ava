@@ -12,7 +12,7 @@ export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | I
 export type CallbackTest = (t: CallbackTestContext) => void;
 export type GenericCallbackTest<T> = (t: GenericCallbackTestContext<T>) => void;
 
-type Context<T> = { context: T };
+interface Context<T> { context: T }
 type AnyContext = Context<any>;
 
 export type ContextualTest = GenericTest<AnyContext>;
