@@ -36,11 +36,11 @@ fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
 
 // Returns the declarations for the 'test' function and core types
 function testFunctionDeclarations() {
-	return [
-		'export default test;',
-		'export const test: ContextualTestFunction<any>;',
-		'export type ContextualTestFunction<T> = TestFunction<Context<T>>;'
-	].join('\n');
+	return (
+`export default test;
+export const test: ContextualTestFunction<any>;
+export interface ContextualTestFunction<T> extends TestFunction<Context<T>> {
+}`);
 }
 
 // Generates type definitions, for the specified prefix
@@ -110,7 +110,7 @@ function generatePrefixed(prefix) {
 
 	if (prefix.length === 0) {
 		// no prefix, so this is the type for the default export
-		return `export type TestFunction<T> = TestFunctionCore<T> & ${typeBody}`;
+		return `export interface TestFunction<T> extends TestFunctionCore<T> ${typeBody}`;
 	}
 	const namespace = ['test'].concat(prefix).join('_');
 	return `interface ${namespace}<T> ${typeBody}`;
