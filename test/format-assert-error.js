@@ -89,7 +89,7 @@ test('diff strings', t => {
 	t.end();
 });
 
-test('diff different types', t => {
+test('print different types', t => {
 	const err = {
 		actual: {
 			type: 'array',
@@ -104,6 +104,36 @@ test('diff different types', t => {
 	t.is(format(err), [
 		'Actual:\n',
 		`${indentString(err.actual.formatted, 2)}\n`,
+		'Expected:\n',
+		`${indentString(err.expected.formatted, 2)}\n`
+	].join('\n'));
+	t.end();
+});
+
+test('print actual even if no expected', t => {
+	const err = {
+		actual: {
+			type: 'array',
+			formatted: prettyFormat([1, 2, 3])
+		}
+	};
+
+	t.is(format(err), [
+		'Actual:\n',
+		`${indentString(err.actual.formatted, 2)}\n`
+	].join('\n'));
+	t.end();
+});
+
+test('print expected even if no actual', t => {
+	const err = {
+		expected: {
+			type: 'array',
+			formatted: prettyFormat([1, 2, 3])
+		}
+	};
+
+	t.is(format(err), [
 		'Expected:\n',
 		`${indentString(err.expected.formatted, 2)}\n`
 	].join('\n'));
