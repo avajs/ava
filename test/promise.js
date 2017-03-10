@@ -293,8 +293,8 @@ test('reject', t => {
 		});
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.name, 'Error');
-		t.is(result.reason.message, 'unicorn');
+		t.is(result.reason.actual.name, 'Error');
+		t.is(result.reason.actual.message, 'unicorn');
 		t.end();
 	});
 });
@@ -303,7 +303,8 @@ test('reject with non-Error', t => {
 	ava(() => Promise.reject('failure')).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
-		t.is(result.reason.message, 'Promise rejected with: \'failure\'');
+		t.is(result.reason.message, 'Rejected promise returned by test');
+		t.is(result.reason.actual, 'failure');
 		t.end();
 	});
 });

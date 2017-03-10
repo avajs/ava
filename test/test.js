@@ -131,14 +131,15 @@ test('run more assertions than planned', t => {
 	t.end();
 });
 
-test('handle non-assertion errors', t => {
+test('wrap non-assertion errors', t => {
+	const err = new Error();
 	const result = ava(() => {
-		throw new Error();
+		throw err;
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.name, 'Error');
-	t.true(result.reason instanceof Error);
+	t.is(result.reason.name, 'AssertionError');
+	t.is(result.reason.actual, err);
 	t.end();
 });
 
@@ -157,7 +158,9 @@ test('end can be used as callback with error', t => {
 		a.end(err);
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason, err);
+		t.is(result.reason.name, 'AssertionError');
+		t.is(result.reason.actual, err);
+		t.is(result.reason.message, 'Callback called with an error');
 		t.end();
 	});
 });
@@ -171,20 +174,20 @@ test('end can be used as callback with a non-error as its error argument', t => 
 		t.ok(result.reason);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.actual, nonError);
-		t.is(result.reason.message, 'Callback called with an error: { foo: \'bar\' }');
+		t.is(result.reason.message, 'Callback called with an error');
 		t.end();
 	});
 });
 
 test('handle non-assertion errors even when planned', t => {
+	const err = new Error('bar');
 	const result = ava(a => {
 		a.plan(1);
-		throw new Error('bar');
+		throw err;
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.name, 'Error');
-	t.is(result.reason.message, 'bar');
+	t.is(result.reason.actual, err);
 	t.end();
 });
 
@@ -288,7 +291,9 @@ test('fails if a bad value is passed to t.throws', t => {
 
 	t.is(result.passed, false);
 	t.ok(result.reason);
-	t.is(result.reason.name, 'TypeError');
+	t.is(result.reason.name, 'AssertionError');
+	t.is(result.reason.message, '`t.throws()` must be called with a function, Promise, or Observable');
+	t.is(result.reason.actual, 'not a function');
 	t.end();
 });
 
@@ -427,9 +432,8 @@ test('fails with thrown falsy value', t => {
 
 	t.is(result.passed, false);
 	t.is(result.reason.actual, 0);
-	t.is(result.reason.message, 'Non-error thrown with value: 0');
+	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.is(result.reason.operator, 'catch');
 	t.end();
 });
 
@@ -441,9 +445,8 @@ test('fails with thrown non-error object', t => {
 
 	t.is(result.passed, false);
 	t.is(result.reason.actual, obj);
-	t.is(result.reason.message, 'Non-error thrown with value: { foo: \'bar\' }');
+	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.is(result.reason.operator, 'catch');
 	t.end();
 });
 
@@ -489,12 +492,13 @@ test('end should not be called multiple times', t => {
 });
 
 test('cb test that throws sync', t => {
+	const err = new Error('foo');
 	const result = ava.cb(() => {
-		throw new Error('foo');
+		throw err;
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.message, 'foo');
+	t.is(result.reason.actual, err);
 	t.end();
 });
 
