@@ -28,7 +28,9 @@ test('serialize standard props', t => {
 	const err = new Error('Hello');
 	const serializedErr = serialize(err);
 
-	t.is(Object.keys(serializedErr).length, 4);
+	t.is(Object.keys(serializedErr).length, 6);
+	t.is(serializedErr.avaAssertionError, false);
+	t.deepEqual(serializedErr.object, {});
 	t.is(serializedErr.name, 'Error');
 	t.is(serializedErr.stack, beautifyStack(err.stack));
 	t.is(serializedErr.message, 'Hello');
@@ -36,6 +38,12 @@ test('serialize standard props', t => {
 	t.is(typeof serializedErr.source.isWithinProject, 'boolean');
 	t.is(typeof serializedErr.source.file, 'string');
 	t.is(typeof serializedErr.source.line, 'number');
+	t.end();
+});
+
+test('additional error properties are preserved', t => {
+	const serializedErr = serialize(Object.assign(new Error(), {foo: 'bar'}));
+	t.deepEqual(serializedErr.object, {foo: 'bar'});
 	t.end();
 });
 
@@ -118,7 +126,14 @@ test('determines whether source file, if within the project, is a dependency', t
 	t.end();
 });
 
-test('serialize statements', t => {
+test('sets avaAssertionError to true if indeed an assertion error', t => {
+	const err = new avaAssert.AssertionError({});
+	const serializedErr = serialize(err);
+	t.true(serializedErr.avaAssertionError);
+	t.end();
+});
+
+test('serialize statements of assertion errors', t => {
 	const err = new avaAssert.AssertionError({
 		assertion: 'true'
 	});
@@ -137,22 +152,7 @@ test('serialize statements', t => {
 	t.end();
 });
 
-test('skip statements for certain assertion errors', t => {
-	for (const assertion of ['fail', 'throws', 'notThrows']) {
-		const err = new avaAssert.AssertionError({assertion});
-		err.statements = [
-			['actual.a[0]', 1],
-			['actual.a', [1]],
-			['actual', {a: [1]}]
-		];
-
-		const serializedErr = serialize(err);
-		t.notOk(serializedErr.statements);
-	}
-	t.end();
-});
-
-test('serialize actual and expected props', t => {
+test('serialize actual and expected props of assertion errors', t => {
 	const err = new avaAssert.AssertionError({
 		assertion: 'is',
 		actual: 1,
@@ -160,27 +160,19 @@ test('serialize actual and expected props', t => {
 	});
 
 	const serializedErr = serialize(err);
-	t.is(serializedErr.actual, serializeValue(1));
-	t.is(serializedErr.expected, serializeValue('a'));
-	t.is(serializedErr.actualType, 'number');
-	t.is(serializedErr.expectedType, 'string');
+	t.is(serializedErr.actual.formatted, serializeValue(1));
+	t.is(serializedErr.expected.formatted, serializeValue('a'));
+	t.is(serializedErr.actual.type, 'number');
+	t.is(serializedErr.expected.type, 'string');
 	t.end();
 });
 
-test('skip actual and expected for certain assertion errors', t => {
-	for (const assertion of ['fail', 'throws', 'notThrows']) {
-		const err = new avaAssert.AssertionError({
-			assertion,
-			actual: 1,
-			expected: 'a'
-		});
+test('only serialize actual and expected props of assertion errors if error was created with one', t => {
+	const err = new avaAssert.AssertionError({});
 
-		const serializedErr = serialize(err);
-		t.notOk(serializedErr.actual);
-		t.notOk(serializedErr.expected);
-		t.notOk(serializedErr.actualType);
-		t.notOk(serializedErr.expectedType);
-	}
+	const serializedErr = serialize(err);
+	t.is(serializedErr.actual, undefined);
+	t.is(serializedErr.expected, undefined);
 	t.end();
 });
 
@@ -206,7 +198,7 @@ test('does not call toJSON() when serializing actual and expected', t => {
 	});
 
 	const serializedErr = serialize(err);
-	t.notSame(serializedErr.actual, serializedErr.expected);
+	t.notSame(serializedErr.actual.formatted, serializedErr.expected);
 	t.end();
 });
 
