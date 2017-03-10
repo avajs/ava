@@ -86,33 +86,3 @@ test('calculate remaining test count', t => {
 	t.is(runStatus.remainingCount, 5);
 	t.end();
 });
-
-test('handle non-object rejections', t => {
-	const runStatus = new RunStatus();
-
-	runStatus.on('error', err => {
-		t.deepEqual(err, {
-			file: 'foo.js',
-			message: '42',
-			type: 'rejection'
-		});
-		t.end();
-	});
-
-	runStatus.handleRejections({file: 'foo.js', rejections: [42]});
-});
-
-test('handle non-object exceptions', t => {
-	const runStatus = new RunStatus();
-
-	runStatus.on('error', err => {
-		t.deepEqual(err, {
-			file: 'bar.js',
-			message: '/ab/g',
-			type: 'exception'
-		});
-		t.end();
-	});
-
-	runStatus.handleExceptions({file: 'bar.js', exception: /ab/g});
-});
