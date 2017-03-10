@@ -36,10 +36,11 @@ test('failing test', t => {
 		error: {
 			name: 'AssertionError',
 			message: 'false == true',
+			avaAssertionError: true,
 			assertion: 'true',
 			operator: '==',
-			expected: 'true',
-			actual: 'false',
+			expected: {formatted: 'true'},
+			actual: {formatted: 'false'},
 			stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
 		}
 	});
@@ -66,14 +67,16 @@ test('multiline strings in YAML block', t => {
 	const actualOutput = reporter.test({
 		title: 'multiline',
 		error: {
-			actual: 'hello\nworld'
+			object: {
+				foo: 'hello\nworld'
+			}
 		}
 	});
 
 	const expectedOutput = `# multiline
 not ok 1 - multiline
   ---
-    actual: |-
+    foo: |-
       hello
       world
   ...`;
@@ -88,8 +91,9 @@ test('strips ANSI from actual and expected values', t => {
 	const actualOutput = reporter.test({
 		title: 'strip ansi',
 		error: {
-			actual: '\u001b[31mhello\u001b[39m',
-			expected: '\u001b[32mworld\u001b[39m'
+			avaAssertionError: true,
+			actual: {formatted: '\u001b[31mhello\u001b[39m'},
+			expected: {formatted: '\u001b[32mworld\u001b[39m'}
 		}
 	});
 

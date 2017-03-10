@@ -363,19 +363,29 @@ test('results with errors', t => {
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
 	err1.source = source(err1Path);
-	err1.actual = JSON.stringify('abc');
-	err1.actualType = 'string';
-	err1.expected = JSON.stringify('abd');
-	err1.expectedType = 'string';
+	err1.avaAssertionError = true;
+	err1.actual = {
+		type: 'string',
+		formatted: JSON.stringify('abc')
+	};
+	err1.expected = {
+		type: 'string',
+		formatted: JSON.stringify('abd')
+	};
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
-	err2.actual = JSON.stringify([1]);
-	err2.actualType = 'array';
-	err2.expected = JSON.stringify([2]);
-	err2.expectedType = 'array';
+	err2.avaAssertionError = true;
+	err2.actual = {
+		type: 'array',
+		formatted: JSON.stringify([1])
+	};
+	err2.expected = {
+		type: 'array',
+		formatted: JSON.stringify([2])
+	};
 
 	const reporter = miniReporter();
 	reporter.failCount = 1;
@@ -423,19 +433,29 @@ test('results with errors', t => {
 test('results with errors and disabled code excerpts', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
-	err1.actual = JSON.stringify('abc');
-	err1.actualType = 'string';
-	err1.expected = JSON.stringify('abd');
-	err1.expectedType = 'string';
+	err1.avaAssertionError = true;
+	err1.actual = {
+		type: 'string',
+		formatted: JSON.stringify('abc')
+	};
+	err1.expected = {
+		type: 'string',
+		formatted: JSON.stringify('abd')
+	};
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
-	err2.actual = JSON.stringify([1]);
-	err2.actualType = 'array';
-	err2.expected = JSON.stringify([2]);
-	err2.expectedType = 'array';
+	err2.avaAssertionError = true;
+	err2.actual = {
+		type: 'array',
+		formatted: JSON.stringify([1])
+	};
+	err2.expected = {
+		type: 'array',
+		formatted: JSON.stringify([2])
+	};
 
 	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
@@ -482,19 +502,29 @@ test('results with errors and broken code excerpts', t => {
 	err1.stack = beautifyStack(err1.stack);
 	const err1Path = tempWrite.sync('a();');
 	err1.source = source(err1Path, 10);
-	err1.actual = JSON.stringify('abc');
-	err1.actualType = 'string';
-	err1.expected = JSON.stringify('abd');
-	err1.expectedType = 'string';
+	err1.avaAssertionError = true;
+	err1.actual = {
+		type: 'string',
+		formatted: JSON.stringify('abc')
+	};
+	err1.expected = {
+		type: 'string',
+		formatted: JSON.stringify('abd')
+	};
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
-	err2.actual = JSON.stringify([1]);
-	err2.actualType = 'array';
-	err2.expected = JSON.stringify([2]);
-	err2.expectedType = 'array';
+	err2.avaAssertionError = true;
+	err2.actual = {
+		type: 'array',
+		formatted: JSON.stringify([1])
+	};
+	err2.expected = {
+		type: 'array',
+		formatted: JSON.stringify([2])
+	};
 
 	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;

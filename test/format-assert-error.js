@@ -26,10 +26,14 @@ test('render statements', t => {
 
 test('diff objects', t => {
 	const err = {
-		actual: prettyFormat({a: 1}),
-		expected: prettyFormat({a: 2}),
-		actualType: 'object',
-		expectedType: 'object'
+		actual: {
+			type: 'object',
+			formatted: prettyFormat({a: 1})
+		},
+		expected: {
+			type: 'object',
+			formatted: prettyFormat({a: 2})
+		}
 	};
 
 	t.is(format(err), [
@@ -38,17 +42,21 @@ test('diff objects', t => {
 		`${chalk.red('-')}   a: 1,`,
 		`${chalk.green('+')}   a: 2,`,
 		'  }',
-		' '
+		''
 	].join('\n'));
 	t.end();
 });
 
 test('diff arrays', t => {
 	const err = {
-		actual: prettyFormat([1]),
-		expected: prettyFormat([2]),
-		actualType: 'array',
-		expectedType: 'array'
+		actual: {
+			type: 'array',
+			formatted: prettyFormat([1])
+		},
+		expected: {
+			type: 'array',
+			formatted: prettyFormat([2])
+		}
 	};
 
 	t.is(format(err), [
@@ -57,17 +65,21 @@ test('diff arrays', t => {
 		`${chalk.red('-')}   1,`,
 		`${chalk.green('+')}   2,`,
 		'  ]',
-		' '
+		''
 	].join('\n'));
 	t.end();
 });
 
 test('diff strings', t => {
 	const err = {
-		actual: 'abc',
-		expected: 'abd',
-		actualType: 'string',
-		expectedType: 'string'
+		actual: {
+			type: 'string',
+			formatted: 'abc'
+		},
+		expected: {
+			type: 'string',
+			formatted: 'abd'
+		}
 	};
 
 	t.is(format(err), [
@@ -79,17 +91,21 @@ test('diff strings', t => {
 
 test('diff different types', t => {
 	const err = {
-		actual: prettyFormat([1, 2, 3]),
-		expected: prettyFormat({a: 1, b: 2, c: 3}),
-		actualType: 'array',
-		expectedType: 'object'
+		actual: {
+			type: 'array',
+			formatted: prettyFormat([1, 2, 3])
+		},
+		expected: {
+			type: 'object',
+			formatted: prettyFormat({a: 1, b: 2, c: 3})
+		}
 	};
 
 	t.is(format(err), [
 		'Actual:\n',
-		`${indentString(err.actual, 2)}\n`,
+		`${indentString(err.actual.formatted, 2)}\n`,
 		'Expected:\n',
-		`${indentString(err.expected, 2)}\n`
+		`${indentString(err.expected.formatted, 2)}\n`
 	].join('\n'));
 	t.end();
 });
