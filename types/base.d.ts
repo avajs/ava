@@ -12,8 +12,8 @@ export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | I
 export type CallbackTest = (t: CallbackTestContext) => void;
 export type GenericCallbackTest<T> = (t: GenericCallbackTestContext<T>) => void;
 
-interface Context<T> { context: T }
-type AnyContext = Context<any>;
+export interface Context<T> { context: T }
+export type AnyContext = Context<any>;
 
 export type ContextualTest = GenericTest<AnyContext>;
 export type ContextualCallbackTest = GenericCallbackTest<AnyContext>;
@@ -112,9 +112,14 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-interface TestFunctionCore<T> {
+interface RegisterBase<T> {
     (name: string, run: GenericTest<T>): void;
     (run: GenericTest<T>): void;
     (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+}
+
+export default test;
+export const test: RegisterContextual<any>;
+export interface RegisterContextual<T> extends Register<Context<T>> {
 }

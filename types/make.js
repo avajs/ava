@@ -26,22 +26,9 @@ const allParts = Object.keys(runner._chainableMethods).filter(name => name !== '
 
 // The output consists of the base declarations, the actual 'test' function declarations,
 // and the namespaced chainable methods.
-const output = [
-	base,
-	testFunctionDeclarations(),
-	generatePrefixed([])
-].join('\n');
+const output = base + generatePrefixed([]);
 
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
-
-// Returns the declarations for the 'test' function and core types
-function testFunctionDeclarations() {
-	return (
-`export default test;
-export const test: ContextualTestFunction<any>;
-export interface ContextualTestFunction<T> extends TestFunction<Context<T>> {
-}`);
-}
 
 // Generates type definitions, for the specified prefix
 // The prefix is an array of function names
@@ -73,7 +60,7 @@ function generatePrefixed(prefix) {
 					chain = `${joined}<T>['${last}']`;
 				}
 
-				output += `\t${part}: test_${chain};\n`;
+				output += `\t${part}: Register_${chain};\n`;
 			}
 
 			continue;
@@ -87,12 +74,12 @@ function generatePrefixed(prefix) {
 				// 'todo' functions don't have a function argument, just a string
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: TestFunctionCore<T>`;
+				output += `\t${part}: RegisterBase<T>`;
 
 				if (hasChildren(parts)) {
 					// this chain can be continued, make the property an intersection type with the chain continuation
 					const joined = parts.join('_');
-					output += ` & test_${joined}<T>`;
+					output += ` & Register_${joined}<T>`;
 				}
 
 				output += ';\n';
@@ -110,9 +97,9 @@ function generatePrefixed(prefix) {
 
 	if (prefix.length === 0) {
 		// no prefix, so this is the type for the default export
-		return `export interface TestFunction<T> extends TestFunctionCore<T> ${typeBody}`;
+		return `export interface Register<T> extends RegisterBase<T> ${typeBody}`;
 	}
-	const namespace = ['test'].concat(prefix).join('_');
+	const namespace = ['Register'].concat(prefix).join('_');
 	return `interface ${namespace}<T> ${typeBody}`;
 }
 
