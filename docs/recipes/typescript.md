@@ -6,7 +6,7 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 
 ## Setup
 
-First install [TypeScript](https://github.com/Microsoft/TypeScript).
+First install [TypeScript](https://github.com/Microsoft/TypeScript) (if you already have it installed, make sure you use version 2.1 or greater).
 
 ```
 $ npm install --save-dev typescript
@@ -52,7 +52,7 @@ test(async (t) => {
 
 ## Working with [`context`](https://github.com/avajs/ava#test-context)
 
-By default, the type of `t.context` will be any. AVA exposes an interface `RegisterContextual<T>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+By default, the type of `t.context` will be [`any`](https://www.typescriptlang.org/docs/handbook/basic-types.html#any). AVA exposes an interface `RegisterContextual<T>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
 ```ts
 import * as ava from 'ava';
