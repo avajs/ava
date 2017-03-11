@@ -534,7 +534,7 @@ test('snapshot handles jsx tree', t => {
 
 		Object.defineProperty(tree, '$$typeof', {value: Symbol.for('react.test.json')});
 
-		assert._snapshot(tree, undefined, matchStub, stateGetter);
+		assert._snapshot(tree, 'message', matchStub, stateGetter);
 	});
 
 	t.ok(stateGetter.called);

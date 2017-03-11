@@ -68,6 +68,16 @@ test('title is optional', t => {
 	t.end();
 });
 
+test('title is callee$0$0', t => {
+	const result = ava(a => {
+		a.pass();
+	}).run();
+
+	t.is(result.passed, true);
+	t.is(result.result.title, '[anonymous]');
+	t.end();
+});
+
 test('callback is required', t => {
 	t.throws(() => {
 		ava();
