@@ -734,7 +734,8 @@ AVA currently only transpiles the tests you ask it to run, as well as test helpe
 
 If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](#configuration).
 
-You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests. Example [here](docs/recipes/precompiling-with-webpack.md).
+You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests. Example [here](docs/recipes/
+-with-webpack.md).
 
 ### Promise support
 
@@ -1120,7 +1121,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
-- [Precompiling code with Webpack](docs/recipes/precompiling-with-webpack.md)
+- [Precompiling source files with webpack](docs/recipes/precompiling-with-webpack.md)
 
 ## Support
 
