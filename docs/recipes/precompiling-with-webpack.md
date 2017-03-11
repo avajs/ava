@@ -1,6 +1,6 @@
 ## Precompiling source files with webpack
 
-The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe shows how to do this using webpack. (This example uses webpack 2.0.)
+The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe shows how to do this using webpack. (This example uses webpack 2.0)
 
 ###### webpack.config.js
 
@@ -24,6 +24,6 @@ module.exports = {
 };
 ```
 
-The important bits are `target: 'node'`, which ignores Node.js-specific `require`s (e.g. `fs`, `path`, etc.) and `externals: nodeModules` which prevents webpack from trying to bundle external Node.js libraries which it may choke on.
+The important bits are `target: 'node'`, which ignores Node.js-specific `require`s (e.g. `fs`, `path`, etc.) and `externals: nodeModules` which prevents webpack from trying to bundle external Node.js modules which it may choke on.
 
 You can now run `$ ava _build/tests.js` to run the tests contained in this output.
