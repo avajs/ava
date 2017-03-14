@@ -154,6 +154,7 @@ test('serialize statements of assertion errors', t => {
 
 test('serialize actual and expected props of assertion errors', t => {
 	const err = new avaAssert.AssertionError({
+		stackStartFunction: null,
 		assertion: 'is',
 		actual: 1,
 		expected: 'a'
@@ -168,7 +169,7 @@ test('serialize actual and expected props of assertion errors', t => {
 });
 
 test('only serialize actual and expected props of assertion errors if error was created with one', t => {
-	const err = new avaAssert.AssertionError({});
+	const err = new avaAssert.AssertionError({stackStartFunction: null});
 
 	const serializedErr = serialize(err);
 	t.is(serializedErr.actual, undefined);
