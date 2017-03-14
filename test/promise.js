@@ -1,6 +1,7 @@
 'use strict';
 const Promise = require('bluebird');
 const test = require('tap').test;
+const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 function ava(fn) {
@@ -82,8 +83,7 @@ test('missing assertion will fail the test', t => {
 		return defer.promise;
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.expected, 2);
-		t.is(result.reason.actual, 1);
+		t.is(result.reason.assertion, 'plan');
 		t.end();
 	});
 });
@@ -107,8 +107,7 @@ test('extra assertion will fail the test', t => {
 		return defer.promise;
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.expected, 2);
-		t.is(result.reason.actual, 3);
+		t.is(result.reason.assertion, 'plan');
 		t.end();
 	});
 });
@@ -293,8 +292,9 @@ test('reject', t => {
 		});
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.actual.name, 'Error');
-		t.is(result.reason.actual.message, 'unicorn');
+		t.is(result.reason.name, 'AssertionError');
+		t.is(result.reason.message, 'Rejected promise returned by test');
+		t.same(result.reason.values, [{label: 'Rejection reason:', formatted: formatValue(new Error('unicorn'))}]);
 		t.end();
 	});
 });
@@ -304,7 +304,7 @@ test('reject with non-Error', t => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Rejected promise returned by test');
-		t.is(result.reason.actual, 'failure');
+		t.same(result.reason.values, [{label: 'Rejection reason:', formatted: formatValue('failure')}]);
 		t.end();
 	});
 });

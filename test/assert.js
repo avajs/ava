@@ -2,19 +2,76 @@
 const test = require('tap').test;
 const sinon = require('sinon');
 const assert = require('../lib/assert');
+const formatValue = require('../lib/format-assert-error').formatValue;
 
+let lastFailure = null;
+let lastPassed = false;
 const assertions = assert.wrapAssertions({
-	pass() {},
+	pass() {
+		lastPassed = true;
+	},
 
 	pending() {},
 
 	fail(_, error) {
-		throw error;
+		lastFailure = error;
 	}
 });
 
+function failsWith(t, fn, subset) {
+	lastFailure = null;
+	fn();
+	if (!lastFailure) {
+		t.fail('Expected assertion to fail');
+		return;
+	}
+
+	t.is(lastFailure.assertion, subset.assertion);
+	t.is(lastFailure.message, subset.message);
+	t.is(lastFailure.name, 'AssertionError');
+	t.is(lastFailure.operator, subset.operator);
+	if (subset.statements) {
+		t.is(lastFailure.statements.length, subset.statements.length);
+		lastFailure.statements.forEach((s, i) => {
+			t.is(s[0], subset.statements[i][0]);
+			t.match(s[1], subset.statements[i][1]);
+		});
+	} else {
+		t.same(lastFailure.statements, []);
+	}
+	if (subset.values) {
+		t.is(lastFailure.values.length, subset.values.length);
+		lastFailure.values.forEach((s, i) => {
+			t.is(s.label, subset.values[i].label);
+			t.match(s.formatted, subset.values[i].formatted);
+		});
+	} else {
+		t.same(lastFailure.values, []);
+	}
+}
+
+function fails(t, fn) {
+	lastFailure = null;
+	fn();
+	if (lastFailure) {
+		t.pass();
+	} else {
+		t.fail('Expected assertion to fail');
+	}
+}
+
+function passes(t, fn) {
+	lastPassed = false;
+	fn();
+	if (lastPassed) {
+		t.pass();
+	} else {
+		t.fail('Expected assertion to pass');
+	}
+}
+
 test('.pass()', t => {
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.pass();
 	});
 
@@ -22,108 +79,87 @@ test('.pass()', t => {
 });
 
 test('.fail()', t => {
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.fail();
+	}, {
+		assertion: 'fail',
+		message: 'Test failed via `t.fail()`'
 	});
 
-	t.end();
-});
-
-test('.truthy()', t => {
-	t.throws(() => {
-		assertions.truthy(0);
-		assertions.truthy(false);
-	});
-
-	t.doesNotThrow(() => {
-		assertions.truthy(1);
-		assertions.truthy(true);
-	});
-
-	t.end();
-});
-
-test('.falsy()', t => {
-	t.throws(() => {
-		assertions.falsy(1);
-		assertions.falsy(true);
-	});
-
-	t.doesNotThrow(() => {
-		assertions.falsy(0);
-		assertions.falsy(false);
-	});
-
-	t.end();
-});
-
-test('.true()', t => {
-	t.throws(() => {
-		assertions.true(1);
-	});
-
-	t.throws(() => {
-		assertions.true(0);
-	});
-
-	t.throws(() => {
-		assertions.true(false);
-	});
-
-	t.throws(() => {
-		assertions.true('foo');
-	});
-
-	t.doesNotThrow(() => {
-		assertions.true(true);
-	});
-
-	t.end();
-});
-
-test('.false()', t => {
-	t.throws(() => {
-		assertions.false(0);
-	});
-
-	t.throws(() => {
-		assertions.false(1);
-	});
-
-	t.throws(() => {
-		assertions.false(true);
-	});
-
-	t.throws(() => {
-		assertions.false('foo');
-	});
-
-	t.doesNotThrow(() => {
-		assertions.false(false);
+	failsWith(t, () => {
+		assertions.fail('my message');
+	}, {
+		assertion: 'fail',
+		message: 'my message'
 	});
 
 	t.end();
 });
 
 test('.is()', t => {
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.is('foo', 'foo');
 	});
 
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.is('foo', 'bar');
+	}, {
+		assertion: 'is',
+		message: '',
+		operator: '===',
+		values: [
+			{label: 'Difference:', formatted: /foobar/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is('foo', 42);
+	}, {
+		assertion: 'is',
+		message: '',
+		operator: '===',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be strictly equal to:', formatted: /42/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is('foo', 42, 'my message');
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		operator: '===',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be strictly equal to:', formatted: /42/}
+		]
 	});
 
 	t.end();
 });
 
 test('.not()', t => {
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.not('foo', 'bar');
 	});
 
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.not('foo', 'foo');
+	}, {
+		assertion: 'not',
+		message: '',
+		operator: '!==',
+		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
+	});
+
+	failsWith(t, () => {
+		assertions.not('foo', 'foo', 'my message');
+	}, {
+		assertion: 'not',
+		message: 'my message',
+		operator: '!==',
+		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
 	});
 
 	t.end();
@@ -133,11 +169,11 @@ test('.deepEqual()', t => {
 	// Tests starting here are to detect regressions in the underlying libraries
 	// used to test deep object equality
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({a: false}, {a: 0});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual({
 			a: 'a',
 			b: 'b'
@@ -147,7 +183,7 @@ test('.deepEqual()', t => {
 		});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual({
 			a: 'a',
 			b: 'b',
@@ -163,21 +199,21 @@ test('.deepEqual()', t => {
 		});
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual([1, 2, 3], [1, 2, 3]);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
 		assertions.deepEqual(fnA, fnB);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		const x1 = {z: 4};
 		const y1 = {x: x1};
 		x1.y = y1;
@@ -189,7 +225,7 @@ test('.deepEqual()', t => {
 		assertions.deepEqual(x1, x2);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		function Foo(a) {
 			this.a = a;
 		}
@@ -200,7 +236,7 @@ test('.deepEqual()', t => {
 		assertions.deepEqual(x, y);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		function Foo(a) {
 			this.a = a;
 		}
@@ -215,7 +251,7 @@ test('.deepEqual()', t => {
 		assertions.deepEqual(x, y);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({
 			a: 'a',
 			b: 'b',
@@ -231,73 +267,73 @@ test('.deepEqual()', t => {
 		});
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({}, []);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({a: 1}, {a: 1, b: undefined});
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(new Date('1972-08-01'), null);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(new Date('1972-08-01'), undefined);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(() => {}, () => {});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(undefined, undefined);
 		assertions.deepEqual({x: undefined}, {x: undefined});
 		assertions.deepEqual({x: [undefined]}, {x: [undefined]});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(null, null);
 		assertions.deepEqual({x: null}, {x: null});
 		assertions.deepEqual({x: [null]}, {x: [null]});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(0, 0);
 		assertions.deepEqual(1, 1);
 		assertions.deepEqual(3.14, 3.14);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(0, 1);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(1, -1);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(3.14, 2.72);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(
 			[
 				{foo: {z: 100, y: 200, x: 300}},
@@ -314,7 +350,7 @@ test('.deepEqual()', t => {
 		);
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(
 			{x: {a: 1, b: 2}, y: {c: 3, d: 4}},
 			{y: {d: 4, c: 3}, x: {b: 2, a: 1}}
@@ -323,61 +359,122 @@ test('.deepEqual()', t => {
 
 	// Regression test end here
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.deepEqual(['a', 'b'], ['a', 'b']);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual({a: 'a'}, {a: 'b'});
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual(['a', 'b'], ['a', 'a']);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		assertions.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
 
-	t.throws(() => {
+	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
 		assertions.deepEqual([circular, 'c'], [circular, 'd']);
+	});
+
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 'bar');
+	}, {
+		assertion: 'deepEqual',
+		message: '',
+		values: [{label: 'Difference:', formatted: /foobar/}]
+	});
+
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 42);
+	}, {
+		assertion: 'deepEqual',
+		message: '',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be deeply equal to:', formatted: /42/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 42, 'my message');
+	}, {
+		assertion: 'deepEqual',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be deeply equal to:', formatted: /42/}
+		]
 	});
 
 	t.end();
 });
 
 test('.notDeepEqual()', t => {
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.notDeepEqual({a: 'a'}, {a: 'a'});
+	}, {
+		assertion: 'notDeepEqual',
+		message: '',
+		values: [{label: 'Value is deeply equal:', formatted: formatValue({a: 'a'})}]
 	});
 
-	t.throws(() => {
-		assertions.notDeepEqual(['a', 'b'], ['a', 'b']);
+	failsWith(t, () => {
+		assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message');
+	}, {
+		assertion: 'notDeepEqual',
+		message: 'my message',
+		values: [{label: 'Value is deeply equal:', formatted: formatValue(['a', 'b'])}]
 	});
 
 	t.end();
 });
 
 test('.throws()', t => {
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.throws(() => {});
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: []
 	});
 
-	t.doesNotThrow(() => {
+	failsWith(t, () => {
+		assertions.throws(() => {}, Error, 'my message');
+	}, {
+		assertion: 'throws',
+		message: 'my message',
+		values: []
+	});
+
+	const err = new Error('foo');
+	failsWith(t, () => {
+		assertions.throws(() => {
+			throw err;
+		}, 'bar');
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: [{label: 'Threw unexpected exception:', formatted: /foo/}]
+	});
+
+	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		});
@@ -406,37 +503,41 @@ test('.throws() returns the rejection reason of promise', t => {
 	});
 });
 
-test('.throws should throw if passed a bad value', t => {
-	t.plan(1);
-
-	t.throws(() => {
+test('.throws() fails if passed a bad value', t => {
+	failsWith(t, () => {
 		assertions.throws('not a function');
 	}, {
-		name: 'AssertionError',
-		message: /`t\.throws\(\)` must be called with a function, Promise, or Observable/
+		assertion: 'throws',
+		message: '`t.throws()` must be called with a function, Promise, or Observable',
+		values: [{label: 'Called with:', formatted: /not a function/}]
 	});
-});
 
-test('.notThrows should throw if passed a bad value', t => {
-	t.plan(1);
-
-	t.throws(() => {
-		assertions.notThrows('not a function');
-	}, {
-		name: 'AssertionError',
-		message: /`t\.notThrows\(\)` must be called with a function, Promise, or Observable/
-	});
+	t.end();
 });
 
 test('.notThrows()', t => {
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.notThrows(() => {});
 	});
 
-	t.throws(() => {
+	failsWith(t, () => {
 		assertions.notThrows(() => {
 			throw new Error('foo');
 		});
+	}, {
+		assertion: 'notThrows',
+		message: '',
+		values: [{label: 'Threw:', formatted: /foo/}]
+	});
+
+	failsWith(t, () => {
+		assertions.notThrows(() => {
+			throw new Error('foo');
+		}, 'my message');
+	}, {
+		assertion: 'notThrows',
+		message: 'my message',
+		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
 	t.end();
@@ -448,56 +549,25 @@ test('.notThrows() returns undefined for a fulfilled promise', t => {
 	});
 });
 
-test('.regex()', t => {
-	t.doesNotThrow(() => {
-		assertions.regex('abc', /^abc$/);
-	});
-
-	t.throws(() => {
-		assertions.regex('foo', /^abc$/);
-	});
-
-	t.end();
-});
-
-test('.notRegex()', t => {
-	t.doesNotThrow(() => {
-		assertions.notRegex('abc', /def/);
-	});
-
-	t.throws(() => {
-		assertions.notRegex('abc', /abc/);
+test('.notThrows() fails if passed a bad value', t => {
+	failsWith(t, () => {
+		assertions.notThrows('not a function');
+	}, {
+		assertion: 'notThrows',
+		message: '`t.notThrows()` must be called with a function, Promise, or Observable',
+		values: [{label: 'Called with:', formatted: /not a function/}]
 	});
 
 	t.end();
 });
 
 test('.ifError()', t => {
-	t.throws(() => {
+	fails(t, () => {
 		assertions.ifError(new Error());
 	});
 
-	t.doesNotThrow(() => {
+	passes(t, () => {
 		assertions.ifError(null);
-	});
-
-	t.end();
-});
-
-test('.deepEqual() should not mask RangeError from underlying assert', t => {
-	const Circular = function () {
-		this.test = this;
-	};
-
-	const a = new Circular();
-	const b = new Circular();
-
-	t.throws(() => {
-		assertions.notDeepEqual(a, b);
-	});
-
-	t.doesNotThrow(() => {
-		assertions.deepEqual(a, b);
 	});
 
 	t.end();
@@ -571,5 +641,199 @@ test('snapshot handles jsx tree', t => {
 	});
 
 	t.ok(saveSpy.calledOnce);
+	t.end();
+});
+
+test('.truthy()', t => {
+	failsWith(t, () => {
+		assertions.truthy(0);
+	}, {
+		assertion: 'truthy',
+		message: '',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /0/}]
+	});
+
+	failsWith(t, () => {
+		assertions.truthy(false, 'my message');
+	}, {
+		assertion: 'truthy',
+		message: 'my message',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /false/}]
+	});
+
+	passes(t, () => {
+		assertions.truthy(1);
+		assertions.truthy(true);
+	});
+
+	t.end();
+});
+
+test('.falsy()', t => {
+	failsWith(t, () => {
+		assertions.falsy(1);
+	}, {
+		assertion: 'falsy',
+		message: '',
+		operator: '!',
+		values: [{label: 'Value is not falsy:', formatted: /1/}]
+	});
+
+	failsWith(t, () => {
+		assertions.falsy(true, 'my message');
+	}, {
+		assertion: 'falsy',
+		message: 'my message',
+		operator: '!',
+		values: [{label: 'Value is not falsy:', formatted: /true/}]
+	});
+
+	passes(t, () => {
+		assertions.falsy(0);
+		assertions.falsy(false);
+	});
+
+	t.end();
+});
+
+test('.true()', t => {
+	failsWith(t, () => {
+		assertions.true(1);
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /1/}]
+	});
+
+	failsWith(t, () => {
+		assertions.true(0);
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /0/}]
+	});
+
+	failsWith(t, () => {
+		assertions.true(false);
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /false/}]
+	});
+
+	failsWith(t, () => {
+		assertions.true('foo', 'my message');
+	}, {
+		assertion: 'true',
+		message: 'my message',
+		values: [{label: 'Value is not `true`:', formatted: /foo/}]
+	});
+
+	passes(t, () => {
+		assertions.true(true);
+	});
+
+	t.end();
+});
+
+test('.false()', t => {
+	failsWith(t, () => {
+		assertions.false(0);
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /0/}]
+	});
+
+	failsWith(t, () => {
+		assertions.false(1);
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /1/}]
+	});
+
+	failsWith(t, () => {
+		assertions.false(true);
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /true/}]
+	});
+
+	failsWith(t, () => {
+		assertions.false('foo', 'my message');
+	}, {
+		assertion: 'false',
+		message: 'my message',
+		values: [{label: 'Value is not `false`:', formatted: /foo/}]
+	});
+
+	passes(t, () => {
+		assertions.false(false);
+	});
+
+	t.end();
+});
+
+test('.regex()', t => {
+	passes(t, () => {
+		assertions.regex('abc', /^abc$/);
+	});
+
+	failsWith(t, () => {
+		assertions.regex('foo', /^abc$/);
+	}, {
+		assertion: 'regex',
+		message: '',
+		values: [
+			{label: 'Value must match expression:', formatted: /foo/},
+			{label: 'Regular expression:', formatted: /\/\^abc\$\//}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.regex('foo', /^abc$/, 'my message');
+	}, {
+		assertion: 'regex',
+		message: 'my message',
+		values: [
+			{label: 'Value must match expression:', formatted: /foo/},
+			{label: 'Regular expression:', formatted: /\/\^abc\$\//}
+		]
+	});
+
+	t.end();
+});
+
+test('.notRegex()', t => {
+	passes(t, () => {
+		assertions.notRegex('abc', /def/);
+	});
+
+	failsWith(t, () => {
+		assertions.notRegex('abc', /abc/);
+	}, {
+		assertion: 'notRegex',
+		message: '',
+		values: [
+			{label: 'Value must not match expression:', formatted: /abc/},
+			{label: 'Regular expression:', formatted: /\/abc\//}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.notRegex('abc', /abc/, 'my message');
+	}, {
+		assertion: 'notRegex',
+		message: 'my message',
+		values: [
+			{label: 'Value must not match expression:', formatted: /abc/},
+			{label: 'Regular expression:', formatted: /\/abc\//}
+		]
+	});
+
 	t.end();
 });

@@ -2,8 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const prettyFormat = require('@ava/pretty-format');
-const reactTestPlugin = require('@ava/pretty-format/plugins/ReactTestComponent');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
 const tempWrite = require('temp-write');
@@ -15,14 +13,6 @@ const serialize = require('../lib/serialize-error');
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
-
-function serializeValue(value) {
-	return prettyFormat(value, {
-		callToJSON: false,
-		plugins: [reactTestPlugin],
-		highlight: true
-	});
-}
 
 test('serialize standard props', t => {
 	const err = new Error('Hello');
@@ -133,73 +123,29 @@ test('sets avaAssertionError to true if indeed an assertion error', t => {
 	t.end();
 });
 
-test('serialize statements of assertion errors', t => {
+test('includes statements of assertion errors', t => {
 	const err = new avaAssert.AssertionError({
 		assertion: 'true'
 	});
 	err.statements = [
-		['actual.a[0]', 1],
-		['actual.a', [1]],
-		['actual', {a: [1]}]
+		['actual.a[0]', '1'],
+		['actual.a', '[1]'],
+		['actual', '{a: [1]}']
 	];
 
 	const serializedErr = serialize(err);
-	t.deepEqual(serializedErr.statements, JSON.stringify([
-		['actual.a[0]', serializeValue(1)],
-		['actual.a', serializeValue([1])],
-		['actual', serializeValue({a: [1]})]
-	]));
+	t.is(serializedErr.statements, err.statements);
 	t.end();
 });
 
-test('serialize actual and expected props of assertion errors', t => {
+test('includes values of assertion errors', t => {
 	const err = new avaAssert.AssertionError({
-		stackStartFunction: null,
 		assertion: 'is',
-		actual: 1,
-		expected: 'a'
+		values: [{label: 'actual:', formatted: '1'}, {label: 'expected:', formatted: 'a'}]
 	});
 
 	const serializedErr = serialize(err);
-	t.is(serializedErr.actual.formatted, serializeValue(1));
-	t.is(serializedErr.expected.formatted, serializeValue('a'));
-	t.is(serializedErr.actual.type, 'number');
-	t.is(serializedErr.expected.type, 'string');
-	t.end();
-});
-
-test('only serialize actual and expected props of assertion errors if error was created with one', t => {
-	const err = new avaAssert.AssertionError({stackStartFunction: null});
-
-	const serializedErr = serialize(err);
-	t.is(serializedErr.actual, undefined);
-	t.is(serializedErr.expected, undefined);
-	t.end();
-});
-
-test('does not call toJSON() when serializing actual and expected', t => {
-	const err = new avaAssert.AssertionError({
-		assertion: 'is',
-		actual: {
-			foo: 'bar',
-			toJSON() {
-				return {
-					foo: 'BAR'
-				};
-			}
-		},
-		expected: {
-			foo: 'thud',
-			toJSON() {
-				return {
-					foo: 'BAR'
-				};
-			}
-		}
-	});
-
-	const serializedErr = serialize(err);
-	t.notSame(serializedErr.actual.formatted, serializedErr.expected);
+	t.is(serializedErr.values, err.values);
 	t.end();
 });
 

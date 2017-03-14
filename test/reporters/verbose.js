@@ -11,7 +11,7 @@ const beautifyStack = require('../../lib/beautify-stack');
 const colors = require('../../lib/colors');
 const VerboseReporter = require('../../lib/reporters/verbose');
 const compareLineOutput = require('../helper/compare-line-output');
-const formatAssertError = require('../../lib/format-assert-error');
+const formatSerializedError = require('../../lib/format-assert-error').formatSerializedError;
 const codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
@@ -374,28 +374,22 @@ test('results with errors', t => {
 	const err1Path = tempWrite.sync('a()');
 	error1.source = source(err1Path);
 	error1.avaAssertionError = true;
-	error1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	error1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	error1.statements = [];
+	error1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{lael: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
 	error2.avaAssertionError = true;
-	error2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	error2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	error2.statements = [];
+	error2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{lael: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = createReporter({color: true});
 	const runStatus = createRunStatus();
@@ -418,7 +412,7 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(error1.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(error1), 2).split('\n'),
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
 		stackLineRegex,
@@ -431,7 +425,7 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(error2), 2).split('\n'),
+		indentString(formatSerializedError(error2), 2).split('\n'),
 		/error two message/
 	]));
 	t.end();
@@ -441,28 +435,22 @@ test('results with errors and disabled code excerpts', t => {
 	const error1 = new Error('error one message');
 	error1.stack = beautifyStack(error1.stack);
 	error1.avaAssertionError = true;
-	error1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	error1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	error1.statements = [];
+	error1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{lael: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
 	error2.avaAssertionError = true;
-	error2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	error2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	error2.statements = [];
+	error2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{lael: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = createReporter({color: true});
 	const runStatus = createRunStatus();
@@ -482,7 +470,7 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		'  ' + chalk.bold.white('fail one'),
 		'',
-		indentString(formatAssertError(error1), 2).split('\n'),
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
 		stackLineRegex,
@@ -495,7 +483,7 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(error2), 2).split('\n'),
+		indentString(formatSerializedError(error2), 2).split('\n'),
 		/error two message/
 	]));
 	t.end();
@@ -507,28 +495,22 @@ test('results with errors and disabled code excerpts', t => {
 	const err1Path = tempWrite.sync('a();');
 	error1.source = source(err1Path, 10);
 	error1.avaAssertionError = true;
-	error1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	error1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	error1.statements = [];
+	error1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{lael: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const error2 = new Error('error two message');
 	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
 	error2.avaAssertionError = true;
-	error2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	error2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	error2.statements = [];
+	error2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{lael: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = createReporter({color: true});
 	const runStatus = createRunStatus();
@@ -549,7 +531,7 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.bold.white('fail one'),
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
 		'',
-		indentString(formatAssertError(error1), 2).split('\n'),
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
 		stackLineRegex,
@@ -562,7 +544,7 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(error2), 2).split('\n'),
+		indentString(formatSerializedError(error2), 2).split('\n'),
 		/error two message/
 	]));
 	t.end();

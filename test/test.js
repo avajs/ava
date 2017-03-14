@@ -3,6 +3,7 @@ const test = require('tap').test;
 const Promise = global.Promise = require('bluebird');
 const delay = require('delay');
 const isPromise = require('is-promise');
+const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
@@ -124,10 +125,8 @@ test('run more assertions than planned', t => {
 
 	t.is(result.passed, false);
 	t.ok(result.reason);
-	t.is(result.reason.name, 'AssertionError');
-	t.is(result.reason.expected, 2);
-	t.is(result.reason.actual, 3);
 	t.match(result.reason.message, /Planned for 2 assertions, but got 3\./);
+	t.is(result.reason.name, 'AssertionError');
 	t.end();
 });
 
@@ -138,8 +137,9 @@ test('wrap non-assertion errors', t => {
 	}).run();
 
 	t.is(result.passed, false);
+	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.is(result.reason.actual, err);
+	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
 	t.end();
 });
 
@@ -158,9 +158,9 @@ test('end can be used as callback with error', t => {
 		a.end(err);
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.name, 'AssertionError');
-		t.is(result.reason.actual, err);
 		t.is(result.reason.message, 'Callback called with an error');
+		t.is(result.reason.name, 'AssertionError');
+		t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
 		t.end();
 	});
 });
@@ -172,9 +172,9 @@ test('end can be used as callback with a non-error as its error argument', t => 
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.ok(result.reason);
-		t.is(result.reason.name, 'AssertionError');
-		t.is(result.reason.actual, nonError);
 		t.is(result.reason.message, 'Callback called with an error');
+		t.is(result.reason.name, 'AssertionError');
+		t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(nonError)}]);
 		t.end();
 	});
 });
@@ -187,7 +187,8 @@ test('handle non-assertion errors even when planned', t => {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.actual, err);
+	t.is(result.reason.name, 'AssertionError');
+	t.is(result.reason.message, 'Error thrown in test');
 	t.end();
 });
 
@@ -237,69 +238,6 @@ test('handle falsy testing of objects', t => {
 			bar: 'bar',
 			cat: 'cake'
 		});
-	}).run();
-
-	t.is(result.passed, true);
-	t.is(result.result.assertCount, 1);
-	t.end();
-});
-
-test('handle throws with error', t => {
-	const expected = new Error('foo');
-	let actual;
-	const result = ava(a => {
-		actual = a.throws(() => {
-			throw expected;
-		});
-	}).run();
-
-	t.is(result.passed, true);
-	t.is(result.result.assertCount, 1);
-	t.is(actual, expected);
-	t.end();
-});
-
-test('handle throws without error', t => {
-	let actual;
-	const result = ava(a => {
-		actual = a.throws(() => {});
-	}).run();
-
-	t.is(result.passed, false);
-	t.ok(result.reason);
-	t.is(actual, undefined);
-	t.end();
-});
-
-test('handle notThrows with error', t => {
-	const result = ava(a => {
-		a.notThrows(() => {
-			throw new Error('foo');
-		});
-	}).run();
-
-	t.is(result.passed, false);
-	t.ok(result.reason);
-	t.is(result.reason.name, 'AssertionError');
-	t.end();
-});
-
-test('fails if a bad value is passed to t.throws', t => {
-	const result = ava(a => {
-		a.throws('not a function');
-	}).run();
-
-	t.is(result.passed, false);
-	t.ok(result.reason);
-	t.is(result.reason.name, 'AssertionError');
-	t.is(result.reason.message, '`t.throws()` must be called with a function, Promise, or Observable');
-	t.is(result.reason.actual, 'not a function');
-	t.end();
-});
-
-test('handle notThrows without error', t => {
-	const result = ava(a => {
-		a.notThrows(() => {});
 	}).run();
 
 	t.is(result.passed, true);
@@ -420,8 +358,11 @@ test('fails with the first assertError', t => {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.actual, 1);
-	t.is(result.reason.expected, 2);
+	t.is(result.reason.name, 'AssertionError');
+	t.same(result.reason.values, [
+		{label: 'Actual:', formatted: formatValue(1)},
+		{label: 'Must be strictly equal to:', formatted: formatValue(2)}
+	]);
 	t.end();
 });
 
@@ -431,9 +372,9 @@ test('fails with thrown falsy value', t => {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.actual, 0);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
+	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(0)}]);
 	t.end();
 });
 
@@ -444,9 +385,9 @@ test('fails with thrown non-error object', t => {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.actual, obj);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
+	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(obj)}]);
 	t.end();
 });
 
@@ -498,7 +439,8 @@ test('cb test that throws sync', t => {
 	}).run();
 
 	t.is(result.passed, false);
-	t.is(result.reason.actual, err);
+	t.is(result.reason.message, 'Error thrown in test');
+	t.is(result.reason.name, 'AssertionError');
 	t.end();
 });
 
@@ -580,8 +522,6 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.assertion, 'plan');
-		t.is(result.reason.actual, 3);
-		t.is(result.reason.expected, 2);
 		t.is(result.reason.operator, '===');
 		t.end();
 	});
@@ -598,8 +538,6 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.assertion, 'plan');
-		t.is(result.reason.actual, 2);
-		t.is(result.reason.expected, 3);
 		t.is(result.reason.operator, '===');
 		t.end();
 	});
