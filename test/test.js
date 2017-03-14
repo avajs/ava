@@ -486,7 +486,7 @@ test('end should not be called multiple times', t => {
 		a.end();
 	}).run().then(result => {
 		t.is(result.passed, false);
-		t.is(result.reason.message, '.end() called more than once');
+		t.is(result.reason.message, '`t.end()` called more than once');
 		t.end();
 	});
 });
@@ -634,7 +634,7 @@ test('it is an error to set context in a hook', t => {
 
 	const result = avaTest.run();
 	t.is(result.passed, false);
-	t.match(result.reason.message, /t\.context is not available in foo tests/);
+	t.match(result.reason.message, /`t\.context` is not available in foo tests/);
 	t.end();
 });
 
