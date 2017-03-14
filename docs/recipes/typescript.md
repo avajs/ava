@@ -6,7 +6,7 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 
 ## Setup
 
-First install [TypeScript](https://github.com/Microsoft/TypeScript).
+First install [TypeScript](https://github.com/Microsoft/TypeScript) (if you already have it installed, make sure you use version 2.1 or greater).
 
 ```
 $ npm install --save-dev typescript
@@ -50,6 +50,35 @@ test(async (t) => {
 });
 ```
 
+## Working with [`context`](https://github.com/avajs/ava#test-context)
+
+By default, the type of `t.context` will be [`any`](https://www.typescriptlang.org/docs/handbook/basic-types.html#any). AVA exposes an interface `RegisterContextual<T>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+
+```ts
+import * as ava from 'ava';
+
+function contextualize<T>(getContext: () => T): ava.RegisterContextual<T> {
+    ava.test.beforeEach(t => {
+        Object.assign(t.context, getContext());
+    });
+
+    return ava.test;
+}
+
+const test = contextualize(() => ({ foo: 'bar' }));
+
+test.beforeEach(t => {
+    t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
+});
+
+test.after.always.failing.cb.serial('very long chains are properly typed', t => {
+    t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type '{ foo: string }'
+});
+
+test('an actual test', t => {
+    t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
+});
+```
 
 ## Execute the tests
 

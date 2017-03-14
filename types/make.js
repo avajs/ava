@@ -24,7 +24,10 @@ const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 // All suported function names
 const allParts = Object.keys(runner._chainableMethods).filter(name => name !== 'test');
 
+// The output consists of the base declarations, the actual 'test' function declarations,
+// and the namespaced chainable methods.
 const output = base + generatePrefixed([]);
+
 fs.writeFileSync(path.join(__dirname, 'generated.d.ts'), output);
 
 // Generates type definitions, for the specified prefix
@@ -43,10 +46,21 @@ function generatePrefixed(prefix) {
 
 		// If `parts` is not sorted, we alias it to the sorted chain
 		if (!isArraySorted(parts)) {
-			const chain = parts.sort().join('.');
-
 			if (exists(parts)) {
-				output += `\texport const ${part}: typeof test.${chain};\n`;
+				parts.sort();
+
+				let chain;
+				if (hasChildren(parts)) {
+					chain = parts.join('_') + '<T>';
+				} else {
+					// this is a single function, not a namespace, so there's no type associated
+					// and we need to dereference it as a property type
+					const last = parts.pop();
+					const joined = parts.join('_');
+					chain = `${joined}<T>['${last}']`;
+				}
+
+				output += `\t${part}: Register_${chain};\n`;
 			}
 
 			continue;
@@ -56,14 +70,19 @@ function generatePrefixed(prefix) {
 		// `always` is a valid prefix, for instance of `always.after`,
 		// but not a valid function name.
 		if (verify(parts, false)) {
-			if (parts.indexOf('todo') !== -1) { // eslint-disable-line no-negated-condition
-				output += '\t' + writeFunction(part, 'name: string', 'void');
+			if (arrayHas(parts)('todo')) {
+				// 'todo' functions don't have a function argument, just a string
+				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				const type = testType(parts);
-				output += '\t' + writeFunction(part, `name: string, implementation: ${type}`);
-				output += '\t' + writeFunction(part, `implementation: ${type}`);
-				output += '\t' + writeFunction(part, `name: string, implementation: Macros<${type}Context>, ...args: any[]`);
-				output += '\t' + writeFunction(part, `implementation: Macros<${type}Context>, ...args: any[]`);
+				output += `\t${part}: RegisterBase<T>`;
+
+				if (hasChildren(parts)) {
+					// this chain can be continued, make the property an intersection type with the chain continuation
+					const joined = parts.join('_');
+					output += ` & Register_${joined}<T>`;
+				}
+
+				output += ';\n';
 			}
 		}
 
@@ -74,13 +93,14 @@ function generatePrefixed(prefix) {
 		return children;
 	}
 
-	const namespace = ['test'].concat(prefix).join('.');
+	const typeBody = `{\n${output}}\n${children}`;
 
-	return `export namespace ${namespace} {\n${output}}\n${children}`;
-}
-
-function writeFunction(name, args) {
-	return `export function ${name}(${args}): void;\n`;
+	if (prefix.length === 0) {
+		// no prefix, so this is the type for the default export
+		return `export interface Register<T> extends RegisterBase<T> ${typeBody}`;
+	}
+	const namespace = ['Register'].concat(prefix).join('_');
+	return `interface ${namespace}<T> ${typeBody}`;
 }
 
 // Checks whether a chain is a valid function name (when `asPrefix === false`)
@@ -126,6 +146,17 @@ function verify(parts, asPrefix) {
 	return true;
 }
 
+// Returns true if a chain can have any child properties
+function hasChildren(parts) {
+	// concatenate the chain with each other part, and see if any concatenations are valid functions
+	const validChildren = allParts
+		.filter(newPart => parts.indexOf(newPart) === -1)
+		.map(newPart => parts.concat([newPart]))
+		.filter(longer => verify(longer, false));
+
+	return validChildren.length > 0;
+}
+
 // Checks whether a chain is a valid function name or a valid prefix with some member
 function exists(parts) {
 	if (verify(parts, false)) {
@@ -146,20 +177,4 @@ function exists(parts) {
 	}
 
 	return false;
-}
-
-// Returns the type name of for the test implementation
-function testType(parts) {
-	const has = arrayHas(parts);
-	let type = 'Test';
-
-	if (has('cb')) {
-		type = `Callback${type}`;
-	}
-
-	if (!has('before') && !has('after')) {
-		type = `Contextual${type}`;
-	}
-
-	return type;
 }

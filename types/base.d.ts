@@ -1,5 +1,3 @@
-export default test;
-
 export type ErrorValidator
 	= (new (...args: any[]) => any)
 	| RegExp
@@ -9,11 +7,16 @@ export type ErrorValidator
 export interface Observable {
 	subscribe(observer: (value: {}) => void): void;
 }
-
 export type Test = (t: TestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
-export type ContextualTest = (t: ContextualTestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
+export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type CallbackTest = (t: CallbackTestContext) => void;
-export type ContextualCallbackTest = (t: ContextualCallbackTestContext) => void;
+export type GenericCallbackTest<T> = (t: GenericCallbackTestContext<T>) => void;
+
+export interface Context<T> { context: T }
+export type AnyContext = Context<any>;
+
+export type ContextualTest = GenericTest<AnyContext>;
+export type ContextualCallbackTest = GenericCallbackTest<AnyContext>;
 
 export interface AssertContext {
 	/**
@@ -99,12 +102,9 @@ export interface CallbackTestContext extends TestContext {
 	 */
 	end(): void;
 }
-export interface ContextualTestContext extends TestContext {
-	context: any;
-}
-export interface ContextualCallbackTestContext extends CallbackTestContext {
-	context: any;
-}
+
+export type GenericTestContext<T> = TestContext & T;
+export type GenericCallbackTestContext<T> = CallbackTestContext & T;
 
 export interface Macro<T> {
 	(t: T, ...args: any[]): void;
@@ -112,7 +112,14 @@ export interface Macro<T> {
 }
 export type Macros<T> = Macro<T> | Macro<T>[];
 
-export function test(name: string, run: ContextualTest): void;
-export function test(run: ContextualTest): void;
-export function test(name: string, run: Macros<ContextualTestContext>, ...args: any[]): void;
-export function test(run: Macros<ContextualTestContext>, ...args: any[]): void;
+interface RegisterBase<T> {
+    (name: string, run: GenericTest<T>): void;
+    (run: GenericTest<T>): void;
+    (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+    (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+}
+
+export default test;
+export const test: RegisterContextual<any>;
+export interface RegisterContextual<T> extends Register<Context<T>> {
+}
