@@ -150,14 +150,6 @@ test('throwing a anonymous function will report the function to the console', t 
 	});
 });
 
-test('log failed tests', t => {
-	execCli('fixture/one-pass-one-fail.js', (err, stdout, stderr) => {
-		t.ok(err);
-		t.match(stderr, /failed via `t.fail\(\)`/);
-		t.end();
-	});
-});
-
 test('pkg-conf: defaults', t => {
 	execCli([], {dirname: 'fixture/pkg-conf/defaults'}, err => {
 		t.ifError(err);

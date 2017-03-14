@@ -272,7 +272,6 @@ function generateTests(prefix, apiCreator) {
 				}]);
 				t.is(result.passCount, 1);
 				t.is(result.failCount, 1);
-				t.is(result.errors[0].error.message, 'Test failed via `t.fail()`');
 			});
 	});
 

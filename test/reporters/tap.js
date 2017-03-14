@@ -39,8 +39,7 @@ test('failing test', t => {
 			avaAssertionError: true,
 			assertion: 'true',
 			operator: '==',
-			expected: {formatted: 'true'},
-			actual: {formatted: 'false'},
+			values: [{label: 'expected:', formatted: 'true'}, {label: 'actual:', formatted: 'false'}],
 			stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
 		}
 	});
@@ -52,8 +51,9 @@ not ok 1 - failing
     message: false == true
     assertion: 'true'
     operator: ==
-    actual: 'false'
-    expected: 'true'
+    values:
+      'expected:': 'true'
+      'actual:': 'false'
     at: 'Test.fn (test.js:1:2)'
   ...`;
 
@@ -92,16 +92,15 @@ test('strips ANSI from actual and expected values', t => {
 		title: 'strip ansi',
 		error: {
 			avaAssertionError: true,
-			actual: {formatted: '\u001b[31mhello\u001b[39m'},
-			expected: {formatted: '\u001b[32mworld\u001b[39m'}
+			values: [{label: 'value', formatted: '\u001b[31mhello\u001b[39m'}]
 		}
 	});
 
 	const expectedOutput = `# strip ansi
 not ok 1 - strip ansi
   ---
-    actual: hello
-    expected: world
+    values:
+      value: hello
   ...`;
 
 	t.is(actualOutput, expectedOutput);

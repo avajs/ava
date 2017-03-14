@@ -12,7 +12,7 @@ const MiniReporter = require('../../lib/reporters/mini');
 const beautifyStack = require('../../lib/beautify-stack');
 const colors = require('../../lib/colors');
 const compareLineOutput = require('../helper/compare-line-output');
-const formatAssertError = require('../../lib/format-assert-error');
+const formatSerializedError = require('../../lib/format-assert-error').formatSerializedError;
 const codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
@@ -364,28 +364,22 @@ test('results with errors', t => {
 	const err1Path = tempWrite.sync('a();');
 	err1.source = source(err1Path);
 	err1.avaAssertionError = true;
-	err1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	err1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	err1.statements = [];
+	err1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{label: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
 	err2.avaAssertionError = true;
-	err2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	err2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	err2.statements = [];
+	err2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{label: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = miniReporter();
 	reporter.failCount = 1;
@@ -411,7 +405,7 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(err1.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(err1), 2).split('\n'),
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
 		stackLineRegex,
@@ -424,7 +418,7 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(err2), 2).split('\n'),
+		indentString(formatSerializedError(err2), 2).split('\n'),
 		/failure two/
 	]));
 	t.end();
@@ -434,28 +428,22 @@ test('results with errors and disabled code excerpts', t => {
 	const err1 = new Error('failure one');
 	err1.stack = beautifyStack(err1.stack);
 	err1.avaAssertionError = true;
-	err1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	err1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	err1.statements = [];
+	err1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{label: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
 	err2.avaAssertionError = true;
-	err2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	err2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	err2.statements = [];
+	err2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{label: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
@@ -478,7 +466,7 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		'  ' + chalk.bold.white('failed one'),
 		'',
-		indentString(formatAssertError(err1), 2).split('\n'),
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
 		stackLineRegex,
@@ -491,7 +479,7 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(err2), 2).split('\n'),
+		indentString(formatSerializedError(err2), 2).split('\n'),
 		/failure two/
 	]));
 	t.end();
@@ -503,28 +491,22 @@ test('results with errors and broken code excerpts', t => {
 	const err1Path = tempWrite.sync('a();');
 	err1.source = source(err1Path, 10);
 	err1.avaAssertionError = true;
-	err1.actual = {
-		type: 'string',
-		formatted: JSON.stringify('abc')
-	};
-	err1.expected = {
-		type: 'string',
-		formatted: JSON.stringify('abd')
-	};
+	err1.statements = [];
+	err1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{label: 'expected:', formatted: JSON.stringify('abd')}
+	];
 
 	const err2 = new Error('failure two');
 	err2.stack = 'error message\nTest.fn (test.js:1:1)\n';
 	const err2Path = tempWrite.sync('b();');
 	err2.source = source(err2Path);
 	err2.avaAssertionError = true;
-	err2.actual = {
-		type: 'array',
-		formatted: JSON.stringify([1])
-	};
-	err2.expected = {
-		type: 'array',
-		formatted: JSON.stringify([2])
-	};
+	err2.statements = [];
+	err2.values = [
+		{label: 'actual:', formatted: JSON.stringify([1])},
+		{label: 'expected:', formatted: JSON.stringify([2])}
+	];
 
 	const reporter = miniReporter({color: true});
 	reporter.failCount = 1;
@@ -548,7 +530,7 @@ test('results with errors and broken code excerpts', t => {
 		'  ' + chalk.bold.white('failed one'),
 		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(formatAssertError(err1), 2).split('\n'),
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
 		stackLineRegex,
@@ -561,7 +543,7 @@ test('results with errors and broken code excerpts', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatAssertError(err2), 2).split('\n'),
+		indentString(formatSerializedError(err2), 2).split('\n'),
 		/failure two/
 	]));
 	t.end();
