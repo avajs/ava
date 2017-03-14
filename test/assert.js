@@ -808,6 +808,26 @@ test('.regex()', t => {
 	t.end();
 });
 
+test('.regex() fails if passed a bad value', t => {
+	failsWith(t, () => {
+		assertions.regex(42, /foo/);
+	}, {
+		assertion: 'regex',
+		message: '`t.regex()` must be called with a string',
+		values: [{label: 'Called with:', formatted: /42/}]
+	});
+
+	failsWith(t, () => {
+		assertions.regex('42', {});
+	}, {
+		assertion: 'regex',
+		message: '`t.regex()` must be called with a regular expression',
+		values: [{label: 'Called with:', formatted: /Object/}]
+	});
+
+	t.end();
+});
+
 test('.notRegex()', t => {
 	passes(t, () => {
 		assertions.notRegex('abc', /def/);
@@ -833,6 +853,26 @@ test('.notRegex()', t => {
 			{label: 'Value must not match expression:', formatted: /abc/},
 			{label: 'Regular expression:', formatted: /\/abc\//}
 		]
+	});
+
+	t.end();
+});
+
+test('.notRegex() fails if passed a bad value', t => {
+	failsWith(t, () => {
+		assertions.notRegex(42, /foo/);
+	}, {
+		assertion: 'notRegex',
+		message: '`t.notRegex()` must be called with a string',
+		values: [{label: 'Called with:', formatted: /42/}]
+	});
+
+	failsWith(t, () => {
+		assertions.notRegex('42', {});
+	}, {
+		assertion: 'notRegex',
+		message: '`t.notRegex()` must be called with a regular expression',
+		values: [{label: 'Called with:', formatted: /Object/}]
 	});
 
 	t.end();
