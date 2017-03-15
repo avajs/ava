@@ -10,19 +10,19 @@ The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) ment
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-	entry: ['src/tests.js'],
-	target: 'node',
-	output: {
-		path: '_build',
-		filename: 'tests.js'
-	},
-	externals: nodeExternals,
-	module: {
-		rules: [{
-				test: /\.(js|jsx)$/,
-				use: 'babel-loader'
-		}]
-	}
+  entry: ['src/tests.js'],
+  target: 'node',
+  output: {
+    path: '_build',
+    filename: 'tests.js'
+  },
+  externals: [nodeExternals()],
+  module: {
+    rules: [{
+      test: /\.(js|jsx)$/,
+      use: 'babel-loader'
+    }]
+  }
 };
 ```
 
