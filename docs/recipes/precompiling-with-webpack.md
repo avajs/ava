@@ -16,7 +16,7 @@ module.exports = {
 		path: '_build',
 		filename: 'tests.js'
 	},
-	externals: nodeExternals,
+	externals: [nodeExternals()],
 	module: {
 		rules: [{
 				test: /\.(js|jsx)$/,
