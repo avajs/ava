@@ -19,8 +19,8 @@ module.exports = {
 	externals: [nodeExternals()],
 	module: {
 		rules: [{
-			test: /\.(js|jsx)$/,
-			use: 'babel-loader'
+				test: /\.(js|jsx)$/,
+				use: 'babel-loader'
 		}]
 	}
 };
