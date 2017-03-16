@@ -6,93 +6,30 @@ const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
+const noop = () => {};
 
-function ava(title, fn, contextRef, onResult) {
-	const t = new Test(title, fn, contextRef, onResult);
-
-	t.metadata = {
-		callback: false
-	};
-
-	return t;
+function ava(fn, contextRef, onResult) {
+	return new Test({callback: false}, '[anonymous]', fn, contextRef, onResult || noop);
 }
 
-ava.failing = (title, fn, contextRef, onResult) => {
-	const t = new Test(title, fn, contextRef, onResult);
-
-	t.metadata = {
-		callback: false,
-		failing: true
-	};
-
-	return t;
+ava.failing = (fn, contextRef, onResult) => {
+	return new Test({callback: false, failing: true}, '[anonymous]', fn, contextRef, onResult || noop);
 };
 
-ava.cb = (title, fn, contextRef, onResult) => {
-	const t = new Test(title, fn, contextRef, onResult);
-
-	t.metadata = {
-		callback: true
-	};
-
-	return t;
+ava.cb = (fn, contextRef, onResult) => {
+	return new Test({callback: true}, '[anonymous]', fn, contextRef, onResult || noop);
 };
 
-ava.cb.failing = (title, fn, contextRef, onResult) => {
-	const t = new Test(title, fn, contextRef, onResult);
-
-	t.metadata = {
-		callback: true,
-		failing: true
-	};
-
-	return t;
+ava.cb.failing = (fn, contextRef, onResult) => {
+	return new Test({callback: true, failing: true}, '[anonymous]', fn, contextRef, onResult || noop);
 };
 
 test('run test', t => {
-	const passed = ava('foo', a => {
+	const passed = ava(a => {
 		a.fail();
 	}).run();
 
 	t.is(passed, false);
-	t.end();
-});
-
-test('title is optional', t => {
-	let result;
-	const passed = ava(a => {
-		a.pass();
-	}, null, null, r => {
-		result = r;
-	}).run();
-
-	t.is(passed, true);
-	t.is(result.result.title, '[anonymous]');
-	t.end();
-});
-
-test('callback is required', t => {
-	t.throws(() => {
-		ava();
-	}, /You must provide a callback/);
-
-	t.throws(() => {
-		ava('title');
-	}, /You must provide a callback/);
-
-	t.end();
-});
-
-test('infer name from function', t => {
-	let result;
-	const passed = ava(function foo(a) { // eslint-disable-line func-names, prefer-arrow-callback
-		a.pass();
-	}, null, null, r => {
-		result = r;
-	}).run();
-
-	t.is(passed, true);
-	t.is(result.result.title, 'foo');
 	t.end();
 });
 
@@ -102,7 +39,7 @@ test('multiple asserts', t => {
 		a.pass();
 		a.pass();
 		a.pass();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -117,7 +54,7 @@ test('plan assertions', t => {
 		a.plan(2);
 		a.pass();
 		a.pass();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 	t.is(passed, true);
@@ -133,7 +70,7 @@ test('run more assertions than planned', t => {
 		a.pass();
 		a.pass();
 		a.pass();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -149,7 +86,7 @@ test('wrap non-assertion errors', t => {
 	let result;
 	const passed = ava(() => {
 		throw err;
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -172,34 +109,34 @@ test('end can be used as callback without maintaining thisArg', t => {
 test('end can be used as callback with error', t => {
 	const err = new Error('failed');
 	let result;
-	ava.cb(a => {
+	const passed = ava.cb(a => {
 		a.end(err);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.is(result.reason.message, 'Callback called with an error');
-		t.is(result.reason.name, 'AssertionError');
-		t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.is(result.reason.message, 'Callback called with an error');
+	t.is(result.reason.name, 'AssertionError');
+	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
+	t.end();
 });
 
 test('end can be used as callback with a non-error as its error argument', t => {
 	const nonError = {foo: 'bar'};
 	let result;
-	ava.cb(a => {
+	const passed = ava.cb(a => {
 		a.end(nonError);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.ok(result.reason);
-		t.is(result.reason.message, 'Callback called with an error');
-		t.is(result.reason.name, 'AssertionError');
-		t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(nonError)}]);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.ok(result.reason);
+	t.is(result.reason.message, 'Callback called with an error');
+	t.is(result.reason.name, 'AssertionError');
+	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(nonError)}]);
+	t.end();
 });
 
 test('handle non-assertion errors even when planned', t => {
@@ -208,7 +145,7 @@ test('handle non-assertion errors even when planned', t => {
 	const passed = ava(a => {
 		a.plan(1);
 		throw err;
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -222,7 +159,7 @@ test('handle testing of arrays', t => {
 	let result;
 	const passed = ava(a => {
 		a.deepEqual(['foo', 'bar'], ['foo', 'bar']);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -235,7 +172,7 @@ test('handle falsy testing of arrays', t => {
 	let result;
 	const passed = ava(a => {
 		a.notDeepEqual(['foo', 'bar'], ['foo', 'bar', 'cat']);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -254,7 +191,7 @@ test('handle testing of objects', t => {
 			foo: 'foo',
 			bar: 'bar'
 		});
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -274,42 +211,13 @@ test('handle falsy testing of objects', t => {
 			bar: 'bar',
 			cat: 'cake'
 		});
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
 	t.is(passed, true);
 	t.is(result.result.assertCount, 1);
 	t.end();
-});
-
-test('run functions after last planned assertion', t => {
-	let i = 0;
-
-	const passed = ava(a => {
-		a.plan(1);
-		a.pass();
-		i++;
-	}).run();
-
-	t.is(i, 1);
-	t.is(passed, true);
-	t.end();
-});
-
-test('run async functions after last planned assertion', t => {
-	let i = 0;
-
-	ava.cb(a => {
-		a.plan(1);
-		a.pass();
-		a.end();
-		i++;
-	}).run().then(passed => {
-		t.is(i, 1);
-		t.is(passed, true);
-		t.end();
-	});
 });
 
 test('planned async assertion', t => {
@@ -321,7 +229,7 @@ test('planned async assertion', t => {
 			a.pass();
 			a.end();
 		}, 100);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -337,7 +245,7 @@ test('async assertion with `.end()`', t => {
 			a.pass();
 			a.end();
 		}, 100);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -352,7 +260,7 @@ test('more assertions than planned should emit an assertion error', t => {
 		a.plan(1);
 		a.pass();
 		a.pass();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -370,7 +278,7 @@ test('record test duration', t => {
 			a.true(true);
 			a.end();
 		}, 1234);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -387,7 +295,7 @@ test('wait for test to end', t => {
 		a.plan(1);
 
 		avaTest = a;
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -409,7 +317,7 @@ test('fails with the first assertError', t => {
 		a.plan(2);
 		a.is(1, 2);
 		a.is(3, 4);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -426,7 +334,7 @@ test('fails with thrown falsy value', t => {
 	let result;
 	const passed = ava(() => {
 		throw 0; // eslint-disable-line no-throw-literal
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -442,7 +350,7 @@ test('fails with thrown non-error object', t => {
 	let result;
 	const passed = ava(() => {
 		throw obj;
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -459,7 +367,7 @@ test('skipped assertions count towards the plan', t => {
 		a.plan(2);
 		a.pass();
 		a.skip.fail();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -478,7 +386,7 @@ test('throws and notThrows work with promises', t => {
 		a.notThrows(delay(20).then(() => {
 			asyncCalled = true;
 		}));
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -491,16 +399,16 @@ test('throws and notThrows work with promises', t => {
 
 test('end should not be called multiple times', t => {
 	let result;
-	ava.cb(a => {
+	const passed = ava.cb(a => {
 		a.end();
 		a.end();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.is(result.reason.message, '`t.end()` called more than once');
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.is(result.reason.message, '`t.end()` called more than once');
+	t.end();
 });
 
 test('cb test that throws sync', t => {
@@ -508,7 +416,7 @@ test('cb test that throws sync', t => {
 	const err = new Error('foo');
 	const passed = ava.cb(() => {
 		throw err;
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run();
 
@@ -524,7 +432,7 @@ test('waits for t.throws to resolve after t.end is called', t => {
 		a.plan(1);
 		a.notThrows(delay(10), 'foo');
 		a.end();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -540,7 +448,7 @@ test('waits for t.throws to reject after t.end is called', t => {
 		a.plan(1);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		a.end();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -556,7 +464,7 @@ test('waits for t.throws to resolve after the promise returned from the test res
 		a.plan(1);
 		a.notThrows(delay(10), 'foo');
 		return Promise.resolve();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -572,7 +480,7 @@ test('waits for t.throws to reject after the promise returned from the test reso
 		a.plan(1);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		return Promise.resolve();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -590,7 +498,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 			a.throws(delay.reject(10, new Error('foo')), 'foo');
 			a.notThrows(delay(10), 'foo');
 		}
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -609,7 +517,7 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 		setTimeout(() => {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
@@ -621,21 +529,21 @@ test('number of assertions matches t.plan when the test exits, but before all pr
 
 test('number of assertions doesn\'t match plan when the test exits, but before all promises resolve another is added', t => {
 	let result;
-	ava(a => {
+	const passed = ava(a => {
 		a.plan(3);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		a.notThrows(delay(10), 'foo');
 		setTimeout(() => {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.is(result.reason.assertion, 'plan');
-		t.is(result.reason.operator, '===');
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.is(result.reason.assertion, 'plan');
+	t.is(result.reason.operator, '===');
+	t.end();
 });
 
 test('assertions return promises', t => {
@@ -650,12 +558,13 @@ test('assertions return promises', t => {
 });
 
 test('contextRef', t => {
-	new Test('foo',
+	new Test({}, 'foo',
 		a => {
 			t.strictDeepEqual(a.context, {foo: 'bar'});
 			t.end();
 		},
-		{context: {foo: 'bar'}}
+		{context: {foo: 'bar'}},
+		() => {}
 	).run();
 });
 
@@ -663,7 +572,7 @@ test('it is an error to set context in a hook', t => {
 	let result;
 	const avaTest = ava(a => {
 		a.context = 'foo';
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	});
 	avaTest.metadata.type = 'foo';
@@ -685,21 +594,17 @@ test('failing tests should fail', t => {
 
 test('failing callback tests should end without error', t => {
 	const err = new Error('failed');
-	let result;
-	ava.cb.failing(a => {
+	const passed = ava.cb.failing(a => {
 		a.end(err);
-	}, null, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.is(result.reason, undefined);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, true);
+	t.end();
 });
 
 test('failing tests must not pass', t => {
 	let result;
-	const passed = ava.failing('foo', a => {
+	const passed = ava.failing(a => {
 		a.pass();
 	}, null, r => {
 		result = r;
@@ -711,23 +616,19 @@ test('failing tests must not pass', t => {
 });
 
 test('failing callback tests must not pass', t => {
-	let result;
-	ava.cb.failing(a => {
+	const passed = ava.cb.failing(a => {
 		a.end();
-	}, null, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.is(result.reason.message, failingTestHint);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.end();
 });
 
 test('failing tests must not return a fulfilled promise', t => {
 	let result;
 	ava.failing(() => {
 		return Promise.resolve();
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
@@ -760,7 +661,7 @@ test('failing tests fail with `t.notThrows(throws)`', t => {
 	let result;
 	ava.failing(a => {
 		a.notThrows(Promise.resolve('foo'));
-	}, null, null, r => {
+	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
