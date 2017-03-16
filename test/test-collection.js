@@ -274,9 +274,8 @@ test('foo', t => {
 	add('after2', {type: 'after'});
 	add('before2', {type: 'before'});
 
-	const result = collection.build().run();
-
-	t.is(result.passed, true);
+	const passed = collection.build().run();
+	t.is(passed, true);
 
 	t.strictDeepEqual(log, [
 		'before1',
@@ -339,9 +338,8 @@ test('foo', t => {
 
 	collection.on('test', logger);
 
-	const result = collection.build().run();
-
-	t.is(result.passed, true);
+	const passed = collection.build().run();
+	t.is(passed, true);
 
 	t.strictDeepEqual(log, [
 		'before1',
