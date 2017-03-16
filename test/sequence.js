@@ -1,15 +1,32 @@
 'use strict';
-const test = require('tap').test;
+const tap = require('tap');
 const Promise = require('bluebird');
+const isPromise = require('is-promise');
 const Sequence = require('../lib/sequence');
+
+let results = [];
+const test = (name, fn) => {
+	tap.test(name, t => {
+		results = [];
+		return fn(t);
+	});
+};
+function collect(result) {
+	if (isPromise(result)) {
+		return result.then(collect);
+	}
+
+	results.push(result);
+	return result;
+}
 
 function pass(val) {
 	return {
 		run() {
-			return {
+			return collect({
 				passed: true,
 				result: val
-			};
+			});
 		}
 	};
 }
@@ -17,10 +34,10 @@ function pass(val) {
 function fail(val) {
 	return {
 		run() {
-			return {
+			return collect({
 				passed: false,
 				reason: val
-			};
+			});
 		}
 	};
 }
@@ -28,10 +45,10 @@ function fail(val) {
 function passAsync(val) {
 	return {
 		run() {
-			return Promise.resolve({
+			return collect(Promise.resolve({
 				passed: true,
 				result: val
-			});
+			}));
 		}
 	};
 }
@@ -39,10 +56,10 @@ function passAsync(val) {
 function failAsync(err) {
 	return {
 		run() {
-			return Promise.resolve({
+			return collect(Promise.resolve({ // eslint-disable-line promise/no-promise-in-callback
 				passed: false,
 				reason: err
-			});
+			}));
 		}
 	};
 }
@@ -65,24 +82,21 @@ test('all sync - no failure - no bail', t => {
 		false
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: true,
-		reason: null,
-		result: [
-			{
-				passed: true,
-				result: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: true,
-				result: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: true});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: true,
+			result: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -96,24 +110,21 @@ test('all sync - no failure - bail', t => {
 		true
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: true,
-		reason: null,
-		result: [
-			{
-				passed: true,
-				result: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: true,
-				result: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: true});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: true,
+			result: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -127,24 +138,21 @@ test('all sync - begin failure - no bail', t => {
 		false
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'a',
-		result: [
-			{
-				passed: false,
-				reason: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: true,
-				result: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: false,
+			reason: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: true,
+			result: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -158,23 +166,20 @@ test('all sync - mid failure - no bail', t => {
 		false
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'b',
-		result: [
-			{
-				passed: true,
-				result: 'a'},
-			{
-				passed: false,
-				reason: 'b'
-			},
-			{
-				passed: true,
-				result: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'},
+		{
+			passed: false,
+			reason: 'b'
+		},
+		{
+			passed: true,
+			result: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -188,24 +193,21 @@ test('all sync - end failure - no bail', t => {
 		false
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'c',
-		result: [
-			{
-				passed: true,
-				result: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: false,
-				reason: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: false,
+			reason: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -219,24 +221,21 @@ test('all sync - multiple failure - no bail', t => {
 		false
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'a',
-		result: [
-			{
-				passed: false,
-				reason: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: false,
-				reason: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: false,
+			reason: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: false,
+			reason: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -250,16 +249,13 @@ test('all sync - begin failure - bail', t => {
 		true
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'a',
-		result: [
-			{
-				passed: false,
-				reason: 'a'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: false,
+			reason: 'a'
+		}
+	]);
 	t.end();
 });
 
@@ -273,20 +269,17 @@ test('all sync - mid failure - bail', t => {
 		true
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'b',
-		result: [
-			{
-				passed: true,
-				result: 'a'
-			},
-			{
-				passed: false,
-				reason: 'b'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: false,
+			reason: 'b'
+		}
+	]);
 	t.end();
 });
 
@@ -300,24 +293,21 @@ test('all sync - end failure - bail', t => {
 		true
 	).run();
 
-	t.strictDeepEqual(result, {
-		passed: false,
-		reason: 'c',
-		result: [
-			{
-				passed: true,
-				result: 'a'
-			},
-			{
-				passed: true,
-				result: 'b'
-			},
-			{
-				passed: false,
-				reason: 'c'
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: false});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: false,
+			reason: 'c'
+		}
+	]);
 	t.end();
 });
 
@@ -330,24 +320,21 @@ test('all async - no failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -361,24 +348,21 @@ test('all async - no failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -392,24 +376,21 @@ test('last async - no failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -423,24 +404,21 @@ test('mid async - no failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -454,24 +432,21 @@ test('first async - no failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -485,24 +460,21 @@ test('last async - no failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -516,24 +488,21 @@ test('mid async - no failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -547,24 +516,21 @@ test('first async - no failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: true,
-			reason: null,
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: true});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -578,16 +544,13 @@ test('all async - begin failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'a',
-			result: [
-				{
-					passed: false,
-					reason: 'a'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: false,
+				reason: 'a'
+			}
+		]);
 		t.end();
 	});
 });
@@ -601,20 +564,17 @@ test('all async - mid failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'b',
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: false,
-					reason: 'b'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: false,
+				reason: 'b'
+			}
+		]);
 		t.end();
 	});
 });
@@ -628,24 +588,21 @@ test('all async - end failure - bail', t => {
 		],
 		true
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'c',
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: false,
-					reason: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -659,24 +616,21 @@ test('all async - begin failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'a',
-			result: [
-				{
-					passed: false,
-					reason: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: false,
+				reason: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -690,24 +644,21 @@ test('all async - mid failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'b',
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: false,
-					reason: 'b'
-				},
-				{
-					passed: true,
-					result: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: false,
+				reason: 'b'
+			},
+			{
+				passed: true,
+				result: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -721,24 +672,21 @@ test('all async - end failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'c',
-			result: [
-				{
-					passed: true,
-					result: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: false,
-					reason: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: true,
+				result: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -752,24 +700,21 @@ test('all async - multiple failure - no bail', t => {
 		],
 		false
 	).run().then(result => {
-		t.strictDeepEqual(result, {
-			passed: false,
-			reason: 'a',
-			result: [
-				{
-					passed: false,
-					reason: 'a'
-				},
-				{
-					passed: true,
-					result: 'b'
-				},
-				{
-					passed: false,
-					reason: 'c'
-				}
-			]
-		});
+		t.strictDeepEqual(result, {passed: false});
+		t.strictDeepEqual(results, [
+			{
+				passed: false,
+				reason: 'a'
+			},
+			{
+				passed: true,
+				result: 'b'
+			},
+			{
+				passed: false,
+				reason: 'c'
+			}
+		]);
 		t.end();
 	});
 });
@@ -802,10 +747,10 @@ test('rejections are just passed through - bail', t => {
 	});
 });
 
-test('needs at least one sequence item', t => {
+test('needs at least one sequence runnable', t => {
 	t.throws(() => {
 		new Sequence().run();
-	}, {message: 'Sequence items can\'t be undefined'});
+	}, {message: 'Expected an array of runnables'});
 	t.end();
 });
 
@@ -815,36 +760,21 @@ test('sequences of sequences', t => {
 		new Sequence([pass('c')])
 	]).run();
 
-	t.strictDeepEqual(result, {
-		passed: true,
-		reason: null,
-		result: [
-			{
-				passed: true,
-				reason: null,
-				result: [
-					{
-						passed: true,
-						result: 'a'
-					},
-					{
-						passed: true,
-						result: 'b'
-					}
-				]
-			},
-			{
-				passed: true,
-				reason: null,
-				result: [
-					{
-						passed: true,
-						result: 'c'
-					}
-				]
-			}
-		]
-	});
+	t.strictDeepEqual(result, {passed: true});
+	t.strictDeepEqual(results, [
+		{
+			passed: true,
+			result: 'a'
+		},
+		{
+			passed: true,
+			result: 'b'
+		},
+		{
+			passed: true,
+			result: 'c'
+		}
+	]);
 
 	t.end();
 });
