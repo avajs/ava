@@ -4,38 +4,34 @@ const Test = require('../lib/test');
 const Observable = require('zen-observable'); // eslint-disable-line import/order
 
 function ava(fn, onResult) {
-	const a = new Test(fn, null, null, onResult);
-	a.metadata = {callback: false};
-	return a;
+	return new Test({callback: false}, '[anonymous]', fn, null, onResult);
 }
 
 ava.cb = function (fn, onResult) {
-	const a = new Test(fn, null, null, onResult);
-	a.metadata = {callback: true};
-	return a;
+	return new Test({callback: true}, '[anonymous]', fn, null, onResult);
 };
 
 test('returning an observable from a legacy async fn is an error', t => {
 	let result;
-	ava.cb(a => {
+	const passed = ava.cb(a => {
 		a.plan(2);
 
 		const observable = Observable.of();
 
-		setTimeout(() => {
+		setImmediate(() => {
 			a.pass();
 			a.pass();
 			a.end();
-		}, 200);
+		});
 
 		return observable;
 	}, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.match(result.reason.message, /Do not return observables/);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.match(result.reason.message, /Do not return observables/);
+	t.end();
 });
 
 test('handle throws with thrown observable', t => {

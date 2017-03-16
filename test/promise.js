@@ -5,15 +5,11 @@ const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 function ava(fn, onResult) {
-	const a = new Test(fn, null, null, onResult);
-	a.metadata = {callback: false};
-	return a;
+	return new Test({callback: false}, '[anonymous]', fn, null, onResult);
 }
 
 ava.cb = function (fn, onResult) {
-	const a = new Test(fn, null, null, onResult);
-	a.metadata = {callback: true};
-	return a;
+	return new Test({callback: true}, '[anonymous]', fn, null, onResult);
 };
 
 function pass() {
@@ -32,7 +28,7 @@ function fail() {
 
 test('returning a promise from a legacy async fn is an error', t => {
 	let result;
-	ava.cb(a => {
+	const passed = ava.cb(a => {
 		a.plan(1);
 
 		return Promise.resolve(true).then(() => {
@@ -41,11 +37,11 @@ test('returning a promise from a legacy async fn is an error', t => {
 		});
 	}, r => {
 		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.match(result.reason.message, /Do not return promises/);
-		t.end();
-	});
+	}).run();
+
+	t.is(passed, false);
+	t.match(result.reason.message, /Do not return promises/);
+	t.end();
 });
 
 test('assertion plan is tested after returned promise resolves', t => {
