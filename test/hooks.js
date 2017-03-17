@@ -38,7 +38,8 @@ test('before', t => {
 		arr.push('a');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr.push('b');
 	});
 
@@ -57,7 +58,8 @@ test('after', t => {
 		arr.push('b');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr.push('a');
 	});
 
@@ -146,6 +148,7 @@ test('stop if before hooks failed', t => {
 	});
 
 	runner.test(a => {
+		a.pass();
 		arr.push('b');
 		a.end();
 	});
@@ -172,11 +175,13 @@ test('before each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr[1].push('d');
 	});
 
@@ -200,11 +205,13 @@ test('before each with serial tests', t => {
 		arr.push('b');
 	});
 
-	runner.serial(() => {
+	runner.serial(a => {
+		a.pass();
 		arr.push('c');
 	});
 
-	runner.serial(() => {
+	runner.serial(a => {
+		a.pass();
 		arr.push('d');
 	});
 
@@ -253,11 +260,13 @@ test('after each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr[1].push('d');
 	});
 
@@ -281,11 +290,13 @@ test('after each with serial tests', t => {
 		arr.push('b');
 	});
 
-	runner.serial(() => {
+	runner.serial(a => {
+		a.pass();
 		arr.push('c');
 	});
 
-	runner.serial(() => {
+	runner.serial(a => {
+		a.pass();
 		arr.push('d');
 	});
 
@@ -385,7 +396,8 @@ test('afterEach.always run even if beforeEach failed', t => {
 		throw new Error('something went wrong');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr.push('a');
 	});
 
@@ -421,7 +433,8 @@ test('ensure hooks run only around tests', t => {
 		arr.push('after');
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		arr.push('test');
 	});
 
@@ -449,6 +462,7 @@ test('shared context', t => {
 	});
 
 	runner.test(a => {
+		a.pass();
 		a.context.arr.push('b');
 		a.deepEqual(a.context.arr, ['a', 'b']);
 	});
@@ -474,6 +488,7 @@ test('shared context of any type', t => {
 	});
 
 	runner.test(a => {
+		a.pass();
 		a.is(a.context, 'foo');
 	});
 

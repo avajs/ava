@@ -9,19 +9,19 @@ const failingTestHint = 'Test was expected to fail, but succeeded, you should st
 const noop = () => {};
 
 function ava(fn, contextRef, onResult) {
-	return new Test({callback: false}, '[anonymous]', fn, contextRef, onResult || noop);
+	return new Test({type: 'test', callback: false}, '[anonymous]', fn, true, contextRef, onResult || noop);
 }
 
 ava.failing = (fn, contextRef, onResult) => {
-	return new Test({callback: false, failing: true}, '[anonymous]', fn, contextRef, onResult || noop);
+	return new Test({type: 'test', callback: false, failing: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
 };
 
 ava.cb = (fn, contextRef, onResult) => {
-	return new Test({callback: true}, '[anonymous]', fn, contextRef, onResult || noop);
+	return new Test({type: 'test', callback: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
 };
 
 ava.cb.failing = (fn, contextRef, onResult) => {
-	return new Test({callback: true, failing: true}, '[anonymous]', fn, contextRef, onResult || noop);
+	return new Test({type: 'test', callback: true, failing: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
 };
 
 test('run test', t => {
@@ -81,6 +81,31 @@ test('run more assertions than planned', t => {
 	t.end();
 });
 
+test('fails if no assertions are run', t => {
+	let result;
+	const passed = ava(() => {}, null, r => {
+		result = r;
+	}).run();
+
+	t.is(passed, false);
+	t.ok(result.reason);
+	t.is(result.reason.name, 'Error');
+	t.match(result.reason.message, /Test finished without running any assertions/);
+	t.end();
+});
+
+test('fails if no assertions are run, unless so planned', t => {
+	const passed = ava(a => a.plan(0)).run();
+	t.is(passed, true);
+	t.end();
+});
+
+test('fails if no assertions are run, unless an ended callback test', t => {
+	const passed = ava.cb(a => a.end()).run();
+	t.is(passed, true);
+	t.end();
+});
+
 test('wrap non-assertion errors', t => {
 	const err = new Error();
 	let result;
@@ -99,6 +124,7 @@ test('wrap non-assertion errors', t => {
 
 test('end can be used as callback without maintaining thisArg', t => {
 	ava.cb(a => {
+		a.pass();
 		setTimeout(a.end);
 	}).run().then(passed => {
 		t.is(passed, true);
@@ -400,6 +426,7 @@ test('throws and notThrows work with promises', t => {
 test('end should not be called multiple times', t => {
 	let result;
 	const passed = ava.cb(a => {
+		a.pass();
 		a.end();
 		a.end();
 	}, null, r => {
@@ -577,11 +604,13 @@ test('assertions return promises', t => {
 });
 
 test('contextRef', t => {
-	new Test({}, 'foo',
+	new Test({type: 'test'}, 'foo',
 		a => {
+			a.pass();
 			t.strictDeepEqual(a.context, {foo: 'bar'});
 			t.end();
 		},
+		true,
 		{context: {foo: 'bar'}},
 		() => {}
 	).run();
@@ -636,6 +665,7 @@ test('failing tests must not pass', t => {
 
 test('failing callback tests must not pass', t => {
 	const passed = ava.cb.failing(a => {
+		a.pass();
 		a.end();
 	}).run();
 
@@ -645,8 +675,11 @@ test('failing callback tests must not pass', t => {
 
 test('failing tests must not return a fulfilled promise', t => {
 	let result;
-	ava.failing(() => {
-		return Promise.resolve();
+	ava.failing(a => {
+		return Promise.resolve()
+			.then(() => {
+				a.pass();
+			});
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {

@@ -5,11 +5,11 @@ const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 function ava(fn, onResult) {
-	return new Test({callback: false}, '[anonymous]', fn, null, onResult);
+	return new Test({type: 'test', callback: false}, '[anonymous]', fn, true, null, onResult);
 }
 
 ava.cb = function (fn, onResult) {
-	return new Test({callback: true}, '[anonymous]', fn, null, onResult);
+	return new Test({type: 'test', callback: true}, '[anonymous]', fn, true, null, onResult);
 };
 
 function pass() {

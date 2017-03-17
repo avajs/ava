@@ -245,6 +245,7 @@ test('foo', t => {
 
 	function logger(a) {
 		log.push(a.title);
+		a.pass();
 	}
 
 	function add(title, opts) {
@@ -313,7 +314,7 @@ test('foo', t => {
 		collection.add({
 			title,
 			metadata: metadata(opts),
-			fn: () => {}
+			fn: a => a.pass()
 		});
 	}
 

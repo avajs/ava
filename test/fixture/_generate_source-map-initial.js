@@ -15,11 +15,13 @@ const fixture = mapFile('throws').require();
 // string.
 test('throw an uncaught exception', t => {
 	setImmediate(run);
+	t.pass();
 })
 const run = () => fixture.run();
-`, {
+`.trim(), {
 	filename: 'source-map-initial-input.js',
-	sourceMaps: true
+	sourceMaps: true,
+	presets: ['@ava/stage-4']
 });
 
 fs.writeFileSync(

@@ -373,7 +373,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:12.*$/m);
 			});
 		});
 
@@ -394,7 +394,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:14.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:15.*$/m);
 			});
 		});
 
@@ -415,7 +415,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:11.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:12.*$/m);
 			});
 		});
 
@@ -436,7 +436,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
 			});
 		});
 
@@ -457,7 +457,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:7.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
 			});
 		});
 
