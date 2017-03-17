@@ -508,21 +508,40 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 	});
 });
 
-test('number of assertions matches t.plan when the test exits, but before all promises resolve another is added', t => {
+test('number of assertions matches t.plan when the test exits, but before all pending assertions resolve another is added', t => {
 	let result;
 	ava(a => {
 		a.plan(2);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		a.notThrows(delay(10), 'foo');
 		setTimeout(() => {
-			a.throws(Promise.reject(new Error('foo')), 'foo');
+			a.pass();
 		}, 5);
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
-		t.is(result.reason.assertion, 'plan');
-		t.is(result.reason.operator, '===');
+		t.match(result.reason.message, /Assertion passed, but test has already ended/);
+		t.is(result.reason.name, 'Error');
+		t.end();
+	});
+});
+
+test('number of assertions matches t.plan when the test exits, but before all pending assertions resolve, a failing assertion is added', t => {
+	let result;
+	ava(a => {
+		a.plan(2);
+		a.throws(delay.reject(10, new Error('foo')), 'foo');
+		a.notThrows(delay(10), 'foo');
+		setTimeout(() => {
+			a.fail();
+		}, 5);
+	}, null, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.match(result.reason.message, /Assertion failed, but test has already ended/);
+		t.is(result.reason.name, 'Error');
 		t.end();
 	});
 });
