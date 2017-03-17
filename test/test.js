@@ -323,7 +323,7 @@ test('record test duration', t => {
 		}, 1234);
 	}).run().then(result => {
 		t.is(result.passed, true);
-		t.true(result.result.duration >= 1234);
+		t.true(result.result.duration >= 1000);
 		t.end();
 	});
 });
@@ -339,7 +339,7 @@ test('wait for test to end', t => {
 		t.is(result.passed, true);
 		t.is(result.result.planCount, 1);
 		t.is(result.result.assertCount, 1);
-		t.true(result.result.duration >= 1234);
+		t.true(result.result.duration >= 1000);
 		t.end();
 	});
 
