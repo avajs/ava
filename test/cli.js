@@ -418,3 +418,10 @@ test('uncaught exceptions are raised for worker errors even if the error cannot 
 		t.end();
 	});
 });
+
+test('tests without assertions do not fail if failWithoutAssertions option is set to false', t => {
+	execCli([], {dirname: 'fixture/pkg-conf/fail-without-assertions'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});

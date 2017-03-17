@@ -262,6 +262,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
     ],
     "concurrency": 5,
     "failFast": true,
+    "failWithoutAssertions": false,
     "tap": true,
     "powerAssert": false,
     "require": [
@@ -325,6 +326,8 @@ test(function name(t) {
 ### Assertion planning
 
 Assertion plans ensure tests only pass when a specific number of assertions have been executed. They'll help you catch cases where tests exit too early. They'll also cause tests to fail if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
+
+If you do not specify an assertion plan, your test will still fail if no assertions are executed. Set the `failWithoutAssertions` option to `false` in AVA's [`package.json` configuration](#configuration) to disable this behavior.
 
 Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https://www.npmjs.com/package/tape), AVA does *not* automatically end a test when the planned assertion count is reached.
 
@@ -672,6 +675,8 @@ We encourage you to use macros instead of building your own test generators ([he
 You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
 
 This won't give you as nice an experience as you'd get with the [built-in assertions](#assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/avajs/ava/issues/25)).
+
+You'll have to configure AVA to not fail tests if no assertions are executed, because AVA can't tell if custom assertions pass. Set the `failWithoutAssertions` option to `false` in AVA's [`package.json` configuration](#configuration).
 
 ```js
 import assert from 'assert';

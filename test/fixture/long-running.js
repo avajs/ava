@@ -4,4 +4,4 @@ test.cb('slow', t => {
 	setTimeout(t.end, 5000);
 });
 
-test('fast', () => {});
+test('fast', t => t.pass());

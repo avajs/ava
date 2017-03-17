@@ -6,4 +6,6 @@ test.after(pass);
 test.afterEach(pass);
 test(pass);
 
-function pass() {}
+function pass(t) {
+	t.pass();
+}

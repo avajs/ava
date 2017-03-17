@@ -10,10 +10,11 @@ test('nested tests and hooks aren\'t allowed', t => {
 
 	const runner = new Runner();
 
-	runner.test(() => {
+	runner.test(a => {
 		t.throws(() => {
 			runner.test(noop);
 		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
+		a.pass();
 	});
 
 	runner.run({}).then(() => {
@@ -26,7 +27,10 @@ test('tests must be declared synchronously', t => {
 
 	const runner = new Runner();
 
-	runner.test(() => Promise.resolve());
+	runner.test(a => {
+		a.pass();
+		return Promise.resolve();
+	});
 
 	runner.run({});
 
@@ -84,8 +88,9 @@ test('anything can be skipped', t => {
 	const arr = [];
 
 	function pusher(title) {
-		return () => {
+		return a => {
 			arr.push(title);
+			a.pass();
 		};
 	}
 
@@ -132,7 +137,7 @@ test('include skipped tests in results', t => {
 	runner.beforeEach('beforeEach', noop);
 	runner.beforeEach.skip('beforeEach.skip', noop);
 
-	runner.test.serial('test', noop);
+	runner.test.serial('test', a => a.pass());
 	runner.test.serial.skip('test.skip', noop);
 
 	runner.after('after', noop);
@@ -224,8 +229,9 @@ test('skip test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.test(() => {
+	runner.test(a => {
 		arr.push('a');
+		a.pass();
 	});
 
 	runner.skip(() => {
@@ -261,8 +267,9 @@ test('todo test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.test(() => {
+	runner.test(a => {
 		arr.push('a');
+		a.pass();
 	});
 
 	runner.todo('todo');
@@ -290,12 +297,14 @@ test('only test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.test(() => {
+	runner.test(a => {
 		arr.push('a');
+		a.pass();
 	});
 
-	runner.only(() => {
+	runner.only(a => {
 		arr.push('b');
+		a.pass();
 	});
 
 	runner.run({}).then(stats => {
@@ -503,6 +512,7 @@ test('options.serial forces all tests to be serial', t => {
 			arr.push(1);
 			a.end();
 		}, 200);
+		a.pass();
 	});
 
 	runner.cb(a => {
@@ -510,9 +520,11 @@ test('options.serial forces all tests to be serial', t => {
 			arr.push(2);
 			a.end();
 		}, 100);
+		a.pass();
 	});
 
-	runner.test(() => {
+	runner.test(a => {
+		a.pass();
 		t.strictDeepEqual(arr, [1, 2]);
 		t.end();
 	});
@@ -551,6 +563,7 @@ test('options.bail will bail out (async)', t => {
 			a.fail();
 			a.end();
 		}, 100);
+		a.pass();
 	});
 
 	runner.cb(a => {
@@ -558,6 +571,7 @@ test('options.bail will bail out (async)', t => {
 			tests.push(2);
 			a.end();
 		}, 300);
+		a.pass();
 	});
 
 	runner.run({}).then(() => {
@@ -611,20 +625,24 @@ test('options.match will not run tests with non-matching titles', t => {
 		match: ['*oo', '!foo']
 	});
 
-	runner.test('mhm. grass tasty. moo', () => {
+	runner.test('mhm. grass tasty. moo', a => {
 		t.pass();
+		a.pass();
 	});
 
-	runner.test('juggaloo', () => {
+	runner.test('juggaloo', a => {
 		t.pass();
+		a.pass();
 	});
 
-	runner.test('foo', () => {
+	runner.test('foo', a => {
 		t.fail();
+		a.pass();
 	});
 
-	runner.test(() => {
+	runner.test(a => {
 		t.fail();
+		a.pass();
 	});
 
 	runner.run({}).then(stats => {
@@ -648,8 +666,9 @@ test('options.match hold no effect on hooks with titles', t => {
 		actual = 'foo';
 	});
 
-	runner.test('after', () => {
+	runner.test('after', a => {
 		t.is(actual, 'foo');
+		a.pass();
 	});
 
 	runner.run({}).then(stats => {
@@ -667,12 +686,14 @@ test('options.match overrides .only', t => {
 		match: ['*oo']
 	});
 
-	runner.test('moo', () => {
+	runner.test('moo', a => {
 		t.pass();
+		a.pass();
 	});
 
-	runner.test.only('boo', () => {
+	runner.test.only('boo', a => {
 		t.pass();
+		a.pass();
 	});
 
 	runner.run({}).then(stats => {
@@ -688,8 +709,9 @@ test('macros: Additional args will be spread as additional args on implementatio
 
 	const runner = new Runner();
 
-	runner.test('test1', function () {
+	runner.test('test1', function (a) {
 		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
+		a.pass();
 	}, 'foo', 'bar');
 
 	runner.run({}).then(stats => {
@@ -717,6 +739,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 	function macroFn(avaT) {
 		t.is(avaT.title, expectedTitles.shift());
 		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
+		avaT.pass();
 	}
 
 	macroFn.title = (title, firstArg) => (title || 'default') + firstArg;
@@ -739,6 +762,7 @@ test('match applies to macros', t => {
 
 	function macroFn(avaT) {
 		t.is(avaT.title, 'foobar');
+		avaT.pass();
 	}
 
 	macroFn.title = (title, firstArg) => `${firstArg}bar`;
@@ -770,12 +794,14 @@ test('arrays of macros', t => {
 		['D']
 	];
 
-	function macroFnA() {
+	function macroFnA(a) {
 		t.deepEqual(slice.call(arguments, 1), expectedArgsA.shift());
+		a.pass();
 	}
 
-	function macroFnB() {
+	function macroFnB(a) {
 		t.deepEqual(slice.call(arguments, 1), expectedArgsB.shift());
+		a.pass();
 	}
 
 	const runner = new Runner();
@@ -798,18 +824,21 @@ test('match applies to arrays of macros', t => {
 	t.plan(3);
 
 	// Foo
-	function fooMacro() {
+	function fooMacro(a) {
 		t.fail();
+		a.pass();
 	}
 	fooMacro.title = (title, firstArg) => `${firstArg}foo`;
 
 	function barMacro(avaT) {
 		t.is(avaT.title, 'foobar');
+		avaT.pass();
 	}
 	barMacro.title = (title, firstArg) => `${firstArg}bar`;
 
-	function bazMacro() {
+	function bazMacro(a) {
 		t.fail();
+		a.pass();
 	}
 	bazMacro.title = firstArg => `${firstArg}baz`;
 
