@@ -101,6 +101,7 @@ babelConfigHelper.build(process.cwd(), cacheDir, conf.babel, true)
 		let uncaughtExceptionCount = 0;
 
 		// Mock the behavior of a parent process
+		process.channel = {ref() {}, unref() {}};
 		process.send = data => {
 			if (data && data.ava) {
 				const name = data.name.replace(/^ava-/, '');

@@ -425,3 +425,24 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 		t.end();
 	});
 });
+
+test('callback tests fail if event loop empties before they\'re ended', t => {
+	execCli('callback.js', {dirname: 'fixture/stalled-tests'}, (_, __, stderr) => {
+		t.match(stderr, /`t\.end\(\)` was never called/);
+		t.end();
+	});
+});
+
+test('observable tests fail if event loop empties before they\'re resolved', t => {
+	execCli('observable.js', {dirname: 'fixture/stalled-tests'}, (_, __, stderr) => {
+		t.match(stderr, /Observable returned by test never completed/);
+		t.end();
+	});
+});
+
+test('promise tests fail if event loop empties before they\'re resolved', t => {
+	execCli('promise.js', {dirname: 'fixture/stalled-tests'}, (_, __, stderr) => {
+		t.match(stderr, /Promise returned by test never resolved/);
+		t.end();
+	});
+});

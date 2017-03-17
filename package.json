@@ -142,7 +142,6 @@
     "lodash.isequal": "^4.5.0",
     "loud-rejection": "^1.2.0",
     "matcher": "^0.1.1",
-    "max-timeout": "^1.0.0",
     "md5-hex": "^2.0.0",
     "meow": "^3.7.0",
     "mkdirp": "^0.5.1",
