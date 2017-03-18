@@ -7,7 +7,7 @@ function writeFullWidth(even, adjust) {
 		const len = Math[even ? 'floor' : 'ceil']((process.stdout.columns + adjust) / 2);
 		for (let i = 0; i < len; i++) {
 			process.stdout.write(String(i % 10));
-			await delay(1);
+			await delay(1); // eslint-disable-line no-await-in-loop
 		}
 		await delay(200);
 		t.pass();

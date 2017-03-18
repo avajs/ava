@@ -1,8 +1,8 @@
+/* eslint-disable promise/no-callback-in-promise */
 'use strict';
 const path = require('path');
 const EventEmitter = require('events');
 const PassThrough = require('stream').PassThrough;
-const Promise = require('bluebird');
 const defaultIgnore = require('ignore-by-default').directories();
 const lolex = require('lolex');
 const proxyquire = require('proxyquire');

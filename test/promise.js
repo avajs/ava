@@ -213,7 +213,7 @@ test('does not handle throws with string reject', t => {
 	ava(a => {
 		a.plan(1);
 
-		const promise = Promise.reject('abc');
+		const promise = Promise.reject('abc'); // eslint-disable-line prefer-promise-reject-errors
 		return a.throws(promise, 'abc');
 	}).run().then(result => {
 		t.is(result.passed, false);
@@ -300,6 +300,7 @@ test('reject', t => {
 });
 
 test('reject with non-Error', t => {
+	// eslint-disable-next-line prefer-promise-reject-errors
 	ava(() => Promise.reject('failure')).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.reason.name, 'AssertionError');

@@ -92,7 +92,7 @@ test('strips ANSI from actual and expected values', t => {
 		title: 'strip ansi',
 		error: {
 			avaAssertionError: true,
-			values: [{label: 'value', formatted: '\u001b[31mhello\u001b[39m'}]
+			values: [{label: 'value', formatted: '\u001B[31mhello\u001B[39m'}]
 		}
 	});
 

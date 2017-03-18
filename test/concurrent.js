@@ -1,6 +1,5 @@
 'use strict';
 const test = require('tap').test;
-const Promise = require('bluebird');
 const Concurrent = require('../lib/concurrent');
 
 function pass(val) {

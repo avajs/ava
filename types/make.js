@@ -53,7 +53,7 @@ function generatePrefixed(prefix) {
 				if (hasChildren(parts)) {
 					chain = parts.join('_') + '<T>';
 				} else {
-					// this is a single function, not a namespace, so there's no type associated
+					// This is a single function, not a namespace, so there's no type associated
 					// and we need to dereference it as a property type
 					const last = parts.pop();
 					const joined = parts.join('_');
@@ -77,7 +77,7 @@ function generatePrefixed(prefix) {
 				output += `\t${part}: RegisterBase<T>`;
 
 				if (hasChildren(parts)) {
-					// this chain can be continued, make the property an intersection type with the chain continuation
+					// This chain can be continued, make the property an intersection type with the chain continuation
 					const joined = parts.join('_');
 					output += ` & Register_${joined}<T>`;
 				}
@@ -96,7 +96,7 @@ function generatePrefixed(prefix) {
 	const typeBody = `{\n${output}}\n${children}`;
 
 	if (prefix.length === 0) {
-		// no prefix, so this is the type for the default export
+		// No prefix, so this is the type for the default export
 		return `export interface Register<T> extends RegisterBase<T> ${typeBody}`;
 	}
 	const namespace = ['Register'].concat(prefix).join('_');
@@ -148,7 +148,7 @@ function verify(parts, asPrefix) {
 
 // Returns true if a chain can have any child properties
 function hasChildren(parts) {
-	// concatenate the chain with each other part, and see if any concatenations are valid functions
+	// Concatenate the chain with each other part, and see if any concatenations are valid functions
 	const validChildren = allParts
 		.filter(newPart => parts.indexOf(newPart) === -1)
 		.map(newPart => parts.concat([newPart]))

@@ -1,6 +1,5 @@
 'use strict';
 const test = require('tap').test;
-const Promise = global.Promise = require('bluebird');
 const delay = require('delay');
 const isPromise = require('is-promise');
 const formatValue = require('../lib/format-assert-error').formatValue;
