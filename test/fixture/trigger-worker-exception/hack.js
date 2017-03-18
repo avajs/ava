@@ -1,20 +1,17 @@
 'use strict';
 
-require('../../../lib/serialize-error');
+const StackUtils = require('stack-utils');
 
-const serializeModule = require.cache[require.resolve('../../../lib/serialize-error')];
-
-const original = serializeModule.exports;
+const original = StackUtils.prototype.parseLine;
 let restored = false;
 let restoreAfterFirstCall = false;
-serializeModule.exports = error => {
+StackUtils.prototype.parseLine = function(line) {
 	if (restored) {
-		return original(error);
+		return original.call(this, line);
 	}
 	if (restoreAfterFirstCall) {
 		restored = true;
 	}
-
 	throw new Error('Forced error');
 };
 
