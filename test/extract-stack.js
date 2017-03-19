@@ -34,3 +34,13 @@ test('strip beginning whitespace from stack', t => {
 	t.is(extractStack(stack), 'Test.t (test.js:1:1)');
 	t.end();
 });
+
+test('includes anonymous function lines', t => {
+	const stack = [
+		'error message',
+		'path/to/test.js:1:1'
+	].join('\n');
+
+	t.is(extractStack(stack), 'path/to/test.js:1:1');
+	t.end();
+});
