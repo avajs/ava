@@ -101,6 +101,14 @@ test('throwing a named function will report the to the console', t => {
 	});
 });
 
+test('include anonymous functions in error reports', t => {
+	execCli('fixture/error-in-anonymous-function.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
+		t.end();
+	});
+});
+
 test('improper use of t.throws will be reported to the console', t => {
 	execCli('fixture/improper-t-throws/throws.js', (err, stdout, stderr) => {
 		t.ok(err);
