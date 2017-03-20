@@ -412,9 +412,9 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(error1.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -425,8 +425,9 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n'),
-		/error two message/
+		/error two message/,
+		'',
+		indentString(formatSerializedError(error2), 2).split('\n')
 	]));
 	t.end();
 });
@@ -470,9 +471,9 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		'  ' + chalk.bold.white('fail one'),
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -483,8 +484,9 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n'),
-		/error two message/
+		/error two message/,
+		'',
+		indentString(formatSerializedError(error2), 2).split('\n')
 	]));
 	t.end();
 });
@@ -531,9 +533,9 @@ test('results with errors and disabled code excerpts', t => {
 		'  ' + chalk.bold.white('fail one'),
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
 		/error one message/,
 		'',
+		indentString(formatSerializedError(error1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -544,8 +546,9 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n'),
-		/error two message/
+		/error two message/,
+		'',
+		indentString(formatSerializedError(error2), 2).split('\n')
 	]));
 	t.end();
 });
