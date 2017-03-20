@@ -126,6 +126,17 @@ test('hasExclusive is set when an exclusive test is added', t => {
 	t.end();
 });
 
+test('title is callee$0$0', t => {
+	const collection = new TestCollection();
+	collection.add(mockTest({}, 'callee$0$0'));
+	t.strictDeepEqual(serialize(collection), {
+		tests: {
+			concurrent: titles(collection.tests.concurrent)
+		}
+	});
+	t.end();
+});
+
 test('adding a concurrent test', t => {
 	const collection = new TestCollection();
 	collection.add(mockTest({}, 'foo'));
