@@ -78,7 +78,7 @@ function serialize(collection) {
 }
 
 test('throws if no type is supplied', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	t.throws(() => {
 		collection.add({
 			title: 'someTitle',
@@ -89,7 +89,7 @@ test('throws if no type is supplied', t => {
 });
 
 test('throws if you try to set a hook as exclusive', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	t.throws(() => {
 		collection.add(mockTest({
 			type: 'beforeEach',
@@ -100,7 +100,7 @@ test('throws if you try to set a hook as exclusive', t => {
 });
 
 test('throws if you try to set a before hook as always', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	t.throws(() => {
 		collection.add(mockTest({
 			type: 'before',
@@ -111,7 +111,7 @@ test('throws if you try to set a before hook as always', t => {
 });
 
 test('throws if you try to set a test as always', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	t.throws(() => {
 		collection.add(mockTest({always: true}));
 	}, {message: '"always" can only be used with after and afterEach hooks'});
@@ -119,7 +119,7 @@ test('throws if you try to set a test as always', t => {
 });
 
 test('hasExclusive is set when an exclusive test is added', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	t.false(collection.hasExclusive);
 	collection.add(mockTest({exclusive: true}, 'foo'));
 	t.true(collection.hasExclusive);
@@ -127,7 +127,7 @@ test('hasExclusive is set when an exclusive test is added', t => {
 });
 
 test('adding a concurrent test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({}, 'foo'));
 	t.strictDeepEqual(serialize(collection), {
 		tests: {
@@ -138,7 +138,7 @@ test('adding a concurrent test', t => {
 });
 
 test('adding a serial test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({serial: true}, 'bar'));
 	t.strictDeepEqual(serialize(collection), {
 		tests: {
@@ -149,7 +149,7 @@ test('adding a serial test', t => {
 });
 
 test('adding a before test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({type: 'before'}, 'baz'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
@@ -160,7 +160,7 @@ test('adding a before test', t => {
 });
 
 test('adding a beforeEach test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({type: 'beforeEach'}, 'foo'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
@@ -171,7 +171,7 @@ test('adding a beforeEach test', t => {
 });
 
 test('adding a after test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({type: 'after'}, 'bar'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
@@ -182,7 +182,7 @@ test('adding a after test', t => {
 });
 
 test('adding a after.always test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({
 		type: 'after',
 		always: true
@@ -196,7 +196,7 @@ test('adding a after.always test', t => {
 });
 
 test('adding a afterEach test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({type: 'afterEach'}, 'baz'));
 	t.strictDeepEqual(serialize(collection), {
 		hooks: {
@@ -207,7 +207,7 @@ test('adding a afterEach test', t => {
 });
 
 test('adding a afterEach.always test', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({
 		type: 'afterEach',
 		always: true
@@ -221,7 +221,7 @@ test('adding a afterEach.always test', t => {
 });
 
 test('adding a bunch of different types', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	collection.add(mockTest({}, 'a'));
 	collection.add(mockTest({}, 'b'));
 	collection.add(mockTest({serial: true}, 'c'));
@@ -240,7 +240,7 @@ test('adding a bunch of different types', t => {
 });
 
 test('foo', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	const log = [];
 
 	function logger(a) {
@@ -302,7 +302,7 @@ test('foo', t => {
 });
 
 test('foo', t => {
-	const collection = new TestCollection();
+	const collection = new TestCollection({});
 	const log = [];
 
 	function logger(result) {
