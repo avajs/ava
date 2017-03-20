@@ -98,25 +98,91 @@ test('throwing a named function will report the to the console', t => {
 });
 
 test('improper use of t.throws will be reported to the console', t => {
-	execCli('fixture/improper-t-throws.js', (err, stdout, stderr) => {
+	execCli('fixture/improper-t-throws/throws.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /Improper usage of t\.throws detected at .*improper-t-throws.js \(4:10\)/);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
 		t.end();
 	});
 });
 
 test('improper use of t.throws from within a Promise will be reported to the console', t => {
-	execCli('fixture/improper-t-throws-promise.js', (err, stdout, stderr) => {
+	execCli('fixture/improper-t-throws/promise.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /Improper usage of t\.throws detected at .*improper-t-throws-promise.js \(5:11\)/);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws from within a pending promise, even if caught and rethrown immediately, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/leaked-from-promise.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
 		t.end();
 	});
 });
 
 test('improper use of t.throws from within an async callback will be reported to the console', t => {
-	execCli('fixture/improper-t-throws-async-callback.js', (err, stdout, stderr) => {
+	execCli('fixture/improper-t-throws/async-callback.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /Improper usage of t\.throws detected at .*improper-t-throws-async-callback.js \(5:11\)/);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws, swallowed as an unhandled rejection, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/unhandled-rejection.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws, even if caught, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/caught.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.notMatch(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws, even if caught and then rethrown immediately, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/caught-and-leaked.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws, even if caught and then later rethrown, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/caught-and-leaked-slowly.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.match(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
+		t.end();
+	});
+});
+
+test('improper use of t.throws, even if caught and then rethrown too slowly, will be reported to the console', t => {
+	execCli('fixture/improper-t-throws/caught-and-leaked-too-slowly.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Improper usage of `t\.throws\(\)` detected/);
+		t.notMatch(stderr, /should be detected/);
+		t.match(stderr, /Try wrapping the first argument/);
 		t.end();
 	});
 });

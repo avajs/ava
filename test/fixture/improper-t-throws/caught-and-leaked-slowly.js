@@ -1,9 +1,13 @@
-import test from '../../';
+import test from '../../..';
 
 test(t => {
-	return Promise.resolve().then(() => {
+	try {
 		t.throws(throwSync());
-	});
+	} catch (err) {
+		setTimeout(() => {
+			throw err;
+		}, 500);
+	}
 });
 
 function throwSync() {

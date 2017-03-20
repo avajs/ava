@@ -1,7 +1,9 @@
-import test from '../../';
+import test from '../../..';
 
 test(t => {
-	t.throws(throwSync());
+	try {
+		t.throws(throwSync());
+	} catch (err) {}
 });
 
 function throwSync() {

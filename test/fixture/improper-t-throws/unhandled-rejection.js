@@ -1,9 +1,11 @@
-import test from '../../';
+import test from '../../..';
 
 test.cb(t => {
-	setTimeout(() => {
+	Promise.resolve().then(() => {
 		t.throws(throwSync());
 	});
+
+	setTimeout(t.end, 20);
 });
 
 function throwSync() {
