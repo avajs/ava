@@ -395,7 +395,6 @@ test('results with errors', t => {
 	};
 
 	const output = reporter.finish(runStatus);
-
 	compareLineOutput(t, output, flatten([
 		'',
 		'  ' + chalk.red('1 failed'),
@@ -405,9 +404,9 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(err1.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -418,8 +417,9 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(err2), 2).split('\n'),
-		/failure two/
+		/failure two/,
+		'',
+		indentString(formatSerializedError(err2), 2).split('\n')
 	]));
 	t.end();
 });
@@ -466,9 +466,9 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		'  ' + chalk.bold.white('failed one'),
 		'',
-		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -479,8 +479,9 @@ test('results with errors and disabled code excerpts', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(err2), 2).split('\n'),
-		/failure two/
+		/failure two/,
+		'',
+		indentString(formatSerializedError(err2), 2).split('\n')
 	]));
 	t.end();
 });
@@ -530,9 +531,9 @@ test('results with errors and broken code excerpts', t => {
 		'  ' + chalk.bold.white('failed one'),
 		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
 		'',
-		indentString(formatSerializedError(err1), 2).split('\n'),
 		/failure one/,
 		'',
+		indentString(formatSerializedError(err1), 2).split('\n'),
 		stackLineRegex,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
@@ -543,8 +544,9 @@ test('results with errors and broken code excerpts', t => {
 		'',
 		indentString(codeExcerpt(err2.source), 2).split('\n'),
 		'',
-		indentString(formatSerializedError(err2), 2).split('\n'),
-		/failure two/
+		/failure two/,
+		'',
+		indentString(formatSerializedError(err2), 2).split('\n')
 	]));
 	t.end();
 });
