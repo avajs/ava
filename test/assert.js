@@ -1,6 +1,7 @@
 'use strict';
+const path = require('path');
+const jestSnapshot = require('jest-snapshot');
 const test = require('tap').test;
-const sinon = require('sinon');
 const assert = require('../lib/assert');
 const formatValue = require('../lib/format-assert-error').formatValue;
 
@@ -573,74 +574,50 @@ test('.ifError()', t => {
 	t.end();
 });
 
-test('snapshot makes a snapshot using a library and global options', t => {
-	const saveSpy = sinon.spy();
-	const state = {save: saveSpy};
-	const stateGetter = sinon.stub().returns(state);
-	const matchStub = sinon.stub().returns({pass: true});
+test('.snapshot()', t => {
+	// Set to `true` to update the snapshot, then run:
+	// "$(npm bin)"/tap --no-cov -R spec test/assert.js
+	//
+	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
+	const update = false;
 
-	const test = {
-		title: 'Test name'
+	const state = jestSnapshot.initializeSnapshotState(__filename, update, path.join(__dirname, 'fixture', 'assert.snap'));
+	const executionContext = {
+		_test: {
+			getSnapshotState() {
+				return state;
+			}
+		},
+		title: ''
 	};
 
-	t.plan(4);
-
-	t.doesNotThrow(() => {
-		assert.snapshot(test, 'tree', undefined, matchStub, stateGetter);
+	passes(t, () => {
+		executionContext.title = 'passes';
+		assertions.snapshot.call(executionContext, {foo: 'bar'});
 	});
 
-	t.ok(stateGetter.called);
-
-	t.match(matchStub.firstCall.thisValue, {
-		currentTestName: 'Test name',
-		snapshotState: state
+	failsWith(t, () => {
+		executionContext.title = 'fails';
+		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'});
+	}, {
+		assertion: 'snapshot',
+		message: 'Did not match snapshot',
+		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
 	});
 
-	t.ok(saveSpy.calledOnce);
-	t.end();
-});
-
-test('snapshot handles jsx tree', t => {
-	const saveSpy = sinon.spy();
-	const state = {save: saveSpy};
-	const stateGetter = sinon.stub().returns(state);
-	const matchStub = sinon.stub().returns({pass: true});
-
-	const test = {
-		title: 'Test name'
-	};
-
-	t.plan(5);
-
-	t.doesNotThrow(() => {
-		const tree = {
-			type: 'h1',
-			children: ['Hello'],
-			props: {}
-		};
-
-		Object.defineProperty(tree, '$$typeof', {value: Symbol.for('react.test.json')});
-
-		assert.snapshot(test, tree, undefined, matchStub, stateGetter);
+	failsWith(t, () => {
+		executionContext.title = 'fails';
+		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'}, 'my message');
+	}, {
+		assertion: 'snapshot',
+		message: 'my message',
+		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
 	});
 
-	t.ok(stateGetter.called);
+	if (update) {
+		state.save(true);
+	}
 
-	const savedTree = JSON.parse(matchStub.firstCall.args[0]);
-	t.deepEqual(savedTree, {
-		__ava_react_jsx: { // eslint-disable-line camelcase
-			type: 'h1',
-			children: ['Hello'],
-			props: {}
-		}
-	});
-
-	t.match(matchStub.firstCall.thisValue, {
-		currentTestName: 'Test name',
-		snapshotState: state
-	});
-
-	t.ok(saveSpy.calledOnce);
 	t.end();
 });
 
