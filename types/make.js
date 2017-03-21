@@ -15,14 +15,14 @@
 const path = require('path');
 const fs = require('fs');
 const isArraySorted = require('is-array-sorted');
-const runner = require('../lib/runner');
+const Runner = require('../lib/runner');
 
 const arrayHas = parts => part => parts.indexOf(part) !== -1;
 
 const base = fs.readFileSync(path.join(__dirname, 'base.d.ts'), 'utf8');
 
 // All suported function names
-const allParts = Object.keys(runner._chainableMethods).filter(name => name !== 'test');
+const allParts = Object.keys(new Runner({}).chain).filter(name => name !== 'test');
 
 // The output consists of the base declarations, the actual 'test' function declarations,
 // and the namespaced chainable methods.
