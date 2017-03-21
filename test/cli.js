@@ -504,3 +504,24 @@ test('promise tests fail if event loop empties before they\'re resolved', t => {
 		t.end();
 	});
 });
+
+test('snapshots work', t => {
+	try {
+		fs.unlinkSync(path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.snap'));
+	} catch (err) {
+		if (err.code !== 'ENOENT') {
+			throw err;
+		}
+	}
+
+	// Test should pass, and a snapshot gets written
+	execCli(['--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
+		t.ifError(err);
+
+		// Test should pass, and the snapshot gets used
+		execCli(['test.js'], {dirname: 'fixture/snapshots'}, err => {
+			t.ifError(err);
+			t.end();
+		});
+	});
+});
