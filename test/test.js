@@ -9,19 +9,47 @@ const failingTestHint = 'Test was expected to fail, but succeeded, you should st
 const noop = () => {};
 
 function ava(fn, contextRef, onResult) {
-	return new Test({type: 'test', callback: false}, '[anonymous]', fn, true, contextRef, onResult || noop);
+	return new Test({
+		contextRef,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: false},
+		onResult: onResult || noop,
+		title: '[anonymous]'
+	});
 }
 
 ava.failing = (fn, contextRef, onResult) => {
-	return new Test({type: 'test', callback: false, failing: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
+	return new Test({
+		contextRef,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: false, failing: true},
+		onResult: onResult || noop,
+		title: '[anonymous]'
+	});
 };
 
 ava.cb = (fn, contextRef, onResult) => {
-	return new Test({type: 'test', callback: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
+	return new Test({
+		contextRef,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: true},
+		onResult: onResult || noop,
+		title: '[anonymous]'
+	});
 };
 
 ava.cb.failing = (fn, contextRef, onResult) => {
-	return new Test({type: 'test', callback: true, failing: true}, '[anonymous]', fn, true, contextRef, onResult || noop);
+	return new Test({
+		contextRef,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: true, failing: true},
+		onResult: onResult || noop,
+		title: '[anonymous]'
+	});
 };
 
 test('run test', t => {
@@ -604,16 +632,18 @@ test('assertions return promises', t => {
 });
 
 test('contextRef', t => {
-	new Test({type: 'test'}, 'foo',
-		a => {
+	new Test({
+		contextRef: {context: {foo: 'bar'}},
+		failWithoutAssertions: true,
+		fn(a) {
 			a.pass();
 			t.strictDeepEqual(a.context, {foo: 'bar'});
 			t.end();
 		},
-		true,
-		{context: {foo: 'bar'}},
-		() => {}
-	).run();
+		metadata: {type: 'test'},
+		onResult() {},
+		title: 'foo'
+	}).run();
 });
 
 test('it is an error to set context in a hook', t => {

@@ -4,11 +4,25 @@ const Test = require('../lib/test');
 const Observable = require('zen-observable'); // eslint-disable-line import/order
 
 function ava(fn, onResult) {
-	return new Test({type: 'test', callback: false}, '[anonymous]', fn, true, null, onResult);
+	return new Test({
+		contextRef: null,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: false},
+		onResult,
+		title: '[anonymous]'
+	});
 }
 
 ava.cb = function (fn, onResult) {
-	return new Test({type: 'test', callback: true}, '[anonymous]', fn, true, null, onResult);
+	return new Test({
+		contextRef: null,
+		failWithoutAssertions: true,
+		fn,
+		metadata: {type: 'test', callback: true},
+		onResult,
+		title: '[anonymous]'
+	});
 };
 
 test('returning an observable from a legacy async fn is an error', t => {
