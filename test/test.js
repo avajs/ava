@@ -384,6 +384,21 @@ test('fails with the first assertError', t => {
 	t.end();
 });
 
+test('failing pending assertion causes test to fail, not promise rejection', t => {
+	let result;
+	return ava(a => {
+		return a.throws(Promise.resolve())
+			.then(() => {
+				throw new Error('Should be ignored');
+			});
+	}, null, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.notMatch(result.reason.message, /Rejected promise returned by test/);
+	});
+});
+
 test('fails with thrown falsy value', t => {
 	let result;
 	const passed = ava(() => {
