@@ -136,12 +136,13 @@ Observable.of('zen-observable').subscribe(logger);
  * @param ctor {(x) => Observable}
  */
 function detects(name, ctor) {
-	test(`detects ${name} observables`, t => {
+	test(`ava detects ${name} observable as a return value`, t => {
 		ava(a => {
 			a.plan(1);
-
 			const observable = ctor(1);
-			observable.subscribe(x => a.is(x, 1));
+			observable.subscribe({
+				next: x => a.is(x, 1)
+			});
 			return observable;
 		}).run().then(result => {
 			t.is(result.passed, true);
