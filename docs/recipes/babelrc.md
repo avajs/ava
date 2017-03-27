@@ -13,7 +13,9 @@ There are multiple options for configuring how AVA transpiles your tests using B
 
 ## AVA's default transpiler behavior
 
-By default, AVA transpiles your tests and helper files using the [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) Babel preset. This is a great option for small modules where you do not desire a build step to transpile your source before deploying to `npm`.
+AVA by default provides some nifty ECMAScript features, like [`async`](https://github.com/avajs/ava#async-function-support), to your test-environment. To make this possible AVA transpiles the tests and helper files using the [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) Babel preset.
+
+This is a great feature for projects where you desire to not transpile your source before deploying but enjoy using ECMAScript for writing tests.
 
 ## Customizing how AVA transpiles your tests
 
