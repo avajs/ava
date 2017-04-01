@@ -591,8 +591,8 @@ test('number of assertions matches t.plan when the test exits, but before all pe
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
-		t.match(result.reason.message, /Assertion passed, but test has already ended/);
-		t.is(result.reason.name, 'Error');
+		t.is(result.reason.assertion, 'plan');
+		t.is(result.reason.operator, '===');
 		t.end();
 	});
 });
@@ -604,35 +604,30 @@ test('number of assertions matches t.plan when the test exits, but before all pe
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		a.notThrows(delay(10), 'foo');
 		setTimeout(() => {
-			a.fail();
+			a.pass();
 		}, 5);
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
-		t.match(result.reason.message, /Assertion failed, but test has already ended/);
-		t.is(result.reason.name, 'Error');
+		t.is(result.reason.assertion, 'plan');
+		t.is(result.reason.operator, '===');
 		t.end();
 	});
 });
 
 test('number of assertions doesn\'t match plan when the test exits, but before all promises resolve another is added', t => {
-	let result;
-	const passed = ava(a => {
+	ava(a => {
 		a.plan(3);
 		a.throws(delay.reject(10, new Error('foo')), 'foo');
 		a.notThrows(delay(10), 'foo');
 		setTimeout(() => {
 			a.throws(Promise.reject(new Error('foo')), 'foo');
 		}, 5);
-	}, null, r => {
-		result = r;
-	}).run();
-
-	t.is(passed, false);
-	t.is(result.reason.assertion, 'plan');
-	t.is(result.reason.operator, '===');
-	t.end();
+	}).run().then(passed => {
+		t.is(passed, true);
+		t.end();
+	});
 });
 
 test('assertions return promises', t => {
@@ -644,6 +639,32 @@ test('assertions return promises', t => {
 		t.is(passed, true);
 		t.end();
 	});
+});
+
+// https://github.com/avajs/ava/issues/1330
+test('no crash when adding assertions after the test has ended', t => {
+	t.plan(3);
+
+	ava(a => {
+		a.pass();
+		setTimeout(() => {
+			t.doesNotThrow(() => a.pass());
+		}, 5);
+	}).run();
+
+	ava(a => {
+		a.pass();
+		setTimeout(() => {
+			t.doesNotThrow(() => a.fail());
+		}, 5);
+	}).run();
+
+	ava(a => {
+		a.pass();
+		setTimeout(() => {
+			t.doesNotThrow(() => a.notThrows(Promise.resolve()));
+		}, 5);
+	}).run();
 });
 
 test('contextRef', t => {
