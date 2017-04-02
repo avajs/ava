@@ -667,6 +667,28 @@ test('no crash when adding assertions after the test has ended', t => {
 	}).run();
 });
 
+test('can add more pending assertions while waiting for earlier assertions to complete', t => {
+	return ava(a => {
+		a.plan(4);
+
+		a.notThrows(new Promise(resolve => {
+			setImmediate(() => {
+				resolve();
+
+				a.pass();
+				a.throws(new Promise(resolve => {
+					setImmediate(() => {
+						a.pass();
+						resolve();
+					});
+				}));
+			});
+		}));
+	}).run().then(passed => {
+		t.is(passed, false);
+	});
+});
+
 test('contextRef', t => {
 	new Test({
 		contextRef: {context: {foo: 'bar'}},
