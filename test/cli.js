@@ -11,6 +11,7 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
+const stripAnsi = require('strip-ansi');
 
 const cliPath = path.join(__dirname, '../cli.js');
 
@@ -523,5 +524,21 @@ test('snapshots work', t => {
 			t.ifError(err);
 			t.end();
 		});
+	});
+});
+
+test('--no-color disables formatting colors', t => {
+	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.is(stripAnsi(stderr), stderr);
+		t.end();
+	});
+});
+
+test('--color enables formatting colors', t => {
+	execCli(['--color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.isNot(stripAnsi(stderr), stderr);
+		t.end();
 	});
 });
