@@ -1,7 +1,6 @@
 'use strict';
 const test = require('tap').test;
 const delay = require('delay');
-const isPromise = require('is-promise');
 const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
@@ -633,17 +632,6 @@ test('number of assertions doesn\'t match plan when the test exits, but before a
 	t.is(result.reason.assertion, 'plan');
 	t.is(result.reason.operator, '===');
 	t.end();
-});
-
-test('assertions return promises', t => {
-	ava(a => {
-		a.plan(2);
-		t.ok(isPromise(a.throws(Promise.reject(new Error('foo')))));
-		t.ok(isPromise(a.notThrows(Promise.resolve(true))));
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.end();
-	});
 });
 
 test('contextRef', t => {
