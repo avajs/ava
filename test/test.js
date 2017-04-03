@@ -591,7 +591,7 @@ test('number of assertions matches t.plan when the test exits, but before all pe
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
-		t.match(result.reason.message, /Assertion passed, but test has already ended/);
+		t.match(result.reason.message, /Assertion passed, but test has already finished/);
 		t.is(result.reason.name, 'Error');
 		t.end();
 	});
@@ -610,7 +610,7 @@ test('number of assertions matches t.plan when the test exits, but before all pe
 		result = r;
 	}).run().then(passed => {
 		t.is(passed, false);
-		t.match(result.reason.message, /Assertion failed, but test has already ended/);
+		t.match(result.reason.message, /Assertion failed, but test has already finished/);
 		t.is(result.reason.name, 'Error');
 		t.end();
 	});
