@@ -450,10 +450,12 @@ test('throws and notThrows work with promises', t => {
 	let result;
 	ava(a => {
 		a.plan(2);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(20).then(() => {
-			asyncCalled = true;
-		}));
+		return Promise.all([
+			a.throws(delay.reject(10, new Error('foo')), 'foo'),
+			a.notThrows(delay(20).then(() => {
+				asyncCalled = true;
+			}))
+		]);
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {
@@ -495,78 +497,18 @@ test('cb test that throws sync', t => {
 	t.end();
 });
 
-test('waits for t.throws to resolve after t.end is called', t => {
-	let result;
-	ava.cb(a => {
-		a.plan(1);
-		a.notThrows(delay(10), 'foo');
-		a.end();
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.is(result.result.planCount, 1);
-		t.is(result.result.assertCount, 1);
-		t.end();
-	});
-});
-
-test('waits for t.throws to reject after t.end is called', t => {
-	let result;
-	ava.cb(a => {
-		a.plan(1);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.end();
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.is(result.result.planCount, 1);
-		t.is(result.result.assertCount, 1);
-		t.end();
-	});
-});
-
-test('waits for t.throws to resolve after the promise returned from the test resolves', t => {
-	let result;
-	ava(a => {
-		a.plan(1);
-		a.notThrows(delay(10), 'foo');
-		return Promise.resolve();
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.is(result.result.planCount, 1);
-		t.is(result.result.assertCount, 1);
-		t.end();
-	});
-});
-
-test('waits for t.throws to reject after the promise returned from the test resolves', t => {
-	let result;
-	ava(a => {
-		a.plan(1);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		return Promise.resolve();
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, true);
-		t.is(result.result.planCount, 1);
-		t.is(result.result.assertCount, 1);
-		t.end();
-	});
-});
-
 test('multiple resolving and rejecting promises passed to t.throws/t.notThrows', t => {
 	let result;
 	ava(a => {
 		a.plan(6);
+		const promises = [];
 		for (let i = 0; i < 3; i++) {
-			a.throws(delay.reject(10, new Error('foo')), 'foo');
-			a.notThrows(delay(10), 'foo');
+			promises.push(
+				a.throws(delay.reject(10, new Error('foo')), 'foo'),
+				a.notThrows(delay(10), 'foo')
+			);
 		}
+		return Promise.all(promises);
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {
@@ -577,61 +519,75 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 	});
 });
 
-test('number of assertions matches t.plan when the test exits, but before all pending assertions resolve another is added', t => {
-	let result;
-	ava(a => {
-		a.plan(2);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(10), 'foo');
-		setTimeout(() => {
-			a.pass();
-		}, 5);
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.match(result.reason.message, /Assertion passed, but test has already finished/);
-		t.is(result.reason.name, 'Error');
-		t.end();
-	});
-});
-
-test('number of assertions matches t.plan when the test exits, but before all pending assertions resolve, a failing assertion is added', t => {
-	let result;
-	ava(a => {
-		a.plan(2);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(10), 'foo');
-		setTimeout(() => {
-			a.fail();
-		}, 5);
-	}, null, r => {
-		result = r;
-	}).run().then(passed => {
-		t.is(passed, false);
-		t.match(result.reason.message, /Assertion failed, but test has already finished/);
-		t.is(result.reason.name, 'Error');
-		t.end();
-	});
-});
-
-test('number of assertions doesn\'t match plan when the test exits, but before all promises resolve another is added', t => {
+test('fails if test ends while there are pending assertions', t => {
 	let result;
 	const passed = ava(a => {
-		a.plan(3);
-		a.throws(delay.reject(10, new Error('foo')), 'foo');
-		a.notThrows(delay(10), 'foo');
-		setTimeout(() => {
-			a.throws(Promise.reject(new Error('foo')), 'foo');
-		}, 5);
+		a.throws(Promise.reject(new Error()));
 	}, null, r => {
 		result = r;
 	}).run();
 
 	t.is(passed, false);
-	t.is(result.reason.assertion, 'plan');
-	t.is(result.reason.operator, '===');
+	t.is(result.reason.name, 'Error');
+	t.match(result.reason.message, /Test finished, but an assertion is still pending/);
 	t.end();
+});
+
+test('fails if callback test ends while there are pending assertions', t => {
+	let result;
+	const passed = ava.cb(a => {
+		a.throws(Promise.reject(new Error()));
+		a.end();
+	}, null, r => {
+		result = r;
+	}).run();
+
+	t.is(passed, false);
+	t.is(result.reason.name, 'Error');
+	t.match(result.reason.message, /Test finished, but an assertion is still pending/);
+	t.end();
+});
+
+test('fails if async test ends while there are pending assertions', t => {
+	let result;
+	ava(a => {
+		a.throws(Promise.reject(new Error()));
+		return Promise.resolve();
+	}, null, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.is(result.reason.name, 'Error');
+		t.match(result.reason.message, /Test finished, but an assertion is still pending/);
+		t.end();
+	});
+});
+
+// This behavior is incorrect, but feedback cannot be provided to the user due to
+// https://github.com/avajs/ava/issues/1330
+test('no crash when adding assertions after the test has ended', t => {
+	t.plan(3);
+
+	ava(a => {
+		a.pass();
+		setImmediate(() => {
+			t.doesNotThrow(() => a.pass());
+		});
+	}).run();
+
+	ava(a => {
+		a.pass();
+		setImmediate(() => {
+			t.doesNotThrow(() => a.fail());
+		});
+	}).run();
+
+	ava(a => {
+		a.pass();
+		setImmediate(() => {
+			t.doesNotThrow(() => a.notThrows(Promise.resolve()));
+		});
+	}).run();
 });
 
 test('contextRef', t => {
@@ -725,8 +681,8 @@ test('failing tests must not return a fulfilled promise', t => {
 test('failing tests pass when returning a rejected promise', t => {
 	ava.failing(a => {
 		a.plan(1);
-		a.notThrows(delay(10), 'foo');
-		return Promise.reject();
+		return a.notThrows(delay(10), 'foo')
+			.then(() => Promise.reject());
 	}).run().then(passed => {
 		t.is(passed, true);
 		t.end();
@@ -735,7 +691,7 @@ test('failing tests pass when returning a rejected promise', t => {
 
 test('failing tests pass with `t.throws(nonThrowingPromise)`', t => {
 	ava.failing(a => {
-		a.throws(Promise.resolve(10));
+		return a.throws(Promise.resolve(10));
 	}).run().then(passed => {
 		t.is(passed, true);
 		t.end();
@@ -745,7 +701,7 @@ test('failing tests pass with `t.throws(nonThrowingPromise)`', t => {
 test('failing tests fail with `t.notThrows(throws)`', t => {
 	let result;
 	ava.failing(a => {
-		a.notThrows(Promise.resolve('foo'));
+		return a.notThrows(Promise.resolve('foo'));
 	}, null, r => {
 		result = r;
 	}).run().then(passed => {

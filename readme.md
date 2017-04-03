@@ -964,9 +964,25 @@ test('rejects', async t => {
 });
 ```
 
+When testing a promise you must wait for the assertion to complete:
+
+```js
+test('rejects', async t => {
+	await t.throws(promise);
+});
+```
+
 ### `.notThrows(function|promise, [message])`
 
 Assert that `function` does not throw an error or that `promise` does not reject with an error.
+
+Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
+
+```js
+test('rejects', async t => {
+	await t.notThrows(promise);
+});
+```
 
 ### `.regex(contents, regex, [message])`
 
