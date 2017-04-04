@@ -1,7 +1,8 @@
 'use strict';
+require('../lib/globals').options.color = false;
+
 const test = require('tap').test;
 const delay = require('delay');
-const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
@@ -145,7 +146,9 @@ test('wrap non-assertion errors', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(err)}]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Error thrown in test:');
+	t.match(result.reason.values[0].formatted, /Error/);
 	t.end();
 });
 
@@ -171,7 +174,9 @@ test('end can be used as callback with error', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Callback called with an error');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Callback called with an error:', formatted: formatValue(err)}]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Callback called with an error:');
+	t.match(result.reason.values[0].formatted, /.*Error.*\n.*message: 'failed'/);
 	t.end();
 });
 
@@ -188,7 +193,9 @@ test('end can be used as callback with a non-error as its error argument', t => 
 	t.ok(result.reason);
 	t.is(result.reason.message, 'Callback called with an error');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Callback called with an error:', formatted: formatValue(nonError)}]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Callback called with an error:');
+	t.match(result.reason.values[0].formatted, /.*\{.*\n.*foo: 'bar'/);
 	t.end();
 });
 
@@ -376,10 +383,9 @@ test('fails with the first assertError', t => {
 
 	t.is(passed, false);
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [
-		{label: 'Actual:', formatted: formatValue(1)},
-		{label: 'Must be the same as:', formatted: formatValue(2)}
-	]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Difference:');
+	t.match(result.reason.values[0].formatted, /- 1\n\+ 2/);
 	t.end();
 });
 
@@ -409,7 +415,9 @@ test('fails with thrown falsy value', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(0)}]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Error thrown in test:');
+	t.match(result.reason.values[0].formatted, /0/);
 	t.end();
 });
 
@@ -425,7 +433,9 @@ test('fails with thrown non-error object', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(obj)}]);
+	t.is(result.reason.values.length, 1);
+	t.is(result.reason.values[0].label, 'Error thrown in test:');
+	t.match(result.reason.values[0].formatted, /.*\{.*\n.*foo: 'bar'/);
 	t.end();
 });
 

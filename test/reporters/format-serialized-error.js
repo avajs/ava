@@ -1,7 +1,7 @@
 'use strict';
 const chalk = require('chalk');
+const concordance = require('concordance');
 const test = require('tap').test;
-const format = require('../../lib/format-assert-error');
 const formatSerializedError = require('../../lib/reporters/format-serialized-error');
 
 test('indicates message should not be printed if it is empty', t => {
@@ -40,11 +40,11 @@ test('print multiple values', t => {
 		values: [
 			{
 				label: 'Actual:',
-				formatted: format.formatValue([1, 2, 3])
+				formatted: concordance.format([1, 2, 3])
 			},
 			{
 				label: 'Expected:',
-				formatted: format.formatValue({a: 1, b: 2, c: 3})
+				formatted: concordance.format({a: 1, b: 2, c: 3})
 			}
 		]
 	};
@@ -64,7 +64,7 @@ test('print single value', t => {
 		values: [
 			{
 				label: 'Actual:',
-				formatted: format.formatValue([1, 2, 3])
+				formatted: concordance.format([1, 2, 3])
 			}
 		]
 	};
@@ -79,17 +79,17 @@ test('print single value', t => {
 test('print multiple statements', t => {
 	const err = {
 		statements: [
-			['actual.a[0]', format.formatValue(1)],
-			['actual.a', format.formatValue([1])],
-			['actual', format.formatValue({a: [1]})]
+			['actual.a[0]', concordance.format(1)],
+			['actual.a', concordance.format([1])],
+			['actual', concordance.format({a: [1]})]
 		],
 		values: []
 	};
 
 	t.is(formatSerializedError(err).formatted, [
-		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`,
-		`actual.a\n${chalk.grey('=>')} ${format.formatValue([1])}`,
-		`actual\n${chalk.grey('=>')} ${format.formatValue({a: [1]})}`
+		`actual.a[0]\n${chalk.grey('=>')} ${concordance.format(1)}`,
+		`actual.a\n${chalk.grey('=>')} ${concordance.format([1])}`,
+		`actual\n${chalk.grey('=>')} ${concordance.format({a: [1]})}`
 	].join('\n\n'));
 	t.end();
 });
@@ -97,13 +97,13 @@ test('print multiple statements', t => {
 test('print single statement', t => {
 	const err = {
 		statements: [
-			['actual.a[0]', format.formatValue(1)]
+			['actual.a[0]', concordance.format(1)]
 		],
 		values: []
 	};
 
 	t.is(formatSerializedError(err).formatted, [
-		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
+		`actual.a[0]\n${chalk.grey('=>')} ${concordance.format(1)}`
 	].join('\n\n'));
 	t.end();
 });
@@ -111,12 +111,12 @@ test('print single statement', t => {
 test('print statements after values', t => {
 	const err = {
 		statements: [
-			['actual.a[0]', format.formatValue(1)]
+			['actual.a[0]', concordance.format(1)]
 		],
 		values: [
 			{
 				label: 'Actual:',
-				formatted: format.formatValue([1, 2, 3])
+				formatted: concordance.format([1, 2, 3])
 			}
 		]
 	};
@@ -124,7 +124,7 @@ test('print statements after values', t => {
 	t.is(formatSerializedError(err).formatted, [
 		'Actual:',
 		`${err.values[0].formatted}`,
-		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
+		`actual.a[0]\n${chalk.grey('=>')} ${concordance.format(1)}`
 	].join('\n\n'));
 	t.end();
 });
