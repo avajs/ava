@@ -102,12 +102,43 @@ test('.is()', t => {
 		assertions.is('foo', 'foo');
 	});
 
+	passes(t, () => {
+		assertions.is(true, true);
+	});
+
+	passes(t, () => {
+		assertions.is(false, false);
+	});
+
+	passes(t, () => {
+		assertions.is(null, null);
+	});
+
+	passes(t, () => {
+		assertions.is(undefined, undefined);
+	});
+
+	passes(t, () => {
+		assertions.is(0, 0);
+	});
+
+	passes(t, () => {
+		assertions.is(-0, -0);
+	});
+
+	passes(t, () => {
+		assertions.is(NaN, NaN);
+	});
+
+	passes(t, () => {
+		assertions.is(0 / 0, NaN);
+	});
+
 	failsWith(t, () => {
 		assertions.is('foo', 'bar');
 	}, {
 		assertion: 'is',
 		message: '',
-		operator: '===',
 		values: [
 			{label: 'Difference:', formatted: /foobar/}
 		]
@@ -118,10 +149,9 @@ test('.is()', t => {
 	}, {
 		assertion: 'is',
 		message: '',
-		operator: '===',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal to:', formatted: /42/}
+			{label: 'Must be strictly equal (using Object.is) to:', formatted: /42/}
 		]
 	});
 
@@ -130,10 +160,31 @@ test('.is()', t => {
 	}, {
 		assertion: 'is',
 		message: 'my message',
-		operator: '===',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal to:', formatted: /42/}
+			{label: 'Must be strictly equal (using Object.is) to:', formatted: /42/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is(0, -0, 'my message');
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /0/},
+			{label: 'Must be strictly equal (using Object.is) to:', formatted: /0/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is(-0, 0, 'my message');
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /0/},
+			{label: 'Must be strictly equal (using Object.is) to:', formatted: /0/}
 		]
 	});
 
@@ -150,8 +201,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: '',
-		operator: '!==',
-		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
+		values: [{label: 'Value is strictly equal (using Object.is):', formatted: /foo/}]
 	});
 
 	failsWith(t, () => {
@@ -159,8 +209,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: 'my message',
-		operator: '!==',
-		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
+		values: [{label: 'Value is strictly equal (using Object.is):', formatted: /foo/}]
 	});
 
 	t.end();

@@ -632,8 +632,8 @@ function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-test('2 + 2 === 4', macro, '2 + 2', 4);
-test('2 * 3 === 6', macro, '2 * 3', 6);
+test('Object.is(2 + 2, 4)', macro, '2 + 2', 4);
+test('Object.is(2 * 3, 6)', macro, '2 * 3', 6);
 ```
 
 You can build the test title programmatically by attaching a `title` function to the macro:
@@ -643,7 +643,7 @@ function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-macro.title = (providedTitle, input, expected) => `${providedTitle} ${input} === ${expected}`.trim();
+macro.title = (providedTitle, input, expected) => `${providedTitle} Object.is(${input}, ${expected})`.trim();
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
@@ -914,15 +914,15 @@ Assert that `value` is `false`.
 
 ### `.is(value, expected, [message])`
 
-Assert that `value` is equal to `expected`.
+Assert that `value` is equal to `expected` (using `Object.is()` for equality testing).
 
 ### `.not(value, expected, [message])`
 
-Assert that `value` is not equal to `expected`.
+Assert that `value` is not equal to `expected` (using `Object.is()` for equality testing).
 
 ### `.deepEqual(value, expected, [message])`
 
-Assert that `value` is deep equal to `expected`. This is based on [Lodash' `isEqual()`](https://lodash.com/docs/4.17.4#isEqual):
+Assert that `value` is deeply equal to `expected`. This is based on [Lodash's `isEqual()`](https://lodash.com/docs/4.17.4#isEqual):
 
 > Performs a deep comparison between two values to determine if they are equivalent.
 >
@@ -930,7 +930,7 @@ Assert that `value` is deep equal to `expected`. This is based on [Lodash' `isEq
 
 ### `.notDeepEqual(value, expected, [message])`
 
-Assert that `value` is not deep equal to `expected`. The inverse of `.deepEqual()`.
+Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
 ### `.throws(function|promise, [error, [message]])`
 
