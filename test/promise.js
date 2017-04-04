@@ -1,7 +1,8 @@
 'use strict';
+require('../lib/globals').options.color = false;
+
 const Promise = require('bluebird');
 const test = require('tap').test;
-const formatValue = require('../lib/format-assert-error').formatValue;
 const Test = require('../lib/test');
 
 function ava(fn, onResult) {
@@ -358,7 +359,9 @@ test('reject', t => {
 		t.is(passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Rejected promise returned by test');
-		t.same(result.reason.values, [{label: 'Rejected promise returned by test. Reason:', formatted: formatValue(new Error('unicorn'))}]);
+		t.is(result.reason.values.length, 1);
+		t.is(result.reason.values[0].label, 'Rejected promise returned by test. Reason:');
+		t.match(result.reason.values[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
 		t.end();
 	});
 });
@@ -374,7 +377,9 @@ test('reject with non-Error', t => {
 		t.is(passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Rejected promise returned by test');
-		t.same(result.reason.values, [{label: 'Rejected promise returned by test. Reason:', formatted: formatValue('failure')}]);
+		t.is(result.reason.values.length, 1);
+		t.is(result.reason.values[0].label, 'Rejected promise returned by test. Reason:');
+		t.match(result.reason.values[0].formatted, /failure/);
 		t.end();
 	});
 });
