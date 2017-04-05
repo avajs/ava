@@ -198,7 +198,7 @@ class Api extends EventEmitter {
 		}
 
 		return Promise
-			.map(files, getPort)
+			.map(files, () => getPort())
 			.map(port => {
 				const forkExecArgv = execArgv.slice();
 				let flagName = isInspect ? '--inspect' : '--debug';
