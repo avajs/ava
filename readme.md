@@ -632,8 +632,8 @@ function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-test('Object.is(2 + 2, 4)', macro, '2 + 2', 4);
-test('Object.is(2 * 3, 6)', macro, '2 * 3', 6);
+test('2 + 2 = 4', macro, '2 + 2', 4);
+test('2 * 3 = 6', macro, '2 * 3', 6);
 ```
 
 You can build the test title programmatically by attaching a `title` function to the macro:
@@ -643,7 +643,7 @@ function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-macro.title = (providedTitle, input, expected) => `${providedTitle} Object.is(${input}, ${expected})`.trim();
+macro.title = (providedTitle, input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
