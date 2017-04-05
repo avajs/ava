@@ -103,6 +103,10 @@ test('.is()', t => {
 	});
 
 	passes(t, () => {
+		assertions.is('', '');
+	});
+
+	passes(t, () => {
 		assertions.is(true, true);
 	});
 
@@ -119,6 +123,10 @@ test('.is()', t => {
 	});
 
 	passes(t, () => {
+		assertions.is(1, 1);
+	});
+
+	passes(t, () => {
 		assertions.is(0, 0);
 	});
 
@@ -132,6 +140,73 @@ test('.is()', t => {
 
 	passes(t, () => {
 		assertions.is(0 / 0, NaN);
+	});
+
+	passes(t, () => {
+		const someRef = {foo: 'bar'};
+		assertions.is(someRef, someRef);
+	});
+
+	fails(t, () => {
+		assertions.is(0, -0);
+	});
+
+	fails(t, () => {
+		assertions.is(0, false);
+	});
+
+	fails(t, () => {
+		assertions.is('', false);
+	});
+
+	fails(t, () => {
+		assertions.is('0', 0);
+	});
+
+	fails(t, () => {
+		assertions.is('17', 17);
+	});
+
+	fails(t, () => {
+		assertions.is([1, 2], '1,2');
+	});
+
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers
+		assertions.is(new String('foo'), 'foo');
+	});
+
+	fails(t, () => {
+		assertions.is(null, undefined);
+	});
+
+	fails(t, () => {
+		assertions.is(null, false);
+	});
+
+	fails(t, () => {
+		assertions.is(undefined, false);
+	});
+
+	fails(t, () => {
+		assertions.is({foo: 'bar'}, {foo: 'bar'});
+	});
+
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers
+		assertions.is(new String('foo'), new String('foo'));
+	});
+
+	fails(t, () => {
+		assertions.is(0, null);
+	});
+
+	fails(t, () => {
+		assertions.is(0, NaN);
+	});
+
+	fails(t, () => {
+		assertions.is('foo', NaN);
 	});
 
 	failsWith(t, () => {
@@ -194,6 +269,14 @@ test('.is()', t => {
 test('.not()', t => {
 	passes(t, () => {
 		assertions.not('foo', 'bar');
+	});
+
+	fails(t, () => {
+		assertions.not(NaN, NaN);
+	});
+
+	fails(t, () => {
+		assertions.not(0 / 0, NaN);
 	});
 
 	failsWith(t, () => {
