@@ -43,7 +43,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && flow check test/flow-types && nyc tap --no-cov --timeout=150 --jobs=4 test/*.js test/reporters/*.js",
+    "test": "xo && flow check test/flow-types && tsc -p test/ts-types && nyc tap --no-cov --timeout=150 --jobs=4 test/*.js test/reporters/*.js",
     "test-win": "tap --no-cov --reporter=classic --timeout=150 --jobs=4 test/*.js test/reporters/*.js",
     "visual": "node test/visual/run-visual-tests.js",
     "prepublish": "npm run make-ts",
@@ -188,6 +188,7 @@
     "tap": "^10.0.0",
     "temp-write": "^3.1.0",
     "touch": "^1.0.0",
+    "typescript": "^2.2.2",
     "xo": "^0.18.0",
     "zen-observable": "^0.5.1"
   },
