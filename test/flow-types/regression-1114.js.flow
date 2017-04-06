@@ -25,11 +25,6 @@ test.cb(t => {
 	t.end();
 });
 
-test.beforeEach(t => {
-	// $ExpectError: Unknown property "context"
-	const context = t.context;
-})
-
 function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
