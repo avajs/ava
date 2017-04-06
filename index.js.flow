@@ -187,8 +187,8 @@ declare module.exports: {
 	(              run: ContextualTest): void;
 	(name: string, run: ContextualTest): void;
 
-	beforeEach : TestMethod;
-	afterEach  : TestMethod;
+	beforeEach : ContextualTestMethod;
+	afterEach  : ContextualTestMethod;
 	serial     : ContextualTestMethod;
 	before     : ContextualTestMethod;
 	after      : ContextualTestMethod;
