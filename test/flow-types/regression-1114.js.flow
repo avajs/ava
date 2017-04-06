@@ -26,7 +26,6 @@ test.cb(t => {
 });
 
 test.beforeEach(t => {
-	// $ExpectError: Unknown property "context"
 	const context = t.context;
 })
 
