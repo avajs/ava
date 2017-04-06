@@ -84,9 +84,8 @@ type TestContext = AssertContext & {
 	plan(count: number): void;
 	skip: AssertContext;
 };
-type CallbackTestContext           = TestContext         & { end(): void; };
-type ContextualTestContext         = TestContext         & { context: any; };
-type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
+type ContextualTestContext         = TestContext & { context: any; };
+type ContextualCallbackTestContext = TestContext & { context: any; end(): void; };
 
 /**
  * Test Implementations
@@ -101,8 +100,6 @@ type TestImplementation<T, R> =
 	| TestFunction<T, R>
 	| Array<TestFunction<T, R>>;
 
-type Test                   = TestImplementation<TestContext, SpecialReturnTypes | void>;
-type CallbackTest           = TestImplementation<CallbackTestContext, void>;
 type ContextualTest         = TestImplementation<ContextualTestContext, SpecialReturnTypes | void>;
 type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, void>;
 
@@ -110,40 +107,6 @@ type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, 
 /**
  * Method Types
  */
-
-type TestMethod = {
-	(              implementation: Test): void;
-	(name: string, implementation: Test): void;
-
-	serial     : TestMethod;
-	before     : TestMethod;
-	after      : TestMethod;
-	skip       : TestMethod;
-	todo       : TestMethod;
-	failing    : TestMethod;
-	only       : TestMethod;
-	beforeEach : TestMethod;
-	afterEach  : TestMethod;
-	cb         : CallbackTestMethod;
-	always     : TestMethod;
-};
-
-type CallbackTestMethod = {
-	(              implementation: CallbackTest): void;
-	(name: string, implementation: CallbackTest): void;
-
-	serial     : CallbackTestMethod;
-	before     : CallbackTestMethod;
-	after      : CallbackTestMethod;
-	skip       : CallbackTestMethod;
-	todo       : CallbackTestMethod;
-	failing    : CallbackTestMethod;
-	only       : CallbackTestMethod;
-	beforeEach : CallbackTestMethod;
-	afterEach  : CallbackTestMethod;
-	cb         : CallbackTestMethod;
-	always     : CallbackTestMethod;
-};
 
 type ContextualTestMethod = {
 	(              implementation: ContextualTest): void;
