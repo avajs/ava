@@ -914,11 +914,11 @@ Assert that `value` is `false`.
 
 ### `.is(value, expected, [message])`
 
-Assert that `value` is equal to `expected` (using `Object.is()` for equality testing).
+Assert that `value` is the same as `expected`. This is based on using [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.not(value, expected, [message])`
 
-Assert that `value` is not equal to `expected` (using `Object.is()` for equality testing).
+Assert that `value` is not the same as `expected`. This is based on using [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.deepEqual(value, expected, [message])`
 

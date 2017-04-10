@@ -226,7 +226,7 @@ test('.is()', t => {
 		message: '',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal (using Object.is) to:', formatted: /42/}
+			{label: 'Must be the same as:', formatted: /42/}
 		]
 	});
 
@@ -237,7 +237,7 @@ test('.is()', t => {
 		message: 'my message',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal (using Object.is) to:', formatted: /42/}
+			{label: 'Must be the same as:', formatted: /42/}
 		]
 	});
 
@@ -248,7 +248,7 @@ test('.is()', t => {
 		message: 'my message',
 		values: [
 			{label: 'Actual:', formatted: /0/},
-			{label: 'Must be strictly equal (using Object.is) to:', formatted: /0/}
+			{label: 'Must be the same as:', formatted: /-0/}
 		]
 	});
 
@@ -258,8 +258,8 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Actual:', formatted: /0/},
-			{label: 'Must be strictly equal (using Object.is) to:', formatted: /0/}
+			{label: 'Actual:', formatted: /-0/},
+			{label: 'Must be the same as:', formatted: /0/}
 		]
 	});
 
@@ -284,7 +284,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: '',
-		values: [{label: 'Value is strictly equal (using Object.is):', formatted: /foo/}]
+		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
 	failsWith(t, () => {
@@ -292,7 +292,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: 'my message',
-		values: [{label: 'Value is strictly equal (using Object.is):', formatted: /foo/}]
+		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
 	t.end();
