@@ -9,6 +9,10 @@ This recipe works for any library that needs a mocked browser environment.
 
 ## Install browser-env
 
+> **❗️ Important note**
+>
+>`browser-env` adds properties from the `jsdom` window namespace to the Node.js global namespace. This is explicitly [recommended against](https://github.com/tmpvar/jsdom/wiki/Don't-stuff-jsdom-globals-onto-the-Node-global) by `jsdom`. Please read through the linked wiki page and make sure you understand the caveats. If you don't have lots of dependencies that also require a browser environment then [`window`](https://github.com/lukechilds/window#universal-testing-pattern) may be a better solution.
+
 Install [browser-env](https://github.com/lukechilds/browser-env).
 
 > Simulates a global browser environment using jsdom.
