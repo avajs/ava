@@ -504,7 +504,7 @@ test('promise tests fail if event loop empties before they\'re resolved', t => {
 
 test('snapshots work', t => {
 	try {
-		fs.unlinkSync(path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.snap'));
+		fs.unlinkSync(path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap'));
 	} catch (err) {
 		if (err.code !== 'ENOENT') {
 			throw err;

@@ -2,9 +2,11 @@
 require('../lib/globals').options.color = false;
 
 const path = require('path');
-const jestSnapshot = require('jest-snapshot');
+const stripAnsi = require('strip-ansi');
 const test = require('tap').test;
 const assert = require('../lib/assert');
+const snapshotManager = require('../lib/snapshot-manager');
+const Test = require('../lib/test');
 
 let lastFailure = null;
 let lastPassed = false;
@@ -47,7 +49,7 @@ function assertFailure(t, subset) {
 		t.is(lastFailure.values.length, subset.values.length);
 		lastFailure.values.forEach((s, i) => {
 			t.is(s.label, subset.values[i].label);
-			t.match(s.formatted, subset.values[i].formatted);
+			t.match(stripAnsi(s.formatted), subset.values[i].formatted);
 		});
 	} else {
 		t.same(lastFailure.values, []);
@@ -727,43 +729,52 @@ test('.snapshot()', t => {
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const update = false;
 
-	const state = jestSnapshot.initializeSnapshotState(__filename, update, path.join(__dirname, 'fixture', 'assert.snap'));
-	const executionContext = {
-		_test: {
-			getSnapshotState() {
-				return state;
-			}
-		},
-		title: ''
+	const manager = snapshotManager.load(path.join(__dirname, 'fixture'), 'assert.js', 'test/assert.js', update);
+	const setup = title => {
+		const fauxTest = new Test({
+			title,
+			compareTestSnapshot: options => manager.compare(options)
+		});
+		const executionContext = {
+			_test: fauxTest
+		};
+		return executionContext;
 	};
 
 	passes(t, () => {
-		executionContext.title = 'passes';
+		const executionContext = setup('passes');
 		assertions.snapshot.call(executionContext, {foo: 'bar'});
+		assertions.snapshot.call(executionContext, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
 	});
 
 	failsWith(t, () => {
-		executionContext.title = 'fails';
+		const executionContext = setup('fails');
 		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'});
 	}, {
 		assertion: 'snapshot',
 		message: 'Did not match snapshot',
-		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
 	});
 
 	failsWith(t, () => {
-		executionContext.title = 'fails';
+		const executionContext = setup('fails (fixed id)');
+		assertions.snapshot.call(executionContext, {foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
+	}, {
+		assertion: 'snapshot',
+		message: 'different message, also not included in snapshot report',
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+	});
+
+	failsWith(t, () => {
+		const executionContext = setup('fails');
 		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'}, 'my message');
 	}, {
 		assertion: 'snapshot',
 		message: 'my message',
-		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
 	});
 
-	if (update) {
-		state.save(true);
-	}
-
+	manager.save();
 	t.end();
 });
 
