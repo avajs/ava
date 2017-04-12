@@ -139,8 +139,6 @@
     "is-obj": "^1.0.0",
     "is-observable": "^0.2.0",
     "is-promise": "^2.1.0",
-    "jest-diff": "19.0.0",
-    "jest-snapshot": "19.0.2",
     "js-yaml": "^3.8.2",
     "last-line-stream": "^1.0.0",
     "lodash.clonedeepwith": "^4.5.0",
@@ -171,7 +169,8 @@
     "time-require": "^0.1.2",
     "trim-off-newlines": "^1.0.1",
     "unique-temp-dir": "^1.0.0",
-    "update-notifier": "^2.1.0"
+    "update-notifier": "^2.1.0",
+    "write-file-atomic": "^1.3.4"
   },
   "devDependencies": {
     "cli-table2": "^0.2.0",
