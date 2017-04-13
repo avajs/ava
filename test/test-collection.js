@@ -243,68 +243,6 @@ test('foo', t => {
 	const collection = new TestCollection({});
 	const log = [];
 
-	function logger(a) {
-		log.push(a.title);
-		a.pass();
-	}
-
-	function add(title, opts) {
-		collection.add({
-			title,
-			metadata: metadata(opts),
-			fn: logger
-		});
-	}
-
-	add('after1', {type: 'after'});
-	add('after.always', {
-		type: 'after',
-		always: true
-	});
-	add('beforeEach1', {type: 'beforeEach'});
-	add('before1', {type: 'before'});
-	add('beforeEach2', {type: 'beforeEach'});
-	add('afterEach1', {type: 'afterEach'});
-	add('afterEach.always', {
-		type: 'afterEach',
-		always: true
-	});
-	add('test1', {});
-	add('afterEach2', {type: 'afterEach'});
-	add('test2', {});
-	add('after2', {type: 'after'});
-	add('before2', {type: 'before'});
-
-	const passed = collection.build().run();
-	t.is(passed, true);
-
-	t.strictDeepEqual(log, [
-		'before1',
-		'before2',
-		'beforeEach1 for test1',
-		'beforeEach2 for test1',
-		'test1',
-		'afterEach1 for test1',
-		'afterEach2 for test1',
-		'afterEach.always for test1',
-		'beforeEach1 for test2',
-		'beforeEach2 for test2',
-		'test2',
-		'afterEach1 for test2',
-		'afterEach2 for test2',
-		'afterEach.always for test2',
-		'after1',
-		'after2',
-		'after.always'
-	]);
-
-	t.end();
-});
-
-test('foo', t => {
-	const collection = new TestCollection({});
-	const log = [];
-
 	function logger(result) {
 		t.is(result.passed, true);
 		log.push(result.result.title);

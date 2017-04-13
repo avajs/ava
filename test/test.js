@@ -199,6 +199,19 @@ test('end can be used as callback with a non-error as its error argument', t => 
 	t.end();
 });
 
+test('title returns the test title', t => {
+	t.plan(1);
+	new Test({
+		fn(a) {
+			t.is(a.title, 'foo');
+			a.pass();
+		},
+		metadata: {type: 'test', callback: false},
+		onResult: noop,
+		title: 'foo'
+	}).run();
+});
+
 test('handle non-assertion errors even when planned', t => {
 	const err = new Error('bar');
 	let result;
