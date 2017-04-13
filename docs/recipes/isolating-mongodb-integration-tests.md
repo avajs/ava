@@ -77,7 +77,7 @@ test('my mongoose model integration test', async t => {
 	
 	// Re-assign original mongose models to new Mongoose connection
 	Object.keys(mongoose.models).forEach(name => {
-		const model = mongoose.models[name];
+		let model = mongoose.models[name];
 		odm.model(name, model.schema);
 	});
 
