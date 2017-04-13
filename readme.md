@@ -867,7 +867,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks.
+The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks. `t.title` returns the test's title.
 
 ###### `t.plan(count)`
 
