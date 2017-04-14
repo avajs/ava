@@ -93,7 +93,7 @@ test.beforeEach(async t => {
     await db.connect(await MongoDBServer.getConnectionString());
   
     for (const name of mongoose.modelNames()) {
-      db.model(name, mongoose.model(name));
+      db.model(name, mongoose.model(name).schema);
     }
   
     t.context.db = db;
