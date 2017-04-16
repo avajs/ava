@@ -378,7 +378,7 @@ test('fails with the first assertError', t => {
 	t.is(result.reason.name, 'AssertionError');
 	t.same(result.reason.values, [
 		{label: 'Actual:', formatted: formatValue(1)},
-		{label: 'Must be strictly equal to:', formatted: formatValue(2)}
+		{label: 'Must be the same as:', formatted: formatValue(2)}
 	]);
 	t.end();
 });

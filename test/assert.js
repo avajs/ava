@@ -102,12 +102,118 @@ test('.is()', t => {
 		assertions.is('foo', 'foo');
 	});
 
+	passes(t, () => {
+		assertions.is('', '');
+	});
+
+	passes(t, () => {
+		assertions.is(true, true);
+	});
+
+	passes(t, () => {
+		assertions.is(false, false);
+	});
+
+	passes(t, () => {
+		assertions.is(null, null);
+	});
+
+	passes(t, () => {
+		assertions.is(undefined, undefined);
+	});
+
+	passes(t, () => {
+		assertions.is(1, 1);
+	});
+
+	passes(t, () => {
+		assertions.is(0, 0);
+	});
+
+	passes(t, () => {
+		assertions.is(-0, -0);
+	});
+
+	passes(t, () => {
+		assertions.is(NaN, NaN);
+	});
+
+	passes(t, () => {
+		assertions.is(0 / 0, NaN);
+	});
+
+	passes(t, () => {
+		const someRef = {foo: 'bar'};
+		assertions.is(someRef, someRef);
+	});
+
+	fails(t, () => {
+		assertions.is(0, -0);
+	});
+
+	fails(t, () => {
+		assertions.is(0, false);
+	});
+
+	fails(t, () => {
+		assertions.is('', false);
+	});
+
+	fails(t, () => {
+		assertions.is('0', 0);
+	});
+
+	fails(t, () => {
+		assertions.is('17', 17);
+	});
+
+	fails(t, () => {
+		assertions.is([1, 2], '1,2');
+	});
+
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers
+		assertions.is(new String('foo'), 'foo');
+	});
+
+	fails(t, () => {
+		assertions.is(null, undefined);
+	});
+
+	fails(t, () => {
+		assertions.is(null, false);
+	});
+
+	fails(t, () => {
+		assertions.is(undefined, false);
+	});
+
+	fails(t, () => {
+		assertions.is({foo: 'bar'}, {foo: 'bar'});
+	});
+
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers
+		assertions.is(new String('foo'), new String('foo'));
+	});
+
+	fails(t, () => {
+		assertions.is(0, null);
+	});
+
+	fails(t, () => {
+		assertions.is(0, NaN);
+	});
+
+	fails(t, () => {
+		assertions.is('foo', NaN);
+	});
+
 	failsWith(t, () => {
 		assertions.is('foo', 'bar');
 	}, {
 		assertion: 'is',
 		message: '',
-		operator: '===',
 		values: [
 			{label: 'Difference:', formatted: /foobar/}
 		]
@@ -118,10 +224,9 @@ test('.is()', t => {
 	}, {
 		assertion: 'is',
 		message: '',
-		operator: '===',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal to:', formatted: /42/}
+			{label: 'Must be the same as:', formatted: /42/}
 		]
 	});
 
@@ -130,10 +235,31 @@ test('.is()', t => {
 	}, {
 		assertion: 'is',
 		message: 'my message',
-		operator: '===',
 		values: [
 			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be strictly equal to:', formatted: /42/}
+			{label: 'Must be the same as:', formatted: /42/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is(0, -0, 'my message');
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /0/},
+			{label: 'Must be the same as:', formatted: /-0/}
+		]
+	});
+
+	failsWith(t, () => {
+		assertions.is(-0, 0, 'my message');
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /-0/},
+			{label: 'Must be the same as:', formatted: /0/}
 		]
 	});
 
@@ -145,13 +271,20 @@ test('.not()', t => {
 		assertions.not('foo', 'bar');
 	});
 
+	fails(t, () => {
+		assertions.not(NaN, NaN);
+	});
+
+	fails(t, () => {
+		assertions.not(0 / 0, NaN);
+	});
+
 	failsWith(t, () => {
 		assertions.not('foo', 'foo');
 	}, {
 		assertion: 'not',
 		message: '',
-		operator: '!==',
-		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
+		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
 	failsWith(t, () => {
@@ -159,8 +292,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: 'my message',
-		operator: '!==',
-		values: [{label: 'Value is strictly equal:', formatted: /foo/}]
+		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
 	t.end();
