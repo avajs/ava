@@ -1,7 +1,7 @@
 # Setting up AVA for Isolated MongoDB Integration Tests
 
 This recipe outlines how to run disposable MongoDB databases in your AVA tests with per-test isolation.
-This uses `mongomem` and is available on [npm](https://www.npmjs.com/package/mongomem).
+This uses `mongomem` which is available on [npm](https://www.npmjs.com/package/mongomem).
 
 `mongomem` is a package that allows you to quickly run a temporary MongoDB server locally.
 It uses temporary file storage which is destroyed when the server stops. 
@@ -23,7 +23,7 @@ import test from 'ava';
 import { MongoDBServer } from 'mongomem';
 
 test.before('start mongodb server', async t => {
-  await MongoDBServer.start();
+	await MongoDBServer.start();
 })
 
 test('some feature', async t => {
@@ -43,8 +43,8 @@ This will remove any temporary files the server used while running.
 This is normally cleaned up by your operating system but it is good practise to do it manually to avoid OS-specific issues.
 
 ```javascript
-test.after.always('cleanup', async t => {
-  MongoDBServer.tearDown(); // This will clean up temporary file storage.
+test.after.always('cleanup', t => {
+	MongoDBServer.tearDown(); // This will clean up temporary file storage.
 });
 ```
 
@@ -82,25 +82,25 @@ First, call `new mongoose.Mongoose()` to get the new instance, and then call `co
 
 ```javascript
 import mongoose from 'mongoose';
-import { MongoDBServer } from 'mongomem'
+import { MongoDBServer } from 'mongomem';
 
 test.before('start mongodb', async t => {
-  await MongoDBServer.start();
+	await MongoDBServer.start();
 });
 
 test.beforeEach(async t => {
-  const db = new mongoose.Mongoose();
-    await db.connect(await MongoDBServer.getConnectionString());
-  
-    for (const name of mongoose.modelNames()) {
-      db.model(name, mongoose.model(name).schema);
-    }
-  
-    t.context.db = db;
+	const db = new mongoose.Mongoose();
+	await db.connect(await MongoDBServer.getConnectionString());
+	
+	for (const name of mongoose.modelNames()) {
+		db.model(name, mongoose.model(name).schema);
+	}
+	
+	t.context.db = db;
 });
 
 test('my mongoose model integration test', async t => {
 	const {db} = t.context;
-      // do something…
+	// Now use the isolated DB instance in your test...
 });
 ```
