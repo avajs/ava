@@ -1,6 +1,14 @@
 # Setting up Ava for Isolated MongoDB Integration Tests
 
+<<<<<<< Updated upstream
 This recipe outlines how to run disposable MongoDB databases in your Ava tests, isolated between tests.
+=======
+This recipe outlines how to run disposable MongoDB databases in your AVA tests with per-test isolation.
+This uses `mongomem` which is available on [npm](https://www.npmjs.com/package/mongomem).
+
+`mongomem` is a package that allows you to quickly run a temporary MongoDB server locally.
+It uses temporary file storage which is destroyed when the server stops. 
+>>>>>>> Stashed changes
 
 ## Install MongoDB in-memory Server (MongoMem)
 In the root directory of your application, run:
@@ -13,6 +21,7 @@ In your test file, import the module and run the server.
 
 ```javascript
 import { MongoDBServer } from 'mongomem';
+<<<<<<< Updated upstream
 let hasStarted = MongoDBServer.start();
 
 // ES6 promise syntax
@@ -29,6 +38,32 @@ test('some feature - es6', t => {
 test('some feature - async/await', async t => {
 	await hasStarted;
 	let connectionString = await MongoDBServer.getConnectionString();
+=======
+
+test.before('start mongodb server', async t => {
+	await MongoDBServer.start();
+})
+
+test('some feature', async t => {
+	const connectionString = await MongoDBServer.getConnectionString();
+	
+	// connectionString === 'mongodb://localhost:27017/3411fd12-b5d6-4860-854c-5bbdb011cb93'
+	// use connectionString to connect to the database with a client of your choice. See below for usage with Mongoose.
+});
+
+```
+
+## Cleaning Up
+
+After you have run your tests, you should include a `test.after.always` method to clean up the MongoDB server.
+This will remove any temporary files the server used while running.
+
+This is normally cleaned up by your operating system but it is good practise to do it manually to avoid OS-specific issues.
+
+```javascript
+test.after.always('cleanup', t => {
+  MongoDBServer.tearDown(); // This will clean up temporary file storage.
+>>>>>>> Stashed changes
 });
 ```
 
@@ -66,8 +101,9 @@ First, call `new mongoose.Mongoose()` to get the new instance, and then call `co
 
 ```javascript
 import mongoose from 'mongoose';
-import { MongoDBServer } from 'mongomem'
+import { MongoDBServer } from 'mongomem';
 
+<<<<<<< Updated upstream
 let hasStarted = MongoDBServer.start();
 
 test('my mongoose model integration test', async t => {
@@ -82,5 +118,25 @@ test('my mongoose model integration test', async t => {
 	});
 
 	// Now you can test with Mongoose using the 'odm' variable...
+=======
+test.before('start mongodb', async t => {
+	await MongoDBServer.start();
+});
+
+test.beforeEach(async t => {
+	const db = new mongoose.Mongoose();
+	await db.connect(await MongoDBServer.getConnectionString());
+	
+	for (const name of mongoose.modelNames()) {
+		db.model(name, mongoose.model(name).schema);
+	}
+	
+	t.context.db = db;
+});
+
+test('my mongoose model integration test', async t => {
+	const {db} = t.context;
+	// Now use the isolated DB instance in your test...
+>>>>>>> Stashed changes
 });
 ```
