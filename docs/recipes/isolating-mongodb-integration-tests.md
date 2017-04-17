@@ -85,7 +85,7 @@ import mongoose from 'mongoose';
 import { MongoDBServer } from 'mongomem';
 
 test.before('start mongodb', async t => {
-await MongoDBServer.start();
+	await MongoDBServer.start();
 });
 
 test.beforeEach(async t => {
