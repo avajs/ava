@@ -91,13 +91,13 @@ You may also want to check out the Settings page in Dev Tools and enable one or 
 First collect benchmark data for a branch/commit:
 
 ```
-$ node bench/run
+$ node bench/run.js
 ```
 
 Once you have collected data from two/three branches/commits:
 
 ```
-$ node bench/compare
+$ node bench/compare.js
 ```
 
 *You could for example gather benchmark data from the working tree and the last commit.*
