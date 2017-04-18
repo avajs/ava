@@ -9,10 +9,10 @@ const cross = require('figures').cross;
 const lolex = require('lolex');
 const AvaError = require('../../lib/ava-error');
 const MiniReporter = require('../../lib/reporters/mini');
+const formatSerializedError = require('../../lib/reporters/format-serialized-error');
 const beautifyStack = require('../../lib/beautify-stack');
 const colors = require('../../lib/colors');
 const compareLineOutput = require('../helper/compare-line-output');
-const formatSerializedError = require('../../lib/format-assert-error').formatSerializedError;
 const codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
