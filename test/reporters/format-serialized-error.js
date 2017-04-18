@@ -1,6 +1,5 @@
 'use strict';
 const chalk = require('chalk');
-const indentString = require('indent-string');
 const test = require('tap').test;
 const format = require('../../lib/format-assert-error');
 const formatSerializedError = require('../../lib/reporters/format-serialized-error');
@@ -22,9 +21,9 @@ test('print multiple values', t => {
 
 	t.is(formatSerializedError(err), [
 		'Actual:\n',
-		`${indentString(err.values[0].formatted, 2)}\n`,
+		`${err.values[0].formatted}\n`,
 		'Expected:\n',
-		`${indentString(err.values[1].formatted, 2)}\n`
+		`${err.values[1].formatted}\n`
 	].join('\n'));
 	t.end();
 });
@@ -42,7 +41,7 @@ test('print single value', t => {
 
 	t.is(formatSerializedError(err), [
 		'Actual:\n',
-		`${indentString(err.values[0].formatted, 2)}\n`
+		`${err.values[0].formatted}\n`
 	].join('\n'));
 	t.end();
 });
@@ -94,7 +93,7 @@ test('print statements after values', t => {
 
 	t.is(formatSerializedError(err), [
 		'Actual:',
-		`${indentString(err.values[0].formatted, 2)}`,
+		`${err.values[0].formatted}`,
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
 	].join('\n\n') + '\n');
 	t.end();
