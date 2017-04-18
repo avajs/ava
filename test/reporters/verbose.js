@@ -10,8 +10,8 @@ const lolex = require('lolex');
 const beautifyStack = require('../../lib/beautify-stack');
 const colors = require('../../lib/colors');
 const VerboseReporter = require('../../lib/reporters/verbose');
+const formatSerializedError = require('../../lib/reporters/format-serialized-error');
 const compareLineOutput = require('../helper/compare-line-output');
-const formatSerializedError = require('../../lib/format-assert-error').formatSerializedError;
 const codeExcerpt = require('../../lib/code-excerpt');
 
 chalk.enabled = true;
