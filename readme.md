@@ -143,7 +143,7 @@ $ npm test
 ### Watch it
 
 ```console
-$ npm test -- --watch
+$ npm test --watch
 ```
 
 AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipes/watch-mode.md).
