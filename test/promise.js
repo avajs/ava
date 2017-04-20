@@ -358,7 +358,7 @@ test('reject', t => {
 		t.is(passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Rejected promise returned by test');
-		t.same(result.reason.values, [{label: 'Rejection reason:', formatted: formatValue(new Error('unicorn'))}]);
+		t.same(result.reason.values, [{label: 'Rejected promise returned by test. Reason:', formatted: formatValue(new Error('unicorn'))}]);
 		t.end();
 	});
 });
@@ -374,7 +374,7 @@ test('reject with non-Error', t => {
 		t.is(passed, false);
 		t.is(result.reason.name, 'AssertionError');
 		t.is(result.reason.message, 'Rejected promise returned by test');
-		t.same(result.reason.values, [{label: 'Rejection reason:', formatted: formatValue('failure')}]);
+		t.same(result.reason.values, [{label: 'Rejected promise returned by test. Reason:', formatted: formatValue('failure')}]);
 		t.end();
 	});
 });
