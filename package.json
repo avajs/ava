@@ -170,6 +170,7 @@
     "strip-bom-buf": "^1.0.0",
     "supports-color": "^3.2.3",
     "time-require": "^0.1.2",
+    "trim-off-newlines": "^1.0.1",
     "unique-temp-dir": "^1.0.0",
     "update-notifier": "^2.1.0"
   },

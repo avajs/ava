@@ -23,7 +23,7 @@ test('print multiple values', t => {
 		'Actual:\n',
 		`${err.values[0].formatted}\n`,
 		'Expected:\n',
-		`${err.values[1].formatted}\n`
+		err.values[1].formatted
 	].join('\n'));
 	t.end();
 });
@@ -41,7 +41,7 @@ test('print single value', t => {
 
 	t.is(formatSerializedError(err), [
 		'Actual:\n',
-		`${err.values[0].formatted}\n`
+		err.values[0].formatted
 	].join('\n'));
 	t.end();
 });
@@ -60,7 +60,7 @@ test('print multiple statements', t => {
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`,
 		`actual.a\n${chalk.grey('=>')} ${format.formatValue([1])}`,
 		`actual\n${chalk.grey('=>')} ${format.formatValue({a: [1]})}`
-	].join('\n\n') + '\n');
+	].join('\n\n'));
 	t.end();
 });
 
@@ -74,7 +74,7 @@ test('print single statement', t => {
 
 	t.is(formatSerializedError(err), [
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
-	].join('\n\n') + '\n');
+	].join('\n\n'));
 	t.end();
 });
 
@@ -95,6 +95,6 @@ test('print statements after values', t => {
 		'Actual:',
 		`${err.values[0].formatted}`,
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
-	].join('\n\n') + '\n');
+	].join('\n\n'));
 	t.end();
 });
