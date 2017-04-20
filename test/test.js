@@ -145,7 +145,7 @@ test('wrap non-assertion errors', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
+	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(err)}]);
 	t.end();
 });
 
@@ -171,7 +171,7 @@ test('end can be used as callback with error', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Callback called with an error');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(err)}]);
+	t.same(result.reason.values, [{label: 'Callback called with an error:', formatted: formatValue(err)}]);
 	t.end();
 });
 
@@ -188,7 +188,7 @@ test('end can be used as callback with a non-error as its error argument', t => 
 	t.ok(result.reason);
 	t.is(result.reason.message, 'Callback called with an error');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(nonError)}]);
+	t.same(result.reason.values, [{label: 'Callback called with an error:', formatted: formatValue(nonError)}]);
 	t.end();
 });
 
@@ -409,7 +409,7 @@ test('fails with thrown falsy value', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(0)}]);
+	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(0)}]);
 	t.end();
 });
 
@@ -425,7 +425,7 @@ test('fails with thrown non-error object', t => {
 	t.is(passed, false);
 	t.is(result.reason.message, 'Error thrown in test');
 	t.is(result.reason.name, 'AssertionError');
-	t.same(result.reason.values, [{label: 'Error:', formatted: formatValue(obj)}]);
+	t.same(result.reason.values, [{label: 'Error thrown in test:', formatted: formatValue(obj)}]);
 	t.end();
 });
 

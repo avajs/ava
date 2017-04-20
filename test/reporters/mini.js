@@ -445,8 +445,6 @@ test('results with errors', t => {
 		'',
 		indentString(codeExcerpt(err3.source), 2).split('\n'),
 		'',
-		/failure three/,
-		'',
 		'  failure three:',
 		'',
 		'  [1]',

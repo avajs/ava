@@ -4,6 +4,36 @@ const test = require('tap').test;
 const format = require('../../lib/format-assert-error');
 const formatSerializedError = require('../../lib/reporters/format-serialized-error');
 
+test('indicates message should not be printed if it is empty', t => {
+	const err = {
+		message: '',
+		statements: [],
+		values: [{label: '', formatted: ''}]
+	};
+	t.false(formatSerializedError(err).printMessage);
+	t.end();
+});
+
+test('indicates message should not be printed if the first value label starts with the message', t => {
+	const err = {
+		message: 'foo',
+		statements: [],
+		values: [{label: 'foobar', formatted: ''}]
+	};
+	t.false(formatSerializedError(err).printMessage);
+	t.end();
+});
+
+test('indicates message should be printed if not empty and the first value label does not start with the message', t => {
+	const err = {
+		message: 'foo',
+		statements: [],
+		values: [{label: 'barfoo', formatted: ''}]
+	};
+	t.true(formatSerializedError(err).printMessage);
+	t.end();
+});
+
 test('print multiple values', t => {
 	const err = {
 		statements: [],
@@ -19,7 +49,7 @@ test('print multiple values', t => {
 		]
 	};
 
-	t.is(formatSerializedError(err), [
+	t.is(formatSerializedError(err).formatted, [
 		'Actual:\n',
 		`${err.values[0].formatted}\n`,
 		'Expected:\n',
@@ -39,7 +69,7 @@ test('print single value', t => {
 		]
 	};
 
-	t.is(formatSerializedError(err), [
+	t.is(formatSerializedError(err).formatted, [
 		'Actual:\n',
 		err.values[0].formatted
 	].join('\n'));
@@ -56,7 +86,7 @@ test('print multiple statements', t => {
 		values: []
 	};
 
-	t.is(formatSerializedError(err), [
+	t.is(formatSerializedError(err).formatted, [
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`,
 		`actual.a\n${chalk.grey('=>')} ${format.formatValue([1])}`,
 		`actual\n${chalk.grey('=>')} ${format.formatValue({a: [1]})}`
@@ -72,7 +102,7 @@ test('print single statement', t => {
 		values: []
 	};
 
-	t.is(formatSerializedError(err), [
+	t.is(formatSerializedError(err).formatted, [
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
 	].join('\n\n'));
 	t.end();
@@ -91,7 +121,7 @@ test('print statements after values', t => {
 		]
 	};
 
-	t.is(formatSerializedError(err), [
+	t.is(formatSerializedError(err).formatted, [
 		'Actual:',
 		`${err.values[0].formatted}`,
 		`actual.a[0]\n${chalk.grey('=>')} ${format.formatValue(1)}`
