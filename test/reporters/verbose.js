@@ -377,7 +377,7 @@ test('results with errors', t => {
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
 	const error2 = new Error('error two message');
@@ -388,7 +388,7 @@ test('results with errors', t => {
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
 	];
 
 	const reporter = createReporter({color: true});
@@ -439,7 +439,7 @@ test('results with errors and disabled code excerpts', t => {
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
 	const error2 = new Error('error two message');
@@ -450,7 +450,7 @@ test('results with errors and disabled code excerpts', t => {
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
 	];
 
 	const reporter = createReporter({color: true});
@@ -500,7 +500,7 @@ test('results with errors and disabled code excerpts', t => {
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
 	const error2 = new Error('error two message');
@@ -511,7 +511,7 @@ test('results with errors and disabled code excerpts', t => {
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
 	];
 
 	const reporter = createReporter({color: true});
