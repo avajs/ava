@@ -38,7 +38,6 @@
     }
   ],
   "bin": "cli.js",
-  "typings": "types/generated.d.ts",
   "engines": {
     "node": ">=4"
   },
@@ -56,22 +55,24 @@
     "types/generated.d.ts"
   ],
   "keywords": [
+    "🦄",
     "test",
     "runner",
+    "testing",
     "ava",
     "concurrent",
     "parallel",
     "fast",
-    "tape",
-    "tap",
-    "jest",
-    "mocha",
-    "qunit",
-    "jasmine",
-    "testing",
     "tdd",
     "cli-app",
     "cli",
+    "jest",
+    "mocha",
+    "tape",
+    "tap",
+    "qunit",
+    "jasmine",
+    "babel",
     "assert",
     "assertion",
     "futuristic",
@@ -84,7 +85,12 @@
     "generators",
     "yield",
     "observable",
-    "observables"
+    "unit",
+    "observables",
+    "snapshot",
+    "expect",
+    "typescript",
+    "flow"
   ],
   "dependencies": {
     "@ava/babel-preset-stage-4": "^1.0.0",
@@ -193,8 +199,8 @@
     "xo": "^0.18.0",
     "zen-observable": "^0.5.1"
   },
+  "typings": "types/generated.d.ts",
   "xo": {
-    "esnext": true,
     "rules": {
       "import/newline-after-import": "off",
       "no-use-extend-native/no-use-extend-native": "off"
