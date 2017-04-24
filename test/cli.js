@@ -72,7 +72,7 @@ test('disallow invalid babel config shortcuts', t => {
 
 		let expectedOutput = '\n  ';
 		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava#es2015-support for allowed values.';
+		expectedOutput += ' See https://github.com/avajs/ava#es2017-support for allowed values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
