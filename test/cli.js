@@ -364,6 +364,14 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	});
 });
 
+test('bails when config does not contain `--concurrency` and `-c` values', t => {
+	execCli(['test.js'], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+		t.is(err.code, 1);
+		t.match(stderr, 'The --concurrency and -c flags must be provided the maximum number of test files to run with.');
+		t.end();
+	});
+});
+
 test('--match works', t => {
 	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'fixture/matcher-skip.js'], err => {
 		t.ifError(err);
