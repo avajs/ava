@@ -1,4 +1,4 @@
-# Setting up AVA for Isolated MongoDB Integration Tests
+# Isolated MongoDB integration tests
 
 This recipe outlines how to run disposable MongoDB databases in your AVA tests with per-test isolation. This uses `mongomem` which is available on [npm](https://www.npmjs.com/package/mongomem).
 
@@ -34,7 +34,6 @@ test('some feature', async t => {
 	// connectionString === 'mongodb://localhost:27017/3411fd12-b5d6-4860-854c-5bbdb011cb93'
 	// Use `connectionString` to connect to the database with a client of your choice. See below for usage with Mongoose.
 });
-
 ```
 
 
