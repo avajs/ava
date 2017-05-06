@@ -203,6 +203,7 @@ $ node --inspect node_modules/ava/profile.js some/test/file.js
 
 - [Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [WebStorm](docs/recipes/debugging-with-webstorm.md)
+- [Visual Studio Code](docs/recipes/debugging-with-vscode.md)
 
 
 ## Reporters
