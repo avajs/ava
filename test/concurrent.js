@@ -63,7 +63,7 @@ function passAsync(val) {
 function failAsync(err) {
 	return {
 		run() {
-			return collect(Promise.resolve({ // eslint-disable-line promise/no-promise-in-callback
+			return collect(Promise.resolve({
 				passed: false,
 				reason: err
 			}));

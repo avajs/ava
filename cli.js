@@ -12,7 +12,7 @@ const localCLI = resolveCwd('ava/cli');
 // see https://github.com/nodejs/node/issues/6624
 if (localCLI && path.relative(localCLI, __filename) !== '') {
 	debug('Using local install of AVA');
-	require(localCLI); // eslint-disable-line import/no-dynamic-require
+	require(localCLI);
 } else {
 	if (debug.enabled) {
 		require('time-require'); // eslint-disable-line import/no-unassigned-import
