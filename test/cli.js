@@ -366,7 +366,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 
 ['--concurrency', '-c'].forEach(concurrencyFlag => {
 	test(`bails when ${concurrencyFlag} provided without value`, t => {
-		execCli([concurrencyFlag, 'test.js'], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
 			t.match(stderr, 'The --concurrency and -c flags must be provided the maximum number of test files to run at once.');
 			t.end();
