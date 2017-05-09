@@ -5,6 +5,7 @@ const debug = require('debug')('ava');
 
 // Prefer the local installation of AVA.
 const resolveCwd = require('resolve-cwd');
+
 const localCLI = resolveCwd('ava/cli');
 
 // Use `path.relative()` to detect local AVA installation,

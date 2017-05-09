@@ -2,9 +2,10 @@
 const path = require('path');
 const fs = require('fs');
 const figures = require('figures');
-const rimraf = require('rimraf');
+const del = require('del');
 const test = require('tap').test;
 const Api = require('../api');
+
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
 const ROOT_DIR = path.join(__dirname, '..');
@@ -658,7 +659,7 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} caching is enabled by default`, t => {
-		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 		const api = apiCreator({
 			resolveTestsFrom: path.join(__dirname, 'fixture/caching')
@@ -687,7 +688,7 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} caching can be disabled`, t => {
-		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 		const api = apiCreator({
 			resolveTestsFrom: path.join(__dirname, 'fixture/caching'),

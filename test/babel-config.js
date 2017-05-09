@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const test = require('tap').test;
-const mkdirp = require('mkdirp');
+const makeDir = require('make-dir');
 const uniqueTempDir = require('unique-temp-dir');
 const configManager = require('hullabaloo-config-manager');
 
@@ -154,7 +154,7 @@ test('updates cached verifier if dependency hashes change', t => {
 	const cacheDir = path.join(projectDir, 'cache');
 	const depFile = path.join(projectDir, 'plugin.js');
 
-	mkdirp.sync(cacheDir);
+	makeDir.sync(cacheDir);
 	fs.writeFileSync(depFile, 'foo');
 
 	const userOptions = {

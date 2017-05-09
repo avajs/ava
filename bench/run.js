@@ -3,7 +3,7 @@ const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const arrify = require('arrify');
-const mkdirp = require('mkdirp');
+const makeDir = require('make-dir');
 const branch = require('git-branch').sync(path.join(__dirname, '..'));
 
 const cliPath = require.resolve('../cli');
@@ -124,7 +124,7 @@ Promise.each(combined, definition => {
 		});
 	});
 }).then(() => {
-	mkdirp.sync(path.join(__dirname, '.results'));
+	makeDir.sync(path.join(__dirname, '.results'));
 	results['.time'] = Date.now();
 
 	fs.writeFileSync(
