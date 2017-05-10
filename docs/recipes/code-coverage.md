@@ -36,7 +36,7 @@ Using NYC to provide coverage for production code written in ES5 is simple. Just
 
 That's it!
 
-If you want to create HTML coverage reports, or upload coverage data to Coveralls, you should skip down to those sections below.
+If you want to create HTML coverage reports or upload coverage data to Coveralls, you should skip down to those sections below.
 
 ## ES2015 coverage
 
@@ -85,11 +85,11 @@ Since it is unlikely you want `inline` source maps in your production code. You 
 
 > WARNING: `BABEL_ENV=production` does not work on Windows, you must use the `set` keyword  (`set BABEL_ENV=production`).  For cross platform builds, check out [`cross-env`].
 
-Note that the build script really has very little to do with AVA, and is just a demonstration of how to use Babel's `env` configuration to manipulate your config so it's compatible with AVA.
+Note that the build script has very little to do with AVA and is just a demonstration of how to use Babel's `env` configuration to manipulate your config, so it's compatible with AVA.
 
 ### Use the Babel require hook
 
-To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
+To use the Babel `require` hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
 
 ```json
 {
@@ -146,14 +146,14 @@ Or, use an npm script to save on typing:
 }
 ```
 
-This will output a HTML file to the `coverage` directory.
+This will output an HTML file to the `coverage` directory.
 
 
 ## Hosted coverage
 
 ### Travis CI & Coveralls
 
-First, you must login to [coveralls.io] and activate your repository.
+First, you must log in to [coveralls.io] and activate your repository.
 
 Once that is done, add [`coveralls`] as a development dependency:
 
@@ -169,6 +169,28 @@ after_success:
 ```
 
 Your coverage report will then appear on coveralls shortly after Travis completes.
+
+## Integrating with AVA's Watch mode
+
+While AVA's watch mode [won't](https://github.com/avajs/ava/issues/1100) integrate with `nyc` directly out of the box, you can achieve that using [nodemon](https://github.com/remy/nodemon).
+
+First, install `nodemon` as a dev dependency:
+
+```bash
+$ npm install nodemon --save-dev
+```
+
+Then, create a new npm scripts entry, let's say, `watch`:
+
+```json
+"scripts": {
+	"coverage": "nyc report --reporter=text-lcov | coveralls",
+	"test": "standard && nyc --reporter=html --reporter=text ava",
+	"watch": "nodemon --quiet --watch ./ --exec npm run test"
+},
+```
+
+Now, each time you update any files, `nodemon` will run both AVA **and** the code coverage calculation. Set the AVA's [verbosity](https://github.com/avajs/ava#verbose-reporter) level to your liking.
 
 [`babel`]:      https://github.com/babel/babel
 [coveralls.io]: https://coveralls.io
