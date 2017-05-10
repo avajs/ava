@@ -89,7 +89,7 @@ Note that the build script has very little to do with AVA and is just a demonstr
 
 ### Use the Babel require hook
 
-To use the Babel `require` hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
+To use the Babel `require hook`, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
 
 ```json
 {
@@ -170,24 +170,30 @@ after_success:
 
 Your coverage report will then appear on coveralls shortly after Travis completes.
 
-## Integrating with AVA's Watch mode
+## AVA and NYC code coverage refreshing on _watch_-mode
 
-While AVA's watch mode [won't](https://github.com/avajs/ava/issues/1100) integrate with `nyc` directly out of the box, you can achieve that using [nodemon](https://github.com/remy/nodemon).
+While AVA's watch mode [won't](https://github.com/avajs/ava/issues/1100) integrate with `nyc` directly out of the box, you can make [nodemon](https://github.com/remy/nodemon) to watch your project's folder for changes and re-run **both** AVA tests and NYC code coverage.
 
 First, install `nodemon` as a dev dependency:
 
-```bash
+```console
 $ npm install nodemon --save-dev
 ```
 
-Then, create a new npm scripts entry, let's say, `watch`:
+Then, create a new npm scripts entry in `package.json`, called, let's say, `watch`:
 
 ```json
 "scripts": {
 	"coverage": "nyc report --reporter=text-lcov | coveralls",
-	"test": "standard && nyc --reporter=html --reporter=text ava",
-	"watch": "nodemon --quiet --watch ./ --exec npm run test"
+	"test": "xo && nyc ava",
+	"watch": "nodemon --quiet --watch . --exec npm run test"
 },
+"nyc": {
+	"reporter": [
+      "html",
+      "text"
+    ]
+}
 ```
 
 Now, each time you update any files, `nodemon` will run both AVA **and** the code coverage calculation. Set the AVA's [verbosity](https://github.com/avajs/ava#verbose-reporter) level to your liking.
