@@ -1,5 +1,7 @@
 # Debugging tests with Visual Studio Code
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-vscode.md)
+
 ## Setup
 
 In the sidebar click the `Debug` handle.

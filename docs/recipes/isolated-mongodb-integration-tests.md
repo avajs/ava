@@ -1,5 +1,7 @@
 # Isolated MongoDB integration tests
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/isolated-mongodb-integration-tests.md)
+
 > How to run disposable MongoDB databases in your AVA tests with per-test isolation.
 
 This uses [`MongoMem`](https://github.com/CImrie/mongomem), which allows you to quickly run a temporary MongoDB server locally. It uses temporary file storage which is destroyed when the server stops.
