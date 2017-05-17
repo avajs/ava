@@ -7,20 +7,26 @@ The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) ment
 ###### webpack.config.js
 
 ```js
+const path = require('path');
+// To pre-compile folder with multiple test files, we can use glob
+// see http://stackoverflow.com/questions/32874025/how-to-add-wildcard-mapping-in-entry-of-webpack/34545812#34545812
+// const glob = require('glob');
+
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
 	entry: ['src/tests.js'],
+	// entry: glob.sync('./test/**/*.js'),
 	target: 'node',
 	output: {
-		path: '_build',
+		path: path.resolve(__dirname, '_build'),
 		filename: 'tests.js'
 	},
 	externals: [nodeExternals()],
 	module: {
 		rules: [{
-				test: /\.(js|jsx)$/,
-				use: 'babel-loader'
+			test: /\.(js|jsx)$/,
+			use: 'babel-loader'
 		}]
 	}
 };
