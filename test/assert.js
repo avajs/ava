@@ -3,10 +3,13 @@ require('../lib/globals').options.color = false;
 
 const path = require('path');
 const stripAnsi = require('strip-ansi');
+const React = require('react');
+const renderer = require('react-test-renderer');
 const test = require('tap').test;
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
+const HelloMessage = require('./fixture/HelloMessage');
 
 let lastFailure = null;
 let lastPassed = false;
@@ -504,6 +507,12 @@ test('.deepEqual()', t => {
 		);
 	});
 
+	passes(t, () => {
+		assertions.deepEqual(
+			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
+			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+	});
+
 	// Regression test end here
 
 	passes(t, () => {
@@ -745,16 +754,24 @@ test('.snapshot()', t => {
 		const executionContext = setup('passes');
 		assertions.snapshot.call(executionContext, {foo: 'bar'});
 		assertions.snapshot.call(executionContext, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+		assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
+		assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 	});
 
-	failsWith(t, () => {
+	{
 		const executionContext = setup('fails');
-		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'});
-	}, {
-		assertion: 'snapshot',
-		message: 'Did not match snapshot',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
-	});
+		if (update) {
+			assertions.snapshot.call(executionContext, {foo: 'bar'});
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, {foo: 'not bar'});
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+			});
+		}
+	}
 
 	failsWith(t, () => {
 		const executionContext = setup('fails (fixed id)');
@@ -765,14 +782,61 @@ test('.snapshot()', t => {
 		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
 	});
 
-	failsWith(t, () => {
+	{
 		const executionContext = setup('fails');
-		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'}, 'my message');
-	}, {
-		assertion: 'snapshot',
-		message: 'my message',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
-	});
+		if (update) {
+			assertions.snapshot.call(executionContext, {foo: 'bar'}, 'my message');
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, {foo: 'not bar'}, 'my message');
+			}, {
+				assertion: 'snapshot',
+				message: 'my message',
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('rendered comparison');
+		if (update) {
+			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		} else {
+			passes(t, () => {
+				assertions.snapshot.call(executionContext, React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('rendered comparison');
+		if (update) {
+			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Sindre\n+     Vadim\n    </mark>\n  </div>'}]
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('element comparison');
+		if (update) {
+			assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Vadim'}));
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Sindre"\n+   name="Vadim"\n  />'}]
+			});
+		}
+	}
 
 	manager.save();
 	t.end();
