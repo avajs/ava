@@ -95,6 +95,7 @@
   "dependencies": {
     "@ava/babel-preset-stage-4": "^1.1.0",
     "@ava/babel-preset-transform-test-files": "^3.0.0",
+    "@concordance/react": "^0.2.0",
     "ansi-escapes": "^2.0.0",
     "ansi-styles": "^3.1.0",
     "arr-flatten": "^1.0.1",
@@ -187,6 +188,8 @@
     "lolex": "^1.4.0",
     "nyc": "^10.0.0",
     "proxyquire": "^1.7.4",
+    "react": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
     "signal-exit": "^3.0.0",
     "sinon": "^2.0.0",
     "source-map-fixtures": "^2.1.0",

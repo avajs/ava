@@ -1,3 +1,6 @@
+import React from 'react';
+import renderer from 'react-test-renderer';
+import HelloMessage from './HelloMessage'
 import test from '../../';
 
 // Older AVA versions that do not use Concordance don't handle globals very
@@ -283,3 +286,24 @@ test('circular references', t => {
 	obj.circular = obj;
 	t.true(obj);
 });
+
+test('react element, formatted', t => {
+	const element = React.createElement(HelloMessage, {name: 'Sindre'})
+	t.true(element)
+})
+test('react element, complex attributes, formatted', t => {
+	const element = React.createElement('div', {
+		multiline: 'Hello\nworld',
+		object: {foo: ['bar']}
+	})
+	t.true(element)
+})
+test('react element, opaque children, formatted', t => {
+	const element = React.createElement('Foo', null, new Set(['foo']), true)
+	t.true(element)
+})
+test('react element, diff', t => {
+	const element = React.createElement(HelloMessage, {name: 'Sindre'})
+	const other = React.createElement(HelloMessage, {name: 'Vadim'})
+	t.deepEqual(element, other)
+})
