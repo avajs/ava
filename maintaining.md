@@ -14,6 +14,27 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
  - `npm run coverage`: Generate a coverage report for the last test run (opens a browser window).
  - `tap test/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
 
+## IPC Debugging
+
+AVA makes heavy use of forked processes and Node [IPC](https://nodejs.org/api/process.html#process_process_send_message_sendhandle_callback).
+ This can create some difficulty tracking down bugs that occur in a different process from your test code.
+ The script `debug.js` will launch a single test fixture without forking the process and will log the IPC messages 
+ that would normally be sent parent process.
+
+```sh
+$ debug.js test/fixture/async-await.js
+....
+{
+    "name": "test",
+    "data": {
+        "duration": 5,
+        "title": "async function",
+        "error": {},
+        "type": "test"
+    }
+}
+....
+```
 
 ## Release process
 
