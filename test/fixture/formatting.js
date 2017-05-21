@@ -307,3 +307,28 @@ test('react element, diff', t => {
 	const other = React.createElement(HelloMessage, {name: 'Vadim'})
 	t.deepEqual(element, other)
 })
+
+test('deep structure, formatted', t => {
+	const deep = {
+		foo: {
+			bar: {
+				baz: {
+					qux: 'quux'
+				}
+			}
+		}
+	}
+	t.true(deep)
+})
+test('deep structure, diff', t => {
+	const deep = {
+		foo: {
+			bar: {
+				baz: {
+					qux: 'quux'
+				}
+			}
+		}
+	}
+	t.deepEqual(deep, Object.assign({corge: 'grault'}, deep))
+})
