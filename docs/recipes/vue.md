@@ -1,5 +1,7 @@
 # Testing Vue.js components
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/vue.md)
+
 ## Dependencies
 
 - [Require extension hooks](https://github.com/jackmellis/require-extension-hooks):
