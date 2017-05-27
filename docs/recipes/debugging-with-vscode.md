@@ -28,6 +28,8 @@ Save this configuration after you added it.
 
 > **Note:** The file you want to debug, must be open and active
 
-Set breakpoints in the code.
+> **Note:** The breakpoints in VSCode are a bit buggy sometimes (especially with async code). `debugger;` always works fine.
+
+Set breakpoints in the code **or** write `debugger;` at the point where it should stop.
 
 Hit the green `Debug` button next to the list of configurations on the top left in the `Debug` view. Once the breakpoint is hit, you can evaluate variables and step through the code.
