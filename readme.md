@@ -120,6 +120,8 @@ You'll have to configure the `test` script in your `package.json` to use `ava` (
 
 Create a file named `test.js` in the project root directory:
 
+*Note:* This example uses `delay`, a useful library for resolving promises after a given timeout. To run this exmaple install with `$ npm install --save-dev delay`.
+
 ```js
 import test from 'ava';
 
