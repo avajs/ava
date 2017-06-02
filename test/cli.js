@@ -364,6 +364,25 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	});
 });
 
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} provided without value`, t => {
+		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency and -c flags must be provided the maximum number of test files to run at once.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`works when ${concurrencyFlag} provided with value`, t => {
+		execCli([`${concurrencyFlag}=1`, 'test.js'], {dirname: 'fixture/concurrency'}, err => {
+			t.ifError(err);
+			t.end();
+		});
+	});
+});
+
 test('--match works', t => {
 	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'fixture/matcher-skip.js'], err => {
 		t.ifError(err);
