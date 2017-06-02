@@ -1,6 +1,6 @@
 # Improving language support
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/specs/001 - Improving language support.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/specs/001%20-%20Improving%20language%20support.md)
 
 An [RFC](http://blog.npmjs.org/post/153881413635/some-notes-on-rfcs) with a proposal for improving AVA's support for Babel, React and TypeScript projects.
 
