@@ -1429,3 +1429,13 @@ test('CallSite provides stack proxy functionality', t => {
 	t.true(stackTargetingFoo.split('\n')[1].indexOf('assert.js') > 0);
 	t.end();
 });
+
+test('CallSite accepts custom caller', t => {
+	function doFoo() {
+		return new CallSite(doFoo);
+	}
+
+	const callSite = doFoo();
+	t.true(callSite.getStack().indexOf('doFoo') === -1);
+	t.end();
+});
