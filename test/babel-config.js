@@ -116,13 +116,17 @@ test('caches and uses results', t => {
 			const firstCacheKeys = result.cacheKeys;
 			const stats = files.map(f => fs.statSync(path.join(cacheDir, f)));
 			delete stats[0].atime;
+			delete stats[0].atimeMs;
 			delete stats[1].atime;
+			delete stats[1].atimeMs;
 
 			return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
 				.then(result => {
 					const newStats = files.map(f => fs.statSync(path.join(cacheDir, f)));
 					delete newStats[0].atime;
+					delete newStats[0].atimeMs;
 					delete newStats[1].atime;
+					delete newStats[1].atimeMs;
 
 					t.same(newStats, stats);
 					t.same(result.cacheKeys, firstCacheKeys);
