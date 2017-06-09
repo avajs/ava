@@ -28,10 +28,6 @@ function execCli(args, opts, cb) {
 		env = opts.env || {};
 	}
 
-	if (process.env.AVA_APPVEYOR) {
-		env.AVA_APPVEYOR = 1;
-	}
-
 	let child;
 	let stdout;
 	let stderr;
