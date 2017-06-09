@@ -1,15 +1,23 @@
 language: node_js
 node_js:
-  - '8'
-  - '6'
-  - '4'
+  - 8
+  - 6
+  - 4
+env:
+  - FRESH_DEPS=false
+  - FRESH_DEPS=true
+matrix:
+  exclude:
+    - node_js: 6
+      env: FRESH_DEPS=true
+    - node_js: 4
+      env: FRESH_DEPS=true
 cache:
   directories:
     - $HOME/.npm
     - node_modules
 before_install:
-  - 'npm install --global npm'
-before_script:
-  - 'npm prune'
-after_success:
-  - './node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && ./node_modules/.bin/codecov'
+  - npm install --global npm@^5.0.3
+  - npm --version
+  - if [[ ${FRESH_DEPS} == "true" ]]; then rm package-lock.json; fi
+after_success: ./node_modules/.bin/codecov --file=./coverage/lcov.info
