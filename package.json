@@ -93,7 +93,7 @@
     "flow"
   ],
   "dependencies": {
-    "@ava/babel-preset-stage-4": "^1.0.0",
+    "@ava/babel-preset-stage-4": "^1.1.0",
     "@ava/babel-preset-transform-test-files": "^3.0.0",
     "@ava/pretty-format": "^1.1.0",
     "ansi-escapes": "^2.0.0",
