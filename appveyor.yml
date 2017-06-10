@@ -1,6 +1,5 @@
 build: off
 cache:
-  - node_modules
   - '%APPDATA%\npm-cache'
 clone_depth: 1
 skip_branch_with_pr: true
@@ -29,6 +28,7 @@ install:
   - git config core.symlinks true
   - git reset --hard
   - ps: if ($env:configuration -eq "FreshDeps") { Remove-Item package-lock.json }
-  - npm install
+  - if %configuration% == FreshDeps (npm install --prefer-online)
+  - if %configuration% == LockedDeps (npm install --prefer-online)
 test_script:
   - npm run test-win
