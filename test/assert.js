@@ -7,6 +7,7 @@ const formatValue = require('../lib/format-assert-error').formatValue;
 
 let lastFailure = null;
 let lastPassed = false;
+const CallSite = assert.CallSite;
 const assertions = assert.wrapAssertions({
 	pass() {
 		lastPassed = true;
@@ -48,6 +49,12 @@ function failsWith(t, fn, subset) {
 		});
 	} else {
 		t.same(lastFailure.values, []);
+	}
+	if (subset.callSite) {
+		const callSiteStack = subset.callSite.getStack();
+		const fullStack = lastFailure.stack;
+		const actualStack = fullStack.substring(fullStack.length - callSiteStack.length);
+		t.is(actualStack, callSiteStack);
 	}
 }
 
@@ -92,6 +99,23 @@ test('.fail()', t => {
 	}, {
 		assertion: 'fail',
 		message: 'my message'
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.fail(null, {callSite});
+	}, {
+		assertion: 'fail',
+		message: 'Test failed via `t.fail()`',
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.fail('my message', {callSite});
+	}, {
+		assertion: 'fail',
+		message: 'my message',
+		callSite
 	});
 
 	t.end();
@@ -263,6 +287,66 @@ test('.is()', t => {
 		]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.is('foo', 'bar', null, {callSite});
+	}, {
+		assertion: 'is',
+		message: '',
+		values: [
+			{label: 'Difference:', formatted: /foobar/}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.is('foo', 42, null, {callSite});
+	}, {
+		assertion: 'is',
+		message: '',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be the same as:', formatted: /42/}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.is('foo', 42, 'my message', {callSite});
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be the same as:', formatted: /42/}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.is(0, -0, 'my message', {callSite});
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /0/},
+			{label: 'Must be the same as:', formatted: /-0/}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.is(-0, 0, 'my message', {callSite});
+	}, {
+		assertion: 'is',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /-0/},
+			{label: 'Must be the same as:', formatted: /0/}
+		],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -293,6 +377,25 @@ test('.not()', t => {
 		assertion: 'not',
 		message: 'my message',
 		values: [{label: 'Value is the same as:', formatted: /foo/}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.not('foo', 'foo', null, {callSite});
+	}, {
+		assertion: 'not',
+		message: '',
+		values: [{label: 'Value is the same as:', formatted: /foo/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.not('foo', 'foo', 'my message', {callSite});
+	}, {
+		assertion: 'not',
+		message: 'my message',
+		values: [{label: 'Value is the same as:', formatted: /foo/}],
+		callSite
 	});
 
 	t.end();
@@ -548,6 +651,40 @@ test('.deepEqual()', t => {
 		]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 'bar', null, {callSite});
+	}, {
+		assertion: 'deepEqual',
+		message: '',
+		values: [{label: 'Difference:', formatted: /foobar/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 42, null, {callSite});
+	}, {
+		assertion: 'deepEqual',
+		message: '',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be deeply equal to:', formatted: /42/}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.deepEqual('foo', 42, 'my message', {callSite});
+	}, {
+		assertion: 'deepEqual',
+		message: 'my message',
+		values: [
+			{label: 'Actual:', formatted: /foo/},
+			{label: 'Must be deeply equal to:', formatted: /42/}
+		],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -574,6 +711,25 @@ test('.notDeepEqual()', t => {
 		assertion: 'notDeepEqual',
 		message: 'my message',
 		values: [{label: 'Value is deeply equal:', formatted: formatValue(['a', 'b'])}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.notDeepEqual({a: 'a'}, {a: 'a'}, null, {callSite});
+	}, {
+		assertion: 'notDeepEqual',
+		message: '',
+		values: [{label: 'Value is deeply equal:', formatted: formatValue({a: 'a'})}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message', {callSite});
+	}, {
+		assertion: 'notDeepEqual',
+		message: 'my message',
+		values: [{label: 'Value is deeply equal:', formatted: formatValue(['a', 'b'])}],
+		callSite
 	});
 
 	t.end();
@@ -605,6 +761,36 @@ test('.throws()', t => {
 		assertion: 'throws',
 		message: '',
 		values: [{label: 'Threw unexpected exception:', formatted: /foo/}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.throws(() => {}, null, null, {callSite});
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: [],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, Error, 'my message', {callSite});
+	}, {
+		assertion: 'throws',
+		message: 'my message',
+		values: [],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {
+			throw err;
+		}, 'bar', null, {callSite});
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: [{label: 'Threw unexpected exception:', formatted: /foo/}],
+		callSite
 	});
 
 	passes(t, () => {
@@ -645,6 +831,16 @@ test('.throws() fails if passed a bad value', t => {
 		values: [{label: 'Called with:', formatted: /not a function/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.throws('not a function', null, null, {callSite});
+	}, {
+		assertion: 'throws',
+		message: '`t.throws()` must be called with a function, Promise, or Observable',
+		values: [{label: 'Called with:', formatted: /not a function/}],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -673,6 +869,29 @@ test('.notThrows()', t => {
 		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.notThrows(() => {
+			throw new Error('foo');
+		}, null, {callSite});
+	}, {
+		assertion: 'notThrows',
+		message: '',
+		values: [{label: 'Threw:', formatted: /foo/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.notThrows(() => {
+			throw new Error('foo');
+		}, 'my message', {callSite});
+	}, {
+		assertion: 'notThrows',
+		message: 'my message',
+		values: [{label: 'Threw:', formatted: /foo/}],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -689,6 +908,16 @@ test('.notThrows() fails if passed a bad value', t => {
 		assertion: 'notThrows',
 		message: '`t.notThrows()` must be called with a function, Promise, or Observable',
 		values: [{label: 'Called with:', formatted: /not a function/}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.notThrows('not a function', null, {callSite});
+	}, {
+		assertion: 'notThrows',
+		message: '`t.notThrows()` must be called with a function, Promise, or Observable',
+		values: [{label: 'Called with:', formatted: /not a function/}],
+		callSite
 	});
 
 	t.end();
@@ -772,6 +1001,27 @@ test('.truthy()', t => {
 		values: [{label: 'Value is not truthy:', formatted: /false/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.truthy(0, null, {callSite});
+	}, {
+		assertion: 'truthy',
+		message: '',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /0/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.truthy(false, 'my message', {callSite});
+	}, {
+		assertion: 'truthy',
+		message: 'my message',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /false/}],
+		callSite
+	});
+
 	passes(t, () => {
 		assertions.truthy(1);
 		assertions.truthy(true);
@@ -797,6 +1047,27 @@ test('.falsy()', t => {
 		message: 'my message',
 		operator: '!',
 		values: [{label: 'Value is not falsy:', formatted: /true/}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.falsy(1, null, {callSite});
+	}, {
+		assertion: 'falsy',
+		message: '',
+		operator: '!',
+		values: [{label: 'Value is not falsy:', formatted: /1/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.falsy(true, 'my message', {callSite});
+	}, {
+		assertion: 'falsy',
+		message: 'my message',
+		operator: '!',
+		values: [{label: 'Value is not falsy:', formatted: /true/}],
+		callSite
 	});
 
 	passes(t, () => {
@@ -840,6 +1111,43 @@ test('.true()', t => {
 		values: [{label: 'Value is not `true`:', formatted: /foo/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.true(1, null, {callSite});
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /1/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.true(0, null, {callSite});
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /0/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.true(false, null, {callSite});
+	}, {
+		assertion: 'true',
+		message: '',
+		values: [{label: 'Value is not `true`:', formatted: /false/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.true('foo', 'my message', {callSite});
+	}, {
+		assertion: 'true',
+		message: 'my message',
+		values: [{label: 'Value is not `true`:', formatted: /foo/}],
+		callSite
+	});
+
 	passes(t, () => {
 		assertions.true(true);
 	});
@@ -880,6 +1188,43 @@ test('.false()', t => {
 		values: [{label: 'Value is not `false`:', formatted: /foo/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.false(0, null, {callSite});
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /0/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.false(1, null, {callSite});
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /1/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.false(true, null, {callSite});
+	}, {
+		assertion: 'false',
+		message: '',
+		values: [{label: 'Value is not `false`:', formatted: /true/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.false('foo', 'my message', {callSite});
+	}, {
+		assertion: 'false',
+		message: 'my message',
+		values: [{label: 'Value is not `false`:', formatted: /foo/}],
+		callSite
+	});
+
 	passes(t, () => {
 		assertions.false(false);
 	});
@@ -914,6 +1259,31 @@ test('.regex()', t => {
 		]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.regex('foo', /^abc$/, null, {callSite});
+	}, {
+		assertion: 'regex',
+		message: '',
+		values: [
+			{label: 'Value must match expression:', formatted: /foo/},
+			{label: 'Regular expression:', formatted: /\/\^abc\$\//}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.regex('foo', /^abc$/, 'my message', {callSite});
+	}, {
+		assertion: 'regex',
+		message: 'my message',
+		values: [
+			{label: 'Value must match expression:', formatted: /foo/},
+			{label: 'Regular expression:', formatted: /\/\^abc\$\//}
+		],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -932,6 +1302,25 @@ test('.regex() fails if passed a bad value', t => {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
 		values: [{label: 'Called with:', formatted: /Object/}]
+	});
+
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.regex(42, /foo/, null, {callSite});
+	}, {
+		assertion: 'regex',
+		message: '`t.regex()` must be called with a string',
+		values: [{label: 'Called with:', formatted: /42/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.regex('42', {}, null, {callSite});
+	}, {
+		assertion: 'regex',
+		message: '`t.regex()` must be called with a regular expression',
+		values: [{label: 'Called with:', formatted: /Object/}],
+		callSite
 	});
 
 	t.end();
@@ -964,6 +1353,31 @@ test('.notRegex()', t => {
 		]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.notRegex('abc', /abc/, null, {callSite});
+	}, {
+		assertion: 'notRegex',
+		message: '',
+		values: [
+			{label: 'Value must not match expression:', formatted: /abc/},
+			{label: 'Regular expression:', formatted: /\/abc\//}
+		],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.notRegex('abc', /abc/, 'my message', {callSite});
+	}, {
+		assertion: 'notRegex',
+		message: 'my message',
+		values: [
+			{label: 'Value must not match expression:', formatted: /abc/},
+			{label: 'Regular expression:', formatted: /\/abc\//}
+		],
+		callSite
+	});
+
 	t.end();
 });
 
@@ -984,5 +1398,44 @@ test('.notRegex() fails if passed a bad value', t => {
 		values: [{label: 'Called with:', formatted: /Object/}]
 	});
 
+	const callSite = new CallSite();
+	failsWith(t, () => {
+		assertions.notRegex(42, /foo/, null, {callSite});
+	}, {
+		assertion: 'notRegex',
+		message: '`t.notRegex()` must be called with a string',
+		values: [{label: 'Called with:', formatted: /42/}],
+		callSite
+	});
+
+	failsWith(t, () => {
+		assertions.notRegex('42', {}, null, {callSite});
+	}, {
+		assertion: 'notRegex',
+		message: '`t.notRegex()` must be called with a regular expression',
+		values: [{label: 'Called with:', formatted: /Object/}],
+		callSite
+	});
+
+	t.end();
+});
+
+test('CallSite provides stack proxy functionality', t => {
+	const callSite = new CallSite();
+	t.true(typeof callSite.getStack === 'function');
+	t.true(typeof callSite.getStack() === 'string');
+	const stackTargetingFoo = callSite.getStack('Foo:');
+	t.true(stackTargetingFoo.indexOf('Foo:') === 0);
+	t.true(stackTargetingFoo.split('\n')[1].indexOf('assert.js') > 0);
+	t.end();
+});
+
+test('CallSite accepts custom caller', t => {
+	function doFoo() {
+		return new CallSite(doFoo);
+	}
+
+	const callSite = doFoo();
+	t.true(callSite.getStack().indexOf('doFoo') === -1);
 	t.end();
 });
