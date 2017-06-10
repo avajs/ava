@@ -7,13 +7,14 @@ The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) ment
 ###### webpack.config.js
 
 ```js
+const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
 	entry: ['src/tests.js'],
 	target: 'node',
 	output: {
-		path: '_build',
+		path: path.join(__dirname, '_build'),
 		filename: 'tests.js'
 	},
 	externals: [nodeExternals()],
