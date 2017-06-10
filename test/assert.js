@@ -27,27 +27,31 @@ function failsWith(t, fn, subset) {
 		return;
 	}
 
-	t.is(lastFailure.assertion, subset.assertion);
-	t.is(lastFailure.message, subset.message);
-	t.is(lastFailure.name, 'AssertionError');
-	t.is(lastFailure.operator, subset.operator);
-	if (subset.statements) {
-		t.is(lastFailure.statements.length, subset.statements.length);
-		lastFailure.statements.forEach((s, i) => {
-			t.is(s[0], subset.statements[i][0]);
-			t.match(s[1], subset.statements[i][1]);
+	testFailResults(t, lastFailure, subset);
+}
+
+function testFailResults(t, actual, expected) {
+	t.is(actual.assertion, expected.assertion);
+	t.is(actual.message, expected.message);
+	t.is(actual.name, 'AssertionError');
+	t.is(actual.operator, expected.operator);
+	if (expected.statements) {
+		t.is(actual.statements.length, expected.statements.length);
+		actual.statements.forEach((s, i) => {
+			t.is(s[0], expected.statements[i][0]);
+			t.match(s[1], expected.statements[i][1]);
 		});
 	} else {
-		t.same(lastFailure.statements, []);
+		t.same(actual.statements, []);
 	}
-	if (subset.values) {
-		t.is(lastFailure.values.length, subset.values.length);
-		lastFailure.values.forEach((s, i) => {
-			t.is(s.label, subset.values[i].label);
-			t.match(s.formatted, subset.values[i].formatted);
+	if (expected.values) {
+		t.is(actual.values.length, expected.values.length);
+		actual.values.forEach((s, i) => {
+			t.is(s.label, expected.values[i].label);
+			t.match(s.formatted, expected.values[i].formatted);
 		});
 	} else {
-		t.same(lastFailure.values, []);
+		t.same(actual.values, []);
 	}
 }
 
@@ -646,6 +650,17 @@ test('.throws() fails if passed a bad value', t => {
 	});
 
 	t.end();
+});
+
+test('promise .throws() fails when promise is resolved', t => {
+	return assertions.throws(Promise.resolve('foo'))
+	.catch(err => {
+		testFailResults(t, err, {
+			assertion: 'throws',
+			message: 'Expected promise to be rejected, but it was resolved instead',
+			values: [{label: 'Resolved with:', formatted: formatValue('foo')}]
+		});
+	});
 });
 
 test('.notThrows()', t => {
