@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/precompiling-with-webpack.md)
 
-The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe various approaches using webpack. (These examples use webpack 2.0). Multiple approaches are discussed as each has its own pros and cons. You should select the approach that best fits your use case. This might not be necessery once [this](https://github.com/avajs/ava/blob/master/docs/specs/001%20-%20Improving%20language%20support.md) is completed. See the original discussion [here](/avajs/ava/pull/1385).
+The AVA [readme](https://github.com/avajs/ava#transpiling-imported-modules) mentions precompiling your imported modules as an alternative to runtime compilation, but it doesn't explain how. This recipe discusses several approaches using webpack v2. Multiple approaches are discussed as each has its own pros and cons. You should select the approach that best fits your use case. See the original discussion [here](https://github.com/avajs/ava/pull/1385).
 
 - [Single test file](#single-test-file)
 - [Multiple test files](#multiple-test-files)
@@ -17,11 +17,11 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-	entry: ['tests.js'],
+	entry: ['test.js'],
 	target: 'node',
 	output: {
 		path: path.resolve(__dirname, '_build'),
-		filename: 'tests.js'
+		filename: 'test.js'
 	},
 	externals: [nodeExternals()],
 	module: {
@@ -36,7 +36,7 @@ module.exports = {
 
 The important bits are `target: 'node'`, which ignores Node.js-specific `require`s (e.g. `fs`, `path`, etc.) and `externals: nodeModules` which prevents webpack from trying to bundle external Node.js modules which it may choke on.
 
-You can now run `$ ava _build/tests.js` to run the tests contained in this output.
+You can now run `$ ava _build/test.js` to run the tests contained in this output.
 
 ### Multiple test files
 Things are a little more complicated with multiple test files. We recommend [using babel-register](babelrc.md) until the performance penalty becomes too great.
@@ -46,10 +46,10 @@ The possible approaches are:
 - [Refer precompiled source in tests](#refer-precompiled-source-in-tests)
 - [Single entry file](#single-entry-file)
 - [Multiple entry files](#multiple-entry-files)
-- [Multiple entry files with externalized source files](#multiple-entry-files-with-externalized-source-files)
+- [Test against precompiled sources](#test-against-precompiled-sources)
 
 #### Refer precompiled source in tests
-Source files can be compiled with source maps(for coverage) to `_src` folder and referenced in tests. While this is less than elegant, it performs well and the worklow can be optimized with [webpack's watch mode](https://webpack.js.org/configuration/watch/).
+Source files can be compiled to `_src` folder and referenced in tests. While this is less than elegant, it performs well and the workflow can be optimized with [`babel-cli` watch mode](https://babeljs.io/docs/usage/cli/#babel).
 
 ```js
 // Before
@@ -59,9 +59,11 @@ import fresh from '../_src';
 ```
 
 #### Single entry file
-To pre-compile folder with multiple test files, we can use globbing(see [stackoverflow answer](http://stackoverflow.com/questions/32874025/how-to-add-wildcard-mapping-in-entry-of-webpack/34545812#34545812)). Although this performs quite possibly the best, it comes at a cost. AVA uses the filename and path for test names in verbose mode as well as test failure reports. This can make the error report harder to understand. Also, it can matter if tests modify globals, Node.js built-ins. You wouldn't want that to leak across tests.
+Multiple test files can be compiled into a single file. This may have the best performance but that does come at a cost. All tests will be in the same file, which can make it harder to know which test has failed, since AVA can't show the file name the test was originally in. You'll also lose [process isolation](https://github.com/avajs/ava#process-isolation).
 
 ###### webpack.config.js
+
+[Related stackoverflow answer](http://stackoverflow.com/questions/32874025/how-to-add-wildcard-mapping-in-entry-of-webpack/34545812#34545812)
 
 ```js
 const path = require('path');
@@ -146,14 +148,11 @@ const glob = require('glob');
 
 const nodeExternals = require('webpack-node-externals');
 
-const testFiles = glob.sync('./test/**/*.js');
-
-const entryObj = {};
-const len = testFiles.length;
-for (let idx = 0; idx < len; idx++) {
-	const file = testFiles[idx];
-	entryObj[path.basename(file, path.extname(file))] = file;
-}
+const entryObj = glob.sync('./test/**/*.js')
+    .reduce((acc, file) => {
+        acc[path.basename(file, path.extname(file))] = file;
+        return acc;
+    }, {}); // empty object as initial value
 
 module.exports = {
 	target: 'node',
@@ -175,30 +174,30 @@ module.exports = {
 };
 ```
 
-#### Multiple entry files with externalized source files
-This is the most complicated to setup but performs quite well and also retains file names. In this approach, we use the babel cli to compile the src files but preserve file structure. Then we compile the tests with a require path rewrite. The following example is for a specific file structure. Depending on how your source and test files are organised, you might need to make changes.
+#### Test against precompiled sources
+This is the most complicated to setup but performs quite well and also retains file names. In this approach, we use the `babel-cli` to compile the source files but preserve file structure. Require paths in tests are rewritten when compiling them in webpack. The following example is for a specific file structure. Depending on how your source and test files are organised, you might need to make changes.
 
 File structure:
 ```
 ├───src
-│	├───my-pkg-fldr
-│	│	├───my-module.js
-│	│	└───index.js
-│	└───index.js
+│   ├───my-pkg-fldr
+│   │   ├───my-module.js
+│   │   └───index.js
+│   └───index.js
 └───test
-	├───my-pkg-fldr
-	│	└───my-module.test.js
-	└───index.test.js
+    ├───my-pkg-fldr
+    │   └───my-module.test.js
+    └───index.test.js
 
 # Generated file structure
 ├───_src
-│	├───my-pkg-fldr
-│	│	├───my-module.js
-│	│	└───index.js
-│	└───index.js
+│   ├───my-pkg-fldr
+│   │   ├───my-module.js
+│   │   └───index.js
+│   └───index.js
 └───_build
-	├───my-module.test.js
-	└───index.test.js
+    ├───my-module.test.js
+    └───index.test.js
 ```
 
 npm scripts:
@@ -223,14 +222,12 @@ const glob = require('glob');
 
 const nodeExternals = require('webpack-node-externals');
 
-const testFiles = glob.sync('./test/**/*.js');
+const entryObj = glob.sync('./test/**/*.js')
+    .reduce((acc, file) => {
+        acc[path.basename(file, path.extname(file))] = file;
+        return acc;
+    }, {}); // empty object as initial value
 
-const entryObj = {};
-const len = testFiles.length;
-for (let idx = 0; idx < len; idx++) {
-	const file = testFiles[idx];
-	entryObj[path.basename(file, path.extname(file))] = file;
-}
 
 module.exports = {
 	target: 'node',
