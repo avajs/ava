@@ -23,9 +23,7 @@ const assertions = assert.wrapAssertions({
 	}
 });
 
-function failsWith(t, fn, subset, failure) {
-	lastFailure = failure;
-	fn();
+function assertFailure(t, subset) {
 	if (!lastFailure) {
 		t.fail('Expected assertion to fail');
 		return;
@@ -55,9 +53,16 @@ function failsWith(t, fn, subset, failure) {
 	}
 }
 
+function failsWith(t, fn, subset) {
+	lastFailure = null;
+	fn();
+	assertFailure(t, subset);
+}
+
 function eventuallyFailsWith(t, promise, subset) {
+	lastFailure = null;
 	return promise.then(() => {
-		failsWith(t, () => {}, subset, lastFailure);
+		assertFailure(t, subset);
 	});
 }
 
