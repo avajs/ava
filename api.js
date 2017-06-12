@@ -59,7 +59,7 @@ class Api extends EventEmitter {
 		const resolvedfpath = fs.realpathSync(file);
 		precompiled[resolvedfpath] = hash;
 
-		const options = Object.assign({}, this.options, {precompiled});
+		const options = Object.assign({}, this.options, {precompiled, updateSnapshots: runStatus.updateSnapshots});
 		const emitter = fork(file, options, execArgv);
 		runStatus.observeFork(emitter);
 
@@ -137,7 +137,8 @@ class Api extends EventEmitter {
 			runOnlyExclusive: options.runOnlyExclusive,
 			prefixTitles: this.options.explicitTitles || files.length > 1,
 			base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-			failFast: this.options.failFast
+			failFast: this.options.failFast,
+			updateSnapshots: options.updateSnapshots
 		});
 
 		this.emit('test-run', runStatus, files);
