@@ -12,16 +12,18 @@ const assertions = assert.wrapAssertions({
 		lastPassed = true;
 	},
 
-	pending() {},
+	pending(_, promise) {
+		promise.catch(err => {
+			lastFailure = err;
+		});
+	},
 
 	fail(_, error) {
 		lastFailure = error;
 	}
 });
 
-function failsWith(t, fn, subset) {
-	lastFailure = null;
-	fn();
+function assertFailure(t, subset) {
 	if (!lastFailure) {
 		t.fail('Expected assertion to fail');
 		return;
@@ -49,6 +51,19 @@ function failsWith(t, fn, subset) {
 	} else {
 		t.same(lastFailure.values, []);
 	}
+}
+
+function failsWith(t, fn, subset) {
+	lastFailure = null;
+	fn();
+	assertFailure(t, subset);
+}
+
+function eventuallyFailsWith(t, promise, subset) {
+	lastFailure = null;
+	return promise.then(() => {
+		assertFailure(t, subset);
+	});
 }
 
 function fails(t, fn) {
@@ -646,6 +661,14 @@ test('.throws() fails if passed a bad value', t => {
 	});
 
 	t.end();
+});
+
+test('promise .throws() fails when promise is resolved', t => {
+	return eventuallyFailsWith(t, assertions.throws(Promise.resolve('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: formatValue('foo')}]
+	});
 });
 
 test('.notThrows()', t => {
