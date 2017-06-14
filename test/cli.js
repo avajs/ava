@@ -7,8 +7,6 @@ const getStream = require('get-stream');
 const figures = require('figures');
 const makeDir = require('make-dir');
 const touch = require('touch');
-const proxyquire = require('proxyquire');
-const sinon = require('sinon');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
 const stripAnsi = require('strip-ansi');
@@ -33,7 +31,7 @@ function execCli(args, opts, cb) {
 	let stderr;
 
 	const processPromise = new Promise(resolve => {
-		child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(args), {
+		child = childProcess.spawn(process.execPath, [cliPath].concat(args), {
 			cwd: dirname,
 			env,
 			stdio: [null, 'pipe', 'pipe']
@@ -421,33 +419,16 @@ test('should warn ava is required without the cli', t => {
 });
 
 test('prefers local version of ava', t => {
-	t.plan(1);
-
-	const stubModulePath = path.join(__dirname, '/fixture/empty');
-	const debugSpy = sinon.spy();
-	const resolveCwdStub = () => stubModulePath;
-
-	function debugStub() {
-		return message => {
-			let result = {
-				enabled: false
-			};
-
-			if (message) {
-				result = debugSpy(message);
-			}
-
-			return result;
-		};
-	}
-
-	proxyquire('../cli', {
-		debug: debugStub,
-		'resolve-cwd': resolveCwdStub
+	execCli('', {
+		dirname: 'fixture/local-bin',
+		env: {
+			DEBUG: 'ava'
+		}
+	}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, 'Using local install of AVA');
+		t.end();
 	});
-
-	t.ok(debugSpy.calledWith('Using local install of AVA'));
-	t.end();
 });
 
 test('use current working directory if `package.json` is not found', () => {
