@@ -173,7 +173,7 @@ class Api extends EventEmitter {
 
 		// --inspect-brk is used in addition to --inspect to break on first line and wait
 		execArgv.some((arg, index) => {
-			const isDebugArg = arg === '--inspect' || arg === '--inspect-brk' || arg.indexOf('--inspect=') === 0 || arg.indexOf('--inspect-brk=') === 0;
+			const isDebugArg = /^--inspect(-brk)?($|=)/.test(arg);
 			if (isDebugArg) {
 				debugArgIndex = index;
 			}
@@ -184,7 +184,7 @@ class Api extends EventEmitter {
 		const isInspect = debugArgIndex >= 0;
 		if (!isInspect) {
 			execArgv.some((arg, index) => {
-				const isDebugArg = arg === '--debug' || arg === '--debug-brk' || arg.indexOf('--debug-brk=') === 0 || arg.indexOf('--debug=') === 0;
+				const isDebugArg = /^--debug(-brk)?($|=)/.test(arg);
 				if (isDebugArg) {
 					debugArgIndex = index;
 				}
