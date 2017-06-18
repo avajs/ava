@@ -117,7 +117,7 @@
     "co-with-promise": "^4.6.0",
     "code-excerpt": "^2.1.0",
     "common-path-prefix": "^1.0.0",
-    "concordance": "^0.8.0",
+    "concordance": "^0.9.0",
     "convert-source-map": "^1.2.0",
     "core-assert": "^0.2.0",
     "currently-unhandled": "^0.4.1",

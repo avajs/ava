@@ -768,7 +768,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 			});
 		}
 	}
@@ -779,7 +779,7 @@ test('.snapshot()', t => {
 	}, {
 		assertion: 'snapshot',
 		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 	});
 
 	{
@@ -792,7 +792,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'my message',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'bar\',\n+   foo: \'not bar\',\n  }'}]
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 			});
 		}
 	}
@@ -818,7 +818,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Sindre\n+     Vadim\n    </mark>\n  </div>'}]
+				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Vadim\n+     Sindre\n    </mark>\n  </div>'}]
 			});
 		}
 	}
@@ -833,7 +833,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Sindre"\n+   name="Vadim"\n  />'}]
+				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Vadim"\n+   name="Sindre"\n  />'}]
 			});
 		}
 	}
