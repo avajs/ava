@@ -523,6 +523,48 @@ test('snapshots work', t => {
 	});
 });
 
+test('outdated snapshot version is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is v0, but only v1 is supported\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
+		t.end();
+	});
+});
+
+test('newer snapshot version is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is v65535, but only v1 is supported\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /You should upgrade AVA\./);
+		t.end();
+	});
+});
+
+test('snapshot corruption is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x01, 0x00]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is corrupted\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to recreate it\./);
+		t.end();
+	});
+});
+
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
 		t.ok(err);
