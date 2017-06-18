@@ -565,6 +565,20 @@ test('snapshot corruption is reported to the console', t => {
 	});
 });
 
+test('legacy snapshot files are reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file was created with AVA 0\.19\. It's not supported by this AVA version\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
+		t.end();
+	});
+});
+
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
 		t.ok(err);
