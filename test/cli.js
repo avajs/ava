@@ -587,6 +587,42 @@ for (const obj of [
 	});
 }
 
+test('appends to existing snapshots', t => {
+	const cliPath = require.resolve('../cli.js');
+	const avaPath = require.resolve('../');
+
+	const cwd = uniqueTempDir({create: true});
+	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
+
+	const initial = `import test from ${JSON.stringify(avaPath)}
+test('one', t => {
+	t.snapshot({one: true})
+})`;
+	fs.writeFileSync(path.join(cwd, 'test.js'), initial);
+
+	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, reject: false});
+	return run().then(result => {
+		t.match(result.stderr, /1 test passed/);
+
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
+test('two', t => {
+	t.snapshot({two: true})
+})`);
+		return run();
+	}).then(result => {
+		t.match(result.stderr, /2 tests passed/);
+
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
+test('two', t => {
+	t.snapshot({two: false})
+})`);
+
+		return run();
+	}).then(result => {
+		t.match(result.stderr, /1 test failed/);
+	});
+});
+
 test('outdated snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
