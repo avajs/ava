@@ -95,6 +95,7 @@
   "dependencies": {
     "@ava/babel-preset-stage-4": "^1.1.0",
     "@ava/babel-preset-transform-test-files": "^3.0.0",
+    "@ava/write-file-atomic": "^2.2.0",
     "@concordance/react": "^0.2.0",
     "ansi-escapes": "^2.0.0",
     "ansi-styles": "^3.1.0",
@@ -170,8 +171,7 @@
     "time-require": "^0.1.2",
     "trim-off-newlines": "^1.0.1",
     "unique-temp-dir": "^1.0.0",
-    "update-notifier": "^2.1.0",
-    "write-file-atomic": "^1.3.4"
+    "update-notifier": "^2.1.0"
   },
   "devDependencies": {
     "cli-table2": "^0.2.0",
