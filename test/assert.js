@@ -736,9 +736,16 @@ test('.snapshot()', t => {
 	// "$(npm bin)"/tap --no-cov -R spec test/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
-	const update = false;
+	const updating = false;
 
-	const manager = snapshotManager.load(path.join(__dirname, 'fixture'), 'assert.js', 'test/assert.js', update);
+	const projectDir = path.join(__dirname, 'fixture');
+	const manager = snapshotManager.load({
+		projectDir,
+		testDir: projectDir,
+		name: 'assert.js',
+		relFile: 'test/assert.js',
+		updating
+	});
 	const setup = title => {
 		const fauxTest = new Test({
 			title,
@@ -760,7 +767,7 @@ test('.snapshot()', t => {
 
 	{
 		const executionContext = setup('fails');
-		if (update) {
+		if (updating) {
 			assertions.snapshot.call(executionContext, {foo: 'bar'});
 		} else {
 			failsWith(t, () => {
@@ -784,7 +791,7 @@ test('.snapshot()', t => {
 
 	{
 		const executionContext = setup('fails');
-		if (update) {
+		if (updating) {
 			assertions.snapshot.call(executionContext, {foo: 'bar'}, 'my message');
 		} else {
 			failsWith(t, () => {
@@ -799,7 +806,7 @@ test('.snapshot()', t => {
 
 	{
 		const executionContext = setup('rendered comparison');
-		if (update) {
+		if (updating) {
 			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			passes(t, () => {
@@ -810,7 +817,7 @@ test('.snapshot()', t => {
 
 	{
 		const executionContext = setup('rendered comparison');
-		if (update) {
+		if (updating) {
 			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			failsWith(t, () => {
@@ -825,7 +832,7 @@ test('.snapshot()', t => {
 
 	{
 		const executionContext = setup('element comparison');
-		if (update) {
+		if (updating) {
 			assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
 		} else {
 			failsWith(t, () => {

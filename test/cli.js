@@ -354,7 +354,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 			} else {
 				passedFirst = true;
 				setTimeout(() => {
-					touch.sync(path.join(__dirname, 'fixture/snapshots/__snapshots__/test.js.snap'));
+					touch.sync(path.join(__dirname, 'fixture/snapshots/test.js.snap'));
 				}, 500);
 			}
 		}
@@ -556,29 +556,39 @@ test('promise tests fail if event loop empties before they\'re resolved', t => {
 	});
 });
 
-test('snapshots work', t => {
-	try {
-		fs.unlinkSync(path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap'));
-	} catch (err) {
-		if (err.code !== 'ENOENT') {
-			throw err;
+for (const obj of [
+	{type: 'colocated', rel: '', dir: ''},
+	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
+	{type: 'test', rel: 'test-dir', dir: 'test/snapshots'},
+	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'}
+]) {
+	test(`snapshots work (${obj.type})`, t => {
+		const snapPath = path.join(__dirname, 'fixture', 'snapshots', obj.rel, obj.dir, 'test.js.snap');
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
 		}
-	}
 
-	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
-		t.ifError(err);
-
-		// Test should pass, and the snapshot gets used
-		execCli(['test.js'], {dirname: 'fixture/snapshots'}, err => {
+		const dirname = path.join('fixture/snapshots', obj.rel);
+		// Test should pass, and a snapshot gets written
+		execCli(['--update-snapshots'], {dirname}, err => {
 			t.ifError(err);
-			t.end();
+			t.true(fs.existsSync(snapPath));
+
+			// Test should pass, and the snapshot gets used
+			execCli([], {dirname}, err => {
+				t.ifError(err);
+				t.end();
+			});
 		});
 	});
-});
+}
 
 test('outdated snapshot version is reported to the console', t => {
-	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
@@ -592,7 +602,7 @@ test('outdated snapshot version is reported to the console', t => {
 });
 
 test('newer snapshot version is reported to the console', t => {
-	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
@@ -606,7 +616,7 @@ test('newer snapshot version is reported to the console', t => {
 });
 
 test('snapshot corruption is reported to the console', t => {
-	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x01, 0x00]));
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
@@ -620,7 +630,7 @@ test('snapshot corruption is reported to the console', t => {
 });
 
 test('legacy snapshot files are reported to the console', t => {
-	const snapPath = path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.js.snap');
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
