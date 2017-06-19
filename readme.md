@@ -923,11 +923,7 @@ Assert that `value` is not the same as `expected`. This is based on [`Object.is(
 
 ### `.deepEqual(value, expected, [message])`
 
-Assert that `value` is deeply equal to `expected`. This is based on [Lodash's `isEqual()`](https://lodash.com/docs/4.17.4#isEqual):
-
-> Performs a deep comparison between two values to determine if they are equivalent.
->
-> *Note*: This method supports comparing arrays, array buffers, booleans, date objects, error objects, maps, numbers, `Object` objects, regexes, sets, strings, symbols, and typed arrays. `Object` objects are compared by their own, not inherited, enumerable properties. Functions and DOM nodes are compared by strict equality, i.e. `===`.
+Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
 ### `.notDeepEqual(value, expected, [message])`
 
@@ -998,15 +994,14 @@ Assert that `contents` does not match `regex`.
 
 Assert that `error` is falsy.
 
-### `.snapshot(contents, [message])`
+### `.snapshot(expected, [message])`
+### `.snapshot(expected, [options], [message])`
 
-Make a snapshot of the stringified `contents`.
+Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
 
 ## Snapshot testing
 
-Snapshot testing comes as another kind of assertion and uses [jest-snapshot](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) under the hood.
-
-When used with React, it looks very similar to Jest:
+AVA supports snapshot testing, [as introduced by Jest](https://facebook.github.io/jest/docs/snapshot-testing.html), through its [Assertions](#assertions) interface. You can snapshot any value as well as React elements:
 
 ```js
 // Your component
@@ -1028,31 +1023,24 @@ test('HelloWorld component', t => {
 });
 ```
 
-The first time you run this test, a snapshot file will be created in `__snapshots__` folder looking something like this:
+Snapshots are stored alongside your test files. If your tests are in a `test` or `tests` folder the snapshots will be stored in a `snapshots` folder. If your tests are in a `__tests__` folder then they they'll be stored in a `__snapshots__` folder.
 
-```js
-exports[`HelloWorld component 1`] = `
-<h1>
-	Hello World...!
-</h1>
-`;
-```
+Say you have `~/project/test/main.js` which contains snapshot assertions. AVA will create two files:
 
-These snapshots should be committed together with your code so that everyone on the team shares current state of the app.
+* `~/project/test/snapshots/main.js.snap`
+* `~/project/test/snapshots/main.js.md`
 
-Every time you run this test afterwards, it will check if the component render has changed. If it did, it will fail the test.
+The first file contains the actual snapshot and is required for future comparisons. The second file contains your *snapshot report*. It's regenerated when you update your snapshots. If you commit it to source control you can diff it to see the changes to your snapshot.
+
+AVA will show why your snapshot assertion failed:
 
 <img src="media/snapshot-testing.png" width="814">
 
-Then you will have the choice to check your code - and if the change was intentional, you can use the `--update-snapshots` (or `-u`) flag to update the snapshots into their new version.
-
-That might look like this:
+You can then check your code. If the change was intentional you can use the `--update-snapshots` (or `-u`) flag to update the snapshots:
 
 ```console
 $ ava --update-snapshots
 ```
-
-Note that snapshots can be used for much more than just testing components - you can equally well test any other (data) structure that you can stringify.
 
 ### Skipping assertions
 
