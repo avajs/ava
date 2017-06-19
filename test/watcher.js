@@ -388,7 +388,7 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	test('debounces by 10ms', t => {
+	test('debounces by 100ms', t => {
 		t.plan(1);
 		api.run.returns(Promise.resolve(runStatus));
 		start();
@@ -396,12 +396,12 @@ group('chokidar', (beforeEach, test, group) => {
 		change();
 		const before = clock.now;
 		return debounce().then(() => {
-			t.is(clock.now - before, 10);
+			t.is(clock.now - before, 100);
 		});
 	});
 
 	test('debounces again if changes occur in the interval', t => {
-		t.plan(2);
+		t.plan(4);
 		api.run.returns(Promise.resolve(runStatus));
 		start();
 
@@ -409,12 +409,23 @@ group('chokidar', (beforeEach, test, group) => {
 		change();
 
 		const before = clock.now;
-		return debounce(2).then(() => {
-			t.is(clock.now - before, 2 * 10);
+		return debounce().then(() => {
 			change();
 			return debounce();
 		}).then(() => {
-			t.is(clock.now - before, 3 * 10);
+			t.is(clock.now - before, 150);
+			change();
+			return debounce();
+		}).then(() => {
+			t.is(clock.now - before, 175);
+			change();
+			return debounce();
+		}).then(() => {
+			t.is(clock.now - before, 187);
+			change();
+			return debounce();
+		}).then(() => {
+			t.is(clock.now - before, 197);
 		});
 	});
 
@@ -739,7 +750,7 @@ group('chokidar', (beforeEach, test, group) => {
 				// No new runs yet
 				t.ok(api.run.calledTwice);
 				// Though the clock has advanced
-				t.is(clock.now - before, 10);
+				t.is(clock.now - before, 100);
 				before = clock.now;
 
 				const previous = done;
