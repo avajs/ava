@@ -333,6 +333,34 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 	});
 });
 
+test('watcher reruns test files when snapshot dependencies change', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stderr.on('data', str => {
+		buffer += str;
+		if (/2 tests passed/.test(buffer)) {
+			buffer = '';
+			if (passedFirst) {
+				child.kill();
+				killed = true;
+			} else {
+				passedFirst = true;
+				setTimeout(() => {
+					touch.sync(path.join(__dirname, 'fixture/snapshots/__snapshots__/test.js.snap'));
+				}, 500);
+			}
+		}
+	});
+});
+
 test('`"tap": true` config is ignored when --watch is given', t => {
 	let killed = false;
 
