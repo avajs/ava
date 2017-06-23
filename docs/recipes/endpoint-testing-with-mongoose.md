@@ -76,8 +76,6 @@ app.use('/', routes)
 module.exports = app
 ```
 
-Since tests run concurrently, it's best to create a fresh server instance for each test, because if we referenced the same instance, it could be mutated between tests. This can be accomplished with a `test.beforeEach` and `t.context`, or with simply a factory function:
-
 **After each test, you need to clear your fixtures and disconnect the Mongoose server**:
 
 ```js
