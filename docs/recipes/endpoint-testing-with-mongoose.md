@@ -82,6 +82,7 @@ module.exports = app
 // use .always to help with teardown
 test.afterEach.always(async t => {
   const { db } = t.context
+  // Note: removeFixtures is a placeholder. Write your own
   await removeFixtures()
   await db.connection.close()
 })
