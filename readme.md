@@ -376,7 +376,7 @@ test(t => {
 
 ### Running tests serially
 
-By default tests are run concurrently, which is awesome. Sometimes though you have to write tests that cannot run concurrently.
+Tests are run concurrently by default, however, you sometimes have to write tests that cannot run concurrently.
 
 In these rare cases you can use the `.serial` modifier. It will force those tests to run serially *before* the concurrent ones.
 
