@@ -59,7 +59,11 @@ class Api extends EventEmitter {
 		const resolvedfpath = fs.realpathSync(file);
 		precompiled[resolvedfpath] = hash;
 
-		const options = Object.assign({}, this.options, {precompiled, updateSnapshots: runStatus.updateSnapshots});
+		const options = Object.assign({}, this.options, {precompiled});
+		if (runStatus.updateSnapshots) {
+			// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+			options.updateSnapshots = true;
+		}
 		const emitter = fork(file, options, execArgv);
 		runStatus.observeFork(emitter);
 
