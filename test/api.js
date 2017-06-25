@@ -1049,9 +1049,11 @@ generatePassDebugTests(['--debug'], -1);
 generatePassDebugTests(['--inspect=0'], 0);
 generatePassDebugTests(['--inspect'], 0);
 
+// --inspect takes precedence
 generatePassDebugTests(['--inspect=0', '--debug-brk'], 0);
 generatePassDebugTests(['--inspect', '--debug-brk'], 0);
 
+// --inspect takes precedence, though --debug-brk is still passed to the worker
 generatePassDebugTests(['--debug-brk', '--inspect=0'], 1);
 generatePassDebugTests(['--debug-brk', '--inspect'], 1);
 
