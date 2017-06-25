@@ -129,7 +129,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = sources => new Subject(logger, api, files, sources || []);
+	const start = (specificFiles, sources) => new Subject(logger, api, specificFiles || files, sources || []);
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -177,7 +177,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 	test('watched source files are configurable', t => {
 		t.plan(2);
-		start(['foo.js', '!bar.js', 'baz.js', '!qux.js']);
+		start(null, ['foo.js', '!bar.js', 'baz.js', '!qux.js']);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
@@ -191,7 +191,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 	test('configured sources can override default ignore patterns', t => {
 		t.plan(2);
-		start(['node_modules/foo/*.js']);
+		start(null, ['node_modules/foo/*.js']);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
@@ -709,22 +709,23 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	test(`reruns initial tests and update snapshots when "u" is entered on stdin`, t => {
+	test(`reruns previous tests and update snapshots when "u" is entered on stdin`, t => {
 		const options = Object.assign({}, defaultApiOptions, {updateSnapshots: true});
+		const previousFiles = ['test.js'];
 		t.plan(4);
 		api.run.returns(Promise.resolve(runStatus));
-		start().observeStdin(stdin);
+		start(previousFiles).observeStdin(stdin);
 
 		stdin.write(`u\n`);
 		return delay().then(() => {
 			t.ok(api.run.calledTwice);
-			t.strictDeepEqual(api.run.secondCall.args, [files, options]);
+			t.strictDeepEqual(api.run.secondCall.args, [previousFiles, options]);
 
 			stdin.write(`\tu  \n`);
 			return delay();
 		}).then(() => {
 			t.ok(api.run.calledThrice);
-			t.strictDeepEqual(api.run.thirdCall.args, [files, options]);
+			t.strictDeepEqual(api.run.thirdCall.args, [previousFiles, options]);
 		});
 	});
 
@@ -908,7 +909,7 @@ group('chokidar', (beforeEach, test, group) => {
 				};
 			}));
 
-			const watcher = start(sources);
+			const watcher = start(null, sources);
 			const files = [path.join('test', '1.js'), path.join('test', '2.js')];
 			const absFiles = files.map(relFile => path.resolve(relFile));
 			apiEmitter.emit('test-run', runStatus, absFiles);
