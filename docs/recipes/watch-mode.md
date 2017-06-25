@@ -91,6 +91,10 @@ If you run AVA in your CI with watch mode, the execution will exit with an error
 
 You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed by <kbd>Enter</kbd>.
 
+## Updating snapshots
+
+You can update failing snapshots by typing <kbd>u</kbd> on the console, followed by <kbd>Enter</kbd>.
+
 ## Debugging
 
 Sometimes watch mode does something surprising like rerunning all tests when you thought only a single test would be run. To see its reasoning you can enable a debug mode. This will work best with the verbose reporter:

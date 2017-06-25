@@ -60,6 +60,10 @@ class Api extends EventEmitter {
 		precompiled[resolvedfpath] = hash;
 
 		const options = Object.assign({}, this.options, {precompiled});
+		if (runStatus.updateSnapshots) {
+			// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+			options.updateSnapshots = true;
+		}
 		const emitter = fork(file, options, execArgv);
 		runStatus.observeFork(emitter);
 
@@ -137,7 +141,8 @@ class Api extends EventEmitter {
 			runOnlyExclusive: options.runOnlyExclusive,
 			prefixTitles: this.options.explicitTitles || files.length > 1,
 			base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-			failFast: this.options.failFast
+			failFast: this.options.failFast,
+			updateSnapshots: options.updateSnapshots
 		});
 
 		this.emit('test-run', runStatus, files);
