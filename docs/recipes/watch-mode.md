@@ -65,7 +65,7 @@ AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings ab
 
 In AVA there's a distinction between *source files* and *test files*. As you can imagine the *test files* contain your tests. *Source files* are all other files that are needed for the tests to run, be it your source code or test fixtures.
 
-By default AVA watches for changes to the test files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
+By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
 You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key.
 
