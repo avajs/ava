@@ -91,7 +91,7 @@ group('chokidar', (beforeEach, test, group) => {
 				failCount: 0,
 				rejectionCount: 0,
 				exceptionCount: 0,
-				updateSnapshots: 0
+				updateSnapshots: false
 			};
 
 			return runStatus;
