@@ -161,7 +161,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['package.json', '**/*.js'].concat(files),
+			['package.json', '**/*.js', '**/*.snap'].concat(files),
 			{
 				ignored: defaultIgnore.map(dir => `${dir}/**/*`),
 				ignoreInitial: true
