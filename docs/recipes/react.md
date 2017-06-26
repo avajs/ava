@@ -8,13 +8,13 @@ The first step is setting up Babel to transpile JSX code from the tests by addin
 
 ```json
 {
-  "ava": {
-    "require": ["babel-register"],
-    "babel": "inherit"
-  },
-  "babel": {
-    "presets": ["react"]
-  }
+	"ava": {
+		"require": ["babel-register"],
+		"babel": "inherit"
+	},
+	"babel": {
+		"presets": ["react"]
+	}
 }
 ```
 

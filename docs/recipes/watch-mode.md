@@ -16,9 +16,9 @@ If you've configured it in your `package.json` like this:
 
 ```json
 {
-  "scripts": {
-    "test": "ava"
-  }
+	"scripts": {
+		"test": "ava"
+	}
 }
 ```
 
@@ -32,10 +32,10 @@ You could also set up a special script:
 
 ```json
 {
-  "scripts": {
-    "test": "ava",
-    "watch:test": "ava --watch"
-  }
+	"scripts": {
+		"test": "ava",
+		"watch:test": "ava --watch"
+	}
 }
 ```
 
@@ -49,9 +49,9 @@ Finally you could configure AVA to *always* run in watch mode by setting the `wa
 
 ```json
 {
-  "ava": {
-    "watch": true
-  }
+	"ava": {
+		"watch": true
+	}
 }
 ```
 

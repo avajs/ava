@@ -12,13 +12,13 @@ Add following to the `configurations` object:
 
 ```json
 {
-    "type": "node",
-    "request": "launch",
-    "name": "Run AVA test",
-    "program": "${workspaceRoot}/node_modules/ava/profile.js",
-    "args": [
-      "${file}"
-    ]
+	"type": "node",
+	"request": "launch",
+	"name": "Run AVA test",
+	"program": "${workspaceRoot}/node_modules/ava/profile.js",
+	"args": [
+	  "${file}"
+	]
 }
 ```
 

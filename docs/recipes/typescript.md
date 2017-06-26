@@ -27,9 +27,9 @@ Add a `test` script in the `package.json` file. It will compile the project firs
 
 ```json
 {
-  "scripts": {
-    "test": "tsc && ava"
-  }
+	"scripts": {
+		"test": "tsc && ava"
+	}
 }
 ```
 
@@ -41,12 +41,10 @@ Create a `test.ts` file.
 ```ts
 import test from 'ava';
 
-async function fn() {
-    return Promise.resolve('foo');
-}
+const fn = async () => Promise.resolve('foo');
 
 test(async (t) => {
-    t.is(await fn(), 'foo');
+	t.is(await fn(), 'foo');
 });
 ```
 
@@ -58,25 +56,25 @@ By default, the type of `t.context` will be [`any`](https://www.typescriptlang.o
 import * as ava from 'ava';
 
 function contextualize<T>(getContext: () => T): ava.RegisterContextual<T> {
-    ava.test.beforeEach(t => {
-        Object.assign(t.context, getContext());
-    });
+	ava.test.beforeEach(t => {
+		Object.assign(t.context, getContext());
+	});
 
-    return ava.test;
+	return ava.test;
 }
 
 const test = contextualize(() => ({ foo: 'bar' }));
 
 test.beforeEach(t => {
-    t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
+	t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
 });
 
 test.after.always.failing.cb.serial('very long chains are properly typed', t => {
-    t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type '{ foo: string }'
+	t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type '{ foo: string }'
 });
 
 test('an actual test', t => {
-    t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
+	t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
 });
 ```
 

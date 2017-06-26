@@ -21,12 +21,12 @@ You can override the default Babel configuration AVA uses for test transpilation
 
 ```json
 {
-  "ava": {
-    "babel": {
-      "plugins": ["rewire"],
-      "presets": ["@ava/stage-4", "stage-3"]
-    }
-  }
+	"ava": {
+		"babel": {
+			"plugins": ["rewire"],
+			"presets": ["@ava/stage-4", "stage-3"]
+		}
+	}
 }
 ```
 
@@ -40,11 +40,11 @@ You can enable `babel-polyfill` by adding it to AVA's `require` option:
 
 ```json
 {
-  "ava": {
-    "require": [
-      "babel-polyfill"
-    ]
-  }
+	"ava": {
+		"require": [
+			"babel-polyfill"
+		]
+	}
 }
 ```
 
@@ -56,12 +56,12 @@ To transpile your sources, you will need to define a [`babel config` ](http://ba
 
 ```json
 {
-  "ava": {
-    "require": ["babel-register"]
-  },
-  "babel": {
-    "presets": ["@ava/stage-4"]
-  }
+	"ava": {
+		"require": ["babel-register"]
+	},
+	"babel": {
+		"presets": ["@ava/stage-4"]
+	}
 }
 ```
 
@@ -75,13 +75,16 @@ Using the `"inherit"` shortcut will cause your tests to be transpiled the same a
 
 ```json
 {
-  "ava": {
-    "require": "babel-register",
-    "babel": "inherit"
-  },
-  "babel": {
-    "presets": ["@ava/stage-4", "react"]
-  }
+	"ava": {
+		"require": "babel-register",
+		"babel": "inherit"
+	},
+	"babel": {
+		"presets": [
+			"@ava/stage-4",
+			"react"
+		]
+	}
 }
 ```
 
@@ -97,17 +100,20 @@ When specifying the Babel config for your tests, you can set the `babelrc` optio
 
 ```json
 {
-  "ava": {
-    "require": "babel-register",
-    "babel": {
-      "babelrc": true,
-      "plugins": ["custom-plugin-name"],
-      "presets": ["custom-preset"]
-    }
-  },
-  "babel": {
-    "presets": ["@ava/stage-4", "react"]
-  }
+	"ava": {
+		"require": "babel-register",
+		"babel": {
+			"babelrc": true,
+			"plugins": ["custom-plugin-name"],
+			"presets": ["custom-preset"]
+		}
+	},
+	"babel": {
+		"presets": [
+			"@ava/stage-4",
+			"react"
+		]
+	}
 }
 ```
 
@@ -117,21 +123,20 @@ AVA will only look for a `.babelrc` file in the same directory as the `package.j
 
 ## Extend an alternate config file.
 
-
 If, for some reason, your Babel config is not specified in one of the default locations ([`.babelrc` or `package.json`](http://babeljs.io/docs/usage/babelrc/), you can set the `extends` option to the alternate config you want to use during testing.
 
 `package.json`:
 
 ```json
 {
-  "ava": {
-    "require": "babel-register",
-    "babel": {
-      "extends": "./babel-test-config.json",
-      "plugins": ["custom-plugin-name"],
-      "presets": ["custom-preset"]
-    }
-  }
+	"ava": {
+		"require": "babel-register",
+		"babel": {
+			"extends": "./babel-test-config.json",
+			"plugins": ["custom-plugin-name"],
+			"presets": ["custom-preset"]
+		}
+	}
 }
 ```
 

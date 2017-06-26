@@ -88,13 +88,13 @@ Your `package.json` will then look like this:
 
 ```json
 {
-  "name": "awesome-package",
-  "scripts": {
-    "test": "ava"
-  },
-  "devDependencies": {
-    "ava": "^0.18.0"
-  }
+	"name": "awesome-package",
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"ava": "^0.19.0"
+	}
 }
 ```
 
@@ -249,29 +249,29 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 ```json
 {
-  "ava": {
-    "files": [
-      "my-test-folder/*.js",
-      "!**/not-this-file.js"
-    ],
-    "source": [
-      "**/*.{js,jsx}",
-      "!dist/**/*"
-    ],
-    "match": [
-      "*oo",
-      "!foo"
-    ],
-    "concurrency": 5,
-    "failFast": true,
-    "failWithoutAssertions": false,
-    "tap": true,
-    "powerAssert": false,
-    "require": [
-      "babel-register"
-    ],
-    "babel": "inherit"
-  }
+	"ava": {
+		"files": [
+			"my-test-folder/*.js",
+			"!**/not-this-file.js"
+		],
+		"source": [
+			"**/*.{js,jsx}",
+			"!dist/**/*"
+		],
+		"match": [
+			"*oo",
+			"!foo"
+		],
+		"concurrency": 5,
+		"failFast": true,
+		"failWithoutAssertions": false,
+		"tap": true,
+		"powerAssert": false,
+		"require": [
+			"babel-register"
+		],
+		"babel": "inherit"
+	}
 }
 ```
 
@@ -696,10 +696,10 @@ The corresponding Babel config for AVA's setup is as follows:
 
 ```json
 {
-  "presets": [
-    "@ava/stage-4",
-    "@ava/transform-test-files"
-  ]
+	"presets": [
+		"@ava/stage-4",
+		"@ava/transform-test-files"
+	]
 }
 ```
 
@@ -707,15 +707,15 @@ You can customize how AVA transpiles the test files through the `babel` option i
 
 ```json
 {
-  "ava": {
-     "babel": {
-       "presets": [
-          "es2015",
-          "stage-0",
-          "react"
-       ]
-     }
-  }
+	"ava": {
+		 "babel": {
+			 "presets": [
+					"es2015",
+					"stage-0",
+					"react"
+			 ]
+		 }
+	}
 }
 ```
 
@@ -723,16 +723,16 @@ You can also use the special `"inherit"` keyword. This makes AVA defer to the Ba
 
 ```json
 {
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0",
-      "react"
-    ]
-  },
-  "ava": {
-    "babel": "inherit"
-  }
+	"babel": {
+		"presets": [
+			"es2015",
+			"stage-0",
+			"react"
+		]
+	},
+	"ava": {
+		"babel": "inherit"
+	}
 }
 ```
 
