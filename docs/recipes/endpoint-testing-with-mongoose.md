@@ -30,7 +30,7 @@ import { MongoDBServer } from 'mongomem'
 **Next, start your MongoDB instance with Mongomem**
 
 ```js
-test.before('start server', async t => await MongoDBServer.start())
+test.before('start server', async t => MongoDBServer.start())
 ```
 
 **For each test you run, you need to configure a new Express instance** that connects to a different MongoDB URL. Make sure you add your server only after Mongoose is started.
@@ -99,7 +99,7 @@ test.serial('litmus get test', async t => {
   const res = await request(app)
     .get('/test1')
     .send({
-      email: 'someemail@gmail.com'
+      email: 'example@example.com'
     })
   t.is(res.status, 200)
   t.is(res.body.name, `somename`)
@@ -110,7 +110,7 @@ test.serial('litmus post test', async t => {
   const res = await request(app)
     .post('/test2')
     .send({
-      email: 'woo@gmail.com'
+      email: 'example@example.com'
       name: `A random name`
     })
   t.is(res.status, 200)
