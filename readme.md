@@ -1022,6 +1022,8 @@ test('HelloWorld component', t => {
 });
 ```
 
+[Try it out in this example project.](https://github.com/avajs/ava-snapshot-example)
+
 Snapshots are stored alongside your test files. If your tests are in a `test` or `tests` folder the snapshots will be stored in a `snapshots` folder. If your tests are in a `__tests__` folder then they they'll be stored in a `__snapshots__` folder.
 
 Say you have `~/project/test/main.js` which contains snapshot assertions. AVA will create two files:
