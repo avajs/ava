@@ -6,7 +6,7 @@
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 to 11 seconds. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
-![](media/screenshot-mini-reporter.gif)
+![](media/mini-reporter.gif)
 
 *Read our [contributing guide](contributing.md) if you're looking to contribute (issues/PRs/etc).*
 
@@ -212,13 +212,13 @@ $ node --inspect node_modules/ava/profile.js some/test/file.js
 
 The mini-reporter is the default reporter.
 
-<img src="media/screenshot-mini-reporter.gif" width="460">
+<img src="media/mini-reporter.gif" width="460">
 
 ### Verbose reporter
 
 Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
 
-<img src="media/screenshot.png" width="150">
+<img src="media/verbose-reporter.png" width="294">
 
 ### TAP reporter
 
@@ -228,7 +228,7 @@ AVA supports the TAP format and thus is compatible with [any TAP reporter](https
 $ ava --tap | tap-nyan
 ```
 
-<img src="media/tap-output.png" width="398">
+<img src="media/tap-reporter.png" width="420">
 
 Please note that the TAP reporter is unavailable when using [watch mode](#watch-it).
 
@@ -1014,11 +1014,10 @@ export default HelloWorld;
 // Your test
 import test from 'ava';
 import render from 'react-test-renderer';
-
 import HelloWorld from '.';
 
 test('HelloWorld component', t => {
-	const tree = render.create(<HelloWorld />).toJSON();
+	const tree = render.create(<HelloWorld/>).toJSON();
 	t.snapshot(tree);
 });
 ```
@@ -1034,7 +1033,7 @@ The first file contains the actual snapshot and is required for future compariso
 
 AVA will show why your snapshot assertion failed:
 
-<img src="media/snapshot-testing.png" width="814">
+<img src="media/snapshot-testing.png" width="1048">
 
 You can then check your code. If the change was intentional you can use the `--update-snapshots` (or `-u`) flag to update the snapshots:
 

@@ -202,6 +202,9 @@
 	},
 	"typings": "types/generated.d.ts",
 	"xo": {
+		"ignores": [
+			"media/**"
+		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off"
 		}
