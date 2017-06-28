@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "0.19.1",
+	"version": "0.20.0",
 	"description": "Futuristic test runner 🚀",
 	"license": "MIT",
 	"repository": "avajs/ava",
