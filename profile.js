@@ -66,7 +66,7 @@ const cli = meow(`
 	}
 });
 
-if (cli.input.length !== 1) {
+if (cli.input.length === 0) {
 	throw new Error('Specify a test file');
 }
 
