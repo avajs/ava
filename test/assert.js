@@ -39,6 +39,10 @@ function assertFailure(t, subset) {
 	t.is(lastFailure.message, subset.message);
 	t.is(lastFailure.name, 'AssertionError');
 	t.is(lastFailure.operator, subset.operator);
+	if (subset.expected) {
+		t.is(lastFailure.expected, subset.expected);
+		t.is(lastFailure.actual, subset.actual);
+	}
 	if (subset.statements) {
 		t.is(lastFailure.statements.length, subset.statements.length);
 		lastFailure.statements.forEach((s, i) => {
@@ -233,7 +237,9 @@ test('.is()', t => {
 	failsWith(t, () => {
 		assertions.is('foo', 'bar');
 	}, {
+		actual: 'foo',
 		assertion: 'is',
+		expected: 'bar',
 		message: '',
 		values: [
 			{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}
@@ -243,7 +249,9 @@ test('.is()', t => {
 	failsWith(t, () => {
 		assertions.is('foo', 42);
 	}, {
+		actual: 'foo',
 		assertion: 'is',
+		expected: 42,
 		message: '',
 		values: [
 			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}
@@ -299,7 +307,9 @@ test('.not()', t => {
 	failsWith(t, () => {
 		assertions.not('foo', 'foo');
 	}, {
+		actual: 'foo',
 		assertion: 'not',
+		expected: 'foo',
 		message: '',
 		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
@@ -544,7 +554,9 @@ test('.deepEqual()', t => {
 	failsWith(t, () => {
 		assertions.deepEqual('foo', 'bar');
 	}, {
+		actual: 'foo',
 		assertion: 'deepEqual',
+		expected: 'bar',
 		message: '',
 		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}]
 	});
@@ -552,7 +564,9 @@ test('.deepEqual()', t => {
 	failsWith(t, () => {
 		assertions.deepEqual('foo', 42);
 	}, {
+		actual: 'foo',
 		assertion: 'deepEqual',
+		expected: 42,
 		message: '',
 		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
 	});
@@ -577,10 +591,14 @@ test('.notDeepEqual()', t => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
+	const actual = {a: 'a'};
+	const expected = {a: 'a'};
 	failsWith(t, () => {
-		assertions.notDeepEqual({a: 'a'}, {a: 'a'});
+		assertions.notDeepEqual(actual, expected);
 	}, {
+		actual,
 		assertion: 'notDeepEqual',
+		expected,
 		message: '',
 		values: [{label: 'Value is deeply equal:', formatted: /.*\{.*\n.*a: 'a'/}]
 	});
