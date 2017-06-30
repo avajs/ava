@@ -21,7 +21,7 @@ const fork = require('./lib/fork');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
-		const modulePath = resolveCwd(name);
+		const modulePath = resolveCwd.silent(name);
 
 		if (modulePath === null) {
 			throw new Error(`Could not resolve required module '${name}'`);
