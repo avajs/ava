@@ -11,7 +11,6 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 
  - `npm test`: Lint the code and run the entire test suite with coverage.
  - `npm run test-win`: Run the tests on Windows.
- - `npm run visual`: Run a set of visual tests. Useful during the pre-release process.
  - `tap test/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
 
 
