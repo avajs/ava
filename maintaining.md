@@ -11,7 +11,6 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 
  - `npm test`: Lint the code and run the entire test suite with coverage.
  - `npm run test-win`: Run the tests on Windows.
- - `npm run coverage`: Generate a coverage report for the last test run (opens a browser window).
  - `tap test/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
 
 
