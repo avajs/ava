@@ -5,7 +5,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 Starting with version 2016.2, [WebStorm](https://www.jetbrains.com/webstorm/) and other JetBrains IDEs (IntelliJ IDEA Ultimate, PHPStorm, PyCharm Professional, and RubyMine with installed Node.js plugin) allow you to debug AVA tests.
 
 
-## Setup
+## Setup using Node.js
 
 Add a new *Node.js Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *Node.js*.
 
@@ -15,6 +15,34 @@ In the `Application parameters` pass the CLI flags you're using and the test fil
 
 Save the configuration.
 
+## Setup using NPM
+
+Execute `ava --init` in your project directory, to add AVA to your `package.json`.
+
+Your `package.json` will look something like this:
+
+```json
+{
+    "name": "awesome-package",
+    "scripts": {
+        "test": "ava"
+    },
+    "devDependencies": {
+        "ava": "^0.19.0"
+    }
+}
+```
+
+Add a new *NPM Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *NPM*.
+
+Use the following configuration parameters:
+
+`package.json` : path to your project's `package.json` file
+`Command` : `test`
+
+Do not forget to select a node interpreter.
+
+Save the configuration.
 
 ## Debug
 
