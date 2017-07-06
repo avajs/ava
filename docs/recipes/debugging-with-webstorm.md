@@ -40,6 +40,8 @@ Use the following configuration parameters:
 `package.json` : path to your project's `package.json` file
 `Command` : `test`
 
+You IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` and the AVA-configuration you have specified in your package.json.
+
 Do not forget to select a node interpreter.
 
 Save the configuration.
