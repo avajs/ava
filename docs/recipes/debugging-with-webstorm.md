@@ -15,34 +15,34 @@ In the `Application parameters` pass the CLI flags you're using and the test fil
 
 Save the configuration.
 
-## Setup using NPM
+## Setup using npm
 
-Execute `ava --init` in your project directory, to add AVA to your `package.json`.
+Execute `ava --init` in your project directory to add AVA to your `package.json`.
 
 Your `package.json` will look something like this:
 
 ```json
 {
-    "name": "awesome-package",
-    "scripts": {
-        "test": "ava"
-    },
-    "devDependencies": {
-        "ava": "^0.19.0"
-    }
+	"name": "awesome-package",
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"ava": "^0.20.0"
+	}
 }
 ```
 
-Add a new *NPM Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *NPM*.
+Add a new *npm Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *npm*.
 
 Use the following configuration parameters:
 
-`package.json` : path to your project's `package.json` file
-`Command` : `test`
+- `package.json`: Path to your project's `package.json` file
+- `Command`: `test`
 
-You IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` and the AVA-configuration you have specified in your package.json.
+Your IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` and the AVA-configuration you have specified in your package.json.
 
-Do not forget to select a node interpreter.
+Don't forget to select a Node.js interpreter.
 
 Save the configuration.
 
