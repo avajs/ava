@@ -39,6 +39,10 @@ function assertFailure(t, subset) {
 	t.is(lastFailure.message, subset.message);
 	t.is(lastFailure.name, 'AssertionError');
 	t.is(lastFailure.operator, subset.operator);
+	if (subset.raw) {
+		t.is(lastFailure.raw.expected, subset.raw.expected);
+		t.is(lastFailure.raw.actual, subset.raw.actual);
+	}
 	if (subset.statements) {
 		t.is(lastFailure.statements.length, subset.statements.length);
 		lastFailure.statements.forEach((s, i) => {
@@ -235,6 +239,7 @@ test('.is()', t => {
 	}, {
 		assertion: 'is',
 		message: '',
+		raw: {actual: 'foo', expected: 'bar'},
 		values: [
 			{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}
 		]
@@ -243,7 +248,9 @@ test('.is()', t => {
 	failsWith(t, () => {
 		assertions.is('foo', 42);
 	}, {
+		actual: 'foo',
 		assertion: 'is',
+		expected: 42,
 		message: '',
 		values: [
 			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}
@@ -301,6 +308,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: '',
+		raw: {actual: 'foo', expected: 'foo'},
 		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
@@ -546,6 +554,7 @@ test('.deepEqual()', t => {
 	}, {
 		assertion: 'deepEqual',
 		message: '',
+		raw: {actual: 'foo', expected: 'bar'},
 		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}]
 	});
 
@@ -554,6 +563,7 @@ test('.deepEqual()', t => {
 	}, {
 		assertion: 'deepEqual',
 		message: '',
+		raw: {actual: 'foo', expected: 42},
 		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
 	});
 
@@ -577,11 +587,16 @@ test('.notDeepEqual()', t => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
+	const actual = {a: 'a'};
+	const expected = {a: 'a'};
 	failsWith(t, () => {
-		assertions.notDeepEqual({a: 'a'}, {a: 'a'});
+		assertions.notDeepEqual(actual, expected);
 	}, {
+		actual,
 		assertion: 'notDeepEqual',
+		expected,
 		message: '',
+		raw: {actual, expected},
 		values: [{label: 'Value is deeply equal:', formatted: /.*\{.*\n.*a: 'a'/}]
 	});
 
