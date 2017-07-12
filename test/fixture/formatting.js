@@ -1,5 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import {Buffer} from 'safe-buffer';
 import HelloMessage from './HelloMessage'
 import test from '../../';
 

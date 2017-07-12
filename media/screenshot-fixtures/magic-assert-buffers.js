@@ -1,4 +1,5 @@
 import test from 'ava';
+import {Buffer} from 'safe-buffer';
 
 test('buffers', t => {
 	const actual = Buffer.from('decafbadcab00d1e'.repeat(4), 'hex')
