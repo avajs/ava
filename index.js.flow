@@ -58,8 +58,8 @@ type AssertContext = {
 	// Assert that function throws an error or promise rejects.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws: {
-		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<Error>;
-		(value: () => mixed, error?: ErrorValidator, message?: string): Error;
+		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<any>;
+		(value: () => mixed, error?: ErrorValidator, message?: string): any;
 	};
 	// Assert that function doesn't throw an error or promise resolves.
 	notThrows: {
