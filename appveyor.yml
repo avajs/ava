@@ -23,7 +23,7 @@ matrix:
       nodejs_version: 4
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install --global npm@^5.0.3
+  - npm install --global npm@^5.2.0
   - npm --version
   - git config core.symlinks true
   - git reset --hard

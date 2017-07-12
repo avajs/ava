@@ -16,7 +16,7 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@^5.0.3
+  - npm install --global npm@^5.2.0
   - npm --version
   - if [[ ${FRESH_DEPS} == "true" ]]; then rm package-lock.json; fi
 install:
