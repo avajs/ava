@@ -102,14 +102,13 @@ import test from 'ava';
 import Vue from 'vue';
 import Component from 'component.vue';
 
-test('it sees the updated message', t => {
+test('see the updated message', t => {
 
 	const vm = new Vue(Component).$mount();
 	t.is(vm.$el.textContent, 'my message'); 
 
 	vm.message = 'my new message';
 	// this fails here: t.is('my new message', vm.$el.textContent)
-
 
 	Vue.nextTick(() => {
 		t.is(vm.$el.textContent, 'my new message');
@@ -128,7 +127,7 @@ import Vue from 'vue';
 import Component from 'component.vue';
 
 // Don't forget to add the async prefix
-test('it updates the model using promises', async t => {
+test('update the model using promises', async t => {
 
 	// assume the message data property is a pending promise defined in the Component.
 	const vm = new Vue(Component).$mount();
