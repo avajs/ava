@@ -147,8 +147,8 @@ type ContextualCallbackTestMethod = {
  */
 
 declare module.exports: {
-	(              run: ContextualTest): void;
-	(name: string, run: ContextualTest): void;
+	(              run: ContextualTest, ...args: any): void;
+	(name: string, run: ContextualTest, ...args: any): void;
 
 	beforeEach : ContextualTestMethod;
 	afterEach  : ContextualTestMethod;
