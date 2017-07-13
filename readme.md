@@ -93,7 +93,7 @@ Your `package.json` will then look like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.19.0"
+		"ava": "^0.20.0"
 	}
 }
 ```
