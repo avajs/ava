@@ -162,6 +162,7 @@
 		"pretty-ms": "^2.0.0",
 		"require-precompiled": "^0.1.0",
 		"resolve-cwd": "^2.0.0",
+		"safe-buffer": "^5.1.1",
 		"slash": "^1.0.0",
 		"source-map-support": "^0.4.0",
 		"stack-utils": "^1.0.0",
