@@ -130,6 +130,7 @@
 		"find-cache-dir": "^1.0.0",
 		"fn-name": "^2.0.0",
 		"get-port": "^3.0.0",
+		"get-root-module": "^0.1.1",
 		"globby": "^6.0.0",
 		"has-flag": "^2.0.0",
 		"hullabaloo-config-manager": "^1.1.0",
