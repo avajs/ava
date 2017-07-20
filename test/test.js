@@ -733,3 +733,22 @@ test('failing tests fail with `t.notThrows(throws)`', t => {
 		t.end();
 	});
 });
+
+test('log from tests', t => {
+	let result;
+
+	ava(a => {
+		a.log('a log message from a test');
+		t.true(true);
+		a.log('another log message from a test');
+	}, null, r => {
+		result = r;
+	}).run();
+
+	t.deepEqual(
+		result.result.logs,
+		['a log message from a test', 'another log message from a test']
+	);
+
+	t.end();
+});

@@ -847,3 +847,90 @@ test('result when no-color flag is set', t => {
 	t.is(output, expectedOutput);
 	t.end();
 });
+
+test('successful test with logs', t => {
+	const reporter = createReporter();
+
+	const actualOutput = reporter.test({
+		title: 'successful test',
+		logs: ['log message 1', 'log message 2']
+	}, {});
+
+	const expectedOutput = [
+		'  ' + chalk.green(figures.tick) + ' successful test',
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 1'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 2')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failed test with logs', t => {
+	const reporter = createReporter();
+
+	const actualOutput = reporter.test({
+		title: 'failed test',
+		error: new Error('failure'),
+		logs: ['log message 1', 'log message 2']
+	}, {});
+
+	const expectedOutput = [
+		'  ' + chalk.red(figures.cross) + ' failed test ' + chalk.red('failure'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 1'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 2')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with errors and logs', t => {
+	const error1 = new Error('error one message');
+	error1.stack = beautifyStack(error1.stack);
+	const err1Path = tempWrite.sync('a()');
+	error1.source = source(err1Path);
+	error1.avaAssertionError = true;
+	error1.statements = [];
+	error1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{label: 'expected:', formatted: JSON.stringify('abd')}
+	];
+
+	const reporter = createReporter({color: true});
+	const runStatus = createRunStatus();
+	runStatus.failCount = 1;
+	runStatus.tests = [{
+		title: 'fail one',
+		logs: ['log from failed test', 'another log from failed test'],
+		error: error1
+	}];
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 test failed') + time,
+		'',
+		'  ' + chalk.bold.white('fail one'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log from failed test'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('another log from failed test'),
+		'',
+		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
+		'',
+		indentString(codeExcerpt(error1.source), 2).split('\n'),
+		'',
+		/error one message/,
+		'',
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		''
+	]));
+	t.end();
+});
