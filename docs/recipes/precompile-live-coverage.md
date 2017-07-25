@@ -81,14 +81,14 @@ The essential config to put in browsersync bs-config.js
 ## Explanation
 
 Running npm test ( or yarn test ) will do the following: 
-1. delete and create again the test_src folder
-1. compile your test and output them in the test_src folder and watch for changes
+1. Purge and create the test_src folder
+1. Compile your source and output in the test_src folder and watch for changes
 1. Fire a browsersync watching the coverage dir and serving it statically on the localhost:4000
-1. Watch the folders **test_src** and **src** for changes and execute your test when any of them change
-1. Output the coverage on your terminal and auto refreshing any browser pointing to localhost:4000 when the coverage change
+1. Watch the folders **test_src** and **src** for changes and execute your test when any of them changes
+1. Output the coverage on your terminal and auto refresh any browser pointing to localhost:4000 when the coverage changes
 
 For this to run properly your test should reference the test_src folder when importing js modules and not the original one
 
 This is meant as a starting point but is a minimal working solution, also this is for running the test live locally
-and is not going to work on any CI ( But is easy to modify the script to work well in any CI )
+and is not going to work on any CI ( But is easy to modify the script to do so )
 
