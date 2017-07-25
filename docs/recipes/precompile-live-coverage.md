@@ -78,7 +78,7 @@ The essential config to put in browsersync bs-config.js
 ```
 
 
-## Explaination
+## Explanation
 
 Running npm test ( or yarn test ) will do the following: 
 1. delete and create again the test_src folder
