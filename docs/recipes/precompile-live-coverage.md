@@ -1,5 +1,5 @@
 With a lot of tests that also require your source code to be transpiled the solution of using babel 
-register becomes soon quite slow. Here is a recipe that uses only npm scripts to:
+register becomes quite slow. Here is a recipe that uses only npm scripts to:
 
 1. Run all your test when your test AND/OR source file changes
 1. Compile your source file with babel
