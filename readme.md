@@ -400,7 +400,7 @@ test.only('will be run', t => {
 });
 ```
 
-*Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will stil run. If you want to only run the `test.only` test, specify just that test file to AVA.
+*Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
 ### Running tests with matching titles
 

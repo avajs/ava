@@ -161,7 +161,7 @@ class Api extends EventEmitter {
 					this._setupTimeout(runStatus);
 				}
 
-				let concurrency = Math.max(2, os.cpus().length || 1);
+				let concurrency = os.cpus().length;
 
 				if (this.options.concurrency > 0) {
 					concurrency = this.options.concurrency;
