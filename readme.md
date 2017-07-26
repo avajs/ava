@@ -877,7 +877,7 @@ End the test. Only works with `test.cb()`.
 
 ###### `t.log(message)`
 
-Print a log message contextually alongside the test result instead of immediately streaming the message to stdout like `console.log`.
+Print a log message contextually alongside the test result instead of immediately printing it to `stdout` like `console.log`.
 
 ## Assertions
 

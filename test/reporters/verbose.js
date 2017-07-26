@@ -853,12 +853,13 @@ test('successful test with logs', t => {
 
 	const actualOutput = reporter.test({
 		title: 'successful test',
-		logs: ['log message 1', 'log message 2']
+		logs: ['log message 1\nwith a newline', 'log message 2']
 	}, {});
 
 	const expectedOutput = [
 		'  ' + chalk.green(figures.tick) + ' successful test',
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 1'),
+		'      ' + chalk.gray('with a newline'),
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 2')
 	].join('\n');
 
@@ -872,12 +873,13 @@ test('failed test with logs', t => {
 	const actualOutput = reporter.test({
 		title: 'failed test',
 		error: new Error('failure'),
-		logs: ['log message 1', 'log message 2']
+		logs: ['log message 1\nwith a newline', 'log message 2']
 	}, {});
 
 	const expectedOutput = [
 		'  ' + chalk.red(figures.cross) + ' failed test ' + chalk.red('failure'),
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 1'),
+		'      ' + chalk.gray('with a newline'),
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log message 2')
 	].join('\n');
 
@@ -902,7 +904,7 @@ test('results with errors and logs', t => {
 	runStatus.failCount = 1;
 	runStatus.tests = [{
 		title: 'fail one',
-		logs: ['log from failed test', 'another log from failed test'],
+		logs: ['log from failed test\nwith a newline', 'another log from failed test'],
 		error: error1
 	}];
 
@@ -913,6 +915,7 @@ test('results with errors and logs', t => {
 		'',
 		'  ' + chalk.bold.white('fail one'),
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log from failed test'),
+		'      ' + chalk.gray('with a newline'),
 		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('another log from failed test'),
 		'',
 		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),

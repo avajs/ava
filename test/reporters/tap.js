@@ -272,14 +272,15 @@ test('successful test with logs', t => {
 
 	const actualOutput = reporter.test({
 		title: 'passing',
-		logs: ['log message 1', 'log message 2']
+		logs: ['log message 1\nwith a newline', 'log message 2']
 	});
 
 	const expectedOutput = [
 		'# passing',
 		'ok 1 - passing',
-		'  log message 1',
-		'  log message 2'
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2'
 	].join('\n');
 
 	t.is(actualOutput, expectedOutput);
@@ -295,14 +296,15 @@ test('failing test with logs', t => {
 			name: 'AssertionError',
 			message: 'false == true'
 		},
-		logs: ['log message 1', 'log message 2']
+		logs: ['log message 1\nwith a newline', 'log message 2']
 	});
 
 	const expectedOutput = [
 		'# failing',
 		'not ok 1 - failing',
-		'  log message 1',
-		'  log message 2',
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2',
 		'  ---',
 		'    name: AssertionError',
 		'    message: false == true',

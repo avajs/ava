@@ -2,6 +2,7 @@
 const indentString = require('indent-string');
 const tempWrite = require('temp-write');
 const flatten = require('arr-flatten');
+const figures = require('figures');
 const chalk = require('chalk');
 const sinon = require('sinon');
 const test = require('tap').test;
@@ -932,5 +933,58 @@ test('result when no-color flag is set', t => {
 		'  The .only() modifier is used in some tests. 2 tests were not run' +
 		'\n';
 	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results with errors and logs', t => {
+	const err1 = new Error('failure one');
+	err1.stack = beautifyStack(err1.stack);
+	const err1Path = tempWrite.sync('a();');
+	err1.source = source(err1Path);
+	err1.avaAssertionError = true;
+	err1.statements = [];
+	err1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc') + '\n'},
+		{label: 'expected:', formatted: JSON.stringify('abd') + '\n'}
+	];
+
+	const reporter = miniReporter();
+	reporter.failCount = 1;
+
+	const runStatus = {
+		errors: [{
+			title: 'failed one',
+			logs: ['log from a failed test\nwith a newline', 'another log from failed test'],
+			error: err1
+		}]
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + chalk.red('1 failed'),
+		'',
+		'  ' + chalk.bold.white('failed one'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('log from a failed test'),
+		'      ' + chalk.gray('with a newline'),
+		'    ' + chalk.magenta(figures.info) + ' ' + chalk.gray('another log from failed test'),
+		'',
+		'  ' + chalk.grey(`${err1.source.file}:${err1.source.line}`),
+		'',
+		indentString(codeExcerpt(err1.source), 2).split('\n'),
+		'',
+		/failure one/,
+		'',
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		''
+	]));
 	t.end();
 });
