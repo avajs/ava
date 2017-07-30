@@ -16,6 +16,8 @@ AVA uses [is-ci](https://github.com/watson/is-ci) to decide if it's in a CI envi
 
 You may be using a service that only allows a limited number of concurrent connections. For example, many database-as-a-service businesses offer a free plan with a limit on how many clients can be using it at the same time. AVA can hit those limits as it runs multiple processes, but well-written services should emit an error or throttle in those cases. If the one you're using doesn't, the tests will hang.
 
+By default, AVA will use as many processes as there are CPU cores in your machine.
+
 Use the `concurrency` flag to limit the number of processes ran. For example, if your service plan allows 5 clients, you should run AVA with `concurrency=5` or less.
 
 ## Asynchronous operations
