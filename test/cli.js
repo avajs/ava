@@ -365,7 +365,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 test('`"tap": true` config is ignored when --watch is given', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, () => {
+	const child = execCli(['--watch', '--verbose', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, () => {
 		t.ok(killed);
 		t.end();
 	});
