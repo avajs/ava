@@ -425,7 +425,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 
 ['--concurrency', '-c'].forEach(concurrencyFlag => {
 	test(`bails when ${concurrencyFlag} is provided with an input that isn't an integer`, t => {
-		execCli([`${concurrencyFlag}=foo`,'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+		execCli([`${concurrencyFlag}=foo`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
 			t.match(stderr, 'The --concurrency and -c flags must be an integer.');
 			t.end();
@@ -435,7 +435,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 
 ['--concurrency', '-c'].forEach(concurrencyFlag => {
 	test(`bails when ${concurrencyFlag} is provided with zero`, t => {
-		execCli([`${concurrencyFlag}=0`,'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+		execCli([`${concurrencyFlag}=0`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
 			t.match(stderr, 'The --concurrency and -c flags must be greater than 0.');
 			t.end();
