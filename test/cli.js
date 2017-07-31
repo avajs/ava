@@ -414,17 +414,37 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 });
 
 ['--concurrency', '-c'].forEach(concurrencyFlag => {
-	test(`bails when ${concurrencyFlag} provided without value`, t => {
+	test(`bails when ${concurrencyFlag} is provided without value`, t => {
 		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be provided the maximum number of test files to run at once.');
+			t.match(stderr, 'The --concurrency and -c flags must be provided.');
 			t.end();
 		});
 	});
 });
 
 ['--concurrency', '-c'].forEach(concurrencyFlag => {
-	test(`works when ${concurrencyFlag} provided with value`, t => {
+	test(`bails when ${concurrencyFlag} is provided with an input that isn't an integer`, t => {
+		execCli([`${concurrencyFlag}=foo`,'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency and -c flags must be an integer.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} is provided with zero`, t => {
+		execCli([`${concurrencyFlag}=0`,'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency and -c flags must be greater than 0.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`works when ${concurrencyFlag} is provided with a value`, t => {
 		execCli([`${concurrencyFlag}=1`, 'test.js'], {dirname: 'fixture/concurrency'}, err => {
 			t.ifError(err);
 			t.end();
