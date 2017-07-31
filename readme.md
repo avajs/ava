@@ -169,7 +169,7 @@ $ ava --help
     --match, -m             Only run tests with matching title (Can be repeated)
     --watch, -w             Re-run tests when tests and source files change
     --timeout, -T           Set global timeout
-    --concurrency, -c       Maximum number of test files running at the same time (EXPERIMENTAL)
+    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --update-snapshots, -u  Update snapshots
 
   Examples
@@ -400,7 +400,7 @@ test.only('will be run', t => {
 });
 ```
 
-`.only` applies across all test files, so if you use it in one file, no tests from the other file will run.
+*Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
 ### Running tests with matching titles
 
