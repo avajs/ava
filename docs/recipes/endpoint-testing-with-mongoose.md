@@ -31,7 +31,6 @@ Since MongoDB Memory server requires Babel polyfill to work, the easiest way to 
 
 ```json
 "ava": {
-    "files": ["test/**/*"],
     "require": [
       "babel-register",
       "babel-polyfill"
@@ -189,7 +188,7 @@ And you're done!
 
 You may choose to abstract code for `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file. It should look similar to this:
 
-```
+```js
 // utils.js
 // File for abstracting generic before, beforeEach, afterEach and after code
 
@@ -233,7 +232,7 @@ exports.after = async t => {
 
 Your test file then becomes much simpler:
 
-```
+```js
 import test from 'ava'
 import request from 'supertest'
 import User from '../models/User'
