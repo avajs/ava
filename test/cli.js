@@ -680,6 +680,49 @@ test('legacy snapshot files are reported to the console', t => {
 	});
 });
 
+test('snapshots infer their location from sourcemaps', t => {
+	t.plan(8);
+	const dirname = path.join('fixture/snapshots/test-sourcemaps');
+	const testLocationTypes = [
+		'src',
+		'src/test/snapshots',
+		'src/feature/__tests__/__snapshots__'
+	];
+	const removeExists = relFilePath => {
+		const snapshotFolderPath = path.join(__dirname, dirname, relFilePath);
+		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.md')));
+		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.snap')));
+	};
+	execCli([], {dirname}, (err, stdout, stderr) => {
+		t.ifError(err);
+		testLocationTypes.forEach(removeExists);
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
+test('snapshots resolved location from "snapshotLocation" in ava config', t => {
+	t.plan(8);
+	const dirname = path.join('fixture/snapshots/test-snapshot-location');
+	const snapshotLocation = 'snapshot-fixtures';
+	const testLocationTypes = [
+		'src',
+		'src/feature',
+		'src/feature/nested-feature'
+	];
+	const removeExists = relFilePath => {
+		const snapshotFolderPath = path.join(__dirname, dirname, snapshotLocation, relFilePath);
+		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.md')));
+		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.snap')));
+	};
+	execCli([], {dirname}, (err, stdout, stderr) => {
+		t.ifError(err);
+		testLocationTypes.forEach(removeExists);
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
 		t.ok(err);

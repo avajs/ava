@@ -1,0 +1,10 @@
+{
+  "scripts": {
+	"build": "tsc"
+  },
+  "ava": {
+	"files": [
+		"build/**/*test.js"
+	]
+  }
+}
