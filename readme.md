@@ -979,7 +979,7 @@ Assert that `function` does not throw an error or that `promise` does not reject
 Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
 
 ```js
-test('rejects', async t => {
+test('resolves', async t => {
 	await t.notThrows(promise);
 });
 ```
