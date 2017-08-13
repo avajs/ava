@@ -1041,6 +1041,20 @@ You can then check your code. If the change was intentional you can use the `--u
 $ ava --update-snapshots
 ```
 
+You can also set a custom location for the generated snapshot fixtures. This can be configured in the `package.json#ava` configuration for every test run.
+
+```json
+{
+  "ava": {
+    "snapshotLocation": "custom-directory"
+  }
+}
+```
+
+Snapshots fixtures will be then saved in a directory structure that reflects the test sourcecode.
+
+If you are transpiling the tests with sourcemaps, ava will derive the test location from the `*.js.map` files, see more in the [TypeScript](docs/recipes/typescript.md) recipe.
+
 ### Skipping assertions
 
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
