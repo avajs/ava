@@ -1,10 +1,7 @@
 {
-  "scripts": {
-	"build": "tsc"
-  },
-  "ava": {
-	"files": [
-		"build/**/*test.js"
-	]
-  }
+	"ava": {
+		"files": [
+			"build/**/*test.js"
+		]
+	}
 }
