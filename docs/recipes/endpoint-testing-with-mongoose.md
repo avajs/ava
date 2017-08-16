@@ -1,6 +1,6 @@
 # Endpoint testing with Mongoose
 
-This recipe shows you how to test your endpoints with AVA and Mongoose.
+This recipe shows you how to test your endpoints with AVA and Mongoose, assuming you use Express as your framework.
 
 ## Setup
 
@@ -9,7 +9,7 @@ This recipe uses the following libraries:
 1. [MongoDB memory server](https://github.com/nodkz/mongodb-memory-server) (A MongoDB in-memory Server)
 2. [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) (required for MongoDB memory server)
 3. [Supertest](https://github.com/visionmedia/supertest) (An endpoint testing library)
-4. Mongoose
+4. [Mongoose](http://mongoosejs.com)
 
 Install the first three libraries by running the following code:
 
@@ -19,7 +19,7 @@ $ npm install --save-dev mongodb-memory-server babel-polyfill supertest
 
 You should have Mongoose installed already. If not, run the following code to install it:
 
-(Note: You need at least mongoose v4.11.3)
+(Note: You need at least Mongoose v4.11.3)
 
 ```console
 $ npm install mongoose
@@ -32,18 +32,9 @@ Since MongoDB Memory server requires Babel polyfill to work, the easiest way to 
 ```json
 "ava": {
     "require": [
-      "babel-register",
       "babel-polyfill"
     ]
   },
-```
-
-If you want AVA to run your tests whenever changes are made, add the `--watch` option.
-
-```json
-"scripts": {
-  "watch": "ava --watch"
-},
 ```
 
 ## Your test file
@@ -64,37 +55,13 @@ import User from '../models/User'
 
 ### Your server file
 
-In your `server` file, you cannot use `app.listen` to start your app. Export it to another file and call `app.listen` there.
+When you test endpoints, you don't want to start your app. Supertest does this for us automatically when you pass your app into it.
 
-This `server` file should resemble the following:
+So, if you're using express for your application, make sure you have a startup file that imports `app` and calls `app.listen`
 
-```js
-const express = require('express')
-const bodyParser = require('body-parser')
-const routes = require('./routes')
-const app = express()
+Here's an example of the [server file](https://github.com/zellwk/ava-mdb-test/blob/master/server.js)
 
-// ======================================
-// # Middlewares
-// ======================================
-app.use(bodyParser.json())
-
-// ======================================
-// # Routes
-// ======================================
-app.get('/litmus', async (req, res) => {
-  const { email } = req.body
-  res.json(await User.findOne({email}))
-})
-
-app.post('/litmus', async (req, res) => {
-  const { email, name } = req.body
-  const user = new User({email, name})
-  res.json(await user.save())
-})
-
-module.exports = app
-```
+And here's an example of your Mongoose [model](https://github.com/zellwk/ava-mdb-test/blob/master/models/User.js)
 
 ### Back to your test file
 
@@ -141,6 +108,8 @@ Note: Make sure your tests run serially with `test.serial`.
 
 ```js
 // First test
+// Note: tests must be serial tests.
+// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose
 test.serial('litmus get user', async t => {
   const { app } = t.context
   const res = await request(app)
@@ -151,8 +120,6 @@ test.serial('litmus get user', async t => {
 })
 
 // Second test
-// Note: subsequent tests must be serial tests.
-// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose
 test.serial('litmus create user', async t => {
   const { app } = t.context
   const res = await request(app)
@@ -174,7 +141,7 @@ test.serial('litmus create user', async t => {
 **Shutdown your server and connection when done**:
 
 ```js
-// Disconnect MongoDB and mongoose after all tests are done
+// Disconnect MongoDB and Mongoose after all tests are done
 test.after.always(async t => {
   mongoose.disconnect()
   mongod.stop()
@@ -186,96 +153,6 @@ And you're done!
 
 ## Reusing the configuration across files
 
-You may choose to abstract code for `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file. It should look similar to this:
+You may choose to abstract code for `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file.
 
-```js
-// utils.js
-// File for abstracting generic before, beforeEach, afterEach and after code
-
-const MongodbMemoryServer = require('mongodb-memory-server').default
-const mongoose = require('mongoose')
-
-// Your models and server
-const app = require('../server')
-const User = require('../models/User')
-
-const mongod = new MongodbMemoryServer()
-
-// Create connection to mongoose before all tests
-exports.before = async t =>
-  mongoose.connect(await mongod.getConnectionString(), { useMongoClient: true })
-
-// Create fixtures before each test
-exports.beforeEach = async t => {
-  const user = new User({email: 'one@example.com', name: 'One'})
-  const user2 = new User({email: 'two@example.com', name: 'Two'})
-  const user3 = new User({email: 'three@example.com', name: 'Three'})
-
-  await user.save()
-  await user2.save()
-  await user3.save()
-
-  // Saves app to t.context so tests can access app
-  t.context.app = app
-}
-
-// Clean up database after every test
-exports.afterEach = async t => await User.remove()
-
-// Disconnect MongoDB and mongoose after all tests are done
-exports.after = async t => {
-  mongoose.disconnect()
-  mongod.stop()
-}
-
-```
-
-Your test file then becomes much simpler:
-
-```js
-import test from 'ava'
-import request from 'supertest'
-import User from '../models/User'
-
-import {before, beforeEach, afterEach, after} from './utils'
-
-test.before(before)
-test.beforeEach(beforeEach)
-test.afterEach.always(afterEach)
-
-// First test
-test.serial('litmus get user', async t => {
-  const { app } = t.context
-  const res = await request(app)
-    .get('/litmus')
-    .send({email: 'one@example.com'})
-  t.is(res.status, 200)
-  t.is(res.body.name, 'One')
-})
-
-// Second test
-// Note: subsequent tests must be serial tests.
-// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose
-test.serial('litmus create user', async t => {
-  const { app } = t.context
-  const res = await request(app)
-    .post('/litmus')
-    .send({
-      email: 'new@example.com',
-      name: 'New name'
-    })
-
-  t.is(res.status, 200)
-  t.is(res.body.name, 'New name')
-
-  // Verifies that user is created in DB
-  const newUser = await User.findOne({email: 'new@example.com'})
-  t.is(newUser.name, 'New name')
-})
-
-test.after.always(after)
-```
-
-## A demo repo
-
-Here's a [demo repo](https://github.com/zellwk/ava-mdb-test) if you like to see the recipe in action.
+To see a demo of this configuration file, look at https://github.com/zellwk/ava-mdb-test
