@@ -701,23 +701,34 @@ test('snapshots infer their location from sourcemaps', t => {
 	});
 });
 
-test('snapshots resolved location from "snapshotLocation" in ava config', t => {
+test('snapshots resolved location from "snapshotDir" in ava config', t => {
 	t.plan(8);
-	const dirname = path.join('fixture/snapshots/test-snapshot-location');
-	const snapshotLocation = 'snapshot-fixtures';
-	const testLocationTypes = [
+	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
+	const snapshotDir = 'snapshot-fixtures';
+	const snapshotDirStructure = [
 		'src',
 		'src/feature',
 		'src/feature/nested-feature'
 	];
-	const removeExists = relFilePath => {
-		const snapshotFolderPath = path.join(__dirname, dirname, snapshotLocation, relFilePath);
-		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.md')));
-		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.snap')));
+	const snapshotFixtureFilePaths = snapshotDirStructure
+		.map(snapshotRelativeDir => {
+			const snapshotPath = path.join(__dirname, relativeFixtureDir, snapshotDir, snapshotRelativeDir);
+			return [
+				path.join(snapshotPath, 'test.js.md'),
+				path.join(snapshotPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapshotFixtureFiles = filePath => {
+		return fs.existsSync(filePath) && fs.unlinkSync(filePath);
 	};
-	execCli([], {dirname}, (err, stdout, stderr) => {
+	snapshotFixtureFilePaths.forEach(removeExistingSnapshotFixtureFiles);
+	const verifySnapshotFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
 		t.ifError(err);
-		testLocationTypes.forEach(removeExists);
+		snapshotFixtureFilePaths.forEach(verifySnapshotFixtureFiles);
 		t.match(stderr, /6 passed/);
 		t.end();
 	});

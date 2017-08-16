@@ -1041,7 +1041,7 @@ You can then check your code. If the change was intentional you can use the `--u
 $ ava --update-snapshots
 ```
 
-You can also set a custom location for the generated snapshot fixtures. This can be configured in the `package.json#ava` configuration for every test run.
+You can specify a fixed location for storing the snapshot files from each test under the "ava" key in your package.json:
 
 ```json
 {
@@ -1051,9 +1051,9 @@ You can also set a custom location for the generated snapshot fixtures. This can
 }
 ```
 
-Snapshots fixtures will be then saved in a directory structure that reflects the test sourcecode.
+The snapshot files will be saved in a directory structure that mirrors that of your test files.
 
-If you are transpiling the tests with sourcemaps, ava will derive the test location from the `*.js.map` files, see more in the [TypeScript](docs/recipes/typescript.md) recipe.
+If you are running AVA against precompiled test files, AVA will try and use source maps to determine the location of the original files. Snapshots will be stored next to these files, following the same rules as if AVA had executed the original files directly. This is great if you're writing your tests in TypeScript (see our [TypeScript recipe](docs/recipes/typescript.md)).
 
 ### Skipping assertions
 

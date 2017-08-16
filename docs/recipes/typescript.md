@@ -18,7 +18,8 @@ Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2015"
+		"target": "es2015",
+		"sourceMaps": true
 	}
 }
 ```
@@ -83,7 +84,3 @@ test('an actual test', t => {
 ```
 $ npm test
 ```
-
-## Snapshots
-
-Ava derives the base location for the snapshot fixtures relative to the typescript as if it were standard javascript tests. It determines this from the associated `*.js.map` sourcemap files. Enabling sourcemaps with the typescript compiler can be done in either the [tsconfig](http://www.typescriptlang.org/docs/handbook/tsconfig-json.html) `tsconfig.json#compilerOptions#sourceMap=true` or in the `tsc` cli option `--sourceMap`.
