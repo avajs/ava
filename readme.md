@@ -277,23 +277,19 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
-By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in certain directories as provided by the `ignore-by-default` package.
+### Options
 
-### Config options
+- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Only files with a `.js` extension are used. Files with an underscore prefix are ignored. All `.js` files in selected directories are run
+- `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
+- `failFast`: stop running further tests once a test fails
+- `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
+- `tap`: if `true`, enables the [TAP reporter](##tap-reporter)
+- `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
+- `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
+- `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
 
-- `files` files to match as test files
-- `source` extra files watch in watch mode, see [watch mode source and test files](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
-- `match` not really useful in the `package.json` config, but can be useful on the CLI to filter tests by title. To only run the tests that start with `uni`, you could do `$ ava --match='uni*'`.
-- `failFast` aborts tests after first error encountered
-- `failWithoutAssertions` fail on first error and skip assertions
-- `tap` enable [tap](http://www.node-tap.org)
-- `powerAssert` enable [power-assert](https://github.com/power-assert-js/power-assert) for more descriptive assert messages
-- `require` extra modules to require before tests are run
-- `babel` babel configuration. See [ES2017 support](#es2017-support) section for details on the `babel` option.
-
-When you run f.ex `$ ava test/integration` that overrides the `files` config. 
-If you pass a directory, ava treats all contained `.js` files as tests. 
-You need to repeat your glob, e.g. `$ ava 'test/integration/*.test.js'` to only run those specific tests in your specific folder.
+Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
 ## Documentation
 
