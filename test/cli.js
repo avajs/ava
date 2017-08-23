@@ -682,20 +682,37 @@ test('legacy snapshot files are reported to the console', t => {
 
 test('snapshots infer their location from sourcemaps', t => {
 	t.plan(8);
-	const dirname = path.join('fixture/snapshots/test-sourcemaps');
-	const testLocationTypes = [
+	const relativeFixtureDir = path.join('fixture/snapshots/test-sourcemaps');
+	const snapDirStructure = [
 		'src',
 		'src/test/snapshots',
 		'src/feature/__tests__/__snapshots__'
 	];
-	const removeExists = relFilePath => {
-		const snapshotFolderPath = path.join(__dirname, dirname, relFilePath);
-		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.md')));
-		t.true(fs.existsSync(path.join(snapshotFolderPath, 'test.js.snap')));
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
 	};
-	execCli([], {dirname}, (err, stdout, stderr) => {
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
 		t.ifError(err);
-		testLocationTypes.forEach(removeExists);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
 		t.match(stderr, /6 passed/);
 		t.end();
 	});
@@ -704,31 +721,37 @@ test('snapshots infer their location from sourcemaps', t => {
 test('snapshots resolved location from "snapshotDir" in ava config', t => {
 	t.plan(8);
 	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
-	const snapshotDir = 'snapshot-fixtures';
-	const snapshotDirStructure = [
+	const snapDir = 'snapshot-fixtures';
+	const snapDirStructure = [
 		'src',
 		'src/feature',
 		'src/feature/nested-feature'
 	];
-	const snapshotFixtureFilePaths = snapshotDirStructure
-		.map(snapshotRelativeDir => {
-			const snapshotPath = path.join(__dirname, relativeFixtureDir, snapshotDir, snapshotRelativeDir);
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapDir, snapRelativeDir);
 			return [
-				path.join(snapshotPath, 'test.js.md'),
-				path.join(snapshotPath, 'test.js.snap')
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
 			];
 		})
 		.reduce((a, b) => a.concat(b), []);
-	const removeExistingSnapshotFixtureFiles = filePath => {
-		return fs.existsSync(filePath) && fs.unlinkSync(filePath);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
 	};
-	snapshotFixtureFilePaths.forEach(removeExistingSnapshotFixtureFiles);
-	const verifySnapshotFixtureFiles = relFilePath => {
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
 	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
 		t.ifError(err);
-		snapshotFixtureFilePaths.forEach(verifySnapshotFixtureFiles);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
 		t.match(stderr, /6 passed/);
 		t.end();
 	});
