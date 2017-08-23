@@ -7,14 +7,13 @@ This recipe shows you how to test your endpoints with AVA and Mongoose, assuming
 This recipe uses the following libraries:
 
 1. [MongoDB memory server](https://github.com/nodkz/mongodb-memory-server) (A MongoDB in-memory Server)
-2. [Babel Polyfill](https://babeljs.io/docs/usage/polyfill/) (required for MongoDB memory server)
-3. [Supertest](https://github.com/visionmedia/supertest) (An endpoint testing library)
-4. [Mongoose](http://mongoosejs.com)
+2. [Supertest](https://github.com/visionmedia/supertest) (An endpoint testing library)
+3. [Mongoose](http://mongoosejs.com)
 
-Install the first three libraries by running the following code:
+Install the first two libraries by running the following code:
 
 ```console
-$ npm install --save-dev mongodb-memory-server babel-polyfill supertest
+$ npm install --save-dev mongodb-memory-server supertest
 ```
 
 You should have Mongoose installed already. If not, run the following code to install it:
@@ -23,18 +22,6 @@ You should have Mongoose installed already. If not, run the following code to in
 
 ```console
 $ npm install mongoose
-```
-
-## Setting up AVA
-
-Since MongoDB Memory server requires Babel polyfill to work, the easiest way to set up AVA is through the `ava` key in your `package.json` file.
-
-```json
-"ava": {
-    "require": [
-      "babel-polyfill"
-    ]
-  },
 ```
 
 ## Your test file
@@ -77,8 +64,6 @@ test.before(async t => mongoose.connect(await mongod.getConnectionString(), { us
 
 When you run your first test, MongoDB downloads the latest MongoDB Binaries. It may take a minute. (The download is ~70mb).
 
-Note: Since we're using async/await, you need Node v7.6 and above.
-
 **Add fixtures for each test**
 
 You'll want to populate your database with dummy data. Here's an example:
@@ -104,12 +89,10 @@ test.afterEach.always(async t => await User.remove())
 
 Use Supertest to fire a request for your endpoint. Then, do the rest with AVA normally.
 
-Note: Make sure your tests run serially with `test.serial`.
-
 ```js
 // First test
 // Note: tests must be serial tests.
-// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose
+// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose (see why below)
 test.serial('litmus get user', async t => {
   const { app } = t.context
   const res = await request(app)
@@ -156,3 +139,13 @@ And you're done!
 You may choose to abstract code for `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file.
 
 To see a demo of this configuration file, look at https://github.com/zellwk/ava-mdb-test
+
+## Why `test.serial` instead of `test`
+
+AVA Test cases in a file uses the same Mongoose module (even when they're ran in parallel).
+
+Since you need to use the same Mongoose module, you need to make sure each test fixture is completely cleared (with `test.after.always`) before beginning the next test. Otherwise, your database would be polluted data from the previous test.
+
+The easiest way to make sure your databases remain clean across every test is to test serially, cleaning up after each test. Hence the use of `test.serial`.
+
+There's a hard way (where you modify Mongoose and your models) that makes your code much more complex. If you want to try the hard way, check out the conversation in [this PR](https://github.com/avajs/ava/pull/1420)
