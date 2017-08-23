@@ -3,6 +3,6 @@
 		"files": [
 			"src/**/*test.js"
 		],
-	"snapshotDir": "snapshot-fixtures"
+		"snapshotDir": "snapshot-fixtures"
 	}
 }
