@@ -142,10 +142,6 @@ To see a demo of this configuration file, look at https://github.com/zellwk/ava-
 
 ## Why `test.serial` instead of `test`
 
-AVA Test cases in a file uses the same Mongoose module (even when they're ran in parallel).
+You need Mongoose to use the same connection in both your app and AVA to test endpoints properly. The easiest way is to make sure your tests run serially, clearing test fixtures after every test with `test.after.always` before the next one begins.
 
-Since you need to use the same Mongoose module, you need to make sure each test fixture is completely cleared (with `test.after.always`) before beginning the next test. Otherwise, your database would be polluted data from the previous test.
-
-The easiest way to make sure your databases remain clean across every test is to test serially, cleaning up after each test. Hence the use of `test.serial`.
-
-There's a hard way (where you modify Mongoose and your models) that makes your code much more complex. If you want to try the hard way, check out the conversation in [this PR](https://github.com/avajs/ava/pull/1420)
+There's a harder way (which allows you to run parallel tests), where you create separate Mongoose connections for each test. You'll also have to modify your Schemas to support this behavior. More information can be found [here](https://github.com/nodkz/mongodb-memory-server#several-mongoose-connections-simultaneously)
