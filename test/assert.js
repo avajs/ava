@@ -755,10 +755,11 @@ test('.snapshot()', t => {
 
 	const projectDir = path.join(__dirname, 'fixture');
 	const manager = snapshotManager.load({
-		projectDir,
-		testDir: projectDir,
 		name: 'assert.js',
+		projectDir,
 		relFile: 'test/assert.js',
+		fixedLocation: null,
+		testDir: projectDir,
 		updating
 	});
 	const setup = title => {
