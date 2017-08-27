@@ -755,6 +755,7 @@ test('.snapshot()', t => {
 
 	const projectDir = path.join(__dirname, 'fixture');
 	const manager = snapshotManager.load({
+		file: __filename,
 		name: 'assert.js',
 		projectDir,
 		relFile: 'test/assert.js',
