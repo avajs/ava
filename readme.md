@@ -1041,7 +1041,7 @@ You can then check your code. If the change was intentional you can use the `--u
 $ ava --update-snapshots
 ```
 
-You can specify a fixed location for storing the snapshot files from each test under the "ava" key in your package.json:
+You can specify a fixed location for storing the snapshot files in AVA's [`package.json` configuration](#configuration):
 
 ```json
 {
