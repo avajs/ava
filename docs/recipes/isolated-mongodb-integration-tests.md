@@ -60,4 +60,4 @@ If the server does not seem to start, you can set the `MongoDBServer.debug = tru
 
 [Mongoose](http://mongoosejs.com) is a robust Object-Document-Mapper (ODM) for MongoDB. Refer to its documentation to get started with Mongoose.
 
-To use Mongoose effectively with AVA, check out the [Mongoose integration docs](../endpoint-testing-with-mongoose.md)
+To use Mongoose effectively with AVA, check out the [Mongoose integration docs](../endpoint-testing-with-mongoose.md).

@@ -6,9 +6,9 @@ This recipe shows you how to test your endpoints with AVA and Mongoose, assuming
 
 This recipe uses the following libraries:
 
-1. [MongoDB memory server](https://github.com/nodkz/mongodb-memory-server) (A MongoDB in-memory Server)
-2. [Supertest](https://github.com/visionmedia/supertest) (An endpoint testing library)
-3. [Mongoose](http://mongoosejs.com)
+1. [`mongod-memory-server`](https://github.com/nodkz/mongodb-memory-server) (A MongoDB in-memory Server)
+2. [SuperTest](https://github.com/visionmedia/supertest) (An endpoint testing library)
+3. [Mongoose ODM](http://mongoosejs.com)
 
 Install the first two libraries by running the following code:
 
@@ -24,9 +24,15 @@ You should have Mongoose installed already. If not, run the following code to in
 $ npm install mongoose
 ```
 
+## Prerequisites
+
+You'll need a server file and a Mongoose model. See the [`server.js`](https://github.com/zellwk/ava-mdb-test/blob/master/server.js) and [`models/User.js`](https://github.com/zellwk/ava-mdb-test/blob/master/models/User.js) examples.
+
+Note that `server.js` does not start the app. Instead this must be done by SuperTest, so that the app endpoints can be tested. If you're using Express for your application, make sure you have a startup file that imports `app` and calls `app.listen()`.
+
 ## Your test file
 
-First, include the libraries you need.
+First, include the libraries you need:
 
 ```js
 // Libraries required for testing
@@ -40,94 +46,77 @@ import app from '../server'
 import User from '../models/User'
 ```
 
-### Your server file
-
-When you test endpoints, you don't want to start your app. Supertest does this for us automatically when you pass your app into it.
-
-So, if you're using express for your application, make sure you have a startup file that imports `app` and calls `app.listen`
-
-Here's an example of the [server file](https://github.com/zellwk/ava-mdb-test/blob/master/server.js)
-
-And here's an example of your Mongoose [model](https://github.com/zellwk/ava-mdb-test/blob/master/models/User.js)
-
-### Back to your test file
-
-**First, start your MongoDB instance and connect to Mongoose:**
+Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
-// Start MongoDB Instance
+// Start MongoDB instance
 const mongod = new MongodbMemoryServer()
 
-// Create connection to mongoose before all tests
-test.before(async t => mongoose.connect(await mongod.getConnectionString(), { useMongoClient: true }))
+// Create connection to Mongoose before tests are run
+test.before(async t => {
+	const uri = await mongod.getConnectionString();
+	await mongoose.connect(uri, {useMongoClient: true});
+});
 ```
 
-When you run your first test, MongoDB downloads the latest MongoDB Binaries. It may take a minute. (The download is ~70mb).
-
-**Add fixtures for each test**
+When you run your first test, MongoDB downloads the latest MongoDB binaries. The download is ~70MB so this may take a minute.
 
 You'll want to populate your database with dummy data. Here's an example:
 
 ```js
 test.beforeEach(async t => {
-  const user = new User({
-  	email: 'one@example.com',
-  	name: 'One'
-  })
-  await user.save()
-})
+	const user = new User({
+		email: 'one@example.com',
+		name: 'One'
+	});
+	await user.save();
+});
 ```
 
-**Clear your dummy data after each test**:
+Dummy data should be cleared after each test:
 
 ```js
-// Cleans up database after every test
-test.afterEach.always(async t => await User.remove())
+test.afterEach.always(async t => await User.remove());
 ```
 
-**Write your tests**
-
-Use Supertest to fire a request for your endpoint. Then, do the rest with AVA normally.
+Now you can use SuperTest to send off a request for your app endpoint. Use AVA for your assertions:
 
 ```js
-// First test
-// Note: tests must be serial tests.
-// It is NOT RECOMMENDED to run parallel tests within an AVA test file when using Mongoose (see why below)
+// Note that the tests are run serially. See below as to why.
+
 test.serial('litmus get user', async t => {
-  const { app } = t.context
-  const res = await request(app)
-    .get('/litmus')
-    .send({email: 'one@example.com'})
-  t.is(res.status, 200)
-  t.is(res.body.name, 'One')
-})
+	const {app} = t.context;
+	const res = await request(app)
+		.get('/litmus')
+		.send({email: 'one@example.com'});
+	t.is(res.status, 200);
+	t.is(res.body.name, 'One');
+});
 
-// Second test
 test.serial('litmus create user', async t => {
-  const { app } = t.context
-  const res = await request(app)
-    .post('/litmus')
-    .send({
-      email: 'new@example.com',
-      name: 'New name'
-    })
+	const {app} = t.context;
+	const res = await request(app)
+		.post('/litmus')
+		.send({
+			email: 'new@example.com',
+			name: 'New name'
+		});
 
-  t.is(res.status, 200)
-  t.is(res.body.name, 'New name')
+	t.is(res.status, 200);
+	t.is(res.body.name, 'New name');
 
-  // Verifies that user is created in DB
-  const newUser = await User.findOne({email: 'new@example.com'})
-  t.is(newUser.name, 'New name')
-})
+	// Verify that user is created in DB
+	const newUser = await User.findOne({email: 'new@example.com'});
+	t.is(newUser.name, 'New name');
+});
 ```
 
-**Shutdown your server and connection when done**:
+Finally disconnect from and stop MongoDB when all tests are done:
 
 ```js
-// Disconnect MongoDB and Mongoose after all tests are done
 test.after.always(async t => {
-  mongoose.disconnect()
-  mongod.stop()
+	mongoose.disconnect()
+	mongod.stop()
 })
 
 ```
@@ -136,12 +125,10 @@ And you're done!
 
 ## Reusing the configuration across files
 
-You may choose to abstract code for `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file.
+You may choose to extract the code for the `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` hooks into a separate file. Have a look at https://github.com/zellwk/ava-mdb-test for an example.
 
-To see a demo of this configuration file, look at https://github.com/zellwk/ava-mdb-test
+## Using `test.serial` instead of `test`
 
-## Why `test.serial` instead of `test`
+Your tests likely change the database. Using `test()` means they run concurrently, which may cause one test to affect another. Instead if you use `test.serial()` then the tests will run one at a time. You can then clean up your database between test runs, making the tests more predictable.
 
-You need Mongoose to use the same connection in both your app and AVA to test endpoints properly. The easiest way is to make sure your tests run serially, clearing test fixtures after every test with `test.after.always` before the next one begins.
-
-There's a harder way (which allows you to run parallel tests), where you create separate Mongoose connections for each test. You'll also have to modify your Schemas to support this behavior. More information can be found [here](https://github.com/nodkz/mongodb-memory-server#several-mongoose-connections-simultaneously)
+You could run tests concurrently if you create separate Mongoose connections for each test. This is harder to set up, though. More information can be found [here](https://github.com/nodkz/mongodb-memory-server#several-mongoose-connections-simultaneously).
