@@ -718,7 +718,7 @@ test('snapshots infer their location from sourcemaps', t => {
 	});
 });
 
-test('snapshots resolved location from "snapshotDir" in ava config', t => {
+test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 	t.plan(8);
 	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
 	const snapDir = 'snapshot-fixtures';
