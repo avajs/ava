@@ -3,3 +3,4 @@ node_modules
 coverage
 bench/.results
 types/generated.d.ts
+/package-lock.json.md5

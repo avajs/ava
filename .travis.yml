@@ -21,6 +21,15 @@ cache:
 before_install:
   - npm install --global npm@5.6.0
   - npm --version
-install:
-  - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --no-shrinkwrap --prefer-online; else npm install --prefer-offline; fi
+  - md5sum package-lock.json > package-lock.json.md5
+install: |
+  if [[ ${FRESH_DEPS} == "true" ]]; then
+    npm install --no-shrinkwrap --prefer-online;
+  else
+    npm install --prefer-offline;
+    if ! md5sum --quiet -c package-lock.json.md5; then
+      echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes.";
+      exit 1;
+    fi
+  fi
 after_success: npx codecov --file=./coverage/lcov.info

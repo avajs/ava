@@ -40,6 +40,8 @@ You may find an issue is assigned, or has the [`assigned` label](https://github.
 
 We'd like to fix [`priority` issues](https://github.com/avajs/ava/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/avajs/ava/labels/low%20priority) too. [`future` issues](https://github.com/avajs/ava/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
 
+If you're updating dependencies, please make sure you use npm@5.6.0 and commit the updated `package-lock.json` file.
+
 ### Hang out in our chat
 
 We have a [chat](https://gitter.im/avajs/ava). Jump in there and lurk, talk to us, and help others.
