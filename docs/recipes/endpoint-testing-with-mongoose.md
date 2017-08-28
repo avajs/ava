@@ -8,7 +8,7 @@ This recipe uses the following libraries:
 
 1. [`mongod-memory-server`](https://github.com/nodkz/mongodb-memory-server) (A MongoDB in-memory Server)
 2. [SuperTest](https://github.com/visionmedia/supertest) (An endpoint testing library)
-3. [Mongoose ODM](http://mongoosejs.com)
+3. [Mongoose](http://mongoosejs.com)
 
 Install the first two libraries by running the following code:
 
