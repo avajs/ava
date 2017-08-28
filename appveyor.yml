@@ -27,8 +27,7 @@ install:
   - npm --version
   - git config core.symlinks true
   - git reset --hard
-  - ps: if ($env:configuration -eq "FreshDeps") { Remove-Item package-lock.json }
-  - if %configuration% == FreshDeps (npm install --prefer-online)
+  - if %configuration% == FreshDeps (npm install --no-shrinkwrap --prefer-online)
   - if %configuration% == LockedDeps (npm install --prefer-online)
 test_script:
   - npm run test-win
