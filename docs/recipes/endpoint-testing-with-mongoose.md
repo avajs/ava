@@ -53,7 +53,7 @@ Next start the in-memory MongoDB instance and connect to Mongoose:
 const mongod = new MongodbMemoryServer()
 
 // Create connection to Mongoose before tests are run
-test.before(async t => {
+test.before(async () => {
 	const uri = await mongod.getConnectionString();
 	await mongoose.connect(uri, {useMongoClient: true});
 });
@@ -64,7 +64,7 @@ When you run your first test, MongoDB downloads the latest MongoDB binaries. The
 You'll want to populate your database with dummy data. Here's an example:
 
 ```js
-test.beforeEach(async t => {
+test.beforeEach(async () => {
 	const user = new User({
 		email: 'one@example.com',
 		name: 'One'
@@ -76,7 +76,7 @@ test.beforeEach(async t => {
 Dummy data should be cleared after each test:
 
 ```js
-test.afterEach.always(async t => await User.remove());
+test.afterEach.always(async () => await User.remove());
 ```
 
 Now you can use SuperTest to send off a request for your app endpoint. Use AVA for your assertions:
@@ -114,7 +114,7 @@ test.serial('litmus create user', async t => {
 Finally disconnect from and stop MongoDB when all tests are done:
 
 ```js
-test.after.always(async t => {
+test.after.always(async () => {
 	mongoose.disconnect()
 	mongod.stop()
 })
