@@ -16,9 +16,8 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@^5.2.0
+  - npm install --global npm@5.4.0
   - npm --version
-  - if [[ ${FRESH_DEPS} == "true" ]]; then rm package-lock.json; fi
 install:
-  - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --prefer-online; else npm install --prefer-offline; fi
+  - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --no-shrinkwrap --prefer-online; else npm install --prefer-offline; fi
 after_success: ./node_modules/.bin/codecov --file=./coverage/lcov.info
