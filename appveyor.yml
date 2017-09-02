@@ -8,7 +8,7 @@ skip_commits:
     - '**/*.md'
 configuration:
   - FreshDeps
-  - LockedDeps
+#  - LockedDeps
 environment:
   matrix:
     - nodejs_version: 8
@@ -27,7 +27,7 @@ install:
   - npm --version
   - git config core.symlinks true
   - git reset --hard
-  - if %configuration% == FreshDeps (npm install --no-shrinkwrap --prefer-online)
-  - if %configuration% == LockedDeps (npm install --prefer-offline)
+  - if %configuration% == FreshDeps (npm install --no-optional --no-shrinkwrap --prefer-online)
+  - if %configuration% == LockedDeps (npm install --no-optional --prefer-offline)
 test_script:
   - npm run test-win
