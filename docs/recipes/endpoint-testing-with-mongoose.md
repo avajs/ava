@@ -76,7 +76,7 @@ test.beforeEach(async () => {
 Dummy data should be cleared after each test:
 
 ```js
-test.afterEach.always(async () => await User.remove());
+test.afterEach.always(() => User.remove());
 ```
 
 Now you can use SuperTest to send off a request for your app endpoint. Use AVA for your assertions:
