@@ -1045,6 +1045,20 @@ You can then check your code. If the change was intentional you can use the `--u
 $ ava --update-snapshots
 ```
 
+You can specify a fixed location for storing the snapshot files in AVA's [`package.json` configuration](#configuration):
+
+```json
+{
+  "ava": {
+    "snapshotLocation": "custom-directory"
+  }
+}
+```
+
+The snapshot files will be saved in a directory structure that mirrors that of your test files.
+
+If you are running AVA against precompiled test files, AVA will try and use source maps to determine the location of the original files. Snapshots will be stored next to these files, following the same rules as if AVA had executed the original files directly. This is great if you're writing your tests in TypeScript (see our [TypeScript recipe](docs/recipes/typescript.md)).
+
 ### Skipping assertions
 
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
