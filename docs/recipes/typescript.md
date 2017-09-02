@@ -18,7 +18,8 @@ Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2015"
+		"target": "es2015",
+		"sourceMaps": true
 	}
 }
 ```

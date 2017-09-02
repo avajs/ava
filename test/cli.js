@@ -710,6 +710,83 @@ test('legacy snapshot files are reported to the console', t => {
 	});
 });
 
+test('snapshots infer their location from sourcemaps', t => {
+	t.plan(8);
+	const relativeFixtureDir = path.join('fixture/snapshots/test-sourcemaps');
+	const snapDirStructure = [
+		'src',
+		'src/test/snapshots',
+		'src/feature/__tests__/__snapshots__'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
+test('snapshots resolved location from "snapshotDir" in AVA config', t => {
+	t.plan(8);
+	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
+	const snapDir = 'snapshot-fixtures';
+	const snapDirStructure = [
+		'src',
+		'src/feature',
+		'src/feature/nested-feature'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
 		t.ok(err);
