@@ -1,5 +1,7 @@
 # Endpoint testing with Mongoose
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/endpoint-testing-with-mongoose.md)
+
 This recipe shows you how to test your endpoints with AVA and Mongoose, assuming you use Express as your framework.
 
 ## Setup
