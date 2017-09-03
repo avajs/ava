@@ -165,7 +165,7 @@
 		"safe-buffer": "^5.1.1",
 		"slash": "^1.0.0",
 		"source-map-support": "^0.4.0",
-		"stack-utils": "^1.0.0",
+		"stack-utils": "^1.0.1",
 		"strip-ansi": "^4.0.0",
 		"strip-bom-buf": "^1.0.0",
 		"supports-color": "^4.0.0",
