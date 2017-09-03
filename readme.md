@@ -284,7 +284,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
-- `tap`: if `true`, enables the [TAP reporter](##tap-reporter)
+- `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotLocation`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
