@@ -1,9 +1,10 @@
 import test from '../../';
 
 const getAnonymousFn = () => () => {
-	throw Error();
+	throw new Error();
 };
 
 test(t => {
 	getAnonymousFn()();
+	t.pass();
 });
