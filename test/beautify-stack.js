@@ -10,6 +10,14 @@ const beautifyStack = proxyquire('../lib/beautify-stack', {
 	}
 });
 
+function fooFunc() {
+	barFunc();
+}
+
+function barFunc() {
+	throw new Error();
+}
+
 test('does not strip ava internals and dependencies from stack trace with debug enabled', t => {
 	const beautify = proxyquire('../lib/beautify-stack', {
 		debug() {
@@ -43,4 +51,17 @@ test('strips ava internals and dependencies from stack trace with debug disabled
 test('returns empty string without any arguments', t => {
 	t.is(beautifyStack(), '');
 	t.end();
+});
+
+test('beautify stack - removes uninteresting lines', t => {
+	try {
+		fooFunc();
+	} catch (err) {
+		const stack = beautifyStack(err.stack);
+		t.match(stack, /fooFunc/);
+		t.match(stack, /barFunc/);
+		t.match(err.stack, /Module._compile/);
+		t.notMatch(stack, /Module\._compile/);
+		t.end();
+	}
 });
