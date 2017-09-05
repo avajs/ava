@@ -17,7 +17,12 @@ chalk.enabled = true;
 
 const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
 
-lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
+lolex.install({
+	now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
+	toFake: [
+		'Date'
+	]
+});
 const time = ' ' + chalk.grey.dim('[17:19:12]');
 
 function createReporter(options) {
