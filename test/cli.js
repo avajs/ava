@@ -78,11 +78,7 @@ test('disallow invalid babel config shortcuts', t => {
 test('enabling long stack traces will provide detailed debug information', t => {
 	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
 		t.ok(err);
-		let expectedOutput = '\n  ';
-		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava#es2017-support for allowed values.';
-		expectedOutput += '\n';
-		t.match(stderr, 'From previous event');
+		const expectedOutput = 'From previous event';
 		t.is(stderr, expectedOutput);
 		t.end();
 	});

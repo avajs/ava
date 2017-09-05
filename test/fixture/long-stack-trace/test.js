@@ -4,6 +4,7 @@ test(t => {
 	Promise.resolve().then(function outer() {
     return Promise.resolve().then(function inner() {
         return Promise.resolve().then(function evenMoreInner() {
+					a.b.c.d()
         }).catch(function catcher(e) {
 					t.throws(throwSync());
         });
@@ -11,6 +12,7 @@ test(t => {
 	});
 });
 
+
 function throwSync() {
-	throw new Error('should be detected');
+	throw new Error('Test String');
 }
