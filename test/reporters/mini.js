@@ -750,7 +750,12 @@ test('full-width line when sectioning', t => {
 });
 
 test('results with watching enabled', t => {
-	lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
+	lolex.install({
+		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
+		toFake: [
+			'Date'
+		]
+	});
 	const time = ' ' + chalk.grey.dim('[17:19:12]');
 
 	const reporter = miniReporter({color: true, watching: true});

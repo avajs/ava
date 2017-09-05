@@ -101,7 +101,13 @@ group('chokidar', (beforeEach, test, group) => {
 			clock.uninstall();
 		}
 
-		clock = lolex.install(0, ['setImmediate', 'setTimeout', 'clearTimeout']);
+		clock = lolex.install({
+			toFake: [
+				'setImmediate',
+				'setTimeout',
+				'clearTimeout'
+			]
+		});
 
 		chokidarEmitter = new EventEmitter();
 		chokidar.watch.returns(chokidarEmitter);
