@@ -277,7 +277,20 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 
 Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
 
-See the [ES2017 support](#es2017-support) section for details on the `babel` option.
+### Options
+
+- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Only files with a `.js` extension are used. Files with an underscore prefix are ignored. All `.js` files in selected directories are run
+- `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
+- `failFast`: stop running further tests once a test fails
+- `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
+- `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
+- `snapshotLocation`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
+- `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
+- `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
+- `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
+
+Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
 ## Documentation
 
@@ -1044,6 +1057,20 @@ You can then check your code. If the change was intentional you can use the `--u
 ```console
 $ ava --update-snapshots
 ```
+
+You can specify a fixed location for storing the snapshot files in AVA's [`package.json` configuration](#configuration):
+
+```json
+{
+  "ava": {
+    "snapshotLocation": "custom-directory"
+  }
+}
+```
+
+The snapshot files will be saved in a directory structure that mirrors that of your test files.
+
+If you are running AVA against precompiled test files, AVA will try and use source maps to determine the location of the original files. Snapshots will be stored next to these files, following the same rules as if AVA had executed the original files directly. This is great if you're writing your tests in TypeScript (see our [TypeScript recipe](docs/recipes/typescript.md)).
 
 ### Skipping assertions
 

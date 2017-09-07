@@ -1,0 +1,7 @@
+{
+	"ava": {
+		"files": [
+			"build/**/*test.js"
+		]
+	}
+}

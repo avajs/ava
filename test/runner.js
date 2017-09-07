@@ -711,6 +711,32 @@ test('options.match overrides .only', t => {
 	});
 });
 
+test('options.match includes anonymous tests in negative matches', t => {
+	t.plan(4);
+
+	const runner = new Runner({
+		match: ['!*oo']
+	});
+
+	runner.chain.test('foo', a => {
+		t.fail();
+		a.pass();
+	});
+
+	runner.chain.test(a => {
+		t.pass();
+		a.pass();
+	});
+
+	runner.run({}).then(() => {
+		const stats = runner.buildStats();
+		t.is(stats.skipCount, 0);
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
+		t.end();
+	});
+});
+
 test('macros: Additional args will be spread as additional args on implementation function', t => {
 	t.plan(3);
 
