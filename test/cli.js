@@ -75,6 +75,19 @@ test('disallow invalid babel config shortcuts', t => {
 	});
 });
 
+test('enabling long stack traces will provide detailed debug information', t => {
+	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
+		t.ok(err);
+		let expectedOutput = '\n  ';
+		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
+		expectedOutput += ' See https://github.com/avajs/ava#es2017-support for allowed values.';
+		expectedOutput += '\n';
+		t.match(stderr, 'From previous event');
+		t.is(stderr, expectedOutput);
+		t.end();
+	});
+});
+
 test('timeout', t => {
 	execCli(['fixture/long-running.js', '-T', '1s'], (err, stdout, stderr) => {
 		t.ok(err);
@@ -706,6 +719,83 @@ test('legacy snapshot files are reported to the console', t => {
 		t.match(stderr, /File path:/);
 		t.match(stderr, snapPath);
 		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
+		t.end();
+	});
+});
+
+test('snapshots infer their location from sourcemaps', t => {
+	t.plan(8);
+	const relativeFixtureDir = path.join('fixture/snapshots/test-sourcemaps');
+	const snapDirStructure = [
+		'src',
+		'src/test/snapshots',
+		'src/feature/__tests__/__snapshots__'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
+test('snapshots resolved location from "snapshotDir" in AVA config', t => {
+	t.plan(8);
+	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
+	const snapDir = 'snapshot-fixtures';
+	const snapDirStructure = [
+		'src',
+		'src/feature',
+		'src/feature/nested-feature'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		t.match(stderr, /6 passed/);
 		t.end();
 	});
 });
