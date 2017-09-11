@@ -173,7 +173,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['package.json', '**/*.js', '**/*.snap'].concat(files),
+			['**/*.snap', 'package.json', '**/*.js'].concat(files),
 			{
 				ignored: defaultIgnore.map(dir => `${dir}/**/*`),
 				ignoreInitial: true
@@ -187,7 +187,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(files),
+			['**/*.snap', 'package.json', 'foo.js', 'baz.js'].concat(files),
 			{
 				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('bar.js', 'qux.js'),
 				ignoreInitial: true
@@ -201,7 +201,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['node_modules/foo/*.js'].concat(files),
+			['**/*.snap', 'package.json', 'node_modules/foo/*.js'].concat(files),
 			{
 				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('!node_modules/foo/*.js'),
 				ignoreInitial: true
