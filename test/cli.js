@@ -78,8 +78,7 @@ test('disallow invalid babel config shortcuts', t => {
 test('enabling long stack traces will provide detailed debug information', t => {
 	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
 		t.ok(err);
-		const expectedOutput = 'From previous event';
-		t.is(stderr, expectedOutput);
+		t.match(stderr, /From previous event/);
 		t.end();
 	});
 });
