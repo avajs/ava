@@ -1,18 +1,14 @@
 import test from '../../../';
+const Promise = require('./enable-trace.js');
 
-test(t => {
-	Promise.resolve().then(function outer() {
+test(async t => {
+	const resolve = await Promise.resolve().then(function outer() {
     return Promise.resolve().then(function inner() {
         return Promise.resolve().then(function evenMoreInner() {
 					a.b.c.d()
         }).catch(function catcher(e) {
-					t.throws(throwSync());
+					throw e.stack
         });
     });
 	});
 });
-
-
-function throwSync() {
-	throw new Error('Test String');
-}
