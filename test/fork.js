@@ -134,3 +134,29 @@ test('babelrc is ignored', t => {
 			t.end();
 		});
 });
+
+test('color support is initialized correctly', t => {
+	t.plan(1);
+
+	return Promise.all([
+		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
+		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
+		fork(fixture('chalk-disabled.js'), {}).run({})
+	]).then(info => {
+		info.forEach(info => {
+			if (info.stats.failCount > 0) {
+				throw new Error(`${info.file} failed`);
+			}
+		});
+		t.is(info.length, 3);
+	});
+});
+
+test('doesn\'t pass internal options to worker', t => {
+	return fork(fixture('arguments.js'))
+		.run({})
+		.then(info => {
+			t.is(info.stats.passCount, 1);
+			t.end();
+		});
+});
