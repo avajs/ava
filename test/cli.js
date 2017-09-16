@@ -802,3 +802,19 @@ test('--color enables formatting colors', t => {
 		t.end();
 	});
 });
+
+test('sets NODE_ENV to test when it is not set', t => {
+	execCli([path.join('fixture', 'node-env-test.js')], {env: {}}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('doesn\'t set NODE_ENV when it is set', t => {
+	execCli([path.join('fixture', 'node-env-foo.js')], {env: {NODE_ENV: 'foo'}}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});

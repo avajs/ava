@@ -1127,6 +1127,8 @@ t.true(a.test(b) || b === c)
 
 Each test file is run in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another. It's also great for performance on modern multi-core processors, allowing multiple test files to execute in parallel.
 
+For each process, `NODE_ENV` gets set to `'test'` if it was not set. This could change some ouput and/or the behaviour of some modules (e.g. express' final error handler does [*not* log errors when `NODE_ENV` is `'test'`](https://github.com/expressjs/express/blob/c087a45b9cc3eb69c777e260ee880758b6e03a40/lib/application.js#L630)). Is very convenient to set some defaults (change database, disable logging, etc…), but you shouldn't rely on it too much (if you check your [coverage](#code-coverage), you'll see it go down). As `NODE_ENV` is always set, `'NODE_ENV' in process.env` always is `false` when called from your tests.
+
 ## Tips
 
 ### Temp files
