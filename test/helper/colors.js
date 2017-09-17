@@ -8,7 +8,7 @@ const ansiStyles = require('ansi-styles');
 
 function make(name) {
 	const style = ansiStyles[name];
-	return function(string) {
+	return function (string) {
 		return style.open + string + style.close;
 	};
 }
@@ -19,8 +19,8 @@ const gray = make('gray');
 
 module.exports = {
 	blue: make('blue'),
-	boldWhite: (string) => bold(white(string)),
-	dimGray: (string) => gray(dim(string)),
+	boldWhite: string => bold(white(string)),
+	dimGray: string => gray(dim(string)),
 	gray: make('gray'),
 	green: make('green'),
 	magenta: make('magenta'),
