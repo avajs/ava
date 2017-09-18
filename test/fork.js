@@ -140,8 +140,7 @@ test('color support is initialized correctly', t => {
 
 	return Promise.all([
 		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
-		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
-		fork(fixture('chalk-disabled.js'), {}).run({})
+		fork(fixture('chalk-disabled.js'), {color: false}).run({})
 	]).then(info => {
 		info.forEach(info => {
 			if (info.stats.failCount > 0) {
