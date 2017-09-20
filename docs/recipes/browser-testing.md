@@ -47,11 +47,11 @@ Configure AVA to `require` the helper before every test file.
 
 ```json
 {
-  "ava": {
-    "require": [
-      "./test/helpers/setup-browser-env.js"
-    ]
-  }
+	"ava": {
+		"require": [
+			"./test/helpers/setup-browser-env.js"
+		]
+	}
 }
 ```
 

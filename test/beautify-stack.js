@@ -1,6 +1,7 @@
 'use strict';
 const proxyquire = require('proxyquire').noPreserveCache();
 const test = require('tap').test;
+
 const beautifyStack = proxyquire('../lib/beautify-stack', {
 	debug() {
 		return {

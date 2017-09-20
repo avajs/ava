@@ -266,3 +266,51 @@ test('stdout and stderr should call process.stderr.write', t => {
 	t.is(stub.callCount, 2);
 	t.end();
 });
+
+test('successful test with logs', t => {
+	const reporter = new TapReporter();
+
+	const actualOutput = reporter.test({
+		title: 'passing',
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	});
+
+	const expectedOutput = [
+		'# passing',
+		'ok 1 - passing',
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failing test with logs', t => {
+	const reporter = new TapReporter();
+
+	const actualOutput = reporter.test({
+		title: 'failing',
+		error: {
+			name: 'AssertionError',
+			message: 'false == true'
+		},
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	});
+
+	const expectedOutput = [
+		'# failing',
+		'not ok 1 - failing',
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2',
+		'  ---',
+		'    name: AssertionError',
+		'    message: false == true',
+		'  ...'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});

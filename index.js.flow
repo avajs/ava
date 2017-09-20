@@ -58,8 +58,8 @@ type AssertContext = {
 	// Assert that function throws an error or promise rejects.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws: {
-		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<Error>;
-		(value: () => mixed, error?: ErrorValidator, message?: string): Error;
+		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<any>;
+		(value: () => mixed, error?: ErrorValidator, message?: string): any;
 	};
 	// Assert that function doesn't throw an error or promise resolves.
 	notThrows: {
@@ -69,7 +69,7 @@ type AssertContext = {
 	// Assert that contents matches regex.
 	regex(contents: string, regex: RegExp, message?: string): void;
 	// Assert that contents matches a snapshot.
-	snapshot(contents: any, message?: string): void;
+	snapshot: ((contents: any, message?: string) => void) & ((contents: any, options: {id: string}, message?: string) => void);
 	// Assert that contents does not match regex.
 	notRegex(contents: string, regex: RegExp, message?: string): void;
 	// Assert that error is falsy.
@@ -84,9 +84,8 @@ type TestContext = AssertContext & {
 	plan(count: number): void;
 	skip: AssertContext;
 };
-type CallbackTestContext           = TestContext         & { end(): void; };
-type ContextualTestContext         = TestContext         & { context: any; };
-type ContextualCallbackTestContext = CallbackTestContext & { context: any; };
+type ContextualTestContext         = TestContext & { context: any; };
+type ContextualCallbackTestContext = TestContext & { context: any; end(): void; };
 
 /**
  * Test Implementations
@@ -101,8 +100,6 @@ type TestImplementation<T, R> =
 	| TestFunction<T, R>
 	| Array<TestFunction<T, R>>;
 
-type Test                   = TestImplementation<TestContext, SpecialReturnTypes | void>;
-type CallbackTest           = TestImplementation<CallbackTestContext, void>;
 type ContextualTest         = TestImplementation<ContextualTestContext, SpecialReturnTypes | void>;
 type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, void>;
 
@@ -110,40 +107,6 @@ type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, 
 /**
  * Method Types
  */
-
-type TestMethod = {
-	(              implementation: Test): void;
-	(name: string, implementation: Test): void;
-
-	serial     : TestMethod;
-	before     : TestMethod;
-	after      : TestMethod;
-	skip       : TestMethod;
-	todo       : TestMethod;
-	failing    : TestMethod;
-	only       : TestMethod;
-	beforeEach : TestMethod;
-	afterEach  : TestMethod;
-	cb         : CallbackTestMethod;
-	always     : TestMethod;
-};
-
-type CallbackTestMethod = {
-	(              implementation: CallbackTest): void;
-	(name: string, implementation: CallbackTest): void;
-
-	serial     : CallbackTestMethod;
-	before     : CallbackTestMethod;
-	after      : CallbackTestMethod;
-	skip       : CallbackTestMethod;
-	todo       : CallbackTestMethod;
-	failing    : CallbackTestMethod;
-	only       : CallbackTestMethod;
-	beforeEach : CallbackTestMethod;
-	afterEach  : CallbackTestMethod;
-	cb         : CallbackTestMethod;
-	always     : CallbackTestMethod;
-};
 
 type ContextualTestMethod = {
 	(              implementation: ContextualTest): void;
@@ -184,11 +147,11 @@ type ContextualCallbackTestMethod = {
  */
 
 declare module.exports: {
-	(              run: ContextualTest): void;
-	(name: string, run: ContextualTest): void;
+	(              run: ContextualTest, ...args: any): void;
+	(name: string, run: ContextualTest, ...args: any): void;
 
-	beforeEach : TestMethod;
-	afterEach  : TestMethod;
+	beforeEach : ContextualTestMethod;
+	afterEach  : ContextualTestMethod;
 	serial     : ContextualTestMethod;
 	before     : ContextualTestMethod;
 	after      : ContextualTestMethod;

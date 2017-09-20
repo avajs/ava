@@ -8,13 +8,13 @@ The first step is setting up Babel to transpile JSX code from the tests by addin
 
 ```json
 {
-  "ava": {
-    "require": ["babel-register"],
-    "babel": "inherit"
-  },
-  "babel": {
-    "presets": ["react"]
-  }
+	"ava": {
+		"require": ["babel-register"],
+		"babel": "inherit"
+	},
+	"babel": {
+		"presets": ["react"]
+	}
 }
 ```
 
@@ -142,7 +142,3 @@ In AVA, you can use any assertion library, and there are already a few out there
 
 - [`expect-jsx`](https://github.com/algolia/expect-jsx) ([Example](https://github.com/avajs/ava/issues/186#issuecomment-161317068))
 - [`unexpected-react`](https://github.com/bruderstein/unexpected-react) ([Sample project with an output example](https://github.com/adriantoine/ava-unexpected-react-demo))
-
-## Reference
-
-- [In depth guide of setting up AVA with code coverage on a React project](https://github.com/kentcdodds/react-ava-workshop)

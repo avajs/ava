@@ -2,9 +2,10 @@
 const path = require('path');
 const fs = require('fs');
 const figures = require('figures');
-const rimraf = require('rimraf');
+const del = require('del');
 const test = require('tap').test;
 const Api = require('../api');
+
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
 const ROOT_DIR = path.join(__dirname, '..');
@@ -21,40 +22,6 @@ function apiCreator(options) {
 	}
 	return instance;
 }
-
-generateTests('Without Pool:', options => apiCreator(options || {}));
-
-// The following two tests are only run against "Without Pool" behavior as they test the exclusive test features. These features are currently not expected to work correctly in the limited process pool. When the limited process pool behavior is finalized this test file will be updated. See: https://github.com/avajs/ava/pull/791#issuecomment-216293302
-test('Without Pool: test file with exclusive tests causes non-exclusive tests in other files to be ignored', t => {
-	const files = [
-		path.join(__dirname, 'fixture/exclusive.js'),
-		path.join(__dirname, 'fixture/exclusive-nonexclusive.js'),
-		path.join(__dirname, 'fixture/one-pass-one-fail.js')
-	];
-
-	const api = apiCreator({});
-
-	return api.run(files)
-		.then(result => {
-			t.ok(result.hasExclusive);
-			t.is(result.testCount, 5);
-			t.is(result.passCount, 2);
-			t.is(result.failCount, 0);
-		});
-});
-
-test('Without Pool: test files can be forced to run in exclusive mode', t => {
-	const api = apiCreator();
-	return api.run(
-		[path.join(__dirname, 'fixture/es2015.js')],
-		{runOnlyExclusive: true}
-	).then(result => {
-		t.ok(result.hasExclusive);
-		t.is(result.testCount, 1);
-		t.is(result.passCount, 0);
-		t.is(result.failCount, 0);
-	});
-});
 
 generateTests('With Pool:', options => {
 	options = options || {};
@@ -658,7 +625,7 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} caching is enabled by default`, t => {
-		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 		const api = apiCreator({
 			resolveTestsFrom: path.join(__dirname, 'fixture/caching')
@@ -687,7 +654,7 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} caching can be disabled`, t => {
-		rimraf.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 		const api = apiCreator({
 			resolveTestsFrom: path.join(__dirname, 'fixture/caching'),
@@ -1032,18 +999,34 @@ function generatePassDebugIntegrationTests(execArgv) {
 	});
 }
 
+function generatePassInspectIntegrationTests(execArgv) {
+	test(`pass ${execArgv.join(' ')} to fork`, t => {
+		const api = apiCreator({testOnlyExecArgv: execArgv});
+		return api.run([path.join(__dirname, 'fixture/inspect-arg.js')])
+			.then(result => {
+				t.is(result.passCount, 1);
+			});
+	});
+}
+
 generatePassDebugTests(['--debug=0'], -1);
 generatePassDebugTests(['--debug'], -1);
 
 generatePassDebugTests(['--inspect=0'], 0);
 generatePassDebugTests(['--inspect'], 0);
 
+// --inspect takes precedence
 generatePassDebugTests(['--inspect=0', '--debug-brk'], 0);
 generatePassDebugTests(['--inspect', '--debug-brk'], 0);
 
+// --inspect takes precedence, though --debug-brk is still passed to the worker
 generatePassDebugTests(['--debug-brk', '--inspect=0'], 1);
 generatePassDebugTests(['--debug-brk', '--inspect'], 1);
 
-// --inspect cannot be tested because released node doesn't support it
-generatePassDebugIntegrationTests(['--debug=0']);
-generatePassDebugIntegrationTests(['--debug']);
+if (Number(process.version.split('.')[0].slice(1)) < 8) {
+	generatePassDebugIntegrationTests(['--debug=0']);
+	generatePassDebugIntegrationTests(['--debug']);
+} else {
+	generatePassInspectIntegrationTests(['--inspect=9229']);
+	generatePassInspectIntegrationTests(['--inspect']);
+}

@@ -2,6 +2,7 @@
 const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const commonPathPrefix = require('common-path-prefix');
 const uniqueTempDir = require('unique-temp-dir');
 const findCacheDir = require('find-cache-dir');
@@ -21,7 +22,7 @@ const fork = require('./lib/fork');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
-		const modulePath = resolveCwd(name);
+		const modulePath = resolveCwd.silent(name);
 
 		if (modulePath === null) {
 			throw new Error(`Could not resolve required module '${name}'`);
@@ -60,6 +61,10 @@ class Api extends EventEmitter {
 		precompiled[resolvedfpath] = hash;
 
 		const options = Object.assign({}, this.options, {precompiled});
+		if (runStatus.updateSnapshots) {
+			// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+			options.updateSnapshots = true;
+		}
 		const emitter = fork(file, options, execArgv);
 		runStatus.observeFork(emitter);
 
@@ -137,7 +142,8 @@ class Api extends EventEmitter {
 			runOnlyExclusive: options.runOnlyExclusive,
 			prefixTitles: this.options.explicitTitles || files.length > 1,
 			base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-			failFast: this.options.failFast
+			failFast: this.options.failFast,
+			updateSnapshots: options.updateSnapshots
 		});
 
 		this.emit('test-run', runStatus, files);
@@ -155,25 +161,26 @@ class Api extends EventEmitter {
 					this._setupTimeout(runStatus);
 				}
 
-				let overwatch;
+				let concurrency = os.cpus().length;
+
 				if (this.options.concurrency > 0) {
-					const concurrency = this.options.serial ? 1 : this.options.concurrency;
-					overwatch = this._runWithPool(files, runStatus, concurrency);
-				} else {
-					// _runWithoutPool exists to preserve legacy behavior, specifically around `.only`
-					overwatch = this._runWithoutPool(files, runStatus);
+					concurrency = this.options.concurrency;
 				}
 
-				return overwatch;
+				if (this.options.serial) {
+					concurrency = 1;
+				}
+
+				return this._runWithPool(files, runStatus, concurrency);
 			});
 	}
 	_computeForkExecArgs(files) {
 		const execArgv = this.options.testOnlyExecArgv || process.execArgv;
 		let debugArgIndex = -1;
 
-		// --debug-brk is used in addition to --inspect to break on first line and wait
+		// --inspect-brk is used in addition to --inspect to break on first line and wait
 		execArgv.some((arg, index) => {
-			const isDebugArg = arg === '--inspect' || arg.indexOf('--inspect=') === 0;
+			const isDebugArg = /^--inspect(-brk)?($|=)/.test(arg);
 			if (isDebugArg) {
 				debugArgIndex = index;
 			}
@@ -184,7 +191,7 @@ class Api extends EventEmitter {
 		const isInspect = debugArgIndex >= 0;
 		if (!isInspect) {
 			execArgv.some((arg, index) => {
-				const isDebugArg = arg === '--debug' || arg === '--debug-brk' || arg.indexOf('--debug-brk=') === 0 || arg.indexOf('--debug=') === 0;
+				const isDebugArg = /^--debug(-brk)?($|=)/.test(arg);
 				if (isDebugArg) {
 					debugArgIndex = index;
 				}
@@ -217,79 +224,6 @@ class Api extends EventEmitter {
 			exception: err,
 			file: err.file ? path.relative(process.cwd(), err.file) : undefined
 		});
-	}
-	_runWithoutPool(files, runStatus) {
-		const tests = [];
-		let execArgvList;
-
-		// TODO: This should be cleared at the end of the run
-		runStatus.on('timeout', () => {
-			tests.forEach(fork => {
-				fork.exit();
-			});
-		});
-
-		return this._computeForkExecArgs(files)
-			.then(argvList => {
-				execArgvList = argvList;
-			})
-			.return(files)
-			.each((file, index) => {
-				return new Promise(resolve => {
-					const forkArgs = execArgvList[index];
-					const test = this._runFile(file, runStatus, forkArgs);
-					tests.push(test);
-					test.on('stats', resolve);
-					test.catch(resolve);
-				}).catch(err => {
-					err.results = [];
-					err.file = file;
-					return Promise.reject(err);
-				});
-			})
-			.then(() => {
-				if (this.options.match.length > 0 && !runStatus.hasExclusive) {
-					const err = new AvaError('Couldn\'t find any matching tests');
-					err.file = undefined;
-					err.results = [];
-					return Promise.reject(err);
-				}
-
-				const method = this.options.serial ? 'mapSeries' : 'map';
-				const options = {
-					runOnlyExclusive: runStatus.hasExclusive
-				};
-
-				return Promise[method](files, (file, index) => {
-					return tests[index].run(options).catch(err => {
-						err.file = file;
-						this._handleError(runStatus, err);
-						return getBlankResults();
-					});
-				});
-			})
-			.catch(err => {
-				this._handleError(runStatus, err);
-				return err.results;
-			})
-			.tap(results => {
-				// If no tests ran, make sure to tear down the child processes
-				if (results.length === 0) {
-					tests.forEach(test => {
-						test.send('teardown');
-					});
-				}
-			})
-			.then(results => {
-				// Cancel debounced _onTimeout() from firing
-				if (this.options.timeout) {
-					this._cancelTimeout(runStatus);
-				}
-
-				runStatus.processResults(results);
-
-				return runStatus;
-			});
 	}
 	_runWithPool(files, runStatus, concurrency) {
 		const tests = [];

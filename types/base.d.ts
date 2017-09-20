@@ -119,6 +119,13 @@ interface RegisterBase<T> {
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
 
+interface CallbackRegisterBase<T> {
+    (name: string, run: GenericCallbackTest<T>): void;
+    (run: GenericCallbackTest<T>): void;
+    (name: string, run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
+    (run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
+}
+
 export default test;
 export const test: RegisterContextual<any>;
 export interface RegisterContextual<T> extends Register<Context<T>> {

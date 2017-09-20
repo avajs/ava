@@ -70,7 +70,7 @@ test('source file is an absolute path, after source map correction, even if alre
 	fs.writeFileSync(tmpFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
 
 	try {
-		require(tmpFile).run(); // eslint-disable-line import/no-dynamic-require
+		require(tmpFile).run();
 		t.fail('Fixture should have thrown');
 	} catch (err) {
 		const serializedErr = serialize(err);
@@ -82,7 +82,7 @@ test('source file is an absolute path, after source map correction, even if alre
 test('determines whether source file is within the project', t => {
 	const file = tempWrite.sync('module.exports = () => { throw new Error("hello") }');
 	try {
-		require(file)(); // eslint-disable-line import/no-dynamic-require
+		require(file)();
 		t.fail('Should have thrown');
 	} catch (err) {
 		const serializedErr = serialize(err);

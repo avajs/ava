@@ -74,7 +74,11 @@ function generatePrefixed(prefix) {
 				// 'todo' functions don't have a function argument, just a string
 				output += `\t${part}: (name: string) => void;\n`;
 			} else {
-				output += `\t${part}: RegisterBase<T>`;
+				if (arrayHas(parts)('cb')) {
+					output += `\t${part}: CallbackRegisterBase<T>`;
+				} else {
+					output += `\t${part}: RegisterBase<T>`;
+				}
 
 				if (hasChildren(parts)) {
 					// This chain can be continued, make the property an intersection type with the chain continuation

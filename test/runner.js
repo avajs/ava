@@ -711,6 +711,32 @@ test('options.match overrides .only', t => {
 	});
 });
 
+test('options.match includes anonymous tests in negative matches', t => {
+	t.plan(4);
+
+	const runner = new Runner({
+		match: ['!*oo']
+	});
+
+	runner.chain.test('foo', a => {
+		t.fail();
+		a.pass();
+	});
+
+	runner.chain.test(a => {
+		t.pass();
+		a.pass();
+	});
+
+	runner.run({}).then(() => {
+		const stats = runner.buildStats();
+		t.is(stats.skipCount, 0);
+		t.is(stats.passCount, 1);
+		t.is(stats.testCount, 1);
+		t.end();
+	});
+});
+
 test('macros: Additional args will be spread as additional args on implementation function', t => {
 	t.plan(3);
 
@@ -745,7 +771,6 @@ test('macros: Customize test names attaching a `title` function', t => {
 	];
 
 	function macroFn(avaT) {
-		t.is(avaT.title, expectedTitles.shift());
 		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
 		avaT.pass();
 	}
@@ -753,6 +778,10 @@ test('macros: Customize test names attaching a `title` function', t => {
 	macroFn.title = (title, firstArg) => (title || 'default') + firstArg;
 
 	const runner = new Runner();
+
+	runner.on('test', props => {
+		t.is(props.title, expectedTitles.shift());
+	});
 
 	runner.chain.test(macroFn, 'A');
 	runner.chain.test('supplied', macroFn, 'B');
@@ -770,7 +799,6 @@ test('match applies to macros', t => {
 	t.plan(3);
 
 	function macroFn(avaT) {
-		t.is(avaT.title, 'foobar');
 		avaT.pass();
 	}
 
@@ -778,6 +806,10 @@ test('match applies to macros', t => {
 
 	const runner = new Runner({
 		match: ['foobar']
+	});
+
+	runner.on('test', props => {
+		t.is(props.title, 'foobar');
 	});
 
 	runner.chain.test(macroFn, 'foo');
@@ -842,7 +874,6 @@ test('match applies to arrays of macros', t => {
 	fooMacro.title = (title, firstArg) => `${firstArg}foo`;
 
 	function barMacro(avaT) {
-		t.is(avaT.title, 'foobar');
 		avaT.pass();
 	}
 	barMacro.title = (title, firstArg) => `${firstArg}bar`;
@@ -855,6 +886,10 @@ test('match applies to arrays of macros', t => {
 
 	const runner = new Runner({
 		match: ['foobar']
+	});
+
+	runner.on('test', props => {
+		t.is(props.title, 'foobar');
 	});
 
 	runner.chain.test([fooMacro, barMacro, bazMacro], 'foo');

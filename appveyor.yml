@@ -1,25 +1,33 @@
+build: off
+cache:
+  - '%APPDATA%\npm-cache'
+clone_depth: 1
+skip_branch_with_pr: true
+skip_commits:
+  files:
+    - '**/*.md'
+configuration:
+  - FreshDeps
+#  - LockedDeps
 environment:
   matrix:
-    - nodejs_version: '6'
-    - nodejs_version: '4'
-install:
-  - ps: Install-Product node $env:nodejs_version
-  - set CI=true
-  - set AVA_APPVEYOR=true
-  - git config core.symlinks true
-  - git reset --hard
-  - npm install --global npm
-  - set PATH=%APPDATA%\npm;%PATH%
-  - npm install
-  - npm prune
+    - nodejs_version: 8
+    - nodejs_version: 6
+    - nodejs_version: 4
 matrix:
   fast_finish: true
-build: off
-clone_depth: 1
-cache:
-  - node_modules
-  - '%APPDATA%\npm-cache'
-test_script:
-  - node --version
+  exclude:
+    - configuration: FreshDeps
+      nodejs_version: 6
+    - configuration: FreshDeps
+      nodejs_version: 4
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install --global npm@5.4.0
   - npm --version
+  - git config core.symlinks true
+  - git reset --hard
+  - if %configuration% == FreshDeps (npm install --no-optional --no-shrinkwrap --prefer-online)
+  - if %configuration% == LockedDeps (npm install --no-optional --prefer-offline)
+test_script:
   - npm run test-win
