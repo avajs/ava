@@ -2,8 +2,7 @@
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/browser-testing.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/browser-testing.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/browser-testing.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/browser-testing.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/browser-testing.md)
 
-AVA does not support running tests in browsers [yet](https://github.com/avajs/ava/issues/24). Some libraries require browser specific globals (`window`, `document`, `navigator`, etc).
-An example of this is React, at least if you want to use ReactDOM.render and simulate events with ReactTestUtils.
+AVA does not support running tests in browsers [yet](https://github.com/avajs/ava/issues/24). However JavaScript libraries that require browser specific globals (`window`, `document`, `navigator`, etc) can still be tested with AVA by mocking these globals.
 
 This recipe works for any library that needs a mocked browser environment.
 
@@ -59,7 +58,7 @@ Configure AVA to `require` the helper before every test file.
 
 Write your tests and enjoy a mocked browser environment.
 
-`test/my.dom.test.js`:
+`test.js`:
 
 ```js
 import test from 'ava';
@@ -69,28 +68,5 @@ test('Insert to DOM', t => {
 	document.body.appendChild(div);
 
 	t.is(document.querySelector('div'), div);
-});
-```
-
-`test/my.react.test.js`:
-
-```js
-import test from 'ava';
-import React from 'react';
-import {render} from 'react-dom';
-import {Simulate} from 'react-addons-test-utils';
-import sinon from 'sinon';
-import CustomInput from './components/custom-input.jsx';
-
-test('Input calls onBlur', t => {
-	const onUserBlur = sinon.spy();
-	const input = render(
-		React.createElement(CustomInput, onUserBlur),
-		div
-	);
-
-	Simulate.blur(input);
-
-	t.true(onUserBlur.calledOnce);
 });
 ```
