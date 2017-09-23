@@ -81,6 +81,7 @@ type AssertContext = {
  */
 
 type TestContext = AssertContext & {
+	title: string;
 	plan(count: number): void;
 	skip: AssertContext;
 };
