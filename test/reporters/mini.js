@@ -1,9 +1,9 @@
 'use strict';
 
 // These tests are run as a sub-process of the `tap` module, so the standard
-// output stream will not be recognized as a text terminal. Ava internals are
+// output stream will not be recognized as a text terminal. AVA internals are
 // sensitive to this detail and respond by automatically disable output
-// coloring. Because the tests are written verify Ava's behavior in text
+// coloring. Because the tests are written verify AVA's behavior in text
 // terminals, that environment should be simulated prior to loading any
 // modules.
 process.stdout.isTTY = true;
