@@ -11,7 +11,7 @@ test.serial(t => {
 });
 
 test.serial(t => {
-	const React = {
+	const React = { // eslint-disable-line no-unused-vars
 		createElement: type => type
 	};
 

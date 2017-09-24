@@ -1,1 +1,1 @@
-import x from './babel-hook-imported';
+import './babel-hook-imported'; // eslint-disable-line import/no-unassigned-import

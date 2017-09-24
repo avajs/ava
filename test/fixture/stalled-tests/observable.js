@@ -1,5 +1,5 @@
-import test from '../../..'
-import Observable from 'zen-observable'
+import Observable from 'zen-observable';
+import test from '../../..';
 
 test(t => {
 	return new Observable(() => {

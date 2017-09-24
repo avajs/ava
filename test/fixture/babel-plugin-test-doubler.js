@@ -12,9 +12,10 @@
   This is used by some integration tests to validate correct handling of Babel config options.
 */
 
+/* eslint-disable new-cap */
 module.exports = babel => {
 	const t = babel.types;
-	const anonCount = 1;
+	let anonCount = 1;
 
 	return {
 		visitor: {
@@ -27,7 +28,7 @@ module.exports = babel => {
 					if (args.length === 1) {
 						args = [t.StringLiteral(`repeated test: anonymous${anonCount++}`), args[0]];
 					} else if (args.length === 2 && args[0].type === 'StringLiteral') {
-						if (/^repeated test/.test(args[0].value)) {
+						if (args[0].value.startsWith('repeated test')) {
 							return;
 						}
 

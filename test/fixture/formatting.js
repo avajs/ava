@@ -1,12 +1,11 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import {Buffer} from 'safe-buffer';
-import HelloMessage from './HelloMessage'
 import test from '../../';
+import HelloMessage from './hello-message';
 
 // Older AVA versions that do not use Concordance don't handle globals very
 // well. Use this so formatting output can be contrasted between versions.
-const formatGlobals = !!require(process.env.AVA_PATH + '/package.json').dependencies.concordance
+const formatGlobals = Boolean(require(process.env.AVA_PATH + '/package.json').dependencies.concordance);
 
 test('date formatted', t => {
 	const date = new Date('1969-07-20T20:17:40.000Z');
@@ -39,23 +38,23 @@ test('error formatted, constructor does not match name', t => {
 	t.true(err);
 });
 test('error formatted, constructor does not match name, and string tag does not match constructor', t => {
-	class Custom extends Error {
+	class CustomError extends Error {
 		constructor(message) {
 			super(message);
-			this.name = 'FamousWords';
+			this.name = 'FamousWords'; // eslint-disable-line unicorn/custom-error-definition
 		}
 	}
-	const err = new Custom('Houston, we have a problem');
+	const err = new CustomError('Houston, we have a problem');
 	t.true(err);
 });
 test('error formatted, no name or constructor', t => {
-	class Custom extends Error {
+	class CustomError extends Error {
 		constructor(message) {
 			super(message);
-			this.name = '';
+			this.name = ''; // eslint-disable-line unicorn/custom-error-definition
 		}
 	}
-	const err = new Custom('Houston, we have a problem');
+	const err = new CustomError('Houston, we have a problem');
 	Object.defineProperty(err, 'constructor', {});
 	t.true(err);
 });
@@ -70,7 +69,7 @@ test('error diff, extra properties', t => {
 		date: new Date('1969-07-20T20:17:40.000Z')
 	}));
 });
-test('error thrown in test', t => {
+test('error thrown in test', () => {
 	throw Object.assign(new Error('Houston, we have a problem'), {
 		date: new Date('1969-07-20T20:17:40.000Z')
 	});
@@ -88,7 +87,7 @@ test('error thrown in test due to improper throws', t => {
 	};
 	t.throws(improper());
 });
-test('test returned rejected promise', t => {
+test('test returned rejected promise', () => {
 	return Promise.reject(Object.assign(new Error('Houston, we have a problem'), {
 		date: new Date('1969-07-20T20:17:40.000Z')
 	}));
@@ -130,7 +129,7 @@ test('map diff, extra properties', t => {
 });
 
 test('function formatted', t => {
-	const fn = function foo() {};
+	const fn = function foo() {}; // eslint-disable-line func-name-matching, func-names
 	t.true(fn);
 });
 test('function diff', t => {
@@ -147,7 +146,7 @@ test('anonymous function', t => {
 	t.true(() => {});
 });
 test('generator function', t => {
-	t.true(function * foo() {});
+	t.true(function * foo() {}); // eslint-disable-line func-names
 });
 
 test('arguments formatted', t => {
@@ -289,25 +288,25 @@ test('circular references', t => {
 });
 
 test('react element, formatted', t => {
-	const element = React.createElement(HelloMessage, {name: 'Sindre'})
-	t.true(element)
-})
+	const element = React.createElement(HelloMessage, {name: 'Sindre'});
+	t.true(element);
+});
 test('react element, complex attributes, formatted', t => {
 	const element = React.createElement('div', {
 		multiline: 'Hello\nworld',
 		object: {foo: ['bar']}
-	})
-	t.true(element)
-})
+	});
+	t.true(element);
+});
 test('react element, opaque children, formatted', t => {
-	const element = React.createElement('Foo', null, new Set(['foo']), true)
-	t.true(element)
-})
+	const element = React.createElement('Foo', null, new Set(['foo']), true);
+	t.true(element);
+});
 test('react element, diff', t => {
-	const element = React.createElement(HelloMessage, {name: 'Sindre'})
-	const other = React.createElement(HelloMessage, {name: 'Vadim'})
-	t.deepEqual(element, other)
-})
+	const element = React.createElement(HelloMessage, {name: 'Sindre'});
+	const other = React.createElement(HelloMessage, {name: 'Vadim'});
+	t.deepEqual(element, other);
+});
 
 test('deep structure, formatted', t => {
 	const deep = {
@@ -318,9 +317,9 @@ test('deep structure, formatted', t => {
 				}
 			}
 		}
-	}
-	t.true(deep)
-})
+	};
+	t.true(deep);
+});
 test('deep structure, diff', t => {
 	const deep = {
 		foo: {
@@ -330,6 +329,6 @@ test('deep structure, diff', t => {
 				}
 			}
 		}
-	}
-	t.deepEqual(deep, Object.assign({corge: 'grault'}, deep))
-})
+	};
+	t.deepEqual(deep, Object.assign({corge: 'grault'}, deep));
+});
