@@ -340,7 +340,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:12.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
 			});
 		});
 
@@ -361,7 +361,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:15.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:7.*$/m);
 			});
 		});
 
@@ -382,7 +382,7 @@ function generateTests(prefix, apiCreator) {
 			runStatus.on('error', data => {
 				t.match(data.message, /Thrown by source-map-fixtures/);
 				t.match(data.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
-				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:12.*$/m);
+				t.match(data.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
 			});
 		});
 

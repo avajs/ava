@@ -1,8 +1,8 @@
 import test from '../../../';
 
-import './dep-1';
-import './dep-2';
-import './dep-3.custom';
+import './dep-1'; // eslint-disable-line import/no-unassigned-import
+import './dep-2'; // eslint-disable-line import/no-unassigned-import
+import './dep-3.custom'; // eslint-disable-line import/no-unassigned-import
 
 test('hey ho', t => {
 	t.pass();

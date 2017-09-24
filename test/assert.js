@@ -9,7 +9,7 @@ const test = require('tap').test;
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
-const HelloMessage = require('./fixture/HelloMessage');
+const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
 let lastPassed = false;

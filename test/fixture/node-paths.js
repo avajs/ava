@@ -1,5 +1,5 @@
-import foo from 'nested/foo';
-import bar from 'path/bar';
+import foo from 'nested/foo'; // eslint-disable-line import/no-extraneous-dependencies, import/no-unresolved
+import bar from 'path/bar'; // eslint-disable-line import/no-extraneous-dependencies, import/no-unresolved
 import test from '../../';
 
 test('relative require', t => {
