@@ -140,8 +140,7 @@ test('color support is initialized correctly', t => {
 
 	return Promise.all([
 		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
-		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
-		fork(fixture('chalk-disabled.js'), {}).run({})
+		fork(fixture('chalk-disabled.js'), {color: false}).run({})
 	]).then(info => {
 		info.forEach(info => {
 			if (info.stats.failCount > 0) {
@@ -150,4 +149,13 @@ test('color support is initialized correctly', t => {
 		});
 		t.is(info.length, 3);
 	});
+});
+
+test('doesn\'t pass internal options to worker', t => {
+	return fork(fixture('arguments.js'))
+		.run({})
+		.then(info => {
+			t.is(info.stats.passCount, 1);
+			t.end();
+		});
 });

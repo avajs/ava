@@ -810,3 +810,17 @@ test('--color enables formatting colors', t => {
 		t.end();
 	});
 });
+
+test('--no-color forwards flag to worker', t => {
+	execCli(['--no-color', 'no-color-flag.js'], {dirname: 'fixture'}, err => {
+		t.ok(err);
+		t.end();
+	});
+});
+
+test('--color forwards flag to worker', t => {
+	execCli(['--color', 'color-flag.js'], {dirname: 'fixture'}, err => {
+		t.ok(err);
+		t.end();
+	});
+});
