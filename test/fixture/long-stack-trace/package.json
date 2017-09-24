@@ -1,0 +1,5 @@
+{
+	"ava": {
+		"require": "./enable-trace.js"
+	}
+}
