@@ -715,6 +715,34 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
+	['r', 'rs'].forEach(input => {
+		test(`reruns initial tests when "${input}" is keyed on stdin`, t => {
+			t.plan(2);
+			api.run.returns(Promise.resolve(runStatus));
+			start().observeStdin(stdin);
+
+			stdin.write(`${input}`);
+			return delay().then(() => {
+				t.ok(api.run.calledTwice);
+				t.strictDeepEqual(api.run.secondCall.args, [files, defaultApiOptions]);
+			});
+		});
+	});
+
+	test(`reruns previous tests and update snapshots when "u" is keyed on stdin`, t => {
+		const options = Object.assign({}, defaultApiOptions, {updateSnapshots: true});
+		const previousFiles = ['test.js'];
+		t.plan(2);
+		api.run.returns(Promise.resolve(runStatus));
+		start(previousFiles).observeStdin(stdin);
+
+		stdin.write(`u`);
+		return delay().then(() => {
+			t.ok(api.run.calledTwice);
+			t.strictDeepEqual(api.run.secondCall.args, [previousFiles, options]);
+		});
+	});
+
 	test(`reruns previous tests and update snapshots when "u" is entered on stdin`, t => {
 		const options = Object.assign({}, defaultApiOptions, {updateSnapshots: true});
 		const previousFiles = ['test.js'];
