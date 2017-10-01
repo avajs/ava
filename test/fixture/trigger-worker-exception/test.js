@@ -1,6 +1,7 @@
 import test from '../../../';
 
-import { restoreAfterFirstCall } from './hack';
+import {restoreAfterFirstCall} from './hack';
+
 restoreAfterFirstCall();
 
 test(async () => {

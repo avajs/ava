@@ -1,5 +1,5 @@
 import test from '../../../../';
-import dependency from './source.js';
+import dependency from './source';
 
 test('works', t => {
 	t.truthy(dependency);

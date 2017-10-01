@@ -16,7 +16,7 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@5.4.0
+  - npm install --global npm@5.4.2
   - npm --version
 install:
   - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --no-shrinkwrap --prefer-online; else npm install --prefer-offline; fi

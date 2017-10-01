@@ -2,7 +2,7 @@
 const sinon = require('sinon');
 const test = require('tap').test;
 const hasAnsi = require('has-ansi');
-const chalk = require('chalk');
+const colors = require('../helper/colors');
 const TapReporter = require('../../lib/reporters/tap');
 
 test('start', t => {
@@ -235,7 +235,7 @@ test('reporter strips ANSI characters', t => {
 	const reporter = new TapReporter();
 
 	const output = reporter.test({
-		title: `test ${chalk.gray.dim('›')} my test`,
+		title: `test ${colors.dimGray('›')} my test`,
 		type: 'test',
 		file: 'test.js'
 	});

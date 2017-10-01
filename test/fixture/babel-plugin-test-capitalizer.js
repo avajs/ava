@@ -10,7 +10,7 @@ module.exports = babel => {
 	return {
 		visitor: {
 			CallExpression: path => {
-				// skip require calls
+				// Skip require calls
 				const firstArg = path.get('arguments')[0];
 
 				if (!isRequire(path) && firstArg && firstArg.isStringLiteral() && !/repeated test/.test(firstArg.node.value)) {

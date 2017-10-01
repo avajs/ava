@@ -42,7 +42,8 @@
 		"node": ">=4"
 	},
 	"scripts": {
-		"test": "xo && chmod +x $(node -pe \"require('flow-bin')\") && flow check test/flow-types && tsc -p test/ts-types && nyc tap --no-cov --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
+		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
+		"test": "npm run lint && flow check test/flow-types && tsc -p test/ts-types && nyc tap --no-cov --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
 		"test-win": "tap --no-cov --reporter=classic --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
 		"visual": "node test/visual/run-visual-tests.js",
 		"prepublish": "npm run make-ts",

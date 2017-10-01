@@ -89,6 +89,10 @@ export interface AssertContext {
 }
 export interface TestContext extends AssertContext {
 	/**
+	 * Test title.
+	 */
+	title: string;
+	/**
 	 * Plan how many assertion there are in the test.
 	 * The test will fail if the actual assertion count doesn't match planned assertions.
 	 */
