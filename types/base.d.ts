@@ -99,6 +99,10 @@ export interface TestContext extends AssertContext {
 	plan(count: number): void;
 
 	skip: AssertContext;
+	/**
+	 * Print a log message contextually alongside the test result instead of immediately printing it to stdout like console.log.
+	 */
+	log(message: string): void;
 }
 export interface CallbackTestContext extends TestContext {
 	/**

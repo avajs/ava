@@ -84,6 +84,7 @@ type TestContext = AssertContext & {
 	title: string;
 	plan(count: number): void;
 	skip: AssertContext;
+	log(message: string): void;
 };
 type ContextualTestContext         = TestContext & { context: any; };
 type ContextualCallbackTestContext = TestContext & { context: any; end(): void; };
