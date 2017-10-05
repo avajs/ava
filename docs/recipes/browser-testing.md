@@ -38,6 +38,15 @@ import browserEnv from 'browser-env';
 browserEnv(['window', 'document', 'navigator']);
 ```
 
+If your components use jQuery, you can make it available like so:
+```js
+import browserEnv from 'browser-env';
+import jQuery from 'jquery';
+
+browserEnv();
+global.$ = jQuery(window);
+```
+
 ## Configure tests to use browser-env
 
 Configure AVA to `require` the helper before every test file.
