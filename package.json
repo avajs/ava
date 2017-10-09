@@ -173,7 +173,7 @@
 		"time-require": "^0.1.2",
 		"trim-off-newlines": "^1.0.1",
 		"unique-temp-dir": "^1.0.0",
-		"update-notifier": "^2.1.0"
+		"update-notifier": "^2.3.0"
 	},
 	"devDependencies": {
 		"cli-table2": "^0.2.0",
