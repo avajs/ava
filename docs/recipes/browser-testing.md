@@ -38,7 +38,7 @@ import browserEnv from 'browser-env';
 browserEnv(['window', 'document', 'navigator']);
 ```
 
-If your components use jQuery, you can make it available like so:
+You can expose more global variables by assigning them to the global object. For instance jQuery is typically available through the $ variable:
 ```js
 import browserEnv from 'browser-env';
 import jQuery from 'jquery';
