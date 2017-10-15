@@ -38,6 +38,16 @@ import browserEnv from 'browser-env';
 browserEnv(['window', 'document', 'navigator']);
 ```
 
+You can expose more global variables by assigning them to the `global` object. For instance, jQuery is typically available through the `$` variable:
+
+```js
+import browserEnv from 'browser-env';
+import jQuery from 'jquery';
+
+browserEnv();
+global.$ = jQuery(window);
+```
+
 ## Configure tests to use browser-env
 
 Configure AVA to `require` the helper before every test file.
