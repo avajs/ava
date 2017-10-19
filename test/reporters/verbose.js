@@ -253,7 +253,7 @@ test('results with passing tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -274,7 +274,7 @@ test('results with passing known failure tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 known failure'),
 		'',
 		'',
@@ -295,7 +295,7 @@ test('results with skipped tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.yellow('1 test skipped'),
 		''
 	].join('\n');
@@ -313,7 +313,7 @@ test('results with todo tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.blue('1 test todo'),
 		''
 	].join('\n');
@@ -331,7 +331,7 @@ test('results with passing tests and rejections', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 unhandled rejection'),
 		''
 	].join('\n');
@@ -349,7 +349,7 @@ test('results with passing tests and exceptions', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 uncaught exception'),
 		''
 	].join('\n');
@@ -368,7 +368,7 @@ test('results with passing tests, rejections and exceptions', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 unhandled rejection'),
 		'  ' + colors.red('1 uncaught exception'),
 		''
@@ -428,7 +428,7 @@ test('results with errors', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + colors.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
 		'  ' + colors.boldWhite('fail one'),
 		'  ' + colors.gray(`${error1.source.file}:${error1.source.line}`),
@@ -514,7 +514,7 @@ test('results with errors and disabled code excerpts', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + colors.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
 		'  ' + colors.boldWhite('fail one'),
 		'',
@@ -588,7 +588,7 @@ test('results with errors and disabled code excerpts', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + colors.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
 		'  ' + colors.boldWhite('fail one'),
 		'  ' + colors.gray(`${error1.source.file}:${error1.source.line}`),
@@ -638,7 +638,7 @@ test('results when fail-fast is enabled', t => {
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'\n  ' + colors.red('1 test failed') + time,
+		'\n  ' + colors.red('1 test failed'),
 		'\n',
 		'\n  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped.'),
 		'\n'
@@ -660,7 +660,7 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'\n  ' + colors.red('1 test failed') + time,
+		'\n  ' + colors.red('1 test failed'),
 		'\n',
 		'\n  ' + colors.magenta('`--fail-fast` is on. At least 2 tests were skipped.'),
 		'\n'
@@ -681,7 +681,7 @@ test('results without fail-fast if no failing tests', t => {
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -702,7 +702,7 @@ test('results without fail-fast if no skipped tests', t => {
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		''
 	].join('\n');
 
@@ -721,7 +721,7 @@ test('results with 1 previous failure', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 uncaught exception'),
 		'  ' + colors.red('1 previous failure in test files that were not rerun'),
 		''
@@ -740,7 +740,7 @@ test('results with 2 previous failures', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		'  ' + colors.red('1 uncaught exception'),
 		'  ' + colors.red('2 previous failures in test files that were not rerun'),
 		''
@@ -788,7 +788,7 @@ test('results when hasExclusive is enabled, but there are no known remaining tes
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + colors.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -807,7 +807,7 @@ test('results when hasExclusive is enabled, but there is one remaining tests', t
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'\n  ' + colors.green('1 test passed') + time,
+		'\n  ' + colors.green('1 test passed'),
 		'\n',
 		'\n  ' + colors.magenta('The .only() modifier is used in some tests. 1 test was not run'),
 		'\n'
@@ -828,7 +828,7 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'\n  ' + colors.green('1 test passed') + time,
+		'\n  ' + colors.green('1 test passed'),
 		'\n',
 		'\n  ' + colors.magenta('The .only() modifier is used in some tests. 2 tests were not run'),
 		'\n'
@@ -839,7 +839,7 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 });
 
 test('result when no-color flag is set', t => {
-	const reporter = new VerboseReporter({color: false});
+	const reporter = new VerboseReporter({color: false, watching: true});
 	const runStatus = createRunStatus();
 	runStatus.hasExclusive = true;
 	runStatus.testCount = 3;
@@ -856,6 +856,20 @@ test('result when no-color flag is set', t => {
 	].join('');
 
 	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('timestamp added when watching is enabled', t => {
+	const reporter = new VerboseReporter({color: true, watching: true});
+	const runStatus = createRunStatus();
+	runStatus.testCount = 1;
+	runStatus.passCount = 1;
+	runStatus.failCount = 0;
+
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = `\n  ${colors.green('1 test passed') + time}\n`;
+
+	t.is(actualOutput, expectedOutput);
 	t.end();
 });
 
@@ -922,7 +936,7 @@ test('results with errors and logs', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + colors.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
 		'  ' + colors.boldWhite('fail one'),
 		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log from failed test'),
