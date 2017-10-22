@@ -50,6 +50,26 @@ test(async (t) => {
 });
 ```
 
+## Working with [macros](https://github.com/avajs/ava#test-macros)
+
+```ts
+import test, { AssertContext, Macro } from 'ava';
+import isFoo from '.';
+
+const macro: Macro<AssertContext> = (
+	t: AssertContext,
+	input,
+	expected
+) => {
+	const actual = isFoo(input);
+	t.is(actual, expected);
+};
+
+macro.title = (providedTitle, input) => input;
+
+test(macro, 'foo', true);
+test(macro, 'bar', false);
+```
 
 ## Working with [`context`](https://github.com/avajs/ava#test-context)
 
