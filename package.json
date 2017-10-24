@@ -107,6 +107,7 @@
 		"auto-bind": "^1.1.0",
 		"ava-init": "^0.2.0",
 		"babel-core": "^6.17.0",
+		"babel-generator": "^6.26.0",
 		"bluebird": "^3.0.0",
 		"caching-transform": "^1.0.0",
 		"chalk": "^2.0.1",
