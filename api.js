@@ -6,6 +6,7 @@ const os = require('os');
 const commonPathPrefix = require('common-path-prefix');
 const uniqueTempDir = require('unique-temp-dir');
 const findCacheDir = require('find-cache-dir');
+const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
 const debounce = require('lodash.debounce');
 const autoBind = require('auto-bind');
@@ -161,7 +162,7 @@ class Api extends EventEmitter {
 					this._setupTimeout(runStatus);
 				}
 
-				let concurrency = os.cpus().length;
+				let concurrency = Math.min(os.cpus().length, isCi ? 2 : Infinity);
 
 				if (this.options.concurrency > 0) {
 					concurrency = this.options.concurrency;
