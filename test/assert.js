@@ -214,10 +214,6 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		assertions.is({foo: 'bar'}, {foo: 'bar'});
-	});
-
-	fails(t, () => {
 		// eslint-disable-next-line no-new-wrappers
 		assertions.is(new String('foo'), new String('foo'));
 	});
@@ -232,6 +228,19 @@ test('.is()', t => {
 
 	fails(t, () => {
 		assertions.is('foo', NaN);
+	});
+
+	failsWith(t, () => {
+		assertions.is({foo: 'bar'}, {foo: 'bar'});
+	}, {
+		assertion: 'is',
+		message: '',
+		actual: {foo: 'bar'},
+		expected: {foo: 'bar'},
+		values: [{
+			label: `Objects are identical, but it's not the same object:`,
+			formatted: /foo/
+		}]
 	});
 
 	failsWith(t, () => {
