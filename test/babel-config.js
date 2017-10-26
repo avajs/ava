@@ -19,8 +19,7 @@ function withNodeVersion(version, run) {
 	const promise = new Promise(resolve => {
 		resolve(run());
 	});
-
-	promise.then(resetNodeVersion);
+	promise.then(resetNodeVersion, resetNodeVersion);
 	return promise;
 }
 
