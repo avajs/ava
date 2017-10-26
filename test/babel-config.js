@@ -100,37 +100,37 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.6.0', t 
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
-	return withNodeVersion('9.0.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+	return withNodeVersion('9.0.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, [
 				require.resolve('babel-plugin-syntax-object-rest-spread')
 			]);
-		}));
+		});
 });
 
 test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.6.0', t => {
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
-	return withNodeVersion('8.6.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+	return withNodeVersion('8.6.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, [
 				require.resolve('babel-plugin-syntax-object-rest-spread')
 			]);
-		}));
+		});
 });
 
 test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.6.0', t => {
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
-	return withNodeVersion('8.5.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true)
+	return withNodeVersion('8.5.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, []);
-		}));
+		});
 });
 
 test('should disable power-assert when powerAssert is false', t => {
