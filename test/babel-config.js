@@ -12,7 +12,8 @@ const fixture = name => path.join(__dirname, 'fixture', name);
 const setNodeVersion = value => Object.defineProperty(process.versions, 'node', {value});
 const resetNodeVersion = setNodeVersion.bind(null, process.versions.node);
 
-// Execute `run` with a given stubbed node version, then reset to the real version
+// Execute `run` with a given stubbed node version, then reset to the real
+// version.
 function withNodeVersion(version, run) {
 	setNodeVersion(version);
 	const promise = new Promise(resolve => {
