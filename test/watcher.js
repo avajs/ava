@@ -78,7 +78,8 @@ group('chokidar', (beforeEach, test, group) => {
 			finish: sinon.spy(),
 			section: sinon.spy(),
 			clear: sinon.stub().returns(true),
-			reset: sinon.spy()
+			reset: sinon.spy(),
+			write: sinon.spy()
 		};
 
 		api = {
