@@ -96,7 +96,7 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 		});
 });
 
-test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.6.0', t => {
+test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t => {
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
@@ -109,11 +109,11 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.6.0', t 
 		});
 });
 
-test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.6.0', t => {
+test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t => {
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
-	return withNodeVersion('8.6.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
+	return withNodeVersion('8.3.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, [
@@ -122,11 +122,11 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.6.0', t
 		});
 });
 
-test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.6.0', t => {
+test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.3.0', t => {
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
 
-	return withNodeVersion('8.5.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
+	return withNodeVersion('8.2.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, []);
