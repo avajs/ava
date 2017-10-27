@@ -9,6 +9,19 @@ const configManager = require('hullabaloo-config-manager');
 const babelConfigHelper = require('../lib/babel-config');
 
 const fixture = name => path.join(__dirname, 'fixture', name);
+const setNodeVersion = value => Object.defineProperty(process.versions, 'node', {value});
+const resetNodeVersion = setNodeVersion.bind(null, process.versions.node);
+
+// Execute `run` with a given stubbed node version, then reset to the real
+// version.
+function withNodeVersion(version, run) {
+	setNodeVersion(version);
+	const promise = new Promise(resolve => {
+		resolve(run());
+	});
+	promise.then(resetNodeVersion, resetNodeVersion);
+	return promise;
+}
 
 test('uses default presets when userOptions is "default"', t => {
 	const userOptions = 'default';
@@ -46,6 +59,7 @@ test('uses options from babelrc when userOptions is "inherit"', t => {
 			t.same(options.presets, [require.resolve('@ava/babel-preset-stage-4')]);
 			const envOptions = options.env[configManager.currentEnv()];
 			t.same(envOptions, {
+				plugins: [],
 				presets: [
 					[
 						require.resolve('@ava/babel-preset-transform-test-files'),
@@ -79,6 +93,43 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 					{powerAssert}
 				]
 			]);
+		});
+});
+
+test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+
+	return withNodeVersion('9.0.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
+		.then(result => {
+			const options = result.getOptions();
+			t.same(options.plugins, [
+				require.resolve('babel-plugin-syntax-object-rest-spread')
+			]);
+		});
+});
+
+test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+
+	return withNodeVersion('8.3.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
+		.then(result => {
+			const options = result.getOptions();
+			t.same(options.plugins, [
+				require.resolve('babel-plugin-syntax-object-rest-spread')
+			]);
+		});
+});
+
+test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.3.0', t => {
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+
+	return withNodeVersion('8.2.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
+		.then(result => {
+			const options = result.getOptions();
+			t.same(options.plugins, []);
 		});
 });
 

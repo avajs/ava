@@ -15,6 +15,12 @@ There are multiple options for configuring how AVA transpiles your tests using B
 
 AVA lets you use some nifty JavaScript features, like [async functions](https://github.com/avajs/ava#async-function-support). To make this work on older Node.js versions AVA transpiles the tests and helper files using the [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) Babel preset. This is great for projects where you do not use Babel for your source, but do want to use the newest JavaScript features for your tests.
 
+### Using object rest/spread properties
+
+As of Node.js [8.3.0](https://github.com/nodejs/node/blob/v8.3.0/doc/changelogs/CHANGELOG_V8.md#8.3.0) [object rest/spread properties](https://github.com/tc39/proposal-object-rest-spread) is supported directly. This new language feature however has not yet reached [stage 4](http://2ality.com/2015/11/tc39-process.html#stage-4-finished), which means that AVA won't support it by default. That said, if you're using Node.js 8.3.0 or newer, AVA will load the [`syntax-object-rest-spread`](https://www.npmjs.com/package/babel-plugin-syntax-object-rest-spread) plugin for you. This means you *can* use object rest/spread properties in your tests as long as you're not targeting older Node.js versions.
+
+Note that if you customize the Babel configuration you'll have to explicitly specify the `syntax-object-rest-spread` plugin.
+
 ## Customizing how AVA transpiles your tests
 
 You can override the default Babel configuration AVA uses for test transpilation in `package.json`. For example, the configuration below adds the Babel `rewire` plugin, and adds the Babel [`stage-3`](http://babeljs.io/docs/plugins/preset-stage-3/) preset.
