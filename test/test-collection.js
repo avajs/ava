@@ -279,6 +279,48 @@ test('skips before and after hooks when all tests are skipped', t => {
 	t.end();
 });
 
+test('runs after.always hook, even if all tests are skipped', t => {
+	t.plan(6);
+
+	const collection = new TestCollection({});
+	collection.add({
+		title: 'some serial test',
+		metadata: metadata({skipped: true, serial: true}),
+		fn: a => a.fail()
+	});
+	collection.add({
+		title: 'some concurrent test',
+		metadata: metadata({skipped: true}),
+		fn: a => a.fail()
+	});
+	collection.add({
+		title: 'after always',
+		metadata: metadata({type: 'after', always: true}),
+		fn: a => a.pass()
+	});
+
+	const log = [];
+	collection.on('test', result => {
+		if (result.result.metadata.type === 'after') {
+			t.is(result.result.metadata.skipped, false);
+		} else {
+			t.is(result.result.metadata.skipped, true);
+			t.is(result.result.metadata.type, 'test');
+		}
+		log.push(result.result.title);
+	});
+
+	collection.build().run();
+
+	t.strictDeepEqual(log, [
+		'some serial test',
+		'some concurrent test',
+		'after always'
+	]);
+
+	t.end();
+});
+
 test('skips beforeEach and afterEach hooks when test is skipped', t => {
 	t.plan(3);
 
