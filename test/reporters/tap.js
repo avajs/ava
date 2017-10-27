@@ -40,7 +40,7 @@ test('failing test', t => {
 			assertion: 'true',
 			operator: '==',
 			values: [{label: 'expected:', formatted: 'true'}, {label: 'actual:', formatted: 'false'}],
-			stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
+			stack: 'Test.fn (test.js:1:2)'
 		}
 	});
 
@@ -113,7 +113,7 @@ test('unhandled error', t => {
 	const actualOutput = reporter.unhandledError({
 		message: 'unhandled',
 		name: 'TypeError',
-		stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
+		stack: 'Test.fn (test.js:1:2)'
 	});
 
 	const expectedOutput = `# unhandled

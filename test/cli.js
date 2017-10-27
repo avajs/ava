@@ -91,12 +91,10 @@ test('timeout', t => {
 	});
 });
 
-test('throwing a named function will report the to the console', t => {
-	execCli('fixture/throw-named-function.js', (err, stdout, stderr) => {
+test('include anonymous functions in error reports', t => {
+	execCli('fixture/error-in-anonymous-function.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /function fooFn\(\) \{\}/);
-		// TODO(jamestalmage)
-		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.match(stderr, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
 		t.end();
 	});
 });
@@ -198,16 +196,6 @@ test('babel require hook only does not apply to source files', t => {
 		t.ok(err);
 		t.is(err.code, 1);
 		t.match(stderr, /Unexpected (token|reserved word)/);
-		t.end();
-	});
-});
-
-test('throwing a anonymous function will report the function to the console', t => {
-	execCli('fixture/throw-anonymous-function.js', (err, stdout, stderr) => {
-		t.ok(err);
-		t.match(stderr, /\(\) => \{\}/);
-		// TODO(jamestalmage)
-		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
 	});
 });

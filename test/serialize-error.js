@@ -18,12 +18,13 @@ test('serialize standard props', t => {
 	const err = new Error('Hello');
 	const serializedErr = serialize(err);
 
-	t.is(Object.keys(serializedErr).length, 6);
+	t.is(Object.keys(serializedErr).length, 7);
 	t.is(serializedErr.avaAssertionError, false);
 	t.deepEqual(serializedErr.object, {});
 	t.is(serializedErr.name, 'Error');
 	t.is(serializedErr.stack, beautifyStack(err.stack));
 	t.is(serializedErr.message, 'Hello');
+	t.is(serializedErr.summary, 'Error: Hello');
 	t.is(typeof serializedErr.source.isDependency, 'boolean');
 	t.is(typeof serializedErr.source.isWithinProject, 'boolean');
 	t.is(typeof serializedErr.source.file, 'string');

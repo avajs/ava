@@ -371,6 +371,43 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+	test(`${prefix} enhanced assertion formatting necessary whitespace and empty strings`, t => {
+		const expected = [
+			[
+				/foo === '' && '' === foo/,
+				/foo === ''/,
+				/foo/
+			],
+			[
+				/new Object\(foo\) instanceof Object/,
+				/Object/,
+				/new Object\(foo\)/,
+				/foo/
+			],
+			[
+				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length > 0/,
+				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length/,
+				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\)/,
+				/\[foo]/,
+				/foo/
+			]
+		];
+
+		t.plan(14);
+		const api = apiCreator();
+		return api.run([path.join(__dirname, 'fixture/enhanced-assertion-formatting.js')])
+			.then(result => {
+				t.is(result.errors.length, 3);
+				t.is(result.passCount, 0);
+
+				result.errors.forEach((error, errorIndex) => {
+					error.error.statements.forEach((statement, statementIndex) => {
+						t.match(statement[0], expected[errorIndex][statementIndex]);
+					});
+				});
+			});
+	});
+
 	test(`${prefix} stack traces for exceptions are corrected using a source map file (cache off)`, t => {
 		t.plan(4);
 
