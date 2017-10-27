@@ -175,7 +175,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
 			['package.json', '**/*.js', '**/*.snap'].concat(files),
 			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`),
+				ignored: defaultIgnore.map(dir => `**/${dir}/**/*`),
 				ignoreInitial: true
 			}
 		]);
@@ -189,7 +189,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
 			['foo.js', 'baz.js'].concat(files),
 			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('bar.js', 'qux.js'),
+				ignored: defaultIgnore.map(dir => `**/${dir}/**/*`).concat('bar.js', 'qux.js'),
 				ignoreInitial: true
 			}
 		]);
@@ -197,13 +197,16 @@ group('chokidar', (beforeEach, test, group) => {
 
 	test('configured sources can override default ignore patterns', t => {
 		t.plan(2);
-		start(null, ['node_modules/foo/*.js']);
+		start(null, ['node_modules/foo/*.js', 'foo/node_modules/bar/*.js']);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['node_modules/foo/*.js'].concat(files),
+			['node_modules/foo/*.js', 'foo/node_modules/bar/*.js'].concat(files),
 			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('!node_modules/foo/*.js'),
+				ignored: defaultIgnore.map(dir => `**/${dir}/**/*`).concat([
+					'!node_modules/foo/*.js',
+					'!foo/node_modules/bar/*.js'
+				]),
 				ignoreInitial: true
 			}
 		]);
