@@ -57,7 +57,7 @@ In order to be able to assign the `title` property to a macro:
 ```ts
 import test, { AssertContext, Macro } from 'ava';
 
-const macro: Macro<AssertContext> = (t: AssertContext, input, expected) => {
+const macro: Macro<AssertContext> = (t, input, expected) => {
 	t.is(eval(input), expected);
 }
 
