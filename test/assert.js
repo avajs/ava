@@ -238,7 +238,7 @@ test('.is()', t => {
 		actual: {foo: 'bar'},
 		expected: {foo: 'bar'},
 		values: [{
-			label: `Objects are identical, but it's not the same object:`,
+			label: `Values are deeply equal to each other, but they are not the same:`,
 			formatted: /foo/
 		}]
 	});
