@@ -714,6 +714,18 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
+	test(`${prefix} test file with only skipped tests does not run hooks`, t => {
+		const api = apiCreator();
+
+		return api.run([path.join(__dirname, 'fixture/hooks-skipped.js')])
+			.then(result => {
+				t.is(result.tests.length, 1);
+				t.is(result.skipCount, 1);
+				t.is(result.passCount, 0);
+				t.is(result.failCount, 0);
+			});
+	});
+
 	test(`${prefix} resets state before running`, t => {
 		const api = apiCreator();
 
