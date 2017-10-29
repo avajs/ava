@@ -50,6 +50,23 @@ test(async (t) => {
 });
 ```
 
+## Working with [macros](https://github.com/avajs/ava#test-macros)
+
+In order to be able to assign the `title` property to a macro:
+
+```ts
+import test, { AssertContext, Macro } from 'ava';
+
+const macro: Macro<AssertContext> = (t, input, expected) => {
+	t.is(eval(input), expected);
+}
+
+macro.title = (providedTitle, input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
+
+test(macro, '2 + 2', 4);
+test(macro, '2 * 3', 6);
+test('providedTitle', macro, '3 * 3', 9);
+```
 
 ## Working with [`context`](https://github.com/avajs/ava#test-context)
 
