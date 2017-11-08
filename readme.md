@@ -285,7 +285,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
-- `snapshotLocation`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
+- `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
 - `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
@@ -1065,7 +1065,7 @@ You can specify a fixed location for storing the snapshot files in AVA's [`packa
 ```json
 {
   "ava": {
-    "snapshotLocation": "custom-directory"
+    "snapshotDir": "custom-directory"
   }
 }
 ```
