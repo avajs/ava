@@ -15,7 +15,7 @@ function fixture(file) {
 }
 
 function run(files) {
-	return execa(process.execPath, [profileScript].concat(arrify(files).map(fixture)), {cwd});
+	return execa(process.execPath, [profileScript].concat(arrify(files).map(x => fixture(x))), {cwd});
 }
 
 test('runs the profiler and throws an error when invoked without files to run', t => {

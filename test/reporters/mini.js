@@ -25,7 +25,7 @@ const errorFromWorker = require('../helper/error-from-worker');
 const codeExcerpt = require('../../lib/code-excerpt');
 
 const graySpinner = colors.dimGray(process.platform === 'win32' ? '-' : '⠋');
-const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
+const stackLineRegex = /.+ \(.+:\d+:\d+\)/;
 
 // Needed because tap doesn't emulate a tty environment and thus this is
 // `undefined`, making `cli-truncate` append '...' to test titles

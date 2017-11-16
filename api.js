@@ -55,6 +55,7 @@ class Api extends EventEmitter {
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
 	}
+
 	_runFile(file, runStatus, execArgv) {
 		const hash = this.precompiler.precompileFile(file);
 		const precompiled = Object.assign({}, this._precompiledHelpers);
@@ -71,17 +72,20 @@ class Api extends EventEmitter {
 
 		return emitter;
 	}
+
 	run(files, options) {
 		return new AvaFiles({cwd: this.options.resolveTestsFrom, files})
 			.findTestFiles()
 			.then(files => this._run(files, options));
 	}
+
 	_onTimeout(runStatus) {
 		const timeout = ms(this.options.timeout);
 		const err = new AvaError(`Exited because no new tests completed within the last ${timeout}ms of inactivity`);
 		this._handleError(runStatus, err);
 		runStatus.emit('timeout');
 	}
+
 	_setupTimeout(runStatus) {
 		const timeout = ms(this.options.timeout);
 
@@ -92,9 +96,11 @@ class Api extends EventEmitter {
 		runStatus._restartTimer();
 		runStatus.on('test', runStatus._restartTimer);
 	}
+
 	_cancelTimeout(runStatus) {
 		runStatus._restartTimer.cancel();
 	}
+
 	_setupPrecompiler(files) {
 		const isCacheEnabled = this.options.cacheEnabled !== false;
 		let cacheDir = uniqueTempDir();
@@ -121,6 +127,7 @@ class Api extends EventEmitter {
 				});
 			});
 	}
+
 	_precompileHelpers() {
 		this._precompiledHelpers = {};
 
@@ -136,6 +143,7 @@ class Api extends EventEmitter {
 				this._precompiledHelpers[file] = hash;
 			});
 	}
+
 	_run(files, options) {
 		options = options || {};
 
@@ -175,6 +183,7 @@ class Api extends EventEmitter {
 				return this._runWithPool(files, runStatus, concurrency);
 			});
 	}
+
 	_computeForkExecArgs(files) {
 		const execArgv = this.options.testOnlyExecArgv || process.execArgv;
 		let debugArgIndex = -1;
@@ -220,12 +229,14 @@ class Api extends EventEmitter {
 				return forkExecArgv;
 			});
 	}
+
 	_handleError(runStatus, err) {
 		runStatus.handleExceptions({
 			exception: err,
 			file: err.file ? path.relative(process.cwd(), err.file) : undefined
 		});
 	}
+
 	_runWithPool(files, runStatus, concurrency) {
 		const tests = [];
 		let execArgvList;

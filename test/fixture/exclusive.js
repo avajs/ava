@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test.only(t => {
 	t.pass();

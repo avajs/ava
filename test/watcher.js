@@ -1075,7 +1075,7 @@ group('chokidar', (beforeEach, test, group) => {
 			);
 
 			// Modify all excluded files
-			excludedFiles.forEach(change);
+			excludedFiles.forEach(x => change(x));
 
 			return debounce(excludedFiles.length).then(() => {
 				t.ok(api.run.calledTwice);

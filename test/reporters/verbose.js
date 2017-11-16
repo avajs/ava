@@ -22,7 +22,7 @@ const compareLineOutput = require('../helper/compare-line-output');
 const errorFromWorker = require('../helper/error-from-worker');
 const codeExcerpt = require('../../lib/code-excerpt');
 
-const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
+const stackLineRegex = /.+ \(.+:\d+:\d+\)/;
 
 lolex.install({
 	now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),

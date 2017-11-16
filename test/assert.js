@@ -197,7 +197,7 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
 		assertions.is(new String('foo'), 'foo');
 	});
 
@@ -214,7 +214,7 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
 		assertions.is(new String('foo'), new String('foo'));
 	});
 
@@ -527,7 +527,8 @@ test('.deepEqual()', t => {
 	passes(t, () => {
 		assertions.deepEqual(
 			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
-			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
+		);
 	});
 
 	// Regression test end here

@@ -1,5 +1,5 @@
 import delay from 'delay';
-import test from '../../';
+import test from '../..';
 
 function writeFullWidth(even, adjust) {
 	return async function (t) {

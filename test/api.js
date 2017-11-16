@@ -672,9 +672,9 @@ function generateTests(prefix, apiCreator) {
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
 				t.ok(files.length, 4);
-				t.is(files.filter(endsWithBin).length, 1);
-				t.is(files.filter(endsWithJs).length, 2);
-				t.is(files.filter(endsWithMap).length, 1);
+				t.is(files.filter(x => endsWithBin(x)).length, 1);
+				t.is(files.filter(x => endsWithJs(x)).length, 2);
+				t.is(files.filter(x => endsWithMap(x)).length, 1);
 			});
 
 		function endsWithBin(filename) {

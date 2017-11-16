@@ -732,13 +732,13 @@ test('snapshots infer their location from sourcemaps', t => {
 			}
 		}
 	};
-	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
 	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
 		t.ifError(err);
-		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stderr, /6 passed/);
 		t.end();
 	});
@@ -771,13 +771,13 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 			}
 		}
 	};
-	snapFixtureFilePaths.forEach(removeExistingSnapFixtureFiles);
+	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
 	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
 		t.ifError(err);
-		snapFixtureFilePaths.forEach(verifySnapFixtureFiles);
+		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stderr, /6 passed/);
 		t.end();
 	});

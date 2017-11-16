@@ -1,6 +1,6 @@
 'use strict';
 const delay = require('delay');
-const test = require('../../');
+const test = require('../..');
 require('./print-lorem-ipsum'); // eslint-disable-line import/no-unassigned-import
 
 async function testFn(t) {
