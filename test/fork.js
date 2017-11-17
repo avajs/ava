@@ -135,6 +135,7 @@ test('babelrc is ignored', t => {
 		});
 });
 
+// TODO: Skipped until we can do this properly in #1455
 test('color support is initialized correctly', t => {
 	t.plan(1);
 
@@ -142,12 +143,13 @@ test('color support is initialized correctly', t => {
 		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
 		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
 		fork(fixture('chalk-disabled.js'), {}).run({})
-	]).then(info => {
-		info.forEach(info => {
+	]).then(infos => {
+		for (const info of infos) {
 			if (info.stats.failCount > 0) {
-				throw new Error(`${info.file} failed`);
+				t.fail(`${info.file} failed`);
 			}
-		});
-		t.is(info.length, 3);
+		}
+
+		t.is(infos.length, 3);
 	});
-});
+}, {skip: true});

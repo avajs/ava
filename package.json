@@ -5,38 +5,6 @@
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://ava.li",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "sindresorhus.com"
-	},
-	"maintainers": [
-		{
-			"name": "Vadim Demedes",
-			"email": "vdemedes@gmail.com",
-			"url": "github.com/vadimdemedes"
-		},
-		{
-			"name": "James Talmage",
-			"email": "james@talmage.io",
-			"url": "github.com/jamestalmage"
-		},
-		{
-			"name": "Mark Wubben",
-			"email": "mark@novemberborn.net",
-			"url": "novemberborn.net"
-		},
-		{
-			"name": "Juan Soto",
-			"email": "juan@juansoto.me",
-			"url": "juansoto.me"
-		},
-		{
-			"name": "Jeroen Engels",
-			"email": "jfm.engels@gmail.com",
-			"url": "github.com/jfmengels"
-		}
-	],
 	"bin": "cli.js",
 	"engines": {
 		"node": ">=4"
@@ -76,7 +44,6 @@
 		"babel",
 		"assert",
 		"assertion",
-		"futuristic",
 		"promise",
 		"promises",
 		"async",
@@ -86,8 +53,8 @@
 		"generators",
 		"yield",
 		"observable",
-		"unit",
 		"observables",
+		"unit",
 		"snapshot",
 		"expect",
 		"typescript",
@@ -98,7 +65,7 @@
 		"@ava/babel-preset-transform-test-files": "^3.0.0",
 		"@ava/write-file-atomic": "^2.2.0",
 		"@concordance/react": "^1.0.0",
-		"ansi-escapes": "^2.0.0",
+		"ansi-escapes": "^3.0.0",
 		"ansi-styles": "^3.1.0",
 		"arr-flatten": "^1.0.1",
 		"array-union": "^1.0.1",
@@ -142,7 +109,7 @@
 		"is-ci": "^1.0.7",
 		"is-generator-fn": "^1.0.0",
 		"is-obj": "^1.0.0",
-		"is-observable": "^0.2.0",
+		"is-observable": "^1.0.0",
 		"is-promise": "^2.1.0",
 		"js-yaml": "^3.8.2",
 		"last-line-stream": "^1.0.0",
@@ -168,11 +135,11 @@
 		"safe-buffer": "^5.1.1",
 		"semver": "^5.4.1",
 		"slash": "^1.0.0",
-		"source-map-support": "^0.4.0",
+		"source-map-support": "^0.5.0",
 		"stack-utils": "^1.0.1",
 		"strip-ansi": "^4.0.0",
 		"strip-bom-buf": "^1.0.0",
-		"supports-color": "^4.0.0",
+		"supports-color": "^5.0.0",
 		"time-require": "^0.1.2",
 		"trim-off-newlines": "^1.0.1",
 		"unique-temp-dir": "^1.0.0",
@@ -180,31 +147,31 @@
 	},
 	"devDependencies": {
 		"cli-table2": "^0.2.0",
-		"codecov": "^2.1.0",
+		"codecov": "^3.0.0",
 		"del": "^3.0.0",
 		"delay": "^2.0.0",
 		"execa": "^0.8.0",
-		"flow-bin": "^0.54.0",
+		"flow-bin": "^0.59.0",
 		"get-stream": "^3.0.0",
 		"git-branch": "^1.0.0",
 		"has-ansi": "^3.0.0",
-		"inquirer": "^3.0.5",
+		"inquirer": "^4.0.0",
 		"is-array-sorted": "^1.0.0",
 		"lock-verify": "^1.1.0",
 		"lolex": "^2.1.2",
 		"nyc": "^11.0.3",
 		"proxyquire": "^1.7.4",
-		"react": "^15.6.1",
-		"react-test-renderer": "^15.6.1",
+		"react": "^16.1.1",
+		"react-test-renderer": "^16.1.1",
 		"signal-exit": "^3.0.0",
-		"sinon": "^3.2.1",
+		"sinon": "^4.1.2",
 		"source-map-fixtures": "^2.1.0",
 		"tap": "^10.0.0",
 		"temp-write": "^3.1.0",
 		"touch": "^3.1.0",
 		"typescript": "^2.2.2",
 		"xo": "^0.18.2",
-		"zen-observable": "^0.5.1"
+		"zen-observable": "^0.6.0"
 	},
 	"typings": "types/generated.d.ts",
 	"xo": {
