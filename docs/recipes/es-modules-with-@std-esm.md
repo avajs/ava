@@ -122,6 +122,6 @@ test('2 + 2 = 4', async (ts) => {
 ## Execute test with ava
 
 ```sh
-$ ava src/
+$ ava src/test
 ```
 
