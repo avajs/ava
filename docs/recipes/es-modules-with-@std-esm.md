@@ -88,7 +88,7 @@ To use native ES modules, please modify `tsconfig.json` accordingly.
 }
 ```
 
-Then, add `ts-node` into `ava.require` in `package.json`.
+Then add `@std/esm` configuration into `package.json`.
 
 ```json
 // package.json
