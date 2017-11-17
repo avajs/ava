@@ -24,9 +24,13 @@ Here's all the configuration that you need to write native ES modules with `ava`
 
 {
   ...
+  "scripts": {
+    ...
+    "test": "ava"
+  },
   "dependencies": {
     ...
-    "@std/esm": ""
+    "@std/esm": "^0.15.0"
   },
   "ava": {
     "require": [
@@ -59,28 +63,28 @@ test('2 + 2 = 4', async (t) => {
 });
 ```
 
-## @std/esm + Typescript with ts-node
+## @std/esm + Typescript
 
 For [TypeScript](https://github.com/Microsoft/TypeScript) users, you can do that too! Let's dive in.
 
-First you will need a NPM package called [ts-node](https://github.com/TypeStrong/ts-node) to replace the `babel-register` that `ava` depends on the transpilation process:
+First install `typescript`.
 
 ```sh
-# Install ts-node
-$ npm install --save-dev ts-node # or yarn add -D ts-node
+# Install typescript
+$ npm install --save-dev typescript # or yarn add -D typescript
 ```
 
-Modify `tsconfig.json` to allow allow resolution of ES modules to Node.js.
+To use native ES modules, please modify `tsconfig.json` accordingly.
 
 ```json
 // tsconfig.json
 
 {
-	...
-	"moduleResolution": "node",
-	"module": "es2015", // or "esnext"
-	"target": "es2015" // or "esnext"
-	...
+  ...
+  "moduleResolution": "node",
+  "module": "es2015", // or "esnext"
+  "target": "es2015" // or "esnext"
+  ...
 }
 ```
 
@@ -91,17 +95,19 @@ Then, add `ts-node` into `ava.require` in `package.json`.
 
 {
   ...
+  "scripts": {
+    ...
+    "test": "tsc && ava"
+  },
   "dependencies": {
     ...
-    "@std/esm": ""
+    "@std/esm": "^0.15.0"
   },
   "devDependencies": {
-    ...
-    "ts-node": ""
+    "typescript": "^2.6.1"
   },
   "ava": {
     "require": [
-      "ts-node",
       "@std/esm"
     ],
   },
@@ -136,6 +142,5 @@ test('2 + 2 = 4', async (ts) => {
 ## Execute test with ava
 
 ```sh
-$ ava src/test
+$ npm run test # or npm t
 ```
-
