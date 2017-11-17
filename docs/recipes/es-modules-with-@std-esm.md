@@ -70,6 +70,20 @@ First you will need a NPM package called [ts-node](https://github.com/TypeStrong
 $ npm install --save-dev ts-node # or yarn add -D ts-node
 ```
 
+Modify `tsconfig.json` to allow allow resolution of ES modules to Node.js.
+
+```json
+// tsconfig.json
+
+{
+	...
+	"moduleResolution": "node",
+	"module": "es2015", // or "esnext"
+	"target": "es2015" // or "esnext"
+	...
+}
+```
+
 Then, add `ts-node` into `ava.require` in `package.json`.
 
 ```json
