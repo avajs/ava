@@ -37,12 +37,7 @@ Here's all the configuration that you need to write native ES modules with `ava`
       "@std/esm"
     ]
   },
-  "@std/esm": {
-    "esm": "all",
-    "cjs": true,
-    "await": true,
-    "gz": true
-  }
+  "@std/esm": "cjs"
   ...
 }
 ```
@@ -111,12 +106,7 @@ Then add `@std/esm` configuration into `package.json`.
       "@std/esm"
     ],
   },
-  "@std/esm": {
-    "esm": "all",
-    "cjs": true,
-    "await": true,
-    "gz": true
-  }
+  "@std/esm": "cjs"
   ...
 }
 ```
