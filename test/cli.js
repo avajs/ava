@@ -325,7 +325,9 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 				killed = true;
 			}, 500);
 		} else if (passedFirst && !killed) {
-			t.is(buffer.replace(/\s/g, ''), '');
+			const rerunMessage = `To rerun all tests, type 'r', followed by Enter\nTo update snapshots used in the previous tests, type 'u', followed by Enter\n`;
+			const rerunMessageWithoutWhitespace = rerunMessage.replace(/\s/g, '');
+			t.is(buffer.replace(/\s/g, ''), rerunMessageWithoutWhitespace);
 		}
 	});
 });
