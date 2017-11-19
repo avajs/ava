@@ -1,136 +1,109 @@
 # ES Modules
 
-As of Node.js 8.5.0, ES modules are natively supported, behind a command line option `--experimental-modules`.
+As of Node.js 8.5.0, [ES modules](http://2ality.com/2017/09/native-esm-node.html) are natively supported, but behind a command line option `--experimental-modules`.
 
-However, it works a bit different on Node.js than on web browsers that also natively supported ES Modules. In Node.js, you need to write `.mjs` files instead of commonly known `.js` files. The `.mjs` files do work on the web browsers but they have to be served with the correct Media Type (`text/javascript` or `application/javascript`). There is a [ongoing effort](https://tools.ietf.org/html/draft-bfarias-javascript-mjs-00) working on standardizing `.mjs`.
+However, it works a bit different on Node.js than in web browsers that also natively supports ES modules. In Node.js, you need to use the `.mjs` extension instead of the commonly known `.js` extension. The `.mjs` extension in web browsers too, but they have to be served with the correct media type (`application/javascript`). There is a [ongoing effort](https://tools.ietf.org/html/draft-bfarias-javascript-mjs-00) on standardizing `.mjs`.
 
-Good news is that there's already a library named [@std/esm](https://github.com/standard-things/esm) that allows you to write and run ES modules with transpiling. It basically does everything the specs says to make ES modules work on Node.js 4.x and above.
+The good news is that there's a module called [`@std/esm`](https://github.com/standard-things/esm) that enable you to write and run ES modules in Node.js 4 and above.
 
-`ava` should be able to do right? Yes, it definitely can but it requires a bit more effort to make things work magically!
+Here's how you get it working with AVA.
+
 
 ## @std/esm
 
-First, install [@std/esm](https://github.com/standard-things/esm) first:
+First, install [`@std/esm`](https://github.com/standard-things/esm):
 
-```sh
-# Install @std/esm
-$ npm install --save @std/esm # or yarn add @std/esm
+```
+$ npm install @std/esm
 ```
 
-Here's all the configuration that you need to write native ES modules with `ava`:
+Modify your package.json accordingly:
 
 ```json
-// package.json
-
 {
-  ...
-  "scripts": {
-    ...
-    "test": "ava"
-  },
-  "dependencies": {
-    ...
-    "@std/esm": "^0.15.0"
-  },
-  "ava": {
-    "require": [
-      "@std/esm"
-    ]
-  },
-  "@std/esm": "cjs"
-  ...
+	…
+	"scripts": {
+		"test": "ava"
+	},
+	"dependencies": {
+		"@std/esm": "^0.16.0"
+	},
+	"ava": {
+		"require": [
+			"@std/esm"
+		]
+	},
+	"@std/esm": "cjs"
 }
 ```
 
-That's basically it. You can now write native ES modules with `ava`.
+You can now use native ES modules with AVA:
 
 ```js
-// test/index.js
-
 import test from 'ava';
 
-test('2 + 2 = 4', async (t) => {
-  try {
-    t.true(2 + 2 === 4);
-  } catch (e) {
-    t.fail();
-  }
+test('2 + 2 = 4', t => {
+	t.is(2 + 2, 4);
 });
 ```
 
-## @std/esm + Typescript
 
-For [TypeScript](https://github.com/Microsoft/TypeScript) users, you can do that too! Let's dive in.
+## @std/esm + TypeScript
 
-First install `typescript`.
+For [TypeScript](https://github.com/Microsoft/TypeScript) users, first install the `typescript` package:
 
-```sh
-# Install typescript
-$ npm install --save-dev typescript # or yarn add -D typescript
+```
+$ npm install --save-dev typescript
 ```
 
-To use native ES modules, please modify `tsconfig.json` accordingly.
+Then modify your `tsconfig.json` accordingly:
 
 ```json
-// tsconfig.json
-
 {
-  ...
-  "moduleResolution": "node",
-  "module": "es2015", // or "esnext"
-  "target": "es2015" // or "esnext"
-  ...
+	…
+	"moduleResolution": "node",
+	"module": "es2015",
+	"target": "es2015"
 }
 ```
 
-Then add `@std/esm` configuration into `package.json`.
+Then add the `@std/esm` config to `package.json`:
 
 ```json
-// package.json
-
 {
-  ...
-  "scripts": {
-    ...
-    "test": "tsc && ava"
-  },
-  "dependencies": {
-    ...
-    "@std/esm": "^0.15.0"
-  },
-  "devDependencies": {
-    "typescript": "^2.6.1"
-  },
-  "ava": {
-    "require": [
-      "@std/esm"
-    ],
-  },
-  "@std/esm": "cjs"
-  ...
+	…
+	"scripts": {
+		"test": "tsc && ava"
+	},
+	"dependencies": {
+		"@std/esm": "^0.16.0"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1"
+	},
+	"ava": {
+		"require": [
+			"@std/esm"
+		]
+	},
+	"@std/esm": "cjs"
 }
 ```
 
-Effortless writing test scripts with `ava` + `@std/esm` + `TypeScript` is done!
+You can now write tests with AVA, `@std/esm`, and TypeScript:
 
 ```ts
-// test/index.ts
-
 // @ts-check
-
 import test from 'ava';
 
-test('2 + 2 = 4', async (ts) => {
-  try {
-    t.true(2 + 2 === 4);
-  } catch (e) {
-    t.fail();
-  }
+test('2 + 2 = 4', t => {
+		t.is(2 + 2, 4);
 });
 ```
 
-## Execute test with ava
 
-```sh
-$ npm run test # or npm t
+## Run the AVA test
+
+```
+$ npm run test
 ```
