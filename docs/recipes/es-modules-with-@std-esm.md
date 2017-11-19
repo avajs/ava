@@ -4,7 +4,7 @@ As of Node.js 8.5.0, [ES modules](http://2ality.com/2017/09/native-esm-node.html
 
 However, it works a bit different on Node.js than in web browsers that also natively supports ES modules. In Node.js, you need to use the `.mjs` extension instead of the commonly known `.js` extension. The `.mjs` extension in web browsers too, but they have to be served with the correct media type (`application/javascript`). There is a [ongoing effort](https://tools.ietf.org/html/draft-bfarias-javascript-mjs-00) on standardizing `.mjs`.
 
-The good news is that there's a module called [`@std/esm`](https://github.com/standard-things/esm) that enable you to write and run ES modules in Node.js 4 and above.
+The good news is that there's a module called [`@std/esm`](https://github.com/standard-things/esm) that enables you to write and run ES modules in Node.js 4 and above.
 
 Here's how you get it working with AVA.
 
