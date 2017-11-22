@@ -37,6 +37,7 @@ function getBlankResults() {
 	return {
 		stats: {
 			knownFailureCount: 0,
+			pendingCount: 0,
 			testCount: 0,
 			passCount: 0,
 			skipCount: 0,
