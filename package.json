@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "0.23.0",
+	"version": "0.23.0-babel-7",
 	"description": "Futuristic test runner 🚀",
 	"license": "MIT",
 	"repository": "avajs/ava",
@@ -64,6 +64,7 @@
 		"@ava/babel-preset-stage-4": "^1.1.0",
 		"@ava/babel-preset-transform-test-files": "^3.0.0",
 		"@ava/write-file-atomic": "^2.2.0",
+		"@babel/core": "^7.0.0-beta.32",
 		"@concordance/react": "^1.0.0",
 		"ansi-escapes": "^3.0.0",
 		"ansi-styles": "^3.1.0",
@@ -144,6 +145,9 @@
 		"trim-off-newlines": "^1.0.1",
 		"unique-temp-dir": "^1.0.0",
 		"update-notifier": "^2.3.0"
+	},
+	"peerDependencies": {
+		"@babel/core": "^7"
 	},
 	"devDependencies": {
 		"cli-table2": "^0.2.0",
