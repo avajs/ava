@@ -23,4 +23,4 @@ before_install:
   - npm --version
 install:
   - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --no-shrinkwrap --prefer-online; else npm install --prefer-offline; fi
-after_success: ./node_modules/.bin/codecov --file=./coverage/lcov.info
+after_success: npx codecov --file=./coverage/lcov.info
