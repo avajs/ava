@@ -104,7 +104,7 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t 
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, [
-				require.resolve('babel-plugin-syntax-object-rest-spread')
+				require.resolve('@babel/plugin-syntax-object-rest-spread')
 			]);
 		});
 });
@@ -117,7 +117,7 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t
 		.then(result => {
 			const options = result.getOptions();
 			t.same(options.plugins, [
-				require.resolve('babel-plugin-syntax-object-rest-spread')
+				require.resolve('@babel/plugin-syntax-object-rest-spread')
 			]);
 		});
 });
