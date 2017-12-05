@@ -374,8 +374,8 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} enhanced assertion formatting necessary whitespace and empty strings`, t => {
 		const expected = [
 			[
-				/foo === '' && '' === foo/,
-				/foo === ''/,
+				/foo === "" && "" === foo/,
+				/foo === ""/,
 				/foo/
 			],
 			[
@@ -385,9 +385,9 @@ function generateTests(prefix, apiCreator) {
 				/foo/
 			],
 			[
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length > 0/,
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length/,
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\)/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length > 0/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\)/,
 				/\[foo]/,
 				/foo/
 			]
