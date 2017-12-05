@@ -15,6 +15,7 @@ const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
+const NativeCachingPrecompiler = require('./lib/native-caching-precompiler');
 const globals = require('./lib/globals');
 
 function resolveModules(modules) {
@@ -78,11 +79,19 @@ const cacheDir = findCacheDir({
 
 babelConfigHelper.build(process.cwd(), cacheDir, conf.babel, true)
 	.then(result => {
-		const precompiler = new CachingPrecompiler({
-			path: cacheDir,
-			getBabelOptions: result.getOptions,
-			babelCacheKeys: result.cacheKeys
-		});
+		let precompiler = null;
+		if (conf.compileJavascriptFiles) {
+			precompiler = new CachingPrecompiler({
+				path: cacheDir,
+				getBabelOptions: result.getOptions,
+				babelCacheKeys: result.cacheKeys
+			});
+		} else {
+			precompiler = new NativeCachingPrecompiler({
+				path: cacheDir,
+				babelCacheKeys: result.cacheKeys
+			});
+		}
 
 		const precompiled = {};
 		precompiled[file] = precompiler.precompileFile(file);
