@@ -16,6 +16,7 @@ const arrify = require('arrify');
 const ms = require('ms');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
+const NativeCachingPrecompiler = require('./lib/native-caching-precompiler');
 const RunStatus = require('./lib/run-status');
 const AvaError = require('./lib/ava-error');
 const AvaFiles = require('./lib/ava-files');
@@ -118,13 +119,21 @@ class Api extends EventEmitter {
 		this.options.cacheDir = cacheDir;
 
 		const isPowerAssertEnabled = this.options.powerAssert !== false;
+		const compileJavascriptFiles = this.options.compileJavascriptFiles !== false;
 		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, isPowerAssertEnabled)
 			.then(result => {
-				this.precompiler = new CachingPrecompiler({
-					path: cacheDir,
-					getBabelOptions: result.getOptions,
-					babelCacheKeys: result.cacheKeys
-				});
+				if (compileJavascriptFiles) {
+					this.precompiler = new CachingPrecompiler({
+						path: cacheDir,
+						getBabelOptions: result.getOptions,
+						babelCacheKeys: result.cacheKeys
+					});
+				} else {
+					this.precompiler = new NativeCachingPrecompiler({
+						path: cacheDir,
+						babelCacheKeys: result.cacheKeys
+					});
+				}
 			});
 	}
 
@@ -262,7 +271,6 @@ class Api extends EventEmitter {
 					const options = {
 						runOnlyExclusive: this.options.match.length > 0
 					};
-
 					resolve(test.run(options));
 				}).catch(err => {
 					err.file = file;
