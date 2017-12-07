@@ -4,7 +4,6 @@ const path = require('path');
 const test = require('tap').test;
 const makeDir = require('make-dir');
 const uniqueTempDir = require('unique-temp-dir');
-const configManager = require('hullabaloo-config-manager');
 
 const babelConfigHelper = require('../lib/babel-config');
 
@@ -56,17 +55,13 @@ test('uses options from babelrc when userOptions is "inherit"', t => {
 
 			t.false(options.babelrc);
 			t.same(options.plugins, [require.resolve(fixture('babel-plugin-test-doubler'))]);
-			t.same(options.presets, [require.resolve('@ava/babel-preset-stage-4')]);
-			const envOptions = options.env[configManager.currentEnv()];
-			t.same(envOptions, {
-				plugins: [],
-				presets: [
-					[
-						require.resolve('@ava/babel-preset-transform-test-files'),
-						{powerAssert}
-					]
+			t.same(options.presets, [
+				require.resolve('@ava/babel-preset-stage-4'),
+				[
+					require.resolve('@ava/babel-preset-transform-test-files'),
+					{powerAssert}
 				]
-			});
+			]);
 		});
 });
 
@@ -85,14 +80,13 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.presets, userOptions.presets);
-			t.same(options.plugins, userOptions.plugins);
-			t.same(options.env.development.presets, [
+			t.same(options.presets, userOptions.presets.concat([
 				[
 					require.resolve('@ava/babel-preset-transform-test-files'),
 					{powerAssert}
 				]
-			]);
+			]));
+			t.same(options.plugins, userOptions.plugins);
 		});
 });
 

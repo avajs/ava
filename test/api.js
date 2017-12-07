@@ -917,7 +917,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok(data.title === 'FOO' || data.title === 'repeated test: FOO');
+				t.ok(data.title === 'FOO' || data.title === 'repeated test: foo');
 			});
 		});
 
@@ -941,7 +941,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok(data.title === 'BAR' || data.title === 'repeated test: BAR');
+				t.ok(data.title === 'BAR' || data.title === 'repeated test: bar');
 			});
 		});
 

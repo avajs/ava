@@ -1,4 +1,3 @@
 {
-  "presets": ["@ava/stage-4"],
   "plugins": ["../babel-plugin-foo-to-bar"]
 }
