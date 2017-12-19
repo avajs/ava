@@ -1,4 +1,5 @@
 'use strict';
+const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const test = require('tap').test;
@@ -22,6 +23,19 @@ function withNodeVersion(version, run) {
 	return promise;
 }
 
+function withNodeEnv(value, run) {
+	assert(!('NODE_ENV' in process.env));
+	process.env.NODE_ENV = value;
+	const reset = () => {
+		delete process.env.NODE_ENV;
+	};
+	const promise = new Promise(resolve => {
+		resolve(run());
+	});
+	promise.then(reset, reset);
+	return promise;
+}
+
 test('uses default presets when userOptions is "default"', t => {
 	const userOptions = 'default';
 	const powerAssert = true;
@@ -33,13 +47,9 @@ test('uses default presets when userOptions is "default"', t => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.presets, [
-				require.resolve('@ava/babel-preset-stage-4'),
-				[
-					require.resolve('@ava/babel-preset-transform-test-files'),
-					{powerAssert}
-				]
-			]);
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[1][1], {powerAssert});
 		});
 });
 
@@ -54,22 +64,19 @@ test('uses options from babelrc when userOptions is "inherit"', t => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.plugins, [require.resolve(fixture('babel-plugin-test-doubler'))]);
-			t.same(options.presets, [
-				require.resolve('@ava/babel-preset-stage-4'),
-				[
-					require.resolve('@ava/babel-preset-transform-test-files'),
-					{powerAssert}
-				]
-			]);
+			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-doubler')));
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[1][1], {powerAssert});
 		});
 });
 
 test('uses userOptions for babel options when userOptions is an object', t => {
-	const custom = require.resolve(fixture('empty'));
+	const customFile = require.resolve(fixture('babel-noop-plugin-or-preset'));
+	const custom = require(fixture('babel-noop-plugin-or-preset'));
 	const userOptions = {
-		presets: [custom],
-		plugins: [custom]
+		plugins: [customFile],
+		presets: [customFile]
 	};
 	const powerAssert = true;
 
@@ -78,15 +85,47 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
 		.then(result => {
 			const options = result.getOptions();
+			t.false(options.babelrc);
+			t.is(options.plugins[0][0].wrapped, custom);
+			t.is(options.presets[0][0].wrapped, custom);
+			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[1][1], {powerAssert});
+		});
+});
+
+test('uses "development" environment if NODE_ENV is the empty string', t => {
+	const userOptions = 'inherit';
+	const powerAssert = true;
+
+	const projectDir = fixture('babelrc');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
+	return withNodeEnv('', () => babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert))
+		.then(result => {
+			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.presets, userOptions.presets.concat([
-				[
-					require.resolve('@ava/babel-preset-transform-test-files'),
-					{powerAssert}
-				]
-			]));
-			t.same(options.plugins, userOptions.plugins);
+			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-capitalizer')));
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[1][1], {powerAssert});
+		});
+});
+
+test('supports .babelrc.js files', t => {
+	const userOptions = 'inherit';
+	const powerAssert = true;
+
+	const projectDir = fixture('babelrc-js');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+		.then(result => {
+			const options = result.getOptions();
+
+			t.false(options.babelrc);
+			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-doubler')));
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[1][1], {powerAssert});
 		});
 });
 
@@ -97,9 +136,7 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t 
 	return withNodeVersion('9.0.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
-			t.same(options.plugins, [
-				require.resolve('@babel/plugin-syntax-object-rest-spread')
-			]);
+			t.is(options.plugins[0][0].wrapped, require('@babel/plugin-syntax-object-rest-spread').default);
 		});
 });
 
@@ -110,9 +147,7 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t
 	return withNodeVersion('8.3.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
-			t.same(options.plugins, [
-				require.resolve('@babel/plugin-syntax-object-rest-spread')
-			]);
+			t.is(options.plugins[0][0].wrapped, require('@babel/plugin-syntax-object-rest-spread').default);
 		});
 });
 
@@ -123,7 +158,7 @@ test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.
 	return withNodeVersion('8.2.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
 			const options = result.getOptions();
-			t.same(options.plugins, []);
+			t.true(!options.plugins);
 		});
 });
 
@@ -138,13 +173,7 @@ test('should disable power-assert when powerAssert is false', t => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.presets, [
-				require.resolve('@ava/babel-preset-stage-4'),
-				[
-					require.resolve('@ava/babel-preset-transform-test-files'),
-					{powerAssert}
-				]
-			]);
+			t.same(options.presets[1][1], {powerAssert});
 		});
 });
 
@@ -204,7 +233,7 @@ test('updates cached verifier if dependency hashes change', t => {
 	const depFile = path.join(projectDir, 'plugin.js');
 
 	makeDir.sync(cacheDir);
-	fs.writeFileSync(depFile, 'foo');
+	fs.writeFileSync(depFile, 'module.exports = () => ({})');
 
 	const userOptions = {
 		plugins: ['./plugin.js']
