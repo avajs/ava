@@ -146,6 +146,7 @@
 		"update-notifier": "^2.3.0"
 	},
 	"devDependencies": {
+		"@std/esm": "^0.18.0",
 		"cli-table2": "^0.2.0",
 		"codecov": "^3.0.0",
 		"del": "^3.0.0",
