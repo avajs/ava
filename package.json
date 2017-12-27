@@ -65,6 +65,7 @@
 		"@ava/babel-preset-transform-test-files": "^3.0.0",
 		"@ava/write-file-atomic": "^2.2.0",
 		"@concordance/react": "^1.0.0",
+		"@ladjs/time-require": "^0.1.4",
 		"ansi-escapes": "^3.0.0",
 		"ansi-styles": "^3.1.0",
 		"arr-flatten": "^1.0.1",
@@ -140,7 +141,6 @@
 		"strip-bom-buf": "^1.0.0",
 		"supertap": "^1.0.0",
 		"supports-color": "^5.0.0",
-		"time-require": "^0.1.2",
 		"trim-off-newlines": "^1.0.1",
 		"unique-temp-dir": "^1.0.0",
 		"update-notifier": "^2.3.0"

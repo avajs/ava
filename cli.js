@@ -8,7 +8,7 @@ if (importLocal(__filename)) {
 	debug('Using local install of AVA');
 } else {
 	if (debug.enabled) {
-		require('time-require'); // eslint-disable-line import/no-unassigned-import
+		require('@ladjs/time-require'); // eslint-disable-line import/no-unassigned-import
 	}
 
 	try {
