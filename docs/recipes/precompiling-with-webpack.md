@@ -222,7 +222,7 @@ npm scripts:
 {
 	"scripts": {
 		"precompile-src": "cross-env NODE_ENV=test babel src --out-dir _src",
-		"precompile-tests": "cross-env NODE_ENV=test webpack --config webpack.config.test.js",
+		"precompile-tests": "cross-env NODE_ENV=test webpack --config webpack.config.js",
 		"pretest": "npm run precompile-src && npm run precompile-tests",
 		"test": "cross-env NODE_ENV=test nyc --cache ava _build"
 	}
