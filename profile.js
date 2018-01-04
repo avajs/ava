@@ -9,6 +9,7 @@ const EventEmitter = require('events');
 const meow = require('meow');
 const Promise = require('bluebird');
 const pkgConf = require('pkg-conf');
+const fs = require('pkg-conf');
 const findCacheDir = require('find-cache-dir');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
@@ -35,11 +36,10 @@ globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
 
-const conf = pkgConf.sync('ava', {
-	defaults: {
-		babel: 'default'
-	}
-});
+const conf = Object.assign(
+	{ babel: 'default' },
+	(fs.exists('.avarc') ? JSON.parse(fs.readFileSync('.avarc')) : pkgConf.sync('ava'))
+);
 
 // Define a minimal set of options from the main CLI
 const cli = meow(`
