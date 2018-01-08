@@ -1,4 +1,3 @@
 {
-	"cjs": true,
-	"esm": "js"
+	"esm": "cjs"
 }
