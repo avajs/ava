@@ -7,6 +7,9 @@ export type ErrorValidator
 export interface Observable {
 	subscribe(observer: (value: {}) => void): void;
 }
+export interface SnapshotOptions {
+	id?: string;
+}
 export type Test = (t: TestContext) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type GenericTest<T> = (t: GenericTestContext<T>) => PromiseLike<void> | Iterator<any> | Observable | void;
 export type CallbackTest = (t: CallbackTestContext) => void;
@@ -78,6 +81,7 @@ export interface AssertContext {
 	 * Assert that contents matches a snapshot.
 	 */
 	snapshot(contents: any, message?: string): void;
+	snapshot(contents: any, options: SnapshotOptions, message?: string): void;
 	/**
 	 * Assert that contents does not match regex.
 	 */
