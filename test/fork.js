@@ -135,6 +135,17 @@ test('babelrc is ignored', t => {
 		});
 });
 
+test('@std/esm support', t => {
+	return fork(fixture('std-esm/test.js'), {
+		require: [require.resolve('@std/esm')]
+	})
+		.run({})
+		.then(info => {
+			t.is(info.stats.passCount, 1);
+			t.end();
+		});
+});
+
 // TODO: Skipped until we can do this properly in #1455
 test('color support is initialized correctly', t => {
 	t.plan(1);
