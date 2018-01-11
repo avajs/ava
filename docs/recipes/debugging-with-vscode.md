@@ -17,6 +17,7 @@ Add following to the `configurations` object:
 	"name": "Run AVA test",
 	"program": "${workspaceRoot}/node_modules/ava/profile.js",
 	"args": [
+	  "--serial",
 	  "${file}"
 	]
 }
