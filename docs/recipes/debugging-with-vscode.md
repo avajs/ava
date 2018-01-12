@@ -34,7 +34,7 @@ Set breakpoints in the code **or** write `debugger;` at the point where it shoul
 
 Hit the green `Debug` button next to the list of configurations on the top left in the `Debug` view. Once the breakpoint is hit, you can evaluate variables and step through the code.
 
-## Serial Debugging
+# Serial Debug Setup
 
 > **Note:** The configuration will run tests concurrently, Ava's default, so breakpoints will not be hit sequentially.  To avoid this, optionally add the following to the `configurations` object to run the Ava test serially.
 
