@@ -36,7 +36,7 @@ Hit the green `Debug` button next to the list of configurations on the top left 
 
 # Serial Debug Setup
 
-> **Note:** The configuration will run tests concurrently, Ava's default, so breakpoints will not be hit sequentially.  To avoid this, optionally add the following to the `configurations` object to run the Ava test serially.
+> **Note:** The configuration above will run tests concurrently, Ava's default, so breakpoints will not be hit sequentially.  To avoid this, optionally add the following to the `configurations` object to run the Ava test serially.
 
 ```json
 {
