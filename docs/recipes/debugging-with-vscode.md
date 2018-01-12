@@ -17,7 +17,6 @@ Add following to the `configurations` object:
 	"name": "Run AVA test",
 	"program": "${workspaceRoot}/node_modules/ava/profile.js",
 	"args": [
-	  "--serial",
 	  "${file}"
 	]
 }
@@ -34,3 +33,21 @@ Save this configuration after you added it.
 Set breakpoints in the code **or** write `debugger;` at the point where it should stop.
 
 Hit the green `Debug` button next to the list of configurations on the top left in the `Debug` view. Once the breakpoint is hit, you can evaluate variables and step through the code.
+
+## Serial Debugging
+
+> **Note:** The configuration will run tests concurrently, Ava's default, so breakpoints will not be hit sequentially.  To avoid this, optionally add the following to the `configurations` object to run the Ava test serially.
+
+```json
+{
+	"type": "node",
+	"request": "launch",
+	"name": "Run AVA test serially",
+	"program": "${workspaceRoot}/node_modules/ava/profile.js",
+	"args": [
+	  "--serial",
+	  "${file}"
+	]
+}
+```
+
