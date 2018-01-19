@@ -36,6 +36,8 @@ You can override the default Babel configuration AVA uses for test transpilation
 }
 ```
 
+Note that this only overrides babel for transpiling tests. If you have sources linked to a test, then you still need to add separate babel configuration for sources explained [here](#transpiling-sources).
+
 ## Use Babel Polyfills
 
 AVA lets you write your tests using new JavaScript syntax, even on Node.js versions that otherwise wouldn't support it. However, it doesn't add or modify built-ins of your current environment. Using AVA would, for example, not provide modern features such as `Array.prototype.includes()` to an underlying Node.js 4 environment.
