@@ -87,7 +87,7 @@
 		"cli-spinners": "^1.0.0",
 		"cli-truncate": "^1.0.0",
 		"co-with-promise": "^4.6.0",
-		"code-excerpt": "^2.1.0",
+		"code-excerpt": "^2.1.1",
 		"common-path-prefix": "^1.0.0",
 		"concordance": "^3.0.0",
 		"convert-source-map": "^1.5.1",
