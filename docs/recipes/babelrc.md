@@ -36,7 +36,7 @@ You can override the default Babel configuration AVA uses for test transpilation
 }
 ```
 
-Note that this only overrides babel for transpiling tests. If you have sources linked to a test, then you still need to add separate babel configuration for sources explained [here](#transpiling-sources).
+Note that this only overrides Babel for transpiling tests. If you have sources linked to a test, then you still need to add separate Babel configuration for sources explained [here](#transpiling-sources).
 
 ## Use Babel Polyfills
 
