@@ -13,7 +13,7 @@ function runTests(_args) {
 		const args = [cliPath].concat(arrify(_args));
 		const start = Date.now();
 
-		childProcess.execFile(process.execPath, args, {
+		childProcess.execFile(process.env.NODE_EXEC || process.execPath, args, {
 			cwd: __dirname,
 			maxBuffer: 100000 * 200
 		}, (err, stdout, stderr) => {
