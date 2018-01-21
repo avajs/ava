@@ -18,6 +18,9 @@ Add following to the `configurations` object:
 	"program": "${workspaceRoot}/node_modules/ava/profile.js",
 	"args": [
 	  "${file}"
+	],
+	"skipFiles": [
+		"<node_internals>/**/*.js"
 	]
 }
 ```
@@ -47,6 +50,9 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
 	"args": [
 	  "--serial",
 	  "${file}"
+	],
+	"skipFiles": [
+		"<node_internals>/**/*.js"
 	]
 }
 ```
