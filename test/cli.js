@@ -32,7 +32,7 @@ function execCli(args, opts, cb) {
 	let stderr;
 
 	const processPromise = new Promise(resolve => {
-		child = childProcess.spawn(process.execPath, [cliPath].concat(args), {
+		child = childProcess.spawn(process.env.NODE_EXEC || process.execPath, [cliPath].concat(args), {
 			cwd: dirname,
 			env,
 			stdio: [null, 'pipe', 'pipe']
