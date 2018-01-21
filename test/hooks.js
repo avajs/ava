@@ -24,7 +24,8 @@ function fork(testPath) {
 
 	return _fork(testPath, {
 		cacheDir,
-		precompiled
+		precompiled,
+		fork: true
 	});
 }
 
