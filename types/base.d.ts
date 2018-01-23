@@ -67,11 +67,13 @@ export interface AssertContext {
  	 * @param error Can be a constructor, regex, error message or validation function.
  	 */
 	throws(value: PromiseLike<any>, error?: ErrorValidator, message?: string): Promise<any>;
+	throws(value: () => PromiseLike<any>, error?: ErrorValidator, message?: string): Promise<any>;
 	throws(value: () => void, error?: ErrorValidator, message?: string): any;
 	/**
 	 * Assert that function doesn't throw an error or promise resolves.
 	 */
 	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
+	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
 	notThrows(value: () => void, message?: string): void;
 	/**
 	 * Assert that contents matches regex.

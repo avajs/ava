@@ -55,13 +55,13 @@ type AssertContext = {
 	deepEqual<U>(value: U, expected: U, message?: string): void;
 	// Assert that value is not deep equal to expected.
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that function throws an error or promise rejects.
+	// Assert that the promise rejects, or the function throws or returns a rejected promise.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws: {
 		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<any>;
 		(value: () => mixed, error?: ErrorValidator, message?: string): any;
 	};
-	// Assert that function doesn't throw an error or promise resolves.
+	// Assert that the promise resolves, or the function doesn't throws or returns a resolved promise.
 	notThrows: {
 		(value: PromiseLike<mixed>, message?: string): Promise<void>;
 		(value: () => mixed, message?: string): void;

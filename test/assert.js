@@ -6,6 +6,7 @@ const stripAnsi = require('strip-ansi');
 const React = require('react');
 const renderer = require('react-test-renderer');
 const test = require('tap').test;
+const Observable = require('zen-observable');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
@@ -655,7 +656,11 @@ test('.throws()', t => {
 		});
 	});
 
-	t.end();
+	return eventuallyFailsWith(t, assertions.throws(() => Promise.resolve('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
 });
 
 test('.throws() returns the thrown error', t => {
@@ -673,6 +678,28 @@ test('.throws() returns the rejection reason of promise', t => {
 	const expected = new Error();
 
 	return assertions.throws(Promise.reject(expected)).then(actual => {
+		t.is(actual, expected);
+		t.end();
+	});
+});
+
+test('.throws() returns the rejection reason of a promise returned by the function', t => {
+	const expected = new Error();
+
+	return assertions.throws(() => {
+		return Promise.reject(expected);
+	}).then(actual => {
+		t.is(actual, expected);
+		t.end();
+	});
+});
+
+test('.throws() returns the error of an observable returned by the function', t => {
+	const expected = new Error();
+
+	return assertions.throws(() => {
+		return new Observable(observer => observer.error(expected));
+	}).then(actual => {
 		t.is(actual, expected);
 		t.end();
 	});
@@ -723,11 +750,33 @@ test('.notThrows()', t => {
 		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
-	t.end();
+	return eventuallyFailsWith(t, assertions.notThrows(() => {
+		return Promise.reject(new Error('foo'));
+	}), {
+		assertion: 'notThrows',
+		message: '',
+		values: [{label: 'Threw:', formatted: /foo/}]
+	});
 });
 
 test('.notThrows() returns undefined for a fulfilled promise', t => {
 	return assertions.notThrows(Promise.resolve(Symbol(''))).then(actual => {
+		t.is(actual, undefined);
+	});
+});
+
+test('.notThrows() returns undefined for a fulfilled promise returned by the function', t => {
+	return assertions.notThrows(() => {
+		return Promise.resolve(Symbol(''));
+	}).then(actual => {
+		t.is(actual, undefined);
+	});
+});
+
+test('.notThrows() returns undefined for an observable returned by the function', t => {
+	return assertions.notThrows(() => {
+		return Observable.of(Symbol(''));
+	}).then(actual => {
 		t.is(actual, undefined);
 	});
 });
