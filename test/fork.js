@@ -23,7 +23,8 @@ function fork(testPath, options) {
 
 	return _fork(testPath, Object.assign({
 		cacheDir,
-		precompiled
+		precompiled,
+		fork: true
 	}, options));
 }
 

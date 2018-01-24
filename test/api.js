@@ -16,6 +16,7 @@ function apiCreator(options) {
 	options.powerAssert = true;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
+	options.fork = true;
 	const instance = new Api(options);
 	if (!options.precompileHelpers) {
 		instance._precompileHelpers = () => Promise.resolve();
