@@ -83,6 +83,16 @@ test('enabling long stack traces will provide detailed debug information', t => 
 	});
 });
 
+test('`AssertionError` should capture infinity stack trace', t => {
+	execCli('fixture/infinity-stack-trace.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /c \(.+?infinity-stack-trace\.js:6:20\)/);
+		t.match(stderr, /b \(.+?infinity-stack-trace\.js:7:18\)/);
+		t.match(stderr, /a \(.+?infinity-stack-trace\.js:8:18\)/);
+		t.end();
+	});
+});
+
 test('timeout', t => {
 	execCli(['fixture/long-running.js', '-T', '1s'], (err, stdout, stderr) => {
 		t.ok(err);
