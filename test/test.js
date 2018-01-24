@@ -741,13 +741,19 @@ test('log from tests', t => {
 		a.log('a log message from a test');
 		t.true(true);
 		a.log('another log message from a test');
+		a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
+		t.log();
 	}, null, r => {
 		result = r;
 	}).run();
 
 	t.deepEqual(
 		result.result.logs,
-		['a log message from a test', 'another log message from a test']
+		[
+			'a log message from a test',
+			'another log message from a test',
+			'{\n  b: 1,\n  c: {\n    d: 2,\n  },\n} complex log 5 5.1'
+		]
 	);
 
 	t.end();
