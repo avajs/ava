@@ -75,11 +75,9 @@ test(t => {
 });
 ```
 
-### When using non-default `test` folder
+### Helpers are not compiled when using a non-default test folder
 
-That is a known [issue](https://github.com/avajs/ava/issues/1319). The solution is to rename your `custom-named-folder` to `test` (default test folder names are : `test` or `tests`).
-The cause is due to the [defaultHelperPatterns](https://github.com/avajs/ava/issues/1319#issuecomment-288754866) set in the codebase of AVA.
-
+This is a [known issue](https://github.com/avajs/ava/issues/1319). You should put your tests in a folder called `test` or `__tests__`.
 
 ---
 
