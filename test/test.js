@@ -742,7 +742,7 @@ test('log from tests', t => {
 		t.true(true);
 		a.log('another log message from a test');
 		a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
-		t.log();
+		a.log();
 	}, null, r => {
 		result = r;
 	}).run();
