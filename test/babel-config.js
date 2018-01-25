@@ -40,8 +40,8 @@ test('uses default presets when userOptions is "default"', t => {
 	const userOptions = 'default';
 	const compileEnhancements = true;
 
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
@@ -80,8 +80,8 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 	};
 	const compileEnhancements = true;
 
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
@@ -130,8 +130,8 @@ test('supports .babelrc.js files', t => {
 });
 
 test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 
 	return withNodeVersion('9.0.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
@@ -141,8 +141,8 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions > 8.3.0', t 
 });
 
 test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 
 	return withNodeVersion('8.3.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
@@ -152,8 +152,8 @@ test('adds babel-plugin-syntax-object-rest-spread for node versions == 8.3.0', t
 });
 
 test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.3.0', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 
 	return withNodeVersion('8.2.0', () => babelConfigHelper.build(projectDir, cacheDir, 'default', true))
 		.then(result => {
@@ -166,8 +166,8 @@ test('should not include transform-test-files when compileEnhancements is false'
 	const userOptions = 'default';
 	const compileEnhancements = false;
 
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
@@ -178,8 +178,8 @@ test('should not include transform-test-files when compileEnhancements is false'
 });
 
 test('caches and uses results', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 	return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
 		.then(result => {
 			const files = fs.readdirSync(cacheDir);
@@ -209,8 +209,8 @@ test('caches and uses results', t => {
 });
 
 test('discards cache if userOptions change', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 	const userOptions = {};
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
 		.then(result => {
@@ -228,15 +228,16 @@ test('discards cache if userOptions change', t => {
 });
 
 test('updates cached verifier if dependency hashes change', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
-	const depFile = path.join(projectDir, 'plugin.js');
+	const projectDir = fixture('no-babel-config');
+	const tempDir = uniqueTempDir();
+	const cacheDir = path.join(tempDir, 'cache');
+	const depFile = path.join(tempDir, 'plugin.js');
 
 	makeDir.sync(cacheDir);
 	fs.writeFileSync(depFile, 'module.exports = () => ({})');
 
 	const userOptions = {
-		plugins: ['./plugin.js']
+		plugins: [depFile]
 	};
 	return babelConfigHelper.build(projectDir, cacheDir, userOptions, true)
 		.then(result => {
@@ -255,8 +256,8 @@ test('updates cached verifier if dependency hashes change', t => {
 });
 
 test('crashes if cached files cannot be read', t => {
-	const projectDir = uniqueTempDir();
-	const cacheDir = path.join(projectDir, 'cache');
+	const projectDir = fixture('no-babel-config');
+	const cacheDir = path.join(uniqueTempDir(), 'cache');
 
 	t.plan(1);
 	return babelConfigHelper.build(projectDir, cacheDir, 'default', true)
