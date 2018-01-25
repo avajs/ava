@@ -163,7 +163,6 @@ $ ava --help
     --tap, -t               Generate TAP output
     --verbose, -v           Enable verbose output
     --no-cache              Disable the transpiler cache
-    --no-power-assert       Disable Power Assert
     --color                 Force color output
     --no-color              Disable color output
     --match, -m             Only run tests with matching title (Can be repeated)
@@ -266,7 +265,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 		"failFast": true,
 		"failWithoutAssertions": false,
 		"tap": true,
-		"powerAssert": false,
+		"compileEnhancements": false,
 		"require": [
 			"babel-register"
 		],
@@ -286,7 +285,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
+- `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
 - `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
 

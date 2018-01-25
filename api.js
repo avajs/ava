@@ -117,8 +117,8 @@ class Api extends EventEmitter {
 
 		this.options.cacheDir = cacheDir;
 
-		const isPowerAssertEnabled = this.options.powerAssert !== false;
-		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, isPowerAssertEnabled)
+		const compileEnhancements = this.options.compileEnhancements !== false;
+		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements)
 			.then(result => {
 				this.precompiler = new CachingPrecompiler({
 					path: cacheDir,

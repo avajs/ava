@@ -38,28 +38,28 @@ function withNodeEnv(value, run) {
 
 test('uses default presets when userOptions is "default"', t => {
 	const userOptions = 'default';
-	const powerAssert = true;
+	const compileEnhancements = true;
 
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
-	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
 			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert});
+			t.same(options.presets[1][1], {powerAssert: true});
 		});
 });
 
 test('uses options from babelrc when userOptions is "inherit"', t => {
 	const userOptions = 'inherit';
-	const powerAssert = true;
+	const compileEnhancements = true;
 
 	const projectDir = fixture('babelrc');
 	const cacheDir = path.join(uniqueTempDir(), 'cache');
-	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
 
@@ -67,7 +67,7 @@ test('uses options from babelrc when userOptions is "inherit"', t => {
 			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-doubler')));
 			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert});
+			t.same(options.presets[1][1], {powerAssert: true});
 		});
 });
 
@@ -78,28 +78,28 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 		plugins: [customFile],
 		presets: [customFile]
 	};
-	const powerAssert = true;
+	const compileEnhancements = true;
 
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
-	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
 			t.false(options.babelrc);
 			t.is(options.plugins[0][0].wrapped, custom);
 			t.is(options.presets[0][0].wrapped, custom);
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert});
+			t.same(options.presets[1][1], {powerAssert: true});
 		});
 });
 
 test('uses "development" environment if NODE_ENV is the empty string', t => {
 	const userOptions = 'inherit';
-	const powerAssert = true;
+	const compileEnhancements = true;
 
 	const projectDir = fixture('babelrc');
 	const cacheDir = path.join(uniqueTempDir(), 'cache');
-	return withNodeEnv('', () => babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert))
+	return withNodeEnv('', () => babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements))
 		.then(result => {
 			const options = result.getOptions();
 
@@ -107,17 +107,17 @@ test('uses "development" environment if NODE_ENV is the empty string', t => {
 			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-capitalizer')));
 			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert});
+			t.same(options.presets[1][1], {powerAssert: true});
 		});
 });
 
 test('supports .babelrc.js files', t => {
 	const userOptions = 'inherit';
-	const powerAssert = true;
+	const compileEnhancements = true;
 
 	const projectDir = fixture('babelrc-js');
 	const cacheDir = path.join(uniqueTempDir(), 'cache');
-	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
 
@@ -125,7 +125,7 @@ test('supports .babelrc.js files', t => {
 			t.is(options.plugins[0][0].wrapped, require(fixture('babel-plugin-test-doubler')));
 			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert});
+			t.same(options.presets[1][1], {powerAssert: true});
 		});
 });
 
@@ -162,18 +162,18 @@ test('does not add babel-plugin-syntax-object-rest-spread for node versions < 8.
 		});
 });
 
-test('should disable power-assert when powerAssert is false', t => {
+test('should not include transform-test-files when compileEnhancements is false', t => {
 	const userOptions = 'default';
-	const powerAssert = false;
+	const compileEnhancements = false;
 
 	const projectDir = uniqueTempDir();
 	const cacheDir = path.join(projectDir, 'cache');
-	return babelConfigHelper.build(projectDir, cacheDir, userOptions, powerAssert)
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, compileEnhancements)
 		.then(result => {
 			const options = result.getOptions();
 
 			t.false(options.babelrc);
-			t.same(options.presets[1][1], {powerAssert});
+			t.is(options.presets.length, 1);
 		});
 });
 
