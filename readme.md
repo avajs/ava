@@ -890,9 +890,9 @@ Plan how many assertion there are in the test. The test will fail if the actual 
 
 End the test. Only works with `test.cb()`.
 
-###### `t.log(message)`
+###### `t.log(...values)`
 
-Print a log message contextually alongside the test result instead of immediately printing it to `stdout` like `console.log`.
+Log values contextually alongside the test result instead of immediately printing them to `stdout`. Behaves somewhat like `console.log`, but without support for placeholder tokens.
 
 ## Assertions
 

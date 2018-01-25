@@ -104,9 +104,9 @@ export interface TestContext extends AssertContext {
 
 	skip: AssertContext;
 	/**
-	 * Print a log message contextually alongside the test result instead of immediately printing it to stdout like console.log.
+	 * Log values contextually alongside the test result instead of immediately printing them to `stdout`.
 	 */
-	log(message: string): void;
+	log(...values: any[]): void;
 }
 export interface CallbackTestContext extends TestContext {
 	/**
