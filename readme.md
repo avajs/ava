@@ -148,6 +148,10 @@ $ npm test -- --watch
 
 AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipes/watch-mode.md).
 
+### Supported Node.js versions
+
+AVA supports the latest release of any major version that [is supported by Node.js itself](https://github.com/nodejs/Release#release-schedule). Read more in our [support statement](docs/support-statement.md).
+
 ## CLI
 
 ```console
