@@ -1,3 +1,7 @@
+> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
+
+---
+
 ## Precompiling source files with webpack
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/precompiling-with-webpack.md)

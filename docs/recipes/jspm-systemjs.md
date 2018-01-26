@@ -1,3 +1,7 @@
+> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
+
+---
+
 # JSPM and SystemJS for ES2015
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/jspm-systemjs.md)
