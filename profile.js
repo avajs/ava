@@ -37,7 +37,9 @@ Promise.longStackTraces();
 
 const conf = pkgConf.sync('ava', {
 	defaults: {
-		babel: 'default'
+		babel: {
+			testOptions: {}
+		}
 	}
 });
 
@@ -76,7 +78,7 @@ const cacheDir = findCacheDir({
 	files: [file]
 }) || uniqueTempDir();
 
-babelConfigHelper.build(process.cwd(), cacheDir, conf.babel, true)
+babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), true)
 	.then(result => {
 		const precompiler = new CachingPrecompiler({
 			path: cacheDir,
