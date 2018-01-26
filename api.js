@@ -57,10 +57,13 @@ class Api extends EventEmitter {
 	}
 
 	_runFile(file, runStatus, execArgv) {
-		const hash = this.precompiler.precompileFile(file);
-		const precompiled = Object.assign({}, this._precompiledHelpers);
-		const resolvedfpath = fs.realpathSync(file);
-		precompiled[resolvedfpath] = hash;
+		const precompiled = {};
+		if (this.precompiler) {
+			Object.assign(precompiled, this._precompiledHelpers);
+			const hash = this.precompiler.precompileFile(file);
+			const resolvedfpath = fs.realpathSync(file);
+			precompiled[resolvedfpath] = hash;
+		}
 
 		const options = Object.assign({}, this.options, {precompiled});
 		if (runStatus.updateSnapshots) {
@@ -120,16 +123,21 @@ class Api extends EventEmitter {
 		const compileEnhancements = this.options.compileEnhancements !== false;
 		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements)
 			.then(result => {
-				this.precompiler = new CachingPrecompiler({
-					path: cacheDir,
-					getBabelOptions: result.getOptions,
-					babelCacheKeys: result.cacheKeys
-				});
+				if (result) {
+					this.precompiler = new CachingPrecompiler({
+						path: cacheDir,
+						getBabelOptions: result.getOptions,
+						babelCacheKeys: result.cacheKeys
+					});
+				}
 			});
 	}
 
 	_precompileHelpers() {
 		this._precompiledHelpers = {};
+		if (!this.precompiler) {
+			return Promise.resolve();
+		}
 
 		// Assumes the tests only load helpers from within the `resolveTestsFrom`
 		// directory. Without arguments this is the `projectDir`, else it's
@@ -138,7 +146,7 @@ class Api extends EventEmitter {
 		// processes, avoiding the need for precompilation.
 		return new AvaFiles({cwd: this.options.resolveTestsFrom})
 			.findTestHelpers()
-			.map(file => { // eslint-disable-line array-callback-return
+			.each(file => { // eslint-disable-line array-callback-return
 				const hash = this.precompiler.precompileFile(file);
 				this._precompiledHelpers[file] = hash;
 			});

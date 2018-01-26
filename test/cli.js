@@ -824,3 +824,43 @@ test('doesn\'t set NODE_ENV when it is set', t => {
 		t.end();
 	});
 });
+
+test('skips test file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['import.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('skips helper file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['require-helper.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('no power-assert when babel=false and compileEnhancements=false', t => {
+	execCli(['no-power-assert.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.notMatch(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('skips stage-4 transform when babel=false and compileEnhancements=true', t => {
+	execCli(['import.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('power-assert when babel=false and compileEnhancements=true', t => {
+	execCli(['power-assert.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
