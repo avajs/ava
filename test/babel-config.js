@@ -86,10 +86,37 @@ test('uses userOptions for babel options when userOptions is an object', t => {
 		.then(result => {
 			const options = result.getOptions();
 			t.false(options.babelrc);
-			t.is(options.plugins[0][0].wrapped, custom);
-			t.is(options.presets[0][0].wrapped, custom);
-			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
-			t.same(options.presets[1][1], {powerAssert: true});
+			if (options.plugins.length === 1) {
+				t.is(options.plugins[0][0].wrapped, custom);
+			} else {
+				t.is(options.plugins[1][0].wrapped, custom);
+			}
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[1][0].wrapped, custom);
+			t.is(options.presets[2][0].wrapped, require('@ava/babel-preset-transform-test-files'));
+			t.same(options.presets[2][1], {powerAssert: true});
+		});
+});
+
+test('userOptions can disable ava/stage-4', t => {
+	const userOptions = {
+		presets: [['module:ava/stage-4', false]]
+	};
+	const transpileEnhancements = true;
+
+	const projectDir = uniqueTempDir();
+	const cacheDir = path.join(projectDir, 'cache');
+	fs.mkdirSync(projectDir);
+	fs.mkdirSync(path.join(projectDir, 'node_modules'));
+	fs.mkdirSync(path.join(projectDir, 'node_modules', 'ava'));
+	fs.writeFileSync(path.join(projectDir, 'node_modules', 'ava', 'stage-4.js'), `module.exports = require(${JSON.stringify(require.resolve('@ava/babel-preset-stage-4'))})`);
+
+	return babelConfigHelper.build(projectDir, cacheDir, userOptions, transpileEnhancements)
+		.then(result => {
+			const options = result.getOptions();
+			t.false(options.babelrc);
+			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
+			t.is(options.presets[0][1], false);
 		});
 });
 

@@ -841,8 +841,8 @@ function generateTests(prefix, apiCreator) {
 			}, t.threw);
 	});
 
-	test(`${prefix} Default babel config doesn't use .babelrc`, t => {
-		t.plan(2);
+	test(`${prefix} Default babel config uses .babelrc`, t => {
+		t.plan(3);
 
 		const api = apiCreator({
 			projectDir: path.join(__dirname, 'fixture/babelrc')
@@ -850,13 +850,13 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.is(data.title, 'foo');
+				t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
 			});
 		});
 
 		return api.run()
 			.then(result => {
-				t.is(result.passCount, 1);
+				t.is(result.passCount, 2);
 			});
 	});
 
@@ -899,6 +899,27 @@ function generateTests(prefix, apiCreator) {
 		return api.run()
 			.then(result => {
 				t.is(result.passCount, 2);
+			});
+	});
+
+	test(`${prefix} babelConfig:{babelrc:false} does not use .babelrc`, t => {
+		t.plan(2);
+
+		const api = apiCreator({
+			babelConfig: {babelrc: false},
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
+		});
+
+		api.on('test-run', runStatus => {
+			runStatus.on('test', data => {
+				t.is(data.title, 'foo');
+			});
+		});
+
+		return api.run()
+			.then(result => {
+				t.is(result.passCount, 1);
 			});
 	});
 
