@@ -389,14 +389,6 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	child.stderr.on('data', testOutput);
 });
 
-test('bails when config contains `"tap": true` and `"watch": true`', t => {
-	execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
-		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-		t.end();
-	});
-});
-
 ['--watch', '-w'].forEach(watchFlag => {
 	['--tap', '-t'].forEach(tapFlag => {
 		test(`bails when ${tapFlag} reporter is used while ${watchFlag} is given`, t => {
