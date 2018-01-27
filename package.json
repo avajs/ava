@@ -156,7 +156,7 @@
 		"get-stream": "^3.0.0",
 		"git-branch": "^1.0.0",
 		"has-ansi": "^3.0.0",
-		"inquirer": "^4.0.2",
+		"inquirer": "^5.0.1",
 		"is-array-sorted": "^1.0.0",
 		"lock-verify": "^1.1.0",
 		"lolex": "^2.3.1",
