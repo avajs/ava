@@ -181,7 +181,6 @@ $ ava --help
     ava test-*.js
     ava test
     ava --init
-    ava --init foo.js
 
   Default patterns when no arguments:
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
