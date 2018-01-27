@@ -105,7 +105,7 @@
 		"has-flag": "^3.0.0",
 		"hullabaloo-config-manager": "^2.0.0-beta.1",
 		"ignore-by-default": "^1.0.0",
-		"import-local": "^0.1.1",
+		"import-local": "^1.0.0",
 		"indent-string": "^3.2.0",
 		"is-ci": "^1.1.0",
 		"is-generator-fn": "^1.0.0",
