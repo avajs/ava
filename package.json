@@ -80,7 +80,7 @@
 		"bluebird": "^3.5.1",
 		"caching-transform": "^1.0.0",
 		"chalk": "^2.3.0",
-		"chokidar": "^1.4.2",
+		"chokidar": "^2.0.0",
 		"clean-stack": "^1.1.1",
 		"clean-yaml-object": "^0.1.0",
 		"cli-cursor": "^2.1.0",
