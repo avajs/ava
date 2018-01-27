@@ -121,7 +121,7 @@
 		"make-dir": "^1.1.0",
 		"matcher": "^1.0.0",
 		"md5-hex": "^2.0.0",
-		"meow": "^3.7.0",
+		"meow": "^4.0.0",
 		"ms": "^2.1.1",
 		"multimatch": "^2.1.0",
 		"observable-to-promise": "^0.5.0",
