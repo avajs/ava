@@ -45,7 +45,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Includes TypeScript & Flow type definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](#process-isolation)
-- [Write your tests in ES2017](#es2017-support)
+- [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
@@ -163,7 +163,6 @@ $ ava --help
     --tap, -t               Generate TAP output
     --verbose, -v           Enable verbose output
     --no-cache              Disable the transpiler cache
-    --no-power-assert       Disable Power Assert
     --color                 Force color output
     --no-color              Disable color output
     --match, -m             Only run tests with matching title (Can be repeated)
@@ -266,11 +265,15 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 		"failFast": true,
 		"failWithoutAssertions": false,
 		"tap": true,
-		"powerAssert": false,
+		"compileEnhancements": false,
 		"require": [
-			"babel-register"
+			"@babel/register"
 		],
-		"babel": "inherit"
+		"babel": {
+			"testOptions": {
+				"babelrc": false
+			}
+		}
 	}
 }
 ```
@@ -286,9 +289,9 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
+- `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
-- `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
+- `babel`: test file specific Babel options. See our [Babel recipe] for more details
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
@@ -701,57 +704,15 @@ test(t => {
 });
 ```
 
-### ES2017 support
+### Latest JavaScript support
 
-AVA comes with built-in support for ES2017 through [Babel 6](https://babeljs.io). Just write your tests in ES2017. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset, as well as [custom transforms](https://github.com/avajs/babel-preset-transform-test-files) for test and helper files.
+AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. There is no extra setup required. You don't need to be using Babel in your own project for this to work either.
 
-The corresponding Babel config for AVA's setup is as follows:
+We aim support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
 
-```json
-{
-	"presets": [
-		"@ava/stage-4",
-		"@ava/transform-test-files"
-	]
-}
-```
+Please note that we do not add or modify built-ins. For example, if you use [`Object.entries()`](https://github.com/tc39/proposal-object-values-entries) in your tests, they will crash in Node.js 6 which does not implement this method.
 
-You can customize how AVA transpiles the test files through the `babel` option in AVA's [`package.json` configuration](#configuration). For example to override the presets you can use:
-
-```json
-{
-	"ava": {
-		 "babel": {
-			 "presets": [
-					"es2015",
-					"stage-0",
-					"react"
-			 ]
-		 }
-	}
-}
-```
-
-You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
-
-```json
-{
-	"babel": {
-		"presets": [
-			"es2015",
-			"stage-0",
-			"react"
-		]
-	},
-	"ava": {
-		"babel": "inherit"
-	}
-}
-```
-
-See AVA's [`.babelrc` recipe](docs/recipes/babelrc.md) for further examples and a more detailed explanation of configuration options.
-
-Note that AVA will *always* apply [a few internal plugins](docs/recipes/babelrc.md#notes) regardless of configuration, but they should not impact the behavior of your code.
+You can disable this syntax support, or otherwise customize AVA's Babel pipeline. See our [Babel recipe] for more details.
 
 ### TypeScript support
 
@@ -1179,7 +1140,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
-- [Configuring Babel](docs/recipes/babelrc.md)
+- [Configuring Babel][Babel recipe]
 - [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
@@ -1232,3 +1193,5 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 </div>
+
+[Babel recipe]: docs/recipes/babel.md
