@@ -162,18 +162,18 @@ $ ava --help
 
   Options
     --init                  Add AVA to your project
+    --watch, -w             Re-run tests when tests and source files change
+    --match, -m             Only run tests with matching title (Can be repeated)
+    --update-snapshots, -u  Update snapshots
     --fail-fast             Stop after first test failure
+    --timeout, -T           Set global timeout
     --serial, -s            Run tests serially
-    --tap, -t               Generate TAP output
+    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --verbose, -v           Enable verbose output
-    --no-cache              Disable the transpiler cache
+    --tap, -t               Generate TAP output
+    --no-cache              Disable the compiler cache
     --color                 Force color output
     --no-color              Disable color output
-    --match, -m             Only run tests with matching title (Can be repeated)
-    --watch, -w             Re-run tests when tests and source files change
-    --timeout, -T           Set global timeout
-    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
-    --update-snapshots, -u  Update snapshots
 
   Examples
     ava
