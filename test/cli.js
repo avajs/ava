@@ -864,3 +864,10 @@ test('power-assert when babel=false and compileEnhancements=true', t => {
 		t.end();
 	});
 });
+
+test('workers load compiled helpers if in the require configuration', t => {
+	execCli(['test/verify.js'], {dirname: 'fixture/require-compiled-helper'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
