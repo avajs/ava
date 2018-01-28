@@ -61,6 +61,26 @@ You can disable AVA's stage-4 preset:
 
 Note that this *does not* stop AVA from compiling your test files using Babel.
 
+## Preserve ES module syntax
+
+By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This can be disabled:
+
+```json
+{
+	"ava": {
+		"babel": {
+			"testOptions": {
+				"presets": [
+					["module:ava/stage-4", {"modules": false}]
+				]
+			}
+		}
+	}
+}
+```
+
+You'll have to use [`@std/esm`](https://github.com/standard-things/esm) so that AVA can still load your test files.
+
 ## Disable AVA's Babel pipeline
 
 You can completely disable AVA's use of Babel:
