@@ -132,4 +132,26 @@ You can enable the `register` module by adding it to AVA's `require` option:
 
 You'll need to install `@babel/register` yourself.
 
+`@babel/register` will *also* process your test and helper files. For most use cases this is unnecessary. If you create a new file that requires `@babel/register` you can tell it which file paths to ignore. For instance in your `test` directory create `_register.js`:
+
+```js
+// test/_register.js:
+require('@babel/register')({
+	// These patterns are relative to the project directory (where the `package.json` file lives):
+	ignore: ['test/*']
+});
+```
+
+Now instead of requiring `@babel/register`, require `test/_register` instead:
+
+```json
+{
+	"ava": {
+		"require": [
+			"test/_register.js"
+		]
+	}
+}
+```
+
 Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
