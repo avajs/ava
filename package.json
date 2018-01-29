@@ -124,7 +124,6 @@
 		"ms": "^2.1.1",
 		"multimatch": "^2.1.0",
 		"observable-to-promise": "^0.5.0",
-		"option-chain": "^1.0.0",
 		"package-hash": "^2.0.0",
 		"pkg-conf": "^2.1.0",
 		"plur": "^2.0.0",

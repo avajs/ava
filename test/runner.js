@@ -10,9 +10,9 @@ test('nested tests and hooks aren\'t allowed', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		t.throws(() => {
-			runner.chain.test(noop);
+			runner.chain(noop);
 		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 		a.pass();
 	});
@@ -27,7 +27,7 @@ test('tests must be declared synchronously', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		return Promise.resolve();
 	});
@@ -35,7 +35,7 @@ test('tests must be declared synchronously', t => {
 	runner.run({});
 
 	t.throws(() => {
-		runner.chain.test(noop);
+		runner.chain(noop);
 	}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
 
 	t.end();
@@ -44,7 +44,7 @@ test('tests must be declared synchronously', t => {
 test('runner emits a "test" event', t => {
 	const runner = new Runner();
 
-	runner.chain.test('foo', a => {
+	runner.chain('foo', a => {
 		a.pass();
 	});
 
@@ -62,7 +62,7 @@ test('run serial tests before concurrent ones', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		arr.push('c');
 		a.end();
 	});
@@ -106,8 +106,8 @@ test('anything can be skipped', t => {
 	runner.chain.beforeEach(pusher('beforeEach'));
 	runner.chain.beforeEach.skip(pusher('beforeEach.skip'));
 
-	runner.chain.test('concurrent', pusher('concurrent'));
-	runner.chain.test.skip('concurrent.skip', pusher('concurrent.skip'));
+	runner.chain('concurrent', pusher('concurrent'));
+	runner.chain.skip('concurrent.skip', pusher('concurrent.skip'));
 
 	runner.chain.serial('serial', pusher('serial'));
 	runner.chain.serial.skip('serial.skip', pusher('serial.skip'));
@@ -137,8 +137,8 @@ test('include skipped tests in results', t => {
 	runner.chain.beforeEach('beforeEach', noop);
 	runner.chain.beforeEach.skip('beforeEach.skip', noop);
 
-	runner.chain.test.serial('test', a => a.pass());
-	runner.chain.test.serial.skip('test.skip', noop);
+	runner.chain.serial('test', a => a.pass());
+	runner.chain.serial.skip('test.skip', noop);
 
 	runner.chain.after('after', noop);
 	runner.chain.after.skip('after.skip', noop);
@@ -186,7 +186,7 @@ test('test types and titles', t => {
 	runner.chain.beforeEach(fn);
 	runner.chain.after(fn);
 	runner.chain.afterEach(named);
-	runner.chain.test('test', fn);
+	runner.chain('test', fn);
 
 	const tests = [
 		{
@@ -226,7 +226,7 @@ test('skip test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		arr.push('a');
 		a.pass();
 	});
@@ -255,7 +255,7 @@ test('test throws when given no function', t => {
 	const runner = new Runner();
 
 	t.throws(() => {
-		runner.chain.test();
+		runner.chain();
 	}, new TypeError('Expected an implementation. Use `test.todo()` for tests without an implementation.'));
 });
 
@@ -265,7 +265,7 @@ test('todo test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		arr.push('a');
 		a.pass();
 	});
@@ -296,7 +296,7 @@ test('only test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		arr.push('a');
 		a.pass();
 	});
@@ -315,41 +315,11 @@ test('only test', t => {
 	});
 });
 
-test('throws if you try to set a hook as exclusive', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.beforeEach.only('', noop);
-	}, new TypeError('`only` is only for tests and cannot be used with hooks'));
-
-	t.end();
-});
-
-test('throws if you try to set a before hook as always', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.before.always('', noop);
-	}, new TypeError('`always` can only be used with `after` and `afterEach`'));
-
-	t.end();
-});
-
-test('throws if you try to set a test as always', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.test.always('', noop);
-	}, new TypeError('`always` can only be used with `after` and `afterEach`'));
-
-	t.end();
-});
-
 test('throws if you give a function to todo', t => {
 	const runner = new Runner();
 
 	t.throws(() => {
-		runner.chain.test.todo('todo with function', noop);
+		runner.chain.todo('todo with function', noop);
 	}, new TypeError('`todo` tests are not allowed to have an implementation. Use ' +
 	'`test.skip()` for tests with an implementation.'));
 
@@ -360,112 +330,8 @@ test('throws if todo has no title', t => {
 	const runner = new Runner();
 
 	t.throws(() => {
-		runner.chain.test.todo();
+		runner.chain.todo();
 	}, new TypeError('`todo` tests require a title'));
-
-	t.end();
-});
-
-test('throws if todo has failing, skip, or only', t => {
-	const runner = new Runner();
-
-	const errorMessage = '`todo` tests are just for documentation and cannot be' +
-		' used with `skip`, `only`, or `failing`';
-
-	t.throws(() => {
-		runner.chain.test.failing.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.test.skip.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.test.only.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.end();
-});
-
-test('throws if todo isn\'t a test', t => {
-	const runner = new Runner();
-
-	const errorMessage = '`todo` is only for documentation of future tests and' +
-		' cannot be used with hooks';
-
-	t.throws(() => {
-		runner.chain.before.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.beforeEach.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.after.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.afterEach.todo('test');
-	}, new TypeError(errorMessage));
-
-	t.end();
-});
-
-test('throws if test has skip and only', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.test.only.skip('test', noop);
-	}, new TypeError('`only` tests cannot be skipped'));
-
-	t.end();
-});
-
-test('throws if failing is used on non-tests', t => {
-	const runner = new Runner();
-
-	const errorMessage = '`failing` is only for tests and cannot be used with hooks';
-
-	t.throws(() => {
-		runner.chain.beforeEach.failing('', noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.before.failing('', noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.afterEach.failing('', noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.after.failing('', noop);
-	}, new TypeError(errorMessage));
-
-	t.end();
-});
-
-test('throws if only is used on non-tests', t => {
-	const runner = new Runner();
-
-	const errorMessage = '`only` is only for tests and cannot be used with hooks';
-
-	t.throws(() => {
-		runner.chain.beforeEach.only(noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.before.only(noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.afterEach.only(noop);
-	}, new TypeError(errorMessage));
-
-	t.throws(() => {
-		runner.chain.after.only(noop);
-	}, new TypeError(errorMessage));
 
 	t.end();
 });
@@ -475,7 +341,7 @@ test('validate accepts skipping failing tests', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test.skip.failing('skip failing', noop);
+	runner.chain.failing.skip('skip failing', noop);
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
@@ -492,7 +358,7 @@ test('runOnlyExclusive option test', t => {
 	const options = {runOnlyExclusive: true};
 	const arr = [];
 
-	runner.chain.test('test', () => {
+	runner.chain('test', () => {
 		arr.push('a');
 	});
 
@@ -524,7 +390,7 @@ test('options.serial forces all tests to be serial', t => {
 		a.pass();
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		t.strictDeepEqual(arr, [1, 2]);
 		t.end();
@@ -538,12 +404,12 @@ test('options.bail will bail out', t => {
 
 	const runner = new Runner({bail: true});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		t.pass();
 		a.fail();
 	});
 
-	runner.chain.test('test 2', () => {
+	runner.chain('test 2', () => {
 		t.fail();
 	});
 
@@ -626,22 +492,22 @@ test('options.match will not run tests with non-matching titles', t => {
 		match: ['*oo', '!foo']
 	});
 
-	runner.chain.test('mhm. grass tasty. moo', a => {
+	runner.chain('mhm. grass tasty. moo', a => {
 		t.pass();
 		a.pass();
 	});
 
-	runner.chain.test('juggaloo', a => {
+	runner.chain('juggaloo', a => {
 		t.pass();
 		a.pass();
 	});
 
-	runner.chain.test('foo', a => {
+	runner.chain('foo', a => {
 		t.fail();
 		a.pass();
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		t.fail();
 		a.pass();
 	});
@@ -668,7 +534,7 @@ test('options.match hold no effect on hooks with titles', t => {
 		actual = 'foo';
 	});
 
-	runner.chain.test('after', a => {
+	runner.chain('after', a => {
 		t.is(actual, 'foo');
 		a.pass();
 	});
@@ -689,12 +555,12 @@ test('options.match overrides .only', t => {
 		match: ['*oo']
 	});
 
-	runner.chain.test('moo', a => {
+	runner.chain('moo', a => {
 		t.pass();
 		a.pass();
 	});
 
-	runner.chain.test.only('boo', a => {
+	runner.chain.only('boo', a => {
 		t.pass();
 		a.pass();
 	});
@@ -713,7 +579,7 @@ test('macros: Additional args will be spread as additional args on implementatio
 
 	const runner = new Runner();
 
-	runner.chain.test('test1', function (a) {
+	runner.chain('test1', function (a) {
 		t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 		a.pass();
 	}, 'foo', 'bar');
@@ -754,9 +620,9 @@ test('macros: Customize test names attaching a `title` function', t => {
 		t.is(props.title, expectedTitles.shift());
 	});
 
-	runner.chain.test(macroFn, 'A');
-	runner.chain.test('supplied', macroFn, 'B');
-	runner.chain.test(macroFn, 'C');
+	runner.chain(macroFn, 'A');
+	runner.chain('supplied', macroFn, 'B');
+	runner.chain(macroFn, 'C');
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
@@ -783,8 +649,8 @@ test('match applies to macros', t => {
 		t.is(props.title, 'foobar');
 	});
 
-	runner.chain.test(macroFn, 'foo');
-	runner.chain.test(macroFn, 'bar');
+	runner.chain(macroFn, 'foo');
+	runner.chain(macroFn, 'bar');
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
@@ -821,10 +687,10 @@ test('arrays of macros', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test('A', [macroFnA, macroFnB], 'A');
-	runner.chain.test('B', [macroFnA, macroFnB], 'B');
-	runner.chain.test('C', macroFnA, 'C');
-	runner.chain.test('D', macroFnB, 'D');
+	runner.chain('A', [macroFnA, macroFnB], 'A');
+	runner.chain('B', [macroFnA, macroFnB], 'B');
+	runner.chain('C', macroFnA, 'C');
+	runner.chain('D', macroFnB, 'D');
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
@@ -865,8 +731,8 @@ test('match applies to arrays of macros', t => {
 		t.is(props.title, 'foobar');
 	});
 
-	runner.chain.test([fooMacro, barMacro, bazMacro], 'foo');
-	runner.chain.test([fooMacro, barMacro, bazMacro], 'bar');
+	runner.chain([fooMacro, barMacro, bazMacro], 'foo');
+	runner.chain([fooMacro, barMacro, bazMacro], 'bar');
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
