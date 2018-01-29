@@ -389,14 +389,6 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	child.stderr.on('data', testOutput);
 });
 
-test('bails when config contains `"tap": true` and `"watch": true`', t => {
-	execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
-		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-		t.end();
-	});
-});
-
 ['--watch', '-w'].forEach(watchFlag => {
 	['--tap', '-t'].forEach(tapFlag => {
 		test(`bails when ${tapFlag} reporter is used while ${watchFlag} is given`, t => {
@@ -423,7 +415,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided without value`, t => {
 		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be provided.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -433,7 +425,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is a string`, t => {
 		execCli([`${concurrencyFlag}=foo`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -443,7 +435,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is a float`, t => {
 		execCli([`${concurrencyFlag}=4.7`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -453,7 +445,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is negative`, t => {
 		execCli([`${concurrencyFlag}=-1`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
