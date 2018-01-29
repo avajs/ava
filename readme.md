@@ -913,7 +913,7 @@ Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqua
 
 ### `.throws(function|promise, [error, [message]])`
 
-Assert that `function` throws an error, or `promise` rejects with an error.
+Assert that `function` throws an error, `promise` rejects with an error, or `function` returns a rejected `promise`.
 
 `error` can be an error constructor, error message, regex matched against the error message, or validation function.
 
@@ -952,9 +952,21 @@ test('rejects', async t => {
 });
 ```
 
+When testing an asynchronous function you must also wait for the assertion to complete:
+
+```js
+test('throws', async t => {
+	const error = await t.throws(async () => {
+		throw new TypeError('🦄');
+	}, TypeError);
+
+	t.is(error.message, '🦄');
+});
+```
+
 ### `.notThrows(function|promise, [message])`
 
-Assert that `function` does not throw an error or that `promise` does not reject with an error.
+Assert that `function` does not throw an error, `promise` does not reject with an error, or `function` returns a promise that does not reject with an error.
 
 Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
 
