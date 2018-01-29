@@ -1,5 +1,5 @@
 import test from '../../';
 
-test(t => {
+test('test', t => {
 	t.is(process.cwd(), __dirname);
 });

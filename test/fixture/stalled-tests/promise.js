@@ -1,6 +1,6 @@
 import test from '../../..';
 
-test(t => {
+test('test', t => {
 	return new Promise(() => {
 		t.pass();
 	});

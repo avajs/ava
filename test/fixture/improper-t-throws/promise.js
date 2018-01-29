@@ -1,6 +1,6 @@
 import test from '../../..';
 
-test(t => {
+test('test', t => {
 	return Promise.resolve().then(() => {
 		t.throws(throwSync());
 	});

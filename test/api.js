@@ -69,19 +69,17 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} test title prefixes — multiple files`, t => {
-		t.plan(6);
+		t.plan(5);
 
 		const separator = ` ${figures.pointerSmall} `;
 		const files = [
 			path.join(__dirname, 'fixture/async-await.js'),
-			path.join(__dirname, 'fixture/es2015.js'),
 			path.join(__dirname, 'fixture/generators.js'),
 			path.join(__dirname, 'fixture/subdir/in-a-subdir.js')
 		];
 		const expected = [
 			['async-await', 'async function'].join(separator),
 			['async-await', 'arrow async function'].join(separator),
-			['es2015', '[anonymous]'].join(separator),
 			['generators', 'generator function'].join(separator),
 			['subdir', 'in-a-subdir', 'subdir'].join(separator)
 		];

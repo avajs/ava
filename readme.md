@@ -60,7 +60,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 ```js
 import test from 'ava';
 
-test(t => {
+test('arrays are equal', t => {
 	t.deepEqual([1, 2], [1, 2]);
 });
 ```
@@ -313,7 +313,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument.
+To create a test you call the `test` function you imported from AVA. Provide the required title and implementation function. Titles must be unique within each test file. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument.
 
 **Note:** In order for the [enhanced assertion messages](#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
@@ -321,26 +321,6 @@ To create a test you call the `test` function you imported from AVA. Provide the
 import test from 'ava';
 
 test('my passing test', t => {
-	t.pass();
-});
-```
-
-#### Titles
-
-Titles are optional, meaning you can do:
-
-```js
-test(t => {
-	t.pass();
-});
-```
-
-It's recommended to provide test titles if you have more than one test.
-
-If you haven't provided a test title, but the implementation is a named function, that name will be used as the test title:
-
-```js
-test(function name(t) {
 	t.pass();
 });
 ```
@@ -356,7 +336,7 @@ Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https:
 These examples will result in a passed test:
 
 ```js
-test(t => {
+test('resolves with 3', t => {
 	t.plan(1);
 
 	return Promise.resolve(3).then(n => {
@@ -364,7 +344,7 @@ test(t => {
 	});
 });
 
-test.cb(t => {
+test.cb('invokes callback', t => {
 	t.plan(1);
 
 	someAsyncFunction(() => {
@@ -377,7 +357,7 @@ test.cb(t => {
 These won't:
 
 ```js
-test(t => {
+test('loops twice', t => {
 	t.plan(2);
 
 	for (let i = 0; i < 3; i++) {
@@ -385,7 +365,7 @@ test(t => {
 	}
 }); // Fails, 3 assertions are executed which is too many
 
-test(t => {
+test('invokes callback synchronously', t => {
 	t.plan(1);
 
 	someAsyncFunction(() => {
@@ -399,7 +379,7 @@ test(t => {
 Tests are run concurrently by default, however, sometimes you have to write tests that cannot run concurrently. In these rare cases you can use the `.serial` modifier. It will force those tests to run serially *before* the concurrent ones.
 
 ```js
-test.serial(t => {
+test.serial('passes serially', t => {
 	t.pass();
 });
 ```
@@ -574,7 +554,7 @@ test.afterEach.always(t => {
 	// This runs after each test and other test hooks, even if they failed
 });
 
-test(t => {
+test('title', t => {
 	// Regular test
 });
 ```
@@ -612,7 +592,7 @@ test.beforeEach(t => {
 	t.context.data = generateUniqueData();
 });
 
-test(t => {
+test('context data is foo', t => {
 	t.is(t.context.data + 'bar', 'foobar');
 });
 ```
@@ -624,7 +604,7 @@ test.beforeEach(t => {
 	t.context = 'unicorn';
 });
 
-test(t => {
+test('context is unicorn', t => {
 	t.is(t.context, 'unicorn');
 });
 ```
@@ -703,7 +683,7 @@ You'll have to configure AVA to not fail tests if no assertions are executed, be
 ```js
 import assert from 'assert';
 
-test(t => {
+test('custom assertion', t => {
 	assert(true);
 });
 ```
@@ -737,7 +717,7 @@ You can also transpile your modules in a separate process and refer to the trans
 If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
 
 ```js
-test(t => {
+test('resolves with unicorn', t => {
 	return somePromise().then(result => {
 		t.is(result, 'unicorn');
 	});
@@ -766,7 +746,7 @@ test(async function (t) {
 });
 
 // Async arrow function
-test(async t => {
+test('promises the truth', async t => {
 	const value = await promiseFn();
 	t.true(value);
 });
@@ -779,7 +759,7 @@ AVA comes with built-in support for [observables](https://github.com/zenparsing/
 *You do not need to use "callback mode" or call `t.end()`.*
 
 ```js
-test(t => {
+test('handles observables', t => {
 	t.plan(3);
 	return Observable.of(1, 2, 3, 4, 5, 6)
 		.filter(n => {
@@ -795,7 +775,7 @@ test(t => {
 AVA supports using `t.end` as the final callback when using node-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
 
 ```js
-test.cb(t => {
+test.cb('data.txt can be read', t => {
 	// `t.end` automatically checks for error as first argument
 	fs.readFile('data.txt', t.end);
 });
@@ -864,7 +844,7 @@ Log values contextually alongside the test result instead of immediately printin
 Assertions are mixed into the [execution object](#t) provided to each test implementation:
 
 ```js
-test(t => {
+test('unicorns are truthy', t => {
 	t.truthy('unicorn'); // Assertion
 });
 ```
@@ -1056,7 +1036,7 @@ If you are running AVA against precompiled test files, AVA will try and use sour
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
 
 ```js
-test(t => {
+test('skip assertion', t => {
 	t.plan(2);
 	t.skip.is(foo(), 5); // No need to change your plan count when skipping
 	t.is(1, 1);
@@ -1085,7 +1065,7 @@ AssertionError: false == true
 In AVA however, this test:
 
 ```js
-test(t => {
+test('enhanced assertions', t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';

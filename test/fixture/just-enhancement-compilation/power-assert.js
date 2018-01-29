@@ -2,7 +2,7 @@
 
 const test = require('../../../');
 
-test(t => {
+test('test', t => {
 	const bool = false;
 	t.true(bool);
 });

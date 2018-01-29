@@ -113,7 +113,7 @@ test('throws if you try to set a before hook as always', t => {
 test('throws if you try to set a test as always', t => {
 	const collection = new TestCollection({});
 	t.throws(() => {
-		collection.add(mockTest({always: true}));
+		collection.add(mockTest({always: true}, 'test'));
 	}, {message: '"always" can only be used with after and afterEach hooks'});
 	t.end();
 });

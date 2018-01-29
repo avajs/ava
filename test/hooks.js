@@ -38,7 +38,7 @@ test('before', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		arr.push('b');
 	});
@@ -58,7 +58,7 @@ test('after', t => {
 		arr.push('b');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		arr.push('a');
 	});
@@ -82,7 +82,7 @@ test('after not run if test failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test(() => {
+	runner.chain.test('test', () => {
 		throw new Error('something went wrong');
 	});
 	return runner.run({}).then(() => {
@@ -104,7 +104,7 @@ test('after.always run even if test failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test(() => {
+	runner.chain.test('test', () => {
 		throw new Error('something went wrong');
 	});
 	return runner.run({}).then(() => {
@@ -150,7 +150,7 @@ test('stop if before hooks failed', t => {
 		throw new Error('something went wrong');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		arr.push('b');
 		a.end();
@@ -178,12 +178,12 @@ test('before each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('c', a => {
 		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('d', a => {
 		a.pass();
 		arr[1].push('d');
 	});
@@ -208,12 +208,12 @@ test('before each with serial tests', t => {
 		arr.push('b');
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('c', a => {
 		a.pass();
 		arr.push('c');
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('d', a => {
 		a.pass();
 		arr.push('d');
 	});
@@ -235,7 +235,7 @@ test('fail if beforeEach hook fails', t => {
 		a.fail();
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		arr.push('b');
 		a.pass();
 	});
@@ -264,12 +264,12 @@ test('after each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('c', a => {
 		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('d', a => {
 		a.pass();
 		arr[1].push('d');
 	});
@@ -294,12 +294,12 @@ test('after each with serial tests', t => {
 		arr.push('b');
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('c', a => {
 		a.pass();
 		arr.push('c');
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('d', a => {
 		a.pass();
 		arr.push('d');
 	});
@@ -320,7 +320,7 @@ test('afterEach not run if concurrent tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test(() => {
+	runner.chain.test('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -340,7 +340,7 @@ test('afterEach not run if serial tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.serial(() => {
+	runner.chain.serial('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -360,7 +360,7 @@ test('afterEach.always run even if concurrent tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test(() => {
+	runner.chain.test('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -380,7 +380,7 @@ test('afterEach.always run even if serial tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.serial(() => {
+	runner.chain.serial('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -400,7 +400,7 @@ test('afterEach.always run even if beforeEach failed', t => {
 		throw new Error('something went wrong');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		arr.push('a');
 	});
@@ -437,7 +437,7 @@ test('ensure hooks run only around tests', t => {
 		arr.push('after');
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		arr.push('test');
 	});
@@ -465,7 +465,7 @@ test('shared context', t => {
 		a.context.arr = ['a'];
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		a.context.arr.push('b');
 		a.deepEqual(a.context.arr, ['a', 'b']);
@@ -492,7 +492,7 @@ test('shared context of any type', t => {
 		a.context = 'foo';
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		a.is(a.context, 'foo');
 	});
@@ -525,7 +525,7 @@ test('display hook title if it failed', t => {
 		.run({})
 		.on('test', test => {
 			t.is(test.error.name, 'AssertionError');
-			t.is(test.title, 'fail for pass');
+			t.is(test.title, 'beforeEach hook for pass');
 		})
 		.then(() => {
 			t.end();

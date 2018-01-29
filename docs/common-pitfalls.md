@@ -25,7 +25,7 @@ Use the `concurrency` flag to limit the number of processes ran. For example, if
 You may be running an asynchronous operation inside a test and wondering why it's not finishing. If your asynchronous operation uses promises, you should return the promise:
 
 ```js
-test(t => {
+test('fetches foo', t => {
 	return fetch().then(data => {
 		t.is(data, 'foo');
 	});
@@ -35,7 +35,7 @@ test(t => {
 Better yet, use `async` / `await`:
 
 ```js
-test(async t => {
+test('fetches foo', async t => {
 	const data = await fetch();
 	t.is(data, 'foo');
 });
@@ -44,7 +44,7 @@ test(async t => {
 If you're using callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
 
 ```js
-test.cb(t => {
+test.cb('fetches foo', t => {
 	fetch((err, data) => {
 		t.is(data, 'foo');
 		t.end();
@@ -55,7 +55,7 @@ test.cb(t => {
 Alternatively, promisify the callback function using something like [`pify`](https://github.com/sindresorhus/pify):
 
 ```js
-test(async t => {
+test('fetches foo', async t => {
 	const data = await pify(fetch)();
 	t.is(data, 'foo');
 });
@@ -70,7 +70,7 @@ AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) b
 Ensure that the first parameter passed into your test is named `t`. This is a requirement of [`power-assert`](https://github.com/power-assert-js/power-assert), the library that provides the enhanced messages.
 
 ```js
-test(t => {
+test('one is one', t => {
 	t.is(1, 1);
 });
 ```
