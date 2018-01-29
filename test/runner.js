@@ -811,11 +811,13 @@ test('arrays of macros', t => {
 		t.deepEqual(slice.call(arguments, 1), expectedArgsA.shift());
 		a.pass();
 	}
+	macroFnA.title = prefix => `${prefix}.A`;
 
 	function macroFnB(a) {
 		t.deepEqual(slice.call(arguments, 1), expectedArgsB.shift());
 		a.pass();
 	}
+	macroFnB.title = prefix => `${prefix}.B`;
 
 	const runner = new Runner();
 
@@ -853,7 +855,7 @@ test('match applies to arrays of macros', t => {
 		t.fail();
 		a.pass();
 	}
-	bazMacro.title = firstArg => `${firstArg}baz`;
+	bazMacro.title = (title, firstArg) => `${firstArg}baz`;
 
 	const runner = new Runner({
 		match: ['foobar']
