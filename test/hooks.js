@@ -524,8 +524,10 @@ test('display hook title if it failed', t => {
 	return fork(path.join(__dirname, 'fixture/hooks-failing.js'))
 		.run({})
 		.on('test', test => {
-			t.is(test.error.name, 'AssertionError');
-			t.is(test.title, 'fail for pass');
+			if (test.error) {
+				t.is(test.error.name, 'AssertionError');
+				t.is(test.title, 'fail for pass');
+			}
 		})
 		.then(() => {
 			t.end();

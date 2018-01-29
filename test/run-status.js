@@ -77,12 +77,13 @@ test('calculate remaining test count', t => {
 			failCount: 1,
 			skipCount: 1,
 			todoCount: 1,
-			knownFailureCount: 1
+			knownFailureCount: 1,
+			pendingCount: 1
 		}
 	}];
 
 	runStatus.processResults(results);
 
-	t.is(runStatus.remainingCount, 5);
+	t.is(runStatus.remainingCount, 4);
 	t.end();
 });

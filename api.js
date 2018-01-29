@@ -37,6 +37,7 @@ function getBlankResults() {
 	return {
 		stats: {
 			knownFailureCount: 0,
+			pendingCount: 0,
 			testCount: 0,
 			passCount: 0,
 			skipCount: 0,
@@ -255,16 +256,28 @@ class Api extends EventEmitter {
 			});
 		});
 
+		let interrupted = false;
+
 		return this._computeForkExecArgs(files)
 			.then(argvList => {
 				execArgvList = argvList;
 			})
 			.return(files)
 			.map((file, index) => {
-				return new Promise(resolve => {
+				return new Promise((resolve, reject) => {
 					const forkArgs = execArgvList[index];
+					if (interrupted) {
+						const relFile = path.relative('.', file);
+						return reject(new AvaError(`File ${relFile} was not run.`));
+					}
+
 					const test = this._runFile(file, runStatus, forkArgs);
 					tests.push(test);
+
+					process.on('SIGINT', () => {
+						interrupted = true;
+						test.exit();
+					});
 
 					// If we're looking for matches, run every single test process in exclusive-only mode
 					const options = {

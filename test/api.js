@@ -220,7 +220,7 @@ function generateTests(prefix, apiCreator) {
 		api.on('test-run', runStatus => {
 			runStatus.on('test', test => {
 				tests.push({
-					ok: !test.error,
+					ok: !test.error && !test.pending,
 					title: test.title
 				});
 			});
@@ -235,9 +235,13 @@ function generateTests(prefix, apiCreator) {
 				}, {
 					ok: false,
 					title: 'second fail'
+				}, {
+					ok: false,
+					title: 'third pass'
 				}]);
 				t.is(result.passCount, 1);
 				t.is(result.failCount, 1);
+				t.is(result.pendingCount, 1);
 			});
 	});
 
