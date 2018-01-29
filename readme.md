@@ -385,6 +385,8 @@ test.serial('passes serially', t => {
 
 Note that this only applies to tests within a particular test file. AVA will still run multiple tests files at the same time unless you pass the [`--serial` CLI flag](#cli).
 
+You can use the `.serial` modifier with all tests, hooks and even `.todo()`, but it's only available on the `test` function.
+
 ### Running specific tests
 
 During development it can be helpful to only run a few specific tests. This can be accomplished using the `.only` modifier:
@@ -398,6 +400,8 @@ test.only('will be run', t => {
 	t.pass();
 });
 ```
+
+You can use the `.only` modifier with all tests. It cannot be used with hooks or `.todo()`.
 
 *Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
@@ -485,7 +489,7 @@ test.skip('will not be run', t => {
 });
 ```
 
-You must specify the implementation function.
+You must specify the implementation function. You can use the `.skip` modifier with all tests and hooks, but not with `.todo()`. You can not apply further modifiers to `.skip`.
 
 ### Test placeholders ("todo")
 
@@ -493,6 +497,12 @@ You can use the `.todo` modifier when you're planning to write a test. Like skip
 
 ```js
 test.todo('will think about writing this later');
+```
+
+You can signal that you need to write a serial test:
+
+```js
+test.serial.todo('will think about writing this later');
 ```
 
 ### Failing tests
@@ -558,7 +568,7 @@ test('title', t => {
 });
 ```
 
-Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, use an async function, or enable callback mode via `test.cb.before()`, `test.cb.beforeEach()` etc.
+Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, use an async function, or enable callback mode via `test.before.cb()`, `test.beforeEach.cb()` etc.
 
 ```js
 test.before(async t => {
@@ -569,7 +579,7 @@ test.after(t => {
 	return new Promise(/* ... */);
 });
 
-test.cb.beforeEach(t => {
+test.beforeEach.cb(t => {
 	setTimeout(t.end);
 });
 
@@ -609,19 +619,6 @@ test('context is unicorn', t => {
 ```
 
 Context sharing is *not* available to `before` and `after` hooks.
-
-### Chaining test modifiers
-
-You can use the `.serial`, `.only` and `.skip` modifiers in any order, with `test`, `before`, `after`, `beforeEach` and `afterEach`. For example:
-
-```js
-test.before.skip(...);
-test.skip.after(...);
-test.serial.only(...);
-test.only.serial(...);
-```
-
-This means you can temporarily add `.skip` or `.only` at the end of a test or hook definition without having to make any other changes.
 
 ### Test macros
 

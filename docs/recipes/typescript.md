@@ -89,7 +89,7 @@ test.beforeEach(t => {
 	t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
 });
 
-test.after.always.failing.cb.serial('very long chains are properly typed', t => {
+test.serial.failing.cb('very long chains are properly typed', t => {
 	t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type '{ foo: string }'
 });
 

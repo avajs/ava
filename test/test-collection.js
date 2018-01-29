@@ -77,47 +77,6 @@ function serialize(collection) {
 	return removeEmptyProps(serialized);
 }
 
-test('throws if no type is supplied', t => {
-	const collection = new TestCollection({});
-	t.throws(() => {
-		collection.add({
-			title: 'someTitle',
-			metadata: {}
-		});
-	}, {message: 'Test type must be specified'});
-	t.end();
-});
-
-test('throws if you try to set a hook as exclusive', t => {
-	const collection = new TestCollection({});
-	t.throws(() => {
-		collection.add(mockTest({
-			type: 'beforeEach',
-			exclusive: true
-		}));
-	}, {message: '"only" cannot be used with a beforeEach hook'});
-	t.end();
-});
-
-test('throws if you try to set a before hook as always', t => {
-	const collection = new TestCollection({});
-	t.throws(() => {
-		collection.add(mockTest({
-			type: 'before',
-			always: true
-		}));
-	}, {message: '"always" can only be used with after and afterEach hooks'});
-	t.end();
-});
-
-test('throws if you try to set a test as always', t => {
-	const collection = new TestCollection({});
-	t.throws(() => {
-		collection.add(mockTest({always: true}, 'test'));
-	}, {message: '"always" can only be used with after and afterEach hooks'});
-	t.end();
-});
-
 test('hasExclusive is set when an exclusive test is added', t => {
 	const collection = new TestCollection({});
 	t.false(collection.hasExclusive);
