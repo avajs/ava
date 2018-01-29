@@ -952,7 +952,7 @@ test('rejects', async t => {
 });
 ```
 
-When testing an `async function` you must also wait for the assertion to complete:
+When testing an asynchronous function you must also wait for the assertion to complete:
 
 ```js
 test('throws', async t => {

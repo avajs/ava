@@ -61,7 +61,7 @@ type AssertContext = {
 		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<any>;
 		(value: () => mixed, error?: ErrorValidator, message?: string): any;
 	};
-	// Assert that the promise resolves, or the function doesn't throws or returns a resolved promise.
+	// Assert that the promise resolves, or the function doesn't throw or return a resolved promise.
 	notThrows: {
 		(value: PromiseLike<mixed>, message?: string): Promise<void>;
 		(value: () => mixed, message?: string): void;

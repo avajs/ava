@@ -656,11 +656,7 @@ test('.throws()', t => {
 		});
 	});
 
-	return eventuallyFailsWith(t, assertions.throws(() => Promise.resolve('foo')), {
-		assertion: 'throws',
-		message: 'Expected promise to be rejected, but it was resolved instead',
-		values: [{label: 'Resolved with:', formatted: /'foo'/}]
-	});
+	t.end();
 });
 
 test('.throws() returns the thrown error', t => {
@@ -750,13 +746,7 @@ test('.notThrows()', t => {
 		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
-	return eventuallyFailsWith(t, assertions.notThrows(() => {
-		return Promise.reject(new Error('foo'));
-	}), {
-		assertion: 'notThrows',
-		message: '',
-		values: [{label: 'Threw:', formatted: /foo/}]
-	});
+	t.end();
 });
 
 test('.notThrows() returns undefined for a fulfilled promise', t => {

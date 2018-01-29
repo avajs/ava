@@ -48,7 +48,7 @@ test('returning an observable from a legacy async fn is an error', t => {
 	t.end();
 });
 
-test('handle throws with thrown observable', t => {
+test('handle throws with erroring observable', t => {
 	let result;
 	ava(a => {
 		a.plan(1);
@@ -67,7 +67,26 @@ test('handle throws with thrown observable', t => {
 	});
 });
 
-test('handle throws with long running thrown observable', t => {
+test('handle throws with erroring observable returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const observable = new Observable(observer => {
+			observer.error(new Error());
+		});
+
+		return a.throws(() => observable);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, true);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
+test('handle throws with long running erroring observable', t => {
 	let result;
 	ava(a => {
 		a.plan(1);
@@ -95,6 +114,22 @@ test('handle throws with completed observable', t => {
 
 		const observable = Observable.of();
 		return a.throws(observable);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.is(result.reason.name, 'AssertionError');
+		t.end();
+	});
+});
+
+test('handle throws with completed observable returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const observable = Observable.of();
+		return a.throws(() => observable);
 	}, r => {
 		result = r;
 	}).run().then(passed => {
@@ -188,6 +223,25 @@ test('handle notThrows with thrown observable', t => {
 		});
 
 		return a.notThrows(observable);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.is(result.reason.name, 'AssertionError');
+		t.end();
+	});
+});
+
+test('handle notThrows with erroring observable returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const observable = new Observable(observer => {
+			observer.error(new Error());
+		});
+
+		return a.notThrows(() => observable);
 	}, r => {
 		result = r;
 	}).run().then(passed => {
