@@ -2,7 +2,7 @@
 
 const test = require('../../index.js.flow');
 
-test(t => {
+test('test', t => {
 	t.snapshot({});
 	t.snapshot({}, "a message");
 	t.snapshot({}, {id: "snapshot-id"});

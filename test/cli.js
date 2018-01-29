@@ -528,7 +528,7 @@ test('use current working directory if `package.json` is not found', () => {
 	const cliPath = require.resolve('../cli.js');
 	const avaPath = require.resolve('../');
 
-	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest(t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest('test', t => { t.pass(); });`);
 
 	return execa(process.execPath, [cliPath], {cwd});
 });

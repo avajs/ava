@@ -2,6 +2,6 @@
 
 const test = require('../../../');
 
-test(t => {
+test('test', t => {
 	t.throws(() => require('./_helper'), SyntaxError);
 });

@@ -125,16 +125,14 @@ export interface Macro<T> {
 export type Macros<T> = Macro<T> | Macro<T>[];
 
 interface RegisterBase<T> {
-    (name: string, run: GenericTest<T>): void;
-    (run: GenericTest<T>): void;
-    (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+    (title: string, run: GenericTest<T>): void;
+    (title: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
 
 interface CallbackRegisterBase<T> {
-    (name: string, run: GenericCallbackTest<T>): void;
-    (run: GenericCallbackTest<T>): void;
-    (name: string, run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
+    (title: string, run: GenericCallbackTest<T>): void;
+    (title: string, run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
 }
 

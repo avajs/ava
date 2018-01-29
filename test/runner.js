@@ -10,7 +10,7 @@ test('nested tests and hooks aren\'t allowed', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		t.throws(() => {
 			runner.chain.test(noop);
 		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
@@ -27,7 +27,7 @@ test('tests must be declared synchronously', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		return Promise.resolve();
 	});
@@ -62,17 +62,17 @@ test('run serial tests before concurrent ones', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		arr.push('c');
 		a.end();
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('serial', a => {
 		arr.push('a');
 		a.end();
 	});
 
-	runner.chain.serial(a => {
+	runner.chain.serial('serial 2', a => {
 		arr.push('b');
 		a.end();
 	});
@@ -106,11 +106,11 @@ test('anything can be skipped', t => {
 	runner.chain.beforeEach(pusher('beforeEach'));
 	runner.chain.beforeEach.skip(pusher('beforeEach.skip'));
 
-	runner.chain.test(pusher('concurrent'));
-	runner.chain.test.skip(pusher('concurrent.skip'));
+	runner.chain.test('concurrent', pusher('concurrent'));
+	runner.chain.test.skip('concurrent.skip', pusher('concurrent.skip'));
 
-	runner.chain.serial(pusher('serial'));
-	runner.chain.serial.skip(pusher('serial.skip'));
+	runner.chain.serial('serial', pusher('serial'));
+	runner.chain.serial.skip('serial.skip', pusher('serial.skip'));
 
 	runner.run({}).then(() => {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
@@ -188,17 +188,14 @@ test('test types and titles', t => {
 	runner.chain.afterEach(named);
 	runner.chain.test('test', fn);
 
-	// See https://github.com/avajs/ava/issues/1027
-	const supportsFunctionNames = noop.name === 'noop';
-
 	const tests = [
 		{
 			type: 'before',
-			title: 'named'
+			title: 'before hook'
 		},
 		{
 			type: 'beforeEach',
-			title: supportsFunctionNames ? 'fn for test' : 'beforeEach for test'
+			title: 'beforeEach hook for test'
 		},
 		{
 			type: 'test',
@@ -206,11 +203,11 @@ test('test types and titles', t => {
 		},
 		{
 			type: 'afterEach',
-			title: 'named for test'
+			title: 'afterEach hook for test'
 		},
 		{
 			type: 'after',
-			title: supportsFunctionNames ? 'fn' : 'after'
+			title: 'after hook'
 		}
 	];
 
@@ -229,12 +226,12 @@ test('skip test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		arr.push('a');
 		a.pass();
 	});
 
-	runner.chain.skip(() => {
+	runner.chain.skip('skip', () => {
 		arr.push('b');
 	});
 
@@ -268,7 +265,7 @@ test('todo test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		arr.push('a');
 		a.pass();
 	});
@@ -299,12 +296,12 @@ test('only test', t => {
 	const runner = new Runner();
 	const arr = [];
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		arr.push('a');
 		a.pass();
 	});
 
-	runner.chain.only(a => {
+	runner.chain.only('only', a => {
 		arr.push('b');
 		a.pass();
 	});
@@ -495,7 +492,7 @@ test('runOnlyExclusive option test', t => {
 	const options = {runOnlyExclusive: true};
 	const arr = [];
 
-	runner.chain.test(() => {
+	runner.chain.test('test', () => {
 		arr.push('a');
 	});
 
@@ -511,7 +508,7 @@ test('options.serial forces all tests to be serial', t => {
 	const runner = new Runner({serial: true});
 	const arr = [];
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb', a => {
 		setTimeout(() => {
 			arr.push(1);
 			a.end();
@@ -519,7 +516,7 @@ test('options.serial forces all tests to be serial', t => {
 		a.pass();
 	});
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb 2', a => {
 		setTimeout(() => {
 			arr.push(2);
 			a.end();
@@ -527,7 +524,7 @@ test('options.serial forces all tests to be serial', t => {
 		a.pass();
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		t.strictDeepEqual(arr, [1, 2]);
 		t.end();
@@ -541,12 +538,12 @@ test('options.bail will bail out', t => {
 
 	const runner = new Runner({bail: true});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		t.pass();
 		a.fail();
 	});
 
-	runner.chain.test(() => {
+	runner.chain.test('test 2', () => {
 		t.fail();
 	});
 
@@ -561,7 +558,7 @@ test('options.bail will bail out (async)', t => {
 	const runner = new Runner({bail: true});
 	const tests = [];
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb', a => {
 		setTimeout(() => {
 			tests.push(1);
 			a.fail();
@@ -570,7 +567,7 @@ test('options.bail will bail out (async)', t => {
 		a.pass();
 	});
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb 2', a => {
 		setTimeout(() => {
 			tests.push(2);
 			a.end();
@@ -598,7 +595,7 @@ test('options.bail + serial - tests will never happen (async)', t => {
 	});
 	const tests = [];
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb', a => {
 		setTimeout(() => {
 			tests.push(1);
 			a.fail();
@@ -606,7 +603,7 @@ test('options.bail + serial - tests will never happen (async)', t => {
 		}, 100);
 	});
 
-	runner.chain.cb(a => {
+	runner.chain.cb('cb 2', a => {
 		setTimeout(() => {
 			tests.push(2);
 			a.end();
@@ -644,7 +641,7 @@ test('options.match will not run tests with non-matching titles', t => {
 		a.pass();
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		t.fail();
 		a.pass();
 	});
@@ -707,32 +704,6 @@ test('options.match overrides .only', t => {
 		t.is(stats.skipCount, 0);
 		t.is(stats.passCount, 2);
 		t.is(stats.testCount, 2);
-		t.end();
-	});
-});
-
-test('options.match includes anonymous tests in negative matches', t => {
-	t.plan(4);
-
-	const runner = new Runner({
-		match: ['!*oo']
-	});
-
-	runner.chain.test('foo', a => {
-		t.fail();
-		a.pass();
-	});
-
-	runner.chain.test(a => {
-		t.pass();
-		a.pass();
-	});
-
-	runner.run({}).then(() => {
-		const stats = runner.buildStats();
-		t.is(stats.skipCount, 0);
-		t.is(stats.passCount, 1);
-		t.is(stats.testCount, 1);
 		t.end();
 	});
 });
@@ -848,10 +819,10 @@ test('arrays of macros', t => {
 
 	const runner = new Runner();
 
-	runner.chain.test([macroFnA, macroFnB], 'A');
-	runner.chain.test([macroFnA, macroFnB], 'B');
-	runner.chain.test(macroFnA, 'C');
-	runner.chain.test(macroFnB, 'D');
+	runner.chain.test('A', [macroFnA, macroFnB], 'A');
+	runner.chain.test('B', [macroFnA, macroFnB], 'B');
+	runner.chain.test('C', macroFnA, 'C');
+	runner.chain.test('D', macroFnB, 'D');
 
 	runner.run({}).then(() => {
 		const stats = runner.buildStats();
