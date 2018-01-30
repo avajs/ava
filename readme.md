@@ -1132,6 +1132,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
+- [Flow](docs/recipes/flow.md)
 - [Configuring Babel][Babel recipe]
 - [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)

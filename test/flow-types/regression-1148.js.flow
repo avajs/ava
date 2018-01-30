@@ -1,19 +1,18 @@
-/* @flow */
-
-const test = require('../../index.js.flow');
+// @flow
+import test from '../../index.js.flow';
 
 test('test', t => {
-	t.throws(() => { throw new Error(); });
+	t.throws((): void => { throw new Error(); });
 	t.throws(Promise.reject(new Error()));
 
-	t.notThrows(() => { return; });
+	t.notThrows((): void => { return; });
 	t.notThrows(Promise.resolve('Success'));
 
-	const error = t.throws(() => { throw new Error(); });
+	const error = t.throws((): void => { throw new Error(); });
 	const message: string = error.message;
 
 	const promise = t.throws(Promise.reject(new Error()));
 	promise.then(error => {
 		const message: string = error.message;
-	})
+	});
 });
