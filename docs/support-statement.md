@@ -1,5 +1,7 @@
 # Supported Node.js versions
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/support-statement.md)
+
 AVA supports the latest release of any major version that [is supported by Node.js itself](https://github.com/nodejs/Release#release-schedule).
 
 *Support* here means that we run our test suite under the given Node.js versions and will accept pull requests to fix any bugs (provided they're not known bugs in Node.js itself that will be fixed imminently). Consequently, *dropping support* means we'll remove those Node.js versions from our test matrix and will no longer accept specific pull requests to fix bugs under those versions.
