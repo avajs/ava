@@ -459,7 +459,7 @@ test('shared context', t => {
 	});
 
 	runner.chain.after(a => {
-		a.is(a.context, null);
+		a.deepEqual(a.context.arr, ['a']);
 	});
 
 	runner.chain.beforeEach(a => {
@@ -467,7 +467,7 @@ test('shared context', t => {
 		a.deepEqual(a.context.arr, ['a', 'b']);
 	});
 
-	runner.chain.test(a => {
+	runner.chain.test('test', a => {
 		a.pass();
 		a.context.arr.push('c');
 		a.deepEqual(a.context.arr, ['a', 'b', 'c']);
