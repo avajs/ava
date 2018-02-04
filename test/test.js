@@ -628,21 +628,6 @@ test('contextRef', t => {
 	}).run();
 });
 
-test('it is an error to set context in a hook', t => {
-	let result;
-	const avaTest = ava(a => {
-		a.context = 'foo';
-	}, null, r => {
-		result = r;
-	});
-	avaTest.metadata.type = 'foo';
-
-	const passed = avaTest.run();
-	t.is(passed, false);
-	t.match(result.reason.message, /`t\.context` is not available in foo tests/);
-	t.end();
-});
-
 test('failing tests should fail', t => {
 	const passed = ava.failing('foo', a => {
 		a.fail();
