@@ -151,6 +151,22 @@ test('handle throws with rejected promise', t => {
 	});
 });
 
+test('handle throws with rejected promise returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const promise = Promise.reject(new Error());
+		return a.throws(() => promise);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, true);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
 // TODO(team): This is a very slow test, and I can't figure out why we need it - James
 test('handle throws with long running rejected promise', t => {
 	let result;
@@ -180,6 +196,22 @@ test('handle throws with resolved promise', t => {
 
 		const promise = Promise.resolve();
 		return a.throws(promise);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.is(result.reason.name, 'AssertionError');
+		t.end();
+	});
+});
+
+test('handle throws with resolved promise returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const promise = Promise.resolve();
+		return a.throws(() => promise);
 	}, r => {
 		result = r;
 	}).run().then(passed => {
@@ -308,6 +340,38 @@ test('handle notThrows with rejected promise', t => {
 
 		const promise = Promise.reject(new Error());
 		return a.notThrows(promise);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, false);
+		t.is(result.reason.name, 'AssertionError');
+		t.end();
+	});
+});
+
+test('handle notThrows with resolved promise returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const promise = Promise.resolve();
+		return a.notThrows(() => promise);
+	}, r => {
+		result = r;
+	}).run().then(passed => {
+		t.is(passed, true);
+		t.is(result.result.assertCount, 1);
+		t.end();
+	});
+});
+
+test('handle notThrows with rejected promise returned by function', t => {
+	let result;
+	ava(a => {
+		a.plan(1);
+
+		const promise = Promise.reject(new Error());
+		return a.notThrows(() => promise);
 	}, r => {
 		result = r;
 	}).run().then(passed => {

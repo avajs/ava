@@ -1,7 +1,7 @@
 import Observable from 'zen-observable';
 import test from '../../..';
 
-test(t => {
+test('test', t => {
 	return new Observable(() => {
 		t.pass();
 	});

@@ -18,6 +18,7 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 
 - Bump dependencies.
 - Ensure [Travis CI](https://travis-ci.org/avajs/ava) and [AppVeyor](https://ci.appveyor.com/project/avajs/ava/branch/master) are green.
+- If [necessary](docs/support-statement.md), update the `engines` field in `package.json`
 - Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [semver](http://semver.org).
 - Write a [release note](https://github.com/avajs/ava/releases/new) following the style of previous release notes.
 

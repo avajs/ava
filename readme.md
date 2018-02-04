@@ -45,7 +45,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Includes TypeScript & Flow type definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](#process-isolation)
-- [Write your tests in ES2017](#es2017-support)
+- [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
 - [Promise support](#promise-support)
 - [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
@@ -60,7 +60,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 ```js
 import test from 'ava';
 
-test(t => {
+test('arrays are equal', t => {
 	t.deepEqual([1, 2], [1, 2]);
 });
 ```
@@ -148,6 +148,10 @@ $ npm test -- --watch
 
 AVA comes with an intelligent watch mode. [Learn more in its recipe](docs/recipes/watch-mode.md).
 
+### Supported Node.js versions
+
+AVA supports the latest release of any major version that [is supported by Node.js itself](https://github.com/nodejs/Release#release-schedule). Read more in our [support statement](docs/support-statement.md).
+
 ## CLI
 
 ```console
@@ -158,19 +162,18 @@ $ ava --help
 
   Options
     --init                  Add AVA to your project
+    --watch, -w             Re-run tests when tests and source files change
+    --match, -m             Only run tests with matching title (Can be repeated)
+    --update-snapshots, -u  Update snapshots
     --fail-fast             Stop after first test failure
+    --timeout, -T           Set global timeout
     --serial, -s            Run tests serially
-    --tap, -t               Generate TAP output
+    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --verbose, -v           Enable verbose output
-    --no-cache              Disable the transpiler cache
-    --no-power-assert       Disable Power Assert
+    --tap, -t               Generate TAP output
+    --no-cache              Disable the compiler cache
     --color                 Force color output
     --no-color              Disable color output
-    --match, -m             Only run tests with matching title (Can be repeated)
-    --watch, -w             Re-run tests when tests and source files change
-    --timeout, -T           Set global timeout
-    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
-    --update-snapshots, -u  Update snapshots
 
   Examples
     ava
@@ -178,7 +181,6 @@ $ ava --help
     ava test-*.js
     ava test
     ava --init
-    ava --init foo.js
 
   Default patterns when no arguments:
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
@@ -266,11 +268,15 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 		"failFast": true,
 		"failWithoutAssertions": false,
 		"tap": true,
-		"powerAssert": false,
+		"compileEnhancements": false,
 		"require": [
-			"babel-register"
+			"@babel/register"
 		],
-		"babel": "inherit"
+		"babel": {
+			"testOptions": {
+				"babelrc": false
+			}
+		}
 	}
 }
 ```
@@ -286,9 +292,9 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `powerAssert`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) which otherwise helps provide more descriptive error messages
+- `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
-- `babel`: test file specific Babel options. See [ES2017 support](#es2017-support) for more details
+- `babel`: test file specific Babel options. See our [Babel recipe] for more details
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
@@ -306,7 +312,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 ### Creating tests
 
-To create a test you call the `test` function you imported from AVA. Provide the optional title and implementation function. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument.
+To create a test you call the `test` function you imported from AVA. Provide the required title and implementation function. Titles must be unique within each test file. The function will be called when your test is run. It's passed an [execution object](#t) as its first argument.
 
 **Note:** In order for the [enhanced assertion messages](#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
@@ -314,26 +320,6 @@ To create a test you call the `test` function you imported from AVA. Provide the
 import test from 'ava';
 
 test('my passing test', t => {
-	t.pass();
-});
-```
-
-#### Titles
-
-Titles are optional, meaning you can do:
-
-```js
-test(t => {
-	t.pass();
-});
-```
-
-It's recommended to provide test titles if you have more than one test.
-
-If you haven't provided a test title, but the implementation is a named function, that name will be used as the test title:
-
-```js
-test(function name(t) {
 	t.pass();
 });
 ```
@@ -349,7 +335,7 @@ Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https:
 These examples will result in a passed test:
 
 ```js
-test(t => {
+test('resolves with 3', t => {
 	t.plan(1);
 
 	return Promise.resolve(3).then(n => {
@@ -357,7 +343,7 @@ test(t => {
 	});
 });
 
-test.cb(t => {
+test.cb('invokes callback', t => {
 	t.plan(1);
 
 	someAsyncFunction(() => {
@@ -370,7 +356,7 @@ test.cb(t => {
 These won't:
 
 ```js
-test(t => {
+test('loops twice', t => {
 	t.plan(2);
 
 	for (let i = 0; i < 3; i++) {
@@ -378,7 +364,7 @@ test(t => {
 	}
 }); // Fails, 3 assertions are executed which is too many
 
-test(t => {
+test('invokes callback synchronously', t => {
 	t.plan(1);
 
 	someAsyncFunction(() => {
@@ -392,7 +378,7 @@ test(t => {
 Tests are run concurrently by default, however, sometimes you have to write tests that cannot run concurrently. In these rare cases you can use the `.serial` modifier. It will force those tests to run serially *before* the concurrent ones.
 
 ```js
-test.serial(t => {
+test.serial('passes serially', t => {
 	t.pass();
 });
 ```
@@ -567,7 +553,7 @@ test.afterEach.always(t => {
 	// This runs after each test and other test hooks, even if they failed
 });
 
-test(t => {
+test('title', t => {
 	// Regular test
 });
 ```
@@ -605,7 +591,7 @@ test.beforeEach(t => {
 	t.context.data = generateUniqueData();
 });
 
-test(t => {
+test('context data is foo', t => {
 	t.is(t.context.data + 'bar', 'foobar');
 });
 ```
@@ -617,7 +603,7 @@ test.beforeEach(t => {
 	t.context = 'unicorn';
 });
 
-test(t => {
+test('context is unicorn', t => {
 	t.is(t.context, 'unicorn');
 });
 ```
@@ -696,62 +682,20 @@ You'll have to configure AVA to not fail tests if no assertions are executed, be
 ```js
 import assert from 'assert';
 
-test(t => {
+test('custom assertion', t => {
 	assert(true);
 });
 ```
 
-### ES2017 support
+### Latest JavaScript support
 
-AVA comes with built-in support for ES2017 through [Babel 6](https://babeljs.io). Just write your tests in ES2017. No extra setup needed. You can use any Babel version in your project. We use our own bundled Babel with our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset, as well as [custom transforms](https://github.com/avajs/babel-preset-transform-test-files) for test and helper files.
+AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. There is no extra setup required. You don't need to be using Babel in your own project for this to work either.
 
-The corresponding Babel config for AVA's setup is as follows:
+We aim support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
 
-```json
-{
-	"presets": [
-		"@ava/stage-4",
-		"@ava/transform-test-files"
-	]
-}
-```
+Please note that we do not add or modify built-ins. For example, if you use [`Object.entries()`](https://github.com/tc39/proposal-object-values-entries) in your tests, they will crash in Node.js 6 which does not implement this method.
 
-You can customize how AVA transpiles the test files through the `babel` option in AVA's [`package.json` configuration](#configuration). For example to override the presets you can use:
-
-```json
-{
-	"ava": {
-		 "babel": {
-			 "presets": [
-					"es2015",
-					"stage-0",
-					"react"
-			 ]
-		 }
-	}
-}
-```
-
-You can also use the special `"inherit"` keyword. This makes AVA defer to the Babel config in your [`.babelrc` or `package.json` file](https://babeljs.io/docs/usage/babelrc/). This way your test files will be transpiled using the same config as your source files without having to repeat it just for AVA:
-
-```json
-{
-	"babel": {
-		"presets": [
-			"es2015",
-			"stage-0",
-			"react"
-		]
-	},
-	"ava": {
-		"babel": "inherit"
-	}
-}
-```
-
-See AVA's [`.babelrc` recipe](docs/recipes/babelrc.md) for further examples and a more detailed explanation of configuration options.
-
-Note that AVA will *always* apply [a few internal plugins](docs/recipes/babelrc.md#notes) regardless of configuration, but they should not impact the behavior of your code.
+You can disable this syntax support, or otherwise customize AVA's Babel pipeline. See our [Babel recipe] for more details.
 
 ### TypeScript support
 
@@ -772,7 +716,7 @@ You can also transpile your modules in a separate process and refer to the trans
 If you return a promise in the test you don't need to explicitly end the test as it will end when the promise resolves.
 
 ```js
-test(t => {
+test('resolves with unicorn', t => {
 	return somePromise().then(result => {
 		t.is(result, 'unicorn');
 	});
@@ -801,7 +745,7 @@ test(async function (t) {
 });
 
 // Async arrow function
-test(async t => {
+test('promises the truth', async t => {
 	const value = await promiseFn();
 	t.true(value);
 });
@@ -814,7 +758,7 @@ AVA comes with built-in support for [observables](https://github.com/zenparsing/
 *You do not need to use "callback mode" or call `t.end()`.*
 
 ```js
-test(t => {
+test('handles observables', t => {
 	t.plan(3);
 	return Observable.of(1, 2, 3, 4, 5, 6)
 		.filter(n => {
@@ -830,7 +774,7 @@ test(t => {
 AVA supports using `t.end` as the final callback when using node-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
 
 ```js
-test.cb(t => {
+test.cb('data.txt can be read', t => {
 	// `t.end` automatically checks for error as first argument
 	fs.readFile('data.txt', t.end);
 });
@@ -899,7 +843,7 @@ Log values contextually alongside the test result instead of immediately printin
 Assertions are mixed into the [execution object](#t) provided to each test implementation:
 
 ```js
-test(t => {
+test('unicorns are truthy', t => {
 	t.truthy('unicorn'); // Assertion
 });
 ```
@@ -948,7 +892,7 @@ Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqua
 
 ### `.throws(function|promise, [error, [message]])`
 
-Assert that `function` throws an error, or `promise` rejects with an error.
+Assert that `function` throws an error, `promise` rejects with an error, or `function` returns a rejected `promise`.
 
 `error` can be an error constructor, error message, regex matched against the error message, or validation function.
 
@@ -987,9 +931,21 @@ test('rejects', async t => {
 });
 ```
 
+When testing an asynchronous function you must also wait for the assertion to complete:
+
+```js
+test('throws', async t => {
+	const error = await t.throws(async () => {
+		throw new TypeError('🦄');
+	}, TypeError);
+
+	t.is(error.message, '🦄');
+});
+```
+
 ### `.notThrows(function|promise, [message])`
 
-Assert that `function` does not throw an error or that `promise` does not reject with an error.
+Assert that `function` does not throw an error, `promise` does not reject with an error, or `function` returns a promise that does not reject with an error.
 
 Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
 
@@ -1079,7 +1035,7 @@ If you are running AVA against precompiled test files, AVA will try and use sour
 Any assertion can be skipped using the `skip` modifier. Skipped assertions are still counted, so there is no need to change your planned assertion count.
 
 ```js
-test(t => {
+test('skip assertion', t => {
 	t.plan(2);
 	t.skip.is(foo(), 5); // No need to change your plan count when skipping
 	t.is(1, 1);
@@ -1108,7 +1064,7 @@ AssertionError: false == true
 In AVA however, this test:
 
 ```js
-test(t => {
+test('enhanced assertions', t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';
@@ -1179,7 +1135,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
-- [Configuring Babel](docs/recipes/babelrc.md)
+- [Configuring Babel][Babel recipe]
 - [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
@@ -1232,3 +1188,5 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 </div>
+
+[Babel recipe]: docs/recipes/babel.md

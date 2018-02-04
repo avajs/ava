@@ -55,13 +55,13 @@ type AssertContext = {
 	deepEqual<U>(value: U, expected: U, message?: string): void;
 	// Assert that value is not deep equal to expected.
 	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that function throws an error or promise rejects.
+	// Assert that the promise rejects, or the function throws or returns a rejected promise.
 	// @param error Can be a constructor, regex, error message or validation function.
 	throws: {
 		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<any>;
 		(value: () => mixed, error?: ErrorValidator, message?: string): any;
 	};
-	// Assert that function doesn't throw an error or promise resolves.
+	// Assert that the promise resolves, or the function doesn't throw or return a resolved promise.
 	notThrows: {
 		(value: PromiseLike<mixed>, message?: string): Promise<void>;
 		(value: () => mixed, message?: string): void;
@@ -111,8 +111,8 @@ type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, 
  */
 
 type ContextualTestMethod = {
-	(              implementation: ContextualTest): void;
-	(name: string, implementation: ContextualTest): void;
+	(               implementation: ContextualTest): void;
+	(title: string, implementation: ContextualTest): void;
 
 	serial     : ContextualTestMethod;
 	before     : ContextualTestMethod;
@@ -128,8 +128,8 @@ type ContextualTestMethod = {
 };
 
 type ContextualCallbackTestMethod = {
-	(              implementation: ContextualCallbackTest): void;
-	(name: string, implementation: ContextualCallbackTest): void;
+	(               implementation: ContextualCallbackTest): void;
+	(title: string, implementation: ContextualCallbackTest): void;
 
 	serial     : ContextualCallbackTestMethod;
 	before     : ContextualCallbackTestMethod;
@@ -149,8 +149,8 @@ type ContextualCallbackTestMethod = {
  */
 
 declare module.exports: {
-	(              run: ContextualTest, ...args: any): void;
-	(name: string, run: ContextualTest, ...args: any): void;
+	(               run: ContextualTest, ...args: any): void;
+	(title: string, run: ContextualTest, ...args: any): void;
 
 	beforeEach : ContextualTestMethod;
 	afterEach  : ContextualTestMethod;

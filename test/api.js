@@ -12,8 +12,7 @@ const ROOT_DIR = path.join(__dirname, '..');
 
 function apiCreator(options) {
 	options = options || {};
-	options.babelConfig = options.babelConfig || 'default';
-	options.powerAssert = true;
+	options.babelConfig = options.babelConfig || {testOptions: {}};
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
@@ -70,19 +69,17 @@ function generateTests(prefix, apiCreator) {
 	});
 
 	test(`${prefix} test title prefixes — multiple files`, t => {
-		t.plan(6);
+		t.plan(5);
 
 		const separator = ` ${figures.pointerSmall} `;
 		const files = [
 			path.join(__dirname, 'fixture/async-await.js'),
-			path.join(__dirname, 'fixture/es2015.js'),
 			path.join(__dirname, 'fixture/generators.js'),
 			path.join(__dirname, 'fixture/subdir/in-a-subdir.js')
 		];
 		const expected = [
 			['async-await', 'async function'].join(separator),
 			['async-await', 'arrow async function'].join(separator),
-			['es2015', '[anonymous]'].join(separator),
 			['generators', 'generator function'].join(separator),
 			['subdir', 'in-a-subdir', 'subdir'].join(separator)
 		];
@@ -374,8 +371,8 @@ function generateTests(prefix, apiCreator) {
 	test(`${prefix} enhanced assertion formatting necessary whitespace and empty strings`, t => {
 		const expected = [
 			[
-				/foo === '' && '' === foo/,
-				/foo === ''/,
+				/foo === "" && "" === foo/,
+				/foo === ""/,
 				/foo/
 			],
 			[
@@ -385,9 +382,9 @@ function generateTests(prefix, apiCreator) {
 				/foo/
 			],
 			[
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length > 0/,
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\).length/,
-				/\[foo].filter\(item => {\n\s+return item === 'bar';\n}\)/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length > 0/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length/,
+				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\)/,
 				/\[foo]/,
 				/foo/
 			]
@@ -818,13 +815,14 @@ function generateTests(prefix, apiCreator) {
 		});
 	});
 
-	test(`${prefix} Custom Babel Plugin Support`, t => {
+	test(`${prefix} babel.testOptions with a custom plugin`, t => {
 		t.plan(2);
 
 		const api = apiCreator({
 			babelConfig: {
-				presets: ['@ava/stage-4'],
-				plugins: [testCapitalizerPlugin]
+				testOptions: {
+					plugins: [testCapitalizerPlugin]
+				}
 			},
 			cacheEnabled: false,
 			projectDir: __dirname
@@ -842,31 +840,10 @@ function generateTests(prefix, apiCreator) {
 			}, t.threw);
 	});
 
-	test(`${prefix} Default babel config doesn't use .babelrc`, t => {
-		t.plan(2);
-
-		const api = apiCreator({
-			projectDir: path.join(__dirname, 'fixture/babelrc')
-		});
-
-		api.on('test-run', runStatus => {
-			runStatus.on('test', data => {
-				t.is(data.title, 'foo');
-			});
-		});
-
-		return api.run()
-			.then(result => {
-				t.is(result.passCount, 1);
-			});
-	});
-
-	test(`${prefix} babelConfig:"inherit" uses .babelrc`, t => {
+	test(`${prefix} babel.testOptions.babelrc effectively defaults to true`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
-			babelConfig: 'inherit',
-			cacheEnabled: false,
 			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
 
@@ -882,11 +859,13 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(`${prefix} babelConfig:{babelrc:true} uses .babelrc`, t => {
+	test(`${prefix} babel.testOptions.babelrc can explicitly be true`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
-			babelConfig: {babelrc: true},
+			babelConfig: {
+				testOptions: {babelrc: true}
+			},
 			cacheEnabled: false,
 			projectDir: path.join(__dirname, 'fixture/babelrc')
 		});
@@ -903,13 +882,12 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(`${prefix} babelConfig:{babelrc:true, plugins:[...]} merges plugins with .babelrc`, t => {
-		t.plan(3);
+	test(`${prefix} babel.testOptions.babelrc can explicitly be false`, t => {
+		t.plan(2);
 
 		const api = apiCreator({
 			babelConfig: {
-				plugins: [testCapitalizerPlugin],
-				babelrc: true
+				testOptions: {babelrc: false}
 			},
 			cacheEnabled: false,
 			projectDir: path.join(__dirname, 'fixture/babelrc')
@@ -917,7 +895,33 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok(data.title === 'FOO' || data.title === 'repeated test: FOO');
+				t.is(data.title, 'foo');
+			});
+		});
+
+		return api.run()
+			.then(result => {
+				t.is(result.passCount, 1);
+			});
+	});
+
+	test(`${prefix} babelConfig.testOptions merges plugins with .babelrc`, t => {
+		t.plan(3);
+
+		const api = apiCreator({
+			babelConfig: {
+				testOptions: {
+					babelrc: true,
+					plugins: [testCapitalizerPlugin]
+				}
+			},
+			cacheEnabled: false,
+			projectDir: path.join(__dirname, 'fixture/babelrc')
+		});
+
+		api.on('test-run', runStatus => {
+			runStatus.on('test', data => {
+				t.ok(data.title === 'FOO' || data.title === 'repeated test: foo');
 			});
 		});
 
@@ -927,13 +931,15 @@ function generateTests(prefix, apiCreator) {
 			});
 	});
 
-	test(`${prefix} babelConfig:{extends:path, plugins:[...]} merges plugins with .babelrc`, t => {
+	test(`${prefix} babelConfig.testOptions with extends still merges plugins with .babelrc`, t => {
 		t.plan(3);
 
 		const api = apiCreator({
 			babelConfig: {
-				plugins: [testCapitalizerPlugin],
-				extends: path.join(__dirname, 'fixture/babelrc/.alt-babelrc')
+				testOptions: {
+					plugins: [testCapitalizerPlugin],
+					extends: path.join(__dirname, 'fixture/babelrc/.alt-babelrc')
+				}
 			},
 			cacheEnabled: false,
 			projectDir: path.join(__dirname, 'fixture/babelrc')
@@ -941,7 +947,7 @@ function generateTests(prefix, apiCreator) {
 
 		api.on('test-run', runStatus => {
 			runStatus.on('test', data => {
-				t.ok(data.title === 'BAR' || data.title === 'repeated test: BAR');
+				t.ok(data.title === 'BAR' || data.title === 'repeated test: bar');
 			});
 		});
 

@@ -67,7 +67,7 @@ test('disallow invalid babel config shortcuts', t => {
 
 		let expectedOutput = '\n  ';
 		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava#es2017-support for allowed values.';
+		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
@@ -389,14 +389,6 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	child.stderr.on('data', testOutput);
 });
 
-test('bails when config contains `"tap": true` and `"watch": true`', t => {
-	execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
-		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-		t.end();
-	});
-});
-
 ['--watch', '-w'].forEach(watchFlag => {
 	['--tap', '-t'].forEach(tapFlag => {
 		test(`bails when ${tapFlag} reporter is used while ${watchFlag} is given`, t => {
@@ -423,7 +415,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided without value`, t => {
 		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be provided.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -433,7 +425,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is a string`, t => {
 		execCli([`${concurrencyFlag}=foo`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -443,7 +435,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is a float`, t => {
 		execCli([`${concurrencyFlag}=4.7`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -453,7 +445,7 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 	test(`bails when ${concurrencyFlag} is provided with an input that is negative`, t => {
 		execCli([`${concurrencyFlag}=-1`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
-			t.match(stderr, 'The --concurrency and -c flags must be a nonnegative integer.');
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
 			t.end();
 		});
 	});
@@ -528,7 +520,7 @@ test('use current working directory if `package.json` is not found', () => {
 	const cliPath = require.resolve('../cli.js');
 	const avaPath = require.resolve('../');
 
-	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest(t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest('test', t => { t.pass(); });`);
 
 	return execa(process.execPath, [cliPath], {cwd});
 });
@@ -821,6 +813,53 @@ test('doesn\'t set NODE_ENV when it is set', t => {
 	execCli([path.join('fixture', 'node-env-foo.js')], {env: {NODE_ENV: 'foo'}}, (err, stdout, stderr) => {
 		t.ifError(err);
 		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('skips test file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['import.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('skips helper file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['require-helper.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('no power-assert when babel=false and compileEnhancements=false', t => {
+	execCli(['no-power-assert.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.notMatch(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('skips stage-4 transform when babel=false and compileEnhancements=true', t => {
+	execCli(['import.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('power-assert when babel=false and compileEnhancements=true', t => {
+	execCli(['power-assert.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('workers load compiled helpers if in the require configuration', t => {
+	execCli(['test/verify.js'], {dirname: 'fixture/require-compiled-helper'}, err => {
+		t.ifError(err);
 		t.end();
 	});
 });

@@ -2,7 +2,7 @@
 
 const test = require('../../index.js.flow');
 
-test(t => {
+test('test', t => {
 	t.throws(() => { throw new Error(); });
 	t.throws(Promise.reject(new Error()));
 

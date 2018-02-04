@@ -1,5 +1,5 @@
 import test from '../../';
 
-test(t => {
+test('test', t => {
 	t.true(process.execArgv[0].indexOf('--debug') === 0);
 });

@@ -1,9 +1,9 @@
 import test from '../../';
 
-test.only(t => {
+test.only('only', t => {
 	t.pass();
 });
 
-test(t => {
+test('test', t => {
 	t.fail();
 });

@@ -67,11 +67,13 @@ export interface AssertContext {
  	 * @param error Can be a constructor, regex, error message or validation function.
  	 */
 	throws(value: PromiseLike<any>, error?: ErrorValidator, message?: string): Promise<any>;
+	throws(value: () => PromiseLike<any>, error?: ErrorValidator, message?: string): Promise<any>;
 	throws(value: () => void, error?: ErrorValidator, message?: string): any;
 	/**
 	 * Assert that function doesn't throw an error or promise resolves.
 	 */
 	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
+	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
 	notThrows(value: () => void, message?: string): void;
 	/**
 	 * Assert that contents matches regex.
@@ -125,16 +127,14 @@ export interface Macro<T> {
 export type Macros<T> = Macro<T> | Macro<T>[];
 
 interface RegisterBase<T> {
-    (name: string, run: GenericTest<T>): void;
-    (run: GenericTest<T>): void;
-    (name: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
+    (title: string, run: GenericTest<T>): void;
+    (title: string, run: Macros<GenericTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericTestContext<T>>, ...args: any[]): void;
 }
 
 interface CallbackRegisterBase<T> {
-    (name: string, run: GenericCallbackTest<T>): void;
-    (run: GenericCallbackTest<T>): void;
-    (name: string, run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
+    (title: string, run: GenericCallbackTest<T>): void;
+    (title: string, run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
     (run: Macros<GenericCallbackTestContext<T>>, ...args: any[]): void;
 }
 

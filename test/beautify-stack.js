@@ -1,6 +1,7 @@
 'use strict';
 const proxyquire = require('proxyquire').noPreserveCache();
 const test = require('tap').test;
+const Sequence = require('../lib/sequence');
 
 const beautifyStack = proxyquire('../lib/beautify-stack', {
 	debug() {
@@ -55,13 +56,20 @@ test('returns empty string without any arguments', t => {
 
 test('beautify stack - removes uninteresting lines', t => {
 	try {
-		fooFunc();
+		const seq = new Sequence([{
+			run() {
+				fooFunc();
+			}
+		}]);
+		seq.run();
 	} catch (err) {
 		const stack = beautifyStack(err.stack);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
-		t.match(err.stack, /Module._compile/);
-		t.notMatch(stack, /Module\._compile/);
+		// The runNext line is introduced by Sequence. It's internal so it should
+		// be stripped.
+		t.match(err.stack, /runNext/);
+		t.notMatch(stack, /runNext/);
 		t.end();
 	}
 });

@@ -1,6 +1,6 @@
 import test from '../../..';
 
-test.cb(t => {
+test.cb('test', t => {
 	setTimeout(() => {
 		t.throws(throwSync());
 	});

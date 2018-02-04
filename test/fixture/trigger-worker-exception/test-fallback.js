@@ -1,5 +1,5 @@
 import test from '../../../';
 
-test(async () => {
+test('test', async () => {
 	throw new Error('Hi :)');
 });

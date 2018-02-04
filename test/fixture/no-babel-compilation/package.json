@@ -1,0 +1,6 @@
+{
+	"ava": {
+		"babel": false,
+		"compileEnhancements": false
+	}
+}

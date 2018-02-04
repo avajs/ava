@@ -37,7 +37,10 @@ Promise.longStackTraces();
 
 const conf = pkgConf.sync('ava', {
 	defaults: {
-		babel: 'default'
+		babel: {
+			testOptions: {}
+		},
+		compileEnhancements: true
 	}
 });
 
@@ -76,16 +79,18 @@ const cacheDir = findCacheDir({
 	files: [file]
 }) || uniqueTempDir();
 
-babelConfigHelper.build(process.cwd(), cacheDir, conf.babel, true)
+babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), conf.compileEnhancements === true)
 	.then(result => {
-		const precompiler = new CachingPrecompiler({
-			path: cacheDir,
-			getBabelOptions: result.getOptions,
-			babelCacheKeys: result.cacheKeys
-		});
-
 		const precompiled = {};
-		precompiled[file] = precompiler.precompileFile(file);
+		if (result) {
+			const precompiler = new CachingPrecompiler({
+				path: cacheDir,
+				getBabelOptions: result.getOptions,
+				babelCacheKeys: result.cacheKeys
+			});
+
+			precompiled[file] = precompiler.precompileFile(file);
+		}
 
 		const opts = {
 			file,
