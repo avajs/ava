@@ -8,9 +8,21 @@ const Test = require('../lib/test');
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 const noop = () => {};
 
+class ContextRef {
+	constructor() {
+		this.value = {};
+	}
+	get() {
+		return this.value;
+	}
+	set(newValue) {
+		this.value = newValue;
+	}
+}
+
 function ava(fn, contextRef, onResult) {
 	return new Test({
-		contextRef,
+		contextRef: contextRef || new ContextRef(),
 		failWithoutAssertions: true,
 		fn,
 		metadata: {type: 'test', callback: false},
@@ -21,7 +33,7 @@ function ava(fn, contextRef, onResult) {
 
 ava.failing = (fn, contextRef, onResult) => {
 	return new Test({
-		contextRef,
+		contextRef: contextRef || new ContextRef(),
 		failWithoutAssertions: true,
 		fn,
 		metadata: {type: 'test', callback: false, failing: true},
@@ -32,7 +44,7 @@ ava.failing = (fn, contextRef, onResult) => {
 
 ava.cb = (fn, contextRef, onResult) => {
 	return new Test({
-		contextRef,
+		contextRef: contextRef || new ContextRef(),
 		failWithoutAssertions: true,
 		fn,
 		metadata: {type: 'test', callback: true},
@@ -43,7 +55,7 @@ ava.cb = (fn, contextRef, onResult) => {
 
 ava.cb.failing = (fn, contextRef, onResult) => {
 	return new Test({
-		contextRef,
+		contextRef: contextRef || new ContextRef(),
 		failWithoutAssertions: true,
 		fn,
 		metadata: {type: 'test', callback: true, failing: true},
@@ -615,7 +627,11 @@ test('no crash when adding assertions after the test has ended', t => {
 
 test('contextRef', t => {
 	new Test({
-		contextRef: {context: {foo: 'bar'}},
+		contextRef: {
+			get() {
+				return {foo: 'bar'};
+			}
+		},
 		failWithoutAssertions: true,
 		fn(a) {
 			a.pass();
