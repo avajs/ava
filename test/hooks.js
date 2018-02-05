@@ -38,7 +38,7 @@ test('before', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		arr.push('b');
 	});
@@ -58,7 +58,7 @@ test('after', t => {
 		arr.push('b');
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		arr.push('a');
 	});
@@ -82,7 +82,7 @@ test('after not run if test failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test('test', () => {
+	runner.chain('test', () => {
 		throw new Error('something went wrong');
 	});
 	return runner.run({}).then(() => {
@@ -104,7 +104,7 @@ test('after.always run even if test failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test('test', () => {
+	runner.chain('test', () => {
 		throw new Error('something went wrong');
 	});
 	return runner.run({}).then(() => {
@@ -150,7 +150,7 @@ test('stop if before hooks failed', t => {
 		throw new Error('something went wrong');
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		arr.push('b');
 		a.end();
@@ -178,12 +178,12 @@ test('before each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.chain.test('c', a => {
+	runner.chain('c', a => {
 		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.chain.test('d', a => {
+	runner.chain('d', a => {
 		a.pass();
 		arr[1].push('d');
 	});
@@ -235,7 +235,7 @@ test('fail if beforeEach hook fails', t => {
 		a.fail();
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		arr.push('b');
 		a.pass();
 	});
@@ -264,12 +264,12 @@ test('after each with concurrent tests', t => {
 		arr[k++].push('b');
 	});
 
-	runner.chain.test('c', a => {
+	runner.chain('c', a => {
 		a.pass();
 		arr[0].push('c');
 	});
 
-	runner.chain.test('d', a => {
+	runner.chain('d', a => {
 		a.pass();
 		arr[1].push('d');
 	});
@@ -320,7 +320,7 @@ test('afterEach not run if concurrent tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test('test', () => {
+	runner.chain('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -360,7 +360,7 @@ test('afterEach.always run even if concurrent tests failed', t => {
 		arr.push('a');
 	});
 
-	runner.chain.test('test', () => {
+	runner.chain('test', () => {
 		throw new Error('something went wrong');
 	});
 
@@ -400,7 +400,7 @@ test('afterEach.always run even if beforeEach failed', t => {
 		throw new Error('something went wrong');
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		arr.push('a');
 	});
@@ -437,7 +437,7 @@ test('ensure hooks run only around tests', t => {
 		arr.push('after');
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		arr.push('test');
 	});
@@ -471,7 +471,7 @@ test('shared context', t => {
 		a.context.prop = 'beforeEach';
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		a.deepEqual(a.context.arr, ['a', 'b']);
 		a.context.arr.push('c');
@@ -502,7 +502,7 @@ test('shared context of any type', t => {
 		a.context = 'foo';
 	});
 
-	runner.chain.test('test', a => {
+	runner.chain('test', a => {
 		a.pass();
 		a.is(a.context, 'foo');
 	});

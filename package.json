@@ -13,15 +13,13 @@
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**') && lock-verify",
 		"test": "npm run lint && flow check test/flow-types && tsc -p test/ts-types && nyc tap --no-cov --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
 		"test-win": "tap --no-cov --reporter=classic --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
-		"visual": "node test/visual/run-visual-tests.js",
-		"prepare": "npm run make-ts",
-		"make-ts": "node types/make.js"
+		"visual": "node test/visual/run-visual-tests.js"
 	},
 	"files": [
 		"lib",
 		"*.js",
 		"*.js.flow",
-		"types/generated.d.ts"
+		"index.d.ts"
 	],
 	"keywords": [
 		"🦄",
@@ -125,7 +123,6 @@
 		"ms": "^2.1.1",
 		"multimatch": "^2.1.0",
 		"observable-to-promise": "^0.5.0",
-		"option-chain": "^1.0.0",
 		"package-hash": "^2.0.0",
 		"pkg-conf": "^2.1.0",
 		"plur": "^2.0.0",
@@ -156,7 +153,6 @@
 		"git-branch": "^1.0.0",
 		"has-ansi": "^3.0.0",
 		"inquirer": "^5.0.1",
-		"is-array-sorted": "^1.0.0",
 		"lock-verify": "^1.1.0",
 		"lolex": "^2.3.1",
 		"nyc": "^11.4.1",
@@ -169,11 +165,11 @@
 		"tap": "^11.0.1",
 		"temp-write": "^3.4.0",
 		"touch": "^3.1.0",
-		"typescript": "^2.6.2",
+		"typescript": "^2.7.1",
 		"xo": "^0.18.2",
 		"zen-observable": "^0.7.1"
 	},
-	"typings": "types/generated.d.ts",
+	"typings": "index.d.ts",
 	"xo": {
 		"ignores": [
 			"media/**"

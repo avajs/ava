@@ -1,28 +1,24 @@
-// @flow
-export interface PromiseLike<R> {
-	then<U>(onFulfill?: (value: R) => Promise<U> | U, onReject?: (error: any) => Promise<U> | U): Promise<U>;
-}
-
 export interface ObservableLike {
 	subscribe(observer: (value: any) => void): void;
 }
 
-export type ThrowsErrorValidator = Class<{constructor(...args: Array<any>): any}> | RegExp | string | ((error: any) => boolean);
+export type ThrowsErrorValidator = (new (...args: Array<any>) => any) | RegExp | string | ((error: any) => boolean);
 
 export interface SnapshotOptions {
 	id?: string;
 }
 
 export interface Assertions {
-	deepEqual(actual: any, expected: any, message?: string): void;
+	deepEqual<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
 	fail(message?: string): void;
 	false(actual: any, message?: string): void;
 	falsy(actual: any, message?: string): void;
 	ifError(error: any, message?: string): void;
-	is(actual: any, expected: any, message?: string): void;
-	not(actual: any, expected: any, message?: string): void;
-	notDeepEqual(actual: any, expected: any, message?: string): void;
+	is<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	not<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	notDeepEqual<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
 	notRegex(string: string, regex: RegExp, message?: string): void;
+	notThrows(value: () => never, message?: string): void;
 	notThrows(value: () => ObservableLike, message?: string): Promise<void>;
 	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
 	notThrows(value: () => any, message?: string): void;
@@ -32,6 +28,7 @@ export interface Assertions {
 	regex(string: string, regex: RegExp, message?: string): void;
 	snapshot(expected: any, message?: string): void;
 	snapshot(expected: any, options: SnapshotOptions, message?: string): void;
+	throws(value: () => never, error?: ThrowsErrorValidator, message?: string): any;
 	throws(value: () => ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 	throws(value: () => PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 	throws(value: () => any, error?: ThrowsErrorValidator, message?: string): any;
@@ -54,8 +51,8 @@ export interface CbExecutionContext<Context = {}> extends ExecutionContext<Conte
 }
 
 export type ImplementationResult = PromiseLike<void> | ObservableLike | Iterator<any> | void;
-export type Implementation<Context = {}> = {(t: ExecutionContext<Context>): ImplementationResult};
-export type CbImplementation<Context = {}> = {(t: CbExecutionContext<Context>): ImplementationResult};
+export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
+export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
 export interface Macro<Context = {}> {
 	(t: ExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
@@ -68,7 +65,7 @@ export interface CbMacro<Context = {}> {
 }
 
 export interface TestInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -85,7 +82,7 @@ export interface TestInterface<Context = {}> {
 }
 
 export interface AfterInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -95,7 +92,7 @@ export interface AfterInterface<Context = {}> {
 }
 
 export interface AlwaysInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -104,7 +101,7 @@ export interface AlwaysInterface<Context = {}> {
 }
 
 export interface BeforeInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -113,7 +110,7 @@ export interface BeforeInterface<Context = {}> {
 }
 
 export interface CbInterface<Context = {}> {
-	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, implementation: CbImplementation<Context>): void;
 	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 
@@ -123,7 +120,7 @@ export interface CbInterface<Context = {}> {
 }
 
 export interface CbFailingInterface<Context = {}> {
-	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, implementation: CbImplementation<Context>): void;
 	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 
@@ -132,19 +129,19 @@ export interface CbFailingInterface<Context = {}> {
 }
 
 export interface CbOnlyInterface<Context = {}> {
-	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, implementation: CbImplementation<Context>): void;
 	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 }
 
 export interface CbSkipInterface<Context = {}> {
-	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, implementation: CbImplementation<Context>): void;
 	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 }
 
 export interface FailingInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -153,7 +150,7 @@ export interface FailingInterface<Context = {}> {
 }
 
 export interface HookCbInterface<Context = {}> {
-	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, implementation: CbImplementation<Context>): void;
 	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 
@@ -161,13 +158,13 @@ export interface HookCbInterface<Context = {}> {
 }
 
 export interface OnlyInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 }
 
 export interface SerialInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
@@ -179,23 +176,24 @@ export interface SerialInterface<Context = {}> {
 }
 
 export interface SkipInterface<Context = {}> {
-	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, implementation: Implementation<Context>): void;
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 }
 
-export type TodoDeclaration = {(title: string): void};
+export type TodoDeclaration = (title: string) => void;
 
-declare export default TestInterface<>;
+declare const test: TestInterface;
+export default test;
 
-declare export var test: TestInterface<>;
-declare export var after: AfterInterface<null>;
-declare export var afterEach: AfterInterface<>;
-declare export var before: BeforeInterface<null>;
-declare export var beforeEach: BeforeInterface<>;
-declare export var cb: CbInterface<>;
-declare export var failing: FailingInterface<>;
-declare export var only: OnlyInterface<>;
-declare export var serial: SerialInterface<>;
-declare export var skip: SkipInterface<>;
-declare export var todo: TodoDeclaration;
+export {test};
+export const after: AfterInterface<null>;
+export const afterEach: AfterInterface;
+export const before: BeforeInterface<null>;
+export const beforeEach: BeforeInterface;
+export const cb: CbInterface;
+export const failing: FailingInterface;
+export const only: OnlyInterface;
+export const serial: SerialInterface;
+export const skip: SkipInterface;
+export const todo: TodoDeclaration;
