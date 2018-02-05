@@ -12,6 +12,8 @@ Even though JavaScript is single-threaded, IO in Node.js can happen in parallel 
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
+**This documentation covers the 1.0 beta releases, which use Babel 7. The last release that uses Babel 6 is [`v0.25.0`](https://github.com/avajs/ava/tree/v0.25.0).**
+
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
 
 
@@ -73,14 +75,14 @@ Install AVA globally and run it with `--init` to add AVA to your `package.json`.
 
 
 ```console
-$ npm install --global ava
+$ npm install --global ava@next
 $ ava --init
 ```
 
 If you prefer using Yarn:
 
 ```console
-$ yarn global add ava
+$ yarn global add ava@next
 $ ava --init
 ```
 
@@ -93,7 +95,7 @@ Your `package.json` will then look like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.20.0"
+		"ava": "^1.0.0-beta.1"
 	}
 }
 ```
@@ -105,13 +107,13 @@ Any arguments passed after `--init` are added as config to `package.json`.
 You can also install AVA directly:
 
 ```console
-$ npm install --save-dev ava
+$ npm install --save-dev ava@next
 ```
 
 Alternatively using Yarn:
 
 ```console
-$ yarn add --dev ava
+$ yarn add --dev ava@next
 ```
 
 You'll have to configure the `test` script in your `package.json` to use `ava` (see above).
