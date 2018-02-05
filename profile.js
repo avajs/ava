@@ -9,7 +9,6 @@ const EventEmitter = require('events');
 const meow = require('meow');
 const Promise = require('bluebird');
 const pkgConf = require('pkg-conf');
-const findCacheDir = require('find-cache-dir');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
@@ -44,6 +43,9 @@ const conf = pkgConf.sync('ava', {
 	}
 });
 
+const filepath = pkgConf.filepath(conf);
+const projectDir = filepath === null ? process.cwd() : path.dirname(filepath);
+
 // Define a minimal set of options from the main CLI
 const cli = meow(`
 	Usage
@@ -74,10 +76,7 @@ if (cli.input.length === 0) {
 }
 
 const file = path.resolve(cli.input[0]);
-const cacheDir = findCacheDir({
-	name: 'ava',
-	files: [file]
-}) || uniqueTempDir();
+const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
 babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), conf.compileEnhancements === true)
 	.then(result => {

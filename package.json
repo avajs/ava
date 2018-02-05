@@ -97,7 +97,6 @@
 		"empower-core": "^0.6.1",
 		"equal-length": "^1.0.0",
 		"figures": "^2.0.0",
-		"find-cache-dir": "^1.0.0",
 		"get-port": "^3.2.0",
 		"globby": "^7.1.1",
 		"hullabaloo-config-manager": "^2.0.0-beta.2",
