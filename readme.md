@@ -781,9 +781,7 @@ test.cb('data.txt can be read', t => {
 
 ### Global timeout
 
-A global timeout can be set via the `--timeout` option.
-Timeout in AVA behaves differently than in other test frameworks.
-AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout.
+A global timeout can be set via the `--timeout` option. Timeout in AVA behaves differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests.
 
 You can set timeouts in a human-readable way:
 
