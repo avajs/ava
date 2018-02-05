@@ -69,9 +69,9 @@ export interface TestInterface<Context = {}> {
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-	after: AfterInterface<null>;
+	after: AfterInterface<Context>;
 	afterEach: AfterInterface<Context>;
-	before: BeforeInterface<null>;
+	before: BeforeInterface<Context>;
 	beforeEach: BeforeInterface<Context>;
 	cb: CbInterface<Context>;
 	failing: FailingInterface<Context>;
@@ -187,9 +187,9 @@ declare const test: TestInterface;
 export default test;
 
 export {test};
-export const after: AfterInterface<null>;
+export const after: AfterInterface;
 export const afterEach: AfterInterface;
-export const before: BeforeInterface<null>;
+export const before: BeforeInterface;
 export const beforeEach: BeforeInterface;
 export const cb: CbInterface;
 export const failing: FailingInterface;

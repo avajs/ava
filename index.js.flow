@@ -72,9 +72,9 @@ export interface TestInterface<Context = {}> {
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-	after: AfterInterface<null>;
+	after: AfterInterface<Context>;
 	afterEach: AfterInterface<Context>;
-	before: BeforeInterface<null>;
+	before: BeforeInterface<Context>;
 	beforeEach: BeforeInterface<Context>;
 	cb: CbInterface<Context>;
 	failing: FailingInterface<Context>;
@@ -189,9 +189,9 @@ export type TodoDeclaration = {(title: string): void};
 declare export default TestInterface<>;
 
 declare export var test: TestInterface<>;
-declare export var after: AfterInterface<null>;
+declare export var after: AfterInterface<>;
 declare export var afterEach: AfterInterface<>;
-declare export var before: BeforeInterface<null>;
+declare export var before: BeforeInterface<>;
 declare export var beforeEach: BeforeInterface<>;
 declare export var cb: CbInterface<>;
 declare export var failing: FailingInterface<>;
