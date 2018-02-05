@@ -56,11 +56,20 @@ class Api extends EventEmitter {
 		};
 
 		// Track active forks and manage timeouts.
+		const failFast = apiOptions.failFast === true;
+		let bailed = false;
 		const pendingForks = new Set();
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
+
 			restartTimer = debounce(() => {
+				// If failFast is active, prevent new test files from running after
+				// the current ones are exited.
+				if (failFast) {
+					bailed = true;
+				}
+
 				for (const fork of pendingForks) {
 					fork.exit();
 				}
@@ -78,11 +87,20 @@ class Api extends EventEmitter {
 					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
 					prefixTitles: apiOptions.explicitTitles || files.length > 1,
 					base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-					failFast: apiOptions.failFast,
+					failFast,
 					updateSnapshots: runtimeOptions.updateSnapshots
 				});
 
 				runStatus.on('test', restartTimer);
+				if (failFast) {
+					// Prevent new test files from running once a test has failed.
+					runStatus.on('test', test => {
+						if (test.error) {
+							bailed = true;
+						}
+					});
+				}
+
 				this.emit('test-run', runStatus, files);
 
 				// Bail out early if no files were found.
@@ -130,6 +148,12 @@ class Api extends EventEmitter {
 
 						// Try and run each file, limited by `concurrency`.
 						return Bluebird.map(files, file => {
+							// No new files should be run once a test has timed out or failed,
+							// and failFast is enabled.
+							if (bailed) {
+								return null;
+							}
+
 							let forked;
 							return Bluebird.resolve(
 								this._computeForkExecArgv().then(execArgv => {
@@ -157,6 +181,10 @@ class Api extends EventEmitter {
 
 									return forked;
 								}).catch(err => {
+									// Prevent new test files from running.
+									if (failFast) {
+										bailed = true;
+									}
 									handleError(Object.assign(err, {file}));
 									return null;
 								})

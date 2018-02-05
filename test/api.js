@@ -202,7 +202,7 @@ test('display filename prefixes for failed test stack traces in subdirs', t => {
 		});
 });
 
-test('fail-fast mode', t => {
+test('fail-fast mode - single file', t => {
 	const api = apiCreator({
 		failFast: true
 	});
@@ -218,7 +218,7 @@ test('fail-fast mode', t => {
 		});
 	});
 
-	return api.run([path.join(__dirname, 'fixture/fail-fast.js')])
+	return api.run([path.join(__dirname, 'fixture/fail-fast/single-file/test.js')])
 		.then(result => {
 			t.ok(api.options.failFast);
 			t.strictDeepEqual(tests, [{
@@ -230,6 +230,121 @@ test('fail-fast mode', t => {
 			}]);
 			t.is(result.passCount, 1);
 			t.is(result.failCount, 1);
+		});
+});
+
+test('fail-fast mode - multiple files', t => {
+	const api = apiCreator({
+		failFast: true,
+		serial: true
+	});
+
+	const tests = [];
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', test => {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
+		});
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+		path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.js')
+	])
+		.then(result => {
+			t.ok(api.options.failFast);
+			t.strictDeepEqual(tests, [{
+				ok: true,
+				title: `fails ${figures.pointerSmall} first pass`
+			}, {
+				ok: false,
+				title: `fails ${figures.pointerSmall} second fail`
+			}]);
+			t.is(result.passCount, 1);
+			t.is(result.failCount, 1);
+		});
+});
+
+test('fail-fast mode - crash', t => {
+	const api = apiCreator({
+		failFast: true,
+		serial: true
+	});
+
+	const tests = [];
+	const errors = [];
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', test => {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
+		});
+		runStatus.on('error', err => {
+			errors.push(err);
+		});
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/fail-fast/crash/crashes.js'),
+		path.join(__dirname, 'fixture/fail-fast/crash/passes.js')
+	])
+		.then(result => {
+			t.ok(api.options.failFast);
+			t.strictDeepEqual(tests, []);
+			t.is(errors.length, 1);
+			t.is(errors[0].name, 'AvaError');
+			t.is(errors[0].message, `${path.join('test', 'fixture', 'fail-fast', 'crash', 'crashes.js')} exited with a non-zero exit code: 1`);
+			t.is(result.passCount, 0);
+			t.is(result.failCount, 0);
+		});
+});
+
+test('fail-fast mode - timeout', t => {
+	const api = apiCreator({
+		failFast: true,
+		serial: true,
+		timeout: '100ms'
+	});
+
+	const tests = [];
+	const errors = [];
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', test => {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
+		});
+		runStatus.on('error', err => {
+			errors.push(err);
+		});
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/fail-fast/timeout/fails.js'),
+		path.join(__dirname, 'fixture/fail-fast/timeout/passes.js')
+	])
+		.then(result => {
+			t.ok(api.options.failFast);
+			if (tests.length > 0) {
+				t.is(tests.length, 1);
+				// FIXME: The fails.js test file should have exited without the pending
+				// test completing, but that's not always the case.
+				t.is(tests[0].title, 'fails › slow pass');
+				t.is(result.passCount, 1);
+			} else {
+				t.is(result.passCount, 0);
+			}
+			t.is(errors.length, 1);
+			t.is(errors[0].name, 'AvaError');
+			t.is(errors[0].message, 'Exited because no new tests completed within the last 100ms of inactivity');
+			t.is(result.failCount, 0);
 		});
 });
 
