@@ -656,7 +656,7 @@ test('caching is enabled by default', t => {
 	del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 	const api = apiCreator({
-		resolveTestsFrom: path.join(__dirname, 'fixture/caching')
+		projectDir: path.join(__dirname, 'fixture/caching')
 	});
 
 	return api.run([path.join(__dirname, 'fixture/caching/test.js')])
@@ -1024,14 +1024,13 @@ test('errors thrown when running files are emitted', t => {
 function generatePassDebugTests(execArgv, expectedInspectIndex) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		const api = apiCreator({testOnlyExecArgv: execArgv});
-		return api._computeForkExecArgs(['foo.js'])
+		return api._computeForkExecArgv()
 			.then(result => {
-				t.true(result.length === 1);
+				t.true(result.length === execArgv.length);
 				if (expectedInspectIndex === -1) {
-					t.true(result[0].length === 1);
-					t.true(/--debug=\d+/.test(result[0][0]));
+					t.true(/--debug=\d+/.test(result[0]));
 				} else {
-					t.true(/--inspect=\d+/.test(result[0][expectedInspectIndex]));
+					t.true(/--inspect=\d+/.test(result[expectedInspectIndex]));
 				}
 			});
 	});
