@@ -14,7 +14,6 @@ const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
-const globals = require('./lib/globals');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -27,10 +26,6 @@ function resolveModules(modules) {
 		return modulePath;
 	});
 }
-
-// Chrome gets upset when the `this` value is non-null for these functions
-globals.setTimeout = setTimeout.bind(null);
-globals.clearTimeout = clearTimeout.bind(null);
 
 Promise.longStackTraces();
 
