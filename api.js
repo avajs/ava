@@ -88,6 +88,7 @@ class Api extends EventEmitter {
 					prefixTitles: apiOptions.explicitTitles || files.length > 1,
 					base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
 					failFast,
+					fileCount: files.length,
 					updateSnapshots: runtimeOptions.updateSnapshots
 				});
 

@@ -594,6 +594,8 @@ test('results when fail-fast is enabled', t => {
 	runStatus.remainingCount = 1;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
@@ -616,6 +618,8 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	runStatus.remainingCount = 2;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
@@ -632,6 +636,78 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	t.end();
 });
 
+test('results when fail-fast is enabled with skipped test file', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 2;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 1 test file was skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped test files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 2 test files were skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped tests and files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped, as well as 2 test files.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
 test('results without fail-fast if no failing tests', t => {
 	const reporter = createReporter();
 	const runStatus = createRunStatus();
@@ -639,6 +715,8 @@ test('results without fail-fast if no failing tests', t => {
 	runStatus.failCount = 0;
 	runStatus.passCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
@@ -657,6 +735,8 @@ test('results without fail-fast if no skipped tests', t => {
 	runStatus.remainingCount = 0;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
