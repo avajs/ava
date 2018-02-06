@@ -70,7 +70,7 @@ test('passing test and duration less than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 90
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed';
 
@@ -84,22 +84,11 @@ test('passing test and duration greater than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 150
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed' + colors.dimGray(' (150ms)');
 
 	t.is(actualOutput, expectedOutput);
-	t.end();
-});
-
-test('don\'t display test title if there is only one anonymous test', t => {
-	const reporter = createReporter();
-
-	const output = reporter.test({
-		title: '[anonymous]'
-	}, createRunStatus());
-
-	t.is(output, undefined);
 	t.end();
 });
 
@@ -109,7 +98,7 @@ test('known failure test', t => {
 	const actualOutput = reporter.test({
 		title: 'known failure',
 		failing: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.red(figures.tick) + ' ' + colors.red('known failure');
 
@@ -125,7 +114,7 @@ test('failing test', t => {
 		error: {
 			message: 'assertion failed'
 		}
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.red(figures.cross) + ' failed ' + colors.red('assertion failed');
 
@@ -139,7 +128,7 @@ test('skipped test', t => {
 	const actualOutput = reporter.test({
 		title: 'skipped',
 		skip: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.yellow('- skipped');
 
@@ -154,7 +143,7 @@ test('todo test', t => {
 		title: 'todo',
 		skip: true,
 		todo: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.blue('- todo');
 
