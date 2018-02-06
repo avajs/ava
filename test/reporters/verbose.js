@@ -172,7 +172,7 @@ test('uncaught exception', t => {
 
 	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Uncaught Exception: test.js'));
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -202,7 +202,7 @@ test('unhandled rejection', t => {
 
 	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Unhandled Rejection: test.js'));
+	t.is(output[0].trim(), colors.boldWhite('Unhandled rejection in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -218,8 +218,8 @@ test('unhandled error without stack', t => {
 
 	const output = reporter.unhandledError(err, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Uncaught Exception: test.js'));
-	t.is(output[1], '  ' + colors.red(JSON.stringify(err)));
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
+	t.is(output[1], '  Threw non-error: ' + JSON.stringify({message: 'test'}));
 	t.end();
 });
 
