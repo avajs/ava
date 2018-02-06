@@ -1,4 +1,6 @@
 'use strict';
+require('../lib/worker-options').set({});
+
 const path = require('path');
 const test = require('tap').test;
 const Runner = require('../lib/runner');
