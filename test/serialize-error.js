@@ -161,3 +161,14 @@ test('remove non-string error properties', t => {
 	t.is(serializedErr.stack, undefined);
 	t.end();
 });
+
+test('creates multiline summaries for syntax errors', t => {
+	const err = {
+		name: 'SyntaxError',
+		stack: 'Hello\nThere\nSyntaxError here\nIgnore me'
+	};
+	const serializedErr = serialize(err);
+	t.is(serializedErr.name, 'SyntaxError');
+	t.is(serializedErr.summary, 'Hello\nThere\nSyntaxError here');
+	t.end();
+});
