@@ -332,18 +332,11 @@ test('fail-fast mode - timeout', t => {
 	])
 		.then(result => {
 			t.ok(api.options.failFast);
-			if (tests.length > 0) {
-				t.is(tests.length, 1);
-				// FIXME: The fails.js test file should have exited without the pending
-				// test completing, but that's not always the case.
-				t.is(tests[0].title, 'fails › slow pass');
-				t.is(result.passCount, 1);
-			} else {
-				t.is(result.passCount, 0);
-			}
+			t.strictDeepEqual(tests, []);
 			t.is(errors.length, 1);
 			t.is(errors[0].name, 'AvaError');
 			t.is(errors[0].message, 'Exited because no new tests completed within the last 100ms of inactivity');
+			t.is(result.passCount, 0);
 			t.is(result.failCount, 0);
 		});
 });
