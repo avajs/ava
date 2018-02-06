@@ -1,4 +1,5 @@
 'use strict';
+require('../../lib/worker-options').set({});
 
 // These tests are run as a sub-process of the `tap` module, so the standard
 // output stream will not be recognized as a text terminal. AVA internals are

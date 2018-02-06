@@ -1,5 +1,5 @@
 'use strict';
-require('../lib/globals').options.color = false;
+require('../lib/worker-options').set({color: false});
 
 const test = require('tap').test;
 const delay = require('delay');
