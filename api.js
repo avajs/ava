@@ -157,7 +157,10 @@ class Api extends EventEmitter {
 							let forked;
 							return Bluebird.resolve(
 								this._computeForkExecArgv().then(execArgv => {
-									const options = Object.assign({}, apiOptions);
+									const options = Object.assign({}, apiOptions, {
+										// If we're looking for matches, run every single test process in exclusive-only mode
+										runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
+									});
 									if (precompilation) {
 										options.cacheDir = precompilation.cacheDir;
 										options.precompiled = precompilation.map;
@@ -173,12 +176,6 @@ class Api extends EventEmitter {
 									pendingForks.add(forked);
 									runStatus.observeFork(forked);
 									restartTimer();
-
-									forked.run({
-										// If we're looking for matches, run every single test process in exclusive-only mode
-										runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
-									});
-
 									return forked;
 								}).catch(err => {
 									// Prevent new test files from running.

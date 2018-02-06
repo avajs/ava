@@ -97,6 +97,8 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 		};
 
 		const events = new EventEmitter();
+		events.on('loaded-file', () => {});
+
 		let uncaughtExceptionCount = 0;
 
 		// Mock the behavior of a parent process
