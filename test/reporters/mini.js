@@ -649,7 +649,9 @@ test('results when fail-fast is enabled', t => {
 	const runStatus = {
 		remainingCount: 1,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -666,7 +668,9 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	const runStatus = {
 		remainingCount: 2,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -678,12 +682,71 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	t.end();
 });
 
+test('results when fail-fast is enabled with skipped test file', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 2,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. 1 test file was skipped.'),
+		''
+	]);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped test files', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 3,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. 2 test files were skipped.'),
+		''
+	]);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped tests and files', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 1,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 3,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped, as well as 2 test files.'),
+		''
+	]);
+	t.end();
+});
+
 test('results without fail-fast if no failing tests', t => {
 	const reporter = miniReporter();
 	const runStatus = {
 		remainingCount: 1,
 		failCount: 0,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -696,7 +759,9 @@ test('results without fail-fast if no skipped tests', t => {
 	const runStatus = {
 		remainingCount: 0,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
