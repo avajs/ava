@@ -604,7 +604,12 @@ function generateTests(prefix, apiCreator) {
 			});
 		});
 
-		return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]);
+		return api.run([
+			path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js'),
+			path.join(__dirname, 'fixture/ignored-dirs/a/node_modules/test.js'),
+			path.join(__dirname, 'fixture/ignored-dirs/a/b/node_modules/test.js'),
+			path.join(__dirname, 'fixture/ignored-dirs/a/b/c/node_modules/test.js')
+		]);
 	});
 
 	test(`${prefix} test file in fixtures is ignored`, t => {
@@ -761,12 +766,14 @@ function generateTests(prefix, apiCreator) {
 			});
 
 			// The test files are designed to cause errors so ignore them here.
-			runStatus.on('error', () => {});
+			runStatus.on('error', () => {
+			});
 		});
 
 		const result = api.run(['test/fixture/with-dependencies/*test*.js']);
 
-		return result.catch(() => {});
+		return result.catch(() => {
+		});
 	});
 
 	test(`${prefix} emits stats for test files`, t => {

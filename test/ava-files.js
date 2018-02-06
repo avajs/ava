@@ -48,8 +48,14 @@ test('testMatcher', t => {
 	notTest('foo/_foo-bar.js');
 	notTest('foo-bar.txt');
 	notTest('node_modules/foo.js');
+	notTest('foo/node_modules/bar.js');
+	notTest('foo/bar/baz/node_modules/foo.js');
 	notTest('fixtures/foo.js');
+	notTest('foo/fixtures/bar.js');
+	notTest('foo/bar/baz/fixtures/buz.js');
 	notTest('helpers/foo.js');
+	notTest('foo/helpers/bar.js');
+	notTest('foo/bar/baz/helpers/buz.js');
 	t.end();
 });
 
@@ -82,17 +88,21 @@ test('sourceMatcher - defaults', t => {
 	isSource('bar.js');
 	isSource('bar/bar.js');
 	notSource('node_modules/foo.js');
+	notSource('foo/node_modules/bar.js');
+	notSource('foo/bar/baz/node_modules/buz.js');
 	t.end();
 });
 
 test('sourceMatcher - allow matching specific node_modules directories', t => {
 	const avaFiles = new AvaFiles({
 		files: ['**/foo*'],
-		sources: ['node_modules/foo/**']
+		sources: ['node_modules/foo/**', 'bar/node_modules/foo/**']
 	});
 
 	t.true(avaFiles.isSource('node_modules/foo/foo.js'));
 	t.false(avaFiles.isSource('node_modules/bar/foo.js'));
+	t.true(avaFiles.isSource('bar/node_modules/foo/baz.js'));
+	t.false(avaFiles.isSource('bar/node_modules/baz/foo.js'));
 	t.end();
 });
 
