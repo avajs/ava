@@ -110,18 +110,6 @@ test('fake timers do not break duration', t => {
 		});
 });
 
-/* ignore
-test('destructuring of `t` is allowed', t => {
-	fork(fixture('destructuring-public-api.js'))
-		.run({})
-		.then(info => {
-			t.is(info.stats.failCount, 0);
-			t.is(info.stats.passCount, 3);
-			t.end();
-		});
-});
-*/
-
 test('babelrc is ignored', t => {
 	return fork(fixture('babelrc/test.js'))
 		.then(info => {
