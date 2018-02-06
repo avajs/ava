@@ -454,26 +454,36 @@ test('shared context', t => {
 	const runner = new Runner();
 
 	runner.chain.before(a => {
-		a.is(a.context, null);
+		a.deepEqual(a.context, {});
+		a.context.arr = ['a'];
+		a.context.prop = 'before';
 	});
 
 	runner.chain.after(a => {
-		a.is(a.context, null);
+		a.deepEqual(a.context.arr, ['a', 'b', 'c', 'd']);
+		a.is(a.context.prop, 'before');
 	});
 
 	runner.chain.beforeEach(a => {
-		a.context.arr = ['a'];
+		a.deepEqual(a.context.arr, ['a']);
+		a.context.arr.push('b');
+		a.is(a.context.prop, 'before');
+		a.context.prop = 'beforeEach';
 	});
 
 	runner.chain('test', a => {
 		a.pass();
-		a.context.arr.push('b');
 		a.deepEqual(a.context.arr, ['a', 'b']);
+		a.context.arr.push('c');
+		a.is(a.context.prop, 'beforeEach');
+		a.context.prop = 'test';
 	});
 
 	runner.chain.afterEach(a => {
-		a.context.arr.push('c');
 		a.deepEqual(a.context.arr, ['a', 'b', 'c']);
+		a.context.arr.push('d');
+		a.is(a.context.prop, 'test');
+		a.context.prop = 'afterEach';
 	});
 
 	return runner.run({}).then(() => {
