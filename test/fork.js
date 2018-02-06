@@ -35,7 +35,6 @@ test('emits test event', t => {
 	t.plan(1);
 
 	fork(fixture('generators.js'))
-		.run({})
 		.on('test', tt => {
 			t.is(tt.title, 'generator function');
 			t.end();
@@ -48,7 +47,6 @@ test('resolves promise with tests info', t => {
 	const file = fixture('generators.js');
 
 	return fork(file)
-		.run({})
 		.then(info => {
 			t.is(info.stats.passCount, 1);
 			t.is(info.tests.length, 1);
@@ -64,7 +62,6 @@ test('exit after tests are finished', t => {
 	let cleanupCompleted = false;
 
 	fork(fixture('slow-exit.js'))
-		.run({})
 		.on('exit', () => {
 			t.true(Date.now() - start < 10000, 'test waited for a pending setTimeout');
 			t.true(cleanupCompleted, 'cleanup did not complete');
@@ -104,7 +101,6 @@ test('rejects promise if the process is killed', t => {
 
 test('fake timers do not break duration', t => {
 	return fork(fixture('fake-timers.js'))
-		.run({})
 		.then(info => {
 			const duration = info.tests[0].duration;
 			t.true(duration < 1000, `${duration} < 1000`);
@@ -128,7 +124,6 @@ test('destructuring of `t` is allowed', t => {
 
 test('babelrc is ignored', t => {
 	return fork(fixture('babelrc/test.js'))
-		.run({})
 		.then(info => {
 			t.is(info.stats.passCount, 1);
 			t.end();
@@ -139,7 +134,6 @@ test('@std/esm support', t => {
 	return fork(fixture('std-esm/test.js'), {
 		require: [require.resolve('@std/esm')]
 	})
-		.run({})
 		.then(info => {
 			t.is(info.stats.passCount, 1);
 			t.end();
@@ -151,9 +145,9 @@ test('color support is initialized correctly', t => {
 	t.plan(1);
 
 	return Promise.all([
-		fork(fixture('chalk-enabled.js'), {color: true}).run({}),
-		fork(fixture('chalk-disabled.js'), {color: false}).run({}),
-		fork(fixture('chalk-disabled.js'), {}).run({})
+		fork(fixture('chalk-enabled.js'), {color: true}),
+		fork(fixture('chalk-disabled.js'), {color: false}),
+		fork(fixture('chalk-disabled.js'), {})
 	]).then(infos => {
 		for (const info of infos) {
 			if (info.stats.failCount > 0) {
