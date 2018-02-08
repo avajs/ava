@@ -54,7 +54,13 @@ First, we need a Babel configuration. The following is just an example. You will
 ```json
 {
 	"babel": {
-		"presets": ["es2015"],
+		"presets": [
+	    ["env", {
+	      "targets": {
+	        "browsers": ["last 2 versions", "safari >= 7"]
+	      }
+	    }]
+	  ],
 		"plugins": ["transform-runtime"],
 		"ignore": "test.js",
 		"env": {
