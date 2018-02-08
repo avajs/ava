@@ -99,12 +99,15 @@ Note that the build script really has very little to do with AVA, and is just a 
 
 ### Use the Babel require hook
 
-To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
+To use the [Babel's require hook](http://babeljs.io/docs/usage/babel-register/), add `babel-register` to the `require` section of you AVA config in `package.json`.
+
+Prerequisites
+npm install --save-dev babel-register
 
 ```json
 {
 	"ava": {
-		"require": ["babel-core/register"]
+		"require": ["babel-register"]
 	}
 }
 ```
