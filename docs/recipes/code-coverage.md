@@ -123,7 +123,13 @@ Combining the above steps, your complete `package.json` should look something li
 		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
 	},
 	"babel": {
-		"presets": ["es2015"],
+		"presets": [
+	    ["env", {
+	      "targets": {
+	        "browsers": ["last 2 versions", "safari >= 7"]
+	      }
+	    }]
+	  ],
 		"plugins": ["transform-runtime"],
 		"ignore": "test.js",
 		"env": {
@@ -133,7 +139,7 @@ Combining the above steps, your complete `package.json` should look something li
 		}
 	},
 	"ava": {
-		"require": ["babel-core/register"]
+		"require": ["babel-register"]
 	}
 }
 ```
