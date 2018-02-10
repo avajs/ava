@@ -202,7 +202,7 @@ test('display filename prefixes for failed test stack traces in subdirs', t => {
 		});
 });
 
-test('fail-fast mode - single file', t => {
+test('fail-fast mode - single file & serial', t => {
 	const api = apiCreator({
 		failFast: true
 	});
@@ -236,7 +236,7 @@ test('fail-fast mode - single file', t => {
 		});
 });
 
-test('fail-fast mode - multiple files', t => {
+test('fail-fast mode - multiple files & serial', t => {
 	const api = apiCreator({
 		failFast: true,
 		serial: true
@@ -271,7 +271,48 @@ test('fail-fast mode - multiple files', t => {
 		});
 });
 
-test('fail-fast mode - crash', t => {
+test('fail-fast mode - multiple files & interrupt', t => {
+	const api = apiCreator({
+		failFast: true,
+		concurrency: 2
+	});
+
+	const tests = [];
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', test => {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
+		});
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+		path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js')
+	])
+		.then(result => {
+			t.ok(api.options.failFast);
+			t.strictDeepEqual(tests, [{
+				ok: true,
+				title: `fails ${figures.pointerSmall} first pass`
+			}, {
+				ok: false,
+				title: `fails ${figures.pointerSmall} second fail`
+			}, {
+				ok: true,
+				title: `fails ${figures.pointerSmall} third pass`
+			}, {
+				ok: true,
+				title: `passes-slow ${figures.pointerSmall} first pass`
+			}]);
+			t.is(result.passCount, 3);
+			t.is(result.failCount, 1);
+		});
+});
+
+test('fail-fast mode - crash & serial', t => {
 	const api = apiCreator({
 		failFast: true,
 		serial: true
@@ -307,7 +348,7 @@ test('fail-fast mode - crash', t => {
 		});
 });
 
-test('fail-fast mode - timeout', t => {
+test('fail-fast mode - timeout & serial', t => {
 	const api = apiCreator({
 		failFast: true,
 		serial: true,
