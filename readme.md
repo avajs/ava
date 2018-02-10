@@ -524,17 +524,15 @@ test.failing('demonstrate some bug', t => {
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures or if all tests were skipped, so they are ideal for cleanup tasks. There are two exceptions to this however. If you use `--fail-fast` AVA will stop testing as soon as a failure occurs, and it won't run any hooks including the `.always()` hooks. Uncaught exceptions will crash your tests, possibly preventing `.always()` hooks from running.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. Note however that uncaught exceptions, unhandled rejections or timeouts will crash your tests, possibly preventing `.always()` hooks from running.
 
-`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail. `.always()` hooks are ideal for cleanup tasks.
+`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
-If a test is skipped with the `.skip` modifier, the respective `.beforeEach()` and `.afterEach()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()` and `.after()` hooks for the file are not run. Hooks modified with `.always()` will always run, even if all tests are skipped.
+If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
-**Note**: If the `--fail-fast` flag is specified, AVA will stop after the first test failure and the `.always` hook will **not** run.
+Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](#t). You can use assertions in your hooks. You can also pass a [macro function](#test-macros) and additional arguments.
 
-Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
-
-`before` hooks execute before `beforeEach` hooks. `afterEach` hooks execute before `after` hooks. Within their category the hooks execute in the order they were defined.
+`.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are *not* run before other hooks:
 
 ```js
 test.before(t => {
@@ -542,7 +540,15 @@ test.before(t => {
 });
 
 test.before(t => {
-	// This runs after the above, but before tests
+	// This runs concurrently with the above
+});
+
+test.serial.before(t => {
+	// This runs after the above
+});
+
+test.serial.before(t => {
+	// This too runs after the above, and before tests
 });
 
 test.after('cleanup', t => {
@@ -590,13 +596,13 @@ test.afterEach.cb(t => {
 });
 ```
 
-Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
+Keep in mind that the `.beforeEach()` and `.afterEach()` hooks run just before and after a test is run, and that by default tests run concurrently. This means each multiple `.beforeEach()` hooks may run concurrently. Using `test.serial.beforeEach()` does not change this. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests themselves are [run serially](#running-tests-serially).
 
-Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `after`-hook since that's only called right before the process exits.
+Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `.after()`-hook since that's only called right before the process exits.
 
 #### Test context
 
-The `beforeEach` & `afterEach` hooks can share context with the test:
+The `.beforeEach()` & `.afterEach()` hooks can share context with the test:
 
 ```js
 test.beforeEach(t => {
@@ -620,7 +626,7 @@ test('context is unicorn', t => {
 });
 ```
 
-Context sharing is *not* available to `before` and `after` hooks.
+Context sharing is *not* available to `.before()` and `.after()` hooks.
 
 ### Test macros
 
@@ -821,7 +827,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks. `t.title` returns the test's title.
+The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `.beforeEach()` hooks. `t.title` returns the test's title.
 
 ###### `t.plan(count)`
 

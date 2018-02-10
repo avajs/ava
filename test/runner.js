@@ -9,7 +9,7 @@ const noop = () => {};
 
 const promiseEnd = (runner, next) => {
 	return new Promise(resolve => {
-		runner.on('start', resolve);
+		runner.on('start', data => resolve(data.ended));
 		next(runner);
 	}).then(() => runner);
 };
@@ -121,12 +121,15 @@ test('anything can be skipped', t => {
 	});
 });
 
-test('include skipped tests in results', t => {
-	const titles = [];
+test('emit skipped tests at start', t => {
+	t.plan(1);
 
 	const runner = new Runner();
-	runner.on('test', test => {
-		titles.push(test.title);
+	runner.on('start', data => {
+		t.strictDeepEqual(data.skippedTests, [
+			{failing: false, title: 'test.serial.skip'},
+			{failing: true, title: 'test.failing.skip'}
+		]);
 	});
 
 	return promiseEnd(runner, () => {
@@ -136,81 +139,84 @@ test('include skipped tests in results', t => {
 		runner.chain.beforeEach('beforeEach', noop);
 		runner.chain.beforeEach.skip('beforeEach.skip', noop);
 
-		runner.chain.serial('test', a => a.pass());
-		runner.chain.serial.skip('test.skip', noop);
+		runner.chain.serial('test.serial', a => a.pass());
+		runner.chain.serial.skip('test.serial.skip', noop);
+
+		runner.chain.failing('test.failing', a => a.fail());
+		runner.chain.failing.skip('test.failing.skip', noop);
 
 		runner.chain.after('after', noop);
 		runner.chain.after.skip('after.skip', noop);
 
 		runner.chain.afterEach('afterEach', noop);
 		runner.chain.afterEach.skip('afterEach.skip', noop);
-	}).then(() => {
-		t.strictDeepEqual(titles, [
-			'before',
-			'before.skip',
-			'beforeEach for test',
-			'beforeEach.skip for test',
-			'test',
-			'afterEach for test',
-			'afterEach.skip for test',
-			'test.skip',
-			'after',
-			'after.skip'
-		]);
 	});
 });
 
 test('test types and titles', t => {
-	t.plan(10);
+	t.plan(20);
 
-	const fn = a => {
-		a.pass();
+	const fail = a => a.fail();
+	const pass = a => a.pass();
+
+	const check = (setup, expect) => {
+		const runner = new Runner();
+		const assert = data => {
+			const expected = expect.shift();
+			t.is(data.title, expected.title);
+			t.is(data.metadata.type, expected.type);
+		};
+		runner.on('hook-failed', assert);
+		runner.on('test', assert);
+		return promiseEnd(runner, () => setup(runner.chain));
 	};
 
-	function named(a) {
-		a.pass();
-	}
-
-	return promiseEnd(new Runner(), runner => {
-		runner.chain.before(named);
-		runner.chain.beforeEach(fn);
-		runner.chain.after(fn);
-		runner.chain.afterEach(named);
-		runner.chain('test', fn);
-
-		const tests = [
-			{
-				type: 'before',
-				title: 'before hook'
-			},
-			{
-				type: 'beforeEach',
-				title: 'beforeEach hook for test'
-			},
-			{
-				type: 'test',
-				title: 'test'
-			},
-			{
-				type: 'afterEach',
-				title: 'afterEach hook for test'
-			},
-			{
-				type: 'after',
-				title: 'after hook'
-			}
-		];
-
-		runner.on('test', props => {
-			const test = tests.shift();
-			t.is(props.title, test.title);
-			t.is(props.type, test.type);
-		});
-	});
+	return Promise.all([
+		check(chain => {
+			chain.before(fail);
+			chain('test', pass);
+		}, [
+			{type: 'before', title: 'before hook'}
+		]),
+		check(chain => {
+			chain('test', pass);
+			chain.after(fail);
+		}, [
+			{type: 'test', title: 'test'},
+			{type: 'after', title: 'after hook'}
+		]),
+		check(chain => {
+			chain('test', pass);
+			chain.after.always(fail);
+		}, [
+			{type: 'test', title: 'test'},
+			{type: 'after', title: 'after.always hook'}
+		]),
+		check(chain => {
+			chain.beforeEach(fail);
+			chain('test', fail);
+		}, [
+			{type: 'beforeEach', title: 'beforeEach hook for test'}
+		]),
+		check(chain => {
+			chain('test', pass);
+			chain.afterEach(fail);
+		}, [
+			{type: 'test', title: 'test'},
+			{type: 'afterEach', title: 'afterEach hook for test'}
+		]),
+		check(chain => {
+			chain('test', pass);
+			chain.afterEach.always(fail);
+		}, [
+			{type: 'test', title: 'test'},
+			{type: 'afterEach', title: 'afterEach.always hook for test'}
+		])
+	]);
 });
 
 test('skip test', t => {
-	t.plan(5);
+	t.plan(4);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
@@ -222,31 +228,48 @@ test('skip test', t => {
 		runner.chain.skip('skip', () => {
 			arr.push('b');
 		});
-
-		t.throws(() => {
-			runner.chain.skip('should be a todo');
-		}, new TypeError('Expected an implementation. Use `test.todo()` for tests without an implementation.'));
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.testCount, 2);
-		t.is(stats.passCount, 1);
-		t.is(stats.skipCount, 1);
+		t.is(runner.stats.testCount, 2);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.skipCount, 1);
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
 
-test('test throws when given no function', t => {
+test('tests must have a non-empty title)', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
+		t.throws(() => {
+			runner.chain('', t => t.pass());
+		}, new TypeError('Tests must have a title'));
+	});
+});
+
+test('test titles must be unique', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
+		runner.chain('title', t => t.pass());
+
+		t.throws(() => {
+			runner.chain('title', t => t.pass());
+		}, new Error('Duplicate test title: title'));
+	});
+});
+
+test('tests must have an implementation', t => {
 	t.plan(1);
 
 	const runner = new Runner();
 
 	t.throws(() => {
-		runner.chain();
+		runner.chain('title');
 	}, new TypeError('Expected an implementation. Use `test.todo()` for tests without an implementation.'));
 });
 
 test('todo test', t => {
-	t.plan(6);
+	t.plan(4);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
@@ -256,20 +279,43 @@ test('todo test', t => {
 		});
 
 		runner.chain.todo('todo');
+	}).then(runner => {
+		t.is(runner.stats.testCount, 2);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.todoCount, 1);
+		t.strictDeepEqual(arr, ['a']);
+	});
+});
 
+test('todo tests must not have an implementation', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
 		t.throws(() => {
 			runner.chain.todo('todo', () => {});
 		}, new TypeError('`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.'));
+	});
+});
 
+test('todo tests must have a title', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
 		t.throws(() => {
 			runner.chain.todo();
 		}, new TypeError('`todo` tests require a title'));
-	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.testCount, 2);
-		t.is(stats.passCount, 1);
-		t.is(stats.todoCount, 1);
-		t.strictDeepEqual(arr, ['a']);
+	});
+});
+
+test('todo test titles must be unique', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
+		runner.chain('title', t => t.pass());
+
+		t.throws(() => {
+			runner.chain.todo('title');
+		}, new Error('Duplicate test title: title'));
 	});
 });
 
@@ -288,56 +334,23 @@ test('only test', t => {
 			a.pass();
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.testCount, 1);
-		t.is(stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
 		t.strictDeepEqual(arr, ['b']);
 	});
 });
 
-test('throws if you give a function to todo', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.todo('todo with function', noop);
-	}, new TypeError('`todo` tests are not allowed to have an implementation. Use ' +
-	'`test.skip()` for tests with an implementation.'));
-
-	t.end();
-});
-
-test('throws if todo has no title', t => {
-	const runner = new Runner();
-
-	t.throws(() => {
-		runner.chain.todo();
-	}, new TypeError('`todo` tests require a title'));
-
-	t.end();
-});
-
-test('validate accepts skipping failing tests', t => {
-	t.plan(2);
-
-	return promiseEnd(new Runner(), runner => {
-		runner.chain.failing.skip('skip failing', noop);
-	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.testCount, 1);
-		t.is(stats.skipCount, 1);
-	});
-});
-
-test('runOnlyExclusive option test', t => {
+test('options.runOnlyExclusive means only exclusive tests are run', t => {
 	t.plan(1);
 
-	const arr = [];
 	return promiseEnd(new Runner({runOnlyExclusive: true}), runner => {
 		runner.chain('test', () => {
-			arr.push('a');
+			t.fail();
 		});
-	}).then(() => {
-		t.strictDeepEqual(arr, []);
+
+		runner.chain.only('test 2', () => {
+			t.pass();
+		});
 	});
 });
 
@@ -369,72 +382,103 @@ test('options.serial forces all tests to be serial', t => {
 	});
 });
 
-test('options.bail will bail out', t => {
-	t.plan(1);
+test('options.failFast does not stop concurrent tests from running', t => {
+	const expected = ['first', 'second'];
+	t.plan(expected.length);
 
-	return promiseEnd(new Runner({bail: true}), runner => {
-		runner.chain('test', a => {
-			t.pass();
+	promiseEnd(new Runner({failFast: true}), runner => {
+		let block;
+		let resume;
+		runner.chain.beforeEach(() => {
+			if (block) {
+				return block;
+			}
+
+			block = new Promise(resolve => {
+				resume = resolve;
+			});
+		});
+
+		runner.chain('first', a => {
+			resume();
 			a.fail();
 		});
 
-		runner.chain('test 2', () => {
-			t.fail();
+		runner.chain('second', a => {
+			a.pass();
+		});
+
+		runner.on('test', data => {
+			t.is(data.title, expected.shift());
 		});
 	});
 });
 
-test('options.bail will bail out (async)', t => {
-	t.plan(1);
+test('options.failFast && options.serial stops subsequent tests from running ', t => {
+	const expected = ['first'];
+	t.plan(expected.length);
 
-	let bailed = false;
-	promiseEnd(new Runner({bail: true}), runner => {
-		runner.chain.cb('cb', a => {
-			setTimeout(() => {
-				a.fail();
-				a.end();
-			}, 100);
+	promiseEnd(new Runner({failFast: true, serial: true}), runner => {
+		let block;
+		let resume;
+		runner.chain.beforeEach(() => {
+			if (block) {
+				return block;
+			}
+
+			block = new Promise(resolve => {
+				resume = resolve;
+			});
+		});
+
+		runner.chain('first', a => {
+			resume();
+			a.fail();
+		});
+
+		runner.chain('second', a => {
 			a.pass();
 		});
 
-		// Note that because the first test is asynchronous, the second test is
-		// run and the `setTimeout` call still occurs. The runner should end though
-		// as soon as the first test fails.
-		// See the `bail + serial` test below for comparison
-		runner.chain.cb('cb 2', a => {
-			setTimeout(() => {
-				t.true(bailed);
-				t.end();
-				a.end();
-			}, 300);
-			a.pass();
+		runner.on('test', data => {
+			t.is(data.title, expected.shift());
 		});
-	}).then(() => {
-		bailed = true;
 	});
 });
 
-test('options.bail + serial - tests will never happen (async)', t => {
-	t.plan(1);
+test('options.failFast & failing serial test stops subsequent tests from running ', t => {
+	const expected = ['first'];
+	t.plan(expected.length);
 
-	const tests = [];
-	return promiseEnd(new Runner({bail: true, serial: true}), runner => {
-		runner.chain.cb('cb', a => {
-			setTimeout(() => {
-				tests.push(1);
-				a.fail();
-				a.end();
-			}, 100);
+	promiseEnd(new Runner({failFast: true, serial: true}), runner => {
+		let block;
+		let resume;
+		runner.chain.beforeEach(() => {
+			if (block) {
+				return block;
+			}
+
+			block = new Promise(resolve => {
+				resume = resolve;
+			});
 		});
 
-		runner.chain.cb('cb 2', a => {
-			setTimeout(() => {
-				a.end();
-				t.fail();
-			}, 300);
+		runner.chain.serial('first', a => {
+			resume();
+			a.fail();
 		});
-	}).then(() => {
-		t.strictDeepEqual(tests, [1]);
+
+		runner.chain.serial('second', a => {
+			a.pass();
+		});
+
+		runner.chain('third', a => {
+			a.pass();
+		});
+
+		runner.on('test', data => {
+			t.is(data.title, expected.shift());
+		});
 	});
 });
 
@@ -462,10 +506,9 @@ test('options.match will not run tests with non-matching titles', t => {
 			a.pass();
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.skipCount, 0);
-		t.is(stats.passCount, 2);
-		t.is(stats.testCount, 2);
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
 	});
 });
 
@@ -484,10 +527,9 @@ test('options.match hold no effect on hooks with titles', t => {
 			a.pass();
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.skipCount, 0);
-		t.is(stats.passCount, 1);
-		t.is(stats.testCount, 1);
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
 	});
 });
 
@@ -505,25 +547,40 @@ test('options.match overrides .only', t => {
 			a.pass();
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.skipCount, 0);
-		t.is(stats.passCount, 2);
-		t.is(stats.testCount, 2);
+		t.is(runner.stats.skipCount, 0);
+		t.is(runner.stats.passCount, 2);
+		t.is(runner.stats.testCount, 2);
+	});
+});
+
+test('options.match matches todo tests', t => {
+	t.plan(2);
+
+	return promiseEnd(new Runner({match: ['*oo']}), runner => {
+		runner.chain.todo('moo');
+		runner.chain.todo('oom');
+	}).then(runner => {
+		t.is(runner.stats.testCount, 1);
+		t.is(runner.stats.todoCount, 1);
 	});
 });
 
 test('macros: Additional args will be spread as additional args on implementation function', t => {
-	t.plan(3);
+	t.plan(4);
 
 	return promiseEnd(new Runner(), runner => {
+		runner.chain.before(function (a) {
+			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
+			a.pass();
+		}, 'foo', 'bar');
+
 		runner.chain('test1', function (a) {
 			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 1);
-		t.is(stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
 	});
 });
 
@@ -558,9 +615,32 @@ test('macros: Customize test names attaching a `title` function', t => {
 		runner.chain('supplied', macroFn, 'B');
 		runner.chain(macroFn, 'C');
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 3);
-		t.is(stats.testCount, 3);
+		t.is(runner.stats.passCount, 3);
+		t.is(runner.stats.testCount, 3);
+	});
+});
+
+test('macros: test titles must be strings', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
+		t.throws(() => {
+			const macro = t => t.pass();
+			macro.title = () => [];
+			runner.chain(macro);
+		}, new TypeError('Test & hook titles must be strings'));
+	});
+});
+
+test('macros: hook titles must be strings', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner(), runner => {
+		t.throws(() => {
+			const macro = t => t.pass();
+			macro.title = () => [];
+			runner.chain.before(macro);
+		}, new TypeError('Test & hook titles must be strings'));
 	});
 });
 
@@ -581,9 +661,8 @@ test('match applies to macros', t => {
 		runner.chain(macroFn, 'foo');
 		runner.chain(macroFn, 'bar');
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 1);
-		t.is(stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
 	});
 });
 
@@ -618,9 +697,8 @@ test('arrays of macros', t => {
 		runner.chain('C', macroFnA, 'C');
 		runner.chain('D', macroFnB, 'D');
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 6);
-		t.is(stats.testCount, 6);
+		t.is(runner.stats.passCount, 6);
+		t.is(runner.stats.testCount, 6);
 		t.is(expectedArgsA.length, 0);
 		t.is(expectedArgsB.length, 0);
 	});
@@ -655,8 +733,98 @@ test('match applies to arrays of macros', t => {
 		runner.chain([fooMacro, barMacro, bazMacro], 'foo');
 		runner.chain([fooMacro, barMacro, bazMacro], 'bar');
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 1);
-		t.is(stats.testCount, 1);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.testCount, 1);
+	});
+});
+
+test('silently skips other tests when .only is used', t => {
+	return promiseEnd(new Runner(), runner => {
+		runner.chain('skip me', a => a.pass());
+		runner.chain.serial('skip me too', a => a.pass());
+		runner.chain.only('only me', a => a.pass());
+	}).then(runner => {
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.skipCount, 0);
+	});
+});
+
+test('subsequent always hooks are run even if earlier always hooks fail', t => {
+	t.plan(3);
+	return promiseEnd(new Runner(), runner => {
+		runner.chain('test', a => a.pass());
+		runner.chain.serial.after.always(a => {
+			t.pass();
+			a.fail();
+		});
+		runner.chain.serial.after.always(a => {
+			t.pass();
+			a.fail();
+		});
+		runner.chain.after.always(a => {
+			t.pass();
+			a.fail();
+		});
+	});
+});
+
+test('hooks run concurrently, but can be serialized', t => {
+	t.plan(7);
+
+	let activeCount = 0;
+	return promiseEnd(new Runner(), runner => {
+		runner.chain('test', a => a.pass());
+
+		runner.chain.before(() => {
+			t.is(activeCount, 0);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 20)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.before(() => {
+			t.is(activeCount, 1);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.serial.before(() => {
+			t.is(activeCount, 0);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.before(() => {
+			t.is(activeCount, 0);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 20)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.before(() => {
+			t.is(activeCount, 1);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.serial.before(() => {
+			t.is(activeCount, 0);
+			activeCount++;
+			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+				activeCount--;
+			});
+		});
+
+		runner.chain.serial.before(() => {
+			t.is(activeCount, 0);
+		});
 	});
 });

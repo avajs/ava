@@ -99,6 +99,7 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 		const events = new EventEmitter();
 		events.on('loaded-file', () => {});
 
+		let failCount = 0;
 		let uncaughtExceptionCount = 0;
 
 		// Mock the behavior of a parent process
@@ -130,8 +131,13 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 
 			console.log('RESULTS:', data.stats);
 
+			failCount = data.stats.failCount;
+			setImmediate(() => process.emit('ava-teardown'));
+		});
+
+		events.on('teardown', () => {
 			if (process.exit) {
-				process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
+				process.exit(failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
 			}
 		});
 
