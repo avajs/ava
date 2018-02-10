@@ -32,7 +32,7 @@ function fork(testPath) {
 
 const promiseEnd = (runner, next) => {
 	return new Promise(resolve => {
-		runner.on('start', resolve);
+		runner.on('start', data => resolve(data.ended));
 		next(runner);
 	}).then(() => runner);
 };
@@ -69,9 +69,8 @@ test('after', t => {
 			arr.push('a');
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 1);
-		t.is(stats.failCount, 0);
+		t.is(runner.stats.passCount, 1);
+		t.is(runner.stats.failCount, 0);
 		t.strictDeepEqual(arr, ['a', 'b']);
 	});
 });
@@ -89,9 +88,8 @@ test('after not run if test failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 0);
-		t.is(stats.failCount, 1);
+		t.is(runner.stats.passCount, 0);
+		t.is(runner.stats.failCount, 1);
 		t.strictDeepEqual(arr, []);
 	});
 });
@@ -109,9 +107,8 @@ test('after.always run even if test failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.passCount, 0);
-		t.is(stats.failCount, 1);
+		t.is(runner.stats.passCount, 0);
+		t.is(runner.stats.failCount, 1);
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -124,6 +121,8 @@ test('after.always run even if before failed', t => {
 		runner.chain.before(() => {
 			throw new Error('something went wrong');
 		});
+
+		runner.chain('test', a => a.pass());
 
 		runner.chain.after.always(() => {
 			arr.push('a');
@@ -228,8 +227,7 @@ test('fail if beforeEach hook fails', t => {
 			a.pass();
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.failCount, 1);
+		t.is(runner.stats.failedHookCount, 1);
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -448,8 +446,7 @@ test('shared context', t => {
 			a.context.prop = 'afterEach';
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.failCount, 0);
+		t.is(runner.stats.failCount, 0);
 	});
 });
 
@@ -466,8 +463,7 @@ test('shared context of any type', t => {
 			a.is(a.context, 'foo');
 		});
 	}).then(runner => {
-		const stats = runner.buildStats();
-		t.is(stats.failCount, 0);
+		t.is(runner.stats.failCount, 0);
 	});
 });
 

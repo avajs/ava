@@ -227,8 +227,11 @@ test('fail-fast mode - single file', t => {
 			}, {
 				ok: false,
 				title: 'second fail'
+			}, {
+				ok: true,
+				title: 'third pass'
 			}]);
-			t.is(result.passCount, 1);
+			t.is(result.passCount, 2);
 			t.is(result.failCount, 1);
 		});
 });
