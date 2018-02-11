@@ -1,9 +1,13 @@
 'use strict';
 require('../lib/worker-options').set({color: false});
 
+const path = require('path');
+const React = require('react');
 const test = require('tap').test;
 const delay = require('delay');
+const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
+const HelloMessage = require('./fixture/hello-message');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -712,5 +716,46 @@ test('assertions are bound', t => {
 		(a.notRegex)('bar', /foo/);
 	}).run().then(result => {
 		t.true(result.passed);
+	});
+});
+
+// Snapshots reused from test/assert.js
+test('snapshot assertion can be skipped', t => {
+	const projectDir = path.join(__dirname, 'fixture');
+	const manager = snapshotManager.load({
+		file: __filename,
+		name: 'assert.js',
+		projectDir,
+		relFile: 'test/assert.js',
+		fixedLocation: null,
+		testDir: projectDir,
+		updating: false
+	});
+
+	return new Test({
+		compareTestSnapshot: options => manager.compare(options),
+		updateSnapshots: false,
+		metadata: {},
+		title: 'passes',
+		fn(t) {
+			t.snapshot.skip({not: {a: 'match'}});
+			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+		}
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
+test('snapshot assertion cannot be skipped when updating snapshots', t => {
+	return new Test({
+		updateSnapshots: true,
+		metadata: {},
+		title: 'passes',
+		fn(t) {
+			t.snapshot.skip({not: {a: 'match'}});
+		}
+	}).run().then(result => {
+		t.false(result.passed);
+		t.is(result.error.message, 'Snapshot assertions cannot be skipped when updating snapshots');
 	});
 });
