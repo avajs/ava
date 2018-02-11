@@ -15,17 +15,28 @@ const HelloMessage = require('./fixture/hello-message');
 let lastFailure = null;
 let lastPassed = false;
 const assertions = assert.wrapAssertions({
-	pass() {
+	pass(testObj) {
+		if (testObj !== assertions && !(testObj instanceof Test)) {
+			throw new Error('Expected testObj');
+		}
 		lastPassed = true;
 	},
 
-	pending(_, promise) {
+	pending(testObj, promise) {
+		if (testObj !== assertions && !(testObj instanceof Test)) {
+			throw new Error('Expected testObj');
+		}
+
 		promise.catch(err => {
 			lastFailure = err;
 		});
 	},
 
-	fail(_, error) {
+	fail(testObj, error) {
+		if (testObj !== assertions && !(testObj instanceof Test)) {
+			throw new Error('Expected testObj');
+		}
+
 		lastFailure = error;
 	}
 });
@@ -813,31 +824,27 @@ test('.snapshot()', t => {
 		updating
 	});
 	const setup = title => {
-		const fauxTest = new Test({
+		return new Test({
 			title,
 			compareTestSnapshot: options => manager.compare(options)
 		});
-		const executionContext = {
-			_test: fauxTest
-		};
-		return executionContext;
 	};
 
 	passes(t, () => {
-		const executionContext = setup('passes');
-		assertions.snapshot.call(executionContext, {foo: 'bar'});
-		assertions.snapshot.call(executionContext, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
-		assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		const testInstance = setup('passes');
+		assertions.snapshot.call(testInstance, {foo: 'bar'});
+		assertions.snapshot.call(testInstance, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+		assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Sindre'}));
+		assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 	});
 
 	{
-		const executionContext = setup('fails');
+		const testInstance = setup('fails');
 		if (updating) {
-			assertions.snapshot.call(executionContext, {foo: 'bar'});
+			assertions.snapshot.call(testInstance, {foo: 'bar'});
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(executionContext, {foo: 'not bar'});
+				assertions.snapshot.call(testInstance, {foo: 'not bar'});
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
@@ -847,8 +854,8 @@ test('.snapshot()', t => {
 	}
 
 	failsWith(t, () => {
-		const executionContext = setup('fails (fixed id)');
-		assertions.snapshot.call(executionContext, {foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
+		const testInstance = setup('fails (fixed id)');
+		assertions.snapshot.call(testInstance, {foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
 	}, {
 		assertion: 'snapshot',
 		message: 'different message, also not included in snapshot report',
@@ -856,12 +863,12 @@ test('.snapshot()', t => {
 	});
 
 	{
-		const executionContext = setup('fails');
+		const testInstance = setup('fails');
 		if (updating) {
-			assertions.snapshot.call(executionContext, {foo: 'bar'}, 'my message');
+			assertions.snapshot.call(testInstance, {foo: 'bar'}, 'my message');
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(executionContext, {foo: 'not bar'}, 'my message');
+				assertions.snapshot.call(testInstance, {foo: 'not bar'}, 'my message');
 			}, {
 				assertion: 'snapshot',
 				message: 'my message',
@@ -871,23 +878,23 @@ test('.snapshot()', t => {
 	}
 
 	{
-		const executionContext = setup('rendered comparison');
+		const testInstance = setup('rendered comparison');
 		if (updating) {
-			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+			assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			passes(t, () => {
-				assertions.snapshot.call(executionContext, React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+				assertions.snapshot.call(testInstance, React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
 			});
 		}
 	}
 
 	{
-		const executionContext = setup('rendered comparison');
+		const testInstance = setup('rendered comparison');
 		if (updating) {
-			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+			assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
+				assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
@@ -897,12 +904,12 @@ test('.snapshot()', t => {
 	}
 
 	{
-		const executionContext = setup('element comparison');
+		const testInstance = setup('element comparison');
 		if (updating) {
-			assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
+			assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Sindre'}));
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Vadim'}));
+				assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Vadim'}));
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',

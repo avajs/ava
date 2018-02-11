@@ -851,6 +851,23 @@ test('unicorns are truthy', t => {
 });
 ```
 
+Assertions are bound to their test so you can assign them to a variable or pass them around:
+
+```js
+test('unicorns are truthy', t => {
+	const truthy = t.thruthy;
+	truthy('unicorn');
+});
+```
+
+Assertions can be skipped by adding `.skip()`:
+
+```js
+test('unicorns are truthy', t => {
+	t.truthy.skip('unicorn');
+});
+```
+
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
 ### `.pass([message])`
@@ -1040,7 +1057,7 @@ Any assertion can be skipped using the `skip` modifier. Skipped assertions are s
 ```js
 test('skip assertion', t => {
 	t.plan(2);
-	t.skip.is(foo(), 5); // No need to change your plan count when skipping
+	t.is.skip(foo(), 5); // No need to change your plan count when skipping
 	t.is(1, 1);
 });
 ```

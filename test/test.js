@@ -92,6 +92,32 @@ test('plan assertions', t => {
 	});
 });
 
+test('plan assertion can be skipped', t => {
+	const instance = ava(a => {
+		a.plan.skip(2);
+		a.pass();
+		a.pass();
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.planCount, null);
+		t.is(instance.assertCount, 2);
+	});
+});
+
+test('plan assertion skip() is bound', t => {
+	const instance = ava(a => {
+		(a.plan.skip)(2);
+		a.pass();
+		a.pass();
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.planCount, null);
+		t.is(instance.assertCount, 2);
+	});
+});
+
 test('run more assertions than planned', t => {
 	return ava(a => {
 		a.plan(2);
@@ -379,14 +405,59 @@ test('fails with thrown non-error object', t => {
 
 test('skipped assertions count towards the plan', t => {
 	const instance = ava(a => {
-		a.plan(2);
-		a.pass();
-		a.skip.fail();
+		a.plan(16);
+		a.pass.skip();
+		a.fail.skip();
+		a.is.skip(1, 1);
+		a.not.skip(1, 2);
+		a.deepEqual.skip({foo: 'bar'}, {foo: 'bar'});
+		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
+		a.throws.skip(() => {
+			throw new Error();
+		});
+		a.notThrows.skip(() => {});
+		a.ifError.skip(null);
+		a.snapshot.skip({});
+		a.truthy.skip(true);
+		a.falsy.skip(false);
+		a.true.skip(true);
+		a.false.skip(false);
+		a.regex.skip('foo', /foo/);
+		a.notRegex.skip('bar', /foo/);
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 2);
-		t.is(instance.assertCount, 2);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
+	});
+});
+
+test('assertion.skip() is bound', t => {
+	const instance = ava(a => {
+		a.plan(16);
+		(a.pass.skip)();
+		(a.fail.skip)();
+		(a.is.skip)(1, 1);
+		(a.not.skip)(1, 2);
+		(a.deepEqual.skip)({foo: 'bar'}, {foo: 'bar'});
+		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
+		(a.throws.skip)(() => {
+			throw new Error();
+		});
+		(a.notThrows.skip)(() => {});
+		(a.ifError.skip)(null);
+		(a.snapshot.skip)({});
+		(a.truthy.skip)(true);
+		(a.falsy.skip)(false);
+		(a.true.skip)(true);
+		(a.false.skip)(false);
+		(a.regex.skip)('foo', /foo/);
+		(a.notRegex.skip)('bar', /foo/);
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
 	});
 });
 
@@ -605,14 +676,41 @@ test('log from tests', t => {
 		a.log('another log message from a test');
 		a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
 		a.log();
+		(a.log)('bound');
 	}).run().then(result => {
 		t.deepEqual(
 			result.logs,
 			[
 				'a log message from a test',
 				'another log message from a test',
-				'{\n  b: 1,\n  c: {\n    d: 2,\n  },\n} complex log 5 5.1'
+				'{\n  b: 1,\n  c: {\n    d: 2,\n  },\n} complex log 5 5.1',
+				'bound'
 			]
 		);
+	});
+});
+
+test('assertions are bound', t => {
+	// This does not test .fail() and .snapshot(). It'll suffice.
+	return ava(a => {
+		(a.plan)(14);
+		(a.pass)();
+		(a.is)(1, 1);
+		(a.not)(1, 2);
+		(a.deepEqual)({foo: 'bar'}, {foo: 'bar'});
+		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
+		(a.throws)(() => {
+			throw new Error();
+		});
+		(a.notThrows)(() => {});
+		(a.ifError)(null);
+		(a.truthy)(true);
+		(a.falsy)(false);
+		(a.true)(true);
+		(a.false)(false);
+		(a.regex)('foo', /foo/);
+		(a.notRegex)('bar', /foo/);
+	}).run().then(result => {
+		t.true(result.passed);
 	});
 });
