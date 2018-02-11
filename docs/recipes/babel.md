@@ -4,7 +4,9 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. We do this by compiling test and helper files using our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset. We also use a [second preset](https://github.com/avajs/babel-preset-transform-test-files) to enable [enhanced assertion messages](../../readme#enhanced-assertion-messages) and detect improper use of `t.throws()` assertions.
 
-By default our Babel pipeline is applied to test and helper files ending in `.js`. If your project uses Babel then we'll automatically compile files using your project's Babel configuration.
+By default our Babel pipeline is applied to test and helper files ending in `.js`. If your project uses Babel then we'll automatically compile these files using your project's Babel configuration.
+
+If you are using Babel for your source files then you must also [configure source compilation](#compile-sources).
 
 AVA only looks for Babel configuration files in your project directory. That is, `.babelrc` or `.babelrc.js` files next to your `package.json` file, or the `package.json` file itself.
 
