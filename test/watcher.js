@@ -78,7 +78,8 @@ group('chokidar', (beforeEach, test, group) => {
 			finish: sinon.spy(),
 			section: sinon.spy(),
 			clear: sinon.stub().returns(true),
-			reset: sinon.spy()
+			reset: sinon.spy(),
+			write: sinon.spy()
 		};
 
 		api = {
@@ -210,7 +211,7 @@ group('chokidar', (beforeEach, test, group) => {
 	});
 
 	test('starts running the initial tests', t => {
-		t.plan(8);
+		t.plan(10);
 
 		let done;
 		api.run.returns(new Promise(resolve => {
@@ -223,6 +224,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.ok(logger.clear.notCalled);
 		t.ok(logger.reset.notCalled);
 		t.ok(logger.start.notCalled);
+		t.ok(logger.write.notCalled);
 		t.ok(api.run.calledOnce);
 		t.strictDeepEqual(api.run.firstCall.args, [files, defaultApiOptions]);
 
@@ -232,6 +234,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return delay().then(() => {
 			t.ok(logger.finish.calledOnce);
 			t.is(logger.finish.firstCall.args[0], runStatus);
+			t.ok(logger.write.calledOnce);
 		});
 	});
 
