@@ -1173,13 +1173,16 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Team
 
-[![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes) | [![James Talmage](https://github.com/jamestalmage.png?size=100)](https://github.com/jamestalmage) | [![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Juan Soto](https://github.com/sotojuan.png?size=100)](https://github.com/sotojuan) | [![Jeroen Engels](https://github.com/jfmengels.png?size=100)](https://github.com/jfmengels)
----|---|---|---|---|---
-[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](http://juansoto.me) | [Jeroen Engels](https://github.com/jfmengels)
+[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes)
+---|---|---
+[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes)
 
-### Former
+###### Former
 
 - [Kevin Mårtensson](https://github.com/kevva)
+- [James Talmage](https://github.com/jamestalmage)
+- [Juan Soto](https://github.com/sotojuan)
+- [Jeroen Engels](https://github.com/jfmengels)
 
 
 <div align="center">
