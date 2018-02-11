@@ -363,6 +363,21 @@ test('fails with thrown falsy value', t => {
 	});
 });
 
+test('assert thrown exception message using RegExp', t => {
+	let result;
+	const passed = ava(a => {
+		a.throws(() => {
+			throw new Error('Message');
+		}, /^Message/);
+	}, null, r => {
+		result = r;
+	}).run();
+
+	t.is(passed, true);
+	t.is(result.result.assertCount, 1);
+	t.end();
+});
+
 test('fails with thrown non-error object', t => {
 	const obj = {foo: 'bar'};
 	return ava(() => {
