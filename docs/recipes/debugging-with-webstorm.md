@@ -5,7 +5,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 Starting with version 2016.2, [WebStorm](https://www.jetbrains.com/webstorm/) and other JetBrains IDEs (IntelliJ IDEA Ultimate, PHPStorm, PyCharm Professional, and RubyMine with installed Node.js plugin) allow you to debug AVA tests.
 
 
-## Setup
+## Setup using Node.js
 
 Add a new *Node.js Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *Node.js*.
 
@@ -13,8 +13,42 @@ In the `JavaScript file` field specify the path to AVA in the project's `node_mo
 
 In the `Application parameters` pass the CLI flags you're using and the test files you would like to debug, for example `--verbose test.js`.
 
+In the `Node parameters`, for Node.js 7+, pass the `--inspect-brk` flag to enable the Node inspector. For earlier versions use `--debug-brk`.
+
 Save the configuration.
 
+## Setup using npm
+
+Execute `ava --init` in your project directory to add AVA to your `package.json`.
+
+Your `package.json` will look something like this:
+
+```json
+{
+	"name": "awesome-package",
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"ava": "^0.20.0"
+	}
+}
+```
+
+Add a new *npm Run/Debug configuration*: select `Edit Configurations...` from the dropdown list on the top right, then click `+` and select *npm*.
+
+Use the following configuration parameters:
+
+- `package.json`: Path to your project's `package.json` file
+- `Command`: `test`
+
+Your IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` and the AVA-configuration you have specified in your package.json.
+
+In the `Node parameters`, for Node.js 7+ pass `--inspect-brk` or `--debug-brk` for earlier versions.
+
+Don't forget to select a Node.js interpreter. 
+
+Save the configuration.
 
 ## Debug
 

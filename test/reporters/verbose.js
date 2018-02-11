@@ -1,25 +1,37 @@
 'use strict';
+require('../../lib/worker-options').set({});
+
+// These tests are run as a sub-process of the `tap` module, so the standard
+// output stream will not be recognized as a text terminal. AVA internals are
+// sensitive to this detail and respond by automatically disable output
+// coloring. Because the tests are written verify AVA's behavior in text
+// terminals, that environment should be simulated prior to loading any
+// modules.
+process.stdout.isTTY = true;
+
 const indentString = require('indent-string');
 const flatten = require('arr-flatten');
 const tempWrite = require('temp-write');
 const figures = require('figures');
-const chalk = require('chalk');
 const sinon = require('sinon');
 const test = require('tap').test;
 const lolex = require('lolex');
-const beautifyStack = require('../../lib/beautify-stack');
-const colors = require('../../lib/colors');
+const AssertionError = require('../../lib/assert').AssertionError;
+const colors = require('../helper/colors');
 const VerboseReporter = require('../../lib/reporters/verbose');
 const compareLineOutput = require('../helper/compare-line-output');
-const formatSerializedError = require('../../lib/format-assert-error').formatSerializedError;
+const errorFromWorker = require('../helper/error-from-worker');
 const codeExcerpt = require('../../lib/code-excerpt');
 
-chalk.enabled = true;
+const stackLineRegex = /.+ \(.+:\d+:\d+\)/;
 
-const stackLineRegex = /.+ \(.+:[0-9]+:[0-9]+\)/;
-
-lolex.install(new Date(2014, 11, 19, 17, 19, 12, 200).getTime(), ['Date']);
-const time = ' ' + chalk.grey.dim('[17:19:12]');
+lolex.install({
+	now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
+	toFake: [
+		'Date'
+	]
+});
+const time = ' ' + colors.dimGray('[17:19:12]');
 
 function createReporter(options) {
 	if (options === undefined) {
@@ -36,14 +48,6 @@ function createRunStatus() {
 	};
 }
 
-function fooFunc() {
-	barFunc();
-}
-
-function barFunc() {
-	throw new Error();
-}
-
 function source(file, line) {
 	return {
 		file,
@@ -52,19 +56,6 @@ function source(file, line) {
 		isDependency: false
 	};
 }
-
-test('beautify stack - removes uninteresting lines', t => {
-	try {
-		fooFunc();
-	} catch (err) {
-		const stack = beautifyStack(err.stack);
-		t.match(stack, /fooFunc/);
-		t.match(stack, /barFunc/);
-		t.match(err.stack, /Module._compile/);
-		t.notMatch(stack, /Module\._compile/);
-		t.end();
-	}
-});
 
 test('start', t => {
 	const reporter = createReporter();
@@ -79,9 +70,9 @@ test('passing test and duration less than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 90
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.green(figures.tick) + ' passed';
+	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed';
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -93,22 +84,11 @@ test('passing test and duration greater than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 150
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.green(figures.tick) + ' passed' + chalk.grey.dim(' (150ms)');
+	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed' + colors.dimGray(' (150ms)');
 
 	t.is(actualOutput, expectedOutput);
-	t.end();
-});
-
-test('don\'t display test title if there is only one anonymous test', t => {
-	const reporter = createReporter();
-
-	const output = reporter.test({
-		title: '[anonymous]'
-	}, createRunStatus());
-
-	t.is(output, undefined);
 	t.end();
 });
 
@@ -118,9 +98,9 @@ test('known failure test', t => {
 	const actualOutput = reporter.test({
 		title: 'known failure',
 		failing: true
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.red(figures.tick) + ' ' + chalk.red('known failure');
+	const expectedOutput = '  ' + colors.red(figures.tick) + ' ' + colors.red('known failure');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -134,9 +114,9 @@ test('failing test', t => {
 		error: {
 			message: 'assertion failed'
 		}
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.red(figures.cross) + ' failed ' + chalk.red('assertion failed');
+	const expectedOutput = '  ' + colors.red(figures.cross) + ' failed ' + colors.red('assertion failed');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -148,9 +128,9 @@ test('skipped test', t => {
 	const actualOutput = reporter.test({
 		title: 'skipped',
 		skip: true
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.yellow('- skipped');
+	const expectedOutput = '  ' + colors.yellow('- skipped');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -163,9 +143,9 @@ test('todo test', t => {
 		title: 'todo',
 		skip: true,
 		todo: true
-	}, createRunStatus());
+	});
 
-	const expectedOutput = '  ' + chalk.blue('- todo');
+	const expectedOutput = '  ' + colors.blue('- todo');
 
 	t.is(actualOutput, expectedOutput);
 	t.end();
@@ -174,15 +154,14 @@ test('todo test', t => {
 test('uncaught exception', t => {
 	const reporter = createReporter();
 
-	const error = new Error('Unexpected token');
-
-	const output = reporter.unhandledError({
+	const error = errorFromWorker(new Error('Unexpected token'), {
 		type: 'exception',
-		file: 'test.js',
-		stack: beautifyStack(error.stack)
-	}, createRunStatus()).split('\n');
+		file: 'test.js'
+	});
 
-	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
+	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
+
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -198,22 +177,21 @@ test('ava error', t => {
 		message: 'A futuristic test runner'
 	}, createRunStatus()).split('\n');
 
-	t.is(output[0], chalk.red('  ' + figures.cross + ' A futuristic test runner'));
+	t.is(output[0], colors.red('  ' + figures.cross + ' A futuristic test runner'));
 	t.end();
 });
 
 test('unhandled rejection', t => {
 	const reporter = createReporter();
 
-	const error = new Error('Unexpected token');
-
-	const output = reporter.unhandledError({
-		type: 'rejection',
+	const error = errorFromWorker(new Error('Unexpected token'), {
 		file: 'test.js',
-		stack: beautifyStack(error.stack)
-	}, createRunStatus()).split('\n');
+		type: 'rejection'
+	});
 
-	t.is(output[0], chalk.red('Unhandled Rejection: test.js'));
+	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
+
+	t.is(output[0].trim(), colors.boldWhite('Unhandled rejection in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -222,16 +200,15 @@ test('unhandled rejection', t => {
 test('unhandled error without stack', t => {
 	const reporter = createReporter();
 
-	const err = {
-		type: 'exception',
+	const err = errorFromWorker({message: 'test'}, {
 		file: 'test.js',
-		message: 'test'
-	};
+		type: 'exception'
+	});
 
 	const output = reporter.unhandledError(err, createRunStatus()).split('\n');
 
-	t.is(output[0], chalk.red('Uncaught Exception: test.js'));
-	t.is(output[1], '  ' + chalk.red(JSON.stringify(err)));
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
+	t.is(output[1], '  Threw non-error: ' + JSON.stringify({message: 'test'}));
 	t.end();
 });
 
@@ -243,7 +220,7 @@ test('results with passing tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -264,11 +241,11 @@ test('results with passing known failure tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.red('1 known failure'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 known failure'),
 		'',
 		'',
-		'  ' + chalk.red('known failure'),
+		'  ' + colors.red('known failure'),
 		''
 	].join('\n');
 
@@ -285,8 +262,8 @@ test('results with skipped tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.yellow('1 test skipped'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.yellow('1 test skipped'),
 		''
 	].join('\n');
 
@@ -303,8 +280,8 @@ test('results with todo tests', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.blue('1 test todo'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.blue('1 test todo'),
 		''
 	].join('\n');
 
@@ -321,8 +298,8 @@ test('results with passing tests and rejections', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.red('1 unhandled rejection'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 unhandled rejection'),
 		''
 	].join('\n');
 
@@ -339,8 +316,8 @@ test('results with passing tests and exceptions', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.red('1 uncaught exception'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 uncaught exception'),
 		''
 	].join('\n');
 
@@ -358,9 +335,9 @@ test('results with passing tests, rejections and exceptions', t => {
 	const actualOutput = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'  ' + chalk.red('1 unhandled rejection'),
-		'  ' + chalk.red('1 uncaught exception'),
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 unhandled rejection'),
+		'  ' + colors.red('1 uncaught exception'),
 		''
 	].join('\n');
 
@@ -369,26 +346,34 @@ test('results with passing tests, rejections and exceptions', t => {
 });
 
 test('results with errors', t => {
-	const error1 = new Error('error one message');
-	error1.stack = beautifyStack(error1.stack);
+	const error1 = errorFromWorker(new AssertionError({message: 'error one message'}));
 	const err1Path = tempWrite.sync('a()');
 	error1.source = source(err1Path);
-	error1.avaAssertionError = true;
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
-	const error2 = new Error('error two message');
-	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
+	const error2 = errorFromWorker(new AssertionError({message: 'error two message'}), {
+		stack: 'error message\nTest.fn (test.js:1:1)'
+	});
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.avaAssertionError = true;
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
+	];
+
+	const error3 = errorFromWorker(new AssertionError({message: 'error three message'}), {
+		stack: 'error message\nTest.fn (test.js:1:1)'
+	});
+	const err3Path = tempWrite.sync('b()');
+	error3.source = source(err3Path);
+	error3.statements = [];
+	error3.values = [
+		{label: 'error three message:', formatted: JSON.stringify([1])}
 	];
 
 	const reporter = createReporter({color: true});
@@ -400,57 +385,83 @@ test('results with errors', t => {
 	}, {
 		title: 'fail two',
 		error: error2
+	}, {
+		title: 'fail three',
+		error: error3
 	}];
 
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + chalk.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
-		'  ' + chalk.bold.white('fail one'),
-		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
+		'  ' + colors.boldWhite('fail one'),
+		'  ' + colors.gray(`${error1.source.file}:${error1.source.line}`),
 		'',
 		indentString(codeExcerpt(error1.source), 2).split('\n'),
 		'',
 		/error one message/,
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
-		stackLineRegex,
-		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
 		'',
-		'  ' + chalk.bold.white('fail two'),
-		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
+		'  ' + colors.boldWhite('fail two'),
+		'  ' + colors.gray(`${error2.source.file}:${error2.source.line}`),
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		/error two message/,
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n')
+		'  actual:',
+		'',
+		'  [1]',
+		'',
+		'  expected:',
+		'',
+		'  [2]',
+		'',
+		'',
+		'',
+		'  ' + colors.boldWhite('fail three'),
+		'  ' + colors.gray(`${error3.source.file}:${error3.source.line}`),
+		'',
+		indentString(codeExcerpt(error3.source), 2).split('\n'),
+		'',
+		'  error three message:',
+		'',
+		'  [1]',
+		''
 	]));
 	t.end();
 });
 
 test('results with errors and disabled code excerpts', t => {
-	const error1 = new Error('error one message');
-	error1.stack = beautifyStack(error1.stack);
-	error1.avaAssertionError = true;
+	const error1 = errorFromWorker(new AssertionError({message: 'error one message'}));
+	delete error1.source;
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
-	const error2 = new Error('error two message');
-	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
+	const error2 = errorFromWorker(new AssertionError({message: 'error two message'}), {
+		stack: 'error message\nTest.fn (test.js:1:1)\n'
+	});
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.avaAssertionError = true;
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
 	];
 
 	const reporter = createReporter({color: true});
@@ -467,51 +478,62 @@ test('results with errors and disabled code excerpts', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + chalk.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
-		'  ' + chalk.bold.white('fail one'),
+		'  ' + colors.boldWhite('fail one'),
 		'',
 		/error one message/,
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
-		stackLineRegex,
-		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
 		'',
-		'  ' + chalk.bold.white('fail two'),
-		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
+		'  ' + colors.boldWhite('fail two'),
+		'  ' + colors.gray(`${error2.source.file}:${error2.source.line}`),
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		/error two message/,
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n')
+		'  actual:',
+		'',
+		'  [1]',
+		'',
+		'  expected:',
+		'',
+		'  [2]',
+		''
 	]));
 	t.end();
 });
 
 test('results with errors and disabled code excerpts', t => {
-	const error1 = new Error('error one message');
-	error1.stack = beautifyStack(error1.stack);
+	const error1 = errorFromWorker(new AssertionError({message: 'error one message'}));
 	const err1Path = tempWrite.sync('a();');
 	error1.source = source(err1Path, 10);
-	error1.avaAssertionError = true;
 	error1.statements = [];
 	error1.values = [
 		{label: 'actual:', formatted: JSON.stringify('abc')},
-		{lael: 'expected:', formatted: JSON.stringify('abd')}
+		{label: 'expected:', formatted: JSON.stringify('abd')}
 	];
 
-	const error2 = new Error('error two message');
-	error2.stack = 'error message\nTest.fn (test.js:1:1)\n';
+	const error2 = errorFromWorker(new AssertionError({message: 'error two message'}), {
+		stack: 'error message\nTest.fn (test.js:1:1)\n'
+	});
 	const err2Path = tempWrite.sync('b()');
 	error2.source = source(err2Path);
-	error2.avaAssertionError = true;
 	error2.statements = [];
 	error2.values = [
 		{label: 'actual:', formatted: JSON.stringify([1])},
-		{lael: 'expected:', formatted: JSON.stringify([2])}
+		{label: 'expected:', formatted: JSON.stringify([2])}
 	];
 
 	const reporter = createReporter({color: true});
@@ -528,27 +550,40 @@ test('results with errors and disabled code excerpts', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, flatten([
 		'',
-		'  ' + chalk.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		'',
-		'  ' + chalk.bold.white('fail one'),
-		'  ' + chalk.grey(`${error1.source.file}:${error1.source.line}`),
+		'  ' + colors.boldWhite('fail one'),
+		'  ' + colors.gray(`${error1.source.file}:${error1.source.line}`),
 		'',
 		/error one message/,
 		'',
-		indentString(formatSerializedError(error1), 2).split('\n'),
-		stackLineRegex,
-		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
 		'',
 		'',
-		'  ' + chalk.bold.white('fail two'),
-		'  ' + chalk.grey(`${error2.source.file}:${error2.source.line}`),
+		'  ' + colors.boldWhite('fail two'),
+		'  ' + colors.gray(`${error2.source.file}:${error2.source.line}`),
 		'',
 		indentString(codeExcerpt(error2.source), 2).split('\n'),
 		'',
 		/error two message/,
 		'',
-		indentString(formatSerializedError(error2), 2).split('\n')
+		'  actual:',
+		'',
+		'  [1]',
+		'',
+		'  expected:',
+		'',
+		'  [2]',
+		''
 	]));
 	t.end();
 });
@@ -559,19 +594,19 @@ test('results when fail-fast is enabled', t => {
 	runStatus.remainingCount = 1;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'',
-		'  ' + chalk.red('1 test failed') + time,
-		'',
-		'',
-		'  ' + colors.information('`--fail-fast` is on. At least 1 test was skipped.'),
-		''
-	].join('\n');
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped.'),
+		'\n'
+	].join('');
 
 	t.is(output, expectedOutput);
 	t.end();
@@ -583,19 +618,91 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	runStatus.remainingCount = 2;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'',
-		'  ' + chalk.red('1 test failed') + time,
-		'',
-		'',
-		'  ' + colors.information('`--fail-fast` is on. At least 2 tests were skipped.'),
-		''
-	].join('\n');
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. At least 2 tests were skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped test file', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 2;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 1 test file was skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped test files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 2 test files were skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped tests and files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped, as well as 2 test files.'),
+		'\n'
+	].join('');
 
 	t.is(output, expectedOutput);
 	t.end();
@@ -608,11 +715,13 @@ test('results without fail-fast if no failing tests', t => {
 	runStatus.failCount = 0;
 	runStatus.passCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -626,6 +735,8 @@ test('results without fail-fast if no skipped tests', t => {
 	runStatus.remainingCount = 0;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
@@ -633,7 +744,7 @@ test('results without fail-fast if no skipped tests', t => {
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.red('1 test failed') + time,
+		'  ' + colors.red('1 test failed'),
 		''
 	].join('\n');
 
@@ -652,9 +763,10 @@ test('results with 1 previous failure', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'  ' + colors.pass('1 test passed') + time,
-		'  ' + colors.error('1 uncaught exception'),
-		'  ' + colors.error('1 previous failure in test files that were not rerun')
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 uncaught exception'),
+		'  ' + colors.red('1 previous failure in test files that were not rerun'),
+		''
 	]);
 	t.end();
 });
@@ -670,9 +782,10 @@ test('results with 2 previous failures', t => {
 	const output = reporter.finish(runStatus);
 	compareLineOutput(t, output, [
 		'',
-		'  ' + colors.pass('1 test passed') + time,
-		'  ' + colors.error('1 uncaught exception'),
-		'  ' + colors.error('2 previous failures in test files that were not rerun')
+		'  ' + colors.green('1 test passed'),
+		'  ' + colors.red('1 uncaught exception'),
+		'  ' + colors.red('2 previous failures in test files that were not rerun'),
+		''
 	]);
 	t.end();
 });
@@ -685,7 +798,7 @@ test('full-width line when sectioning', t => {
 	const output = reporter.section();
 	process.stdout.columns = prevColumns;
 
-	t.is(output, chalk.gray.dim('\u2500'.repeat(80)));
+	t.is(output, colors.dimGray('\u2500'.repeat(80)));
 	t.end();
 });
 
@@ -717,7 +830,7 @@ test('results when hasExclusive is enabled, but there are no known remaining tes
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
 		'',
-		'  ' + chalk.green('1 test passed') + time,
+		'  ' + colors.green('1 test passed'),
 		''
 	].join('\n');
 
@@ -736,13 +849,11 @@ test('results when hasExclusive is enabled, but there is one remaining tests', t
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'',
-		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 1 test was not run'),
-		''
-	].join('\n');
+		'\n  ' + colors.green('1 test passed'),
+		'\n',
+		'\n  ' + colors.magenta('The .only() modifier is used in some tests. 1 test was not run'),
+		'\n'
+	].join('');
 
 	t.is(output, expectedOutput);
 	t.end();
@@ -759,20 +870,18 @@ test('results when hasExclusive is enabled, but there are multiple remaining tes
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'',
-		'  ' + chalk.green('1 test passed') + time,
-		'',
-		'',
-		'  ' + colors.information('The .only() modifier is used in some tests. 2 tests were not run'),
-		''
-	].join('\n');
+		'\n  ' + colors.green('1 test passed'),
+		'\n',
+		'\n  ' + colors.magenta('The .only() modifier is used in some tests. 2 tests were not run'),
+		'\n'
+	].join('');
 
 	t.is(output, expectedOutput);
 	t.end();
 });
 
 test('result when no-color flag is set', t => {
-	const reporter = new VerboseReporter({color: false});
+	const reporter = new VerboseReporter({color: false, watching: true});
 	const runStatus = createRunStatus();
 	runStatus.hasExclusive = true;
 	runStatus.testCount = 3;
@@ -782,14 +891,114 @@ test('result when no-color flag is set', t => {
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
-		'',
-		'  1 test passed [17:19:12]',
-		'',
-		'',
-		'  The .only() modifier is used in some tests. 2 tests were not run',
-		''
-	].join('\n');
+		'\n  1 test passed [17:19:12]',
+		'\n',
+		'\n  The .only() modifier is used in some tests. 2 tests were not run',
+		'\n'
+	].join('');
 
 	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('timestamp added when watching is enabled', t => {
+	const reporter = new VerboseReporter({color: true, watching: true});
+	const runStatus = createRunStatus();
+	runStatus.testCount = 1;
+	runStatus.passCount = 1;
+	runStatus.failCount = 0;
+
+	const actualOutput = reporter.finish(runStatus);
+	const expectedOutput = `\n  ${colors.green('1 test passed') + time}\n`;
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('successful test with logs', t => {
+	const reporter = createReporter();
+
+	const actualOutput = reporter.test({
+		title: 'successful test',
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	}, {});
+
+	const expectedOutput = [
+		'  ' + colors.green(figures.tick) + ' successful test',
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log message 1'),
+		'      ' + colors.gray('with a newline'),
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log message 2')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failed test with logs', t => {
+	const reporter = createReporter();
+
+	const actualOutput = reporter.test({
+		title: 'failed test',
+		error: new Error('failure'),
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	}, {});
+
+	const expectedOutput = [
+		'  ' + colors.red(figures.cross) + ' failed test ' + colors.red('failure'),
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log message 1'),
+		'      ' + colors.gray('with a newline'),
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log message 2')
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('results with errors and logs', t => {
+	const error1 = errorFromWorker(new AssertionError({message: 'error one message'}));
+	const err1Path = tempWrite.sync('a()');
+	error1.source = source(err1Path);
+	error1.statements = [];
+	error1.values = [
+		{label: 'actual:', formatted: JSON.stringify('abc')},
+		{label: 'expected:', formatted: JSON.stringify('abd')}
+	];
+
+	const reporter = createReporter({color: true});
+	const runStatus = createRunStatus();
+	runStatus.failCount = 1;
+	runStatus.tests = [{
+		title: 'fail one',
+		logs: ['log from failed test\nwith a newline', 'another log from failed test'],
+		error: error1
+	}];
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, flatten([
+		'',
+		'  ' + colors.red('1 test failed'),
+		'',
+		'  ' + colors.boldWhite('fail one'),
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('log from failed test'),
+		'      ' + colors.gray('with a newline'),
+		'    ' + colors.magenta(figures.info) + ' ' + colors.gray('another log from failed test'),
+		'',
+		'  ' + colors.gray(`${error1.source.file}:${error1.source.line}`),
+		'',
+		indentString(codeExcerpt(error1.source), 2).split('\n'),
+		'',
+		/error one message/,
+		'',
+		'  actual:',
+		'',
+		'  "abc"',
+		'',
+		'  expected:',
+		'',
+		'  "abd"',
+		'',
+		stackLineRegex, compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
+		''
+	]));
 	t.end();
 });

@@ -1,5 +1,5 @@
 import test from '../../';
 
-test.skip(t => {
+test.skip('test', t => {
 	t.fail();
 });

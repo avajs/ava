@@ -16,9 +16,9 @@ If you've configured it in your `package.json` like this:
 
 ```json
 {
-  "scripts": {
-    "test": "ava"
-  }
+	"scripts": {
+		"test": "ava"
+	}
 }
 ```
 
@@ -32,10 +32,10 @@ You could also set up a special script:
 
 ```json
 {
-  "scripts": {
-    "test": "ava",
-    "watch:test": "ava --watch"
-  }
+	"scripts": {
+		"test": "ava",
+		"watch:test": "ava --watch"
+	}
 }
 ```
 
@@ -49,9 +49,9 @@ Finally you could configure AVA to *always* run in watch mode by setting the `wa
 
 ```json
 {
-  "ava": {
-    "watch": true
-  }
+	"ava": {
+		"watch": true
+	}
 }
 ```
 
@@ -65,7 +65,7 @@ AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings ab
 
 In AVA there's a distinction between *source files* and *test files*. As you can imagine the *test files* contain your tests. *Source files* are all other files that are needed for the tests to run, be it your source code or test fixtures.
 
-By default AVA watches for changes to the test files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
+By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
 You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key.
 
@@ -90,6 +90,10 @@ If you run AVA in your CI with watch mode, the execution will exit with an error
 ## Manually rerunning all tests
 
 You can quickly rerun all tests by typing <kbd>r</kbd> on the console, followed by <kbd>Enter</kbd>.
+
+## Updating snapshots
+
+You can update failing snapshots by typing <kbd>u</kbd> on the console, followed by <kbd>Enter</kbd>.
 
 ## Debugging
 

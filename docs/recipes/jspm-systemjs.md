@@ -1,3 +1,7 @@
+> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
+
+---
+
 # JSPM and SystemJS for ES2015
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/jspm-systemjs.md)
@@ -14,7 +18,7 @@ Configure your .babelrc to work with AVA if you have not already. NOTE: You can 
 
 ```json
 {
-  "presets": ["es2015", "stage-2"]
+	"presets": ["es2015", "stage-2"]
 }
 ```
 
@@ -32,12 +36,12 @@ You will also need to update your AVA config in package.json to use the JSPM loa
 
 ```json
 {
-  "ava": {
-    "require": [
-      "babel-register",
-      "ava-jspm-loader"
-    ]
-  }
+	"ava": {
+		"require": [
+			"babel-register",
+			"ava-jspm-loader"
+		]
+	}
 }
 ```
 
@@ -49,8 +53,8 @@ Note that you will need to use `System.import` paths for all of your project fil
 
 ```js
 import test from 'ava';
-import main from 'app/main';  // maps to your JSPM config for "app/main.js"
-import BigNumber from 'bignumber.js';  // in jspm_packages
+import main from 'app/main';  // Maps to your JSPM config for "app/main.js"
+import BigNumber from 'bignumber.js';  // In jspm_packages
 
 function fn() {
 	return Promise.resolve(new BigNumber('1234567890.123456789'));

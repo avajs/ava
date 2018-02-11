@@ -11,7 +11,6 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 
  - `npm test`: Lint the code and run the entire test suite with coverage.
  - `npm run test-win`: Run the tests on Windows.
- - `npm run coverage`: Generate a coverage report for the last test run (opens a browser window).
  - `tap test/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
 
 
@@ -19,6 +18,7 @@ Read and adhere to the [Code of Conduct](code-of-conduct.md).
 
 - Bump dependencies.
 - Ensure [Travis CI](https://travis-ci.org/avajs/ava) and [AppVeyor](https://ci.appveyor.com/project/avajs/ava/branch/master) are green.
+- If [necessary](docs/support-statement.md), update the `engines` field in `package.json`
 - Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [semver](http://semver.org).
 - Write a [release note](https://github.com/avajs/ava/releases/new) following the style of previous release notes.
 

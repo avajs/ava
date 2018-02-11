@@ -1,15 +1,35 @@
 language: node_js
 node_js:
-  - '7'
-  - '6'
-  - '4'
+  - 9
+  - 8
+  - 6
+  - 4
+env:
+  - FRESH_DEPS=false
+  - FRESH_DEPS=true
+matrix:
+  exclude:
+    - node_js: 9
+      env: FRESH_DEPS=true
+    - node_js: 6
+      env: FRESH_DEPS=true
+    - node_js: 4
+      env: FRESH_DEPS=true
 cache:
   directories:
     - $HOME/.npm
-    - node_modules
 before_install:
-  - 'npm install --global npm'
-before_script:
-  - 'npm prune'
-after_success:
-  - './node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && ./node_modules/.bin/codecov'
+  - npm install --global npm@5.6.0
+  - npm --version
+  - md5sum package-lock.json > package-lock.json.md5
+install: |
+  if [[ ${FRESH_DEPS} == "true" ]]; then
+    npm install --no-shrinkwrap --prefer-online;
+  else
+    npm install --prefer-offline;
+    if ! md5sum --quiet -c package-lock.json.md5; then
+      echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes.";
+      exit 1;
+    fi
+  fi
+after_success: npx codecov --file=./coverage/lcov.info

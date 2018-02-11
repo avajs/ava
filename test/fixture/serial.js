@@ -16,6 +16,6 @@ test.cb('second', t => {
 	}, 100);
 });
 
-test(t => {
+test('test', t => {
 	t.deepEqual(tests, ['first', 'second']);
 });

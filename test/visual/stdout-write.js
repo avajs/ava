@@ -1,5 +1,5 @@
 import delay from 'delay';
-import test from '../../';
+import test from '../..';
 
 test('testName1', async t => {
 	process.stdout.write('foo ');

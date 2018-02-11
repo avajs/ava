@@ -2,7 +2,7 @@
 const sinon = require('sinon');
 const test = require('tap').test;
 const hasAnsi = require('has-ansi');
-const chalk = require('chalk');
+const colors = require('../helper/colors');
 const TapReporter = require('../../lib/reporters/tap');
 
 test('start', t => {
@@ -40,7 +40,7 @@ test('failing test', t => {
 			assertion: 'true',
 			operator: '==',
 			values: [{label: 'expected:', formatted: 'true'}, {label: 'actual:', formatted: 'false'}],
-			stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
+			stack: 'Test.fn (test.js:1:2)'
 		}
 	});
 
@@ -113,7 +113,7 @@ test('unhandled error', t => {
 	const actualOutput = reporter.unhandledError({
 		message: 'unhandled',
 		name: 'TypeError',
-		stack: ['', 'Test.fn (test.js:1:2)'].join('\n')
+		stack: 'Test.fn (test.js:1:2)'
 	});
 
 	const expectedOutput = `# unhandled
@@ -235,7 +235,7 @@ test('reporter strips ANSI characters', t => {
 	const reporter = new TapReporter();
 
 	const output = reporter.test({
-		title: `test ${chalk.gray.dim('›')} my test`,
+		title: `test ${colors.dimGray('›')} my test`,
 		type: 'test',
 		file: 'test.js'
 	});
@@ -264,5 +264,53 @@ test('stdout and stderr should call process.stderr.write', t => {
 
 	process.stderr.write.restore();
 	t.is(stub.callCount, 2);
+	t.end();
+});
+
+test('successful test with logs', t => {
+	const reporter = new TapReporter();
+
+	const actualOutput = reporter.test({
+		title: 'passing',
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	});
+
+	const expectedOutput = [
+		'# passing',
+		'ok 1 - passing',
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
+	t.end();
+});
+
+test('failing test with logs', t => {
+	const reporter = new TapReporter();
+
+	const actualOutput = reporter.test({
+		title: 'failing',
+		error: {
+			name: 'AssertionError',
+			message: 'false == true'
+		},
+		logs: ['log message 1\nwith a newline', 'log message 2']
+	});
+
+	const expectedOutput = [
+		'# failing',
+		'not ok 1 - failing',
+		'  * log message 1',
+		'    with a newline',
+		'  * log message 2',
+		'  ---',
+		'    name: AssertionError',
+		'    message: false == true',
+		'  ...'
+	].join('\n');
+
+	t.is(actualOutput, expectedOutput);
 	t.end();
 });

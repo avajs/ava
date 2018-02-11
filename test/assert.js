@@ -1,9 +1,16 @@
 'use strict';
+require('../lib/worker-options').set({color: false});
+
 const path = require('path');
-const jestSnapshot = require('jest-snapshot');
+const stripAnsi = require('strip-ansi');
+const React = require('react');
+const renderer = require('react-test-renderer');
 const test = require('tap').test;
+const Observable = require('zen-observable');
 const assert = require('../lib/assert');
-const formatValue = require('../lib/format-assert-error').formatValue;
+const snapshotManager = require('../lib/snapshot-manager');
+const Test = require('../lib/test');
+const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
 let lastPassed = false;
@@ -12,16 +19,18 @@ const assertions = assert.wrapAssertions({
 		lastPassed = true;
 	},
 
-	pending() {},
+	pending(_, promise) {
+		promise.catch(err => {
+			lastFailure = err;
+		});
+	},
 
 	fail(_, error) {
 		lastFailure = error;
 	}
 });
 
-function failsWith(t, fn, subset) {
-	lastFailure = null;
-	fn();
+function assertFailure(t, subset) {
 	if (!lastFailure) {
 		t.fail('Expected assertion to fail');
 		return;
@@ -31,6 +40,10 @@ function failsWith(t, fn, subset) {
 	t.is(lastFailure.message, subset.message);
 	t.is(lastFailure.name, 'AssertionError');
 	t.is(lastFailure.operator, subset.operator);
+	if (subset.raw) {
+		t.is(lastFailure.raw.expected, subset.raw.expected);
+		t.is(lastFailure.raw.actual, subset.raw.actual);
+	}
 	if (subset.statements) {
 		t.is(lastFailure.statements.length, subset.statements.length);
 		lastFailure.statements.forEach((s, i) => {
@@ -44,11 +57,24 @@ function failsWith(t, fn, subset) {
 		t.is(lastFailure.values.length, subset.values.length);
 		lastFailure.values.forEach((s, i) => {
 			t.is(s.label, subset.values[i].label);
-			t.match(s.formatted, subset.values[i].formatted);
+			t.match(stripAnsi(s.formatted), subset.values[i].formatted);
 		});
 	} else {
 		t.same(lastFailure.values, []);
 	}
+}
+
+function failsWith(t, fn, subset) {
+	lastFailure = null;
+	fn();
+	assertFailure(t, subset);
+}
+
+function eventuallyFailsWith(t, promise, subset) {
+	lastFailure = null;
+	return promise.then(() => {
+		assertFailure(t, subset);
+	});
 }
 
 function fails(t, fn) {
@@ -172,7 +198,7 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
 		assertions.is(new String('foo'), 'foo');
 	});
 
@@ -189,11 +215,7 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		assertions.is({foo: 'bar'}, {foo: 'bar'});
-	});
-
-	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
 		assertions.is(new String('foo'), new String('foo'));
 	});
 
@@ -210,23 +232,38 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
+		assertions.is({foo: 'bar'}, {foo: 'bar'});
+	}, {
+		assertion: 'is',
+		message: '',
+		actual: {foo: 'bar'},
+		expected: {foo: 'bar'},
+		values: [{
+			label: `Values are deeply equal to each other, but they are not the same:`,
+			formatted: /foo/
+		}]
+	});
+
+	failsWith(t, () => {
 		assertions.is('foo', 'bar');
 	}, {
 		assertion: 'is',
 		message: '',
+		raw: {actual: 'foo', expected: 'bar'},
 		values: [
-			{label: 'Difference:', formatted: /foobar/}
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}
 		]
 	});
 
 	failsWith(t, () => {
 		assertions.is('foo', 42);
 	}, {
+		actual: 'foo',
 		assertion: 'is',
+		expected: 42,
 		message: '',
 		values: [
-			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be the same as:', formatted: /42/}
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}
 		]
 	});
 
@@ -236,8 +273,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be the same as:', formatted: /42/}
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}
 		]
 	});
 
@@ -247,8 +283,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Actual:', formatted: /0/},
-			{label: 'Must be the same as:', formatted: /-0/}
+			{label: 'Difference:', formatted: /- 0\n\+ -0/}
 		]
 	});
 
@@ -258,8 +293,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Actual:', formatted: /-0/},
-			{label: 'Must be the same as:', formatted: /0/}
+			{label: 'Difference:', formatted: /- -0\n\+ 0/}
 		]
 	});
 
@@ -284,6 +318,7 @@ test('.not()', t => {
 	}, {
 		assertion: 'not',
 		message: '',
+		raw: {actual: 'foo', expected: 'foo'},
 		values: [{label: 'Value is the same as:', formatted: /foo/}]
 	});
 
@@ -490,6 +525,13 @@ test('.deepEqual()', t => {
 		);
 	});
 
+	passes(t, () => {
+		assertions.deepEqual(
+			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
+			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
+		);
+	});
+
 	// Regression test end here
 
 	passes(t, () => {
@@ -523,7 +565,8 @@ test('.deepEqual()', t => {
 	}, {
 		assertion: 'deepEqual',
 		message: '',
-		values: [{label: 'Difference:', formatted: /foobar/}]
+		raw: {actual: 'foo', expected: 'bar'},
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}]
 	});
 
 	failsWith(t, () => {
@@ -531,10 +574,8 @@ test('.deepEqual()', t => {
 	}, {
 		assertion: 'deepEqual',
 		message: '',
-		values: [
-			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be deeply equal to:', formatted: /42/}
-		]
+		raw: {actual: 'foo', expected: 42},
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
 	});
 
 	failsWith(t, () => {
@@ -542,10 +583,7 @@ test('.deepEqual()', t => {
 	}, {
 		assertion: 'deepEqual',
 		message: 'my message',
-		values: [
-			{label: 'Actual:', formatted: /foo/},
-			{label: 'Must be deeply equal to:', formatted: /42/}
-		]
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
 	});
 
 	t.end();
@@ -560,12 +598,17 @@ test('.notDeepEqual()', t => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
+	const actual = {a: 'a'};
+	const expected = {a: 'a'};
 	failsWith(t, () => {
-		assertions.notDeepEqual({a: 'a'}, {a: 'a'});
+		assertions.notDeepEqual(actual, expected);
 	}, {
+		actual,
 		assertion: 'notDeepEqual',
+		expected,
 		message: '',
-		values: [{label: 'Value is deeply equal:', formatted: formatValue({a: 'a'})}]
+		raw: {actual, expected},
+		values: [{label: 'Value is deeply equal:', formatted: /.*\{.*\n.*a: 'a'/}]
 	});
 
 	failsWith(t, () => {
@@ -573,7 +616,7 @@ test('.notDeepEqual()', t => {
 	}, {
 		assertion: 'notDeepEqual',
 		message: 'my message',
-		values: [{label: 'Value is deeply equal:', formatted: formatValue(['a', 'b'])}]
+		values: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}]
 	});
 
 	t.end();
@@ -636,6 +679,28 @@ test('.throws() returns the rejection reason of promise', t => {
 	});
 });
 
+test('.throws() returns the rejection reason of a promise returned by the function', t => {
+	const expected = new Error();
+
+	return assertions.throws(() => {
+		return Promise.reject(expected);
+	}).then(actual => {
+		t.is(actual, expected);
+		t.end();
+	});
+});
+
+test('.throws() returns the error of an observable returned by the function', t => {
+	const expected = new Error();
+
+	return assertions.throws(() => {
+		return new Observable(observer => observer.error(expected));
+	}).then(actual => {
+		t.is(actual, expected);
+		t.end();
+	});
+});
+
 test('.throws() fails if passed a bad value', t => {
 	failsWith(t, () => {
 		assertions.throws('not a function');
@@ -646,6 +711,14 @@ test('.throws() fails if passed a bad value', t => {
 	});
 
 	t.end();
+});
+
+test('promise .throws() fails when promise is resolved', t => {
+	return eventuallyFailsWith(t, assertions.throws(Promise.resolve('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
 });
 
 test('.notThrows()', t => {
@@ -682,6 +755,22 @@ test('.notThrows() returns undefined for a fulfilled promise', t => {
 	});
 });
 
+test('.notThrows() returns undefined for a fulfilled promise returned by the function', t => {
+	return assertions.notThrows(() => {
+		return Promise.resolve(Symbol(''));
+	}).then(actual => {
+		t.is(actual, undefined);
+	});
+});
+
+test('.notThrows() returns undefined for an observable returned by the function', t => {
+	return assertions.notThrows(() => {
+		return Observable.of(Symbol(''));
+	}).then(actual => {
+		t.is(actual, undefined);
+	});
+});
+
 test('.notThrows() fails if passed a bad value', t => {
 	failsWith(t, () => {
 		assertions.notThrows('not a function');
@@ -711,45 +800,118 @@ test('.snapshot()', t => {
 	// "$(npm bin)"/tap --no-cov -R spec test/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
-	const update = false;
+	const updating = false;
 
-	const state = jestSnapshot.initializeSnapshotState(__filename, update, path.join(__dirname, 'fixture', 'assert.snap'));
-	const executionContext = {
-		_test: {
-			getSnapshotState() {
-				return state;
-			}
-		},
-		title: ''
+	const projectDir = path.join(__dirname, 'fixture');
+	const manager = snapshotManager.load({
+		file: __filename,
+		name: 'assert.js',
+		projectDir,
+		relFile: 'test/assert.js',
+		fixedLocation: null,
+		testDir: projectDir,
+		updating
+	});
+	const setup = title => {
+		const fauxTest = new Test({
+			title,
+			compareTestSnapshot: options => manager.compare(options)
+		});
+		const executionContext = {
+			_test: fauxTest
+		};
+		return executionContext;
 	};
 
 	passes(t, () => {
-		executionContext.title = 'passes';
+		const executionContext = setup('passes');
 		assertions.snapshot.call(executionContext, {foo: 'bar'});
+		assertions.snapshot.call(executionContext, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+		assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
+		assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 	});
 
-	failsWith(t, () => {
-		executionContext.title = 'fails';
-		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'});
-	}, {
-		assertion: 'snapshot',
-		message: 'Did not match snapshot',
-		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
-	});
-
-	failsWith(t, () => {
-		executionContext.title = 'fails';
-		assertions.snapshot.call(executionContext, {foo: update ? 'bar' : 'not bar'}, 'my message');
-	}, {
-		assertion: 'snapshot',
-		message: 'my message',
-		values: [{label: 'Difference:', formatted: 'Object {\n-   "foo": "bar",\n+   "foo": "not bar",\n  }'}]
-	});
-
-	if (update) {
-		state.save(true);
+	{
+		const executionContext = setup('fails');
+		if (updating) {
+			assertions.snapshot.call(executionContext, {foo: 'bar'});
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, {foo: 'not bar'});
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+			});
+		}
 	}
 
+	failsWith(t, () => {
+		const executionContext = setup('fails (fixed id)');
+		assertions.snapshot.call(executionContext, {foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
+	}, {
+		assertion: 'snapshot',
+		message: 'different message, also not included in snapshot report',
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+	});
+
+	{
+		const executionContext = setup('fails');
+		if (updating) {
+			assertions.snapshot.call(executionContext, {foo: 'bar'}, 'my message');
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, {foo: 'not bar'}, 'my message');
+			}, {
+				assertion: 'snapshot',
+				message: 'my message',
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('rendered comparison');
+		if (updating) {
+			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		} else {
+			passes(t, () => {
+				assertions.snapshot.call(executionContext, React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('rendered comparison');
+		if (updating) {
+			assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Vadim\n+     Sindre\n    </mark>\n  </div>'}]
+			});
+		}
+	}
+
+	{
+		const executionContext = setup('element comparison');
+		if (updating) {
+			assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Sindre'}));
+		} else {
+			failsWith(t, () => {
+				assertions.snapshot.call(executionContext, React.createElement(HelloMessage, {name: 'Vadim'}));
+			}, {
+				assertion: 'snapshot',
+				message: 'Did not match snapshot',
+				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Vadim"\n+   name="Sindre"\n  />'}]
+			});
+		}
+	}
+
+	manager.save();
 	t.end();
 });
 
@@ -931,7 +1093,7 @@ test('.regex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /Object/}]
+		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
 	t.end();
@@ -981,7 +1143,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /Object/}]
+		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
 	t.end();

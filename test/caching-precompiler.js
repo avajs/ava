@@ -5,7 +5,7 @@ const test = require('tap').test;
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
 
@@ -41,8 +41,8 @@ test('adds files and source maps to the cache directory as needed', t => {
 
 	const files = fs.readdirSync(tempDir);
 	t.is(files.length, 2);
-	t.is(files.filter(endsWithJs).length, 1, 'one .js file is saved to the cache');
-	t.is(files.filter(endsWithMap).length, 1, 'one .js.map file is saved to the cache');
+	t.is(files.filter(x => endsWithJs(x)).length, 1, 'one .js file is saved to the cache');
+	t.is(files.filter(x => endsWithMap(x)).length, 1, 'one .js.map file is saved to the cache');
 	t.end();
 });
 
@@ -87,7 +87,7 @@ test('disables babel cache', t => {
 
 	const tempDir = uniqueTempDir();
 	const CachingPrecompiler = proxyquire('../lib/caching-precompiler', {
-		'babel-core': Object.assign({}, babel, {
+		'@babel/core': Object.assign({}, babel, {
 			transform(code, options) {
 				t.same(process.env.BABEL_DISABLE_CACHE, '1');
 				return babel.transform(code, options);

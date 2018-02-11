@@ -4,84 +4,110 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-## Setup
-
-First install [TypeScript](https://github.com/Microsoft/TypeScript) (if you already have it installed, make sure you use version 2.1 or greater).
-
-```
-$ npm install --save-dev typescript
-```
-
-Create a [`tsconfig.json`](https://github.com/Microsoft/TypeScript/wiki/tsconfig.json) file. This file specifies the compiler options required to compile the project or the test file.
-
-```json
-{
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es2015"
-	}
-}
-```
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.7.1.
 
 Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
 
 ```json
 {
-  "scripts": {
-    "test": "tsc && ava"
-  }
+	"scripts": {
+		"test": "tsc && ava"
+	}
 }
 ```
 
+Make sure that AVA runs your built TypeScript files.
 
-## Add tests
+## Writing tests
 
 Create a `test.ts` file.
 
 ```ts
 import test from 'ava';
 
-async function fn() {
-    return Promise.resolve('foo');
-}
+const fn = async () => Promise.resolve('foo');
 
 test(async (t) => {
-    t.is(await fn(), 'foo');
+	t.is(await fn(), 'foo');
 });
 ```
 
-## Working with [`context`](https://github.com/avajs/ava#test-context)
+## Using [macros](https://github.com/avajs/ava#test-macros)
 
-By default, the type of `t.context` will be [`any`](https://www.typescriptlang.org/docs/handbook/basic-types.html#any). AVA exposes an interface `RegisterContextual<T>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+In order to be able to assign the `title` property to a macro you need to type the function:
 
 ```ts
-import * as ava from 'ava';
+import test, {Macro} from 'ava';
 
-function contextualize<T>(getContext: () => T): ava.RegisterContextual<T> {
-    ava.test.beforeEach(t => {
-        Object.assign(t.context, getContext());
-    });
+const macro: Macro = (t, input: string, expected: number) => {
+	t.is(eval(input), expected);
+};
+macro.title = (providedTitle: string, input: string, expected: number) => `${providedTitle} ${input} = ${expected}`.trim();
 
-    return ava.test;
-}
+test(macro, '2 + 2', 4);
+test(macro, '2 * 3', 6);
+test('providedTitle', macro, '3 * 3', 9);
+```
 
-const test = contextualize(() => ({ foo: 'bar' }));
+You'll need a different type if you're expecting your macro to be used with a callback test:
+
+```ts
+import test, {CbMacro} from 'ava';
+
+const macro: CbMacro = t => {
+	t.pass();
+	setTimeout(t.end, 100);
+};
+
+test.cb(macro);
+```
+
+## Typing [`t.context`](https://github.com/avajs/ava#test-context)
+
+By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+
+```ts
+import anyTest, {TestInterface} from 'ava';
+
+const test: TestInterface<{foo: string}> = anyTest;
 
 test.beforeEach(t => {
-    t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
+	t.context = {foo: 'bar'};
 });
 
-test.after.always.failing.cb.serial('very long chains are properly typed', t => {
-    t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type '{ foo: string }'
+test.beforeEach(t => {
+	t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
+});
+
+test.serial.cb.failing('very long chains are properly typed', t => {
+	t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type ''
 });
 
 test('an actual test', t => {
-    t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
+	t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
 });
 ```
 
-## Execute the tests
+You can also type the context when creating macros:
 
+```ts
+import anyTest, {Macro, TestInterface} from 'ava';
+
+interface Context {
+	foo: string
+}
+
+const test: TestInterface<Context> = anyTest;
+
+const macro: Macro<Context> = (t, expected: string) => {
+	t.is(t.context.foo, expected);
+};
+
+test.beforeEach(t => {
+	t.context = {foo: 'bar'};
+});
+
+test('foo is bar', macro, 'bar');
 ```
-$ npm test
-```
+
+Note that, despite the type cast above, when executing `t.context` is an empty object unless it's assigned.

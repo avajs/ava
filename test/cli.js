@@ -7,10 +7,9 @@ const getStream = require('get-stream');
 const figures = require('figures');
 const makeDir = require('make-dir');
 const touch = require('touch');
-const proxyquire = require('proxyquire');
-const sinon = require('sinon');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
+const Buffer = require('safe-buffer').Buffer;
 const stripAnsi = require('strip-ansi');
 
 const cliPath = path.join(__dirname, '../cli.js');
@@ -28,16 +27,12 @@ function execCli(args, opts, cb) {
 		env = opts.env || {};
 	}
 
-	if (process.env.AVA_APPVEYOR) {
-		env.AVA_APPVEYOR = 1;
-	}
-
 	let child;
 	let stdout;
 	let stderr;
 
 	const processPromise = new Promise(resolve => {
-		child = childProcess.spawn(process.execPath, [path.relative(dirname, cliPath)].concat(args), {
+		child = childProcess.spawn(process.execPath, [cliPath].concat(args), {
 			cwd: dirname,
 			env,
 			stdio: [null, 'pipe', 'pipe']
@@ -72,10 +67,28 @@ test('disallow invalid babel config shortcuts', t => {
 
 		let expectedOutput = '\n  ';
 		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava#es2017-support for allowed values.';
+		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
+		t.end();
+	});
+});
+
+test('enabling long stack traces will provide detailed debug information', t => {
+	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /From previous event/);
+		t.end();
+	});
+});
+
+test('`AssertionError` should capture infinity stack trace', t => {
+	execCli('fixture/infinity-stack-trace.js', (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /c \(.+?infinity-stack-trace\.js:6:20\)/);
+		t.match(stderr, /b \(.+?infinity-stack-trace\.js:7:18\)/);
+		t.match(stderr, /a \(.+?infinity-stack-trace\.js:8:18\)/);
 		t.end();
 	});
 });
@@ -88,12 +101,10 @@ test('timeout', t => {
 	});
 });
 
-test('throwing a named function will report the to the console', t => {
-	execCli('fixture/throw-named-function.js', (err, stdout, stderr) => {
+test('include anonymous functions in error reports', t => {
+	execCli('fixture/error-in-anonymous-function.js', (err, stdout, stderr) => {
 		t.ok(err);
-		t.match(stderr, /function fooFn\(\) \{\}/);
-		// TODO(jamestalmage)
-		// t.ok(/1 uncaught exception[^s]/.test(stdout));
+		t.match(stderr, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
 		t.end();
 	});
 });
@@ -188,23 +199,13 @@ test('improper use of t.throws, even if caught and then rethrown too slowly, wil
 	});
 });
 
-test('babel require hook only does not apply to source files', t => {
+test('precompiler require hook does not apply to source files', t => {
 	t.plan(3);
 
 	execCli('fixture/babel-hook.js', (err, stdout, stderr) => {
 		t.ok(err);
 		t.is(err.code, 1);
 		t.match(stderr, /Unexpected (token|reserved word)/);
-		t.end();
-	});
-});
-
-test('throwing a anonymous function will report the function to the console', t => {
-	execCli('fixture/throw-anonymous-function.js', (err, stdout, stderr) => {
-		t.ok(err);
-		t.match(stderr, /\(\) => \{\}/);
-		// TODO(jamestalmage)
-		// t.ok(/1 uncaught exception[^s]/.test(stdout));
 		t.end();
 	});
 });
@@ -313,10 +314,64 @@ test('watcher reruns test files when source dependencies change', t => {
 	});
 });
 
+test('watcher does not rerun test files when they write snapshot files', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stderr.on('data', str => {
+		buffer += str;
+		if (/2 tests passed/.test(buffer) && !passedFirst) {
+			buffer = '';
+			passedFirst = true;
+			setTimeout(() => {
+				child.kill();
+				killed = true;
+			}, 500);
+		} else if (passedFirst && !killed) {
+			t.is(buffer.replace(/\s/g, ''), '');
+		}
+	});
+});
+
+test('watcher reruns test files when snapshot dependencies change', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stderr.on('data', str => {
+		buffer += str;
+		if (/2 tests passed/.test(buffer)) {
+			buffer = '';
+			if (passedFirst) {
+				child.kill();
+				killed = true;
+			} else {
+				passedFirst = true;
+				setTimeout(() => {
+					touch.sync(path.join(__dirname, 'fixture/snapshots/test.js.snap'));
+				}, 500);
+			}
+		}
+	});
+});
+
 test('`"tap": true` config is ignored when --watch is given', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, () => {
+	const child = execCli(['--watch', '--verbose', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf'}, () => {
 		t.ok(killed);
 		t.end();
 	});
@@ -332,14 +387,6 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	};
 	child.stdout.on('data', testOutput);
 	child.stderr.on('data', testOutput);
-});
-
-test('bails when config contains `"tap": true` and `"watch": true`', t => {
-	execCli(['test.js'], {dirname: 'fixture/watcher/tap-and-watch-in-conf'}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
-		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-		t.end();
-	});
 });
 
 ['--watch', '-w'].forEach(watchFlag => {
@@ -359,6 +406,55 @@ test('bails when config contains `"tap": true` and `"watch": true`', t => {
 		execCli([watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
 			t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} is provided without value`, t => {
+		execCli(['test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} is provided with an input that is a string`, t => {
+		execCli([`${concurrencyFlag}=foo`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} is provided with an input that is a float`, t => {
+		execCli([`${concurrencyFlag}=4.7`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`bails when ${concurrencyFlag} is provided with an input that is negative`, t => {
+		execCli([`${concurrencyFlag}=-1`, 'test.js', concurrencyFlag], {dirname: 'fixture/concurrency'}, (err, stdout, stderr) => {
+			t.is(err.code, 1);
+			t.match(stderr, 'The --concurrency or -c flag must be provided with a nonnegative integer.');
+			t.end();
+		});
+	});
+});
+
+['--concurrency', '-c'].forEach(concurrencyFlag => {
+	test(`works when ${concurrencyFlag} is provided with a value`, t => {
+		execCli([`${concurrencyFlag}=1`, 'test.js'], {dirname: 'fixture/concurrency'}, err => {
+			t.ifError(err);
 			t.end();
 		});
 	});
@@ -406,33 +502,16 @@ test('should warn ava is required without the cli', t => {
 });
 
 test('prefers local version of ava', t => {
-	t.plan(1);
-
-	const stubModulePath = path.join(__dirname, '/fixture/empty');
-	const debugSpy = sinon.spy();
-	const resolveCwdStub = () => stubModulePath;
-
-	function debugStub() {
-		return message => {
-			let result = {
-				enabled: false
-			};
-
-			if (message) {
-				result = debugSpy(message);
-			}
-
-			return result;
-		};
-	}
-
-	proxyquire('../cli', {
-		debug: debugStub,
-		'resolve-cwd': resolveCwdStub
+	execCli('', {
+		dirname: 'fixture/local-bin',
+		env: {
+			DEBUG: 'ava'
+		}
+	}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, 'Using local install of AVA');
+		t.end();
 	});
-
-	t.ok(debugSpy.calledWith('Using local install of AVA'));
-	t.end();
 });
 
 test('use current working directory if `package.json` is not found', () => {
@@ -441,7 +520,7 @@ test('use current working directory if `package.json` is not found', () => {
 	const cliPath = require.resolve('../cli.js');
 	const avaPath = require.resolve('../');
 
-	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest(t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest('test', t => { t.pass(); });`);
 
 	return execa(process.execPath, [cliPath], {cwd});
 });
@@ -506,24 +585,203 @@ test('promise tests fail if event loop empties before they\'re resolved', t => {
 	});
 });
 
-test('snapshots work', t => {
-	try {
-		fs.unlinkSync(path.join(__dirname, 'fixture', 'snapshots', '__snapshots__', 'test.snap'));
-	} catch (err) {
-		if (err.code !== 'ENOENT') {
-			throw err;
+for (const obj of [
+	{type: 'colocated', rel: '', dir: ''},
+	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
+	{type: 'test', rel: 'test-dir', dir: 'test/snapshots'},
+	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'}
+]) {
+	test(`snapshots work (${obj.type})`, t => {
+		const snapPath = path.join(__dirname, 'fixture', 'snapshots', obj.rel, obj.dir, 'test.js.snap');
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
 		}
-	}
 
-	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots'}, err => {
-		t.ifError(err);
-
-		// Test should pass, and the snapshot gets used
-		execCli(['test.js'], {dirname: 'fixture/snapshots'}, err => {
+		const dirname = path.join('fixture/snapshots', obj.rel);
+		// Test should pass, and a snapshot gets written
+		execCli(['--update-snapshots'], {dirname}, err => {
 			t.ifError(err);
-			t.end();
+			t.true(fs.existsSync(snapPath));
+
+			// Test should pass, and the snapshot gets used
+			execCli([], {dirname}, err => {
+				t.ifError(err);
+				t.end();
+			});
 		});
+	});
+}
+
+test('appends to existing snapshots', t => {
+	const cliPath = require.resolve('../cli.js');
+	const avaPath = require.resolve('../');
+
+	const cwd = uniqueTempDir({create: true});
+	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
+
+	const initial = `import test from ${JSON.stringify(avaPath)}
+test('one', t => {
+	t.snapshot({one: true})
+})`;
+	fs.writeFileSync(path.join(cwd, 'test.js'), initial);
+
+	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, reject: false});
+	return run().then(result => {
+		t.match(result.stderr, /1 test passed/);
+
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
+test('two', t => {
+	t.snapshot({two: true})
+})`);
+		return run();
+	}).then(result => {
+		t.match(result.stderr, /2 tests passed/);
+
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
+test('two', t => {
+	t.snapshot({two: false})
+})`);
+
+		return run();
+	}).then(result => {
+		t.match(result.stderr, /1 test failed/);
+	});
+});
+
+test('outdated snapshot version is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is v0, but only v1 is supported\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
+		t.end();
+	});
+});
+
+test('newer snapshot version is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is v65535, but only v1 is supported\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /You should upgrade AVA\./);
+		t.end();
+	});
+});
+
+test('snapshot corruption is reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x01, 0x00]));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file is corrupted\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to recreate it\./);
+		t.end();
+	});
+});
+
+test('legacy snapshot files are reported to the console', t => {
+	const snapPath = path.join(__dirname, 'fixture', 'snapshots', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
+
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /The snapshot file was created with AVA 0\.19\. It's not supported by this AVA version\./);
+		t.match(stderr, /File path:/);
+		t.match(stderr, snapPath);
+		t.match(stderr, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
+		t.end();
+	});
+});
+
+test('snapshots infer their location from sourcemaps', t => {
+	t.plan(8);
+	const relativeFixtureDir = path.join('fixture/snapshots/test-sourcemaps');
+	const snapDirStructure = [
+		'src',
+		'src/test/snapshots',
+		'src/feature/__tests__/__snapshots__'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
+		t.match(stderr, /6 passed/);
+		t.end();
+	});
+});
+
+test('snapshots resolved location from "snapshotDir" in AVA config', t => {
+	t.plan(8);
+	const relativeFixtureDir = 'fixture/snapshots/test-snapshot-location';
+	const snapDir = 'snapshot-fixtures';
+	const snapDirStructure = [
+		'src',
+		'src/feature',
+		'src/feature/nested-feature'
+	];
+	const snapFixtureFilePaths = snapDirStructure
+		.map(snapRelativeDir => {
+			const snapPath = path.join(__dirname, relativeFixtureDir, snapDir, snapRelativeDir);
+			return [
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap')
+			];
+		})
+		.reduce((a, b) => a.concat(b), []);
+	const removeExistingSnapFixtureFiles = snapPath => {
+		try {
+			fs.unlinkSync(snapPath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
+	const verifySnapFixtureFiles = relFilePath => {
+		t.true(fs.existsSync(relFilePath));
+	};
+	execCli([], {dirname: relativeFixtureDir}, (err, stdout, stderr) => {
+		t.ifError(err);
+		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
+		t.match(stderr, /6 passed/);
+		t.end();
 	});
 });
 
@@ -539,6 +797,69 @@ test('--color enables formatting colors', t => {
 	execCli(['--color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout, stderr) => {
 		t.ok(err);
 		t.isNot(stripAnsi(stderr), stderr);
+		t.end();
+	});
+});
+
+test('sets NODE_ENV to test when it is not set', t => {
+	execCli([path.join('fixture', 'node-env-test.js')], {env: {}}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('doesn\'t set NODE_ENV when it is set', t => {
+	execCli([path.join('fixture', 'node-env-foo.js')], {env: {NODE_ENV: 'foo'}}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('skips test file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['import.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('skips helper file compilation when babel=false and compileEnhancements=false', t => {
+	execCli(['require-helper.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ifError(err);
+		t.match(stderr, /1 passed/);
+		t.end();
+	});
+});
+
+test('no power-assert when babel=false and compileEnhancements=false', t => {
+	execCli(['no-power-assert.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.notMatch(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('skips stage-4 transform when babel=false and compileEnhancements=true', t => {
+	execCli(['import.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.end();
+	});
+});
+
+test('power-assert when babel=false and compileEnhancements=true', t => {
+	execCli(['power-assert.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stripAnsi(stderr), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('workers load compiled helpers if in the require configuration', t => {
+	execCli(['test/verify.js'], {dirname: 'fixture/require-compiled-helper'}, err => {
+		t.ifError(err);
 		t.end();
 	});
 });

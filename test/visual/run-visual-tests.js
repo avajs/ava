@@ -60,7 +60,8 @@ run(
 		'  quz',
 		'',
 		'The mini reporter output (2 passes) should only appear at the end.'
-	])
+	]
+)
 
 	.then(thenRun(
 		'stdout.write() should not mess up the mini reporter',
@@ -95,5 +96,5 @@ run(
 			'There should be no other blank lines within the speech text.',
 			'The test counter should display "399 passed  1 failed" at the bottom.'
 		]
-	))
-;
+	));
+

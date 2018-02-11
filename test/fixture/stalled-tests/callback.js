@@ -1,5 +1,5 @@
-import test from '../../..'
+import test from '../../..';
 
-test.cb(t => {
+test.cb('test', t => {
 	t.pass();
 });

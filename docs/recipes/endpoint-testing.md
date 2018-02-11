@@ -9,6 +9,7 @@ Since tests run concurrently, it's best to create a fresh server instance for ea
 ```js
 function makeApp() {
 	const app = express();
+	app.use(bodyParser.json());
 	app.post('/signup', signupHandler);
 	return app;
 }

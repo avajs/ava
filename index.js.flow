@@ -1,164 +1,205 @@
-/* @flow */
-
-/**
- * Misc Setup Types
- */
-
-type PromiseLike<R> = {
-	then<U>(
-		onFulfill?: (value: R) => Promise<U> | U,
-		onReject?: (error: any) => Promise<U> | U
-	): Promise<U>;
+// @flow
+export interface PromiseLike<R> {
+	then<U>(onFulfill?: (value: R) => Promise<U> | U, onReject?: (error: any) => Promise<U> | U): Promise<U>;
 }
 
-type ObservableLike = {
-	subscribe(observer: (value: {}) => void): void;
-};
+export interface ObservableLike {
+	subscribe(observer: (value: any) => void): void;
+}
 
-type SpecialReturnTypes =
-	| PromiseLike<any>
-	| Iterator<any>
-	| ObservableLike;
+export type ThrowsErrorValidator = Class<{constructor(...args: Array<any>): any}> | RegExp | string | ((error: any) => boolean);
 
-type Constructor = Class<{
-	constructor(...args: Array<any>): any
-}>;
+export interface SnapshotOptions {
+	id?: string;
+}
 
-type ErrorValidator =
-	| Constructor
-	| RegExp
-	| string
-	| ((error: any) => boolean);
-
-/**
- * Assertion Types
- */
-
-type AssertContext = {
-	// Passing assertion.
-	pass(message?: string): void;
-	// Failing assertion.
+export interface Assertions {
+	deepEqual(actual: any, expected: any, message?: string): void;
 	fail(message?: string): void;
-	// Assert that value is truthy.
-	truthy(value: mixed, message?: string): void;
-	// Assert that value is falsy.
-	falsy(value: mixed, message?: string): void;
-	// Assert that value is true.
-	true(value: mixed, message?: string): void;
-	// Assert that value is false.
-	false(value: mixed, message?: string): void;
-	// Assert that value is equal to expected.
-	is<U>(value: U, expected: U, message?: string): void;
-	// Assert that value is not equal to expected.
-	not<U>(value: U, expected: U, message?: string): void;
-	// Assert that value is deep equal to expected.
-	deepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that value is not deep equal to expected.
-	notDeepEqual<U>(value: U, expected: U, message?: string): void;
-	// Assert that function throws an error or promise rejects.
-	// @param error Can be a constructor, regex, error message or validation function.
-	throws: {
-		(value: PromiseLike<mixed>, error?: ErrorValidator, message?: string): Promise<Error>;
-		(value: () => mixed, error?: ErrorValidator, message?: string): Error;
-	};
-	// Assert that function doesn't throw an error or promise resolves.
-	notThrows: {
-		(value: PromiseLike<mixed>, message?: string): Promise<void>;
-		(value: () => mixed, message?: string): void;
-	};
-	// Assert that contents matches regex.
-	regex(contents: string, regex: RegExp, message?: string): void;
-	// Assert that contents matches a snapshot.
-	snapshot(contents: any, message?: string): void;
-	// Assert that contents does not match regex.
-	notRegex(contents: string, regex: RegExp, message?: string): void;
-	// Assert that error is falsy.
+	false(actual: any, message?: string): void;
+	falsy(actual: any, message?: string): void;
 	ifError(error: any, message?: string): void;
-};
+	is(actual: any, expected: any, message?: string): void;
+	not(actual: any, expected: any, message?: string): void;
+	notDeepEqual(actual: any, expected: any, message?: string): void;
+	notRegex(string: string, regex: RegExp, message?: string): void;
+	notThrows(value: () => ObservableLike, message?: string): Promise<void>;
+	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
+	notThrows(value: () => any, message?: string): void;
+	notThrows(value: ObservableLike, message?: string): Promise<void>;
+	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
+	pass(message?: string): void;
+	regex(string: string, regex: RegExp, message?: string): void;
+	snapshot(expected: any, message?: string): void;
+	snapshot(expected: any, options: SnapshotOptions, message?: string): void;
+	throws(value: () => ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
+	throws(value: () => PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
+	throws(value: () => any, error?: ThrowsErrorValidator, message?: string): any;
+	throws(value: ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
+	throws(value: PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
+	true(actual: any, message?: string): void;
+	truthy(actual: any, message?: string): void;
+}
 
-/**
- * Context Types
- */
-
-type TestContext = AssertContext & {
+export interface ExecutionContext<Context = {}> extends Assertions {
+	context: Context;
+	skip: Assertions;
+	title: string;
+	log(...values: Array<any>): void;
 	plan(count: number): void;
-	skip: AssertContext;
-};
-type ContextualTestContext         = TestContext & { context: any; };
-type ContextualCallbackTestContext = TestContext & { context: any; end(): void; };
+}
 
-/**
- * Test Implementations
- */
+export interface CbExecutionContext<Context = {}> extends ExecutionContext<Context> {
+	end(): void;
+}
 
-type TestFunction<T, R> = {
-	(t: T, ...args: Array<any>): R;
+export type ImplementationResult = PromiseLike<void> | ObservableLike | Iterator<any> | void;
+export type Implementation<Context = {}> = {(t: ExecutionContext<Context>): ImplementationResult};
+export type CbImplementation<Context = {}> = {(t: CbExecutionContext<Context>): ImplementationResult};
+
+export interface Macro<Context = {}> {
+	(t: ExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
 	title?: (providedTitle: string, ...args: Array<any>) => string;
-};
+}
 
-type TestImplementation<T, R> =
-	| TestFunction<T, R>
-	| Array<TestFunction<T, R>>;
+export interface CbMacro<Context = {}> {
+	(t: CbExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
+	title?: (providedTitle: string, ...args: Array<any>) => string;
+}
 
-type ContextualTest         = TestImplementation<ContextualTestContext, SpecialReturnTypes | void>;
-type ContextualCallbackTest = TestImplementation<ContextualCallbackTestContext, void>;
+export interface TestInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
+	after: AfterInterface<Context>;
+	afterEach: AfterInterface<Context>;
+	before: BeforeInterface<Context>;
+	beforeEach: BeforeInterface<Context>;
+	cb: CbInterface<Context>;
+	failing: FailingInterface<Context>;
+	only: OnlyInterface<Context>;
+	serial: SerialInterface<Context>;
+	skip: SkipInterface<Context>;
+	todo: TodoDeclaration;
+}
 
-/**
- * Method Types
- */
+export interface AfterInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-type ContextualTestMethod = {
-	(              implementation: ContextualTest): void;
-	(name: string, implementation: ContextualTest): void;
+	always: AlwaysInterface<Context>;
+	cb: HookCbInterface<Context>;
+	skip: SkipInterface<Context>;
+}
 
-	serial     : ContextualTestMethod;
-	before     : ContextualTestMethod;
-	after      : ContextualTestMethod;
-	skip       : ContextualTestMethod;
-	todo       : ContextualTestMethod;
-	failing    : ContextualTestMethod;
-	only       : ContextualTestMethod;
-	beforeEach : ContextualTestMethod;
-	afterEach  : ContextualTestMethod;
-	cb         : ContextualCallbackTestMethod;
-	always     : ContextualTestMethod;
-};
+export interface AlwaysInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-type ContextualCallbackTestMethod = {
-	(              implementation: ContextualCallbackTest): void;
-	(name: string, implementation: ContextualCallbackTest): void;
+	cb: HookCbInterface<Context>;
+	skip: SkipInterface<Context>;
+}
 
-	serial     : ContextualCallbackTestMethod;
-	before     : ContextualCallbackTestMethod;
-	after      : ContextualCallbackTestMethod;
-	skip       : ContextualCallbackTestMethod;
-	todo       : ContextualCallbackTestMethod;
-	failing    : ContextualCallbackTestMethod;
-	only       : ContextualCallbackTestMethod;
-	beforeEach : ContextualCallbackTestMethod;
-	afterEach  : ContextualCallbackTestMethod;
-	cb         : ContextualCallbackTestMethod;
-	always     : ContextualCallbackTestMethod;
-};
+export interface BeforeInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-/**
- * Public API
- */
+	cb: HookCbInterface<Context>;
+	skip: SkipInterface<Context>;
+}
 
-declare module.exports: {
-	(              run: ContextualTest): void;
-	(name: string, run: ContextualTest): void;
+export interface CbInterface<Context = {}> {
+	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
 
-	beforeEach : ContextualTestMethod;
-	afterEach  : ContextualTestMethod;
-	serial     : ContextualTestMethod;
-	before     : ContextualTestMethod;
-	after      : ContextualTestMethod;
-	skip       : ContextualTestMethod;
-	todo       : ContextualTestMethod;
-	failing    : ContextualTestMethod;
-	only       : ContextualTestMethod;
-	cb         : ContextualCallbackTestMethod;
-	always     : ContextualTestMethod;
-};
+	failing: CbFailingInterface<Context>;
+	only: CbOnlyInterface<Context>;
+	skip: CbSkipInterface<Context>;
+}
+
+export interface CbFailingInterface<Context = {}> {
+	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+
+	only: CbOnlyInterface<Context>;
+	skip: CbSkipInterface<Context>;
+}
+
+export interface CbOnlyInterface<Context = {}> {
+	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+}
+
+export interface CbSkipInterface<Context = {}> {
+	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+}
+
+export interface FailingInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+
+	only: OnlyInterface<Context>;
+	skip: SkipInterface<Context>;
+}
+
+export interface HookCbInterface<Context = {}> {
+	(title: string, implementation: CbImplementation<Context> | CbMacro<Context>): void;
+	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+
+	skip: CbSkipInterface<Context>;
+}
+
+export interface OnlyInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+}
+
+export interface SerialInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+
+	after: AfterInterface<Context>;
+	afterEach: AfterInterface<Context>;
+	before: BeforeInterface<Context>;
+	beforeEach: BeforeInterface<Context>;
+	cb: CbInterface<Context>;
+	failing: FailingInterface<Context>;
+	only: OnlyInterface<Context>;
+	skip: SkipInterface<Context>;
+	todo: TodoDeclaration;
+}
+
+export interface SkipInterface<Context = {}> {
+	(title: string, implementation: Implementation<Context> | Macro<Context>): void;
+	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+}
+
+export type TodoDeclaration = {(title: string): void};
+
+declare export default TestInterface<>;
+
+declare export var test: TestInterface<>;
+declare export var after: AfterInterface<>;
+declare export var afterEach: AfterInterface<>;
+declare export var before: BeforeInterface<>;
+declare export var beforeEach: BeforeInterface<>;
+declare export var cb: CbInterface<>;
+declare export var failing: FailingInterface<>;
+declare export var only: OnlyInterface<>;
+declare export var serial: SerialInterface<>;
+declare export var skip: SkipInterface<>;
+declare export var todo: TodoDeclaration;

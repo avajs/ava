@@ -1,5 +1,5 @@
 'use strict';
-const SKIP_UNTIL_EMPTY_LINE = {};
+const SKIP_UNTIL_EMPTY_LINE = Symbol('SKIP_UNTIL_EMPTY_LINE');
 
 function compareLineOutput(t, actual, lineExpectations) {
 	const actualLines = actual.split('\n');
@@ -22,6 +22,8 @@ function compareLineOutput(t, actual, lineExpectations) {
 			t.match(line, expected, `line ${lineIndex} ≪${line}≫ matches ${expected}`);
 		}
 	}
+
+	t.is(lineIndex, actualLines.length, `Compared ${lineIndex} of ${actualLines.length} lines`);
 }
 
 module.exports = compareLineOutput;

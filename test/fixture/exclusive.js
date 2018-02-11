@@ -1,5 +1,5 @@
-import test from '../../';
+import test from '../..';
 
-test.only(t => {
+test.only('test', t => {
 	t.pass();
 });

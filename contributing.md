@@ -40,6 +40,8 @@ You may find an issue is assigned, or has the [`assigned` label](https://github.
 
 We'd like to fix [`priority` issues](https://github.com/avajs/ava/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/avajs/ava/labels/low%20priority) too. [`future` issues](https://github.com/avajs/ava/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
 
+If you're updating dependencies, please make sure you use npm@5.6.0 and commit the updated `package-lock.json` file.
+
 ### Hang out in our chat
 
 We have a [chat](https://gitter.im/avajs/ava). Jump in there and lurk, talk to us, and help others.
@@ -64,7 +66,7 @@ We have a [chat](https://gitter.im/avajs/ava). Jump in there and lurk, talk to u
 - Make the pull request from a [topic branch](https://github.com/dchelimsky/rspec/wiki/Topic-Branches), not master.
 - Use a clear and descriptive title for the pull request and commits.
 - Write a convincing description of why we should land your pull request. It's your job to convince us. Answer "why" it's needed and provide use-cases.
-- You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/docs/blob/master/amending-a-commit-guide.md)
+- You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/knowledge/blob/master/github/amending-a-commit-guide.md)
 
 Note: when making code changes, try to remember AVA's mantra (stolen from Python) of having preferably one way to do something. For example, a request to add an alias to part of the API ([like this](https://github.com/avajs/ava/pull/663)) will likely be rejected without some other substantial benefit.
 
