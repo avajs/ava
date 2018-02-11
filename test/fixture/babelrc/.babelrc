@@ -1,4 +1,11 @@
 {
   "presets": ["@ava/stage-4"],
-  "plugins": ["../babel-plugin-test-doubler"]
+	"env": {
+		"development": {
+			"plugins": ["../babel-plugin-test-capitalizer"]
+		},
+		"test": {
+			"plugins": ["../babel-plugin-test-doubler"],
+		}
+	}
 }

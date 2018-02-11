@@ -1,6 +1,9 @@
 'use strict';
+require('../lib/worker-options').set({});
+
 const proxyquire = require('proxyquire').noPreserveCache();
 const test = require('tap').test;
+const Runner = require('../lib/runner');
 
 const beautifyStack = proxyquire('../lib/beautify-stack', {
 	debug() {
@@ -55,13 +58,20 @@ test('returns empty string without any arguments', t => {
 
 test('beautify stack - removes uninteresting lines', t => {
 	try {
-		fooFunc();
+		const runner = new Runner();
+		runner.runSingle({
+			run() {
+				fooFunc();
+			}
+		});
 	} catch (err) {
 		const stack = beautifyStack(err.stack);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
-		t.match(err.stack, /Module._compile/);
-		t.notMatch(stack, /Module\._compile/);
+		// The runSingle line is introduced by Runner. It's internal so it should
+		// be stripped.
+		t.match(err.stack, /runSingle/);
+		t.notMatch(stack, /runSingle/);
 		t.end();
 	}
 });

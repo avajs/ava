@@ -4,6 +4,6 @@ import {restoreAfterFirstCall} from './hack';
 
 restoreAfterFirstCall();
 
-test(async () => {
+test('test', async () => {
 	throw new Error('Hi :)');
 });

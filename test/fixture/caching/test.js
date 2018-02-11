@@ -1,5 +1,5 @@
 import test from '../../../';
 
-test(t => {
+test('test', t => {
 	t.true(2 + 2 === 4);
 });

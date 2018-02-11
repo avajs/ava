@@ -10,7 +10,7 @@ const sinon = require('sinon');
 const test = require('tap').test;
 const AvaFiles = require('../lib/ava-files');
 
-const setImmediate = require('../lib/globals').setImmediate;
+const setImmediate = require('../lib/now-and-timers').setImmediate;
 
 // Helper to make using beforeEach less arduous
 function makeGroup(test) {

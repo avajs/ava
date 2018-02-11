@@ -8,6 +8,6 @@ test.only('bar', t => {
 	t.pass();
 });
 
-test.only(t => {
+test.only('baz', t => {
 	t.pass();
 });

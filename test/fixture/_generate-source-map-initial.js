@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const babel = require('babel-core');
+const babel = require('@babel/core');
 
 const transformed = babel.transform(`
 import {mapFile} from 'source-map-fixtures';

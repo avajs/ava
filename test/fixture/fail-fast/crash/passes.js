@@ -1,5 +1,5 @@
 import test from '../../../../';
 
-test('works', t => {
+test('first pass', t => {
 	t.pass();
 });

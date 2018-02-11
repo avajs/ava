@@ -5,7 +5,7 @@ const test = require('tap').test;
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
 
@@ -87,7 +87,7 @@ test('disables babel cache', t => {
 
 	const tempDir = uniqueTempDir();
 	const CachingPrecompiler = proxyquire('../lib/caching-precompiler', {
-		'babel-core': Object.assign({}, babel, {
+		'@babel/core': Object.assign({}, babel, {
 			transform(code, options) {
 				t.same(process.env.BABEL_DISABLE_CACHE, '1');
 				return babel.transform(code, options);

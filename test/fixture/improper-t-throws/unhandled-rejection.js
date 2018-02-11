@@ -1,6 +1,6 @@
 import test from '../../..';
 
-test.cb(t => {
+test.cb('test', t => {
 	Promise.resolve().then(() => {
 		t.throws(throwSync());
 	});

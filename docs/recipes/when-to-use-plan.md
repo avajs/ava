@@ -13,7 +13,7 @@ Many users transitioning from `tap`/`tape` are accustomed to using `t.plan()` pr
 `t.plan()` is unnecessary in most sync tests.
 
 ```js
-test(t => {
+test('simple sums', t => {
 	// BAD: there is no branching here - t.plan() is pointless
 	t.plan(2);
 
@@ -27,7 +27,7 @@ test(t => {
 ### Promises that are expected to resolve
 
 ```js
-test(t => {
+test('gives foo', t => {
 	t.plan(1);
 
 	return somePromise().then(result => {
@@ -43,7 +43,7 @@ At a glance, this tests appears to make good use of `t.plan()` since an async pr
 2. It would be better to take advantage of `async`/`await`:
 
 ```js
-test(async t => {
+test('gives foo', async t => {
 	t.is(await somePromise(), 'foo');
 });
 ```
@@ -51,7 +51,7 @@ test(async t => {
 ### Promises with a `.catch()` block
 
 ```js
-test(t => {
+test('rejects with foo', t => {
 	t.plan(2);
 
 	return shouldRejectWithFoo().catch(reason => {
@@ -65,7 +65,7 @@ Here, the use of `t.plan()` seeks to ensure that the code inside the `catch` blo
 Instead, you should take advantage of `t.throws` and `async`/`await`, as this leads to flatter code that is easier to reason about:
 
 ```js
-test(async t => {
+test('rejects with foo', async t => {
 	const reason = await t.throws(shouldRejectWithFoo());
 	t.is(reason.message, 'Hello');
 	t.is(reason.foo, 'bar');
@@ -75,7 +75,7 @@ test(async t => {
 ### Ensuring a catch statement happens
 
 ```js
-test(t => {
+test('throws', t => {
 	t.plan(2);
 
 	try {
@@ -96,7 +96,7 @@ As stated in the previous example, using the `t.throws()` assertion with `async`
 ### Ensuring multiple callbacks are actually called
 
 ```js
-test.cb(t => {
+test.cb('invokes callbacks', t => {
 	t.plan(2);
 
 	const callbackA = () => {
@@ -120,7 +120,7 @@ In most cases, it's a bad idea to use any complex branching inside your tests. A
 const testData = require('./fixtures/test-definitions.json');
 
 testData.forEach(testDefinition => {
-	test(t => {
+	test('foo or bar', t => {
 		const result = functionUnderTest(testDefinition.input);
 
 		// testDefinition should have an expectation for `foo` or `bar` but not both

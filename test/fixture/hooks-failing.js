@@ -1,7 +1,7 @@
 import test from '../../';
 
 test.beforeEach(fail);
-test(pass);
+test('pass', pass);
 
 function pass() {}
 

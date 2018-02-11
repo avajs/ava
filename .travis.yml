@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - 9
   - 8
   - 6
   - 4
@@ -8,6 +9,8 @@ env:
   - FRESH_DEPS=true
 matrix:
   exclude:
+    - node_js: 9
+      env: FRESH_DEPS=true
     - node_js: 6
       env: FRESH_DEPS=true
     - node_js: 4
@@ -16,8 +19,17 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@5.4.2
+  - npm install --global npm@5.6.0
   - npm --version
-install:
-  - if [[ ${FRESH_DEPS} == "true" ]]; then npm install --no-shrinkwrap --prefer-online; else npm install --prefer-offline; fi
-after_success: ./node_modules/.bin/codecov --file=./coverage/lcov.info
+  - md5sum package-lock.json > package-lock.json.md5
+install: |
+  if [[ ${FRESH_DEPS} == "true" ]]; then
+    npm install --no-shrinkwrap --prefer-online;
+  else
+    npm install --prefer-offline;
+    if ! md5sum --quiet -c package-lock.json.md5; then
+      echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes.";
+      exit 1;
+    fi
+  fi
+after_success: npx codecov --file=./coverage/lcov.info

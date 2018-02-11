@@ -1,3 +1,7 @@
+> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
+
+---
+
 # Testing Vue.js components
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/vue.md)
@@ -13,6 +17,8 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 ## Setup
 
 The first step is setting up a helper to configure the environment to transpile `.vue` files and run in a browser like environment:
+
+`package.json`
 
 ```json
 {
