@@ -219,18 +219,27 @@ class Api extends EventEmitter {
 			uniqueTempDir() :
 			path.join(this.options.projectDir, 'node_modules', '.cache', 'ava');
 
+		return this._buildBabelConfig(cacheDir).then(result => {
+			return result ? {
+				cacheDir,
+				precompiler: new CachingPrecompiler({
+					path: cacheDir,
+					getBabelOptions: result.getOptions,
+					babelCacheKeys: result.cacheKeys
+				})
+			} : null;
+		});
+	}
+
+	_buildBabelConfig(cacheDir) {
+		if (this._babelConfigPromise) {
+			return this._babelConfigPromise;
+		}
+
 		const compileEnhancements = this.options.compileEnhancements !== false;
-		return babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements)
-			.then(result => {
-				return result ? {
-					cacheDir,
-					precompiler: new CachingPrecompiler({
-						path: cacheDir,
-						getBabelOptions: result.getOptions,
-						babelCacheKeys: result.cacheKeys
-					})
-				} : null;
-			});
+		const promise = babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements);
+		this._babelConfigPromise = promise;
+		return promise;
 	}
 
 	_computeForkExecArgv() {
