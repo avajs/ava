@@ -27,7 +27,9 @@ const assertions = assert.wrapAssertions({
 			throw new Error('Expected testObj');
 		}
 
-		promise.catch(err => {
+		promise.then(() => {
+			lastPassed = true;
+		}, err => {
 			lastFailure = err;
 		});
 	},
@@ -75,16 +77,44 @@ function assertFailure(t, subset) {
 	}
 }
 
+let gathering = false;
+let gatheringPromise = Promise.resolve();
+function gather(run) {
+	return t => {
+		if (gathering) {
+			throw new Error('Cannot nest gather()');
+		}
+
+		gathering = true;
+		try {
+			run(t);
+			return gatheringPromise;
+		} finally {
+			gathering = false;
+			gatheringPromise = Promise.resolve();
+		}
+	};
+}
+function add(fn) {
+	if (!gathering) {
+		throw new Error('Cannot add promise, must be called from gather() callback');
+	}
+	gatheringPromise = gatheringPromise.then(fn);
+	return gatheringPromise;
+}
+
 function failsWith(t, fn, subset) {
 	lastFailure = null;
 	fn();
 	assertFailure(t, subset);
 }
 
-function eventuallyFailsWith(t, promise, subset) {
-	lastFailure = null;
-	return promise.then(() => {
-		assertFailure(t, subset);
+function eventuallyFailsWith(t, fn, subset) {
+	return add(() => {
+		lastFailure = null;
+		return fn().then(() => {
+			assertFailure(t, subset);
+		});
 	});
 }
 
@@ -98,6 +128,19 @@ function fails(t, fn) {
 	}
 }
 
+function eventuallyFails(t, fn) {
+	return add(() => {
+		lastFailure = null;
+		return fn().then(() => {
+			if (lastFailure) {
+				t.pass();
+			} else {
+				t.fail('Expected assertion to fail');
+			}
+		});
+	});
+}
+
 function passes(t, fn) {
 	lastPassed = false;
 	fn();
@@ -106,6 +149,19 @@ function passes(t, fn) {
 	} else {
 		t.fail('Expected assertion to pass');
 	}
+}
+
+function eventuallyPasses(t, fn) {
+	return add(() => {
+		lastPassed = false;
+		return fn().then(() => {
+			if (lastPassed) {
+				t.pass();
+			} else {
+				t.fail('Expected assertion to pass');
+			}
+		});
+	});
 }
 
 test('.pass()', t => {
@@ -633,7 +689,8 @@ test('.notDeepEqual()', t => {
 	t.end();
 });
 
-test('.throws()', t => {
+test('.throws()', gather(t => {
+	// Fails because function doesn't throw.
 	failsWith(t, () => {
 		assertions.throws(() => {});
 	}, {
@@ -642,6 +699,8 @@ test('.throws()', t => {
 		values: []
 	});
 
+	// Fails because function doesn't throw. Asserts that 'my message' is used
+	// as the assertion message (*not* compared against the error).
 	failsWith(t, () => {
 		assertions.throws(() => {}, Error, 'my message');
 	}, {
@@ -650,6 +709,7 @@ test('.throws()', t => {
 		values: []
 	});
 
+	// Fails because thrown error's message is not equal to 'bar'
 	const err = new Error('foo');
 	failsWith(t, () => {
 		assertions.throws(() => {
@@ -661,14 +721,89 @@ test('.throws()', t => {
 		values: [{label: 'Threw unexpected exception:', formatted: /foo/}]
 	});
 
+	// Passes because thrown error's message is equal to 'bar'
+	passes(t, () => {
+		assertions.throws(() => {
+			throw err;
+		}, 'foo');
+	});
+
+	// Passes because an error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		});
 	});
 
-	t.end();
-});
+	// Fails because the promise is resolved, not rejected.
+	eventuallyFailsWith(t, () => assertions.throws(Promise.resolve('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
+
+	// Fails because the promise is resolved with an Error
+	eventuallyFailsWith(t, () => assertions.throws(Promise.resolve(new Error())), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /Error/}]
+	});
+
+	// Fails because the function returned a promise that resolved, not rejected.
+	eventuallyFailsWith(t, () => assertions.throws(() => Promise.resolve('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
+
+	// Passes because the promise was rejected with an error.
+	eventuallyPasses(t, () => assertions.throws(Promise.reject(new Error())));
+
+	// Passes because the function returned a promise rejected with an error.
+	eventuallyPasses(t, () => assertions.throws(() => Promise.reject(new Error())));
+
+	// Passes because the error's message matches the regex
+	eventuallyPasses(t, () => assertions.throws(Promise.reject(new Error('abc')), /abc/));
+
+	// Fails because the error's message does not match the regex
+	eventuallyFails(t, () => assertions.throws(Promise.reject(new Error('abc')), /def/));
+
+	const complete = arg => Observable.of(arg);
+	const error = err => new Observable(observer => observer.error(err));
+
+	// Fails because the observable completed, not errored.
+	eventuallyFailsWith(t, () => assertions.throws(complete('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
+
+	// Fails because the observable completed with an Error
+	eventuallyFailsWith(t, () => assertions.throws(complete(new Error())), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /Error/}]
+	});
+
+	// Fails because the function returned a observable that completed, not rejected.
+	eventuallyFailsWith(t, () => assertions.throws(() => complete('foo')), {
+		assertion: 'throws',
+		message: 'Expected promise to be rejected, but it was resolved instead',
+		values: [{label: 'Resolved with:', formatted: /'foo'/}]
+	});
+
+	// Passes because the observable errored with an error.
+	eventuallyPasses(t, () => assertions.throws(error(new Error())));
+
+	// Passes because the function returned an observable errored with an error.
+	eventuallyPasses(t, () => assertions.throws(() => error(new Error())));
+
+	// Passes because the error's message matches the regex
+	eventuallyPasses(t, () => assertions.throws(error(new Error('abc')), /abc/));
+
+	// Fails because the error's message does not match the regex
+	eventuallyFails(t, () => assertions.throws(error(new Error('abc')), /def/));
+}));
 
 test('.throws() returns the thrown error', t => {
 	const expected = new Error();
@@ -724,19 +859,13 @@ test('.throws() fails if passed a bad value', t => {
 	t.end();
 });
 
-test('promise .throws() fails when promise is resolved', t => {
-	return eventuallyFailsWith(t, assertions.throws(Promise.resolve('foo')), {
-		assertion: 'throws',
-		message: 'Expected promise to be rejected, but it was resolved instead',
-		values: [{label: 'Resolved with:', formatted: /'foo'/}]
-	});
-});
-
-test('.notThrows()', t => {
+test('.notThrows()', gather(t => {
+	// Passes because the function doesn't throw
 	passes(t, () => {
 		assertions.notThrows(() => {});
 	});
 
+	// Fails because the function throws.
 	failsWith(t, () => {
 		assertions.notThrows(() => {
 			throw new Error('foo');
@@ -747,6 +876,8 @@ test('.notThrows()', t => {
 		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
+	// Fails because the function throws. Asserts that message is used for the
+	// assertion, not to validate the thrown error.
 	failsWith(t, () => {
 		assertions.notThrows(() => {
 			throw new Error('foo');
@@ -757,8 +888,33 @@ test('.notThrows()', t => {
 		values: [{label: 'Threw:', formatted: /foo/}]
 	});
 
-	t.end();
-});
+	// Passes because the promise is resolved
+	eventuallyPasses(t, () => assertions.notThrows(Promise.resolve()));
+
+	// Fails because the promise is rejected
+	eventuallyFails(t, () => assertions.notThrows(Promise.reject(new Error())));
+
+	// Passes because the function returned a resolved promise
+	eventuallyPasses(t, () => assertions.notThrows(() => Promise.resolve()));
+
+	// Fails because the function returned a rejected promise
+	eventuallyFails(t, () => assertions.notThrows(() => Promise.reject(new Error())));
+
+	const complete = arg => Observable.of(arg);
+	const error = err => new Observable(observer => observer.error(err));
+
+	// Passes because the observable completed
+	eventuallyPasses(t, () => assertions.notThrows(complete()));
+
+	// Fails because the observable errored
+	eventuallyFails(t, () => assertions.notThrows(error(new Error())));
+
+	// Passes because the function returned a completed observable
+	eventuallyPasses(t, () => assertions.notThrows(() => complete()));
+
+	// Fails because the function returned an errored observable
+	eventuallyFails(t, () => assertions.notThrows(() => error(new Error())));
+}));
 
 test('.notThrows() returns undefined for a fulfilled promise', t => {
 	return assertions.notThrows(Promise.resolve(Symbol(''))).then(actual => {
