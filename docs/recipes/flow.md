@@ -1,5 +1,7 @@
 # Flow
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/flow.md)
+
 AVA comes bundled with a Flow definition file. This allows developers to leverage Flow for writing tests.
 
 This guide assumes you've already set up Flow for your project. Note that AVA's definition as been tested with version 0.64.
