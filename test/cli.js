@@ -842,3 +842,10 @@ test('workers load compiled helpers if in the require configuration', t => {
 		t.end();
 	});
 });
+
+test('additional arguments are forwarded to the worker', t => {
+	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], {dirname: 'fixture'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
