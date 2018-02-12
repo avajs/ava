@@ -1,4 +1,5 @@
 'use strict';
+require('../../lib/worker-options').set({});
 
 // These tests are run as a sub-process of the `tap` module, so the standard
 // output stream will not be recognized as a text terminal. AVA internals are
@@ -296,8 +297,12 @@ test('results with passing tests and rejections', t => {
 	reporter.passCount = 1;
 	reporter.rejectionCount = 1;
 
-	const err1 = errorFromWorker(new Error('failure one'), {type: 'rejection'});
+	const err1 = errorFromWorker(new Error('failure one'), {
+		file: 'test.js',
+		type: 'rejection'
+	});
 	const err2 = errorFromWorker(new Error('failure two'), {
+		file: 'test.js',
 		type: 'rejection',
 		stack: 'Error: failure two\n    at trailingWhitespace (test.js:1:1)\r\n'
 	});
@@ -312,12 +317,12 @@ test('results with passing tests and rejections', t => {
 		'  ' + colors.green('1 passed'),
 		'  ' + colors.red('1 rejection'),
 		'',
-		'  ' + colors.boldWhite('Unhandled Rejection'),
+		'  ' + colors.boldWhite('Unhandled rejection in test.js'),
 		/Error: failure one/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
 		'',
-		'  ' + colors.boldWhite('Unhandled Rejection'),
+		'  ' + colors.boldWhite('Unhandled rejection in test.js'),
 		/Error: failure two/,
 		/trailingWhitespace/,
 		''
@@ -330,9 +335,15 @@ test('results with passing tests and exceptions', t => {
 	reporter.passCount = 1;
 	reporter.exceptionCount = 2;
 
-	const err = errorFromWorker(new Error('failure'), {type: 'exception'});
+	const err = errorFromWorker(new Error('failure'), {
+		file: 'test.js',
+		type: 'exception'
+	});
 
-	const avaErr = errorFromWorker(new AvaError('A futuristic test runner'), {type: 'exception'});
+	const avaErr = errorFromWorker(new AvaError('A futuristic test runner'), {
+		file: 'test.js',
+		type: 'exception'
+	});
 
 	const runStatus = {
 		errors: [err, avaErr]
@@ -344,7 +355,7 @@ test('results with passing tests and exceptions', t => {
 		'  ' + colors.green('1 passed'),
 		'  ' + colors.red('2 exceptions'),
 		'',
-		'  ' + colors.boldWhite('Uncaught Exception'),
+		'  ' + colors.boldWhite('Uncaught exception in test.js'),
 		/Error: failure/,
 		/test\/reporters\/mini\.js/,
 		compareLineOutput.SKIP_UNTIL_EMPTY_LINE,
@@ -638,7 +649,9 @@ test('results when fail-fast is enabled', t => {
 	const runStatus = {
 		remainingCount: 1,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -655,7 +668,9 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	const runStatus = {
 		remainingCount: 2,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -667,12 +682,71 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	t.end();
 });
 
+test('results when fail-fast is enabled with skipped test file', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 2,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. 1 test file was skipped.'),
+		''
+	]);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped test files', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 0,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 3,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. 2 test files were skipped.'),
+		''
+	]);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped tests and files', t => {
+	const reporter = miniReporter();
+	const runStatus = {
+		remainingCount: 1,
+		failCount: 1,
+		failFastEnabled: true,
+		fileCount: 3,
+		observationCount: 1
+	};
+
+	const output = reporter.finish(runStatus);
+	compareLineOutput(t, output, [
+		'',
+		'  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped, as well as 2 test files.'),
+		''
+	]);
+	t.end();
+});
+
 test('results without fail-fast if no failing tests', t => {
 	const reporter = miniReporter();
 	const runStatus = {
 		remainingCount: 1,
 		failCount: 0,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -685,7 +759,9 @@ test('results without fail-fast if no skipped tests', t => {
 	const runStatus = {
 		remainingCount: 0,
 		failCount: 1,
-		failFastEnabled: true
+		failFastEnabled: true,
+		fileCount: 1,
+		observationCount: 1
 	};
 
 	const output = reporter.finish(runStatus);
@@ -820,7 +896,7 @@ test('returns description based on error itself if no stack available', t => {
 	const reporter = miniReporter();
 	reporter.exceptionCount = 1;
 	const thrownValue = {message: 'failure one'};
-	const err1 = errorFromWorker(thrownValue);
+	const err1 = errorFromWorker(thrownValue, {file: 'test.js'});
 	const runStatus = {
 		errors: [err1]
 	};
@@ -829,7 +905,7 @@ test('returns description based on error itself if no stack available', t => {
 	const expectedOutput = [
 		'\n  ' + colors.red('1 exception'),
 		'\n',
-		'\n  ' + colors.boldWhite('Uncaught Exception'),
+		'\n  ' + colors.boldWhite('Uncaught exception in test.js'),
 		'\n  Threw non-error: ' + JSON.stringify(thrownValue),
 		'\n'
 	].join('');
@@ -840,7 +916,7 @@ test('returns description based on error itself if no stack available', t => {
 test('shows "non-error" hint for invalid throws', t => {
 	const reporter = miniReporter();
 	reporter.exceptionCount = 1;
-	const err = errorFromWorker({type: 'exception', message: 'function fooFn() {}', stack: 'function fooFn() {}'});
+	const err = errorFromWorker({type: 'exception', message: 'function fooFn() {}', stack: 'function fooFn() {}'}, {file: 'test.js'});
 	const runStatus = {
 		errors: [err]
 	};
@@ -848,7 +924,7 @@ test('shows "non-error" hint for invalid throws', t => {
 	const expectedOutput = [
 		'\n  ' + colors.red('1 exception'),
 		'\n',
-		'\n  ' + colors.boldWhite('Uncaught Exception'),
+		'\n  ' + colors.boldWhite('Uncaught exception in test.js'),
 		'\n  Threw non-error: function fooFn() {}',
 		'\n'
 	].join('');

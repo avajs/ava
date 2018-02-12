@@ -1,4 +1,5 @@
 'use strict';
+require('../lib/worker-options').set({});
 
 const fs = require('fs');
 const path = require('path');
@@ -158,5 +159,16 @@ test('remove non-string error properties', t => {
 	const serializedErr = serialize(err);
 	t.is(serializedErr.name, undefined);
 	t.is(serializedErr.stack, undefined);
+	t.end();
+});
+
+test('creates multiline summaries for syntax errors', t => {
+	const err = {
+		name: 'SyntaxError',
+		stack: 'Hello\nThere\nSyntaxError here\nIgnore me'
+	};
+	const serializedErr = serialize(err);
+	t.is(serializedErr.name, 'SyntaxError');
+	t.is(serializedErr.summary, 'Hello\nThere\nSyntaxError here');
 	t.end();
 });

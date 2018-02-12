@@ -9,13 +9,11 @@ const EventEmitter = require('events');
 const meow = require('meow');
 const Promise = require('bluebird');
 const pkgConf = require('pkg-conf');
-const findCacheDir = require('find-cache-dir');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
-const globals = require('./lib/globals');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -29,10 +27,6 @@ function resolveModules(modules) {
 	});
 }
 
-// Chrome gets upset when the `this` value is non-null for these functions
-globals.setTimeout = setTimeout.bind(null);
-globals.clearTimeout = clearTimeout.bind(null);
-
 Promise.longStackTraces();
 
 const conf = pkgConf.sync('ava', {
@@ -43,6 +37,9 @@ const conf = pkgConf.sync('ava', {
 		compileEnhancements: true
 	}
 });
+
+const filepath = pkgConf.filepath(conf);
+const projectDir = filepath === null ? process.cwd() : path.dirname(filepath);
 
 // Define a minimal set of options from the main CLI
 const cli = meow(`
@@ -74,10 +71,7 @@ if (cli.input.length === 0) {
 }
 
 const file = path.resolve(cli.input[0]);
-const cacheDir = findCacheDir({
-	name: 'ava',
-	files: [file]
-}) || uniqueTempDir();
+const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
 babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), conf.compileEnhancements === true)
 	.then(result => {
@@ -103,6 +97,9 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 		};
 
 		const events = new EventEmitter();
+		events.on('loaded-file', () => {});
+
+		let failCount = 0;
 		let uncaughtExceptionCount = 0;
 
 		// Mock the behavior of a parent process
@@ -134,8 +131,13 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 
 			console.log('RESULTS:', data.stats);
 
+			failCount = data.stats.failCount;
+			setImmediate(() => process.emit('ava-teardown'));
+		});
+
+		events.on('teardown', () => {
 			if (process.exit) {
-				process.exit(data.stats.failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
+				process.exit(failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
 			}
 		});
 

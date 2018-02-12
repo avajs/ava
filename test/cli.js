@@ -199,7 +199,7 @@ test('improper use of t.throws, even if caught and then rethrown too slowly, wil
 	});
 });
 
-test('babel require hook only does not apply to source files', t => {
+test('precompiler require hook does not apply to source files', t => {
 	t.plan(3);
 
 	execCli('fixture/babel-hook.js', (err, stdout, stderr) => {

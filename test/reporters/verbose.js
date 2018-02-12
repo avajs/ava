@@ -1,4 +1,5 @@
 'use strict';
+require('../../lib/worker-options').set({});
 
 // These tests are run as a sub-process of the `tap` module, so the standard
 // output stream will not be recognized as a text terminal. AVA internals are
@@ -69,7 +70,7 @@ test('passing test and duration less than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 90
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed';
 
@@ -83,22 +84,11 @@ test('passing test and duration greater than threshold', t => {
 	const actualOutput = reporter.test({
 		title: 'passed',
 		duration: 150
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.green(figures.tick) + ' passed' + colors.dimGray(' (150ms)');
 
 	t.is(actualOutput, expectedOutput);
-	t.end();
-});
-
-test('don\'t display test title if there is only one anonymous test', t => {
-	const reporter = createReporter();
-
-	const output = reporter.test({
-		title: '[anonymous]'
-	}, createRunStatus());
-
-	t.is(output, undefined);
 	t.end();
 });
 
@@ -108,7 +98,7 @@ test('known failure test', t => {
 	const actualOutput = reporter.test({
 		title: 'known failure',
 		failing: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.red(figures.tick) + ' ' + colors.red('known failure');
 
@@ -124,7 +114,7 @@ test('failing test', t => {
 		error: {
 			message: 'assertion failed'
 		}
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.red(figures.cross) + ' failed ' + colors.red('assertion failed');
 
@@ -138,7 +128,7 @@ test('skipped test', t => {
 	const actualOutput = reporter.test({
 		title: 'skipped',
 		skip: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.yellow('- skipped');
 
@@ -153,7 +143,7 @@ test('todo test', t => {
 		title: 'todo',
 		skip: true,
 		todo: true
-	}, createRunStatus());
+	});
 
 	const expectedOutput = '  ' + colors.blue('- todo');
 
@@ -171,7 +161,7 @@ test('uncaught exception', t => {
 
 	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Uncaught Exception: test.js'));
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -201,7 +191,7 @@ test('unhandled rejection', t => {
 
 	const output = reporter.unhandledError(error, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Unhandled Rejection: test.js'));
+	t.is(output[0].trim(), colors.boldWhite('Unhandled rejection in test.js'));
 	t.match(output[1], /Error: Unexpected token/);
 	t.match(output[2], /test\/reporters\/verbose\.js/);
 	t.end();
@@ -217,8 +207,8 @@ test('unhandled error without stack', t => {
 
 	const output = reporter.unhandledError(err, createRunStatus()).split('\n');
 
-	t.is(output[0], colors.red('Uncaught Exception: test.js'));
-	t.is(output[1], '  ' + colors.red(JSON.stringify(err)));
+	t.is(output[0].trim(), colors.boldWhite('Uncaught exception in test.js'));
+	t.is(output[1], '  Threw non-error: ' + JSON.stringify({message: 'test'}));
 	t.end();
 });
 
@@ -604,6 +594,8 @@ test('results when fail-fast is enabled', t => {
 	runStatus.remainingCount = 1;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
@@ -626,6 +618,8 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	runStatus.remainingCount = 2;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];
@@ -642,6 +636,78 @@ test('results when fail-fast is enabled with multiple skipped tests', t => {
 	t.end();
 });
 
+test('results when fail-fast is enabled with skipped test file', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 2;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 1 test file was skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with multiple skipped test files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 0;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. 2 test files were skipped.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
+test('results when fail-fast is enabled with skipped tests and files', t => {
+	const reporter = createReporter();
+	const runStatus = createRunStatus();
+	runStatus.remainingCount = 1;
+	runStatus.failCount = 1;
+	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 3;
+	runStatus.observationCount = 1;
+	runStatus.tests = [{
+		title: 'failed test'
+	}];
+
+	const output = reporter.finish(runStatus);
+	const expectedOutput = [
+		'\n  ' + colors.red('1 test failed'),
+		'\n',
+		'\n  ' + colors.magenta('`--fail-fast` is on. At least 1 test was skipped, as well as 2 test files.'),
+		'\n'
+	].join('');
+
+	t.is(output, expectedOutput);
+	t.end();
+});
+
 test('results without fail-fast if no failing tests', t => {
 	const reporter = createReporter();
 	const runStatus = createRunStatus();
@@ -649,6 +715,8 @@ test('results without fail-fast if no failing tests', t => {
 	runStatus.failCount = 0;
 	runStatus.passCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 
 	const output = reporter.finish(runStatus);
 	const expectedOutput = [
@@ -667,6 +735,8 @@ test('results without fail-fast if no skipped tests', t => {
 	runStatus.remainingCount = 0;
 	runStatus.failCount = 1;
 	runStatus.failFastEnabled = true;
+	runStatus.fileCount = 1;
+	runStatus.observationCount = 1;
 	runStatus.tests = [{
 		title: 'failed test'
 	}];

@@ -2,7 +2,7 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![Dependency Status](https://dependencyci.com/github/avajs/ava/badge)](https://dependencyci.com/github/avajs/ava) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava) [![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
+[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava) [![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 to 11 seconds. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
@@ -524,17 +524,15 @@ test.failing('demonstrate some bug', t => {
 
 AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures or if all tests were skipped, so they are ideal for cleanup tasks. There are two exceptions to this however. If you use `--fail-fast` AVA will stop testing as soon as a failure occurs, and it won't run any hooks including the `.always()` hooks. Uncaught exceptions will crash your tests, possibly preventing `.always()` hooks from running.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. Note however that uncaught exceptions, unhandled rejections or timeouts will crash your tests, possibly preventing `.always()` hooks from running.
 
-`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail. `.always()` hooks are ideal for cleanup tasks.
+`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
-If a test is skipped with the `.skip` modifier, the respective `.beforeEach()` and `.afterEach()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()` and `.after()` hooks for the file are not run. Hooks modified with `.always()` will always run, even if all tests are skipped.
+If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
-**Note**: If the `--fail-fast` flag is specified, AVA will stop after the first test failure and the `.always` hook will **not** run.
+Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](#t). You can use assertions in your hooks. You can also pass a [macro function](#test-macros) and additional arguments.
 
-Like `test()` these methods take an optional title and a callback function. The title is shown if your hook fails to execute. The callback is called with an [execution object](#t).
-
-`before` hooks execute before `beforeEach` hooks. `afterEach` hooks execute before `after` hooks. Within their category the hooks execute in the order they were defined.
+`.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are *not* run before other hooks:
 
 ```js
 test.before(t => {
@@ -542,7 +540,15 @@ test.before(t => {
 });
 
 test.before(t => {
-	// This runs after the above, but before tests
+	// This runs concurrently with the above
+});
+
+test.serial.before(t => {
+	// This runs after the above
+});
+
+test.serial.before(t => {
+	// This too runs after the above, and before tests
 });
 
 test.after('cleanup', t => {
@@ -590,13 +596,13 @@ test.afterEach.cb(t => {
 });
 ```
 
-Keep in mind that the `beforeEach` and `afterEach` hooks run just before and after a test is run, and that by default tests run concurrently. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests are [run serially](#running-tests-serially).
+Keep in mind that the `.beforeEach()` and `.afterEach()` hooks run just before and after a test is run, and that by default tests run concurrently. This means each multiple `.beforeEach()` hooks may run concurrently. Using `test.serial.beforeEach()` does not change this. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests themselves are [run serially](#running-tests-serially).
 
-Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `after`-hook since that's only called right before the process exits.
+Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `.after()`-hook since that's only called right before the process exits.
 
 #### Test context
 
-The `beforeEach` & `afterEach` hooks can share context with the test:
+The `.beforeEach()` & `.afterEach()` hooks can share context with the test:
 
 ```js
 test.beforeEach(t => {
@@ -620,7 +626,7 @@ test('context is unicorn', t => {
 });
 ```
 
-Context sharing is *not* available to `before` and `after` hooks.
+Context sharing is *not* available to `.before()` and `.after()` hooks.
 
 ### Test macros
 
@@ -781,9 +787,7 @@ test.cb('data.txt can be read', t => {
 
 ### Global timeout
 
-A global timeout can be set via the `--timeout` option.
-Timeout in AVA behaves differently than in other test frameworks.
-AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout.
+A global timeout can be set via the `--timeout` option. Timeout in AVA behaves differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests.
 
 You can set timeouts in a human-readable way:
 
@@ -823,7 +827,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `beforeEach` hooks. `t.title` returns the test's title.
+The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `.beforeEach()` hooks. `t.title` returns the test's title.
 
 ###### `t.plan(count)`
 
@@ -1019,9 +1023,9 @@ You can specify a fixed location for storing the snapshot files in AVA's [`packa
 
 ```json
 {
-  "ava": {
-    "snapshotDir": "custom-directory"
-  }
+	"ava": {
+		"snapshotDir": "custom-directory"
+	}
 }
 ```
 
@@ -1162,20 +1166,23 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Links
 
-- [Buy AVA stickers](https://www.stickermule.com/user/1070705604/stickers)
+- [AVA stickers, t-shirts, etc](https://www.redbubble.com/people/sindresorhus/works/30330590-ava-logo)
 - [Awesome list](https://github.com/avajs/awesome-ava)
 - [AVA Casts](http://avacasts.com)
 - [More…](https://github.com/avajs/awesome-ava)
 
 ## Team
 
-[![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes) | [![James Talmage](https://github.com/jamestalmage.png?size=100)](https://github.com/jamestalmage) | [![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Juan Soto](https://github.com/sotojuan.png?size=100)](https://github.com/sotojuan) | [![Jeroen Engels](https://github.com/jfmengels.png?size=100)](https://github.com/jfmengels)
----|---|---|---|---|---
-[Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes) | [James Talmage](https://github.com/jamestalmage) | [Mark Wubben](https://novemberborn.net) | [Juan Soto](http://juansoto.me) | [Jeroen Engels](https://github.com/jfmengels)
+[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes)
+---|---|---
+[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes)
 
-### Former
+###### Former
 
 - [Kevin Mårtensson](https://github.com/kevva)
+- [James Talmage](https://github.com/jamestalmage)
+- [Juan Soto](https://github.com/sotojuan)
+- [Jeroen Engels](https://github.com/jfmengels)
 
 
 <div align="center">

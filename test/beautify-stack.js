@@ -1,7 +1,9 @@
 'use strict';
+require('../lib/worker-options').set({});
+
 const proxyquire = require('proxyquire').noPreserveCache();
 const test = require('tap').test;
-const Sequence = require('../lib/sequence');
+const Runner = require('../lib/runner');
 
 const beautifyStack = proxyquire('../lib/beautify-stack', {
 	debug() {
@@ -56,20 +58,20 @@ test('returns empty string without any arguments', t => {
 
 test('beautify stack - removes uninteresting lines', t => {
 	try {
-		const seq = new Sequence([{
+		const runner = new Runner();
+		runner.runSingle({
 			run() {
 				fooFunc();
 			}
-		}]);
-		seq.run();
+		});
 	} catch (err) {
 		const stack = beautifyStack(err.stack);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
-		// The runNext line is introduced by Sequence. It's internal so it should
+		// The runSingle line is introduced by Runner. It's internal so it should
 		// be stripped.
-		t.match(err.stack, /runNext/);
-		t.notMatch(stack, /runNext/);
+		t.match(err.stack, /runSingle/);
+		t.notMatch(stack, /runSingle/);
 		t.end();
 	}
 });

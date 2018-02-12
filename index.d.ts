@@ -168,6 +168,10 @@ export interface SerialInterface<Context = {}> {
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
+	after: AfterInterface<Context>;
+	afterEach: AfterInterface<Context>;
+	before: BeforeInterface<Context>;
+	beforeEach: BeforeInterface<Context>;
 	cb: CbInterface<Context>;
 	failing: FailingInterface<Context>;
 	only: OnlyInterface<Context>;
