@@ -1151,6 +1151,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Recipes
 
+- [Test setup](docs/recipes/test-setup.md)
 - [Code coverage](docs/recipes/code-coverage.md)
 - [Watch mode](docs/recipes/watch-mode.md)
 - [Endpoint testing](docs/recipes/endpoint-testing.md)
