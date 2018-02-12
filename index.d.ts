@@ -2,7 +2,7 @@ export interface ObservableLike {
 	subscribe(observer: (value: any) => void): void;
 }
 
-export type ThrowsErrorValidator = (new (...args: Array<any>) => any) | RegExp | string | ((error: any) => boolean);
+export type ThrowsErrorValidator = (new (...args: Array<any>) => any) | RegExp | string;
 
 export interface SnapshotOptions {
 	id?: string;

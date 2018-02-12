@@ -910,13 +910,13 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
-### `.throws(function|promise, [error, [message]])`
+### `.throws(thrower, [expected, [message]])`
 
-Assert that `function` throws an error, `promise` rejects with an error, or `function` returns a rejected `promise`.
+Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject, or an observable that should error. Alternatively a promise or observable can be passed directly.
 
-`error` can be an error constructor, error message, regex matched against the error message, or validation function.
+The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
-Returns the error thrown by `function` or a promise for the rejection reason of the specified `promise`.
+`expected` can be a constructor, in which case the thrown value must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. `expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
 
 Example:
 
@@ -943,7 +943,7 @@ test('rejects', async t => {
 });
 ```
 
-When testing a promise you must wait for the assertion to complete:
+When testing an observable or promise you must wait for the assertion to complete:
 
 ```js
 test('rejects', async t => {
@@ -963,11 +963,11 @@ test('throws', async t => {
 });
 ```
 
-### `.notThrows(function|promise, [message])`
+### `.notThrows(nonThrower, [message])`
 
-Assert that `function` does not throw an error, `promise` does not reject with an error, or `function` returns a promise that does not reject with an error.
+Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve, or an observable that should complete. Alternatively a promise or an observable can be passed directly.
 
-Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
+Like the `.throws()` assertion, when testing a promise or an observable you must wait for the assertion to complete:
 
 ```js
 test('resolves', async t => {
