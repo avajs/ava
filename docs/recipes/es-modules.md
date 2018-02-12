@@ -1,5 +1,7 @@
 # Using ES modules in AVA
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/es-modules.md)
+
 As of Node.js 8.5.0, [ES modules](http://2ality.com/2017/09/native-esm-node.html) are natively supported, but behind the `--experimental-modules` command line flag. It works using the `.mjs` file extension. AVA does not currently support the command line option or the new file extension, but you *can* use the [`@std/esm`](https://github.com/standard-things/esm) module to use the new syntax.
 
 Here's how you get it working with AVA.
