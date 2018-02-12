@@ -210,27 +210,6 @@ test('precompiler require hook does not apply to source files', t => {
 	});
 });
 
-test('pkg-conf: defaults', t => {
-	execCli([], {dirname: 'fixture/pkg-conf/defaults'}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
-test('pkg-conf: pkg-overrides', t => {
-	execCli([], {dirname: 'fixture/pkg-conf/pkg-overrides'}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
-test('pkg-conf: cli takes precedence', t => {
-	execCli(['--match=foo*', '--no-serial', '--cache', '--no-fail-fast', 'c.js'], {dirname: 'fixture/pkg-conf/precedence'}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
 test('pkg-conf(resolve-dir): works as expected when run from the package.json directory', t => {
 	execCli(['--verbose'], {dirname: 'fixture/pkg-conf/resolve-dir'}, (err, stdout, stderr) => {
 		t.ifError(err);
