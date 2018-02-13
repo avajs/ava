@@ -1161,6 +1161,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Flow](docs/recipes/flow.md)
 - [Configuring Babel][Babel recipe]
 - [Using ES modules](docs/recipes/es-modules.md)
+- [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
 - [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
