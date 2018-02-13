@@ -1,5 +1,7 @@
 # Test setup
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/test-setup.md)
+
 Tests can be set up using the `beforeEach()` hook. Often though you could use a plain setup function instead. This recipe helps you decide what's best for your use case.
 
 # The `beforeEach()` hook versus setup functions
