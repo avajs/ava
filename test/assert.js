@@ -145,22 +145,24 @@ function eventuallyFails(t, fn) {
 
 function passes(t, fn) {
 	lastPassed = false;
+	lastFailure = null;
 	fn();
 	if (lastPassed) {
 		t.pass();
 	} else {
-		t.fail('Expected assertion to pass');
+		t.ifError(lastFailure, 'Expected assertion to pass');
 	}
 }
 
 function eventuallyPasses(t, fn) {
 	return add(() => {
 		lastPassed = false;
+		lastFailure = null;
 		return fn().then(() => {
 			if (lastPassed) {
 				t.pass();
 			} else {
-				t.fail('Expected assertion to pass');
+				t.ifError(lastFailure, 'Expected assertion to pass');
 			}
 		});
 	});
@@ -726,8 +728,8 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because thrown error's message is not equal to 'bar'
-	const err = new Error('foo');
 	failsWith(t, () => {
+		const err = new Error('foo');
 		assertions.throws(() => {
 			throw err;
 		}, 'bar');
@@ -742,6 +744,7 @@ test('.throws()', gather(t => {
 
 	// Fails because thrown error is not the right instance
 	failsWith(t, () => {
+		const err = new Error('foo');
 		assertions.throws(() => {
 			throw err;
 		}, class Foo {});
@@ -756,6 +759,7 @@ test('.throws()', gather(t => {
 
 	// Passes because thrown error's message is equal to 'bar'
 	passes(t, () => {
+		const err = new Error('foo');
 		assertions.throws(() => {
 			throw err;
 		}, 'foo');
@@ -766,6 +770,52 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		});
+	});
+
+	// Passes because the correct error is thrown.
+	passes(t, () => {
+		const err = new Error('foo');
+		assertions.throws(() => {
+			throw err;
+		}, {is: err});
+	});
+
+	// Fails because the thrown value is not an error
+	fails(t, () => {
+		const obj = {};
+		assertions.throws(() => {
+			throw obj;
+		}, {is: obj});
+	});
+
+	// Fails because the thrown value is not the right one
+	fails(t, () => {
+		const err = new Error('foo');
+		assertions.throws(() => {
+			throw err;
+		}, {is: {}});
+	});
+
+	// Passes because the correct error is thrown.
+	passes(t, () => {
+		assertions.throws(() => {
+			throw new TypeError();
+		}, {name: 'TypeError'});
+	});
+
+	// Fails because the thrown value is not an error
+	fails(t, () => {
+		assertions.throws(() => {
+			const err = {name: 'Bob'};
+			throw err;
+		}, {name: 'Bob'});
+	});
+
+	// Fails because the thrown value is not the right one
+	fails(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, {name: 'TypeError'});
 	});
 
 	// Fails because the promise is resolved, not rejected.
@@ -911,8 +961,56 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, true);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be a function, string, regular expression or `null`',
+		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /true/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {});
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /\{\}/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, []);
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /\[\]/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {instanceOf: null});
+	}, {
+		assertion: 'throws',
+		message: 'The `instanceOf` property of the second argument to `t.throws()` must be a function',
+		values: [{label: 'Called with:', formatted: /instanceOf: null/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {message: null});
+	}, {
+		assertion: 'throws',
+		message: 'The `message` property of the second argument to `t.throws()` must be a string or regular expression',
+		values: [{label: 'Called with:', formatted: /message: null/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {name: null});
+	}, {
+		assertion: 'throws',
+		message: 'The `name` property of the second argument to `t.throws()` must be a string',
+		values: [{label: 'Called with:', formatted: /name: null/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {is: {}, message: '', name: '', of() {}, foo: null});
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` contains unexpected properties',
+		values: [{label: 'Called with:', formatted: /foo: null/}]
 	});
 
 	t.end();

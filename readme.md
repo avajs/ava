@@ -916,7 +916,14 @@ Assert that an error is thrown. `thrower` can be a function which should throw, 
 
 The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
-`expected` can be a constructor, in which case the thrown value must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. `expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expected` can be a constructor, in which case the thrown error must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. You can also specify a matcher object with one or more of the following properties:
+
+* `instanceOf`: a constructor, the thrown error must be an instance of
+* `is`: the thrown error must be strictly equal to `expected.is`
+* `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
+* `name`: the expected `.name` value of the thrown error
+
+`expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
 
 Example:
 
@@ -955,11 +962,9 @@ When testing an asynchronous function you must also wait for the assertion to co
 
 ```js
 test('throws', async t => {
-	const error = await t.throws(async () => {
+	await t.throws(async () => {
 		throw new TypeError('🦄');
-	}, TypeError);
-
-	t.is(error.message, '🦄');
+	}, {instanceOf: TypeError, message: '🦄'});
 });
 ```
 
