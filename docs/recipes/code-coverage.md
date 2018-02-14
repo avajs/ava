@@ -48,16 +48,25 @@ Using Babel to transpile your production code is a bit more involved. Here we've
 
 ### Configure Babel
 
-First, we need a Babel configuration. The following is just an example. You will need to modify it to fit your needs.
+First, we need a Babel configuration. The following is just an example. You will need to modify it to fit your needs. [Babel's preset env](https://www.npmjs.com/package/@babel/preset-env) will compile ES2015+ down to ES5 automatically.
+
+```
+npm install @babel/preset-env --save-dev
+```
 
 `package.json`:
 ```json
 {
 	"babel": {
-		"presets": ["es2015"],
-		"plugins": ["transform-runtime"],
+		"presets": [
+	    ["@babel/preset-env", {
+	      "targets": {
+	        "browsers": ["last 2 versions", "safari >= 7"]
+	      }
+	    }]
+	  ],
 		"ignore": "test.js",
-		"env": {
+		"@babel/preset-env": {
 			"development": {
 				"sourceMaps": "inline"
 			}
@@ -93,12 +102,16 @@ Note that the build script really has very little to do with AVA, and is just a 
 
 ### Use the Babel require hook
 
-To use the Babel require hook, add `babel-core/register` to the `require` section of you AVA config in `package.json`.
+To use the [Babel's require hook](https://www.npmjs.com/package/@babel/register), add `@babel/register` to the `require` section of you AVA config in `package.json`.
+
+```
+npm install @babel/register --save-dev
+```
 
 ```json
 {
 	"ava": {
-		"require": ["babel-core/register"]
+		"require": ["@babel/register"]
 	}
 }
 ```
@@ -114,17 +127,22 @@ Combining the above steps, your complete `package.json` should look something li
 		"build": "BABEL_ENV=production babel --out-dir=dist index.js"
 	},
 	"babel": {
-		"presets": ["es2015"],
-		"plugins": ["transform-runtime"],
+		"presets": [
+	    ["@babel/preset-env" {
+	      "targets": {
+	        "browsers": ["last 2 versions", "safari >= 7"]
+	      }
+	    }]
+	  ],
 		"ignore": "test.js",
-		"env": {
+		"@babel/preset-env": {
 			"development": {
 				"sourceMaps": "inline"
 			}
 		}
 	},
 	"ava": {
-		"require": ["babel-core/register"]
+		"require": ["@babel/register"]
 	}
 }
 ```
