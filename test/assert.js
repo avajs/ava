@@ -818,6 +818,24 @@ test('.throws()', gather(t => {
 		}, {name: 'TypeError'});
 	});
 
+	// Passes because the correct error is thrown.
+	passes(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			err.code = 'ERR_TEST';
+			throw err;
+		}, {code: 'ERR_TEST'});
+	});
+
+	// Fails because the thrown value is not the right one
+	fails(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			err.code = 'ERR_NOPE';
+			throw err;
+		}, {code: 'ERR_TEST'});
+	});
+
 	// Fails because the promise is resolved, not rejected.
 	eventuallyFailsWith(t, () => assertions.throws(Promise.resolve('foo')), {
 		assertion: 'throws',
