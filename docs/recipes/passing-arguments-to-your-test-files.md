@@ -1,5 +1,7 @@
 # Passing arguments to your test files
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/passing-arguments-to-your-test-files.md)
+
 You can pass command line arguments to your test files. Use the `--` argument terminator to separate AVA's arguments from your own:
 
 ```js
