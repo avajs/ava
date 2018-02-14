@@ -602,7 +602,7 @@ Remember that AVA runs each test file in its own process. You may not have to cl
 
 #### Test context
 
-The `.beforeEach()` & `.afterEach()` hooks can share context with the test:
+Hooks can share context with the test:
 
 ```js
 test.beforeEach(t => {
@@ -614,10 +614,14 @@ test('context data is foo', t => {
 });
 ```
 
-The context is not shared between tests, allowing you to set up data in a way where it will not risk leaking to other, subsequent tests. By default `t.context` is an object but you can reassign it:
+Context created in `.before()` hooks is [cloned](https://www.npmjs.com/package/lodash.clone) before it is passed to `.beforeEach()` hooks and / or tests. The `.after()` and `.after.always()` hooks receive the original context value.
+
+For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context is *not* shared between different tests, allowing you to set up data such that it will not leak to other tests.
+
+By default `t.context` is an object but you can reassign it:
 
 ```js
-test.beforeEach(t => {
+test.before(t => {
 	t.context = 'unicorn';
 });
 
@@ -625,8 +629,6 @@ test('context is unicorn', t => {
 	t.is(t.context, 'unicorn');
 });
 ```
-
-Context sharing is *not* available to `.before()` and `.after()` hooks.
 
 ### Test macros
 
@@ -827,7 +829,7 @@ Should contain the actual test.
 
 Type: `object`
 
-The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from `.beforeEach()` hooks. `t.title` returns the test's title.
+The execution object of a particular test. Each test implementation receives a different object. Contains the [assertions](#assertions) as well as `.plan(count)` and `.end()` methods. `t.context` can contain shared state from hooks. `t.title` returns the test's title.
 
 ###### `t.plan(count)`
 
