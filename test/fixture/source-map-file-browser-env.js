@@ -1,5 +1,5 @@
 const fixture = require('source-map-fixtures').mapFile('throws').require();
-const test = require('../../');
+const test = require('../..');
 
 global.window = function () {};
 global.XMLHttpRequest = function () {};

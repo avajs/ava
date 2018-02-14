@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import test from '../../';
+import test from '../..';
 
 test('test', t => {
 	sinon.useFakeTimers(Date.now() + 10000);

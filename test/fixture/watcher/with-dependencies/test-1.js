@@ -1,4 +1,4 @@
-import test from '../../../../';
+import test from '../../../..';
 import dependency from './source';
 
 test('works', t => {

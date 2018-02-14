@@ -1,4 +1,4 @@
-import test from '../../../';
+import test from '../../..';
 
 import {restoreAfterFirstCall} from './hack';
 

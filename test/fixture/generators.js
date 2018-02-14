@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test('generator function', function * (t) {
 	t.plan(1);

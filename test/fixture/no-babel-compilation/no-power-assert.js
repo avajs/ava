@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('../../../');
+const test = require('../../..');
 
 test('test', t => {
 	const bool = false;

@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test('async function', async t => {
 	t.plan(1);

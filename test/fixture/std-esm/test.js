@@ -1,4 +1,4 @@
-import test from '../../../';
+import test from '../../..';
 import m from '.';
 
 test('works', t => {

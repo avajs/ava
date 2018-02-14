@@ -1,4 +1,4 @@
-import test from '../../../';
+import test from '../../..';
 
 const fixture = [1, 2];
 

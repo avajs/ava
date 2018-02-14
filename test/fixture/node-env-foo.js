@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test('NODE_ENV is foo', t => {
 	t.plan(1);

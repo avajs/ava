@@ -15,9 +15,11 @@ class ContextRef {
 	constructor() {
 		this.value = {};
 	}
+
 	get() {
 		return this.value;
 	}
+
 	set(newValue) {
 		this.value = newValue;
 	}
@@ -417,7 +419,7 @@ test('skipped assertions count towards the plan', t => {
 		a.deepEqual.skip({foo: 'bar'}, {foo: 'bar'});
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
 		a.throws.skip(() => {
-			throw new Error();
+			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		a.notThrows.skip(() => {});
 		a.ifError.skip(null);
@@ -446,7 +448,7 @@ test('assertion.skip() is bound', t => {
 		(a.deepEqual.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
 		(a.throws.skip)(() => {
-			throw new Error();
+			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		(a.notThrows.skip)(() => {});
 		(a.ifError.skip)(null);
@@ -704,7 +706,7 @@ test('assertions are bound', t => {
 		(a.deepEqual)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
 		(a.throws)(() => {
-			throw new Error();
+			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		(a.notThrows)(() => {});
 		(a.ifError)(null);

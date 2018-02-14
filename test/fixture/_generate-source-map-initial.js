@@ -26,9 +26,11 @@ const run = () => fixture.run();
 
 fs.writeFileSync(
 	path.join(__dirname, 'source-map-initial.js'),
-	transformed.code + '\n//# sourceMappingURL=./source-map-initial.js.map\n// Generated using node test/fixtures/_generate-source-map-initial.js\n');
+	transformed.code + '\n//# sourceMappingURL=./source-map-initial.js.map\n// Generated using node test/fixtures/_generate-source-map-initial.js\n'
+);
 fs.writeFileSync(
 	path.join(__dirname, 'source-map-initial.js.map'),
-	JSON.stringify(transformed.map));
+	JSON.stringify(transformed.map)
+);
 
 console.log('Generated source-map-initial.js');

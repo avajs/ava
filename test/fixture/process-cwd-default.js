@@ -1,6 +1,6 @@
 import path from 'path';
 import pkgConf from 'pkg-conf';
-import test from '../../';
+import test from '../..';
 
 test('test', t => {
 	const conf = pkgConf.sync('ava');

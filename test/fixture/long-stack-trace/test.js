@@ -1,4 +1,4 @@
-import test from '../../../';
+import test from '../../..';
 import Bluebird from './_enable-trace';
 
 // This promise throwing pattern was used in bluebird documentation for long stack traces

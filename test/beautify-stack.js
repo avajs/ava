@@ -18,7 +18,7 @@ function fooFunc() {
 }
 
 function barFunc() {
-	throw new Error();
+	throw new Error(); // eslint-disable-line unicorn/error-message
 }
 
 test('does not strip ava internals and dependencies from stack trace with debug enabled', t => {

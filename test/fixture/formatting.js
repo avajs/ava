@@ -1,6 +1,6 @@
 import React from 'react';
 import {Buffer} from 'safe-buffer';
-import test from '../../';
+import test from '../..';
 import HelloMessage from './hello-message';
 
 // Older AVA versions that do not use Concordance don't handle globals very

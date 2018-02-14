@@ -1,4 +1,4 @@
-import test from '../../../../';
+import test from '../../../..';
 
 test.serial('first pass', async t => {
 	t.pass();

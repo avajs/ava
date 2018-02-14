@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test('this test will match', t => {
 	t.pass();

@@ -1,4 +1,4 @@
-import test from '../../';
+import test from '../..';
 
 test('throw an uncaught exception', t => {
 	setImmediate(() => {
