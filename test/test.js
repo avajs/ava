@@ -758,3 +758,10 @@ test('snapshot assertion cannot be skipped when updating snapshots', t => {
 		t.is(result.error.message, 'Snapshot assertions cannot be skipped when updating snapshots');
 	});
 });
+
+test('implementation runs with null scope', t => {
+	return ava(function (a) {
+		a.pass();
+		t.is(this, null);
+	}).run();
+});

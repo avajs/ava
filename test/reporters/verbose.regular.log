@@ -15,7 +15,7 @@
 ---tty-stream-chunk-separator
   [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
   [31mError: Can't catch me[39m
-  [90mTest.t [as fn] (unhandled-rejection.js:4:17)[39m
+  [90mt (unhandled-rejection.js:4:17)[39m
 
 
 
@@ -167,7 +167,7 @@ stderr
     [34m[4mhttps://github.com/avajs/ava#throwsfunctionpromise-error-message[24m[39m
 
   [90mfn (test.js:35:9)[39m
-  [90mTest.t [as fn] (test.js:37:11)[39m
+  [90mt (test.js:37:11)[39m
 
 
 
@@ -196,7 +196,7 @@ stderr
     [34m[4mhttps://github.com/avajs/ava#throwsfunctionpromise-error-message[24m[39m
 
   [90mfn (test.js:42:9)[39m
-  [90mTest.t [as fn] (test.js:44:14)[39m
+  [90mt (test.js:44:14)[39m
 
 
 
