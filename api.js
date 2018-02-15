@@ -98,10 +98,10 @@ class Api extends EventEmitter {
 					runStatus.on('test', test => {
 						if (test.error) {
 							bailed = true;
-						}
 
-						for (const fork of pendingForks) {
-							fork.notifyOfPeerFailure();
+							for (const fork of pendingForks) {
+								fork.notifyOfPeerFailure();
+							}
 						}
 					});
 				}
