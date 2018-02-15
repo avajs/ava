@@ -156,6 +156,7 @@
 		"proxyquire": "^2.0.1",
 		"react": "^16.3.0",
 		"react-test-renderer": "^16.3.0",
+		"replace-string": "^1.1.0",
 		"signal-exit": "^3.0.0",
 		"sinon": "^4.5.0",
 		"source-map-fixtures": "^2.1.0",

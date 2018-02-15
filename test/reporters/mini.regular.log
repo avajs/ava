@@ -1,0 +1,285 @@
+[2K[G---tty-stream-chunk-separator
+ 
+   unhandled-rejection [90m[2m›[22m[39m passes
+
+  [32m1 passed[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+
+  [32m2 passed[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   uncaught-exception [90m[2m›[22m[39m passes
+
+  [32m3 passed[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+stdout
+---tty-stream-chunk-separator
+ 
+   uncaught-exception [90m[2m›[22m[39m passes
+
+  [32m3 passed[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+stderr
+---tty-stream-chunk-separator
+ 
+   uncaught-exception [90m[2m›[22m[39m passes
+
+  [32m3 passed[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   test [90m[2m›[22m[39m passes
+
+  [32m4 passed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m fails[39m
+
+  [32m4 passed[39m
+  [31m1 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m known failure[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m1 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m no longer failing[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m2 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m logs[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m3 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m formatted[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m4 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m power-assert[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m5 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m bad throws[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m6 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m bad notThrows[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m7 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   [31mtest [90m[2m›[22m[31m implementation throws non-error[39m
+
+  [32m5 passed[39m
+  [31m1 known failure[39m
+  [31m8 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+ 
+   slow [90m[2m›[22m[39m slow
+
+  [32m6 passed[39m
+  [31m1 known failure[39m
+  [31m8 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+
+  [32m6 passed[39m
+  [31m1 known failure[39m
+  [31m8 failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m
+  [31m2 rejections[39m
+  [31m3 exceptions[39m
+
+   [1m[37mtest [90m[2m›[1m[37m known failure[39m[22m
+
+  [1m[37mtest [90m[2m›[1m[37m fails[39m[22m
+
+  [90m~/test/fixture/report/regular/test.js:12[39m
+
+   [90m11:[39m                              
+  [41m 12: test('fails', t => t.fail());[49m
+   [90m13:[39m                              
+
+  Test failed via `t.fail()`
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m no longer failing[39m[22m
+
+
+  Test was expected to fail, but succeeded, you should stop marking the test as failing
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m logs[39m[22m
+    [35mℹ[39m [90mhello[39m
+    [35mℹ[39m [90mworld[39m
+
+  [90m~/test/fixture/report/regular/test.js:21[39m
+
+   [90m20:[39m   t.log('world');
+  [41m 21:   t.fail();      [49m
+   [90m22:[39m });              
+
+  Test failed via `t.fail()`
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m formatted[39m[22m
+
+  [90m~/test/fixture/report/regular/test.js:25[39m
+
+   [90m24:[39m test('formatted', t => {    
+  [41m 25:   t.deepEqual('foo', 'bar');[49m
+   [90m26:[39m });                         
+
+  Difference:
+
+  [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
+  [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m power-assert[39m[22m
+
+  [90m~/test/fixture/report/regular/test.js:30[39m
+
+   [90m29:[39m   const foo = 'bar';
+  [41m 30:   t.falsy(foo);     [49m
+   [90m31:[39m });                 
+
+  Value is not falsy:
+
+  [34m'[39m[34mbar[39m[34m'[39m
+
+  foo
+  [90m=>[39m [34m'[39m[34mbar[39m[34m'[39m
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m bad throws[39m[22m
+
+  [90m~/test/fixture/report/regular/test.js:37[39m
+
+   [90m36:[39m   };             
+  [41m 37:   t.throws(fn());[49m
+   [90m38:[39m });              
+
+  Improper usage of `t.throws()` detected
+
+  The following error was thrown, possibly before `t.throws()` could be called:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Try wrapping the first argument to `t.throws()` in a function:
+
+    [36mt.throws(() => { [39m[90m/* your code here */[39m[36m })[39m
+
+  Visit the following URL for more details:
+
+    [34m[4mhttps://github.com/avajs/ava#throwsfunctionpromise-error-message[24m[39m
+
+  [90mfn (test.js:35:9)[39m
+  [90mTest.t [as fn] (test.js:37:11)[39m
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m bad notThrows[39m[22m
+
+  [90m~/test/fixture/report/regular/test.js:44[39m
+
+   [90m43:[39m   };                
+  [41m 44:   t.notThrows(fn());[49m
+   [90m45:[39m });                 
+
+  Improper usage of `t.notThrows()` detected
+
+  The following error was thrown, possibly before `t.notThrows()` could be called:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Try wrapping the first argument to `t.notThrows()` in a function:
+
+    [36mt.notThrows(() => { [39m[90m/* your code here */[39m[36m })[39m
+
+  Visit the following URL for more details:
+
+    [34m[4mhttps://github.com/avajs/ava#throwsfunctionpromise-error-message[24m[39m
+
+  [90mfn (test.js:42:9)[39m
+  [90mTest.t [as fn] (test.js:44:14)[39m
+
+
+
+  [1m[37mtest [90m[2m›[1m[37m implementation throws non-error[39m[22m
+
+
+  Error thrown in test:
+
+  [33mnull[39m
+
+
+
+  [1m[37mUncaught exception in test/fixture/report/regular/bad-test-chain.js[39m[22m
+  [31mTypeError: _.default.serial.test is not a function[39m
+  [90mObject.<anonymous> (bad-test-chain.js:3:13)[39m
+
+  [31m✖ No tests found in test/fixture/report/regular/bad-test-chain.js[39m
+
+  [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
+  [31mError: Can't catch me[39m
+  [90mTest.t [as fn] (unhandled-rejection.js:4:17)[39m
+
+  [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
+  Threw non-error: {"message":"null"}
+  [1m[37mUncaught exception in test/fixture/report/regular/uncaught-exception.js[39m[22m
+  [31mError: Can't catch me[39m
+  [90mTimeout.setTimeout (uncaught-exception.js:5:9)[39m
+---tty-stream-chunk-separator
