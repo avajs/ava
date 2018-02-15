@@ -385,6 +385,37 @@ test('fail-fast mode - timeout & serial', t => {
 		});
 });
 
+test('fail-fast mode - no errors', t => {
+	const api = apiCreator({
+		failFast: true
+	});
+
+	const tests = [];
+	const errors = [];
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', test => {
+			tests.push({
+				ok: !test.error,
+				title: test.title
+			});
+		});
+		runStatus.on('error', err => {
+			errors.push(err);
+		});
+	});
+
+	return api.run([
+		path.join(__dirname, 'fixture/fail-fast/without-error/a.js'),
+		path.join(__dirname, 'fixture/fail-fast/without-error/b.js')
+	])
+		.then(result => {
+			t.ok(api.options.failFast);
+			t.is(result.passCount, 2);
+			t.is(result.failCount, 0);
+		});
+});
+
 test('serial execution mode', t => {
 	const api = apiCreator({
 		serial: true
