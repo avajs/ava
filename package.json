@@ -67,7 +67,6 @@
 		"@babel/plugin-syntax-async-generators": "7.0.0-beta.44",
 		"@babel/plugin-syntax-object-rest-spread": "7.0.0-beta.44",
 		"@concordance/react": "^1.0.0",
-		"@ladjs/time-require": "^0.1.4",
 		"ansi-escapes": "^3.1.0",
 		"ansi-styles": "^3.2.1",
 		"arr-flatten": "^1.1.0",
