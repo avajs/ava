@@ -69,7 +69,7 @@ By default, the type of `t.context` will be the empty object (`{}`). AVA exposes
 ```ts
 import anyTest, {TestInterface} from 'ava';
 
-const test: TestInterface<{foo: string}> = anyTest;
+const test = anyTest as TestInterface<{foo: string}>;
 
 test.beforeEach(t => {
 	t.context = {foo: 'bar'};
@@ -97,7 +97,7 @@ interface Context {
 	foo: string
 }
 
-const test: TestInterface<Context> = anyTest;
+const test = anyTest as TestInterface<Context>;
 
 const macro: Macro<Context> = (t, expected: string) => {
 	t.is(t.context.foo, expected);
