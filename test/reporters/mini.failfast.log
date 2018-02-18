@@ -1,11 +1,14 @@
-[2K[G---tty-stream-chunk-separator
- 
-   [31ma [90m[2m›[22m[31m fails[39m
+[?25l---tty-stream-chunk-separator
 
-  [31m1 failed[39m---tty-stream-chunk-separator
-[2K[1A[2K[1A[2K[1A[2K[G---tty-stream-chunk-separator
+---tty-stream-chunk-separator
+* ---tty-stream-chunk-separator
+[2K[1G---tty-stream-chunk-separator
+* a [90m[2m›[22m[39m fails
 
-  [31m1 failed[39m
+  [31m1 test failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+[?25h
+  [31m1 test failed[39m
 
   [1m[37ma [90m[2m›[1m[37m fails[39m[22m
 
@@ -20,4 +23,5 @@
 
 
   [35m`--fail-fast` is on. 1 test file was skipped.[39m
+
 ---tty-stream-chunk-separator

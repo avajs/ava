@@ -9,10 +9,13 @@ not ok 1 - a [90m[2m›[22m[39m fails
     at: 't (a.js:3:22)'
   ...
 ---tty-stream-chunk-separator
+# 1 test remaining in test/fixture/report/failfast2/a.js
+not ok 2 - 1 test remaining in test/fixture/report/failfast2/a.js
+---tty-stream-chunk-separator
 
 1..1
 # tests 1
 # pass 0
-# fail 1
+# fail 2
 
 ---tty-stream-chunk-separator

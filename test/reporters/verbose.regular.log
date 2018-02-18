@@ -1,38 +1,54 @@
 
 ---tty-stream-chunk-separator
   [1m[37mUncaught exception in test/fixture/report/regular/bad-test-chain.js[39m[22m
-  [31mTypeError: _.default.serial.test is not a function[39m
-  [90mObject.<anonymous> (bad-test-chain.js:3:13)[39m
 
+  [90m~/test/fixture/report/regular/bad-test-chain.js:3[39m
 
+   [90m2:[39m                                           
+  [41m 3: test.serial.test('passes', t => t.pass());[49m
+   [90m4:[39m                                           
+
+  TypeError: _.default.serial.test is not a function
 
 ---tty-stream-chunk-separator
-[31m  ✖ No tests found in test/fixture/report/regular/bad-test-chain.js[39m
+  [31m✖ test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
 ---tty-stream-chunk-separator
+
   [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
-  [31mError: Can't catch me[39m
-  [90mt (unhandled-rejection.js:4:17)[39m
 
+  [90m~/test/fixture/report/regular/unhandled-rejection.js:4[39m
 
+   [90m3:[39m test('passes', t => {                          
+  [41m 4:   Promise.reject(new Error('Can/'t catch me'));[49m
+   [90m5:[39m   t.pass();                                    
+
+  Error: Can't catch me
 
 ---tty-stream-chunk-separator
   [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
-  [33mnull[39m
 
+  [33mnull[39m
 
 ---tty-stream-chunk-separator
   [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
+
   [1m[37mUncaught exception in test/fixture/report/regular/uncaught-exception.js[39m[22m
-  [31mError: Can't catch me[39m
-  [90mTimeout.setTimeout (uncaught-exception.js:5:9)[39m
 
+  [90m~/test/fixture/report/regular/uncaught-exception.js:5[39m
 
+   [90m4:[39m   setTimeout(() => {                   
+  [41m 5:     throw new Error('Can/'t catch me');[49m
+   [90m6:[39m   });                                  
 
+  Error: Can't catch me
+
+---tty-stream-chunk-separator
+  [31m✖ test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
 stdout
 ---tty-stream-chunk-separator
@@ -72,8 +88,7 @@ stderr
   [33m1 test skipped[39m
   [34m1 test todo[39m
   [31m2 unhandled rejections[39m
-  [31m3 uncaught exceptions[39m
-
+  [31m2 uncaught exceptions[39m
 
   [31mtest [90m[2m›[22m[31m known failure[39m
 
@@ -92,7 +107,7 @@ stderr
   [1m[37mtest [90m[2m›[1m[37m no longer failing[39m[22m
 
 
-  Test was expected to fail, but succeeded, you should stop marking the test as failing
+  Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
 
 
