@@ -1,5 +1,5 @@
 'use strict';
-require('../lib/worker-options').set({color: false});
+require('../lib/worker/options').set({color: false});
 
 const Promise = require('bluebird');
 const test = require('tap').test;

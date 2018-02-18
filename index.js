@@ -4,5 +4,5 @@
 if (process.env.AVA_PATH && process.env.AVA_PATH !== __dirname) {
 	module.exports = require(process.env.AVA_PATH);
 } else {
-	module.exports = require('./lib/main');
+	module.exports = require('./lib/worker/main');
 }

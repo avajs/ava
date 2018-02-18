@@ -154,7 +154,7 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 			console.log(stack);
 		});
 
-		// `test-worker` will read process.argv[2] for options
+		// The "subprocess" will read process.argv[2] for options
 		process.argv[2] = JSON.stringify(opts);
 		process.argv.length = 3;
 
@@ -163,6 +163,6 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 		}
 
 		setImmediate(() => {
-			require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
+			require('./lib/worker/subprocess'); // eslint-disable-line import/no-unassigned-import
 		});
 	});

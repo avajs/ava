@@ -1,5 +1,5 @@
 'use strict';
-require('../lib/worker-options').set({});
+require('../lib/worker/options').set({});
 
 const test = require('tap').test;
 const Test = require('../lib/test');
