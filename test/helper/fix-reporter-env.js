@@ -17,6 +17,7 @@ module.exports = () => {
 	});
 
 	fixColors();
+	require('../../lib/chalk').set({enabled: true, level: 3});
 };
 
 module.exports.onlyColors = fixColors;

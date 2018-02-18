@@ -1,4 +1,6 @@
 'use strict';
+require('../lib/chalk').set();
+
 const path = require('path');
 const fs = require('fs');
 const figures = require('figures');
