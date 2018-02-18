@@ -11,7 +11,9 @@ const uniqueTempDir = require('unique-temp-dir');
 const test = require('tap').test;
 const avaAssert = require('../lib/assert');
 const beautifyStack = require('../lib/beautify-stack');
-const serialize = require('../lib/serialize-error');
+const serializeError = require('../lib/serialize-error');
+
+const serialize = err => serializeError('Test', true, err);
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
@@ -20,8 +22,9 @@ test('serialize standard props', t => {
 	const err = new Error('Hello');
 	const serializedErr = serialize(err);
 
-	t.is(Object.keys(serializedErr).length, 7);
+	t.is(Object.keys(serializedErr).length, 8);
 	t.is(serializedErr.avaAssertionError, false);
+	t.is(serializedErr.nonErrorObject, false);
 	t.deepEqual(serializedErr.object, {});
 	t.is(serializedErr.name, 'Error');
 	t.is(serializedErr.stack, beautifyStack(err.stack));
@@ -164,10 +167,10 @@ test('remove non-string error properties', t => {
 });
 
 test('creates multiline summaries for syntax errors', t => {
-	const err = {
-		name: 'SyntaxError',
-		stack: 'Hello\nThere\nSyntaxError here\nIgnore me'
-	};
+	const err = new SyntaxError();
+	Object.defineProperty(err, 'stack', {
+		value: 'Hello\nThere\nSyntaxError here\nIgnore me'
+	});
 	const serializedErr = serialize(err);
 	t.is(serializedErr.name, 'SyntaxError');
 	t.is(serializedErr.summary, 'Hello\nThere\nSyntaxError here');

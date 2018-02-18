@@ -278,7 +278,7 @@ stderr
   [90mt (unhandled-rejection.js:4:17)[39m
 
   [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
-  Threw non-error: {"message":"null"}
+  [33mnull[39m
   [1m[37mUncaught exception in test/fixture/report/regular/uncaught-exception.js[39m[22m
   [31mError: Can't catch me[39m
   [90mTimeout.setTimeout (uncaught-exception.js:5:9)[39m
