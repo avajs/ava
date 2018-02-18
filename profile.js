@@ -1,4 +1,5 @@
 'use strict';
+require('./lib/worker/load-chalk'); // eslint-disable-line import/no-unassigned-import
 
 // Iron-node does not work with forked processes
 // This cli command will run a single file in the current process.

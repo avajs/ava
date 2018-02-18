@@ -1,4 +1,6 @@
 'use strict';
+require('../lib/chalk').set();
+
 const path = require('path');
 const test = require('tap').test;
 const chalk = require('chalk');

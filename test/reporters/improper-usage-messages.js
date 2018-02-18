@@ -1,4 +1,6 @@
 'use strict';
+require('../../lib/chalk').set();
+
 const test = require('tap').test;
 const improperUsageMessages = require('../../lib/reporters/improper-usage-messages');
 

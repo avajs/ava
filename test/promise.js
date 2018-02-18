@@ -1,4 +1,5 @@
 'use strict';
+require('../lib/chalk').set();
 require('../lib/worker/options').set({color: false});
 
 const Promise = require('bluebird');
