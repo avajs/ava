@@ -103,7 +103,6 @@
 		"is-ci": "^1.1.0",
 		"is-error": "^2.2.1",
 		"is-generator-fn": "^1.0.0",
-		"is-obj": "^1.0.0",
 		"is-observable": "^1.1.0",
 		"is-promise": "^2.1.0",
 		"last-line-stream": "^1.0.0",

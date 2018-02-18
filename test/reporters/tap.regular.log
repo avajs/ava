@@ -23,10 +23,11 @@ not ok 5 - Can't catch me
     at: 't (unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
-# null
-not ok 6 - null
+# undefined
+not ok 6 - undefined
   ---
-    {}
+    message: Non-error object
+    formatted: 'null'
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception › passes

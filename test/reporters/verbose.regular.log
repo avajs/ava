@@ -21,7 +21,7 @@
 
 ---tty-stream-chunk-separator
   [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
-  Threw non-error: {"message":"null"}
+  [33mnull[39m
 
 
 ---tty-stream-chunk-separator
