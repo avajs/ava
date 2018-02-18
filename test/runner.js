@@ -10,7 +10,7 @@ const noop = () => {};
 
 const promiseEnd = (runner, next) => {
 	return new Promise(resolve => {
-		runner.on('start', data => resolve(data.ended));
+		resolve(runner.once('finish'));
 		next(runner);
 	}).then(() => runner);
 };
@@ -43,14 +43,19 @@ test('tests must be declared synchronously', t => {
 	});
 });
 
-test('runner emits a "test" event', t => {
+test('runner emits "stateChange" events', t => {
 	const runner = new Runner();
 
-	runner.on('test', props => {
-		t.ifError(props.error);
-		t.is(props.title, 'foo');
-		t.not(props.duration, undefined);
-		t.end();
+	runner.on('stateChange', evt => {
+		if (evt.type === 'declared-test') {
+			t.deepEqual(evt, {
+				type: 'declared-test',
+				title: 'foo',
+				knownFailing: false,
+				todo: false
+			});
+			t.end();
+		}
 	});
 
 	runner.chain('foo', a => {
@@ -122,53 +127,20 @@ test('anything can be skipped', t => {
 	});
 });
 
-test('emit skipped tests at start', t => {
-	t.plan(1);
-
-	const runner = new Runner();
-	runner.on('start', data => {
-		t.strictDeepEqual(data.skippedTests, [
-			{failing: false, title: 'test.serial.skip'},
-			{failing: true, title: 'test.failing.skip'}
-		]);
-	});
-
-	return promiseEnd(runner, () => {
-		runner.chain.before('before', noop);
-		runner.chain.before.skip('before.skip', noop);
-
-		runner.chain.beforeEach('beforeEach', noop);
-		runner.chain.beforeEach.skip('beforeEach.skip', noop);
-
-		runner.chain.serial('test.serial', a => a.pass());
-		runner.chain.serial.skip('test.serial.skip', noop);
-
-		runner.chain.failing('test.failing', a => a.fail());
-		runner.chain.failing.skip('test.failing.skip', noop);
-
-		runner.chain.after('after', noop);
-		runner.chain.after.skip('after.skip', noop);
-
-		runner.chain.afterEach('afterEach', noop);
-		runner.chain.afterEach.skip('afterEach.skip', noop);
-	});
-});
-
 test('test types and titles', t => {
-	t.plan(20);
+	t.plan(10);
 
 	const fail = a => a.fail();
 	const pass = a => a.pass();
 
 	const check = (setup, expect) => {
 		const runner = new Runner();
-		const assert = data => {
-			const expected = expect.shift();
-			t.is(data.title, expected.title);
-			t.is(data.metadata.type, expected.type);
-		};
-		runner.on('hook-failed', assert);
-		runner.on('test', assert);
+		runner.on('stateChange', evt => {
+			if (evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed') {
+				const expected = expect.shift();
+				t.is(evt.title, expected.title);
+			}
+		});
 		return promiseEnd(runner, () => setup(runner.chain));
 	};
 
@@ -217,10 +189,19 @@ test('test types and titles', t => {
 });
 
 test('skip test', t => {
-	t.plan(4);
+	t.plan(3);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test' && evt.skip) {
+				t.pass();
+			}
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('test', a => {
 			arr.push('a');
 			a.pass();
@@ -229,10 +210,7 @@ test('skip test', t => {
 		runner.chain.skip('skip', () => {
 			arr.push('b');
 		});
-	}).then(runner => {
-		t.is(runner.stats.testCount, 2);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.skipCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -270,20 +248,26 @@ test('tests must have an implementation', t => {
 });
 
 test('todo test', t => {
-	t.plan(4);
+	t.plan(3);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test' && evt.todo) {
+				t.pass();
+			}
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('test', a => {
 			arr.push('a');
 			a.pass();
 		});
 
 		runner.chain.todo('todo');
-	}).then(runner => {
-		t.is(runner.stats.testCount, 2);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.todoCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -321,10 +305,16 @@ test('todo test titles must be unique', t => {
 });
 
 test('only test', t => {
-	t.plan(3);
+	t.plan(2);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test') {
+				t.pass();
+			}
+		});
+
 		runner.chain('test', a => {
 			arr.push('a');
 			a.pass();
@@ -334,9 +324,7 @@ test('only test', t => {
 			arr.push('b');
 			a.pass();
 		});
-	}).then(runner => {
-		t.is(runner.stats.testCount, 1);
-		t.is(runner.stats.passCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['b']);
 	});
 });
@@ -409,8 +397,10 @@ test('options.failFast does not stop concurrent tests from running', t => {
 			a.pass();
 		});
 
-		runner.on('test', data => {
-			t.is(data.title, expected.shift());
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
+				t.is(evt.title, expected.shift());
+			}
 		});
 	});
 });
@@ -441,8 +431,10 @@ test('options.failFast && options.serial stops subsequent tests from running ', 
 			a.pass();
 		});
 
-		runner.on('test', data => {
-			t.is(data.title, expected.shift());
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
+				t.is(evt.title, expected.shift());
+			}
 		});
 	});
 });
@@ -477,16 +469,24 @@ test('options.failFast & failing serial test stops subsequent tests from running
 			a.pass();
 		});
 
-		runner.on('test', data => {
-			t.is(data.title, expected.shift());
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
+				t.is(evt.title, expected.shift());
+			}
 		});
 	});
 });
 
 test('options.match will not run tests with non-matching titles', t => {
-	t.plan(5);
+	t.plan(4);
 
 	return promiseEnd(new Runner({match: ['*oo', '!foo']}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('mhm. grass tasty. moo', a => {
 			t.pass();
 			a.pass();
@@ -506,17 +506,19 @@ test('options.match will not run tests with non-matching titles', t => {
 			t.fail();
 			a.pass();
 		});
-	}).then(runner => {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 2);
-		t.is(runner.stats.testCount, 2);
 	});
 });
 
 test('options.match hold no effect on hooks with titles', t => {
-	t.plan(4);
+	t.plan(2);
 
 	return promiseEnd(new Runner({match: ['!before*']}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		let actual;
 
 		runner.chain.before('before hook with title', () => {
@@ -527,17 +529,19 @@ test('options.match hold no effect on hooks with titles', t => {
 			t.is(actual, 'foo');
 			a.pass();
 		});
-	}).then(runner => {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.testCount, 1);
 	});
 });
 
 test('options.match overrides .only', t => {
-	t.plan(5);
+	t.plan(4);
 
 	return promiseEnd(new Runner({match: ['*oo']}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('moo', a => {
 			t.pass();
 			a.pass();
@@ -547,29 +551,34 @@ test('options.match overrides .only', t => {
 			t.pass();
 			a.pass();
 		});
-	}).then(runner => {
-		t.is(runner.stats.skipCount, 0);
-		t.is(runner.stats.passCount, 2);
-		t.is(runner.stats.testCount, 2);
 	});
 });
 
 test('options.match matches todo tests', t => {
-	t.plan(2);
+	t.plan(1);
 
 	return promiseEnd(new Runner({match: ['*oo']}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test' && evt.todo) {
+				t.pass();
+			}
+		});
+
 		runner.chain.todo('moo');
 		runner.chain.todo('oom');
-	}).then(runner => {
-		t.is(runner.stats.testCount, 1);
-		t.is(runner.stats.todoCount, 1);
 	});
 });
 
 test('macros: Additional args will be spread as additional args on implementation function', t => {
-	t.plan(4);
+	t.plan(3);
 
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain.before(function (a) {
 			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 			a.pass();
@@ -579,14 +588,11 @@ test('macros: Additional args will be spread as additional args on implementatio
 			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
-	}).then(runner => {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.testCount, 1);
 	});
 });
 
 test('macros: Customize test names attaching a `title` function', t => {
-	t.plan(8);
+	t.plan(6);
 
 	const expectedTitles = [
 		'defaultA',
@@ -608,16 +614,15 @@ test('macros: Customize test names attaching a `title` function', t => {
 	macroFn.title = (title, firstArg) => (title || 'default') + firstArg;
 
 	return promiseEnd(new Runner(), runner => {
-		runner.on('test', props => {
-			t.is(props.title, expectedTitles.shift());
+		runner.on('stateChange', evt => {
+			if (evt.type === 'declared-test') {
+				t.is(evt.title, expectedTitles.shift());
+			}
 		});
 
 		runner.chain(macroFn, 'A');
 		runner.chain('supplied', macroFn, 'B');
 		runner.chain(macroFn, 'C');
-	}).then(runner => {
-		t.is(runner.stats.passCount, 3);
-		t.is(runner.stats.testCount, 3);
 	});
 });
 
@@ -646,7 +651,7 @@ test('macros: hook titles must be strings', t => {
 });
 
 test('match applies to macros', t => {
-	t.plan(3);
+	t.plan(1);
 
 	function macroFn(avaT) {
 		avaT.pass();
@@ -655,15 +660,14 @@ test('match applies to macros', t => {
 	macroFn.title = (title, firstArg) => `${firstArg}bar`;
 
 	return promiseEnd(new Runner({match: ['foobar']}), runner => {
-		runner.on('test', props => {
-			t.is(props.title, 'foobar');
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.is(evt.title, 'foobar');
+			}
 		});
 
 		runner.chain(macroFn, 'foo');
 		runner.chain(macroFn, 'bar');
-	}).then(runner => {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.testCount, 1);
 	});
 });
 
@@ -693,20 +697,24 @@ test('arrays of macros', t => {
 	macroFnB.title = prefix => `${prefix}.B`;
 
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('A', [macroFnA, macroFnB], 'A');
 		runner.chain('B', [macroFnA, macroFnB], 'B');
 		runner.chain('C', macroFnA, 'C');
 		runner.chain('D', macroFnB, 'D');
-	}).then(runner => {
-		t.is(runner.stats.passCount, 6);
-		t.is(runner.stats.testCount, 6);
+	}).then(() => {
 		t.is(expectedArgsA.length, 0);
 		t.is(expectedArgsB.length, 0);
 	});
 });
 
 test('match applies to arrays of macros', t => {
-	t.plan(3);
+	t.plan(1);
 
 	// Foo
 	function fooMacro(a) {
@@ -727,26 +735,29 @@ test('match applies to arrays of macros', t => {
 	bazMacro.title = (title, firstArg) => `${firstArg}baz`;
 
 	return promiseEnd(new Runner({match: ['foobar']}), runner => {
-		runner.on('test', props => {
-			t.is(props.title, 'foobar');
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.is(evt.title, 'foobar');
+			}
 		});
 
 		runner.chain([fooMacro, barMacro, bazMacro], 'foo');
 		runner.chain([fooMacro, barMacro, bazMacro], 'bar');
-	}).then(runner => {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.testCount, 1);
 	});
 });
 
 test('silently skips other tests when .only is used', t => {
+	t.plan(1);
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain('skip me', a => a.pass());
 		runner.chain.serial('skip me too', a => a.pass());
 		runner.chain.only('only me', a => a.pass());
-	}).then(runner => {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.skipCount, 0);
 	});
 });
 

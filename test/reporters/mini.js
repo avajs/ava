@@ -17,15 +17,15 @@ const run = type => t => {
 		columns: 200,
 		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO]
 	});
-	const reporter = Object.assign(new MiniReporter({color: true, watching: type === 'watch'}), {
-		stream: tty,
-		// Disable the spinner.
-		start() {
-			return '';
+	const reporter = new MiniReporter({
+		spinner: {
+			interval: 60 * 60 * 1000, // No need to update the spinner
+			color: false,
+			frames: ['*']
 		},
-		spinnerChar() {
-			return ' ';
-		}
+		reportStream: tty,
+		stdStream: tty,
+		watching: type === 'watch'
 	});
 	return report[type](reporter)
 		.then(() => {

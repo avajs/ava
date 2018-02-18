@@ -2,38 +2,12 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const path = require('path');
 const test = require('tap').test;
 const Runner = require('../lib/runner');
-const _fork = require('../lib/fork.js');
-const CachingPrecompiler = require('../lib/caching-precompiler');
-
-const cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
-const precompiler = new CachingPrecompiler({
-	babelCacheKeys: {},
-	getBabelOptions() {
-		return {
-			babelrc: false,
-			presets: [require.resolve('@ava/babel-preset-stage-4')]
-		};
-	},
-	path: cacheDir
-});
-
-function fork(testPath) {
-	const hash = precompiler.precompileFile(testPath);
-	const precompiled = {};
-	precompiled[testPath] = hash;
-
-	return _fork(testPath, {
-		cacheDir,
-		precompiled
-	});
-}
 
 const promiseEnd = (runner, next) => {
 	return new Promise(resolve => {
-		runner.on('start', data => resolve(data.ended));
+		resolve(runner.once('finish'));
 		next(runner);
 	}).then(() => runner);
 };
@@ -57,10 +31,16 @@ test('before', t => {
 });
 
 test('after', t => {
-	t.plan(3);
+	t.plan(2);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
 		runner.chain.after(() => {
 			arr.push('b');
 		});
@@ -69,18 +49,22 @@ test('after', t => {
 			a.pass();
 			arr.push('a');
 		});
-	}).then(runner => {
-		t.is(runner.stats.passCount, 1);
-		t.is(runner.stats.failCount, 0);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['a', 'b']);
 	});
 });
 
 test('after not run if test failed', t => {
-	t.plan(3);
+	t.plan(2);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed') {
+				t.pass();
+			}
+		});
+
 		runner.chain.after(() => {
 			arr.push('a');
 		});
@@ -88,18 +72,22 @@ test('after not run if test failed', t => {
 		runner.chain('test', () => {
 			throw new Error('something went wrong');
 		});
-	}).then(runner => {
-		t.is(runner.stats.passCount, 0);
-		t.is(runner.stats.failCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, []);
 	});
 });
 
 test('after.always run even if test failed', t => {
-	t.plan(3);
+	t.plan(2);
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed') {
+				t.pass();
+			}
+		});
+
 		runner.chain.after.always(() => {
 			arr.push('a');
 		});
@@ -107,9 +95,7 @@ test('after.always run even if test failed', t => {
 		runner.chain('test', () => {
 			throw new Error('something went wrong');
 		});
-	}).then(runner => {
-		t.is(runner.stats.passCount, 0);
-		t.is(runner.stats.failCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -218,6 +204,12 @@ test('fail if beforeEach hook fails', t => {
 
 	const arr = [];
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'hook-failed') {
+				t.pass();
+			}
+		});
+
 		runner.chain.beforeEach(a => {
 			arr.push('a');
 			a.fail();
@@ -227,8 +219,7 @@ test('fail if beforeEach hook fails', t => {
 			arr.push('b');
 			a.pass();
 		});
-	}).then(runner => {
-		t.is(runner.stats.failedHookCount, 1);
+	}).then(() => {
 		t.strictDeepEqual(arr, ['a']);
 	});
 });
@@ -411,9 +402,13 @@ test('ensure hooks run only around tests', t => {
 });
 
 test('shared context', t => {
-	t.plan(1);
-
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
+				t.fail();
+			}
+		});
+
 		runner.chain.before(a => {
 			a.deepEqual(a.context, {});
 			a.context.arr = ['a'];
@@ -446,15 +441,17 @@ test('shared context', t => {
 			a.is(a.context.prop, 'test');
 			a.context.prop = 'afterEach';
 		});
-	}).then(runner => {
-		t.is(runner.stats.failCount, 0);
 	});
 });
 
 test('shared context of any type', t => {
-	t.plan(1);
-
 	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
+				t.fail();
+			}
+		});
+
 		runner.chain.beforeEach(a => {
 			a.context = 'foo';
 		});
@@ -463,27 +460,5 @@ test('shared context of any type', t => {
 			a.pass();
 			a.is(a.context, 'foo');
 		});
-	}).then(runner => {
-		t.is(runner.stats.failCount, 0);
 	});
-});
-
-test('don\'t display hook title if it did not fail', t => {
-	t.plan(2);
-
-	return fork(path.join(__dirname, 'fixture/hooks-passing.js'))
-		.on('test', test => {
-			t.strictDeepEqual(test.error, null);
-			t.is(test.title, 'pass');
-		});
-});
-
-test('display hook title if it failed', t => {
-	t.plan(2);
-
-	return fork(path.join(__dirname, 'fixture/hooks-failing.js'))
-		.on('test', test => {
-			t.is(test.error.name, 'AssertionError');
-			t.is(test.title, 'beforeEach hook for pass');
-		});
 });

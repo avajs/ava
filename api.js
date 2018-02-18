@@ -1,5 +1,4 @@
 'use strict';
-const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -14,10 +13,11 @@ const arrify = require('arrify');
 const ms = require('ms');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
+const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
-const AvaError = require('./lib/ava-error');
 const AvaFiles = require('./lib/ava-files');
 const fork = require('./lib/fork');
+const serializeError = require('./lib/serialize-error');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -31,7 +31,7 @@ function resolveModules(modules) {
 	});
 }
 
-class Api extends EventEmitter {
+class Api extends Emittery {
 	constructor(options) {
 		super();
 
@@ -46,19 +46,12 @@ class Api extends EventEmitter {
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
 		let runStatus;
-
 		// Irrespectively, perform some setup now, before finding test files.
-		const handleError = exception => {
-			runStatus.handleExceptions({
-				exception,
-				file: exception.file ? path.relative(process.cwd(), exception.file) : undefined
-			});
-		};
 
 		// Track active forks and manage timeouts.
 		const failFast = apiOptions.failFast === true;
 		let bailed = false;
-		const pendingForks = new Set();
+		const pendingWorkers = new Set();
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
@@ -70,11 +63,11 @@ class Api extends EventEmitter {
 					bailed = true;
 				}
 
-				for (const fork of pendingForks) {
-					fork.exit();
+				for (const worker of pendingWorkers) {
+					worker.exit();
 				}
 
-				handleError(new AvaError(`Exited because no new tests completed within the last ${timeout}ms of inactivity`));
+				runStatus.emitStateChange({type: 'timeout', period: timeout});
 			}, timeout);
 		} else {
 			restartTimer = Object.assign(() => {}, {cancel() {}});
@@ -83,39 +76,45 @@ class Api extends EventEmitter {
 		// Find all test files.
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files}).findTestFiles()
 			.then(files => {
-				runStatus = new RunStatus({
-					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
-					prefixTitles: apiOptions.explicitTitles || files.length > 1,
-					base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-					failFast,
-					fileCount: files.length,
-					updateSnapshots: runtimeOptions.updateSnapshots
+				runStatus = new RunStatus(files.length);
+
+				const emittedRun = this.emit('run', {
+					clearLogOnNextRun: runtimeOptions.clearLogOnNextRun === true,
+					failFastEnabled: failFast,
+					filePathPrefix: commonPathPrefix(files),
+					files,
+					matching: apiOptions.match.length > 0,
+					previousFailures: runtimeOptions.previousFailures || 0,
+					runOnlyExclusive: runtimeOptions.runOnlyExclusive === true,
+					runVector: runtimeOptions.runVector || 0,
+					status: runStatus
 				});
-
-				runStatus.on('test', restartTimer);
-				if (failFast) {
-					// Prevent new test files from running once a test has failed.
-					runStatus.on('test', test => {
-						if (test.error) {
-							bailed = true;
-
-							for (const fork of pendingForks) {
-								fork.notifyOfPeerFailure();
-							}
-						}
-					});
-				}
-
-				this.emit('test-run', runStatus, files);
 
 				// Bail out early if no files were found.
 				if (files.length === 0) {
-					handleError(new AvaError('Couldn\'t find any files to test'));
-					return runStatus;
+					return emittedRun.then(() => {
+						return runStatus;
+					});
 				}
 
+				runStatus.on('stateChange', record => {
+					// Restart the timer whenever there is activity.
+					restartTimer();
+
+					if (failFast && (record.type === 'hook-failed' || record.type === 'test-failed' || record.type === 'worker-failed')) {
+						// Prevent new test files from running once a test has failed.
+						bailed = true;
+
+						// Try to stop currently scheduled tests.
+						for (const worker of pendingWorkers) {
+							worker.notifyOfPeerFailure();
+						}
+					}
+				});
+
 				// Set up a fresh precompiler for each test run.
-				return this._setupPrecompiler()
+				return emittedRun
+					.then(() => this._setupPrecompiler())
 					.then(precompilation => {
 						if (!precompilation) {
 							return null;
@@ -156,59 +155,44 @@ class Api extends EventEmitter {
 							// No new files should be run once a test has timed out or failed,
 							// and failFast is enabled.
 							if (bailed) {
-								return null;
+								return;
 							}
 
-							let forked;
-							return Bluebird.resolve(
-								this._computeForkExecArgv().then(execArgv => {
-									const options = Object.assign({}, apiOptions, {
-										// If we're looking for matches, run every single test process in exclusive-only mode
-										runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
-									});
-									if (precompilation) {
-										options.cacheDir = precompilation.cacheDir;
-										options.precompiled = precompilation.map;
-									} else {
-										options.precompiled = {};
-									}
-									if (runtimeOptions.updateSnapshots) {
-										// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
-										options.updateSnapshots = true;
-									}
+							return this._computeForkExecArgv().then(execArgv => {
+								const options = Object.assign({}, apiOptions, {
+									// If we're looking for matches, run every single test process in exclusive-only mode
+									runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
+								});
+								if (precompilation) {
+									options.cacheDir = precompilation.cacheDir;
+									options.precompiled = precompilation.map;
+								} else {
+									options.precompiled = {};
+								}
+								if (runtimeOptions.updateSnapshots) {
+									// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+									options.updateSnapshots = true;
+								}
 
-									forked = fork(file, options, execArgv);
-									pendingForks.add(forked);
-									runStatus.observeFork(forked);
-									restartTimer();
-									return forked;
-								}).catch(err => {
-									// Prevent new test files from running.
-									if (failFast) {
-										bailed = true;
-									}
-									handleError(Object.assign(err, {file}));
-									return null;
-								})
-							).finally(() => {
-								pendingForks.delete(forked);
+								const worker = fork(file, options, execArgv);
+								runStatus.observeWorker(worker, file);
+
+								pendingWorkers.add(worker);
+								worker.promise.then(() => { // eslint-disable-line max-nested-callbacks
+									pendingWorkers.delete(worker);
+								});
+
+								restartTimer();
+
+								return worker.promise;
 							});
 						}, {concurrency});
 					})
 					.catch(err => {
-						handleError(err);
-						return [];
+						runStatus.emitStateChange({type: 'internal-error', err: serializeError('Internal error', false, err)});
 					})
-					.then(results => {
+					.then(() => {
 						restartTimer.cancel();
-
-						// Filter out undefined results (e.g. for files that were skipped after a timeout)
-						results = results.filter(Boolean);
-						if (apiOptions.match.length > 0 && !runStatus.hasExclusive) {
-							handleError(new AvaError('Couldn\'t find any matching tests'));
-						}
-
-						runStatus.processResults(results);
 						return runStatus;
 					});
 			});

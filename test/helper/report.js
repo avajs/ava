@@ -5,7 +5,6 @@ const path = require('path');
 const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
-const Logger = require('../../lib/logger');
 
 let _Api = null;
 const createApi = options => {
@@ -86,7 +85,6 @@ const run = (type, reporter) => {
 		require: [],
 		cacheEnable: true,
 		compileEnhancements: true,
-		explicitTitles: type === 'watch',
 		match: [],
 		babelConfig: {testOptions: {}},
 		resolveTestsFrom: projectDir,
@@ -98,49 +96,24 @@ const run = (type, reporter) => {
 		color: true
 	});
 
-	reporter.api = api;
-	const logger = new Logger(reporter);
-	logger.start();
-
-	api.on('test-run', runStatus => {
-		reporter.api = runStatus;
-		runStatus.on('test', logger.test);
-		runStatus.on('error', logger.unhandledError);
-
-		runStatus.on('stdout', logger.stdout);
-		runStatus.on('stderr', logger.stderr);
-	});
+	api.on('run', plan => reporter.startRun(plan));
 
 	const files = globby.sync('*.js', {cwd: projectDir}).sort();
 	if (type !== 'watch') {
-		return api.run(files).then(runStatus => {
-			logger.finish(runStatus);
+		return api.run(files).then(() => {
+			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run(files).then(runStatus => {
-		logger.finish(runStatus);
-
-		// Don't clear
-		logger.reset();
-		logger.section();
-		logger.reset();
-		logger.start();
-
-		return api.run(files);
-	}).then(runStatus => {
-		runStatus.previousFailCount = 2;
-		logger.finish(runStatus);
-
-		// Clear
-		logger.clear();
-		logger.reset();
-		logger.start();
-
-		return api.run(files);
-	}).then(runStatus => {
-		logger.finish(runStatus);
+	return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}).then(() => {
+		reporter.endRun();
+		return api.run(files, {clearLogOnNextRun: true, previousFailures: 2, runVector: 2});
+	}).then(() => {
+		reporter.endRun();
+		return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 3});
+	}).then(() => {
+		reporter.endRun();
 	});
 };
 

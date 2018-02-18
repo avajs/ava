@@ -1,4 +1,5 @@
 'use strict';
+const os = require('os');
 const lolex = require('lolex');
 
 const fixColors = () => {
@@ -15,6 +16,9 @@ module.exports = () => {
 			'Date'
 		]
 	});
+
+	// Fix line endings.
+	Object.defineProperty(os, 'EOL', {value: '\n'});
 
 	fixColors();
 	require('../../lib/chalk').set({enabled: true, level: 3});
