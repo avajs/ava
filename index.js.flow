@@ -27,7 +27,6 @@ export interface Assertions {
 	fail(message?: string): void;
 	false(actual: any, message?: string): void;
 	falsy(actual: any, message?: string): void;
-	ifError(error: any, message?: string): void;
 	is(actual: any, expected: any, message?: string): void;
 	not(actual: any, expected: any, message?: string): void;
 	notDeepEqual(actual: any, expected: any, message?: string): void;
