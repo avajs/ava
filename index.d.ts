@@ -17,61 +17,86 @@ export interface SnapshotOptions {
 	id?: string;
 }
 
-// When an assert fail, the message string will be shown in the error
 export interface Assertions {
-	// Assert that actual is deep equal to expected
+	/** Assert that `actual` is deep equal to `expected` */
 	deepEqual<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
-	// Failing assertion
+
+	/** Cause the test to fail */
 	fail(message?: string): void;
-	// Assert that actual is equal to false
+
+	/** Assert that `actual` is equal to false */
 	false(actual: any, message?: string): void;
-	// Assert that actual is falsy (false, 0, '', "", null, undefined, NaN)
+
+	/** Assert that `actual` is falsy (false, 0, '', null, undefined, NaN) */
 	falsy(actual: any, message?: string): void;
-	// Assert that error is falsy
+
+	/** Assert that `error` is falsy */
 	ifError(error: any, message?: string): void;
-	// Assert that actual is equal to expected (use deepEqual for objects/arrays)
+
+	/** Assert that `actual` is strictly equal to `expected` */
 	is<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
-	// Assert that actual is not equal to expected (use notDeepEqual for objects/arrays)
+
+	/** Assert that `actual` is not strictly equal to `expected` */
 	not<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
-	// Assert that actual is not deep equal to expected
+
+	/** Assert that `actual` is not deep equal to `expected` */
 	notDeepEqual<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
-	// Assert that string does not follow the regex pattern
+
+	/** Assert that `string` does not match the regex pattern */
 	notRegex(string: string, regex: RegExp, message?: string): void;
-	// Assert that a function that never returns does not throw an error
+
+	/** Assert that a function does not throw */
 	notThrows(value: () => never, message?: string): void;
-	// Assert that a function that returns an observable does not throw an error
+
+	/** Assert that a function that returns an observable does not throw */
 	notThrows(value: () => ObservableLike, message?: string): Promise<void>;
-	// Assert that a function that returns a promise does not throw an error
+
+	/** Assert that a function that returns a promise throws an error */
 	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
-	// Assert that a function that returns any value does not throw an error
+
+	/** Assert that a function does not throw */
 	notThrows(value: () => any, message?: string): void;
-	// Assert that an observable does not throw an error
+
+	/** Assert that an observable does not throw */
 	notThrows(value: ObservableLike, message?: string): Promise<void>;
-	// Assert that a promise does not throw an error
+
+	/** Assert that a promise does not throw */
 	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
-	// Passing assertion
+
+	/** Passing assertion */
 	pass(message?: string): void;
-	// Assert that string follows the regex pattern
+
+	/** Assert that string match the regex pattern */
 	regex(string: string, regex: RegExp, message?: string): void;
-	// Assert that expected matches a snapshot
+
+	/** Assert that expected matches a snapshot */
 	snapshot(expected: any, message?: string): void;
-	// Assert that expected matches a snapshot with option `id`
+
+	/** Assert that expected matches a snapshot with option `id` */
 	snapshot(expected: any, options: SnapshotOptions, message?: string): void;
-	// Assert that a function that never returns throws an error
+
+	/** Assert that a function that returns any value throws an error */
 	throws(value: () => never, error?: ThrowsErrorValidator, message?: string): any;
-	// Assert that a function that returns an observable throws an error
+
+	/** Assert that a function that returns an observable throws an error */
 	throws(value: () => ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
-	// Assert that a function that returns a promise throws an error
+
+	/** Assert that a function that returns a promise throws an error */
 	throws(value: () => PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
-	// Assert that a function that returns any value throws an error
+
+	/** Assert that a function that returns any value throws an error */
 	throws(value: () => any, error?: ThrowsErrorValidator, message?: string): any;
-	// Assert that an observable throws an error
+
+	/** Assert that an observable throws an error */
 	throws(value: ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
-	// Assert that a promise throws an error
+
+	/** Assert that a promise throws an error */
 	throws(value: PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
-	// Assert that actual is equal to true
+
+	/** Assert that actual is equal to true */
 	true(actual: any, message?: string): void;
-	// Assert that actual is truthy ('0', 'false', [], {}, function() {}, etc.)
+
+	/** Assert that actual is truthy ('0', 'false', [], {}, function() {}, etc.) */
 	truthy(actual: any, message?: string): void;
 }
 
@@ -106,25 +131,34 @@ export interface TestInterface<Context = {}> {
 	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
 
-	// Test hook that runs after all tests are done
+	/** Specify a hook that run once all test have completed */
 	after: AfterInterface<Context>;
-	// Test hook that runs after each test is done
+
+	/** Specify a hook that run after each test */
 	afterEach: AfterInterface<Context>;
-	// Test hook that runs before all test starts
+
+	/** Specify a hook that run before all test runs */
 	before: BeforeInterface<Context>;
-	// Test hook that runs before each test starts
+
+	/** Specify a hook that run before each test */
 	beforeEach: BeforeInterface<Context>;
-	// Test modifier that enables callback support
+
+	/** Specify a hook/test that support callbacks */
 	cb: CbInterface<Context>;
-	// Test modifier to forcely fails a test
+
+	/** Specify a test that fails */
 	failing: FailingInterface<Context>;
-	// Test modifier to run this test only
+
+	/** Specify a test that run only this test */
 	only: OnlyInterface<Context>;
-	// Test modifier to run test with serial tag first serially
+
+	/** Specify a test/hook that run serially */
 	serial: SerialInterface<Context>;
-	// Test modifier to skip tagged tests
+
+	/** Specify a test/hook that will be skipped */
 	skip: SkipInterface<Context>;
-	// Test modifier for todo tests
+
+	/** TODO tests/hooks */
 	todo: TodoDeclaration;
 }
 
