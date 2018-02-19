@@ -411,7 +411,7 @@ test('fails with thrown non-error object', t => {
 
 test('skipped assertions count towards the plan', t => {
 	const instance = ava(a => {
-		a.plan(16);
+		a.plan(15);
 		a.pass.skip();
 		a.fail.skip();
 		a.is.skip(1, 1);
@@ -422,7 +422,6 @@ test('skipped assertions count towards the plan', t => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		a.notThrows.skip(() => {});
-		a.ifError.skip(null);
 		a.snapshot.skip({});
 		a.truthy.skip(true);
 		a.falsy.skip(false);
@@ -433,14 +432,14 @@ test('skipped assertions count towards the plan', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 16);
-		t.is(instance.assertCount, 16);
+		t.is(instance.planCount, 15);
+		t.is(instance.assertCount, 15);
 	});
 });
 
 test('assertion.skip() is bound', t => {
 	const instance = ava(a => {
-		a.plan(16);
+		a.plan(15);
 		(a.pass.skip)();
 		(a.fail.skip)();
 		(a.is.skip)(1, 1);
@@ -451,7 +450,6 @@ test('assertion.skip() is bound', t => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		(a.notThrows.skip)(() => {});
-		(a.ifError.skip)(null);
 		(a.snapshot.skip)({});
 		(a.truthy.skip)(true);
 		(a.falsy.skip)(false);
@@ -462,8 +460,8 @@ test('assertion.skip() is bound', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 16);
-		t.is(instance.assertCount, 16);
+		t.is(instance.planCount, 15);
+		t.is(instance.assertCount, 15);
 	});
 });
 
@@ -699,7 +697,7 @@ test('log from tests', t => {
 test('assertions are bound', t => {
 	// This does not test .fail() and .snapshot(). It'll suffice.
 	return ava(a => {
-		(a.plan)(14);
+		(a.plan)(13);
 		(a.pass)();
 		(a.is)(1, 1);
 		(a.not)(1, 2);
@@ -709,7 +707,6 @@ test('assertions are bound', t => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
 		(a.notThrows)(() => {});
-		(a.ifError)(null);
 		(a.truthy)(true);
 		(a.falsy)(false);
 		(a.true)(true);

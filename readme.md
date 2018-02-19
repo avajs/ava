@@ -990,10 +990,6 @@ Assert that `contents` matches `regex`.
 
 Assert that `contents` does not match `regex`.
 
-### `.ifError(error, [message])`
-
-Assert that `error` is falsy.
-
 ### `.snapshot(expected, [message])`
 ### `.snapshot(expected, [options], [message])`
 
