@@ -30,9 +30,6 @@ export interface Assertions {
 	/** Assert that `actual` is falsy (false, 0, '', null, undefined, NaN) */
 	falsy(actual: any, message?: string): void;
 
-	/** Assert that `error` is falsy */
-	ifError(error: any, message?: string): void;
-
 	/** Assert that `actual` is strictly equal to `expected` */
 	is<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
 

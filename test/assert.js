@@ -1123,18 +1123,6 @@ test('.notThrows() fails if passed a bad value', t => {
 	t.end();
 });
 
-test('.ifError()', t => {
-	fails(t, () => {
-		assertions.ifError(new Error());
-	});
-
-	passes(t, () => {
-		assertions.ifError(null);
-	});
-
-	t.end();
-});
-
 test('.snapshot()', t => {
 	// Set to `true` to update the snapshot, then run:
 	// "$(npm bin)"/tap --no-cov -R spec test/assert.js
