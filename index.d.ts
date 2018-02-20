@@ -27,7 +27,7 @@ export interface Assertions {
 	/** Assert that `actual` is equal to false */
 	false(actual: any, message?: string): void;
 
-	/** Assert that `actual` is falsy (false, 0, '', null, undefined, NaN) */
+	/** Assert that `actual` is falsy `(false, 0, '', null, undefined, NaN)` */
 	falsy(actual: any, message?: string): void;
 
 	/** Assert that `actual` is strictly equal to `expected` */
@@ -42,58 +42,58 @@ export interface Assertions {
 	/** Assert that `string` does not match the regex pattern */
 	notRegex(string: string, regex: RegExp, message?: string): void;
 
-	/** Assert that a function does not throw */
+	/** Assert that a `function` does not throw */
 	notThrows(value: () => never, message?: string): void;
 
-	/** Assert that a function that returns an observable does not throw */
+	/** Assert that a `function that returns an observable` does not throw */
 	notThrows(value: () => ObservableLike, message?: string): Promise<void>;
 
-	/** Assert that a function that returns a promise throws an error */
+	/** Assert that a `function that returns a promise` throws an error */
 	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
 
-	/** Assert that a function does not throw */
+	/** Assert that a `function` does not throw */
 	notThrows(value: () => any, message?: string): void;
 
-	/** Assert that an observable does not throw */
+	/** Assert that an `observable` does not throw */
 	notThrows(value: ObservableLike, message?: string): Promise<void>;
 
-	/** Assert that a promise does not throw */
+	/** Assert that a `promise` does not throw */
 	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
 
 	/** Passing assertion */
 	pass(message?: string): void;
 
-	/** Assert that string match the regex pattern */
+	/** Assert that `string` match the regex pattern */
 	regex(string: string, regex: RegExp, message?: string): void;
 
-	/** Assert that expected matches a snapshot */
+	/** Assert that `expected` matches a snapshot */
 	snapshot(expected: any, message?: string): void;
 
-	/** Assert that expected matches a snapshot with option `id` */
+	/** Assert that `expected `matches a snapshot with option `id` */
 	snapshot(expected: any, options: SnapshotOptions, message?: string): void;
 
-	/** Assert that a function that returns any value throws an error */
+	/** Assert that a `function` throws an error */
 	throws(value: () => never, error?: ThrowsErrorValidator, message?: string): any;
 
-	/** Assert that a function that returns an observable throws an error */
+	/** Assert that a f`unction that returns an observable` throws an error */
 	throws(value: () => ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a function that returns a promise throws an error */
+	/** Assert that a `function that returns a promise` throws an error */
 	throws(value: () => PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a function that returns any value throws an error */
+	/** Assert that a `function` throws an error */
 	throws(value: () => any, error?: ThrowsErrorValidator, message?: string): any;
 
-	/** Assert that an observable throws an error */
+	/** Assert that an `observable` throws an error */
 	throws(value: ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a promise throws an error */
+	/** Assert that a `promise` throws an error */
 	throws(value: PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that actual is equal to true */
+	/** Assert that `actual` is equal to `true` */
 	true(actual: any, message?: string): void;
 
-	/** Assert that actual is truthy ('0', 'false', [], {}, function() {}, etc.) */
+	/** Assert that `actual` is truthy `('0', 'false', [], {}, function() {}, etc.)` */
 	truthy(actual: any, message?: string): void;
 }
 
