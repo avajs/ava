@@ -117,7 +117,13 @@ Alternatively using Yarn:
 $ yarn add --dev ava@next
 ```
 
-You'll have to configure the `test` script in your `package.json` to use `ava` (see above).
+If you're running at least npm@5.2.0, you can run ava setup with:
+
+```console
+$ npx ava --init
+```
+
+Otherwise, you'll have to configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
