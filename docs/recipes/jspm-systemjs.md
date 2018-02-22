@@ -1,6 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
 
 # JSPM and SystemJS for ES2015
 
@@ -14,11 +11,15 @@ This recipe has only been tested with JSPM v0.17.0-beta.22, but it should work w
 
 ### Babel
 
-Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building.
+Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building. As of babel 7 [preset-env](https://babeljs.io/docs/plugins/preset-env/) will transform code as babel-preset-esXXXX did previously.
+
+```
+npm install babel-preset-env --save-dev
+```
 
 ```json
 {
-	"presets": ["es2015", "stage-2"]
+	"presets": ["env"]
 }
 ```
 
