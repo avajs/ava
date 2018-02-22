@@ -7,10 +7,5 @@ const importLocal = require('import-local');
 if (importLocal(__filename)) {
 	debug('Using local install of AVA');
 } else {
-	try {
-		require('./lib/cli').run();
-	} catch (err) {
-		console.error(`\n  ${err.message}`);
-		process.exit(1);
-	}
+	require('./lib/cli').run();
 }
