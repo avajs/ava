@@ -50,7 +50,7 @@ You will also need to update your AVA config in package.json to use the JSPM loa
 }
 ```
 
-NOTE: If you use async/await in your source code (not in your test code), you will need to install `babel-polyfill` from npm and add it to your `require` array.
+NOTE: If you use async/await in your source code (not in your test code), you will need to install [@babel/polyfill](https://www.npmjs.com/package/@babel/polyfill) and add it to your `require` array.
 
 ### Example test file
 
