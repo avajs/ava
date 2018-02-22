@@ -28,18 +28,22 @@ You can find more information about setting up Babel with AVA in the [babelrc re
 ### JSPM Loader Helper
 
 You will need to install the [AVA JSPM loader](https://github.com/skorlir/ava-jspm-loader) as a dev dependency.
+Per Babel 7 you will also need to install [@babel/register](https://www.npmjs.com/package/@babel/register).
 
 ```
 $ npm install --save-dev ava-jspm-loader
 ```
 
+```
+npm install @babel/register --save-dev
+```
 You will also need to update your AVA config in package.json to use the JSPM loader.
 
 ```json
 {
 	"ava": {
 		"require": [
-			"babel-register",
+			"@babel/register",
 			"ava-jspm-loader"
 		]
 	}
