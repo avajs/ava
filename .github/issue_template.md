@@ -5,7 +5,7 @@
 - We realize there is a lot of data requested here. We ask only that you do your best to provide as much information as possible so we can better help you.
 - Read the [contributing guidelines](https://github.com/avajs/ava/blob/master/contributing.md).
 - Support questions are better asked in one of the following locations:
-	- [Our chat](https://gitter.im/avajs/ava)
+	- [Our chat](https://spectrum.chat/ava)
 	- [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
 - Ensure the issue isn't already reported.
 - Should be reproducible with the latest AVA version.
