@@ -72,19 +72,18 @@ test('arrays are equal', t => {
 
 ### Add AVA to your project
 
-Install AVA globally and run it with `--init` to add AVA to your `package.json`.
-
+Install AVA and run it with --init to add AVA to your package.json:
 
 ```console
-$ npm install --global ava@next
-$ ava --init
+$ npm install ava@next --save-dev
+$ npx ava --init
 ```
 
 If you prefer using Yarn:
 
 ```console
-$ yarn global add ava@next
-$ ava --init
+$ yarn add --dev ava@next
+$ yarn run ava --init
 ```
 
 Your `package.json` will then look like this:
@@ -101,29 +100,8 @@ Your `package.json` will then look like this:
 }
 ```
 
-Any arguments passed after `--init` are added as config to `package.json`.
-
-#### Manual installation
-
-You can also install AVA directly:
-
-```console
-$ npm install --save-dev ava@next
-```
-
-Alternatively using Yarn:
-
-```console
-$ yarn add --dev ava@next
-```
-
-If you're running at least npm@5.2.0, you can run ava setup with:
-
-```console
-$ npx ava --init
-```
-
-Otherwise, you'll have to configure the `test` script in your `package.json` to use `ava` (see above).
+NOTE: Running `npx` requires `npm` version `0.5.2` or greater. Otherwise, you'll have to 
+configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
