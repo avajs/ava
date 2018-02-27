@@ -72,14 +72,14 @@ test('arrays are equal', t => {
 
 ### Add AVA to your project
 
-Install AVA and run it with --init to add AVA to your package.json:
+Install AVA and run it with `--init` to add AVA to your `package.json`:
 
 ```console
 $ npm install ava@next --save-dev
 $ npx ava --init
 ```
 
-If you prefer using Yarn:
+If you prefer using `yarn`:
 
 ```console
 $ yarn add --dev ava@next
