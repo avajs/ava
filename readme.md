@@ -100,7 +100,7 @@ Your `package.json` will then look like this:
 }
 ```
 
-NOTE: Running `npx` requires [`npm` version `5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater. Otherwise, you'll have to manually configure the `test` script in your `package.json` to use `ava` (see above).
+NOTE: Running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater. Otherwise, you'll have to manually configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
