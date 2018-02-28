@@ -79,7 +79,7 @@ $ npm install ava@next --save-dev
 $ npx ava --init
 ```
 
-If you prefer using `yarn`:
+If you prefer using [Yarn](https://yarnpkg.com/en/):
 
 ```console
 $ yarn add --dev ava@next
@@ -95,12 +95,12 @@ Your `package.json` will then look like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^1.0.0-beta.1"
+		"ava": "^1.0.0-beta.3"
 	}
 }
 ```
 
-NOTE: Running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater. Otherwise, you'll have to manually configure the `test` script in your `package.json` to use `ava` (see above).
+Running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater. Otherwise, you'll have to manually configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
