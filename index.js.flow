@@ -9,102 +9,153 @@ export interface ObservableLike {
 
 export type Constructor = Class<{constructor(...args: Array<any>): any}>;
 
+/** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation = {
+	/** The thrown error must be an instance of this constructor. */
 	instanceOf?: Constructor;
+
+	/** The thrown error must be strictly equal to this value. */
 	is?: Error;
+
+	/** The thrown error must have an error that equals the given string, or matches the regular expression. */
 	message?: string | RegExp;
+
+	/** The thrown error must have a name that equals the given string. */
 	name?: string;
 };
 
 export type ThrowsErrorValidator = Constructor | RegExp | string | ThrowsExpectation;
 
+/** Options that can be passed to the `t.snapshot()` assertion. */
 export interface SnapshotOptions {
+	/** If provided and not an empty string, used to select the snapshot to compare the `expected` value against. */
 	id?: string;
 }
 
 export interface Assertions {
-	/** Assert that `actual` is deep equal to `expected` */
+	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual(actual: any, expected: any, message?: string): void;
 
-	/** Cause the test to fail */
+	/** Fail the test. */
 	fail(message?: string): void;
 
-	/** Assert that `actual` is equal to false */
+	/** Assert that `actual` is strictly false. */
 	false(actual: any, message?: string): void;
 
-	/** Assert that `actual` is falsy `(false, 0, '', null, undefined, NaN)` */
+	/** Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy). */
 	falsy(actual: any, message?: string): void;
 
-	/** Assert that `actual` is strictly equal to `expected` */
+	/**
+	 * Assert that `actual` is [the same
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 */
 	is(actual: any, expected: any, message?: string): void;
 
-	/** Assert that `actual` is not strictly equal to `expected` */
+	/**
+	 * Assert that `actual` is not [the same
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 */
 	not(actual: any, expected: any, message?: string): void;
 
-	/** Assert that `actual` is not deep equal to `expected` */
+	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	notDeepEqual(actual: any, expected: any, message?: string): void;
 
-	/** Assert that `string` does not match the regex pattern */
+	/** Assert that `string` does not match the regular expression. */
 	notRegex(string: string, regex: RegExp, message?: string): void;
 
-	/** Assert that a `function that returns an observable` does not throw */
+	/** Assert that the function returns an observable that does not error. You must await the result. */
 	notThrows(value: () => ObservableLike, message?: string): Promise<void>;
 
-	/** Assert that a `function that returns a promise` does not throw */
+	/** Assert that the function returns a promise that does not reject. You must await the result. */
 	notThrows(value: () => PromiseLike<any>, message?: string): Promise<void>;
 
-	/** Assert that a `function `does not throw */
+	/** Assert that the function does not throw. */
 	notThrows(value: () => any, message?: string): void;
 
-	/** Assert that an `observable` does not throw */
+	/** Assert that the observable does not error. You must await the result. */
 	notThrows(value: ObservableLike, message?: string): Promise<void>;
 
-	/** Assert that a `promise` does not throw */
+	/** Assert that the promise does not reject. You must await the result. */
 	notThrows(value: PromiseLike<any>, message?: string): Promise<void>;
 
-	/** Passing assertion */
+	/** Count a passing assertion. */
 	pass(message?: string): void;
 
-	/** Assert that `string` match the regex pattern */
+	/** Assert that `string` matches the regular expression. */
 	regex(string: string, regex: RegExp, message?: string): void;
 
-	/** Assert that `expected` matches a snapshot */
+	/**
+	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
+	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details), or if
+	 * necessary record a new snapshot.
+	 */
 	snapshot(expected: any, message?: string): void;
 
-	/** Assert that `expected` matches a snapshot with option `id` */
+	/**
+	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
+	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details) (selected
+	 * through `options.id` if provided), or if necessary record a new snapshot.
+	 */
 	snapshot(expected: any, options: SnapshotOptions, message?: string): void;
 
-	/** Assert that a `function that returns an observable` throws an error */
+	/**
+	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
+	 * If so, returns the error value. You must await the result.
+	 */
 	throws(value: () => ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a `function that returns a promise` throws an error */
+	/**
+	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
+	 * If so, returns the rejection reason. You must await the result.
+	 */
 	throws(value: () => PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a `function` throws an error */
+	/**
+	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
+	 * The error must be an instance of the given constructor.
+	 */
 	throws(value: () => any, error?: ThrowsErrorValidator, message?: string): any;
 
-	/** Assert that an `observable` throws an error */
+	/**
+	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result. The error must be an instance of the given constructor.
+	 */
 	throws(value: ObservableLike, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that a `promise` throws an error */
+	/**
+	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
+	 * rejection reason. You must await the result. The error must be an instance of the given constructor.
+	 */
 	throws(value: PromiseLike<any>, error?: ThrowsErrorValidator, message?: string): Promise<any>;
 
-	/** Assert that `actual` is equal to true */
+	/** Assert that `actual` is strictly true. */
 	true(actual: any, message?: string): void;
 
-	/** Assert that `actual` is truthy `('0', 'false', [], {}, function() {}, etc.)` */
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
 	truthy(actual: any, message?: string): void;
 }
 
+/** The `t` value passed to test & hook implementations. */
 export interface ExecutionContext<Context = {}> extends Assertions {
+	/** Test context, shared with hooks. */
 	context: Context;
+
 	skip: Assertions;
+
+	/** Title of the test or hook. */
 	title: string;
+
 	log(...values: Array<any>): void;
+
 	plan(count: number): void;
 }
 
+/** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
 export interface CbExecutionContext<Context = {}> extends ExecutionContext<Context> {
+	/**
+	 * End the test. If `error` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) the test or hook
+	 * will fail.
+	 */
 	end(): void;
 }
 
