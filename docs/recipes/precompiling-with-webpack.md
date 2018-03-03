@@ -1,6 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
 
 ## Precompiling source files with webpack
 
