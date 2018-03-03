@@ -1,6 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
 
 # Testing React components
 
@@ -22,7 +19,7 @@ The first step is setting up Babel to transpile JSX code from the tests by addin
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
+You can find more information about setting up Babel with AVA in the [babelrc recipe](babel.md).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
