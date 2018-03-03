@@ -32,6 +32,7 @@ module.exports = {
 				test: /\.(js|jsx)$/,
 				use: 'babel-loader',
 				options: {
+          presets: ['env'],
 					cacheDirectory: true
 				}
 			}
@@ -46,7 +47,7 @@ You can now run `$ ava _build/test.js` to run the tests contained in this output
 
 ### Multiple test files
 
-Things are a little more complicated with multiple test files. We recommend [using babel-register](babelrc.md) until the performance penalty becomes too great.
+Things are a little more complicated with multiple test files. We recommend [using babel-register](babel.md) until the performance penalty becomes too great.
 
 The possible approaches are:
 
