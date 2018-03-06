@@ -25,10 +25,10 @@ export type ThrowsExpectation = {
 };
 
 /** Options that can be passed to the `t.snapshot()` assertion. */
-export interface SnapshotOptions {
+export type SnapshotOptions = {
 	/** If provided and not an empty string, used to select the snapshot to compare the `expected` value against. */
 	id?: string;
-}
+};
 
 export interface Assertions {
 	deepEqual: DeepEqualAssertion;
