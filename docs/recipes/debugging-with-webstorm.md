@@ -19,7 +19,7 @@ Save the configuration.
 
 ## Setup using npm
 
-Execute `ava --init` in your project directory to add AVA to your `package.json`.
+Execute `npx ava-init` in your project directory to add AVA to your `package.json`.
 
 Your `package.json` will look something like this:
 
@@ -46,7 +46,7 @@ Your IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` 
 
 In the `Node parameters`, for Node.js 7+ pass `--inspect-brk` or `--debug-brk` for earlier versions.
 
-Don't forget to select a Node.js interpreter. 
+Don't forget to select a Node.js interpreter.
 
 Save the configuration.
 
