@@ -11,10 +11,10 @@ This recipe has only been tested with JSPM v0.17.0-beta.22, but it should work w
 
 ### Babel
 
-Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building. As of babel 7 [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env) will transform code as babel-preset-esXXXX did previously.
+Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building.
 
 ```
-$ npm install --save-dev @babel/preset-env 
+$ npm install --save-dev @babel/preset-env
 ```
 
 ```json
@@ -35,7 +35,7 @@ $ npm install --save-dev ava-jspm-loader
 ```
 
 ```
-$ npm install --save-dev @babel/register 
+$ npm install --save-dev @babel/register
 ```
 You will also need to update your AVA config in package.json to use the JSPM loader.
 
