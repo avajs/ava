@@ -7,10 +7,6 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 The first step is setting up Babel to transpile JSX code from the tests by adding an AVA section to your package.json:
 
-```console
-$ npm install --save-dev @babel/preset-react
-```
-
 ```json
 {
 	"ava": {
@@ -23,7 +19,7 @@ $ npm install --save-dev @babel/preset-react
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babel.md).
+You can find more information about setting up Babel with AVA in the [babel recipe](babel.md).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
