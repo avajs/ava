@@ -30,7 +30,6 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
 				use: 'babel-loader',
 				options: {
           presets: ['env'],
@@ -48,7 +47,7 @@ You can now run `$ ava _build/test.js` to run the tests contained in this output
 
 ### Multiple test files
 
-Things are a little more complicated with multiple test files. We recommend [using babel-register](babel.md) until the performance penalty becomes too great.
+Things are a little more complicated with multiple test files. We recommend [using @babel/register](babel.md##compile-sources) until the performance penalty becomes too great.
 
 The possible approaches are:
 
@@ -93,7 +92,6 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
 				use: {
 					loader: 'babel-loader',
 					options: {
@@ -181,7 +179,6 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
 				use: {
 					loader: 'babel-loader',
 					options: {
