@@ -83,7 +83,7 @@ By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This 
 }
 ```
 
-You'll have to use [`@std/esm`](https://github.com/standard-things/esm) so that AVA can still load your test files. [See our recipe for details](./es-modules.md).
+You'll have to use the [`esm`](https://github.com/standard-things/esm) module so that AVA can still load your test files. [See our recipe for details](./es-modules.md).
 
 ## Disable AVA's Babel pipeline
 

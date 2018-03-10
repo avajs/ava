@@ -1,10 +1,14 @@
 'use strict';
 const path = require('path');
-const test = require('tap').test;
+const tap = require('tap');
 const _fork = require('../lib/fork.js');
 const CachingPrecompiler = require('../lib/caching-precompiler');
 
+const skip = tap.skip;
+const test = tap.test;
+
 const cacheDir = path.join(__dirname, '../node_modules/.cache/ava');
+const isNode4 = /\d+/.exec(process.version)[0] === '4';
 const precompiler = new CachingPrecompiler({
 	babelCacheKeys: {},
 	getBabelOptions() {
@@ -118,9 +122,10 @@ test('babelrc is ignored', t => {
 		});
 });
 
-test('@std/esm support', t => {
-	return fork(fixture('std-esm/test.js'), {
-		require: [require.resolve('@std/esm')]
+(isNode4 ? skip : test)(
+'`esm` package support', t => {
+	return fork(fixture('esm-pkg/test.js'), {
+		require: [require.resolve('esm')]
 	})
 		.then(info => {
 			t.is(info.stats.passCount, 1);
