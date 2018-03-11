@@ -1,7 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
-
 ## Precompiling source files with webpack
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/precompiling-with-webpack.md)
@@ -45,11 +41,11 @@ module.exports = {
 
 The important bits are `target: 'node'`, which ignores Node.js-specific `require`s (e.g. `fs`, `path`, etc.) and `externals: nodeModules` which prevents webpack from trying to bundle external Node.js modules which it may choke on.
 
-You can now run `$ ava _build/test.js` to run the tests contained in this output.
+You can now run `$ npx ava _build/test.js` to run the tests contained in this output.
 
 ### Multiple test files
 
-Things are a little more complicated with multiple test files. We recommend [using babel-register](babelrc.md) until the performance penalty becomes too great.
+Things are a little more complicated with multiple test files. We recommend [using `@babel/register`](babel.md##compile-sources) until the performance penalty becomes too great.
 
 The possible approaches are:
 
