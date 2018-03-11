@@ -1,28 +1,26 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
-
 # Testing React components
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/react.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/react.md)
 
 ## Setting up Babel
 
-The first step is setting up Babel to transpile JSX code from the tests by adding an AVA section to your package.json:
+AVA automatically extends your regular (project-level) Babel configuration. You should be able to use React in your test files without any additional configuration.
+
+However if you want to set it up explicitly, add the preset to the test options in AVA's Babel pipeline by modifying your `package.json`:
 
 ```json
 {
 	"ava": {
-		"require": ["babel-register"],
-		"babel": "inherit"
-	},
-	"babel": {
-		"presets": ["react"]
+		"babel": {
+			"testOptions": {
+				"presets": ["@babel/preset-react"]
+			}
+		}
 	}
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
+You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
