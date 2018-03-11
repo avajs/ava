@@ -19,7 +19,7 @@ Save the configuration.
 
 ## Setup using npm
 
-Execute `npx ava-init` in your project directory to add AVA to your `package.json`.
+Execute `npx @ava/init` in your project directory to add AVA to your `package.json`.
 
 Your `package.json` will look something like this:
 

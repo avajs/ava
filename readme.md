@@ -75,7 +75,7 @@ test('arrays are equal', t => {
 To install and set up AVA, run:
 
 ```console
-$ npx ava-init
+$ npx @ava/init --next
 ```
 
 Your `package.json` will then look like this:
