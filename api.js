@@ -52,6 +52,7 @@ class Api extends Emittery {
 		const failFast = apiOptions.failFast === true;
 		let bailed = false;
 		const pendingWorkers = new Set();
+		const timedOutWorkerFiles = new Set();
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
@@ -64,6 +65,7 @@ class Api extends Emittery {
 				}
 
 				for (const worker of pendingWorkers) {
+					timedOutWorkerFiles.add(worker.file);
 					worker.exit();
 				}
 
@@ -98,8 +100,11 @@ class Api extends Emittery {
 				}
 
 				runStatus.on('stateChange', record => {
-					// Restart the timer whenever there is activity.
-					restartTimer();
+					if (record.testFile && !timedOutWorkerFiles.has(record.testFile)) {
+						// Restart the timer whenever there is activity from workers that
+						// haven't already timed out.
+						restartTimer();
+					}
 
 					if (failFast && (record.type === 'hook-failed' || record.type === 'test-failed' || record.type === 'worker-failed')) {
 						// Prevent new test files from running once a test has failed.

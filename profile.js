@@ -110,6 +110,7 @@ babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf
 
 		const runStatus = new RunStatus([file]);
 		runStatus.observeWorker({
+			file,
 			onStateChange(listener) {
 				const emit = evt => listener(Object.assign(evt, {testFile: file}));
 				process.send = data => {
