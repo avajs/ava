@@ -75,7 +75,6 @@
 		"array-uniq": "^1.0.2",
 		"arrify": "^1.0.0",
 		"auto-bind": "^1.2.0",
-		"ava-init": "^0.2.1",
 		"bluebird": "^3.5.1",
 		"caching-transform": "^1.0.0",
 		"chalk": "^2.3.1",
@@ -141,6 +140,7 @@
 		"update-notifier": "^2.3.0"
 	},
 	"devDependencies": {
+		"@ava/init": "^1.0.0",
 		"cli-table2": "^0.2.0",
 		"codecov": "^3.0.0",
 		"del": "^3.0.0",
