@@ -2,6 +2,7 @@
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const Promise = require('bluebird');
 const arrify = require('arrify');
 const makeDir = require('make-dir');
 const branch = require('git-branch').sync(path.join(__dirname, '..'));
