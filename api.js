@@ -43,6 +43,12 @@ class Api extends EventEmitter {
 		const apiOptions = this.options;
 		runtimeOptions = runtimeOptions || {};
 
+		const doNotCompileExtensions = apiOptions.extensions || [];
+		const babelExtensions = apiOptions.babelConfig.extensions || [];
+
+		// Combine all extensions possible for testing.
+		const allExts = [...doNotCompileExtensions, ...babelExtensions];
+
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
 		let runStatus;
@@ -81,7 +87,7 @@ class Api extends EventEmitter {
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: allExts}).findTestFiles()
 			.then(files => {
 				runStatus = new RunStatus({
 					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
@@ -125,21 +131,22 @@ class Api extends EventEmitter {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom}).findTestHelpers().then(helpers => {
-							return {
-								cacheDir: precompilation.cacheDir,
-								map: files.concat(helpers).reduce((acc, file) => {
-									try {
-										const realpath = fs.realpathSync(file);
-										const hash = precompilation.precompiler.precompileFile(realpath);
-										acc[realpath] = hash;
-									} catch (err) {
-										throw Object.assign(err, {file});
-									}
-									return acc;
-								}, {})
-							};
-						});
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: allExts})
+							.findTestHelpers().then(helpers => {
+								return {
+									cacheDir: precompilation.cacheDir,
+									map: files.concat(helpers).reduce((acc, file) => {
+										try {
+											const realpath = fs.realpathSync(file);
+											const hash = precompilation.precompiler.precompileFile(realpath, doNotCompileExtensions);
+											acc[realpath] = hash;
+										} catch (err) {
+											throw Object.assign(err, {file});
+										}
+										return acc;
+									}, {})
+								};
+							});
 					})
 					.then(precompilation => {
 						// Resolve the correct concurrency value.
