@@ -92,7 +92,17 @@ Your `package.json` will then look like this:
 }
 ```
 
-Initialization will work with npm and Yarn, but running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater to be installed. Otherwise, you'll have to manually install `ava` (`npm i -D ava`) and configure the `test` script in your `package.json` (see above).
+Initialization will work with npm and Yarn, but running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater to be installed. Otherwise, you'll have to manually install `ava` and configure the `test` script in your `package.json` as per above:
+
+```console
+$ npm install --save-dev ava@next
+```
+
+Or if you prefer using Yarn:
+
+```console
+$ yarn add --dev ava@next
+```
 
 ### Create your test file
 
