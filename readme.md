@@ -235,7 +235,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## Configuration
 
-All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt. To ignore a file or group of files, prefix an ! to your pattern.
+All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt. To ignore a file or directory of files, prefix an ! to your pattern.
 
 ```json
 {
