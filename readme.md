@@ -235,14 +235,14 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## Configuration
 
-All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
+All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt. Any patterns prefixed with an ! are ignore patterns.  
 
 ```json
 {
 	"ava": {
 		"files": [
 			"my-test-folder/*.js",
-			"!**/not-this-file.js"
+			"!**/exclude-this-file.js"
 		],
 		"source": [
 			"**/*.{js,jsx}",
