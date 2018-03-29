@@ -130,7 +130,7 @@ test('findFiles - honors cwd option', t => {
 	});
 });
 
-test('findFiles - finds the correct files by default', t => {
+tap.only('findFiles - finds the correct files by default', t => {
 	const fixtureDir = fixture('default-patterns');
 	process.chdir(fixtureDir);
 
