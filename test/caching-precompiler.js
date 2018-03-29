@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const test = require('tap').test;
+const tap = require('tap');
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -9,6 +9,8 @@ const babel = require('@babel/core');
 const babelTransform = require('@babel/core/lib/transform');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
+
+const test = tap.test;
 
 const fixture = name => path.join(__dirname, 'fixture', name);
 const endsWithJs = filename => /\.js$/.test(filename);
@@ -37,7 +39,7 @@ test('adds files and source maps to the cache directory as needed', t => {
 
 	t.false(fs.existsSync(tempDir), 'cache directory is not created before it is needed');
 
-	precompiler.precompileFile(fixture('es2015.js'));
+	precompiler.precompileFile(fixture('es2015.js'), []);
 	t.true(fs.existsSync(tempDir), 'cache directory is lazily created');
 
 	const files = fs.readdirSync(tempDir);
@@ -51,7 +53,7 @@ test('adds a map file comment to the cached files', t => {
 	const tempDir = uniqueTempDir();
 	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
-	precompiler.precompileFile(fixture('es2015.js'));
+	precompiler.precompileFile(fixture('es2015.js'), []);
 
 	let cachedCode;
 	let cachedMap;
@@ -77,8 +79,8 @@ test('should reuse existing source maps', t => {
 	const tempDir = uniqueTempDir();
 	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
-	precompiler.precompileFile(fixture('es2015-source-maps.js'));
-	const options = transformSpy.lastCall.args[1];
+	precompiler.precompileFile(fixture('es2015-source-maps.js'), []);
+	const options = babel.transform.lastCall.args[1];
 	t.ok(options.inputSourceMap);
 	t.end();
 });
@@ -98,7 +100,7 @@ test('disables babel cache', t => {
 	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
 	process.env.BABEL_DISABLE_CACHE = 'foo';
-	precompiler.precompileFile(fixture('es2015.js'));
+	precompiler.precompileFile(fixture('es2015.js'), []);
 	t.same(process.env.BABEL_DISABLE_CACHE, 'foo');
 	t.end();
 });
