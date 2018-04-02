@@ -53,7 +53,7 @@ export interface DeepEqualAssertion {
 
 export interface FailAssertion {
 	/** Fail the test. */
-	(message?: string): void;
+	(message?: string): never;
 
 	/** Skip this assertion. */
 	skip(message?: string): void;
