@@ -3,7 +3,6 @@ node_js:
   - 9
   - 8
   - 6
-  - 4
 env:
   - FRESH_DEPS=false
   - FRESH_DEPS=true
@@ -12,8 +11,6 @@ matrix:
     - node_js: 9
       env: FRESH_DEPS=true
     - node_js: 6
-      env: FRESH_DEPS=true
-    - node_js: 4
       env: FRESH_DEPS=true
 cache:
   directories:
