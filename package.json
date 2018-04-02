@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
 		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && nyc tap --no-cov --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
-		"test-win": "tap --no-cov --reporter=classic --timeout=300 --jobs=4 test/*.js test/reporters/*.js"
+		"test-win": "tap --no-cov --reporter=classic --timeout=300 --jobs=1 test/*.js test/reporters/*.js"
 	},
 	"files": [
 		"lib",
