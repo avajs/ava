@@ -16,15 +16,16 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@5.6.0
+  - npm install --global npm@5.8.0
   - npm --version
-  - md5sum package-lock.json > package-lock.json.md5
 install: |
   if [[ ${FRESH_DEPS} == "true" ]]; then
     npm install --no-shrinkwrap --prefer-online;
   else
-    npm install --prefer-offline;
-    if ! md5sum --quiet -c package-lock.json.md5; then
+    npm ci;
+    checksum=$(md5sum package-lock.json);
+    npm install --package-lock-only;
+    if ! echo ${checksum} | md5sum --quiet -c -; then
       echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes.";
       exit 1;
     fi
