@@ -8,12 +8,12 @@ const path = require('path');
 const EventEmitter = require('events');
 const meow = require('meow');
 const Promise = require('bluebird');
-const pkgConf = require('pkg-conf');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const babelConfigHelper = require('./lib/babel-config');
 const CachingPrecompiler = require('./lib/caching-precompiler');
+const loadConfig = require('./lib/load-config');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -29,7 +29,7 @@ function resolveModules(modules) {
 
 Promise.longStackTraces();
 
-const conf = pkgConf.sync('ava', {
+const conf = loadConfig({
 	defaults: {
 		babel: {
 			testOptions: {}
@@ -38,9 +38,7 @@ const conf = pkgConf.sync('ava', {
 	}
 });
 
-const filepath = pkgConf.filepath(conf);
-const projectDir = filepath === null ? process.cwd() : path.dirname(filepath);
-
+const projectDir = loadConfig.projectDir();
 // Define a minimal set of options from the main CLI
 const cli = meow(`
 	Usage
