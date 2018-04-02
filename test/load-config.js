@@ -37,13 +37,16 @@ test('Throws a warning of both configs are present', t => {
 test('Merges in defaults passed with initial call', t => {
 	changeDir('package-only');
 	const opts = {
-		files: ['123', '!456'],
-		concurrency: 5
+		defaults: {
+
+			files: ['123', '!456'],
+			concurrency: 5
+		}
 	};
 	const {files, failFast, concurrency} = loadConfig(opts);
 	t.is(failFast, true, 'preserves original props');
-	t.is(files, opts.files, 'merges in extra props');
-	t.is(concurrency, opts.concurrency, 'overrides original props');
+	t.is(files, opts.defaults.files, 'merges in extra props');
+	t.is(concurrency, opts.defaults.concurrency, 'overrides original props');
 	t.end();
 });
 
