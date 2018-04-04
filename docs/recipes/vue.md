@@ -41,7 +41,7 @@ hooks('vue').plugin('vue').push();
 hooks(['vue', 'js']).plugin('babel').push();
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
+You can find more information about setting up Babel with AVA in the [babelrc recipe](babel.md).
 
 ## Sample snapshot test
 
