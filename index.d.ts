@@ -26,20 +26,61 @@ export type SnapshotOptions = {
 };
 
 export interface Assertions {
+	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
+
+	/** Fail the test. */
 	fail: FailAssertion;
+
+	/** Assert that `actual` is strictly false. */
 	false: FalseAssertion;
+
+	/** Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy). */
 	falsy: FalsyAssertion;
+
+	/**
+	 * Assert that `actual` is [the same
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 */
 	is: IsAssertion;
+
+	/**
+	 * Assert that `actual` is not [the same
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	*/
 	not: NotAssertion;
+	
+	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	notDeepEqual: NotDeepEqualAssertion;
+
+	/** Assert that `string` does not match the regular expression. */
 	notRegex: NotRegexAssertion;
+
+	/** Assert that the function does not throw. */
 	notThrows: NotThrowsAssertion;
+
+	/** Count a passing assertion. */
 	pass: PassAssertion;
+
+	/** Assert that `string` matches the regular expression. */
 	regex: RegexAssertion;
+
+	/**
+	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
+	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details), or if
+	 * necessary record a new snapshot.
+	*/
 	snapshot: SnapshotAssertion;
+
+	/**
+	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
+	*/
 	throws: ThrowsAssertion;
+
+	/** Assert that `actual` is strictly true. */
 	true: TrueAssertion;
+
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
 	truthy: TruthyAssertion;
 }
 
