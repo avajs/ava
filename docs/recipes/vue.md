@@ -19,10 +19,7 @@ The first step is setting up a helper to configure the environment to transpile 
 ```json
 {
 	"ava": {
-		"babel": "inherit",
-		"require": [
-			"./test/helpers/setup.js"
-		]
+		"babel": "inherit"
 	}
 }
 ```
