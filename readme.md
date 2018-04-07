@@ -243,8 +243,8 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 {
 	"ava": {
 		"files": [
-			"my-test-directory/*.js",
-			"!exclude-this-directory/*.js",
+			"my-test-directory/**/*.js",
+			"!my-test-directory/exclude-this-directory/**/*.js",
 			"!**/exclude-this-file.js"
 		],
 		"source": [
