@@ -6,6 +6,7 @@ const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const babel = require('@babel/core');
+const babelTransform = require('@babel/core/lib/transform');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
 
@@ -21,7 +22,7 @@ function getBabelOptions() {
 
 const babelCacheKeys = {};
 
-sinon.spy(babel, 'transform');
+const transformSpy = sinon.spy(babelTransform, 'default');
 
 test('creation with new', t => {
 	const tempDir = uniqueTempDir();
@@ -77,7 +78,7 @@ test('should reuse existing source maps', t => {
 	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
 	precompiler.precompileFile(fixture('es2015-source-maps.js'));
-	const options = babel.transform.lastCall.args[1];
+	const options = transformSpy.lastCall.args[1];
 	t.ok(options.inputSourceMap);
 	t.end();
 });
