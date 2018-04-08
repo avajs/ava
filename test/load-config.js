@@ -14,17 +14,10 @@ const changeDir = fixtureDir => {
 	process.chdir(path.resolve(__dirname, 'fixture', 'load-config', fixtureDir));
 };
 
-test('Finds package.json', t => {
+test('Finds config in package.json', t => {
 	changeDir('package-only');
 	const conf = loadConfig();
 	t.is(conf.failFast, true);
-	t.end();
-});
-
-test('Loads sibling `ava.config.js` file if no package config is present', t => {
-	changeDir('package-no-file-yes');
-	const conf = loadConfig();
-	t.is(conf.files, 'package-no-file-yes-test-value');
 	t.end();
 });
 
@@ -50,7 +43,11 @@ test('Merges in defaults passed with initial call', t => {
 	t.end();
 });
 
-// Test('Passes `process` to config file for factory functions', t => {
-// })
+test('Loads config from file', t => {
+	changeDir('package-no-file-yes');
+	const conf = loadConfig();
+	t.is(conf.files, 'package-no-file-yes-test-value')
+	t.end()
+})
 
 // test('Returns project dir for package.json')
