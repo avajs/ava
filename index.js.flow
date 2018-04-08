@@ -46,7 +46,7 @@ export interface Assertions {
 	/**
 	 * Assert that `actual` is [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
-	 */
+	*/
 	is: IsAssertion;
 
 	/**
