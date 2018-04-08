@@ -46,15 +46,15 @@ export interface Assertions {
 	/**
 	 * Assert that `actual` is [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
-	*/
+	 */
 	is: IsAssertion;
 
 	/**
 	 * Assert that `actual` is not [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
-	*/
+	 */
 	not: NotAssertion;
-	
+
 	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	notDeepEqual: NotDeepEqualAssertion;
 
@@ -74,12 +74,12 @@ export interface Assertions {
 	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
 	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details), or if
 	 * necessary record a new snapshot.
-	*/
+	 */
 	snapshot: SnapshotAssertion;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	*/
+	 */
 	throws: ThrowsAssertion;
 
 	/** Assert that `actual` is strictly true. */
