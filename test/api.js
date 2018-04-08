@@ -12,7 +12,7 @@ const ROOT_DIR = path.join(__dirname, '..');
 
 function apiCreator(options) {
 	options = options || {};
-	options.babelConfig = options.babelConfig || {testOptions: {}};
+	options.babelConfig = options.babelConfig || {extensions: ['js'], testOptions: {}};
 	options.concurrency = 2;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;

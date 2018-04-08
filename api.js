@@ -44,7 +44,7 @@ class Api extends EventEmitter {
 		runtimeOptions = runtimeOptions || {};
 
 		const doNotCompileExtensions = apiOptions.extensions || [];
-		const babelExtensions = apiOptions.babelConfig.extensions || [];
+		const babelExtensions = apiOptions.babelConfig ? apiOptions.babelConfig.extensions || ['js'] : ['js'];
 
 		// Combine all extensions possible for testing.
 		const allExts = [...doNotCompileExtensions, ...babelExtensions];
@@ -138,7 +138,10 @@ class Api extends EventEmitter {
 									map: files.concat(helpers).reduce((acc, file) => {
 										try {
 											const realpath = fs.realpathSync(file);
-											const hash = precompilation.precompiler.precompileFile(realpath, doNotCompileExtensions);
+											let hash = realpath;
+											if (!doNotCompileExtensions.includes(path.extname(realpath))) {
+												hash = precompilation.precompiler.precompileFile(realpath);
+											}
 											acc[realpath] = hash;
 										} catch (err) {
 											throw Object.assign(err, {file});
