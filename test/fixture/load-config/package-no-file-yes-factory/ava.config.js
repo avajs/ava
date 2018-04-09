@@ -1,8 +1,8 @@
 
-const config = (projectDir) => {
+const config = projectDir => {
 	return {
 		files: projectDir
-	}
-}
+	};
+};
 
-module.exports = config
+module.exports = config;
