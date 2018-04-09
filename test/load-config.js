@@ -60,7 +60,7 @@ test('Loads config from file with `export default` syntax', t => {
 test('Loads config from factory function', t => {
 	changeDir('package-no-file-yes-factory');
 	const conf = loadConfig();
-	t.ok(conf.files.startsWith(path.resolve(__dirname)));
+	t.ok(conf.files.startsWith(__dirname));
 	t.end();
 });
 
@@ -70,3 +70,9 @@ test('Throws an error if a config file returns a promise', t => {
 	t.end();
 });
 
+test('Receives a `_meta` property that contains the project directory', t => {
+	changeDir('package-only');
+	const conf = loadConfig();
+	t.ok(conf._meta.projectDir.startsWith(__dirname));
+	t.end();
+});
