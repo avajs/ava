@@ -46,20 +46,27 @@ test('Merges in defaults passed with initial call', t => {
 test('Loads config from file', t => {
 	changeDir('package-no-file-yes');
 	const conf = loadConfig();
-	t.is(conf.files, 'package-no-file-yes-test-value')
-	t.end()
-})
+	t.is(conf.files, 'package-no-file-yes-test-value');
+	t.end();
+});
 
 test('Loads config from file with `export default` syntax', t => {
 	changeDir('package-no-file-yes-esm');
 	const conf = loadConfig();
-	t.is(conf.files, 'config-file-esm-test-value')
-	t.end()
-})
+	t.is(conf.files, 'config-file-esm-test-value');
+	t.end();
+});
 
 test('Loads config from factory function', t => {
 	changeDir('package-no-file-yes-factory');
 	const conf = loadConfig();
-	t.ok(conf.files.startsWith(path.resolve(__dirname)))
-	t.end()
-})
+	t.ok(conf.files.startsWith(path.resolve(__dirname)));
+	t.end();
+});
+
+test('Throws an error if a config file returns a promise', t => {
+	changeDir('package-no-file-yes-promise-bad');
+	t.throws(loadConfig);
+	t.end();
+});
+
