@@ -1131,7 +1131,7 @@ In contrast AVA is highly opinionated and runs tests concurrently, with a separa
 
 ### How is the name written and pronounced?
 
-AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?raw=true).
+AVA, not Ava or ava. Pronounced [\`/ˈeɪvə/\` ay-və](media/pronunciation.m4a?raw=true).
 
 ### What is the header background?
 
