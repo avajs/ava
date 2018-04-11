@@ -43,11 +43,21 @@ class Api extends EventEmitter {
 		const apiOptions = this.options;
 		runtimeOptions = runtimeOptions || {};
 
-		const doNotCompileExtensions = apiOptions.extensions || [];
-		const babelExtensions = apiOptions.babelConfig ? apiOptions.babelConfig.extensions || ['js'] : ['js'];
+		const {extensions: doNotCompileExtensions = []} = apiOptions;
+		const {extensions: babelExtensions = []} = apiOptions.babelConfig || {};
 
-		// Combine all extensions possible for testing.
-		const allExts = [...doNotCompileExtensions, ...babelExtensions];
+		if (!apiOptions.babelConfig && doNotCompileExtensions.length === 0) {
+			doNotCompileExtensions.push('js');
+		}
+		  
+		if (apiOptions.babelConfig && babelExtensions.length === 0) {
+			babelExtensions.push('js');
+		}
+
+		// Combine all extensions possible for testing. Removing duplicate extensions.
+		const allExtensions = doNotCompileExtensions
+			.concat(babelExtensions)
+			.filter((ext, i, self) => self.indexOf(ext) === i);
 
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
@@ -87,7 +97,7 @@ class Api extends EventEmitter {
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: allExts}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: allExtensions}).findTestFiles()
 			.then(files => {
 				runStatus = new RunStatus({
 					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
@@ -131,7 +141,7 @@ class Api extends EventEmitter {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: allExts})
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: allExtensions})
 							.findTestHelpers().then(helpers => {
 								return {
 									cacheDir: precompilation.cacheDir,
