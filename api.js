@@ -49,7 +49,7 @@ class Api extends EventEmitter {
 		if (!apiOptions.babelConfig && doNotCompileExtensions.length === 0) {
 			doNotCompileExtensions.push('js');
 		}
-		  
+
 		if (apiOptions.babelConfig && babelExtensions.length === 0) {
 			babelExtensions.push('js');
 		}
