@@ -12,7 +12,7 @@ const ROOT_DIR = path.join(__dirname, '..');
 
 function apiCreator(options) {
 	options = options || {};
-	options.babelConfig = options.babelConfig || {extensions: ['js'], testOptions: {}};
+	options.babelConfig = options.babelConfig || {testOptions: {}};
 	options.concurrency = 2;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
@@ -1125,6 +1125,32 @@ test('babelConfig.testOptions with extends still merges plugins with .babelrc', 
 	api.on('test-run', runStatus => {
 		runStatus.on('test', data => {
 			t.ok(data.title === 'BAR' || data.title === 'repeated test: bar');
+		});
+	});
+
+	return api.run()
+		.then(result => {
+			t.is(result.passCount, 2);
+		});
+});
+
+test('precompiles tests when babelConfig.extensions is defined', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			extensions: [],
+			testOptions: {
+				babelrc: true
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('test-run', runStatus => {
+		runStatus.on('test', data => {
+			t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
 		});
 	});
 
