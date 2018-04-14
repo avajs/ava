@@ -19,9 +19,10 @@ The first step is setting up a helper to configure the environment to transpile 
 ```json
 {
 	"ava": {
-    "require": [
-      "./test/helpers/setup.js"
-    ]
+		"require": [
+			"./test/helpers/setup.js"
+		]
+	}
 }
 ```
 
