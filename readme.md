@@ -149,7 +149,6 @@ $ ava --help
     ava [<file|directory|glob> ...]
 
   Options
-    --init                  Add AVA to your project
     --watch, -w             Re-run tests when tests and source files change
     --match, -m             Only run tests with matching title (Can be repeated)
     --update-snapshots, -u  Update snapshots
@@ -168,7 +167,6 @@ $ ava --help
     ava test.js test2.js
     ava test-*.js
     ava test
-    ava --init
 
   Default patterns when no arguments:
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
