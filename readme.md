@@ -75,7 +75,7 @@ test('arrays are equal', t => {
 To install and set up AVA, run:
 
 ```console
-$ npx @ava/init --next
+$ npx create-ava --next
 ```
 
 Your `package.json` will then look like this:
@@ -87,7 +87,7 @@ Your `package.json` will then look like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^1.0.0-beta.3"
+		"ava": "1.0.0-beta.4"
 	}
 }
 ```
@@ -95,13 +95,13 @@ Your `package.json` will then look like this:
 Initialization will work with npm and Yarn, but running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater to be installed. Otherwise, you'll have to manually install `ava` and configure the `test` script in your `package.json` as per above:
 
 ```console
-$ npm install --save-dev ava@next
+$ npm install --save-dev --save-exact ava@next
 ```
 
 Or if you prefer using Yarn:
 
 ```console
-$ yarn add --dev ava@next
+$ yarn add ava@next --dev --exact
 ```
 
 ### Create your test file
@@ -149,7 +149,6 @@ $ ava --help
     ava [<file|directory|glob> ...]
 
   Options
-    --init                  Add AVA to your project
     --watch, -w             Re-run tests when tests and source files change
     --match, -m             Only run tests with matching title (Can be repeated)
     --update-snapshots, -u  Update snapshots
@@ -168,7 +167,6 @@ $ ava --help
     ava test.js test2.js
     ava test-*.js
     ava test
-    ava --init
 
   Default patterns when no arguments:
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
