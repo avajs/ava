@@ -55,9 +55,7 @@ class Api extends EventEmitter {
 		}
 
 		// Combine all extensions possible for testing. Removing duplicate extensions.
-		const allExtensions = doNotCompileExtensions
-			.concat(babelExtensions)
-			.filter((ext, i, self) => self.indexOf(ext) === i);
+		const allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
 
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
