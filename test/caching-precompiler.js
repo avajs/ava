@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const tap = require('tap');
+const test = require('tap').test;
 const uniqueTempDir = require('unique-temp-dir');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -9,8 +9,6 @@ const babel = require('@babel/core');
 const babelTransform = require('@babel/core/lib/transform');
 const fromMapFileSource = require('convert-source-map').fromMapFileSource;
 const CachingPrecompiler = require('../lib/caching-precompiler');
-
-const test = tap.test;
 
 const fixture = name => path.join(__dirname, 'fixture', name);
 const endsWithJs = filename => /\.js$/.test(filename);
