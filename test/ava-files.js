@@ -152,6 +152,25 @@ test('findFiles - finds the correct files by default', t => {
 	});
 });
 
+test('findFiles - finds the files with configured extensions', t => {
+	const fixtureDir = fixture('custom-extension');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'test/foo.jsx',
+		'test/sub/bar.jsx'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles({
+		extensions: ['jsx']
+	});
+
+	avaFiles.findTestFiles().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});
+
 test('findTestHelpers - finds the test helpers', t => {
 	const fixtureDir = fixture('default-patterns');
 	process.chdir(fixtureDir);
