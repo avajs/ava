@@ -31,15 +31,12 @@ test('Merges in defaults passed with initial call', t => {
 	changeDir('package-only');
 	const opts = {
 		defaults: {
-
-			files: ['123', '!456'],
-			concurrency: 5
+			files: ['123', '!456']
 		}
 	};
-	const {files, failFast, concurrency} = loadConfig(opts);
+	const {files, failFast} = loadConfig(opts);
 	t.is(failFast, true, 'preserves original props');
 	t.is(files, opts.defaults.files, 'merges in extra props');
-	t.is(concurrency, opts.defaults.concurrency, 'overrides original props');
 	t.end();
 });
 
@@ -70,9 +67,9 @@ test('Throws an error if a config file returns a promise', t => {
 	t.end();
 });
 
-test('Receives a `_meta` property that contains the project directory', t => {
+test('Receives a `projectDir` property', t => {
 	changeDir('package-only');
 	const conf = loadConfig();
-	t.ok(conf._meta.projectDir.startsWith(__dirname));
+	t.ok(conf.projectDir.startsWith(__dirname));
 	t.end();
 });

@@ -38,9 +38,7 @@ const conf = loadConfig({
 	}
 });
 
-console.log(conf);
-
-const {projectDir} = conf._meta;
+const {projectDir} = conf;
 // Define a minimal set of options from the main CLI
 const cli = meow(`
 	Usage
