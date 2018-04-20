@@ -1202,7 +1202,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 	<a href="https://ava.li">
-		<img src="https://cdn.rawgit.com/avajs/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
+		<img src="media/logo.svg" width="200" alt="AVA">
 	</a>
 	<br>
 	<br>
