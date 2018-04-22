@@ -233,7 +233,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## Configuration
 
-All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
+All of the CLI options can be configured in the `ava` section of either your `package.json` or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
 
@@ -286,6 +286,61 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `babel`: test file specific Babel options. See our [Babel recipe] for more details
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
+
+### Using `ava.config.js`
+
+To use an `ava.config.js` file:
+
+ 1. It must be in the same directory as your `package.json`.
+ 2. Your `package.json` must not contain an `ava` property.
+
+The config file can use either ESM or CommonJS syntax. Both of these are valid:
+
+```js
+module.exports = {
+	// ...
+}
+```
+
+```js
+export default {
+	// ...
+}
+```
+
+The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a configuration object, and cannot be a promise.
+
+```js
+const config = ({projectDir}) => {
+	if (projectDir === '...') {
+		return {
+			// config A
+		}
+	}
+	return {
+		// config B
+	}
+}
+
+export default config
+```
+
+Or, return different configuration based on the environment: `NODE_ENV=development ava`
+
+```js
+const config = () => {
+	if (process.env.NODE_ENV === 'development') {
+		return {
+			// dev config
+		}
+	}
+	return {
+		// default config
+	}
+}
+
+export default config
+```
 
 ## Documentation
 
