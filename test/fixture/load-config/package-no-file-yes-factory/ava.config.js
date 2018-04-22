@@ -1,5 +1,5 @@
 
-const config = projectDir => {
+const config = ({projectDir}) => {
 	return {
 		files: projectDir
 	};
