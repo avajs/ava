@@ -298,31 +298,32 @@ The config file can use either ESM or CommonJS syntax. Both of these are valid:
 
 ```js
 module.exports = {
-	// ...
-}
+	// …
+};
 ```
 
 ```js
 export default {
-	// ...
-}
+	// …
+};
 ```
 
-The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a configuration object, and cannot be a promise.
+The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a config object, and cannot be a promise.
 
 ```js
 const config = ({projectDir}) => {
 	if (projectDir === '...') {
 		return {
-			// config A
-		}
+			// Config A
+		};
 	}
+
 	return {
-		// config B
-	}
+		// Config B
+	};
 }
 
-export default config
+export default config;
 ```
 
 Or, return different configuration based on the environment: `NODE_ENV=development ava`
@@ -331,15 +332,16 @@ Or, return different configuration based on the environment: `NODE_ENV=developme
 const config = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return {
-			// dev config
-		}
+			// Development config
+		};
 	}
+
 	return {
-		// default config
-	}
+		// Default config
+	};
 }
 
-export default config
+export default config;
 ```
 
 ## Documentation
