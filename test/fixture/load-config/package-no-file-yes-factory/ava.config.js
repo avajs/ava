@@ -1,4 +1,3 @@
-
 const config = ({projectDir}) => {
 	return {
 		files: projectDir
