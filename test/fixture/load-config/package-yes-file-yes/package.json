@@ -1,6 +1,9 @@
 {
 	"name": "package-yes-file-yes",
 	"ava": {
-		"files": ["abc", "!xyz"]
+		"files": [
+			"abc",
+			"!xyz"
+		]
 	}
 }
