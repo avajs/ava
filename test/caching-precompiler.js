@@ -78,7 +78,7 @@ test('should reuse existing source maps', t => {
 	const precompiler = new CachingPrecompiler({path: tempDir, getBabelOptions, babelCacheKeys});
 
 	precompiler.precompileFile(fixture('es2015-source-maps.js'), []);
-	const options = babel.transform.lastCall.args[1];
+	const options = transformSpy.lastCall.args[1];
 	t.ok(options.inputSourceMap);
 	t.end();
 });
