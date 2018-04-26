@@ -8,6 +8,7 @@ const uniqueTempDir = require('unique-temp-dir');
 const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
 const debounce = require('lodash.debounce');
+const difference = require('lodash.difference');
 const Bluebird = require('bluebird');
 const getPort = require('get-port');
 const arrify = require('arrify');
@@ -37,25 +38,32 @@ class Api extends EventEmitter {
 
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
+
+		const {extensions: doNotCompileExtensions = []} = this.options;
+		const {extensions: babelExtensions = []} = this.options.babelConfig || {};
+
+		if (!this.options.babelConfig && doNotCompileExtensions.length === 0) {
+			doNotCompileExtensions.push('js');
+		}
+
+		if (this.options.babelConfig && babelExtensions.length === 0) {
+			babelExtensions.push('js');
+		}
+
+		this.options.extensions = doNotCompileExtensions;
+
+		// Combine all extensions possible for testing. Removing duplicate extensions.
+		this.allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
+
+		if (this.allExtensions.length !== doNotCompileExtensions.length + babelExtensions.length) {
+			const duplicates = difference([...doNotCompileExtensions, ...babelExtensions]);
+			throw new Error(`Unexpected duplicate extensions in options: ${duplicates}`);
+		}
 	}
 
 	run(files, runtimeOptions) {
 		const apiOptions = this.options;
 		runtimeOptions = runtimeOptions || {};
-
-		const {extensions: doNotCompileExtensions = []} = apiOptions;
-		const {extensions: babelExtensions = []} = apiOptions.babelConfig || {};
-
-		if (!apiOptions.babelConfig && doNotCompileExtensions.length === 0) {
-			doNotCompileExtensions.push('js');
-		}
-
-		if (apiOptions.babelConfig && babelExtensions.length === 0) {
-			babelExtensions.push('js');
-		}
-
-		// Combine all extensions possible for testing. Removing duplicate extensions.
-		const allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
 
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
@@ -95,7 +103,7 @@ class Api extends EventEmitter {
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: allExtensions}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this.allExtensions}).findTestFiles()
 			.then(files => {
 				runStatus = new RunStatus({
 					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
@@ -139,7 +147,7 @@ class Api extends EventEmitter {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: allExtensions})
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: this.allExtensions})
 							.findTestHelpers().then(helpers => {
 								return {
 									cacheDir: precompilation.cacheDir,
@@ -147,7 +155,7 @@ class Api extends EventEmitter {
 										try {
 											const realpath = fs.realpathSync(file);
 											let hash = realpath;
-											if (!doNotCompileExtensions.includes(path.extname(realpath))) {
+											if (!this.options.extensions.includes(path.extname(realpath))) {
 												hash = precompilation.precompiler.precompileFile(realpath);
 											}
 											acc[realpath] = hash;

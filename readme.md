@@ -262,6 +262,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"@babel/register"
 		],
 		"babel": {
+			"extensions": ["jsx"]
 			"testOptions": {
 				"babelrc": false
 			}
@@ -282,8 +283,10 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
+- `extensions`: Extensions to opt of of precompilation.
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
 - `babel`: test file specific Babel options. See our [Babel recipe] for more details
+- `babel.extensions`: Extensions to include in precompilation.
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
