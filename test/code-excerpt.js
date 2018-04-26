@@ -1,4 +1,6 @@
 'use strict';
+require('../lib/chalk').set();
+
 const fs = require('fs');
 const tempWrite = require('temp-write');
 const chalk = require('chalk');
