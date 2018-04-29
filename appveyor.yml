@@ -11,6 +11,7 @@ configuration:
   - LockedDeps
 environment:
   matrix:
+    - nodejs_version: 10
     - nodejs_version: 9
     - nodejs_version: 8
     - nodejs_version: 6
@@ -19,6 +20,8 @@ matrix:
   exclude:
     - configuration: FreshDeps
       nodejs_version: 9
+    - configuration: FreshDeps
+      nodejs_version: 8
     - configuration: FreshDeps
       nodejs_version: 6
 install:
