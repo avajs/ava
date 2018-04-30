@@ -7,7 +7,7 @@
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4"
+		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=9.11.1 <10 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
