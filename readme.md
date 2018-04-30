@@ -308,11 +308,11 @@ export default {
 };
 ```
 
-The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a config object, and cannot be a promise.
+The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a config object, it must not return a promise.
 
 ```js
 const config = ({projectDir}) => {
-	if (projectDir === '...') {
+	if (projectDir === '/Users/username/projects/my-project') {
 		return {
 			// Config A
 		};
@@ -320,24 +320,6 @@ const config = ({projectDir}) => {
 
 	return {
 		// Config B
-	};
-}
-
-export default config;
-```
-
-Or, return different configuration based on the environment: `NODE_ENV=development ava`
-
-```js
-const config = () => {
-	if (process.env.NODE_ENV === 'development') {
-		return {
-			// Development config
-		};
-	}
-
-	return {
-		// Default config
 	};
 }
 
