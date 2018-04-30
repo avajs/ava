@@ -62,7 +62,13 @@ test('loads config from factory function', t => {
 });
 
 test('throws an error if a config file returns a promise', t => {
-	changeDir('package-no-file-yes-promise-bad');
+	changeDir('factory-no-promise-return');
+	t.throws(loadConfig);
+	t.end();
+});
+
+test('throws an error if a config file is a promise', t => {
+	changeDir('factory-no-promise-config');
 	t.throws(loadConfig);
 	t.end();
 });

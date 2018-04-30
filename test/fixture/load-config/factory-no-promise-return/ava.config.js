@@ -1,4 +1,4 @@
-const config = new Promise(resolve => {
+const config = () => new Promise(resolve => {
 	resolve({
 		files: 'this-should-not-work'
 	});
