@@ -1,6 +1,9 @@
 // @flow
 export interface PromiseLike<R> {
-	then<U>(onFulfill?: (value: R) => Promise<U> | U, onReject?: (error: any) => Promise<U> | U): Promise<U>;
+	then<U>(
+		onFulfill: (value: R) => Promise<U> | U,
+		onReject?: (error: any) => Promise<U> | U
+	): Promise<U>;
 }
 
 export interface ObservableLike {

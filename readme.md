@@ -883,7 +883,7 @@ Assertions are bound to their test so you can assign them to a variable or pass 
 
 ```js
 test('unicorns are truthy', t => {
-	const truthy = t.thruthy;
+	const truthy = t.truthy;
 	truthy('unicorn');
 });
 ```

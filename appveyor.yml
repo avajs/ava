@@ -11,6 +11,7 @@ configuration:
   - LockedDeps
 environment:
   matrix:
+    - nodejs_version: 10
     - nodejs_version: 9
     - nodejs_version: 8
     - nodejs_version: 6
@@ -20,10 +21,12 @@ matrix:
     - configuration: FreshDeps
       nodejs_version: 9
     - configuration: FreshDeps
+      nodejs_version: 8
+    - configuration: FreshDeps
       nodejs_version: 6
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install --global npm@5.8.0
+  - npm install --global npm@6.0.0
   - npm --version
   - git config core.symlinks true
   - git reset --hard
