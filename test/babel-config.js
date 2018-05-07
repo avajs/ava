@@ -102,6 +102,11 @@ test('supports .babelrc.js files', t => {
 			t.is(options.presets[0][0].wrapped, require('@ava/babel-preset-stage-4'));
 			t.is(options.presets[1][0].wrapped, require('@ava/babel-preset-transform-test-files'));
 			t.same(options.presets[1][1], {powerAssert: true});
+
+			// Repeat, using the cached verifier files.
+			return babelConfigHelper.build(projectDir, cacheDir, {testOptions: {}}, compileEnhancements);
+		}).then(result => {
+			t.doesNotThrow(() => result.getOptions());
 		});
 });
 
