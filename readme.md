@@ -158,7 +158,6 @@ $ ava --help
     --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --verbose, -v           Enable verbose output
     --tap, -t               Generate TAP output
-    --no-cache              Disable the compiler cache
     --color                 Force color output
     --no-color              Disable color output
 
@@ -253,6 +252,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"*oo",
 			"!foo"
 		],
+		"cache": true,
 		"concurrency": 5,
 		"failFast": true,
 		"failWithoutAssertions": false,
@@ -277,6 +277,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Only files with a `.js` extension are used. Files with an underscore prefix are ignored. All `.js` files in selected directories are run
 - `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
+- `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
