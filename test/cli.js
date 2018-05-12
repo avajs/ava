@@ -66,7 +66,7 @@ test('disallow invalid babel config shortcuts', t => {
 	execCli(['es2015.js'], {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
 		t.ok(err);
 
-		let expectedOutput = '\n  ';
+		let expectedOutput = '\n';
 		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
 		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
 		expectedOutput += '\n';
