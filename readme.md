@@ -245,7 +245,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"!my-test-directory/exclude-this-directory/**/*.js",
 			"!**/exclude-this-file.js"
 		],
-		"source": [
+		"sources": [
 			"**/*.{js,jsx}",
 			"!dist/**/*"
 		],
