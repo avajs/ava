@@ -26,6 +26,24 @@ Configure it in your `package.json` file, and add it to AVA's `"require"` option
 
 By default AVA converts ES module syntax to CommonJS. [You can disable this](./babel.md#preserve-es-module-syntax).
 
+Additionally, [configure](https://github.com/standard-things/esm#options) the `esm`, instructing it to enable top-level await in modules without ESM exports and CJS features in ESM.
+
+Your package.json will now contain a setup, similar to:
+
+```json
+"esm": {
+	"await": true,
+	"cjs": true
+},
+"ava": {
+	"compileEnhancements": false,
+	"require": [
+		"esm"
+	],
+	"verbose": true
+},
+```
+
 You can now use native ES modules with AVA:
 
 ```js
