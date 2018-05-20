@@ -10,9 +10,9 @@ const debounce = require('lodash.debounce');
 const Bluebird = require('bluebird');
 const getPort = require('get-port');
 const arrify = require('arrify');
+const makeDir = require('make-dir');
 const ms = require('ms');
-const babelConfigHelper = require('./lib/babel-config');
-const CachingPrecompiler = require('./lib/caching-precompiler');
+const babelPipeline = require('./lib/babel-pipeline');
 const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
 const AvaFiles = require('./lib/ava-files');
@@ -37,6 +37,8 @@ class Api extends Emittery {
 
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
+
+		this._precompiler = null;
 	}
 
 	run(files, runtimeOptions) {
@@ -117,11 +119,10 @@ class Api extends Emittery {
 					}
 				});
 
-				// Set up a fresh precompiler for each test run.
 				return emittedRun
 					.then(() => this._setupPrecompiler())
 					.then(precompilation => {
-						if (!precompilation) {
+						if (!precompilation.precompileFile) {
 							return null;
 						}
 
@@ -132,11 +133,13 @@ class Api extends Emittery {
 						return new AvaFiles({cwd: this.options.resolveTestsFrom}).findTestHelpers().then(helpers => {
 							return {
 								cacheDir: precompilation.cacheDir,
-								map: files.concat(helpers).reduce((acc, file) => {
+								map: [...files, ...helpers].reduce((acc, file) => {
 									try {
 										const realpath = fs.realpathSync(file);
-										const hash = precompilation.precompiler.precompileFile(realpath);
-										acc[realpath] = hash;
+										const cachePath = precompilation.precompileFile(realpath);
+										if (cachePath) {
+											acc[realpath] = cachePath;
+										}
 									} catch (err) {
 										throw Object.assign(err, {file});
 									}
@@ -204,31 +207,23 @@ class Api extends Emittery {
 	}
 
 	_setupPrecompiler() {
+		if (this._precompiler) {
+			return this._precompiler;
+		}
+
 		const cacheDir = this.options.cacheEnabled === false ?
 			uniqueTempDir() :
 			path.join(this.options.projectDir, 'node_modules', '.cache', 'ava');
 
-		return this._buildBabelConfig(cacheDir).then(result => {
-			return result ? {
-				cacheDir,
-				precompiler: new CachingPrecompiler({
-					path: cacheDir,
-					getBabelOptions: result.getOptions,
-					babelCacheKeys: result.cacheKeys
-				})
-			} : null;
-		});
-	}
+		// Ensure cacheDir exists
+		makeDir.sync(cacheDir);
 
-	_buildBabelConfig(cacheDir) {
-		if (this._babelConfigPromise) {
-			return this._babelConfigPromise;
-		}
-
-		const compileEnhancements = this.options.compileEnhancements !== false;
-		const promise = babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements);
-		this._babelConfigPromise = promise;
-		return promise;
+		const {projectDir, babelConfig, compileEnhancements} = this.options;
+		this._precompiler = {
+			cacheDir,
+			precompileFile: babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements !== false)
+		};
+		return this._precompiler;
 	}
 
 	_computeForkExecArgv() {

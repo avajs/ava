@@ -12,8 +12,7 @@ const pkgConf = require('pkg-conf');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
-const babelConfigHelper = require('./lib/babel-config');
-const CachingPrecompiler = require('./lib/caching-precompiler');
+const babelPipeline = require('./lib/babel-pipeline');
 const RunStatus = require('./lib/run-status');
 const VerboseReporter = require('./lib/reporters/verbose');
 
@@ -75,92 +74,84 @@ if (cli.input.length === 0) {
 const file = path.resolve(cli.input[0]);
 const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
-babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), conf.compileEnhancements === true)
-	.then(result => {
-		const precompiled = {};
-		if (result) {
-			const precompiler = new CachingPrecompiler({
-				path: cacheDir,
-				getBabelOptions: result.getOptions,
-				babelCacheKeys: result.cacheKeys
-			});
+const precompileFile = babelPipeline.build(process.cwd(), cacheDir, babelPipeline.validate(conf.babel), conf.compileEnhancements === true);
+const precompiled = {};
+if (precompileFile) {
+	precompiled[file] = precompileFile(file);
+}
 
-			precompiled[file] = precompiler.precompileFile(file);
-		}
+const opts = {
+	file,
+	failFast: cli.flags.failFast,
+	serial: cli.flags.serial,
+	tty: false,
+	cacheDir,
+	precompiled,
+	require: resolveModules(conf.require)
+};
 
-		const opts = {
-			file,
-			failFast: cli.flags.failFast,
-			serial: cli.flags.serial,
-			tty: false,
-			cacheDir,
-			precompiled,
-			require: resolveModules(conf.require)
-		};
+// Mock the behavior of a parent process
+process.connected = true;
+process.channel = {ref() {}, unref() {}};
 
-		// Mock the behavior of a parent process
-		process.connected = true;
-		process.channel = {ref() {}, unref() {}};
+const reporter = new VerboseReporter({
+	reportStream: process.stdout,
+	stdStream: process.stderr,
+	watching: false
+});
 
-		const reporter = new VerboseReporter({
-			reportStream: process.stdout,
-			stdStream: process.stderr,
-			watching: false
-		});
-
-		const runStatus = new RunStatus([file]);
-		runStatus.observeWorker({
-			file,
-			onStateChange(listener) {
-				const emit = evt => listener(Object.assign(evt, {testFile: file}));
-				process.send = data => {
-					if (data && data.ava) {
-						const evt = data.ava;
-						if (evt.type === 'ping') {
-							if (console.profileEnd) {
-								console.profileEnd();
-							}
-
-							if (process.exitCode) {
-								emit({type: 'worker-failed', nonZeroExitCode: process.exitCode});
-							} else {
-								emit({type: 'worker-finished', forcedExit: false});
-								process.exitCode = runStatus.suggestExitCode({matching: false});
-							}
-
-							setImmediate(() => {
-								reporter.endRun();
-								process.emit('message', {ava: {type: 'pong'}});
-							});
-						} else {
-							emit(data.ava);
-						}
+const runStatus = new RunStatus([file]);
+runStatus.observeWorker({
+	file,
+	onStateChange(listener) {
+		const emit = evt => listener(Object.assign(evt, {testFile: file}));
+		process.send = data => {
+			if (data && data.ava) {
+				const evt = data.ava;
+				if (evt.type === 'ping') {
+					if (console.profileEnd) {
+						console.profileEnd();
 					}
-				};
+
+					if (process.exitCode) {
+						emit({type: 'worker-failed', nonZeroExitCode: process.exitCode});
+					} else {
+						emit({type: 'worker-finished', forcedExit: false});
+						process.exitCode = runStatus.suggestExitCode({matching: false});
+					}
+
+					setImmediate(() => {
+						reporter.endRun();
+						process.emit('message', {ava: {type: 'pong'}});
+					});
+				} else {
+					emit(data.ava);
+				}
 			}
-		}, file);
+		};
+	}
+}, file);
 
-		reporter.startRun({
-			failFastEnabled: false,
-			files: [file],
-			matching: false,
-			previousFailures: 0,
-			status: runStatus
-		});
+reporter.startRun({
+	failFastEnabled: false,
+	files: [file],
+	matching: false,
+	previousFailures: 0,
+	status: runStatus
+});
 
-		process.on('beforeExit', () => {
-			process.exitCode = process.exitCode || runStatus.suggestExitCode({matching: false});
-		});
+process.on('beforeExit', () => {
+	process.exitCode = process.exitCode || runStatus.suggestExitCode({matching: false});
+});
 
-		// The "subprocess" will read process.argv[2] for options
-		process.argv[2] = JSON.stringify(opts);
-		process.argv.length = 3;
+// The "subprocess" will read process.argv[2] for options
+process.argv[2] = JSON.stringify(opts);
+process.argv.length = 3;
 
-		if (console.profile) {
-			console.profile('AVA test-worker process');
-		}
+if (console.profile) {
+	console.profile('AVA test-worker process');
+}
 
-		setImmediate(() => {
-			require('./lib/worker/subprocess'); // eslint-disable-line import/no-unassigned-import
-		});
-	});
+setImmediate(() => {
+	require('./lib/worker/subprocess'); // eslint-disable-line import/no-unassigned-import
+});
