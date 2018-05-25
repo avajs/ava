@@ -76,6 +76,7 @@
 		"bluebird": "^3.5.1",
 		"chalk": "^2.3.2",
 		"chokidar": "^2.0.3",
+		"ci-parallel-vars": "^1.0.0",
 		"clean-stack": "^1.1.1",
 		"clean-yaml-object": "^0.1.0",
 		"cli-cursor": "^2.1.0",

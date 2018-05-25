@@ -83,6 +83,19 @@ class Api extends Emittery {
 		// Find all test files.
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
+				if (isCi && ciParallelVars) {
+					let total = Math.min(ciParallelVars.total, files.length);
+					let index = ciParallelVars.index;
+
+					let count = Math.ceil(files.length / total);
+					let start = count * index;
+
+					files = files.slice(start, start + count);
+				}
+
+				return files;
+			})
+			.then(files => {
 				runStatus = new RunStatus(files.length);
 
 				const emittedRun = this.emit('run', {
