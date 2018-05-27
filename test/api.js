@@ -373,6 +373,33 @@ test('stack traces for exceptions are corrected using a source map file', t => {
 		});
 });
 
+test('babel.testOptions can disable sourceMaps', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				sourceMaps: false
+			}
+		},
+		cacheEnabled: true
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'uncaught-exception') {
+				t.match(evt.err.message, /Thrown by source-map-fixtures/);
+				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:7.*$/m);
+			}
+		});
+	});
+
+	return api.run([path.join(__dirname, 'fixture/source-map-file.js')])
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+		});
+});
+
 test('stack traces for exceptions are corrected using a source map file in what looks like a browser env', t => {
 	t.plan(4);
 
