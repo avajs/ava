@@ -31,7 +31,7 @@ You will need to install the [AVA JSPM loader](https://github.com/skorlir/ava-js
 ```
 $ npm install --save-dev ava-jspm-loader @babel/register
 ```
-You will also need to update your AVA config in package.json to use the JSPM loader.
+You will also need to update your AVA config in the `package.json` or `ava.config.js` to use the JSPM loader.
 
 ```json
 {
