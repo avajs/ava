@@ -1,19 +1,34 @@
 'use strict';
 require('../lib/chalk').set();
 
+const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const del = require('del');
 const test = require('tap').test;
 const Api = require('../api');
+const babelPipeline = require('../lib/babel-pipeline');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
 const ROOT_DIR = path.join(__dirname, '..');
 
+function withNodeEnv(value, run) {
+	assert(!('NODE_ENV' in process.env));
+	process.env.NODE_ENV = value;
+	const reset = () => {
+		delete process.env.NODE_ENV;
+	};
+	const promise = new Promise(resolve => {
+		resolve(run());
+	});
+	promise.then(reset, reset);
+	return promise;
+}
+
 function apiCreator(options) {
 	options = options || {};
-	options.babelConfig = options.babelConfig || {testOptions: {}};
+	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
@@ -358,6 +373,33 @@ test('stack traces for exceptions are corrected using a source map file', t => {
 		});
 });
 
+test('babel.testOptions can disable sourceMaps', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				sourceMaps: false
+			}
+		},
+		cacheEnabled: true
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'uncaught-exception') {
+				t.match(evt.err.message, /Thrown by source-map-fixtures/);
+				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:7.*$/m);
+			}
+		});
+	});
+
+	return api.run([path.join(__dirname, 'fixture/source-map-file.js')])
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+		});
+});
+
 test('stack traces for exceptions are corrected using a source map file in what looks like a browser env', t => {
 	t.plan(4);
 
@@ -593,15 +635,10 @@ test('caching is enabled by default', t => {
 	return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 		.then(() => {
 			const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-			t.ok(files.length, 4);
-			t.is(files.filter(x => endsWithBin(x)).length, 1);
-			t.is(files.filter(x => endsWithJs(x)).length, 2);
+			t.is(files.filter(x => endsWithJs(x)).length, 1);
 			t.is(files.filter(x => endsWithMap(x)).length, 1);
+			t.is(files.length, 2);
 		});
-
-	function endsWithBin(filename) {
-		return /\.bin$/.test(filename);
-	}
 
 	function endsWithJs(filename) {
 		return /\.js$/.test(filename);
@@ -797,7 +834,7 @@ test('babel.testOptions.babelrc can explicitly be false', t => {
 		});
 });
 
-test('babelConfig.testOptions merges plugins with .babelrc', t => {
+test('babel.testOptions merges plugins with .babelrc', t => {
 	t.plan(3);
 
 	const api = apiCreator({
@@ -825,7 +862,58 @@ test('babelConfig.testOptions merges plugins with .babelrc', t => {
 		});
 });
 
-test('babelConfig.testOptions with extends still merges plugins with .babelrc', t => {
+test('babel.testOptions.babelrc (when true) picks up .babelrc.js files', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				babelrc: true
+			}
+		},
+		projectDir: path.join(__dirname, 'fixture/babelrc-js')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok((evt.title === 'foo') || (evt.title === 'repeated test: foo'));
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
+test('babel.testOptions can disable ava/stage-4', t => {
+	t.plan(1);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				babelrc: false,
+				presets: [[require.resolve('../stage-4'), false]]
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'uncaught-exception') {
+				t.is(evt.err.name, 'SyntaxError');
+			}
+		});
+	});
+
+	return api.run();
+});
+
+test('babel.testOptions with extends still merges plugins with .babelrc', t => {
 	t.plan(3);
 
 	const api = apiCreator({
@@ -850,6 +938,78 @@ test('babelConfig.testOptions with extends still merges plugins with .babelrc', 
 	return api.run()
 		.then(runStatus => {
 			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
+test('extended config can disable ava/stage-4', t => {
+	t.plan(1);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				babelrc: false,
+				extends: path.join(__dirname, 'fixture/babelrc/disable-stage-4.babelrc')
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'uncaught-exception') {
+				t.is(evt.err.name, 'SyntaxError');
+			}
+		});
+	});
+
+	return api.run();
+}, {skip: true}); // FIXME https://github.com/babel/babel/issues/7920
+
+test('babel can be disabled for particular files', t => {
+	t.plan(1);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				babelrc: false,
+				ignore: [path.join(__dirname, 'fixture/babelrc/test.js')]
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'uncaught-exception') {
+				t.is(evt.err.name, 'SyntaxError');
+			}
+		});
+	});
+
+	return api.run();
+});
+
+test('uses "development" Babel environment if NODE_ENV is the empty string', t => {
+	t.plan(2);
+
+	const api = apiCreator({
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.is(evt.title, 'FOO');
+			}
+		});
+	});
+
+	return withNodeEnv('', () => api.run())
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
 		});
 });
 
