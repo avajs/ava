@@ -39,27 +39,30 @@ class Api extends Emittery {
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
 
-		const {extensions: doNotCompileExtensions = []} = this.options;
-		const {extensions: babelExtensions = []} = this.options.babelConfig || {};
+		const {babelConfig, extensions: doNotCompileExtensions = []} = this.options;
+		const {extensions: babelExtensions = []} = babelConfig || {};
 
-		if (!this.options.babelConfig && doNotCompileExtensions.length === 0) {
+		if (babelConfig) {
+			if (babelExtensions.length === 0) {
+				if (doNotCompileExtensions.includes('js')) {
+					throw new Error(`Cannot specify generic 'js' extension without disabling AVA's Babel usage`);
+				}
+
+				babelExtensions.push('js');
+			}
+		} else if (doNotCompileExtensions.length === 0) {
 			doNotCompileExtensions.push('js');
 		}
 
-		if (this.options.babelConfig && babelExtensions.length === 0) {
-			babelExtensions.push('js');
-		}
-
-		this.options.extensions = doNotCompileExtensions;
-
 		// Combine all extensions possible for testing. Removing duplicate extensions.
-		this.allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
-
-		if (this.allExtensions.length !== doNotCompileExtensions.length + babelExtensions.length) {
-			const duplicates = difference([...doNotCompileExtensions, ...babelExtensions]);
-			throw new Error(`Unexpected duplicate extensions in options: ${duplicates}`);
+		this._allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
+		if (this._allExtensions.length !== doNotCompileExtensions.length + babelExtensions.length) {
+			const notRepeated = difference(doNotCompileExtensions, babelExtensions);
+			const duplicates = this._allExtensions.filter(ext => !notRepeated.includes(ext));
+			throw new Error(`Unexpected duplicate extensions in options: ${duplicates.join(', ')}`);
 		}
 
+		this._doNotCompileExtensions = new Set(doNotCompileExtensions);
 		this._precompiler = null;
 	}
 
@@ -100,7 +103,7 @@ class Api extends Emittery {
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this.allExtensions}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
 				runStatus = new RunStatus(files.length);
 
@@ -152,14 +155,14 @@ class Api extends Emittery {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: this.allExtensions})
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: this._allExtensions})
 							.findTestHelpers().then(helpers => {
 								return {
 									cacheDir: precompilation.cacheDir,
 									map: [...files, ...helpers].reduce((acc, file) => {
 										try {
 											const realpath = fs.realpathSync(file);
-											if (!this.options.extensions.includes(path.extname(realpath))) {
+											if (!this._doNotCompileExtensions.has(path.extname(realpath))) {
 												const cachePath = precompilation.precompileFile(realpath);
 												if (cachePath) {
 													acc[realpath] = cachePath;
