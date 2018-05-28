@@ -836,6 +836,14 @@ test('power-assert when babel=false and compileEnhancements=true', t => {
 	});
 });
 
+test('power-assert with custom extension and no regular babel pipeline', t => {
+	execCli(['.'], {dirname: 'fixture/just-enhancement-compilation/custom-extension'}, (err, stdout) => {
+		t.ok(err);
+		t.match(stripAnsi(stdout), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
 test('workers load compiled helpers if in the require configuration', t => {
 	execCli(['test/verify.js'], {dirname: 'fixture/require-compiled-helper'}, err => {
 		t.ifError(err);
