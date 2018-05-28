@@ -31,12 +31,10 @@ function resolveModules(modules) {
 Promise.longStackTraces();
 
 const conf = loadConfig({
-	defaults: {
-		babel: {
-			testOptions: {}
-		},
-		compileEnhancements: true
-	}
+	babel: {
+		testOptions: {}
+	},
+	compileEnhancements: true
 });
 
 const {projectDir} = conf;

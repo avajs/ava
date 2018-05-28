@@ -1,7 +1,5 @@
-const config = () => new Promise(resolve => {
+export default () => new Promise(resolve => {
 	resolve({
 		files: 'this-should-not-work'
 	});
 });
-
-module.exports = config;

@@ -29,26 +29,17 @@ test('throws a warning of both configs are present', t => {
 
 test('merges in defaults passed with initial call', t => {
 	changeDir('package-only');
-	const opts = {
-		defaults: {
-			files: ['123', '!456']
-		}
+	const defaults = {
+		files: ['123', '!456']
 	};
-	const {files, failFast} = loadConfig(opts);
+	const {files, failFast} = loadConfig(defaults);
 	t.is(failFast, true, 'preserves original props');
-	t.is(files, opts.defaults.files, 'merges in extra props');
-	t.end();
-});
-
-test('loads config from file', t => {
-	changeDir('package-no-file-yes');
-	const conf = loadConfig();
-	t.is(conf.files, 'package-no-file-yes-test-value');
+	t.is(files, defaults.files, 'merges in extra props');
 	t.end();
 });
 
 test('loads config from file with `export default` syntax', t => {
-	changeDir('package-no-file-yes-esm');
+	changeDir('package-no-file-yes');
 	const conf = loadConfig();
 	t.is(conf.files, 'config-file-esm-test-value');
 	t.end();
@@ -68,7 +59,7 @@ test('throws an error if a config file returns a promise', t => {
 });
 
 test('throws an error if a config file is a promise', t => {
-	changeDir('factory-no-promise-config');
+	changeDir('no-promise-config');
 	t.throws(loadConfig);
 	t.end();
 });

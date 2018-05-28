@@ -1,3 +1,5 @@
-module.exports = {
-	files: 'package-no-file-yes-test-value'
+const config = {
+	files: 'config-file-esm-test-value'
 };
+
+export default config;

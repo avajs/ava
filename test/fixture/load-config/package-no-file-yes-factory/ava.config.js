@@ -1,7 +1,5 @@
-const config = ({projectDir}) => {
+export default ({projectDir}) => {
 	return {
 		files: projectDir
 	};
 };
-
-module.exports = config;
