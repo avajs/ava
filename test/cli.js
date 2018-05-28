@@ -62,19 +62,32 @@ function execCli(args, opts, cb) {
 	return child;
 }
 
-test('disallow invalid babel config shortcuts', t => {
-	execCli(['es2015.js'], {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
-		t.ok(err);
+for (const which of [
+	'bad-key',
+	'bad-shortcut',
+	'array-test-options',
+	'false-test-options',
+	'null-test-options',
+	'null-extensions',
+	'obj-extensions',
+	'string-extensions',
+	'non-string-value-extensions',
+	'empty-string-value-extensions'
+]) {
+	test(`validates babel config: ${which}`, t => {
+		execCli(['es2015.js'], {dirname: `fixture/invalid-babel-config/${which}`}, (err, stdout, stderr) => {
+			t.ok(err);
 
-		let expectedOutput = '\n';
-		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
-		expectedOutput += '\n';
+			let expectedOutput = '\n';
+			expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
+			expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
+			expectedOutput += '\n';
 
-		t.is(stderr, expectedOutput);
-		t.end();
+			t.is(stderr, expectedOutput);
+			t.end();
+		});
 	});
-});
+}
 
 test('enabling long stack traces will provide detailed debug information', t => {
 	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
