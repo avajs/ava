@@ -7,7 +7,7 @@
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4"
+		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=9.11.1 <10 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
@@ -58,13 +58,13 @@
 		"flow"
 	],
 	"dependencies": {
-		"@ava/babel-preset-stage-4": "2.0.0-beta.5",
-		"@ava/babel-preset-transform-test-files": "4.0.0-beta.4",
+		"@ava/babel-preset-stage-4": "2.0.0-beta.6",
+		"@ava/babel-preset-transform-test-files": "4.0.0-beta.5",
 		"@ava/write-file-atomic": "^2.2.0",
-		"@babel/core": "7.0.0-beta.44",
-		"@babel/generator": "7.0.0-beta.44",
-		"@babel/plugin-syntax-async-generators": "7.0.0-beta.44",
-		"@babel/plugin-syntax-object-rest-spread": "7.0.0-beta.44",
+		"@babel/core": "7.0.0-beta.48",
+		"@babel/generator": "7.0.0-beta.48",
+		"@babel/plugin-syntax-async-generators": "7.0.0-beta.48",
+		"@babel/plugin-syntax-object-rest-spread": "7.0.0-beta.48",
 		"@concordance/react": "^1.0.0",
 		"ansi-escapes": "^3.1.0",
 		"ansi-styles": "^3.2.1",
@@ -74,7 +74,6 @@
 		"arrify": "^1.0.0",
 		"auto-bind": "^1.2.0",
 		"bluebird": "^3.5.1",
-		"caching-transform": "^1.0.0",
 		"chalk": "^2.3.2",
 		"chokidar": "^2.0.3",
 		"clean-stack": "^1.1.1",
@@ -95,7 +94,6 @@
 		"figures": "^2.0.0",
 		"get-port": "^3.2.0",
 		"globby": "^7.1.1",
-		"hullabaloo-config-manager": "2.0.0-beta.4",
 		"ignore-by-default": "^1.0.0",
 		"import-local": "^1.0.0",
 		"indent-string": "^3.2.0",

@@ -1,11 +1,11 @@
 import test from '../../..';
 
-const fixture = [1, 2];
+const one = {one: 1};
+const two = {two: 2};
 
 test('foo', t => {
-	// Using destructuring to ensure it transpiles on Node.js 4
-	// since that is a Node.js 6 feature
-	const [one, two] = fixture;
-	t.is(one, 1);
-	t.is(two, 2);
+	// Using object rest/spread to ensure it transpiles on Node.js 6, since this
+	// is a Node.js 8 feature
+	const actual = {...one, ...two};
+	t.deepEqual(actual, {one: 1, two: 2});
 });

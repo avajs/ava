@@ -66,7 +66,7 @@ test('disallow invalid babel config shortcuts', t => {
 	execCli(['es2015.js'], {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
 		t.ok(err);
 
-		let expectedOutput = '\n  ';
+		let expectedOutput = '\n';
 		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
 		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
 		expectedOutput += '\n';
@@ -786,7 +786,7 @@ test('doesn\'t set NODE_ENV when it is set', t => {
 test('skips test file compilation when babel=false and compileEnhancements=false', t => {
 	execCli(['import.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import|identifier)/);
 		t.end();
 	});
 });
@@ -810,7 +810,7 @@ test('no power-assert when babel=false and compileEnhancements=false', t => {
 test('skips stage-4 transform when babel=false and compileEnhancements=true', t => {
 	execCli(['import.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import)/);
+		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import|identifier)/);
 		t.end();
 	});
 });
@@ -834,5 +834,19 @@ test('additional arguments are forwarded to the worker', t => {
 	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], {dirname: 'fixture'}, err => {
 		t.ifError(err);
 		t.end();
+	});
+});
+
+test('--reset-cache resets cache', t => {
+	const cacheDir = path.join(__dirname, 'fixture', 'reset-cache', 'node_modules', '.cache', 'ava');
+	execCli([], {dirname: 'fixture/reset-cache'}, err => {
+		t.ifError(err);
+		t.true(fs.readdirSync(cacheDir).length > 0);
+
+		execCli(['--reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
+			t.ifError(err);
+			t.true(fs.readdirSync(cacheDir).length === 0);
+			t.end();
+		});
 	});
 });
