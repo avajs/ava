@@ -162,7 +162,7 @@ class Api extends Emittery {
 									map: [...files, ...helpers].reduce((acc, file) => {
 										try {
 											const realpath = fs.realpathSync(file);
-											if (!this._doNotCompileExtensions.has(path.extname(realpath))) {
+											if (!this._doNotCompileExtensions.has(path.extname(realpath).slice(1))) {
 												const cachePath = precompilation.precompileFile(realpath);
 												if (cachePath) {
 													acc[realpath] = cachePath;
