@@ -152,7 +152,7 @@ test('findFiles - finds the correct files by default', t => {
 	});
 });
 
-test('findFiles - finds the files with configured extensions', t => {
+test('findFiles - finds the files with configured extensions (single)', t => {
 	const fixtureDir = fixture('custom-extension');
 	process.chdir(fixtureDir);
 
@@ -163,6 +163,26 @@ test('findFiles - finds the files with configured extensions', t => {
 
 	const avaFiles = new AvaFiles({
 		extensions: ['jsx']
+	});
+
+	avaFiles.findTestFiles().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});
+
+test('findFiles - finds the files with configured extensions (multiple)', t => {
+	const fixtureDir = fixture('custom-extension');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'test/do-not-compile.js',
+		'test/foo.jsx',
+		'test/sub/bar.jsx'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles({
+		extensions: ['jsx', 'js']
 	});
 
 	avaFiles.findTestFiles().then(files => {
@@ -183,6 +203,45 @@ test('findTestHelpers - finds the test helpers', t => {
 	].sort().map(file => path.join(fixtureDir, file));
 
 	const avaFiles = new AvaFiles();
+
+	avaFiles.findTestHelpers().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});
+
+test('findFiles - finds the test helpers with configured extensions (single)', t => {
+	const fixtureDir = fixture('custom-extension');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'test/sub/_helper.jsx',
+		'test/helpers/a.jsx'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles({
+		extensions: ['jsx']
+	});
+
+	avaFiles.findTestHelpers().then(files => {
+		t.deepEqual(files.sort(), expected);
+		t.end();
+	});
+});
+
+test('findFiles - finds the test helpers with configured extensions (multiple)', t => {
+	const fixtureDir = fixture('custom-extension');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'test/sub/_helper.jsx',
+		'test/helpers/a.jsx',
+		'test/helpers/b.js'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const avaFiles = new AvaFiles({
+		extensions: ['jsx', 'js']
+	});
 
 	avaFiles.findTestHelpers().then(files => {
 		t.deepEqual(files.sort(), expected);
