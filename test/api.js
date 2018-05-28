@@ -30,6 +30,7 @@ function apiCreator(options) {
 	options = options || {};
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
+	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
@@ -941,34 +942,6 @@ test('babel.testOptions with extends still merges plugins with .babelrc', t => {
 		});
 });
 
-test('precompiles tests when babelConfig.extensions is defined', t => {
-	t.plan(3);
-
-	const api = apiCreator({
-		babelConfig: {
-			extensions: [],
-			testOptions: {
-				babelrc: true
-			}
-		},
-		cacheEnabled: false,
-		projectDir: path.join(__dirname, 'fixture/babelrc')
-	});
-
-	api.on('run', plan => {
-		plan.status.on('stateChange', evt => {
-			if (evt.type === 'test-passed') {
-				t.ok(evt.title === 'foo' || evt.title === 'repeated test: foo');
-			}
-		});
-	});
-
-	return api.run()
-		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 2);
-		});
-});
-
 test('extended config can disable ava/stage-4', t => {
 	t.plan(1);
 
@@ -1036,6 +1009,38 @@ test('uses "development" Babel environment if NODE_ENV is the empty string', t =
 	});
 
 	return withNodeEnv('', () => api.run())
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+		});
+});
+
+test('full extensions take precedence over enhancements-only', t => {
+	t.plan(2);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				plugins: [testCapitalizerPlugin]
+			}
+		},
+		extensions: {
+			all: ['foo.bar', 'bar'],
+			enhancementsOnly: ['bar'],
+			full: ['foo.bar']
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/extensions')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok(evt.title === 'FOO');
+			}
+		});
+	});
+
+	return api.run()
 		.then(runStatus => {
 			t.is(runStatus.stats.passedTests, 1);
 		});

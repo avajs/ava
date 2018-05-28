@@ -3,11 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const commonPathPrefix = require('common-path-prefix');
+const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
 const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
 const debounce = require('lodash.debounce');
-const difference = require('lodash.difference');
 const Bluebird = require('bluebird');
 const getPort = require('get-port');
 const arrify = require('arrify');
@@ -39,30 +39,8 @@ class Api extends Emittery {
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
 
-		const {babelConfig, extensions: doNotCompileExtensions = []} = this.options;
-		const {extensions: babelExtensions = []} = babelConfig || {};
-
-		if (babelConfig) {
-			if (babelExtensions.length === 0) {
-				if (doNotCompileExtensions.includes('js')) {
-					throw new Error(`Cannot specify generic 'js' extension without disabling AVA's Babel usage`);
-				}
-
-				babelExtensions.push('js');
-			}
-		} else if (doNotCompileExtensions.length === 0) {
-			doNotCompileExtensions.push('js');
-		}
-
-		// Combine all extensions possible for testing. Removing duplicate extensions.
-		this._allExtensions = [...new Set([...doNotCompileExtensions, ...babelExtensions])];
-		if (this._allExtensions.length !== doNotCompileExtensions.length + babelExtensions.length) {
-			const notRepeated = difference(doNotCompileExtensions, babelExtensions);
-			const duplicates = this._allExtensions.filter(ext => !notRepeated.includes(ext));
-			throw new Error(`Unexpected duplicate extensions in options: ${duplicates.join(', ')}`);
-		}
-
-		this._doNotCompileExtensions = new Set(doNotCompileExtensions);
+		this._allExtensions = this.options.extensions.all;
+		this._regexpFullExtensions = new RegExp(`\\.(${this.options.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
 		this._precompiler = null;
 	}
 
@@ -162,10 +140,10 @@ class Api extends Emittery {
 									map: [...files, ...helpers].reduce((acc, file) => {
 										try {
 											const realpath = fs.realpathSync(file);
-											const ext = path.extname(realpath).slice(1);
-											const cachePath = this._doNotCompileExtensions.has(ext) ?
-												precompilation.precompileEnhancementsOnly(realpath) :
-												precompilation.precompileFull(realpath);
+											const filename = path.basename(realpath);
+											const cachePath = this._regexpFullExtensions.test(filename) ?
+												precompilation.precompileFull(realpath) :
+												precompilation.precompileEnhancementsOnly(realpath);
 											if (cachePath) {
 												acc[realpath] = cachePath;
 											}
@@ -254,7 +232,7 @@ class Api extends Emittery {
 			filename => {
 				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
 			};
-		const precompileEnhancementsOnly = compileEnhancements && this._doNotCompileExtensions.size > 0 ?
+		const precompileEnhancementsOnly = compileEnhancements && this.options.extensions.enhancementsOnly.length > 0 ?
 			babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
 			filename => {
 				throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
