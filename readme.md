@@ -262,7 +262,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"@babel/register"
 		],
 		"babel": {
-			"extensions": ["jsx"]
+			"extensions": ["jsx"],
 			"testOptions": {
 				"babelrc": false
 			}
@@ -275,7 +275,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 
 ### Options
 
-- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Only files with a `.js` extension are used. Files with an underscore prefix are ignored. All `.js` files in selected directories are run
+- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Files with an underscore prefix are ignored. All matched files in selected directories are run. By default only selects files with `js` extensions, even if the glob pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
 - `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
@@ -284,10 +284,10 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
-- `extensions`: Extensions to opt of of precompilation.
+- `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable power-assert and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
 - `babel`: test file specific Babel options. See our [Babel recipe] for more details
-- `babel.extensions`: Extensions to include in precompilation.
+- `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
