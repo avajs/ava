@@ -292,27 +292,29 @@ Note that providing files on the CLI overrides the `files` option. If you've con
 
 To use an `ava.config.js` file:
 
- 1. It must be in the same directory as your `package.json`.
- 2. Your `package.json` must not contain an `ava` property.
+ 1. It must be in the same directory as your `package.json`
+ 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
 
-The config file can use either ESM or CommonJS syntax. Both of these are valid:
-
-```js
-module.exports = {
-	// …
-};
-```
+The config file must have a default export, using ES modules. It can either be a plain object or a factory function which returns a plain object:
 
 ```js
 export default {
-	// …
+	require: ['esm']
 };
 ```
 
-The config file may also export a factory function, which will be called with an object containing a `projectDir` property. This function must return a config object, it must not return a promise.
+```js
+export default function factory() {
+	return {
+		require: ['esm']
+	};
+};
+```
+
+The factory function is called with an object containing a `projectDir` property, which you could use to change the returned configuration:
 
 ```js
-const config = ({projectDir}) => {
+export default ({projectDir}) => {
 	if (projectDir === '/Users/username/projects/my-project') {
 		return {
 			// Config A
@@ -322,10 +324,10 @@ const config = ({projectDir}) => {
 	return {
 		// Config B
 	};
-}
-
-export default config;
+};
 ```
+
+Note that the final configuration must not be a promise.
 
 ## Documentation
 
