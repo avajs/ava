@@ -147,7 +147,7 @@ class Api extends Emittery {
 				return emittedRun
 					.then(() => this._setupPrecompiler())
 					.then(precompilation => {
-						if (!precompilation.precompileFile) {
+						if (!precompilation.enabled) {
 							return null;
 						}
 
@@ -162,11 +162,12 @@ class Api extends Emittery {
 									map: [...files, ...helpers].reduce((acc, file) => {
 										try {
 											const realpath = fs.realpathSync(file);
-											if (!this._doNotCompileExtensions.has(path.extname(realpath).slice(1))) {
-												const cachePath = precompilation.precompileFile(realpath);
-												if (cachePath) {
-													acc[realpath] = cachePath;
-												}
+											const ext = path.extname(realpath).slice(1);
+											const cachePath = this._doNotCompileExtensions.has(ext) ?
+												precompilation.precompileEnhancementsOnly(realpath) :
+												precompilation.precompileFull(realpath);
+											if (cachePath) {
+												acc[realpath] = cachePath;
 											}
 										} catch (err) {
 											throw Object.assign(err, {file});
@@ -246,10 +247,24 @@ class Api extends Emittery {
 		// Ensure cacheDir exists
 		makeDir.sync(cacheDir);
 
-		const {projectDir, babelConfig, compileEnhancements} = this.options;
+		const {projectDir, babelConfig} = this.options;
+		const compileEnhancements = this.options.compileEnhancements !== false;
+		const precompileFull = babelConfig ?
+			babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
+			};
+		const precompileEnhancementsOnly = compileEnhancements && this._doNotCompileExtensions.size > 0 ?
+			babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
+			};
+
 		this._precompiler = {
 			cacheDir,
-			precompileFile: babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements !== false)
+			enabled: babelConfig || compileEnhancements,
+			precompileEnhancementsOnly,
+			precompileFull
 		};
 		return this._precompiler;
 	}
