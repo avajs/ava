@@ -955,15 +955,17 @@ test('precompiles tests when babelConfig.extensions is defined', t => {
 		projectDir: path.join(__dirname, 'fixture/babelrc')
 	});
 
-	api.on('test-run', runStatus => {
-		runStatus.on('test', data => {
-			t.ok((data.title === 'foo') || (data.title === 'repeated test: foo'));
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok(evt.title === 'foo' || evt.title === 'repeated test: foo');
+			}
 		});
 	});
 
 	return api.run()
-		.then(result => {
-			t.is(result.passCount, 2);
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
 		});
 });
 
