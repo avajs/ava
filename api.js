@@ -87,10 +87,10 @@ class Api extends Emittery {
 				let splitTests = null;
 
 				if (isCi && ciParallelVars) {
-					let total = ciParallelVars.total;
-					let index = ciParallelVars.index;
+					const total = ciParallelVars.total;
+					const index = ciParallelVars.index;
 
-					let count = files.length / total;
+					const count = files.length / total;
 					let start = count * index;
 					let end = start + count;
 
@@ -98,7 +98,7 @@ class Api extends Emittery {
 					end = Math.round(end);
 
 					runningFiles = runningFiles.slice(start, end);
-					splitTests = { index, total, start, end };
+					splitTests = {index, total, start, end};
 				}
 
 				runStatus = new RunStatus(files.length, splitTests);
