@@ -62,19 +62,64 @@ function execCli(args, opts, cb) {
 	return child;
 }
 
-test('disallow invalid babel config shortcuts', t => {
-	execCli(['es2015.js'], {dirname: 'fixture/invalid-babel-config'}, (err, stdout, stderr) => {
+for (const which of [
+	'bad-key',
+	'bad-shortcut',
+	'array-test-options',
+	'false-test-options',
+	'null-test-options',
+	'null-extensions',
+	'obj-extensions',
+	'string-extensions',
+	'non-string-value-extensions',
+	'empty-string-value-extensions'
+]) {
+	test(`validates babel config: ${which}`, t => {
+		execCli(['es2015.js'], {dirname: `fixture/invalid-babel-config/${which}`}, (err, stdout, stderr) => {
+			t.ok(err);
+
+			let expectedOutput = '\n';
+			expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
+			expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
+			expectedOutput += '\n';
+
+			t.is(stderr, expectedOutput);
+			t.end();
+		});
+	});
+}
+
+test('errors if top-level extensions include "js" without babel=false', t => {
+	execCli(['es2015.js'], {dirname: `fixture/invalid-extensions/top-level`}, (err, stdout, stderr) => {
 		t.ok(err);
 
 		let expectedOutput = '\n';
-		expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-		expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
+		expectedOutput += figures.cross + ' Cannot specify generic \'js\' extension without disabling AVA\'s Babel usage.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
 		t.end();
 	});
 });
+
+for (const [where, which, msg = '\'js\', \'jsx\''] of [
+	['top-level', 'top-level-duplicates'],
+	['babel', 'babel-duplicates'],
+	['top-level and babel', 'shared-duplicates', '\'jsx\'']
+]) {
+	test(`errors if ${where} extensions include duplicates`, t => {
+		execCli(['es2015.js'], {dirname: `fixture/invalid-extensions/${which}`}, (err, stdout, stderr) => {
+			t.ok(err);
+
+			let expectedOutput = '\n';
+			expectedOutput += figures.cross + ` Unexpected duplicate extensions in options: ${msg}.`;
+			expectedOutput += '\n';
+
+			t.is(stderr, expectedOutput);
+			t.end();
+		});
+	});
+}
 
 test('enabling long stack traces will provide detailed debug information', t => {
 	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
@@ -817,6 +862,14 @@ test('skips stage-4 transform when babel=false and compileEnhancements=true', t 
 
 test('power-assert when babel=false and compileEnhancements=true', t => {
 	execCli(['power-assert.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout) => {
+		t.ok(err);
+		t.match(stripAnsi(stdout), /bool\n.*=> false/);
+		t.end();
+	});
+});
+
+test('power-assert with custom extension and no regular babel pipeline', t => {
+	execCli(['.'], {dirname: 'fixture/just-enhancement-compilation/custom-extension'}, (err, stdout) => {
 		t.ok(err);
 		t.match(stripAnsi(stdout), /bool\n.*=> false/);
 		t.end();

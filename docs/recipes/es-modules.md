@@ -45,4 +45,43 @@ test('2 + 2 = 4', t => {
 });
 ```
 
-Note that test files still need to use the `.js` extension.
+You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use:
+
+```json
+{
+	"ava": {
+		"babel": {
+			"extensions": [
+				"js",
+				"mjs"
+			]
+		}
+	}
+}
+```
+
+Alternatively you can use:
+
+```json
+{
+	"ava": {
+		"babel": false,
+		"extensions": [
+			"js",
+			"mjs"
+		]
+	}
+}
+```
+
+Or leave Babel enabled (which means it's applied to `.js` files), but don't apply it to `.mjs` files:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"mjs"
+		]
+	}
+}
+```

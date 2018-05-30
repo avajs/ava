@@ -79,6 +79,11 @@ const run = (type, reporter) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
 	const api = createApi({
+		extensions: {
+			all: ['js'],
+			enhancementsOnly: [],
+			full: ['js']
+		},
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',

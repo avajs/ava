@@ -37,6 +37,25 @@ Instead run the following to reset AVA's cache when you change the configuration
 $ npx ava --reset-cache
 ```
 
+## Add additional extensions
+
+You can configure AVA to recognize additional file extensions and compile those test & helper files using Babel:
+
+```json
+{
+	"ava": {
+		"babel": {
+			"extensions": [
+				"js",
+				"jsx"
+			]
+		}
+	}
+}
+```
+
+See also AVA's [`extensions` option](../../readme.md#options).
+
 ## Make AVA skip your project's Babel options
 
 You may not want AVA to use your project's Babel options, for example if your project is relying on Babel 6. You can set the `babelrc` option to `false`:
