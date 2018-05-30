@@ -9,7 +9,6 @@ const makeDir = require('make-dir');
 const touch = require('touch');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
-const Buffer = require('safe-buffer').Buffer;
 const stripAnsi = require('strip-ansi');
 
 const cliPath = path.join(__dirname, '../cli.js');
