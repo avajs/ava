@@ -1001,6 +1001,14 @@ test('.throws() fails if passed a bad expectation', t => {
 	});
 
 	failsWith(t, () => {
+		assertions.throws(() => {}, {code: 42});
+	}, {
+		assertion: 'throws',
+		message: 'The `code` property of the second argument to `t.throws()` must be a string',
+		values: [{label: 'Called with:', formatted: /code: 42/}]
+	});
+
+	failsWith(t, () => {
 		assertions.throws(() => {}, {instanceOf: null});
 	}, {
 		assertion: 'throws',
