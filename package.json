@@ -122,7 +122,7 @@
 		"observable-to-promise": "^0.5.0",
 		"ora": "^2.0.0",
 		"package-hash": "^2.0.0",
-		"path-sort": "^0.1.0",
+		"path-sort2": "^1.0.0",
 		"pkg-conf": "^2.1.0",
 		"plur": "^2.0.0",
 		"pretty-ms": "^3.1.0",
