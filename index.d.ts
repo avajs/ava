@@ -6,6 +6,9 @@ export type Constructor = (new (...args: Array<any>) => any);
 
 /** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation = {
+	/** The thrown error must have a code that equals the given string. */
+	code?: string;
+
 	/** The thrown error must be an instance of this constructor. */
 	instanceOf?: Constructor;
 
