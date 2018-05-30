@@ -15,7 +15,7 @@ export type ThrowsExpectation = {
 	/** The thrown error must be strictly equal to this value. */
 	is?: Error;
 
-	/** The thrown error must have an error that equals the given string, or matches the regular expression. */
+	/** The thrown error must have a message that equals the given string, or matches the regular expression. */
 	message?: string | RegExp;
 
 	/** The thrown error must have a name that equals the given string. */
