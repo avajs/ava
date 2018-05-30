@@ -1,1 +1,1 @@
-export default new Promise(resolve => resolve('should not work!'));
+export default Promise.resolve('should not work!');
