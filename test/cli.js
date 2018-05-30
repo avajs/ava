@@ -121,6 +121,20 @@ for (const [where, which, msg = '\'js\', \'jsx\''] of [
 	});
 }
 
+test('formats errors from ava.config.js', t => {
+	execCli(['es2015.js'], {dirname: 'fixture/load-config/throws'}, (err, stdout, stderr) => {
+		t.ok(err);
+
+		const lines = stderr.split('\n');
+		t.is(lines[0], '');
+		t.is(lines[1], figures.cross + ' Error loading ava.config.js');
+		t.is(lines[2], '');
+		t.match(lines[3], /ava\.config\.js/);
+		t.match(lines[4], /foo/);
+		t.end();
+	});
+});
+
 test('enabling long stack traces will provide detailed debug information', t => {
 	execCli('fixture/long-stack-trace', (err, stdout, stderr) => {
 		t.ok(err);

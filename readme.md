@@ -232,7 +232,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 ## Configuration
 
-All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
+All of the CLI options can be configured in the `ava` section of either your `package.json` or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
 
@@ -290,6 +290,47 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
+
+### Using `ava.config.js`
+
+To use an `ava.config.js` file:
+
+ 1. It must be in the same directory as your `package.json`
+ 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
+
+The config file must have a default export, using ES modules. It can either be a plain object or a factory function which returns a plain object:
+
+```js
+export default {
+	require: ['esm']
+};
+```
+
+```js
+export default function factory() {
+	return {
+		require: ['esm']
+	};
+};
+```
+
+The factory function is called with an object containing a `projectDir` property, which you could use to change the returned configuration:
+
+```js
+export default ({projectDir}) => {
+	if (projectDir === '/Users/username/projects/my-project') {
+		return {
+			// Config A
+		};
+	}
+
+	return {
+		// Config B
+	};
+};
+```
+
+Note that the final configuration must not be a promise.
 
 ## Documentation
 

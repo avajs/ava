@@ -45,7 +45,7 @@ And then use:
 $ npm run watch:test
 ```
 
-Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`]:
+Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config]:
 
 ```json
 {
@@ -67,7 +67,7 @@ In AVA there's a distinction between *source files* and *test files*. As you can
 
 By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-You can configure patterns for the source files in the [`ava` section of your `package.json`] file, using the `source` key.
+You can configure patterns for the source files in the [`ava` section of your `package.json`, or `ava.config.js` file][config], using the `source` key.
 
 You can specify patterns to match files in the folders that would otherwise be ignored, e.g. use `node_modules/some-dependency/*.js` to specify all `.js` files in `node_modules/some-dependency` as a source, even though normally all files in `node_modules` are ignored. Note that you need to specify an exact directory; `{bower_components,node_modules}/**/*.js` won't work.
 
@@ -77,7 +77,7 @@ If your tests write to disk they may trigger the watcher to rerun your tests. Co
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json`], and not from inside your test file. Files accessed using the `fs` module are not tracked.
+Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.js` file][config], and not from inside your test file. Files accessed using the `fs` module are not tracked.
 
 ## Watch mode and the `.only` modifier
 
@@ -118,5 +118,4 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`.only` modifier]: https://github.com/avajs/ava#running-specific-tests
-[`ava` section of your `package.json`]: https://github.com/avajs/ava#configuration
-[added them in your `package.json`]: https://github.com/avajs/ava#configuration
+[config]: https://github.com/avajs/ava#configuration

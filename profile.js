@@ -8,13 +8,13 @@ require('./lib/worker/load-chalk'); // eslint-disable-line import/no-unassigned-
 const path = require('path');
 const meow = require('meow');
 const Promise = require('bluebird');
-const pkgConf = require('pkg-conf');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const babelPipeline = require('./lib/babel-pipeline');
 const RunStatus = require('./lib/run-status');
 const VerboseReporter = require('./lib/reporters/verbose');
+const loadConfig = require('./lib/load-config');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -30,18 +30,14 @@ function resolveModules(modules) {
 
 Promise.longStackTraces();
 
-const conf = pkgConf.sync('ava', {
-	defaults: {
-		babel: {
-			testOptions: {}
-		},
-		compileEnhancements: true
-	}
+const conf = loadConfig({
+	babel: {
+		testOptions: {}
+	},
+	compileEnhancements: true
 });
 
-const filepath = pkgConf.filepath(conf);
-const projectDir = filepath === null ? process.cwd() : path.dirname(filepath);
-
+const {projectDir} = conf;
 // Define a minimal set of options from the main CLI
 const cli = meow(`
 	Usage
