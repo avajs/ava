@@ -44,11 +44,11 @@ If you're updating dependencies, please make sure you use npm@5.6.0 and commit t
 
 ### Hang out in our chat
 
-We have a [chat](https://gitter.im/avajs/ava). Jump in there and lurk, talk to us, and help others.
+We have a [chat](https://spectrum.chat/ava). Jump in there and lurk, talk to us, and help others.
 
 ## Submitting an issue
 
-- The issue tracker is for issues. Use our [chat](https://gitter.im/avajs/ava) or [Stack Overflow](https://stackoverflow.com/questions/tagged/ava) for support.
+- The issue tracker is for issues. Use our [chat](https://spectrum.chat/ava) or [Stack Overflow](https://stackoverflow.com/questions/tagged/ava) for support.
 - Search the issue tracker before opening an issue.
 - Ensure you're using the latest version of AVA.
 - Use a clear and descriptive title.

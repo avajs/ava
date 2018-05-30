@@ -2,14 +2,14 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/es-modules.md)
 
-As of Node.js 8.5.0, [ES modules](http://2ality.com/2017/09/native-esm-node.html) are natively supported, but behind the `--experimental-modules` command line flag. It works using the `.mjs` file extension. AVA does not currently support the command line option or the new file extension, but you *can* use the [`@std/esm`](https://github.com/standard-things/esm) module to use the new syntax.
+As of Node.js 8.5.0, [ES modules](http://2ality.com/2017/09/native-esm-node.html) are natively supported, but behind the `--experimental-modules` command line flag. It works using the `.mjs` file extension. AVA does not currently support the command line option or the new file extension, but you *can* use the [`esm`](https://github.com/standard-things/esm) module to use the new syntax.
 
 Here's how you get it working with AVA.
 
-First, install [`@std/esm`](https://github.com/standard-things/esm):
+First, install [`esm`](https://github.com/standard-things/esm):
 
 ```
-$ npm install @std/esm
+$ npm install esm
 ```
 
 Configure it in your `package.json` file, and add it to AVA's `"require"` option as well. Make sure to add it as the first item:
@@ -18,10 +18,9 @@ Configure it in your `package.json` file, and add it to AVA's `"require"` option
 {
 	"ava": {
 		"require": [
-			"@std/esm"
+			"esm"
 		]
-	},
-	"@std/esm": "js"
+	}
 }
 ```
 
@@ -46,4 +45,43 @@ test('2 + 2 = 4', t => {
 });
 ```
 
-Note that test files still need to use the `.js` extension.
+You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use:
+
+```json
+{
+	"ava": {
+		"babel": {
+			"extensions": [
+				"js",
+				"mjs"
+			]
+		}
+	}
+}
+```
+
+Alternatively you can use:
+
+```json
+{
+	"ava": {
+		"babel": false,
+		"extensions": [
+			"js",
+			"mjs"
+		]
+	}
+}
+```
+
+Or leave Babel enabled (which means it's applied to `.js` files), but don't apply it to `.mjs` files:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"mjs"
+		]
+	}
+}
+```

@@ -1,5 +1,6 @@
 'use strict';
-require('../lib/worker-options').set({color: false});
+require('../lib/chalk').set();
+require('../lib/worker/options').set({color: false});
 
 const path = require('path');
 const stripAnsi = require('strip-ansi');
@@ -1136,18 +1137,6 @@ test('.notThrows() fails if passed a bad value', t => {
 		assertion: 'notThrows',
 		message: '`t.notThrows()` must be called with a function, observable or promise',
 		values: [{label: 'Called with:', formatted: /not a function/}]
-	});
-
-	t.end();
-});
-
-test('.ifError()', t => {
-	fails(t, () => {
-		assertions.ifError(new Error());
-	});
-
-	passes(t, () => {
-		assertions.ifError(null);
 	});
 
 	t.end();

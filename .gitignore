@@ -2,5 +2,3 @@ node_modules
 .nyc_output
 coverage
 bench/.results
-types/generated.d.ts
-/package-lock.json.md5

@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.7.1.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.8.1.
 
 Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
 
@@ -69,7 +69,7 @@ By default, the type of `t.context` will be the empty object (`{}`). AVA exposes
 ```ts
 import anyTest, {TestInterface} from 'ava';
 
-const test: TestInterface<{foo: string}> = anyTest;
+const test = anyTest as TestInterface<{foo: string}>;
 
 test.beforeEach(t => {
 	t.context = {foo: 'bar'};
@@ -97,7 +97,7 @@ interface Context {
 	foo: string
 }
 
-const test: TestInterface<Context> = anyTest;
+const test = anyTest as TestInterface<Context>;
 
 const macro: Macro<Context> = (t, expected: string) => {
 	t.is(t.context.foo, expected);

@@ -1,7 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
-
 # JSPM and SystemJS for ES2015
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/jspm-systemjs.md)
@@ -16,36 +12,39 @@ This recipe has only been tested with JSPM v0.17.0-beta.22, but it should work w
 
 Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building.
 
+```
+$ npm install --save-dev @babel/preset-env
+```
+
 ```json
 {
-	"presets": ["es2015", "stage-2"]
+	"presets": ["@babel/preset-env"]
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
+You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
 
 ### JSPM Loader Helper
 
-You will need to install the [AVA JSPM loader](https://github.com/skorlir/ava-jspm-loader) as a dev dependency.
+You will need to install the [AVA JSPM loader](https://github.com/skorlir/ava-jspm-loader) as a dev dependency. You will also need to install [`@babel/register`](https://www.npmjs.com/package/@babel/register).
 
 ```
-$ npm install --save-dev ava-jspm-loader
+$ npm install --save-dev ava-jspm-loader @babel/register
 ```
-
 You will also need to update your AVA config in package.json to use the JSPM loader.
 
 ```json
 {
 	"ava": {
 		"require": [
-			"babel-register",
+			"@babel/register",
 			"ava-jspm-loader"
 		]
 	}
 }
 ```
 
-NOTE: If you use async/await in your source code (not in your test code), you will need to install `babel-polyfill` from npm and add it to your `require` array.
+NOTE: If you use async/await in your source code (not in your test code), you will need to install [`@babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill) and add it to your `require` array.
 
 ### Example test file
 

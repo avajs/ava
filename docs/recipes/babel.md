@@ -2,13 +2,11 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/babel.md)
 
-AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. We do this by compiling test and helper files using our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset. We also use a [second preset](https://github.com/avajs/babel-preset-transform-test-files) to enable [enhanced assertion messages](../../readme#enhanced-assertion-messages) and detect improper use of `t.throws()` assertions.
+AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. We do this by compiling test and helper files using our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset. We also use a [second preset, `@ava/transform-test-files`](https://github.com/avajs/babel-preset-transform-test-files) to enable [enhanced assertion messages](../../readme#enhanced-assertion-messages) and detect improper use of `t.throws()` assertions.
 
-By default our Babel pipeline is applied to test and helper files ending in `.js`. If your project uses Babel then we'll automatically compile these files using your project's Babel configuration.
+By default our Babel pipeline is applied to test and helper files ending in `.js`. If your project uses Babel then we'll automatically compile these files using your project's Babel configuration. The `@ava/transform-helper-files` preset is applied first, and the `@ava/stage-4` last.
 
 If you are using Babel for your source files then you must also [configure source compilation](#compile-sources).
-
-AVA only looks for Babel configuration files in your project directory. That is, `.babelrc` or `.babelrc.js` files next to your `package.json` file, or the `package.json` file itself.
 
 ## Customize how AVA compiles your test files
 
@@ -28,6 +26,35 @@ You can override the default Babel configuration AVA uses for test file compilat
 ```
 
 All `.babelrc` options are allowed inside the `testOptions` object.
+
+## Reset AVA's cache
+
+AVA caches the compiled test and helper files. It automatically recompiles these files when you change them, however it can't detect updates of your Babel plugins and presets, or changes to your Babel configuration files.
+
+Instead run the following to reset AVA's cache when you change the configuration or update plugins or presets:
+
+```console
+$ npx ava --reset-cache
+```
+
+## Add additional extensions
+
+You can configure AVA to recognize additional file extensions and compile those test & helper files using Babel:
+
+```json
+{
+	"ava": {
+		"babel": {
+			"extensions": [
+				"js",
+				"jsx"
+			]
+		}
+	}
+}
+```
+
+See also AVA's [`extensions` option](../../readme.md#options).
 
 ## Make AVA skip your project's Babel options
 
@@ -65,6 +92,8 @@ You can disable AVA's stage-4 preset:
 
 Note that this *does not* stop AVA from compiling your test files using Babel.
 
+You **must** disable the preset by configuring it in the `testOptions`. AVA will still apply the preset if you configure it in other files (for instance a `.babelrc` file). This is [due to a Babel issue](https://github.com/babel/babel/issues/7920).
+
 ## Preserve ES module syntax
 
 By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This can be disabled:
@@ -83,7 +112,9 @@ By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This 
 }
 ```
 
-You'll have to use [`@std/esm`](https://github.com/standard-things/esm) so that AVA can still load your test files. [See our recipe for details](./es-modules.md).
+You **must** configure the preset in the `testOptions` in order to preserve the ES module syntax. AVA will still apply the preset if you configure it in other files (for instance a `.babelrc` file). This is [due to a Babel issue](https://github.com/babel/babel/issues/7920).
+
+You'll have to use the [`esm`](https://github.com/standard-things/esm) module so that AVA can still load your test files. [See our recipe for details](./es-modules.md).
 
 ## Disable AVA's Babel pipeline
 

@@ -1,19 +1,20 @@
 'use strict';
+require('./lib/worker/load-chalk'); // eslint-disable-line import/no-unassigned-import
 
 // Iron-node does not work with forked processes
 // This cli command will run a single file in the current process.
 // Intended to be used with iron-node for profiling purposes.
 
 const path = require('path');
-const EventEmitter = require('events');
 const meow = require('meow');
 const Promise = require('bluebird');
 const pkgConf = require('pkg-conf');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
-const babelConfigHelper = require('./lib/babel-config');
-const CachingPrecompiler = require('./lib/caching-precompiler');
+const babelPipeline = require('./lib/babel-pipeline');
+const RunStatus = require('./lib/run-status');
+const VerboseReporter = require('./lib/reporters/verbose');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -73,96 +74,84 @@ if (cli.input.length === 0) {
 const file = path.resolve(cli.input[0]);
 const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
-babelConfigHelper.build(process.cwd(), cacheDir, babelConfigHelper.validate(conf.babel), conf.compileEnhancements === true)
-	.then(result => {
-		const precompiled = {};
-		if (result) {
-			const precompiler = new CachingPrecompiler({
-				path: cacheDir,
-				getBabelOptions: result.getOptions,
-				babelCacheKeys: result.cacheKeys
-			});
+const precompileFile = babelPipeline.build(process.cwd(), cacheDir, babelPipeline.validate(conf.babel), conf.compileEnhancements === true);
+const precompiled = {};
+if (precompileFile) {
+	precompiled[file] = precompileFile(file);
+}
 
-			precompiled[file] = precompiler.precompileFile(file);
-		}
+const opts = {
+	file,
+	failFast: cli.flags.failFast,
+	serial: cli.flags.serial,
+	tty: false,
+	cacheDir,
+	precompiled,
+	require: resolveModules(conf.require)
+};
 
-		const opts = {
-			file,
-			failFast: cli.flags.failFast,
-			serial: cli.flags.serial,
-			tty: false,
-			cacheDir,
-			precompiled,
-			require: resolveModules(conf.require)
-		};
+// Mock the behavior of a parent process
+process.connected = true;
+process.channel = {ref() {}, unref() {}};
 
-		const events = new EventEmitter();
-		events.on('loaded-file', () => {});
+const reporter = new VerboseReporter({
+	reportStream: process.stdout,
+	stdStream: process.stderr,
+	watching: false
+});
 
-		let failCount = 0;
-		let uncaughtExceptionCount = 0;
-
-		// Mock the behavior of a parent process
-		process.channel = {ref() {}, unref() {}};
+const runStatus = new RunStatus([file]);
+runStatus.observeWorker({
+	file,
+	onStateChange(listener) {
+		const emit = evt => listener(Object.assign(evt, {testFile: file}));
 		process.send = data => {
 			if (data && data.ava) {
-				const name = data.name.replace(/^ava-/, '');
+				const evt = data.ava;
+				if (evt.type === 'ping') {
+					if (console.profileEnd) {
+						console.profileEnd();
+					}
 
-				if (events.listeners(name).length > 0) {
-					events.emit(name, data.data);
+					if (process.exitCode) {
+						emit({type: 'worker-failed', nonZeroExitCode: process.exitCode});
+					} else {
+						emit({type: 'worker-finished', forcedExit: false});
+						process.exitCode = runStatus.suggestExitCode({matching: false});
+					}
+
+					setImmediate(() => {
+						reporter.endRun();
+						process.emit('message', {ava: {type: 'pong'}});
+					});
 				} else {
-					console.log('UNHANDLED AVA EVENT:', name, data.data);
+					emit(data.ava);
 				}
-
-				return;
 			}
-
-			console.log('NON AVA EVENT:', data);
 		};
+	}
+}, file);
 
-		events.on('test', data => {
-			console.log('TEST:', data.title, data.error);
-		});
+reporter.startRun({
+	failFastEnabled: false,
+	files: [file],
+	matching: false,
+	previousFailures: 0,
+	status: runStatus
+});
 
-		events.on('results', data => {
-			if (console.profileEnd) {
-				console.profileEnd();
-			}
+process.on('beforeExit', () => {
+	process.exitCode = process.exitCode || runStatus.suggestExitCode({matching: false});
+});
 
-			console.log('RESULTS:', data.stats);
+// The "subprocess" will read process.argv[2] for options
+process.argv[2] = JSON.stringify(opts);
+process.argv.length = 3;
 
-			failCount = data.stats.failCount;
-			setImmediate(() => process.emit('ava-teardown'));
-		});
+if (console.profile) {
+	console.profile('AVA test-worker process');
+}
 
-		events.on('teardown', () => {
-			if (process.exit) {
-				process.exit(failCount + uncaughtExceptionCount); // eslint-disable-line unicorn/no-process-exit
-			}
-		});
-
-		events.on('stats', () => {
-			setImmediate(() => {
-				process.emit('ava-run', {});
-			});
-		});
-
-		events.on('uncaughtException', data => {
-			uncaughtExceptionCount++;
-			let stack = data && data.exception && data.exception.stack;
-			stack = stack || data;
-			console.log(stack);
-		});
-
-		// `test-worker` will read process.argv[2] for options
-		process.argv[2] = JSON.stringify(opts);
-		process.argv.length = 3;
-
-		if (console.profile) {
-			console.profile('AVA test-worker process');
-		}
-
-		setImmediate(() => {
-			require('./lib/test-worker'); // eslint-disable-line import/no-unassigned-import
-		});
-	});
+setImmediate(() => {
+	require('./lib/worker/subprocess'); // eslint-disable-line import/no-unassigned-import
+});

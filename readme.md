@@ -2,7 +2,8 @@
 
 > Futuristic test runner
 
-[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/avajs/ava) [![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
+[![Build Status: Linux](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Build status: Windows](https://ci.appveyor.com/api/projects/status/e7v91mu2m5x48ehx/branch/master?svg=true)](https://ci.appveyor.com/project/ava/ava/branch/master) [![Coverage Status](https://coveralls.io/repos/github/avajs/ava/badge.svg?branch=master)](https://coveralls.io/github/avajs/ava?branch=master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/ava)
+ [![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
 
 Even though JavaScript is single-threaded, IO in Node.js can happen in parallel due to its async nature. AVA takes advantage of this and runs your tests concurrently, which is especially beneficial for IO heavy tests. In addition, test files are run in parallel as separate processes, giving you even better performance and an isolated environment for each test file. [Switching](https://github.com/sindresorhus/pageres/commit/663be15acb3dd2eb0f71b1956ef28c2cd3fdeed0) from Mocha to AVA in Pageres brought the test time down from 31 to 11 seconds. Having tests run concurrently forces you to write atomic tests, meaning tests don't depend on global state or the state of other tests, which is a great thing!
 
@@ -71,19 +72,10 @@ test('arrays are equal', t => {
 
 ### Add AVA to your project
 
-Install AVA globally and run it with `--init` to add AVA to your `package.json`.
-
-
-```console
-$ npm install --global ava@next
-$ ava --init
-```
-
-If you prefer using Yarn:
+To install and set up AVA, run:
 
 ```console
-$ yarn global add ava@next
-$ ava --init
+$ npx create-ava --next
 ```
 
 Your `package.json` will then look like this:
@@ -95,28 +87,22 @@ Your `package.json` will then look like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^1.0.0-beta.1"
+		"ava": "1.0.0-beta.4"
 	}
 }
 ```
 
-Any arguments passed after `--init` are added as config to `package.json`.
-
-#### Manual installation
-
-You can also install AVA directly:
+Initialization will work with npm and Yarn, but running `npx` requires [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) or greater to be installed. Otherwise, you'll have to manually install `ava` and configure the `test` script in your `package.json` as per above:
 
 ```console
-$ npm install --save-dev ava@next
+$ npm install --save-dev --save-exact ava@next
 ```
 
-Alternatively using Yarn:
+Or if you prefer using Yarn:
 
 ```console
-$ yarn add --dev ava@next
+$ yarn add ava@next --dev --exact
 ```
-
-You'll have to configure the `test` script in your `package.json` to use `ava` (see above).
 
 ### Create your test file
 
@@ -163,7 +149,6 @@ $ ava --help
     ava [<file|directory|glob> ...]
 
   Options
-    --init                  Add AVA to your project
     --watch, -w             Re-run tests when tests and source files change
     --match, -m             Only run tests with matching title (Can be repeated)
     --update-snapshots, -u  Update snapshots
@@ -173,7 +158,6 @@ $ ava --help
     --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --verbose, -v           Enable verbose output
     --tap, -t               Generate TAP output
-    --no-cache              Disable the compiler cache
     --color                 Force color output
     --no-color              Disable color output
 
@@ -182,7 +166,6 @@ $ ava --help
     ava test.js test2.js
     ava test-*.js
     ava test
-    ava --init
 
   Default patterns when no arguments:
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
@@ -251,14 +234,17 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 All of the CLI options can be configured in the `ava` section of your `package.json`. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
+To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
+
 ```json
 {
 	"ava": {
 		"files": [
-			"my-test-folder/*.js",
-			"!**/not-this-file.js"
+			"my-test-directory/**/*.js",
+			"!my-test-directory/exclude-this-directory/**/*.js",
+			"!**/exclude-this-file.js"
 		],
-		"source": [
+		"sources": [
 			"**/*.{js,jsx}",
 			"!dist/**/*"
 		],
@@ -266,6 +252,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 			"*oo",
 			"!foo"
 		],
+		"cache": true,
 		"concurrency": 5,
 		"failFast": true,
 		"failWithoutAssertions": false,
@@ -275,6 +262,7 @@ All of the CLI options can be configured in the `ava` section of your `package.j
 			"@babel/register"
 		],
 		"babel": {
+			"extensions": ["jsx"],
 			"testOptions": {
 				"babelrc": false
 			}
@@ -287,16 +275,19 @@ Arguments passed to the CLI will always take precedence over the configuration i
 
 ### Options
 
-- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Only files with a `.js` extension are used. Files with an underscore prefix are ignored. All `.js` files in selected directories are run
+- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Files with an underscore prefix are ignored. All matched files in selected directories are run. By default only selects files with `js` extensions, even if the glob pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
 - `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](#running-tests-with-matching-titles)
+- `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
+- `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable power-assert and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](#process-isolation)
 - `babel`: test file specific Babel options. See our [Babel recipe] for more details
+- `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
@@ -857,7 +848,7 @@ Assertions are bound to their test so you can assign them to a variable or pass 
 
 ```js
 test('unicorns are truthy', t => {
-	const truthy = t.thruthy;
+	const truthy = t.truthy;
 	truthy('unicorn');
 });
 ```
@@ -990,10 +981,6 @@ Assert that `contents` matches `regex`.
 ### `.notRegex(contents, regex, [message])`
 
 Assert that `contents` does not match `regex`.
-
-### `.ifError(error, [message])`
-
-Assert that `error` is falsy.
 
 ### `.snapshot(expected, [message])`
 ### `.snapshot(expected, [options], [message])`
@@ -1147,7 +1134,7 @@ In contrast AVA is highly opinionated and runs tests concurrently, with a separa
 
 ### How is the name written and pronounced?
 
-AVA, not Ava or ava. Pronounced [`/ˈeɪvə/` ay-və](media/pronunciation.m4a?raw=true).
+AVA, not Ava or ava. Pronounced [/ˈeɪvə/ ay-və](media/pronunciation.m4a?raw=true).
 
 ### What is the header background?
 
@@ -1181,7 +1168,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 ## Support
 
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
-- [Gitter chat](https://gitter.im/avajs/ava)
+- [Spectrum](https://spectrum.chat/ava)
 - [Twitter](https://twitter.com/ava__js)
 
 ## Related
@@ -1220,7 +1207,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 	<a href="https://ava.li">
-		<img src="https://cdn.rawgit.com/avajs/ava/fe1cea1ca3d2c8518c0cc39ec8be592beab90558/media/logo.svg" width="200" alt="AVA">
+		<img src="media/logo.svg" width="200" alt="AVA">
 	</a>
 	<br>
 	<br>

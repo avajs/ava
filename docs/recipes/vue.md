@@ -1,7 +1,3 @@
-> **Please note, this recipe has not yet been updated for Babel 7 support in AVA 1.0.**
-
----
-
 # Testing Vue.js components
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/vue.md)
@@ -23,7 +19,6 @@ The first step is setting up a helper to configure the environment to transpile 
 ```json
 {
 	"ava": {
-		"babel": "inherit",
 		"require": [
 			"./test/helpers/setup.js"
 		]
@@ -48,7 +43,7 @@ hooks('vue').plugin('vue').push();
 hooks(['vue', 'js']).plugin('babel').push();
 ```
 
-You can find more information about setting up Babel with AVA in the [babelrc recipe](babelrc.md).
+You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
 
 ## Sample snapshot test
 

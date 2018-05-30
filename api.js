@@ -1,9 +1,9 @@
 'use strict';
-const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const commonPathPrefix = require('common-path-prefix');
+const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
 const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
@@ -11,13 +11,14 @@ const debounce = require('lodash.debounce');
 const Bluebird = require('bluebird');
 const getPort = require('get-port');
 const arrify = require('arrify');
+const makeDir = require('make-dir');
 const ms = require('ms');
-const babelConfigHelper = require('./lib/babel-config');
-const CachingPrecompiler = require('./lib/caching-precompiler');
+const babelPipeline = require('./lib/babel-pipeline');
+const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
-const AvaError = require('./lib/ava-error');
 const AvaFiles = require('./lib/ava-files');
 const fork = require('./lib/fork');
+const serializeError = require('./lib/serialize-error');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -31,12 +32,16 @@ function resolveModules(modules) {
 	});
 }
 
-class Api extends EventEmitter {
+class Api extends Emittery {
 	constructor(options) {
 		super();
 
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
+
+		this._allExtensions = this.options.extensions.all;
+		this._regexpFullExtensions = new RegExp(`\\.(${this.options.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
+		this._precompiler = null;
 	}
 
 	run(files, runtimeOptions) {
@@ -46,19 +51,13 @@ class Api extends EventEmitter {
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
 		let runStatus;
-
 		// Irrespectively, perform some setup now, before finding test files.
-		const handleError = exception => {
-			runStatus.handleExceptions({
-				exception,
-				file: exception.file ? path.relative(process.cwd(), exception.file) : undefined
-			});
-		};
 
 		// Track active forks and manage timeouts.
 		const failFast = apiOptions.failFast === true;
 		let bailed = false;
-		const pendingForks = new Set();
+		const pendingWorkers = new Set();
+		const timedOutWorkerFiles = new Set();
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
@@ -70,54 +69,63 @@ class Api extends EventEmitter {
 					bailed = true;
 				}
 
-				for (const fork of pendingForks) {
-					fork.exit();
+				for (const worker of pendingWorkers) {
+					timedOutWorkerFiles.add(worker.file);
+					worker.exit();
 				}
 
-				handleError(new AvaError(`Exited because no new tests completed within the last ${timeout}ms of inactivity`));
+				runStatus.emitStateChange({type: 'timeout', period: timeout});
 			}, timeout);
 		} else {
 			restartTimer = Object.assign(() => {}, {cancel() {}});
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
-				runStatus = new RunStatus({
-					runOnlyExclusive: runtimeOptions.runOnlyExclusive,
-					prefixTitles: apiOptions.explicitTitles || files.length > 1,
-					base: path.relative(process.cwd(), commonPathPrefix(files)) + path.sep,
-					failFast,
-					fileCount: files.length,
-					updateSnapshots: runtimeOptions.updateSnapshots
+				runStatus = new RunStatus(files.length);
+
+				const emittedRun = this.emit('run', {
+					clearLogOnNextRun: runtimeOptions.clearLogOnNextRun === true,
+					failFastEnabled: failFast,
+					filePathPrefix: commonPathPrefix(files),
+					files,
+					matching: apiOptions.match.length > 0,
+					previousFailures: runtimeOptions.previousFailures || 0,
+					runOnlyExclusive: runtimeOptions.runOnlyExclusive === true,
+					runVector: runtimeOptions.runVector || 0,
+					status: runStatus
 				});
-
-				runStatus.on('test', restartTimer);
-				if (failFast) {
-					// Prevent new test files from running once a test has failed.
-					runStatus.on('test', test => {
-						if (test.error) {
-							bailed = true;
-						}
-
-						for (const fork of pendingForks) {
-							fork.notifyOfPeerFailure();
-						}
-					});
-				}
-
-				this.emit('test-run', runStatus, files);
 
 				// Bail out early if no files were found.
 				if (files.length === 0) {
-					handleError(new AvaError('Couldn\'t find any files to test'));
-					return runStatus;
+					return emittedRun.then(() => {
+						return runStatus;
+					});
 				}
 
-				// Set up a fresh precompiler for each test run.
-				return this._setupPrecompiler()
+				runStatus.on('stateChange', record => {
+					if (record.testFile && !timedOutWorkerFiles.has(record.testFile)) {
+						// Restart the timer whenever there is activity from workers that
+						// haven't already timed out.
+						restartTimer();
+					}
+
+					if (failFast && (record.type === 'hook-failed' || record.type === 'test-failed' || record.type === 'worker-failed')) {
+						// Prevent new test files from running once a test has failed.
+						bailed = true;
+
+						// Try to stop currently scheduled tests.
+						for (const worker of pendingWorkers) {
+							worker.notifyOfPeerFailure();
+						}
+					}
+				});
+
+				return emittedRun
+					.then(() => this._setupPrecompiler())
 					.then(precompilation => {
-						if (!precompilation) {
+						if (!precompilation.enabled) {
 							return null;
 						}
 
@@ -125,21 +133,27 @@ class Api extends EventEmitter {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom}).findTestHelpers().then(helpers => {
-							return {
-								cacheDir: precompilation.cacheDir,
-								map: files.concat(helpers).reduce((acc, file) => {
-									try {
-										const realpath = fs.realpathSync(file);
-										const hash = precompilation.precompiler.precompileFile(realpath);
-										acc[realpath] = hash;
-									} catch (err) {
-										throw Object.assign(err, {file});
-									}
-									return acc;
-								}, {})
-							};
-						});
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: this._allExtensions})
+							.findTestHelpers().then(helpers => {
+								return {
+									cacheDir: precompilation.cacheDir,
+									map: [...files, ...helpers].reduce((acc, file) => {
+										try {
+											const realpath = fs.realpathSync(file);
+											const filename = path.basename(realpath);
+											const cachePath = this._regexpFullExtensions.test(filename) ?
+												precompilation.precompileFull(realpath) :
+												precompilation.precompileEnhancementsOnly(realpath);
+											if (cachePath) {
+												acc[realpath] = cachePath;
+											}
+										} catch (err) {
+											throw Object.assign(err, {file});
+										}
+										return acc;
+									}, {})
+								};
+							});
 					})
 					.then(precompilation => {
 						// Resolve the correct concurrency value.
@@ -156,90 +170,81 @@ class Api extends EventEmitter {
 							// No new files should be run once a test has timed out or failed,
 							// and failFast is enabled.
 							if (bailed) {
-								return null;
+								return;
 							}
 
-							let forked;
-							return Bluebird.resolve(
-								this._computeForkExecArgv().then(execArgv => {
-									const options = Object.assign({}, apiOptions, {
-										// If we're looking for matches, run every single test process in exclusive-only mode
-										runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
-									});
-									if (precompilation) {
-										options.cacheDir = precompilation.cacheDir;
-										options.precompiled = precompilation.map;
-									} else {
-										options.precompiled = {};
-									}
-									if (runtimeOptions.updateSnapshots) {
-										// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
-										options.updateSnapshots = true;
-									}
+							return this._computeForkExecArgv().then(execArgv => {
+								const options = Object.assign({}, apiOptions, {
+									// If we're looking for matches, run every single test process in exclusive-only mode
+									runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
+								});
+								if (precompilation) {
+									options.cacheDir = precompilation.cacheDir;
+									options.precompiled = precompilation.map;
+								} else {
+									options.precompiled = {};
+								}
+								if (runtimeOptions.updateSnapshots) {
+									// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+									options.updateSnapshots = true;
+								}
 
-									forked = fork(file, options, execArgv);
-									pendingForks.add(forked);
-									runStatus.observeFork(forked);
-									restartTimer();
-									return forked;
-								}).catch(err => {
-									// Prevent new test files from running.
-									if (failFast) {
-										bailed = true;
-									}
-									handleError(Object.assign(err, {file}));
-									return null;
-								})
-							).finally(() => {
-								pendingForks.delete(forked);
+								const worker = fork(file, options, execArgv);
+								runStatus.observeWorker(worker, file);
+
+								pendingWorkers.add(worker);
+								worker.promise.then(() => { // eslint-disable-line max-nested-callbacks
+									pendingWorkers.delete(worker);
+								});
+
+								restartTimer();
+
+								return worker.promise;
 							});
 						}, {concurrency});
 					})
 					.catch(err => {
-						handleError(err);
-						return [];
+						runStatus.emitStateChange({type: 'internal-error', err: serializeError('Internal error', false, err)});
 					})
-					.then(results => {
+					.then(() => {
 						restartTimer.cancel();
-
-						// Filter out undefined results (e.g. for files that were skipped after a timeout)
-						results = results.filter(Boolean);
-						if (apiOptions.match.length > 0 && !runStatus.hasExclusive) {
-							handleError(new AvaError('Couldn\'t find any matching tests'));
-						}
-
-						runStatus.processResults(results);
 						return runStatus;
 					});
 			});
 	}
 
 	_setupPrecompiler() {
+		if (this._precompiler) {
+			return this._precompiler;
+		}
+
 		const cacheDir = this.options.cacheEnabled === false ?
 			uniqueTempDir() :
 			path.join(this.options.projectDir, 'node_modules', '.cache', 'ava');
 
-		return this._buildBabelConfig(cacheDir).then(result => {
-			return result ? {
-				cacheDir,
-				precompiler: new CachingPrecompiler({
-					path: cacheDir,
-					getBabelOptions: result.getOptions,
-					babelCacheKeys: result.cacheKeys
-				})
-			} : null;
-		});
-	}
+		// Ensure cacheDir exists
+		makeDir.sync(cacheDir);
 
-	_buildBabelConfig(cacheDir) {
-		if (this._babelConfigPromise) {
-			return this._babelConfigPromise;
-		}
-
+		const {projectDir, babelConfig} = this.options;
 		const compileEnhancements = this.options.compileEnhancements !== false;
-		const promise = babelConfigHelper.build(this.options.projectDir, cacheDir, this.options.babelConfig, compileEnhancements);
-		this._babelConfigPromise = promise;
-		return promise;
+		const precompileFull = babelConfig ?
+			babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
+			};
+		const precompileEnhancementsOnly = compileEnhancements && this.options.extensions.enhancementsOnly.length > 0 ?
+			babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
+			};
+
+		this._precompiler = {
+			cacheDir,
+			enabled: babelConfig || compileEnhancements,
+			precompileEnhancementsOnly,
+			precompileFull
+		};
+		return this._precompiler;
 	}
 
 	_computeForkExecArgv() {
