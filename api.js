@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const commonPathPrefix = require('common-path-prefix');
+const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
 const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
@@ -38,6 +39,8 @@ class Api extends Emittery {
 		this.options = Object.assign({match: []}, options);
 		this.options.require = resolveModules(this.options.require);
 
+		this._allExtensions = this.options.extensions.all;
+		this._regexpFullExtensions = new RegExp(`\\.(${this.options.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
 		this._precompiler = null;
 	}
 
@@ -78,7 +81,7 @@ class Api extends Emittery {
 		}
 
 		// Find all test files.
-		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files}).findTestFiles()
+		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
 				runStatus = new RunStatus(files.length);
 
@@ -122,7 +125,7 @@ class Api extends Emittery {
 				return emittedRun
 					.then(() => this._setupPrecompiler())
 					.then(precompilation => {
-						if (!precompilation.precompileFile) {
+						if (!precompilation.enabled) {
 							return null;
 						}
 
@@ -130,23 +133,27 @@ class Api extends Emittery {
 						// helpers from within the `resolveTestsFrom` directory. Without
 						// arguments this is the `projectDir`, else it's `process.cwd()`
 						// which may be nested too deeply.
-						return new AvaFiles({cwd: this.options.resolveTestsFrom}).findTestHelpers().then(helpers => {
-							return {
-								cacheDir: precompilation.cacheDir,
-								map: [...files, ...helpers].reduce((acc, file) => {
-									try {
-										const realpath = fs.realpathSync(file);
-										const cachePath = precompilation.precompileFile(realpath);
-										if (cachePath) {
-											acc[realpath] = cachePath;
+						return new AvaFiles({cwd: this.options.resolveTestsFrom, extensions: this._allExtensions})
+							.findTestHelpers().then(helpers => {
+								return {
+									cacheDir: precompilation.cacheDir,
+									map: [...files, ...helpers].reduce((acc, file) => {
+										try {
+											const realpath = fs.realpathSync(file);
+											const filename = path.basename(realpath);
+											const cachePath = this._regexpFullExtensions.test(filename) ?
+												precompilation.precompileFull(realpath) :
+												precompilation.precompileEnhancementsOnly(realpath);
+											if (cachePath) {
+												acc[realpath] = cachePath;
+											}
+										} catch (err) {
+											throw Object.assign(err, {file});
 										}
-									} catch (err) {
-										throw Object.assign(err, {file});
-									}
-									return acc;
-								}, {})
-							};
-						});
+										return acc;
+									}, {})
+								};
+							});
 					})
 					.then(precompilation => {
 						// Resolve the correct concurrency value.
@@ -218,10 +225,24 @@ class Api extends Emittery {
 		// Ensure cacheDir exists
 		makeDir.sync(cacheDir);
 
-		const {projectDir, babelConfig, compileEnhancements} = this.options;
+		const {projectDir, babelConfig} = this.options;
+		const compileEnhancements = this.options.compileEnhancements !== false;
+		const precompileFull = babelConfig ?
+			babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
+			};
+		const precompileEnhancementsOnly = compileEnhancements && this.options.extensions.enhancementsOnly.length > 0 ?
+			babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
+			filename => {
+				throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
+			};
+
 		this._precompiler = {
 			cacheDir,
-			precompileFile: babelPipeline.build(projectDir, cacheDir, babelConfig, compileEnhancements !== false)
+			enabled: babelConfig || compileEnhancements,
+			precompileEnhancementsOnly,
+			precompileFull
 		};
 		return this._precompiler;
 	}
