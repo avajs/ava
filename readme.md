@@ -956,6 +956,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 * `is`: the thrown error must be strictly equal to `expected.is`
 * `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
 * `name`: the expected `.name` value of the thrown error
+* `code`: the expected `.code` value of the thrown error
 
 `expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
 

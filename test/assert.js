@@ -819,6 +819,24 @@ test('.throws()', gather(t => {
 		}, {name: 'TypeError'});
 	});
 
+	// Passes because the correct error is thrown.
+	passes(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			err.code = 'ERR_TEST';
+			throw err;
+		}, {code: 'ERR_TEST'});
+	});
+
+	// Fails because the thrown value is not the right one
+	fails(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			err.code = 'ERR_NOPE';
+			throw err;
+		}, {code: 'ERR_TEST'});
+	});
+
 	// Fails because the promise is resolved, not rejected.
 	eventuallyFailsWith(t, () => assertions.throws(Promise.resolve('foo')), {
 		assertion: 'throws',
@@ -980,6 +998,14 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertion: 'throws',
 		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /\[\]/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, {code: 42});
+	}, {
+		assertion: 'throws',
+		message: 'The `code` property of the second argument to `t.throws()` must be a string',
+		values: [{label: 'Called with:', formatted: /code: 42/}]
 	});
 
 	failsWith(t, () => {
