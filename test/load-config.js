@@ -52,14 +52,26 @@ test('loads config from factory function', t => {
 	t.end();
 });
 
-test('throws an error if a config file returns a promise', t => {
+test('throws an error if a config factory returns a promise', t => {
 	changeDir('factory-no-promise-return');
 	t.throws(loadConfig);
 	t.end();
 });
 
-test('throws an error if a config file is a promise', t => {
+test('throws an error if a config exports a promise', t => {
 	changeDir('no-promise-config');
+	t.throws(loadConfig);
+	t.end();
+});
+
+test('throws an error if a config factory does not return a plain object', t => {
+	changeDir('factory-no-plain-return');
+	t.throws(loadConfig);
+	t.end();
+});
+
+test('throws an error if a config does not export a plain object', t => {
+	changeDir('no-plain-config');
 	t.throws(loadConfig);
 	t.end();
 });
@@ -68,5 +80,21 @@ test('receives a `projectDir` property', t => {
 	changeDir('package-only');
 	const conf = loadConfig();
 	t.ok(conf.projectDir.startsWith(__dirname));
+	t.end();
+});
+
+test('rethrows wrapped module errors', t => {
+	t.plan(1);
+	changeDir('throws');
+	try {
+		loadConfig();
+	} catch (err) {
+		t.is(err.parent.message, 'foo');
+	}
+});
+
+test('throws an error if a config file has no default export', t => {
+	changeDir('no-default-export');
+	t.throws(loadConfig);
 	t.end();
 });
