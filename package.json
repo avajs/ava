@@ -88,6 +88,7 @@
 		"convert-source-map": "^1.5.1",
 		"currently-unhandled": "^0.4.1",
 		"debug": "^3.1.0",
+		"del": "^3.0.0",
 		"dot-prop": "^4.2.0",
 		"emittery": "^0.3.0",
 		"empower-core": "^0.6.1",
@@ -142,7 +143,6 @@
 	"devDependencies": {
 		"cli-table2": "^0.2.0",
 		"codecov": "^3.0.2",
-		"del": "^3.0.0",
 		"delay": "^3.0.0",
 		"execa": "^0.10.0",
 		"flow-bin": "^0.73.0",
