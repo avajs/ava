@@ -169,6 +169,14 @@ function eventuallyPasses(t, fn) {
 	});
 }
 
+test('AssertionError throws when message is not a string', t => {
+	const input = new Error('an error object');
+	const AssertionError = assert.AssertionError;
+	const expectedError = new TypeError('Assertion message must be a string');
+	t.throws(() => new AssertionError({message: input}), expectedError);
+	t.end();
+});
+
 test('.pass()', t => {
 	passes(t, () => {
 		assertions.pass();
