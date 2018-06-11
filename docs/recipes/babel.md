@@ -153,6 +153,8 @@ You'll need to install `@babel/polyfill` yourself.
 
 AVA does not currently compile source files. You'll have to load [Babel's `register` module](http://babeljs.io/docs/usage/require/), which will compile source files as needed.
 
+To compile source files on-the-fly, use `@babel/register` else, use `babel-register`.
+
 You can enable the `register` module by adding it to AVA's `require` option:
 
 ```json
@@ -190,3 +192,5 @@ Now instead of requiring `@babel/register`, require `test/_register` instead:
 ```
 
 Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
+
+Also, use `@babel/register` and Babel 7 configs, or `babel-register` with Babel 6 configs.
