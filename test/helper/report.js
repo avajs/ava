@@ -5,6 +5,7 @@ const path = require('path');
 const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
+const pkg = require('../../package.json');
 
 let _Api = null;
 const createApi = options => {
@@ -72,7 +73,8 @@ exports.sanitizers = {
 			return str;
 		}
 		return str === 'stdout\n' || str === 'stderr\n' ? '' : str;
-	}
+	},
+	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
 const run = (type, reporter) => {
