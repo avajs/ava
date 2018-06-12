@@ -10,6 +10,7 @@ const touch = require('touch');
 const uniqueTempDir = require('unique-temp-dir');
 const execa = require('execa');
 const stripAnsi = require('strip-ansi');
+const pkg = require('../package.json');
 
 const cliPath = path.join(__dirname, '../cli.js');
 
@@ -79,7 +80,7 @@ for (const which of [
 
 			let expectedOutput = '\n';
 			expectedOutput += figures.cross + ' Unexpected Babel configuration for AVA.';
-			expectedOutput += ' See https://github.com/avajs/ava/blob/master/docs/recipes/babel.md for allowed values.';
+			expectedOutput += ` See https://github.com/avajs/ava/blob/v${pkg.version}/docs/recipes/babel.md for allowed values.`;
 			expectedOutput += '\n';
 
 			t.is(stderr, expectedOutput);
