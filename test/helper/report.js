@@ -77,12 +77,13 @@ exports.sanitizers = {
 
 const run = (type, reporter) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
+	const extension = (type === 'typescript') ? 'ts' : 'js';
 
-	const api = createApi({
+	const options = {
 		extensions: {
-			all: ['js'],
+			all: [extension],
 			enhancementsOnly: [],
-			full: ['js']
+			full: [extension]
 		},
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
@@ -99,11 +100,18 @@ const run = (type, reporter) => {
 		updateSnapshots: false,
 		snapshotDir: false,
 		color: true
-	});
+	};
+
+	if (type === 'typescript') {
+		options.compileEnhancements = false;
+		options.require = ['ts-node/register'];
+	}
+
+	const api = createApi(options);
 
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync('*.js', {cwd: projectDir}).sort();
+	const files = globby.sync('*.' + extension, {cwd: projectDir}).sort();
 	if (type !== 'watch') {
 		return api.run(files).then(() => {
 			reporter.endRun();
@@ -127,3 +135,4 @@ exports.failFast = reporter => run('failFast', reporter);
 exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.watch = reporter => run('watch', reporter);
+exports.typescript = reporter => run('typescript', reporter);

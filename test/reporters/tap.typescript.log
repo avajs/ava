@@ -1,0 +1,27 @@
+TAP version 13
+---tty-stream-chunk-separator
+# TSError: ⨯ Unable to compile TypeScript:
+not ok 1 - TSError: ⨯ Unable to compile TypeScript:
+  ---
+    diagnosticText: |
+      build-error.ts(3,1): error TS2532: Object is possibly 'undefined'.
+    diagnosticCodes: []
+    name: TSError
+    message: |
+      ⨯ Unable to compile TypeScript:
+      build-error.ts(3,1): error TS2532: Object is possibly 'undefined'.
+    at: >-
+      createTSError
+      (~/node_modules/ts-node/src/index.ts:250:12)
+  ...
+---tty-stream-chunk-separator
+# test/fixture/report/typescript/build-error.ts exited with a non-zero exit code: 1
+not ok 2 - test/fixture/report/typescript/build-error.ts exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+
+1..0
+# tests 0
+# pass 0
+# fail 2
+
+---tty-stream-chunk-separator
