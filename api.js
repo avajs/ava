@@ -232,11 +232,14 @@ class Api extends Emittery {
 			filename => {
 				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
 			};
-		const precompileEnhancementsOnly = compileEnhancements && this.options.extensions.enhancementsOnly.length > 0 ?
-			babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
-			filename => {
-				throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
-			};
+		let precompileEnhancementsOnly = () => null;
+		if (compileEnhancements) {
+			precompileEnhancementsOnly = this.options.extensions.enhancementsOnly.length > 0 ?
+				babelPipeline.build(projectDir, cacheDir, null, compileEnhancements) :
+				filename => {
+					throw new Error(`Cannot apply enhancement-only precompilation, possible bad usage: ${filename}`);
+				};
+		}
 
 		this._precompiler = {
 			cacheDir,

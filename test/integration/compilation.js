@@ -68,3 +68,10 @@ test('workers load compiled helpers if in the require configuration', t => {
 		t.end();
 	});
 });
+
+test('skips babel compilation for custom extensions, with disabled enhancement compilation', t => {
+	execCli(['test.ts'], {dirname: 'fixture/ts-node'}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
