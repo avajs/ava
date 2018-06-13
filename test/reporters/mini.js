@@ -15,7 +15,7 @@ const run = type => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO]
+		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
 	});
 	const reporter = new MiniReporter({
 		spinner: {
