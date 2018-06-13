@@ -63,6 +63,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 
 exports.sanitizers = {
 	cwd: str => replaceString(str, process.cwd(), '~'),
+	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
 	// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr. This
