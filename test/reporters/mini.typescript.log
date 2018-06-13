@@ -8,17 +8,7 @@
 
   [1m[37mUncaught exception in test/fixture/report/typescript/build-error.ts[39m[22m
 
-  [90m~/node_modules/ts-node/src/index.ts:250[39m
-
-  TSError: ⨯ Unable to compile TypeScript:
-
-  build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
-
-
-  [90mcreateTSError (~/node_modules/ts-node/src/index.ts:250:12)[39m
-  [90mgetOutput (~/node_modules/ts-node/src/index.ts:358:40)[39m
-  [90mObject.compile (~/node_modules/ts-node/src/index.ts:546:11)[39m
-  [90mModule.m._compile (~/node_modules/ts-node/src/index.ts:430:43)[39m
-  [90mObject.require.extensions.(anonymous function) [as .ts] (~/node_modules/ts-node/src/index.ts:433:12)[39m
+  [90mbuild-error.ts(1,1): error TS2304: Cannot find name 'trigger'.[39m
+  [90mbuild-error.ts(2,1): error TS2304: Cannot find name 'lets'.[39m
 
 ---tty-stream-chunk-separator

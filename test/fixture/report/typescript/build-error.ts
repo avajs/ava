@@ -1,1 +1,2 @@
-trigger.a.build.error()
+trigger.a.build.error();
+lets.do.another();

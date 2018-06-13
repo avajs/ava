@@ -5,11 +5,15 @@ not ok 1 - TSError: ⨯ Unable to compile TypeScript:
   ---
     diagnosticText: |
       build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
-    diagnosticCodes: []
+      build-error.ts(2,1): error TS2304: Cannot find name 'lets'.
+    diagnosticCodes:
+      - 2304
+      - 2304
     name: TSError
     message: |
       ⨯ Unable to compile TypeScript:
       build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
+      build-error.ts(2,1): error TS2304: Cannot find name 'lets'.
     at: >-
       createTSError
       (~/node_modules/ts-node/src/index.ts:250:12)
