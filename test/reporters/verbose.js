@@ -8,14 +8,14 @@ const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const VerboseReporter = require('../../lib/reporters/verbose');
 
-const run = type => t => {
+const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
 	const logFile = path.join(__dirname, `verbose.${type.toLowerCase()}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
 	});
 	const reporter = new VerboseReporter({
 		reportStream: tty,
@@ -36,3 +36,4 @@ test('verbose reporter - failFast run', run('failFast'));
 test('verbose reporter - second failFast run', run('failFast2'));
 test('verbose reporter - only run', run('only'));
 test('verbose reporter - watch mode run', run('watch'));
+test('verbose reporter - typescript', run('typescript', [report.sanitizers.lineEndings]));

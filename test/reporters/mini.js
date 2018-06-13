@@ -8,14 +8,14 @@ const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const MiniReporter = require('../../lib/reporters/mini');
 
-const run = type => t => {
+const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
 	const logFile = path.join(__dirname, `mini.${type.toLowerCase()}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
 	});
 	const reporter = new MiniReporter({
 		spinner: {
@@ -41,3 +41,4 @@ test('mini reporter - failFast run', run('failFast'));
 test('mini reporter - second failFast run', run('failFast2'));
 test('mini reporter - only run', run('only'));
 test('mini reporter - watch mode run', run('watch'));
+test('mini reporter - typescript', run('typescript', [report.sanitizers.lineEndings]));

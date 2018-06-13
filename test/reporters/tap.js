@@ -8,14 +8,14 @@ const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const TapReporter = require('../../lib/reporters/tap');
 
-const run = type => t => {
+const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
 	const logFile = path.join(__dirname, `tap.${type.toLowerCase()}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO]
 	});
 	const reporter = new TapReporter({
 		reportStream: tty,
