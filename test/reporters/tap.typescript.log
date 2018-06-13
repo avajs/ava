@@ -4,12 +4,12 @@ TAP version 13
 not ok 1 - TSError: ⨯ Unable to compile TypeScript:
   ---
     diagnosticText: |
-      build-error.ts(3,1): error TS2532: Object is possibly 'undefined'.
+      build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
     diagnosticCodes: []
     name: TSError
     message: |
       ⨯ Unable to compile TypeScript:
-      build-error.ts(3,1): error TS2532: Object is possibly 'undefined'.
+      build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
     at: >-
       createTSError
       (~/node_modules/ts-node/src/index.ts:250:12)

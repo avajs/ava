@@ -6,12 +6,12 @@
 
   TSError: ⨯ Unable to compile TypeScript:
 
-  build-error.ts(3,1): error TS2532: Object is possibly 'undefined'.
+  build-error.ts(1,1): error TS2304: Cannot find name 'trigger'.
 
 
   [90mcreateTSError (~/node_modules/ts-node/src/index.ts:250:12)[39m
   [90mgetOutput (~/node_modules/ts-node/src/index.ts:358:40)[39m
-  [90mObject.compile (~/node_modules/ts-node/src/index.ts:545:11)[39m
+  [90mObject.compile (~/node_modules/ts-node/src/index.ts:546:11)[39m
   [90mModule.m._compile (~/node_modules/ts-node/src/index.ts:430:43)[39m
   [90mObject.require.extensions.(anonymous function) [as .ts] (~/node_modules/ts-node/src/index.ts:433:12)[39m
 

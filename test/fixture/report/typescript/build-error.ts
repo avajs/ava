@@ -1,1 +1,1 @@
-this.is.a.build.error()
+trigger.a.build.error()
