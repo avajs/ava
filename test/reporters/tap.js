@@ -15,7 +15,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO, ...sanitizers]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.unreliableProcessIO]
 	});
 	const reporter = new TapReporter({
 		reportStream: tty,

@@ -15,7 +15,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version, ...sanitizers]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
 	});
 	const reporter = new VerboseReporter({
 		reportStream: tty,
