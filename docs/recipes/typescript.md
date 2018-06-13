@@ -6,17 +6,13 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 
 This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.8.3.
 
-## Setup
+## Configuring AVA to compile TypeScript files on the fly
 
-Firstly, we recommend keeping a `tsconfig.json` file in your test folder. This can extend your normal `tsconfig.json` file, but should include your test files. This allows changing typescript configuration for tests, and running tools like `tslint` on your test files.
-
-Secondly, you will need to have `ts-node` installed.
-
-And last but not least, configure ava to build typescript files by adding this configuration to your `package.json` file.
+You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly:
 
 ```json
+{
 	"ava": {
-		"babel": false,
 		"compileEnhancements": false,
 		"extensions": [
 			"ts"
@@ -25,9 +21,24 @@ And last but not least, configure ava to build typescript files by adding this c
 			"ts-node/register"
 		]
 	}
+}
 ```
 
-It's worth noting that the following configuration requires your test files to pass typescript building without errors. If you want to be able to test with incorrect type errors, or other _non critical_ errors, you can use `ts-node/register/transpile-only` instead.
+It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+
+## Compiling TypeScript files before running AVA
+
+Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
+
+```json
+{
+	"scripts": {
+		"test": "tsc && ava"
+	}
+}
+```
+
+Make sure that AVA runs your built TypeScript files.
 
 ## Writing tests
 
