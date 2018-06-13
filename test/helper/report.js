@@ -91,7 +91,7 @@ const run = (type, reporter) => {
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
-		cacheEnable: true,
+		cacheEnabled: true,
 		compileEnhancements: true,
 		match: [],
 		babelConfig: {testOptions: {}},
