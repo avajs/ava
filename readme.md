@@ -653,7 +653,7 @@ For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context 
 By default `t.context` is an object but you can reassign it:
 
 ```js
-test.before(t => {
+test.beforeEach(t => {
 	t.context = 'unicorn';
 });
 
