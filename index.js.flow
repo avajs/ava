@@ -22,7 +22,7 @@ export interface ObservableLike {
     next: (value: any) => void,
     error?: (error: any) => void,
     complete?: () => void,
-  ): ObservableSubscription;
+  ): Subscription;
 }
 
 export type Constructor = Class<{constructor(...args: Array<any>): any}>;
