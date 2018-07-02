@@ -1,5 +1,20 @@
+export interface Subscription {
+  unsubscribe(): void;
+}
+
+export interface Observer {
+  next?: (value: any) => void;
+  error?: (error: any) => void;
+  complete?: () => void;
+}
+
 export interface ObservableLike {
-	subscribe(observer: (value: any) => void): void;
+	subscribe(observer: Observer): Subscription;
+	subscribe(
+    next: (value: any) => void,
+    error?: (error: any) => void,
+    complete?: () => void,
+  ): ObservableSubscription;
 }
 
 export type Constructor = (new (...args: Array<any>) => any);
