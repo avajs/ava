@@ -801,8 +801,6 @@ declare const test: TestInterface;
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 export default test;
 
-export {test};
-
 /** Call to declare a hook that is run once, after all tests have passed, or chain to declare modifiers. */
 export const after: AfterInterface;
 

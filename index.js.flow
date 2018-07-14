@@ -774,9 +774,6 @@ export interface TodoDeclaration {
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 declare export default TestInterface<>;
 
-/** Call to declare a test, or chain to declare hooks or test modifiers */
-declare export var test: TestInterface<>;
-
 /** Call to declare a hook that is run after each passing test, or chain to declare modifiers. */
 declare export var after: AfterInterface<>;
 
