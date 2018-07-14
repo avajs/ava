@@ -50,7 +50,6 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Isolated environment for each test file](#process-isolation)
 - [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
 - [Promise support](#promise-support)
-- [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
@@ -762,17 +761,6 @@ test('resolves with unicorn', t => {
 });
 ```
 
-### Generator function support
-
-AVA comes with built-in support for [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
-
-```js
-test(function * (t) {
-	const value = yield generatorFn();
-	t.true(value);
-});
-```
-
 ### Async function support
 
 AVA comes with built-in support for [async functions](https://tc39.github.io/ecmascript-asyncawait/) *(async/await)*.
@@ -946,7 +934,7 @@ Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqua
 
 ### `.throws(thrower, [expected, [message]])`
 
-Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject, or an observable that should error. Alternatively a promise or observable can be passed directly.
+Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject. Alternatively a promise can be passed directly.
 
 The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
@@ -985,7 +973,7 @@ test('rejects', async t => {
 });
 ```
 
-When testing an observable or promise you must wait for the assertion to complete:
+When testing a promise you must wait for the assertion to complete:
 
 ```js
 test('rejects', async t => {
@@ -1005,9 +993,9 @@ test('throws', async t => {
 
 ### `.notThrows(nonThrower, [message])`
 
-Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve, or an observable that should complete. Alternatively a promise or an observable can be passed directly.
+Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve. Alternatively a promise can be passed directly.
 
-Like the `.throws()` assertion, when testing a promise or an observable you must wait for the assertion to complete:
+Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
 
 ```js
 test('resolves', async t => {

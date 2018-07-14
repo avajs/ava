@@ -4,7 +4,29 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.8.1.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 2.8.3.
+
+## Configuring AVA to compile TypeScript files on the fly
+
+You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly:
+
+```json
+{
+	"ava": {
+		"compileEnhancements": false,
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	}
+}
+```
+
+It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+
+## Compiling TypeScript files before running AVA
 
 Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
 

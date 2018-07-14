@@ -5,6 +5,7 @@ const path = require('path');
 const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
+const pkg = require('../../package.json');
 
 let _Api = null;
 const createApi = options => {
@@ -62,6 +63,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 
 exports.sanitizers = {
 	cwd: str => replaceString(str, process.cwd(), '~'),
+	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
 	// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr. This
@@ -72,13 +74,14 @@ exports.sanitizers = {
 			return str;
 		}
 		return str === 'stdout\n' || str === 'stderr\n' ? '' : str;
-	}
+	},
+	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
 const run = (type, reporter) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-	const api = createApi({
+	const options = {
 		extensions: {
 			all: ['js'],
 			enhancementsOnly: [],
@@ -88,7 +91,7 @@ const run = (type, reporter) => {
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
-		cacheEnable: true,
+		cacheEnabled: true,
 		compileEnhancements: true,
 		match: [],
 		babelConfig: {testOptions: {}},
@@ -99,11 +102,21 @@ const run = (type, reporter) => {
 		updateSnapshots: false,
 		snapshotDir: false,
 		color: true
-	});
+	};
+	let pattern = '*.js';
 
+	if (type === 'typescript') {
+		options.extensions.all.push('ts');
+		options.extensions.enhancementsOnly.push('ts');
+		options.compileEnhancements = false;
+		options.require = ['ts-node/register'];
+		pattern = '*.ts';
+	}
+
+	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync('*.js', {cwd: projectDir}).sort();
+	const files = globby.sync(pattern, {cwd: projectDir}).sort();
 	if (type !== 'watch') {
 		return api.run(files).then(() => {
 			reporter.endRun();
@@ -127,3 +140,4 @@ exports.failFast = reporter => run('failFast', reporter);
 exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.watch = reporter => run('watch', reporter);
+exports.typescript = reporter => run('typescript', reporter);
