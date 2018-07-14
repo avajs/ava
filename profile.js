@@ -96,7 +96,7 @@ const reporter = new VerboseReporter({
 	watching: false
 });
 
-const runStatus = new RunStatus([file]);
+const runStatus = new RunStatus(1, null);
 runStatus.observeWorker({
 	file,
 	onStateChange(listener) {
