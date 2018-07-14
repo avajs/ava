@@ -161,17 +161,11 @@ export interface NotThrowsAssertion {
 	/** Assert that the function does not throw. */
 	(fn: () => never, message?: string): void;
 
-	/** Assert that the function returns an observable that does not error. You must await the result. */
-	(fn: () => ObservableLike, message?: string): Promise<void>;
-
 	/** Assert that the function returns a promise that does not reject. You must await the result. */
 	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
 
 	/** Assert that the function does not throw. */
 	(fn: () => any, message?: string): void;
-
-	/** Assert that the observable does not error. You must await the result. */
-	(observable: ObservableLike, message?: string): Promise<void>;
 
 	/** Assert that the promise does not reject. You must await the result. */
 	(promise: PromiseLike<any>, message?: string): Promise<void>;
@@ -249,37 +243,6 @@ export interface ThrowsAssertion {
 	(fn: () => never, expectations: ThrowsExpectation, message?: string): any;
 
 	/**
-	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the error value. You must await the result.
-	 */
-	(fn: () => ObservableLike, expectations?: null, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the error value. You must await the result. The error must be an instance of the given constructor.
-	 */
-	(fn: () => ObservableLike, constructor: Constructor, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the error value. You must await the result. The error must have a message that matches the regular
-	 * expression.
-	 */
-	(fn: () => ObservableLike, regex: RegExp, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the error value. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	(fn: () => ObservableLike, errorMessage: string, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns an observable that errors with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the error value. You must await the result. The error must satisfy all expectations.
-	 */
-	(fn: () => ObservableLike, expectations: ThrowsExpectation, message?: string): Promise<any>;
-
-	/**
 	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
 	 * If so, returns the rejection reason. You must await the result.
 	 */
@@ -340,36 +303,6 @@ export interface ThrowsAssertion {
 	 * The error must satisfy all expectations.
 	 */
 	(fn: () => any, expectations: ThrowsExpectation, message?: string): any;
-
-	/**
-	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result.
-	 */
-	(promise: ObservableLike, expectations?: null, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must be an instance of the given constructor.
-	 */
-	(promise: ObservableLike, constructor: Constructor, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message that matches the regular expression.
-	 */
-	(promise: ObservableLike, regex: RegExp, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	(promise: ObservableLike, errorMessage: string, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the observable errors with [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must satisfy all expectations.
-	 */
-	(promise: ObservableLike, expectations: ThrowsExpectation, message?: string): Promise<any>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
