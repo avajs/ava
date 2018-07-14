@@ -61,15 +61,6 @@ test('precompile helpers', t => {
 		});
 });
 
-test('generators support', t => {
-	const api = apiCreator();
-
-	return api.run([path.join(__dirname, 'fixture/generators.js')])
-		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 1);
-		});
-});
-
 test('async/await support', t => {
 	const api = apiCreator();
 

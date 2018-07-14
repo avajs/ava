@@ -50,7 +50,6 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Isolated environment for each test file](#process-isolation)
 - [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
 - [Promise support](#promise-support)
-- [Generator function support](#generator-function-support)
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
@@ -759,17 +758,6 @@ test('resolves with unicorn', t => {
 	return somePromise().then(result => {
 		t.is(result, 'unicorn');
 	});
-});
-```
-
-### Generator function support
-
-AVA comes with built-in support for [generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
-
-```js
-test(function * (t) {
-	const value = yield generatorFn();
-	t.true(value);
 });
 ```
 

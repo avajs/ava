@@ -461,7 +461,7 @@ export interface CbExecutionContext<Context = {}> extends ExecutionContext<Conte
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | ObservableLike | Iterator<any> | void;
+export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
 export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
