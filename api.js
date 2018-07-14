@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const ciParallelVars = require('ci-parallel-vars');
 const commonPathPrefix = require('common-path-prefix');
 const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
