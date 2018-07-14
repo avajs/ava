@@ -946,7 +946,7 @@ Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqua
 
 ### `.throws(thrower, [expected, [message]])`
 
-Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject, or an observable that should error. Alternatively a promise or observable can be passed directly.
+Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject. Alternatively a promise can be passed directly.
 
 The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
@@ -985,7 +985,7 @@ test('rejects', async t => {
 });
 ```
 
-When testing an observable or promise you must wait for the assertion to complete:
+When testing a promise you must wait for the assertion to complete:
 
 ```js
 test('rejects', async t => {
@@ -1005,9 +1005,9 @@ test('throws', async t => {
 
 ### `.notThrows(nonThrower, [message])`
 
-Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve, or an observable that should complete. Alternatively a promise or an observable can be passed directly.
+Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve. Alternatively a promise can be passed directly.
 
-Like the `.throws()` assertion, when testing a promise or an observable you must wait for the assertion to complete:
+Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
 
 ```js
 test('resolves', async t => {

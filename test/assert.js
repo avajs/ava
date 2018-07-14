@@ -7,7 +7,6 @@ const stripAnsi = require('strip-ansi');
 const React = require('react');
 const renderer = require('react-test-renderer');
 const test = require('tap').test;
-const Observable = require('zen-observable');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
@@ -876,49 +875,6 @@ test('.throws()', gather(t => {
 			{label: 'Expected message to match:', formatted: /\/def\//}
 		]
 	});
-
-	const complete = arg => Observable.of(arg);
-	const error = err => new Observable(observer => observer.error(err));
-
-	// Fails because the observable completed, not errored.
-	eventuallyFailsWith(t, () => assertions.throws(complete('foo')), {
-		assertion: 'throws',
-		message: '',
-		values: [{label: 'Observable completed with:', formatted: /'foo'/}]
-	});
-
-	// Fails because the observable completed with an Error
-	eventuallyFailsWith(t, () => assertions.throws(complete(new Error())), {
-		assertion: 'throws',
-		message: '',
-		values: [{label: 'Observable completed with:', formatted: /Error/}]
-	});
-
-	// Fails because the function returned a observable that completed, not rejected.
-	eventuallyFailsWith(t, () => assertions.throws(() => complete('foo')), {
-		assertion: 'throws',
-		message: '',
-		values: [{label: 'Returned observable completed with:', formatted: /'foo'/}]
-	});
-
-	// Passes because the observable errored with an error.
-	eventuallyPasses(t, () => assertions.throws(error(new Error())));
-
-	// Passes because the function returned an observable errored with an error.
-	eventuallyPasses(t, () => assertions.throws(() => error(new Error())));
-
-	// Passes because the error's message matches the regex
-	eventuallyPasses(t, () => assertions.throws(error(new Error('abc')), /abc/));
-
-	// Fails because the error's message does not match the regex
-	eventuallyFailsWith(t, () => assertions.throws(error(new Error('abc')), /def/), {
-		assertion: 'throws',
-		message: '',
-		values: [
-			{label: 'Observable errored with unexpected exception:', formatted: /Error/},
-			{label: 'Expected message to match:', formatted: /\/def\//}
-		]
-	});
 }));
 
 test('.throws() returns the thrown error', t => {
@@ -952,23 +908,12 @@ test('.throws() returns the rejection reason of a promise returned by the functi
 	});
 });
 
-test('.throws() returns the error of an observable returned by the function', t => {
-	const expected = new Error();
-
-	return assertions.throws(() => {
-		return new Observable(observer => observer.error(expected));
-	}).then(actual => {
-		t.is(actual, expected);
-		t.end();
-	});
-});
-
 test('.throws() fails if passed a bad value', t => {
 	failsWith(t, () => {
 		assertions.throws('not a function');
 	}, {
 		assertion: 'throws',
-		message: '`t.throws()` must be called with a function, observable or promise',
+		message: '`t.throws()` must be called with a function or promise',
 		values: [{label: 'Called with:', formatted: /not a function/}]
 	});
 
@@ -1091,29 +1036,6 @@ test('.notThrows()', gather(t => {
 		message: '',
 		values: [{label: 'Returned promise rejected with:', formatted: /Error/}]
 	});
-
-	const complete = arg => Observable.of(arg);
-	const error = err => new Observable(observer => observer.error(err));
-
-	// Passes because the observable completed
-	eventuallyPasses(t, () => assertions.notThrows(complete()));
-
-	// Fails because the observable errored
-	eventuallyFailsWith(t, () => assertions.notThrows(error(new Error())), {
-		assertion: 'notThrows',
-		message: '',
-		values: [{label: 'Observable errored with:', formatted: /Error/}]
-	});
-
-	// Passes because the function returned a completed observable
-	eventuallyPasses(t, () => assertions.notThrows(() => complete()));
-
-	// Fails because the function returned an errored observable
-	eventuallyFailsWith(t, () => assertions.notThrows(() => error(new Error())), {
-		assertion: 'notThrows',
-		message: '',
-		values: [{label: 'Returned observable errored with:', formatted: /Error/}]
-	});
 }));
 
 test('.notThrows() returns undefined for a fulfilled promise', t => {
@@ -1130,20 +1052,12 @@ test('.notThrows() returns undefined for a fulfilled promise returned by the fun
 	});
 });
 
-test('.notThrows() returns undefined for an observable returned by the function', t => {
-	return assertions.notThrows(() => {
-		return Observable.of(Symbol(''));
-	}).then(actual => {
-		t.is(actual, undefined);
-	});
-});
-
 test('.notThrows() fails if passed a bad value', t => {
 	failsWith(t, () => {
 		assertions.notThrows('not a function');
 	}, {
 		assertion: 'notThrows',
-		message: '`t.notThrows()` must be called with a function, observable or promise',
+		message: '`t.notThrows()` must be called with a function or promise',
 		values: [{label: 'Called with:', formatted: /not a function/}]
 	});
 
