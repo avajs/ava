@@ -84,31 +84,26 @@ class Api extends Emittery {
 		// Find all test files.
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
-				let runningFiles = files;
-				let splitTests = null;
-
 				if (isCi && ciParallelVars) {
-					const total = ciParallelVars.total;
-					const index = ciParallelVars.index;
+					const {index, total} = ciParallelVars.total;
+					const fileCount = files.length;
+					const each = Math.floor(fileCount / total);
+					const remainder = fileCount % total;
 
-					const count = files.length / total;
-					let start = count * index;
-					let end = start + count;
+					const offset = Math.min(index, remainder) + (index * each);
+					const count = each + (index < remainder ? 1 : 0);
 
-					start = Math.round(start);
-					end = Math.round(end);
-
-					runningFiles = runningFiles.slice(start, end);
-					splitTests = {index, total, start, end};
+					files = files.slice(offset, offset + count);
+					runStatus = new RunStatus(fileCount, {count, index, total});
+				} else {
+					runStatus = new RunStatus(files.length, null);
 				}
-
-				runStatus = new RunStatus(files.length, splitTests);
 
 				const emittedRun = this.emit('run', {
 					clearLogOnNextRun: runtimeOptions.clearLogOnNextRun === true,
 					failFastEnabled: failFast,
 					filePathPrefix: commonPathPrefix(files),
-					files: runningFiles,
+					files,
 					matching: apiOptions.match.length > 0,
 					previousFailures: runtimeOptions.previousFailures || 0,
 					runOnlyExclusive: runtimeOptions.runOnlyExclusive === true,
@@ -117,7 +112,7 @@ class Api extends Emittery {
 				});
 
 				// Bail out early if no files were found.
-				if (runningFiles.length === 0) {
+				if (files.length === 0) {
 					return emittedRun.then(() => {
 						return runStatus;
 					});
@@ -185,7 +180,7 @@ class Api extends Emittery {
 						}
 
 						// Try and run each file, limited by `concurrency`.
-						return Bluebird.map(runningFiles, file => {
+						return Bluebird.map(files, file => {
 							// No new files should be run once a test has timed out or failed,
 							// and failFast is enabled.
 							if (bailed) {
