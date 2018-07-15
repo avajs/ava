@@ -62,11 +62,11 @@ test('rejects with foo', t => {
 ```
 
 Here, the use of `t.plan()` seeks to ensure that the code inside the `catch` block is executed.
-Instead, you should take advantage of `t.throws` and `async`/`await`, as this leads to flatter code that is easier to reason about:
+Instead, you should take advantage of `t.throwsAsync` and `async`/`await`, as this leads to flatter code that is easier to reason about:
 
 ```js
 test('rejects with foo', async t => {
-	const reason = await t.throws(shouldRejectWithFoo());
+	const reason = await t.throwsAsync(shouldRejectWithFoo());
 	t.is(reason.message, 'Hello');
 	t.is(reason.foo, 'bar');
 });

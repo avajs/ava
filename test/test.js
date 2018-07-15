@@ -374,7 +374,7 @@ test('fails with the first assertError', t => {
 
 test('failing pending assertion causes test to fail, not promise rejection', t => {
 	return ava(a => {
-		return a.throws(Promise.resolve()).then(() => {
+		return a.throwsAsync(Promise.resolve()).then(() => {
 			throw new Error('Should be ignored');
 		});
 	}).run().then(result => {
@@ -471,8 +471,8 @@ test('throws and notThrows work with promises', t => {
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
-			a.throws(delay.reject(10, new Error('foo')), 'foo'),
-			a.notThrows(delay(20).then(() => {
+			a.throwsAsync(delay.reject(10, new Error('foo')), 'foo'),
+			a.notThrowsAsync(delay(20).then(() => {
 				asyncCalled = true;
 			}))
 		]);
@@ -513,8 +513,8 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		const promises = [];
 		for (let i = 0; i < 3; i++) {
 			promises.push(
-				a.throws(delay.reject(10, new Error('foo')), 'foo'),
-				a.notThrows(delay(10), 'foo')
+				a.throwsAsync(delay.reject(10, new Error('foo')), 'foo'),
+				a.notThrowsAsync(delay(10), 'foo')
 			);
 		}
 		return Promise.all(promises);
@@ -528,7 +528,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 
 test('fails if test ends while there are pending assertions', t => {
 	return ava(a => {
-		a.throws(Promise.reject(new Error()));
+		a.throwsAsync(Promise.reject(new Error()));
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.name, 'Error');
@@ -538,7 +538,7 @@ test('fails if test ends while there are pending assertions', t => {
 
 test('fails if callback test ends while there are pending assertions', t => {
 	return ava.cb(a => {
-		a.throws(Promise.reject(new Error()));
+		a.throwsAsync(Promise.reject(new Error()));
 		a.end();
 	}).run().then(result => {
 		t.is(result.passed, false);
@@ -549,7 +549,7 @@ test('fails if callback test ends while there are pending assertions', t => {
 
 test('fails if async test ends while there are pending assertions', t => {
 	return ava(a => {
-		a.throws(Promise.reject(new Error()));
+		a.throwsAsync(Promise.reject(new Error()));
 		return Promise.resolve();
 	}).run().then(result => {
 		t.is(result.passed, false);
@@ -580,7 +580,7 @@ test('no crash when adding assertions after the test has ended', t => {
 	ava(a => {
 		a.pass();
 		setImmediate(() => {
-			t.doesNotThrow(() => a.notThrows(Promise.resolve()));
+			t.doesNotThrow(() => a.notThrowsAsync(Promise.resolve()));
 		});
 	}).run();
 });
@@ -651,23 +651,23 @@ test('failing tests must not return a fulfilled promise', t => {
 test('failing tests pass when returning a rejected promise', t => {
 	return ava.failing(a => {
 		a.plan(1);
-		return a.notThrows(delay(10), 'foo').then(() => Promise.reject());
+		return a.notThrowsAsync(delay(10), 'foo').then(() => Promise.reject());
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
 });
 
-test('failing tests pass with `t.throws(nonThrowingPromise)`', t => {
+test('failing tests pass with `t.throwsAsync(nonThrowingPromise)`', t => {
 	return ava.failing(a => {
-		return a.throws(Promise.resolve(10));
+		return a.throwsAsync(Promise.resolve(10));
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
 });
 
-test('failing tests fail with `t.notThrows(throws)`', t => {
+test('failing tests fail with `t.notThrowsAsync(throws)`', t => {
 	return ava.failing(a => {
-		return a.notThrows(Promise.resolve('foo'));
+		return a.notThrowsAsync(Promise.resolve('foo'));
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.message, failingTestHint);

@@ -62,6 +62,9 @@ export interface Assertions {
 	/** Assert that the function does not throw. */
 	notThrows: NotThrowsAssertion;
 
+	/** Assert that the async function does not throw, or that the promise does not reject. Must be awaited. */
+	notThrowsAsync: NotThrowsAsyncAssertion;
+
 	/** Count a passing assertion. */
 	pass: PassAssertion;
 
@@ -79,6 +82,12 @@ export interface Assertions {
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 */
 	throws: ThrowsAssertion;
+
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error), or the promise rejects
+	 * with one. If so, returns a promise for the error value, which must be awaited.
+	 */
+	throwsAsync: ThrowsAsyncAssertion;
 
 	/** Assert that `actual` is strictly true. */
 	true: TrueAssertion;
@@ -159,13 +168,15 @@ export interface NotRegexAssertion {
 
 export interface NotThrowsAssertion {
 	/** Assert that the function does not throw. */
-	(fn: () => never, message?: string): void;
-
-	/** Assert that the function returns a promise that does not reject. You must await the result. */
-	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
-
-	/** Assert that the function does not throw. */
 	(fn: () => any, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(fn: () => any, message?: string): void;
+}
+
+export interface NotThrowsAsyncAssertion {
+	/** Assert that the async function does not throw. You must await the result. */
+	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
 
 	/** Assert that the promise does not reject. You must await the result. */
 	(promise: PromiseLike<any>, message?: string): Promise<void>;
@@ -216,68 +227,6 @@ export interface ThrowsAssertion {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 */
-	(fn: () => never, expectations?: null, message?: string): any;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must be an instance of the given constructor.
-	 */
-	(fn: () => never, constructor: Constructor, message?: string): any;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message that matches the regular expression.
-	 */
-	(fn: () => never, regex: RegExp, message?: string): any;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message equal to `errorMessage`.
-	 */
-	(fn: () => never, errorMessage: string, message?: string): any;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must satisfy all expectations.
-	 */
-	(fn: () => never, expectations: ThrowsExpectation, message?: string): any;
-
-	/**
-	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the rejection reason. You must await the result.
-	 */
-	(fn: () => PromiseLike<any>, expectations?: null, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the rejection reason. You must await the result. The error must be an instance of the given
-	 * constructor.
-	 */
-	(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the rejection reason. You must await the result. The error must have a message that matches the
-	 * regular expression.
-	 */
-	(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the rejection reason. You must await the result. The error must have a message equal to
-	 * `errorMessage`.
-	 */
-	(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function returns a promise that rejects with [an error](https://www.npmjs.com/package/is-error).
-	 * If so, returns the rejection reason. You must await the result. The error must satisfy all expectations.
-	 */
-	(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<any>;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 */
 	(fn: () => any, expectations?: null, message?: string): any;
 
 	/**
@@ -303,6 +252,41 @@ export interface ThrowsAssertion {
 	 * The error must satisfy all expectations.
 	 */
 	(fn: () => any, expectations: ThrowsExpectation, message?: string): any;
+
+	/** Skip this assertion. */
+	skip(fn: () => any, expectations?: any, message?: string): void;
+}
+
+export interface ThrowsAsyncAssertion {
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result.
+	 */
+	(fn: () => PromiseLike<any>, expectations?: null, message?: string): Promise<any>;
+
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result. The error must be an instance of the given constructor.
+	 */
+	(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<any>;
+
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result. The error must have a message that matches the regular expression.
+	 */
+	(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<any>;
+
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result. The error must have a message equal to `errorMessage`.
+	 */
+	(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<any>;
+
+	/**
+	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * value. You must await the result. The error must satisfy all expectations.
+	 */
+	(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<any>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
