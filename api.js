@@ -84,6 +84,9 @@ class Api extends Emittery {
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
 				if (this.options.parallelRuns) {
+					// The files must be in the same order across all runs, so sort them.
+					files = files.sort((a, b) => a.localeCompare(b, [], {numeric: true}));
+
 					const {currentIndex, totalRuns} = this.options.parallelRuns;
 					const fileCount = files.length;
 					const each = Math.floor(fileCount / totalRuns);
