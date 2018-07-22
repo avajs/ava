@@ -1,0 +1,14 @@
+{
+  "name": "ava",
+  "sources": [
+    {
+      "dir": "bucklescript"
+    },
+    {
+      "dir" : "test/bucklescript/src",
+      "type": "dev"
+    }
+  ],
+  "namespace": true,
+  "refmt": 3
+}

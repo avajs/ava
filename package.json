@@ -11,14 +11,17 @@
 	},
 	"scripts": {
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
-		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && nyc tap --no-cov --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
-		"test-win": "tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js"
+		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && npm run test-bucklescript && nyc tap --no-cov --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
+		"test-win": "tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
+		"test-bucklescript": "bsb -make-world && node cli lib/js/test/bucklescript/src"
 	},
 	"files": [
 		"lib",
 		"*.js",
 		"*.js.flow",
-		"index.d.ts"
+		"index.d.ts",
+		"src",
+		"bsconfig.json"
 	],
 	"keywords": [
 		"🦄",
@@ -140,6 +143,7 @@
 		"update-notifier": "^2.5.0"
 	},
 	"devDependencies": {
+		"bs-platform": "^4.0.0",
 		"cli-table2": "^0.2.0",
 		"codecov": "^3.0.2",
 		"delay": "^3.0.0",
