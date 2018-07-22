@@ -94,7 +94,7 @@
 		"empower-core": "^0.6.1",
 		"equal-length": "^1.0.0",
 		"escape-string-regexp": "^1.0.5",
-		"esm": "^3.0.40",
+		"esm": "^3.0.71",
 		"figures": "^2.0.0",
 		"get-port": "^3.2.0",
 		"globby": "^7.1.1",
