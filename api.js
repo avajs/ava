@@ -2,7 +2,6 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const ciParallelVars = require('ci-parallel-vars');
 const commonPathPrefix = require('common-path-prefix');
 const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
@@ -84,17 +83,17 @@ class Api extends Emittery {
 		// Find all test files.
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
-				if (isCi && ciParallelVars) {
-					const {index, total} = ciParallelVars.total;
+				if (this.options.parallelRuns) {
+					const {currentIndex, totalRuns} = this.options.parallelRuns;
 					const fileCount = files.length;
-					const each = Math.floor(fileCount / total);
-					const remainder = fileCount % total;
+					const each = Math.floor(fileCount / totalRuns);
+					const remainder = fileCount % totalRuns;
 
-					const offset = Math.min(index, remainder) + (index * each);
-					const count = each + (index < remainder ? 1 : 0);
+					const offset = Math.min(currentIndex, remainder) + (currentIndex * each);
+					const currentFileCount = each + (currentIndex < remainder ? 1 : 0);
 
-					files = files.slice(offset, offset + count);
-					runStatus = new RunStatus(fileCount, {count, index, total});
+					files = files.slice(offset, offset + currentFileCount);
+					runStatus = new RunStatus(fileCount, {currentFileCount, currentIndex, totalRuns});
 				} else {
 					runStatus = new RunStatus(files.length, null);
 				}
