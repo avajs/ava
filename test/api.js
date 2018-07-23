@@ -627,18 +627,10 @@ test('caching is enabled by default', t => {
 	return api.run([path.join(__dirname, 'fixture/caching/test.js')])
 		.then(() => {
 			const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-			t.is(files.filter(x => endsWithJs(x)).length, 1);
-			t.is(files.filter(x => endsWithMap(x)).length, 1);
+			t.is(files.filter(x => x.endsWith('.js')).length, 1);
+			t.is(files.filter(x => x.endsWith('.map')).length, 1);
 			t.is(files.length, 2);
 		});
-
-	function endsWithJs(filename) {
-		return /\.js$/.test(filename);
-	}
-
-	function endsWithMap(filename) {
-		return /\.map$/.test(filename);
-	}
 });
 
 test('caching can be disabled', t => {
@@ -702,7 +694,7 @@ test('emits dependencies for test files', t => {
 	api.on('run', plan => {
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'dependencies') {
-				t.notEqual(testFiles.indexOf(evt.testFile), -1);
+				t.true(testFiles.includes(evt.testFile));
 				t.strictDeepEqual(evt.dependencies.slice(-3), sourceFiles);
 			}
 		});

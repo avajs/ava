@@ -129,8 +129,8 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	child.stderr.on('data', testOutput);
 });
 
-['--watch', '-w'].forEach(watchFlag => {
-	['--tap', '-t'].forEach(tapFlag => {
+for (const watchFlag of ['--watch', '-w']) {
+	for (const tapFlag of ['--tap', '-t']) {
 		test(`bails when ${tapFlag} reporter is used while ${watchFlag} is given`, t => {
 			execCli([tapFlag, watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, (err, stdout, stderr) => {
 				t.is(err.code, 1);
@@ -138,10 +138,10 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 				t.end();
 			});
 		});
-	});
-});
+	}
+}
 
-['--watch', '-w'].forEach(watchFlag => {
+for (const watchFlag of ['--watch', '-w']) {
 	test(`bails when CI is used while ${watchFlag} is given`, t => {
 		execCli([watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
 			t.is(err.code, 1);
@@ -149,4 +149,4 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 			t.end();
 		});
 	});
-});
+}

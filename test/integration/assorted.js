@@ -30,14 +30,14 @@ test('--match works', t => {
 	});
 });
 
-['--tap', '-t'].forEach(tapFlag => {
+for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
 		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, err => {
 			t.ok(!err);
 			t.end();
 		});
 	});
-});
+}
 
 test('handles NODE_PATH', t => {
 	const nodePaths = `fixture/node-paths/modules${path.delimiter}fixture/node-paths/deep/nested`;
