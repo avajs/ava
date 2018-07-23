@@ -11,10 +11,10 @@ function execCli(args, opts, cb) {
 
 	if (typeof opts === 'function') {
 		cb = opts;
-		dirname = path.resolve(__dirname, '..', 'fixture');
+		dirname = path.resolve(__dirname, '..');
 		env = {};
 	} else {
-		dirname = path.resolve(__dirname, '..', opts.dirname ? opts.dirname : 'fixture');
+		dirname = path.resolve(__dirname, '..', opts.dirname ? opts.dirname : '');
 		env = opts.env || {};
 	}
 

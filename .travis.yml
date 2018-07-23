@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - 10
+  - 9
   - 8
   - 6
 env:
@@ -8,6 +9,8 @@ env:
   - FRESH_DEPS=true
 matrix:
   exclude:
+    - node_js: 9
+      env: FRESH_DEPS=true
     - node_js: 8
       env: FRESH_DEPS=true
     - node_js: 6
@@ -16,7 +19,7 @@ cache:
   directories:
     - $HOME/.npm
 before_install:
-  - npm install --global npm@6.2.0
+  - npm install --global npm@6.1.0
   - npm --version
 install: |
   if [[ ${FRESH_DEPS} == "true" ]]; then

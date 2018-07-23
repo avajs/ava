@@ -6,7 +6,7 @@ const {execCli} = require('../helper/cli');
 test('precompiler require hook does not apply to source files', t => {
 	t.plan(3);
 
-	execCli('babel-hook.js', (err, stdout) => {
+	execCli('fixture/babel-hook.js', (err, stdout) => {
 		t.ok(err);
 		t.is(err.code, 1);
 		t.match(stdout, /Unexpected (token|reserved word)/);
