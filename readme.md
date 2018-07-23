@@ -53,6 +53,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
+- [Automatic parallel test runs in CI](#parallel-runs-in-ci)
 - [TAP reporter](#tap-reporter)
 - [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
 
@@ -818,6 +819,10 @@ $ ava --timeout=10s # 10 seconds
 $ ava --timeout=2m # 2 minutes
 $ ava --timeout=100 # 100 milliseconds
 ```
+
+### Parallel runs in CI
+
+AVA automatically detects whether your CI environment supports parallel builds. Each build will run a subset of all test files, while still making sure all tests get executed. See the [`ci-parallel-vars`](https://www.npmjs.com/package/ci-parallel-vars) package for a list of supported CI environments.
 
 ## API
 
