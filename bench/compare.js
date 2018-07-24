@@ -57,14 +57,14 @@ const results = {};
 const fileNames = files.map(file => file['.file']);
 const stats = ['mean', 'stdDev', 'median', 'min', 'max'];
 
-files.forEach(file => {
+for (const file of files) {
 	Object.keys(file)
-		.filter(key => !/^\./.test(key))
+		.filter(key => !key.startsWith('.'))
 		.forEach(key => {
 			results[key] = results[key] || {};
 			results[key][file['.file']] = prepStats(file[key]);
 		});
-});
+}
 
 const table = new Table();
 table.push(
@@ -78,37 +78,36 @@ table.push(
 	stats.reduce(arr => arr.concat(fileNames), ['args'])
 );
 
-Object.keys(results)
-	.forEach(key => {
-		table.push(stats.reduce((arr, stat) => {
-			let min = Infinity;
-			let max = -Infinity;
+for (const key of Object.keys(results)) {
+	table.push(stats.reduce((arr, stat) => {
+		let min = Infinity;
+		let max = -Infinity;
 
-			const statGroup = fileNames.map(fileName => {
-				let result = results[key][fileName];
-				result = result && result[stat];
+		const statGroup = fileNames.map(fileName => {
+			let result = results[key][fileName];
+			result = result && result[stat];
 
-				if (result) {
-					min = Math.min(min, result);
-					max = Math.max(max, result);
-					return result;
-				}
+			if (result) {
+				min = Math.min(min, result);
+				max = Math.max(max, result);
+				return result;
+			}
 
-				return '';
-			});
+			return '';
+		});
 
-			return arr.concat(statGroup.map(stat => {
-				if (stat === min) {
-					return chalk.green(stat);
-				}
+		return arr.concat(statGroup.map(stat => {
+			if (stat === min) {
+				return chalk.green(stat);
+			}
 
-				if (stat === max) {
-					return chalk.red(stat);
-				}
+			if (stat === max) {
+				return chalk.red(stat);
+			}
 
-				return stat;
-			}));
-		}, [key]));
-	});
+			return stat;
+		}));
+	}, [key]));
+}
 
 console.log(table.toString());

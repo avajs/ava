@@ -119,7 +119,7 @@ In most cases, it's a bad idea to use any complex branching inside your tests. A
 ```js
 const testData = require('./fixtures/test-definitions.json');
 
-testData.forEach(testDefinition => {
+for (const testDefinition of testData) {
 	test('foo or bar', t => {
 		const result = functionUnderTest(testDefinition.input);
 
@@ -134,7 +134,7 @@ testData.forEach(testDefinition => {
 			t.is(result.bar, testDefinition.foo);
 		}
 	});
-});
+}
 ```
 
 ## Conclusion
