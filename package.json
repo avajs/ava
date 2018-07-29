@@ -7,12 +7,12 @@
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=9.11.1 <10 || >=10.0.0"
+		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo && (cd test/fixture && xo '**' '!{source-map-initial,syntax-error}.js' '!snapshots/test-sourcemaps/build/**')",
-		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && nyc tap --no-cov --timeout=300 --jobs=4 test/*.js test/reporters/*.js",
-		"test-win": "tap --no-cov --reporter=classic --timeout=300 --jobs=1 test/*.js test/reporters/*.js"
+		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && nyc tap --no-cov --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
+		"test-win": "tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js"
 	},
 	"files": [
 		"lib",
@@ -77,6 +77,7 @@
 		"bluebird": "^3.5.1",
 		"chalk": "^2.4.1",
 		"chokidar": "^2.0.3",
+		"ci-parallel-vars": "^1.0.0",
 		"clean-stack": "^1.1.1",
 		"clean-yaml-object": "^0.1.0",
 		"cli-cursor": "^2.1.0",

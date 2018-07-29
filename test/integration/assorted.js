@@ -8,7 +8,7 @@ const test = require('tap').test;
 const {execCli} = require('../helper/cli');
 
 test('timeout', t => {
-	execCli(['fixture/long-running.js', '-T', '1s'], (err, stdout) => {
+	execCli(['long-running.js', '-T', '1s'], (err, stdout) => {
 		t.ok(err);
 		t.match(stdout, /Exited because no new tests completed within the last 1000ms of inactivity/);
 		t.end();
@@ -16,7 +16,7 @@ test('timeout', t => {
 });
 
 test('include anonymous functions in error reports', t => {
-	execCli('fixture/error-in-anonymous-function.js', (err, stdout) => {
+	execCli('error-in-anonymous-function.js', (err, stdout) => {
 		t.ok(err);
 		t.match(stdout, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
 		t.end();
@@ -24,25 +24,25 @@ test('include anonymous functions in error reports', t => {
 });
 
 test('--match works', t => {
-	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'fixture/matcher-skip.js'], err => {
+	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'matcher-skip.js'], err => {
 		t.ifError(err);
 		t.end();
 	});
 });
 
-['--tap', '-t'].forEach(tapFlag => {
+for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
 		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, err => {
 			t.ok(!err);
 			t.end();
 		});
 	});
-});
+}
 
 test('handles NODE_PATH', t => {
-	const nodePaths = `fixture/node-paths/modules${path.delimiter}fixture/node-paths/deep/nested`;
+	const nodePaths = `node-paths/modules${path.delimiter}node-paths/deep/nested`;
 
-	execCli('fixture/node-paths.js', {env: {NODE_PATH: nodePaths}}, err => {
+	execCli('node-paths.js', {env: {NODE_PATH: nodePaths}}, err => {
 		t.ifError(err);
 		t.end();
 	});
@@ -103,7 +103,7 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 });
 
 test('--no-color disables formatting colors', t => {
-	execCli(['--no-color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout) => {
+	execCli(['--no-color', '--verbose', 'formatting-color.js'], (err, stdout) => {
 		t.ok(err);
 		t.is(stripAnsi(stdout), stdout);
 		t.end();
@@ -111,7 +111,7 @@ test('--no-color disables formatting colors', t => {
 });
 
 test('--color enables formatting colors', t => {
-	execCli(['--color', '--verbose', 'formatting-color.js'], {dirname: 'fixture'}, (err, stdout) => {
+	execCli(['--color', '--verbose', 'formatting-color.js'], (err, stdout) => {
 		t.ok(err);
 		t.isNot(stripAnsi(stdout), stdout);
 		t.end();
@@ -119,7 +119,7 @@ test('--color enables formatting colors', t => {
 });
 
 test('sets NODE_ENV to test when it is not set', t => {
-	execCli([path.join('fixture', 'node-env-test.js')], {env: {}}, (err, stdout) => {
+	execCli('node-env-test.js', {env: {}}, (err, stdout) => {
 		t.ifError(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
@@ -127,7 +127,7 @@ test('sets NODE_ENV to test when it is not set', t => {
 });
 
 test('doesn\'t set NODE_ENV when it is set', t => {
-	execCli([path.join('fixture', 'node-env-foo.js')], {env: {NODE_ENV: 'foo'}}, (err, stdout) => {
+	execCli('node-env-foo.js', {env: {NODE_ENV: 'foo'}}, (err, stdout) => {
 		t.ifError(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
@@ -135,7 +135,7 @@ test('doesn\'t set NODE_ENV when it is set', t => {
 });
 
 test('additional arguments are forwarded to the worker', t => {
-	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], {dirname: 'fixture'}, err => {
+	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], err => {
 		t.ifError(err);
 		t.end();
 	});

@@ -1,18 +1,16 @@
 // @flow
 import test from '../../index.js.flow';
 
-test('test', t => {
-	t.throws((): void => { throw new Error(); });
-	t.throws(Promise.reject(new Error()));
+test('test', async t => {
+	t.throws(() => { throw new Error(); });
+	await t.throwsAsync(Promise.reject(new Error()));
 
-	t.notThrows((): void => { return; });
-	t.notThrows(Promise.resolve('Success'));
+	t.notThrows(() => { return; });
+	await t.notThrowsAsync(Promise.resolve('Success'));
 
-	const error = t.throws((): void => { throw new Error(); });
+	const error = t.throws(() => { throw new Error(); });
 	const message: string = error.message;
 
-	const promise = t.throws(Promise.reject(new Error()));
-	promise.then(error => {
-		const message: string = error.message;
-	});
+	const errorAsync = await t.throwsAsync(Promise.reject(new Error()));
+	const messageAsync: string = errorAsync.message;
 });

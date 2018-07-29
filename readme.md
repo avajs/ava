@@ -53,6 +53,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Async function support](#async-function-support)
 - [Observable support](#observable-support)
 - [Enhanced assertion messages](#enhanced-assertion-messages)
+- [Automatic parallel test runs in CI](#parallel-runs-in-ci)
 - [TAP reporter](#tap-reporter)
 - [Automatic migration from other test runners](https://github.com/avajs/ava-codemods#migrating-to-ava)
 
@@ -819,6 +820,10 @@ $ ava --timeout=2m # 2 minutes
 $ ava --timeout=100 # 100 milliseconds
 ```
 
+### Parallel runs in CI
+
+AVA automatically detects whether your CI environment supports parallel builds. Each build will run a subset of all test files, while still making sure all tests get executed. See the [`ci-parallel-vars`](https://www.npmjs.com/package/ci-parallel-vars) package for a list of supported CI environments.
+
 ## API
 
 ### `test([title], implementation)`
@@ -932,11 +937,9 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
-### `.throws(thrower, [expected, [message]])`
+### `.throws(fn, [expected, [message]])`
 
-Assert that an error is thrown. `thrower` can be a function which should throw, or return a promise that should reject. Alternatively a promise can be passed directly.
-
-The thrown value *must* be an error. It is returned so you can run more assertions against it.
+Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
 `expected` can be a constructor, in which case the thrown error must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. You can also specify a matcher object with one or more of the following properties:
 
@@ -964,42 +967,54 @@ test('throws', t => {
 });
 ```
 
-```js
-const promise = Promise.reject(new TypeError('🦄'));
+### `.throwsAsync(thrower, [expected, [message]])`
 
-test('rejects', async t => {
-	const error = await t.throws(promise);
-	t.is(error.message, '🦄');
-});
-```
+Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
-When testing a promise you must wait for the assertion to complete:
+The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
-```js
-test('rejects', async t => {
-	await t.throws(promise);
-});
-```
+`expected` can be a constructor, in which case the thrown error must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. You can also specify a matcher object with one or more of the following properties:
 
-When testing an asynchronous function you must also wait for the assertion to complete:
+* `instanceOf`: a constructor, the thrown error must be an instance of
+* `is`: the thrown error must be strictly equal to `expected.is`
+* `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
+* `name`: the expected `.name` value of the thrown error
+* `code`: the expected `.code` value of the thrown error
+
+`expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+
+Example:
 
 ```js
 test('throws', async t => {
-	await t.throws(async () => {
+	await t.throwsAsync(async () => {
 		throw new TypeError('🦄');
 	}, {instanceOf: TypeError, message: '🦄'});
 });
 ```
 
-### `.notThrows(nonThrower, [message])`
+```js
+const promise = Promise.reject(new TypeError('🦄'));
 
-Assert that no error is thrown. `thrower` can be a function which shouldn't throw, or return a promise that should resolve. Alternatively a promise can be passed directly.
+test('rejects', async t => {
+	const error = await t.throwsAsync(promise);
+	t.is(error.message, '🦄');
+});
+```
 
-Like the `.throws()` assertion, when testing a promise you must wait for the assertion to complete:
+### `.notThrows(fn, [message])`
+
+Assert that no error is thrown. `fn` must be a function which shouldn't throw.
+
+### `.notThrowsAsync(nonThrower, [message])`
+
+Assert that no error is thrown. `nonThrower` can be an async function which shouldn't throw, or a promise that should resolve.
+
+Like the `.throwsAsync()` assertion, you must wait for the assertion to complete:
 
 ```js
 test('resolves', async t => {
-	await t.notThrows(promise);
+	await t.notThrowsAsync(promise);
 });
 ```
 

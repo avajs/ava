@@ -678,7 +678,7 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	['r', 'rs'].forEach(input => {
+	for (const input of ['r', 'rs']) {
 		test(`reruns initial tests when "${input}" is entered on stdin`, t => {
 			t.plan(4);
 			api.run.returns(Promise.resolve(runStatus));
@@ -700,7 +700,7 @@ group('chokidar', (beforeEach, test, group) => {
 				})]);
 			});
 		});
-	});
+	}
 
 	test(`reruns previous tests and update snapshots when "u" is entered on stdin`, t => {
 		const options = Object.assign({}, defaultApiOptions, {updateSnapshots: true});
@@ -726,7 +726,7 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	['r', 'rs', 'u'].forEach(input => {
+	for (const input of ['r', 'rs', 'u']) {
 		test(`entering "${input}" on stdin prevents the log from being cleared`, t => {
 			t.plan(2);
 			api.run.returns(Promise.resolve(runStatus));
@@ -818,7 +818,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.is(before, clock.now);
 			});
 		});
-	});
+	}
 
 	test('does nothing if anything other than "rs" is entered on stdin', t => {
 		t.plan(1);

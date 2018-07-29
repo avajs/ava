@@ -66,20 +66,3 @@ test('an actual test', t => {
 ```
 
 Note that, despite the type cast above, when executing `t.context` is an empty object unless it's assigned.
-
-## Using `t.throws()` and `t.notThrows()`
-
-The `t.throws()` and `t.noThrows()` assertions can be called with a function that returns an observable or a promise. You may have to explicitly type functions:
-
-```ts
-import test from 'ava';
-
-test('just throws', async t => {
-	const expected = new Error();
-	const err = t.throws((): void => { throw expected; });
-	t.is(err, expected);
-
-	const err2 = await t.throws((): Promise<*> => Promise.reject(expected));
-	t.is(err2, expected);
-});
-```
