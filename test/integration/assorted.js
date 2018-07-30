@@ -7,10 +7,15 @@ const stripAnsi = require('strip-ansi');
 const test = require('tap').test;
 const {execCli} = require('../helper/cli');
 
-test('timeout', t => {
+test('timeout while tests running', t => {
 	execCli(['long-running.js', '-T', '1s'], (err, stdout) => {
 		t.ok(err);
 		t.match(stdout, /Exited because no new tests completed within the last 1000ms of inactivity/);
+		t.match(stdout, /3 tests still running/);
+		t.notMatch(stdout, /.*long-running.js:fast.*/, 'the fast test should not still be shown as running');
+		t.match(stdout, /.*long-running.js:slow.*/);
+		t.match(stdout, /.*long-running.js:slow two.*/);
+		t.match(stdout, /.*long-running.js:slow three.*/);
 		t.end();
 	});
 });
