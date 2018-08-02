@@ -120,7 +120,7 @@ stderr
 
   [31mtest [90m[2m›[22m[31m known failure[39m
 
-  [1m[37mtest [90m[2m›[1m[37m fails[39m[22m
+  [1mtest [90m[2m›[1m[39m fails[22m
 
   [90m~/test/fixture/report/regular/test.js:12[39m
 
@@ -132,14 +132,14 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m no longer failing[39m[22m
+  [1mtest [90m[2m›[1m[39m no longer failing[22m
 
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m logs[39m[22m
+  [1mtest [90m[2m›[1m[39m logs[22m
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 
@@ -153,7 +153,7 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m formatted[39m[22m
+  [1mtest [90m[2m›[1m[39m formatted[22m
 
   [90m~/test/fixture/report/regular/test.js:25[39m
 
@@ -168,7 +168,7 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m power-assert[39m[22m
+  [1mtest [90m[2m›[1m[39m power-assert[22m
 
   [90m~/test/fixture/report/regular/test.js:30[39m
 
@@ -185,7 +185,7 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m bad throws[39m[22m
+  [1mtest [90m[2m›[1m[39m bad throws[22m
 
   [90m~/test/fixture/report/regular/test.js:37[39m
 
@@ -214,7 +214,7 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m bad notThrows[39m[22m
+  [1mtest [90m[2m›[1m[39m bad notThrows[22m
 
   [90m~/test/fixture/report/regular/test.js:44[39m
 
@@ -243,7 +243,7 @@ stderr
 
 
 
-  [1m[37mtest [90m[2m›[1m[37m implementation throws non-error[39m[22m
+  [1mtest [90m[2m›[1m[39m implementation throws non-error[22m
 
 
   Error thrown in test:
@@ -252,7 +252,7 @@ stderr
 
 
 
-  [1m[37mUncaught exception in test/fixture/report/regular/bad-test-chain.js[39m[22m
+  [1mUncaught exception in test/fixture/report/regular/bad-test-chain.js[22m
 
   [90m~/test/fixture/report/regular/bad-test-chain.js:3[39m
 
@@ -264,7 +264,7 @@ stderr
 
 
 
-  [1m[37mUncaught exception in test/fixture/report/regular/uncaught-exception.js[39m[22m
+  [1mUncaught exception in test/fixture/report/regular/uncaught-exception.js[22m
 
   [90m~/test/fixture/report/regular/uncaught-exception.js:5[39m
 
@@ -276,7 +276,7 @@ stderr
 
 
 
-  [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
+  [1mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[22m
 
   [90m~/test/fixture/report/regular/unhandled-rejection.js:4[39m
 
@@ -288,7 +288,7 @@ stderr
 
 
 
-  [1m[37mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[39m[22m
+  [1mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[22m
 
   [33mnull[39m
 

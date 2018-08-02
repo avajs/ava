@@ -6,7 +6,7 @@
 [?25h
   [31m1 uncaught exception[39m
 
-  [1m[37mUncaught exception in test/fixture/report/typescript/build-error.ts[39m[22m
+  [1mUncaught exception in test/fixture/report/typescript/build-error.ts[22m
 
   [90mbuild-error.ts(1,1): error TS2304: Cannot find name 'trigger'.[39m
   [90mbuild-error.ts(2,1): error TS2304: Cannot find name 'lets'.[39m
