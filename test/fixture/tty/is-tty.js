@@ -1,7 +1,10 @@
 import test from '../../..';
 
-test('stdout is a TTY', t => {
-	t.true(process.stdout.isTTY);
-	t.is(typeof process.stdout.columns, 'number');
-	t.is(typeof process.stdout.rows, 'number');
-});
+const assertTTY = (t, stream) => {
+	t.true(stream.isTTY);
+	t.is(typeof stream.columns, 'number');
+	t.is(typeof stream.rows, 'number');
+};
+
+test('stderr is a TTY', assertTTY, process.stderr);
+test('stdout is a TTY', assertTTY, process.stdout);

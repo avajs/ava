@@ -2,14 +2,14 @@
 const test = require('tap').test;
 const {execCli} = require('../helper/cli');
 
-test('test workers do not get a TTY when ava is not run with a TTY', t => {
+test('test workers do not get TTYs when ava is not run with TTYs', t => {
 	execCli('is-not-tty.js', {dirname: 'fixture/tty'}, err => {
 		t.ifError(err);
 		t.end();
 	});
 });
 
-test('test workers get a TTY when ava is run with a TTY', t => {
+test('test workers get TTYs when ava is run with TTYs', t => {
 	const options = {
 		dirname: 'fixture/tty',
 		env: {AVA_SIMULATE_TTY: true}
@@ -33,7 +33,7 @@ test('test worker TTYs do not support getColorDepth by default', t => {
 	});
 });
 
-test('test worker TTYs do not support color if the parent TTY does not', t => {
+test('test worker TTYs do not support color if the parent TTYs do not', t => {
 	const options = {
 		dirname: 'fixture/tty',
 		env: {
