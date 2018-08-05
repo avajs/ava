@@ -4,6 +4,7 @@ const childProcess = require('child_process');
 const getStream = require('get-stream');
 
 const cliPath = path.join(__dirname, '../../cli.js');
+const ttySimulator = path.join(__dirname, 'simulate-tty.js');
 
 function execCli(args, opts, cb) {
 	let dirname;
@@ -23,7 +24,9 @@ function execCli(args, opts, cb) {
 	let stderr;
 
 	const processPromise = new Promise(resolve => {
-		child = childProcess.spawn(process.execPath, [cliPath].concat(args), {
+		// Spawning a child with piped IO means that the CLI will never see a TTY.
+		// Inserting a shim here allows us to fake a TTY.
+		child = childProcess.spawn(process.execPath, ['-r', ttySimulator, cliPath].concat(args), {
 			cwd: dirname,
 			env: Object.assign({CI: '1'}, env), // Force CI to ensure the correct reporter is selected
 			// env,
