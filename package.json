@@ -162,13 +162,15 @@
 		"touch": "^3.1.0",
 		"ts-node": "^6.1.1",
 		"typescript": "^2.8.3",
-		"xo": "^0.21.1",
+		"xo": "^0.22.0",
 		"zen-observable": "^0.8.8"
 	},
 	"typings": "index.d.ts",
 	"xo": {
 		"ignores": [
-			"media/**"
+			"media/**",
+			"test/fixture/**",
+			"**/*.ts"
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off",

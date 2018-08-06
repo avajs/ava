@@ -1,4 +1,4 @@
-import test from '../../../../../../..'
+import test from '../../../../../../..';
 
 test('feature test title', t => {
 	t.snapshot({foo: 'bar'});

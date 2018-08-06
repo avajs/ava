@@ -47,7 +47,14 @@ test('truncate lines', t => {
 
 test('format line numbers', t => {
 	const file = tempWrite.sync([
-		'', '', '', '', '', '', '', '',
+		'',
+		'',
+		'',
+		'',
+		'',
+		'',
+		'',
+		'',
 		'function a() {',
 		'\talert();',
 		'}'
