@@ -97,7 +97,7 @@ const run = (type, reporter) => {
 		babelConfig: {testOptions: {}},
 		resolveTestsFrom: projectDir,
 		projectDir,
-		timeout: undefined,
+		timeout: type === 'timeout' ? "100ms" : undefined,
 		concurrency: 1,
 		updateSnapshots: false,
 		snapshotDir: false,

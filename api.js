@@ -61,6 +61,7 @@ class Api extends Emittery {
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
+			console.log("timeout 🍣", timeout);
 
 			restartTimer = debounce(() => {
 				// If failFast is active, prevent new test files from running after
