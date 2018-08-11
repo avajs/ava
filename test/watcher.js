@@ -147,7 +147,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = (specificFiles, sources) => new Subject(reporter, api, specificFiles || files, sources || []);
+	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || files, sources: sources || []});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
