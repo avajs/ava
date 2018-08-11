@@ -5,7 +5,7 @@ not ok 1 - TypeError: _.default.serial.test is not a function
   ---
     name: TypeError
     message: _.default.serial.test is not a function
-    at: 'Object.<anonymous> (bad-test-chain.js:3:13)'
+    at: 'Object.test (bad-test-chain.js:3:13)'
   ...
 ---tty-stream-chunk-separator
 # test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
@@ -65,7 +65,7 @@ not ok 13 - test [90m[2m›[22m[39m fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 't (test.js:12:22)'
+    at: 'fail (test.js:12:22)'
   ...
 ---tty-stream-chunk-separator
 # test › known failure
@@ -88,7 +88,7 @@ not ok 16 - test [90m[2m›[22m[39m logs
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 't (test.js:21:4)'
+    at: 'fail (test.js:21:4)'
   ...
 ---tty-stream-chunk-separator
 # test › formatted
@@ -100,7 +100,7 @@ not ok 17 - test [90m[2m›[22m[39m formatted
       'Difference:': |-
         - 'foo'
         + 'bar'
-    at: 't (test.js:25:4)'
+    at: 'deepEqual (test.js:25:4)'
   ...
 ---tty-stream-chunk-separator
 # test › power-assert
@@ -111,7 +111,7 @@ not ok 18 - test [90m[2m›[22m[39m power-assert
     operator: '!'
     values:
       'Value is not falsy:': '''bar'''
-    at: 't (test.js:30:4)'
+    at: 'falsy (test.js:30:4)'
   ...
 ---tty-stream-chunk-separator
 # test › bad throws
