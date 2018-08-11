@@ -143,7 +143,7 @@
 		"codecov": "^3.0.4",
 		"delay": "^3.0.0",
 		"execa": "^0.10.0",
-		"flow-bin": "^0.73.0",
+		"flow-bin": "^0.78.0",
 		"get-stream": "^4.0.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
