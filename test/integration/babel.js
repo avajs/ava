@@ -41,7 +41,7 @@ test('includes relative paths in source map', t => {
 			cwd: path.resolve(__dirname, '../fixture/correct-sources-in-source-map/node_modules/.cache/ava')
 		});
 		const map = JSON.parse(fs.readFileSync(file, 'utf8'));
-		t.same(map.sources, ['test/path-to/the/test-file.js']);
+		t.same(map.sources, [path.normalize('test/path-to/the/test-file.js')]);
 		t.is(map.sourceRoot, path.resolve(__dirname, '../fixture/correct-sources-in-source-map'));
 		t.end();
 	});
