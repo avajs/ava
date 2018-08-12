@@ -1,4 +1,7 @@
 'use strict';
+const fs = require('fs');
+const path = require('path');
+const globby = require('globby');
 const test = require('tap').test;
 const figures = require('figures');
 const pkg = require('../../package.json');
@@ -30,3 +33,16 @@ for (const which of [
 		});
 	});
 }
+
+test('includes relative paths in source map', t => {
+	execCli([], {dirname: 'fixture/correct-sources-in-source-map'}, () => {
+		const [file] = globby.sync(['*.js.map'], {
+			absolute: true,
+			cwd: path.resolve(__dirname, '../fixture/correct-sources-in-source-map/node_modules/.cache/ava')
+		});
+		const map = JSON.parse(fs.readFileSync(file, 'utf8'));
+		t.same(map.sources, [path.normalize('test/path-to/the/test-file.js')]);
+		t.is(map.sourceRoot, path.resolve(__dirname, '../fixture/correct-sources-in-source-map'));
+		t.end();
+	});
+});
