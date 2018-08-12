@@ -1,0 +1,9 @@
+{
+	"ava": {
+		"babel": {
+			"extensions": [
+				"foo"
+			]
+		}
+	}
+}
