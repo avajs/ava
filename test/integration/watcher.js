@@ -30,6 +30,32 @@ test('watcher reruns test files when they changed', t => {
 	});
 });
 
+test('watcher respects custom test file extensions', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/custom-extensions', env: {CI: ''}}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stdout.on('data', str => {
+		buffer += str;
+		if (/1 test passed/.test(buffer)) {
+			if (!passedFirst) {
+				touch.sync(path.join(__dirname, '../fixture/watcher/custom-extensions/test.foo'));
+				buffer = '';
+				passedFirst = true;
+			} else if (!killed) {
+				child.kill();
+				killed = true;
+			}
+		}
+	});
+});
+
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 
