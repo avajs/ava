@@ -9,6 +9,8 @@ const {execCli} = require('../helper/cli');
 
 test('timeout while tests running', t => {
 	execCli(['long-running.js', '-T', '1s'], (err, stdout) => {
+		console.log('stdout', 'WM 🌊🏄 ☀️️----',stdout)
+		console.log('err', 'WM 🌊🏄 ☀️️----',err)
 		t.ok(err);
 		t.match(stdout, /Exited because no new tests completed within the last 1000ms of inactivity/);
 		t.match(stdout, /3 tests still running/);
