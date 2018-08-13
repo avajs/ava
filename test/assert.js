@@ -827,6 +827,15 @@ test('.throws()', gather(t => {
 		}, {code: 'ERR_TEST'});
 	});
 
+	// Passes because the correct error is thrown.
+	passes(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			err.code = 42;
+			throw err;
+		}, {code: 42});
+	});
+
 	// Fails because the thrown value is not the right one
 	fails(t, () => {
 		assertions.throws(() => {
@@ -980,11 +989,11 @@ test('.throws() fails if passed a bad expectation', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.throws(() => {}, {code: 42});
+		assertions.throws(() => {}, {code: {}});
 	}, {
 		assertion: 'throws',
-		message: 'The `code` property of the second argument to `t.throws()` must be a string',
-		values: [{label: 'Called with:', formatted: /code: 42/}]
+		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
+		values: [{label: 'Called with:', formatted: /code: {}/}]
 	});
 
 	failsWith(t, () => {
@@ -1048,11 +1057,11 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.throwsAsync(() => {}, {code: 42});
+		assertions.throwsAsync(() => {}, {code: {}});
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string',
-		values: [{label: 'Called with:', formatted: /code: 42/}]
+		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string or number',
+		values: [{label: 'Called with:', formatted: /code: {}/}]
 	});
 
 	failsWith(t, () => {
