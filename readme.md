@@ -257,6 +257,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 		"failFast": true,
 		"failWithoutAssertions": false,
 		"tap": true,
+		"verbose": true,
 		"compileEnhancements": false,
 		"require": [
 			"@babel/register"
@@ -282,6 +283,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](#assertions)
 - `tap`: if `true`, enables the [TAP reporter](#tap-reporter)
+- `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
 - `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable power-assert and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
