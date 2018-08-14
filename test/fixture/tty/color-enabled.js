@@ -1,8 +1,11 @@
 import test from '../../..';
 
-test('stdout supports color', t => {
-	t.true(process.stdout.isTTY);
-	const colorDepth = process.stdout.getColorDepth();
+const assertColor = (t, stream) => {
+	t.true(stream.isTTY);
+	const colorDepth = stream.getColorDepth();
 	t.is(typeof colorDepth, 'number');
 	t.true(colorDepth > 1);
-});
+};
+
+test('stderr supports color', assertColor, process.stderr);
+test('stdout supports color', assertColor, process.stdout);
