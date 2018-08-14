@@ -205,3 +205,23 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		t.end();
 	});
 });
+
+test(`snapshots are indentical on different platforms`, t => {
+	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
+	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
+	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
+
+	// Test should pass, and a snapshot gets written
+	execCli(['--update-snapshots'], {dirname: fixtureDir}, err => {
+		t.ifError(err);
+		t.true(fs.existsSync(reportPath));
+		t.true(fs.existsSync(snapPath));
+
+		const reportContents = fs.readFileSync(reportPath, 'utf8');
+		const snapContents = JSON.stringify([...fs.readFileSync(snapPath)]);
+
+		t.matchSnapshot(reportContents, 'report file contents matches snapshot');
+		t.matchSnapshot(snapContents, 'snap file contents matches snapshot');
+		t.end();
+	});
+});
