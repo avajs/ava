@@ -28,8 +28,8 @@ const run = (type, sanitizers = []) => t => {
 			return tty.asBuffer();
 		})
 		.then(buffer => {
-			console.log('buffer.toString()', 'WM 🌊🏄 ☀️️----',buffer.toString())
-			return report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true})
+			console.log('buffer.toString()', 'WM 🌊🏄 ☀️️----', buffer.toString());
+			return report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true});
 		}
 		)
 		.catch(t.threw);
@@ -44,4 +44,5 @@ test('verbose reporter - typescript', run('typescript', [report.sanitizers.lineE
 test('verbose reporter - edge cases', run('edgeCases'));
 test("verbose reporter - timeout run", run("timeout"));
 test("verbose reporter - timeout run", run("timeoutInSingleFile"));
+test('verbose reporter - timeout in multiple files run', run('timeoutInMultipleFiles'));
 

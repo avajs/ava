@@ -1,6 +1,5 @@
 import test from "../../../..";
 
-console.log("in timeout a.js");
 test("passes", t => t.pass());
 
 test.cb("slow", t => {

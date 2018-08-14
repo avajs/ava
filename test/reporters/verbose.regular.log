@@ -182,7 +182,7 @@ stderr
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
 
   [90mfn (test.js:35:9)[39m
-  [90mfn (test.js:37:11)[39m
+  [90mt (test.js:37:11)[39m
 
 
 
@@ -211,7 +211,7 @@ stderr
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
 
   [90mfn (test.js:42:9)[39m
-  [90mfn (test.js:44:14)[39m
+  [90mt (test.js:44:14)[39m
 
 
 

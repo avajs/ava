@@ -1,0 +1,14 @@
+
+---tty-stream-chunk-separator
+  [32m✔[39m passes
+---tty-stream-chunk-separator
+  [32m✔[39m passes two
+---tty-stream-chunk-separator
+  [32m✔[39m slow[90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+  [32m✔[39m slow two [90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+
+  [32m4 tests passed[39m
+
+---tty-stream-chunk-separator

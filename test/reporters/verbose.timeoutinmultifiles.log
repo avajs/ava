@@ -1,0 +1,22 @@
+
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a passes
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a passes two
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a slow[90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a slow two [90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m b passes
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m b passes two
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m b slow[90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m b slow two [90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+
+  [32m8 tests passed[39m
+
+---tty-stream-chunk-separator

@@ -97,7 +97,7 @@ const run = (type, reporter) => {
 		babelConfig: {testOptions: {}},
 		resolveTestsFrom: projectDir,
 		projectDir,
-		timeout: type === 'timeoutinsinglefile' ? "1000ms" : undefined,
+		timeout: type.startsWith('timeout') ? '1000ms' : undefined,
 		concurrency: 1,
 		updateSnapshots: false,
 		snapshotDir: false,
@@ -139,7 +139,8 @@ exports.regular = reporter => run('regular', reporter);
 exports.failFast = reporter => run('failFast', reporter);
 exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
-exports.timeoutInSingleFile = reporter => run('timeoutinsinglefile', reporter);
+exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
+exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
 exports.edgeCases = reporter => run('edge-cases', reporter);
