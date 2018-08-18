@@ -34,6 +34,17 @@ function execCli(args, opts, cb) {
 		});
 
 		child.on('close', (code, signal) => {
+			// Ignore possible SIGINT and SIGTERM exit codes, which are not mapped
+			// to the `signal` variable. Workaround for <https://github.com/standard-things/esm/issues/569>.
+			if (code === 130) {
+				code = null;
+				signal = 'SIGINT';
+			}
+			if (code === 143) {
+				code = null;
+				signal = 'SIGTERM';
+			}
+
 			if (code) {
 				const err = new Error(`test-worker exited with a non-zero exit code: ${code}`);
 				err.code = code;
