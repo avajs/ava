@@ -78,6 +78,7 @@ if (precompileFile) {
 
 const opts = {
 	file,
+	projectDir,
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	tty: false,
