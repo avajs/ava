@@ -4,11 +4,12 @@
 ---tty-stream-chunk-separator
   [32m✔[39m passes two
 ---tty-stream-chunk-separator
-  [32m✔[39m slow[90m[2m  (000ms)[22m[39m
----tty-stream-chunk-separator
-  [32m✔[39m slow two [90m[2m  (000ms)[22m[39m
+  [31m✖ Exited because no new tests completed within the last 1000ms of inactivity[39m
+  [31m 2 tests still running[39m
+  [31m◌ ~/test/fixture/report/timeoutinsinglefile/a.js:slow[39m
+  [31m◌ ~/test/fixture/report/timeoutinsinglefile/a.js:slow two [39m
 ---tty-stream-chunk-separator
 
-  [32m4 tests passed[39m
+  [32m2 tests passed[39m
 
 ---tty-stream-chunk-separator

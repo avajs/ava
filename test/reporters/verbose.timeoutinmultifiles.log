@@ -4,19 +4,23 @@
 ---tty-stream-chunk-separator
   [32m✔[39m a [90m[2m›[22m[39m a passes two
 ---tty-stream-chunk-separator
-  [32m✔[39m a [90m[2m›[22m[39m a slow[90m[2m  (000ms)[22m[39m
----tty-stream-chunk-separator
-  [32m✔[39m a [90m[2m›[22m[39m a slow two [90m[2m  (000ms)[22m[39m
+  [31m✖ Exited because no new tests completed within the last 1000ms of inactivity[39m
+  [31m 2 tests still running[39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/a.js:a slow[39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/a.js:a slow two [39m
 ---tty-stream-chunk-separator
   [32m✔[39m b [90m[2m›[22m[39m b passes
 ---tty-stream-chunk-separator
   [32m✔[39m b [90m[2m›[22m[39m b passes two
 ---tty-stream-chunk-separator
-  [32m✔[39m b [90m[2m›[22m[39m b slow[90m[2m  (000ms)[22m[39m
----tty-stream-chunk-separator
-  [32m✔[39m b [90m[2m›[22m[39m b slow two [90m[2m  (000ms)[22m[39m
+  [31m✖ Exited because no new tests completed within the last 1000ms of inactivity[39m
+  [31m 4 tests still running[39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/a.js:a slow[39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/a.js:a slow two [39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/b.js:b slow[39m
+  [31m◌ ~/test/fixture/report/timeoutinmultifiles/b.js:b slow two [39m
 ---tty-stream-chunk-separator
 
-  [32m8 tests passed[39m
+  [32m4 tests passed[39m
 
 ---tty-stream-chunk-separator

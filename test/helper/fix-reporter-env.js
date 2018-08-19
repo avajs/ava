@@ -10,7 +10,7 @@ const fixColors = () => {
 
 module.exports = () => {
 	// Fix timestamps.
-	lolex.install({
+	const clock = lolex.install({
 		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
 		toFake: [
 			'Date'
@@ -22,6 +22,12 @@ module.exports = () => {
 
 	fixColors();
 	require('../../lib/chalk').set({enabled: true, level: 3});
+
+	return {
+		restoreClock() {
+			clock.uninstall();
+		}
+	};
 };
 
 module.exports.onlyColors = fixColors;
