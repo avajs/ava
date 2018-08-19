@@ -1,0 +1,10 @@
+{
+	"ava": {
+		"cache": false
+	},
+	"babel": {
+		"plugins": [
+			"@babel/plugin-syntax-async-generators"
+		]
+	}
+}

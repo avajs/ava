@@ -46,3 +46,12 @@ test('includes relative paths in source map', t => {
 		t.end();
 	});
 });
+
+for (const plugin of ['async-generators', 'object-rest-spread', 'optional-catch-binding']) {
+	test(`avoids applying '@babel/plugin-syntax-${plugin}' if already in config`, t => {
+		execCli([], {dirname: `fixture/babel/with-explicit-syntax-plugins/${plugin}`}, err => {
+			t.ifError(err);
+			t.end();
+		});
+	});
+}
