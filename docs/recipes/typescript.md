@@ -8,7 +8,7 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Configuring AVA to compile TypeScript files on the fly
 
-You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly:
+With AVA version `v1.0.0-beta.6` or above, you can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly:
 
 ```json
 {
