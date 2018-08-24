@@ -46,4 +46,14 @@ test('page title should contain "Google"', async t => {
 test('page should contain an element with #hplogo selector', async t => {
   t.not(await t.context.page.$('#hplogo'), null);
 });
+
+test('full page should match the snapshot', async t => {
+  let fullHTML = await t.context.page.evaluate(() => document.innerHTML);
+  t.snapshot(fullHTML);
+});
+
+test('search form should match the snapshot', async t => {
+  let searchForm = await t.context.page.$('#searchform').innerHTML;
+  t.snapshot(searchForm);
+});
 ```
