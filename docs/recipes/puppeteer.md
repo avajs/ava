@@ -42,4 +42,8 @@ setup(test);
 test('page title should contain "Google"', async t => {
   t.true((await t.context.page.title()).includes('Google'));
 });
+
+test('page should contain an element with #hplogo selector', async t => {
+  t.not(await t.context.page.$('#hplogo'), null);
+});
 ```
