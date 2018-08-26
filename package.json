@@ -168,7 +168,7 @@
 	"xo": {
 		"ignores": [
 			"media/**",
-			"test/fixture/{source-map-initial,syntax-error,symlinkfile}.js",
+			"test/fixture/{source-map-initial,syntax-error}.js",
 			"test/fixture/snapshots/test-sourcemaps/build/**",
 			"**/*.ts"
 		],
