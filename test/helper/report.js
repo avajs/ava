@@ -141,3 +141,4 @@ exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
+exports.edgeCases = reporter => run('edge-cases', reporter);

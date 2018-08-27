@@ -42,3 +42,4 @@ test('mini reporter - second failFast run', run('failFast2'));
 test('mini reporter - only run', run('only'));
 test('mini reporter - watch mode run', run('watch'));
 test('mini reporter - typescript', run('typescript', [report.sanitizers.lineEndings]));
+test('mini reporter - edge cases', run('edgeCases'));
