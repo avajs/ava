@@ -13,9 +13,8 @@ The first step is setting up a helper to configure the environment:
 
 ```js
 const puppeteer = require('puppeteer');
-const url = "https://google.com"; // App URL, for example, google.com
 
-module.exports = test => {
+module.exports = (test, url) => {
   test.before(async t => {
     t.context.browser = await puppeteer.launch();
     t.context.page = await t.context.browser.newPage();
@@ -37,7 +36,7 @@ module.exports = test => {
 const test = require("ava");
 const setup = require('./helpers/setup');
 
-setup(test);
+setup(test, 'https://google.com');
 
 test('page title should contain "Google"', async t => {
   t.true((await t.context.page.title()).includes('Google'));
