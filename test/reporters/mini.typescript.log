@@ -4,6 +4,8 @@
 * ---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
 [?25h
+  [31m✖ No tests found in test/fixture/report/typescript/build-error.ts[39m
+
   [31m1 uncaught exception[39m
 
   [1mUncaught exception in test/fixture/report/typescript/build-error.ts[22m

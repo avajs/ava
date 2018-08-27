@@ -3,9 +3,16 @@
 ---tty-stream-chunk-separator
 * ---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
+* [31m✖ No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js[39m---tty-stream-chunk-separator
+[2K[1G---tty-stream-chunk-separator
 * [31m✖ No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
 [?25h
+  [31m✖ No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file[39m
+  [31m✖ No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js[39m
+  [31m✖ No tests found in test/fixture/report/edge-cases/throws.js[39m
+  [31m✖ No tests found in test/fixture/report/edge-cases/import-and-use-test-member.js[39m
+
   [31m2 uncaught exceptions[39m
 
   [1mUncaught exception in test/fixture/report/edge-cases/throws.js[22m
