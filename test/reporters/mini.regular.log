@@ -111,6 +111,8 @@ stderr
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 [?25h
+  [31m✖ No tests found in test/fixture/report/regular/bad-test-chain.js[39m
+
   [31m8 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
