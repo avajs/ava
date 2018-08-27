@@ -205,3 +205,40 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		t.end();
 	});
 });
+
+test(`snapshots are indentical on different platforms`, t => {
+	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
+	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
+	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
+	const expectedReportPath = path.join(fixtureDir, 'test.js.md.expected');
+	const expectedSnapPath = path.join(fixtureDir, 'test.js.snap.expected');
+
+	const removeFile = filePath => {
+		try {
+			fs.unlinkSync(filePath);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	};
+
+	// Clear current snapshots
+	[reportPath, snapPath].forEach(fp => removeFile(fp));
+
+	// Test should pass, and a snapshot gets written
+	execCli(['--update-snapshots'], {dirname: fixtureDir}, err => {
+		t.ifError(err);
+		t.true(fs.existsSync(reportPath));
+		t.true(fs.existsSync(snapPath));
+
+		const reportContents = fs.readFileSync(reportPath);
+		const snapContents = fs.readFileSync(snapPath);
+		const expectedReportContents = fs.readFileSync(expectedReportPath);
+		const expectedSnapContents = fs.readFileSync(expectedSnapPath);
+
+		t.true(reportContents.equals(expectedReportContents), 'report file contents matches snapshot');
+		t.true(snapContents.equals(expectedSnapContents), 'snap file contents matches snapshot');
+		t.end();
+	});
+});
