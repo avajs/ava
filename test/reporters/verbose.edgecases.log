@@ -1,0 +1,37 @@
+
+---tty-stream-chunk-separator
+  [31m✖ No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js[39m
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in test/fixture/report/edge-cases/throws.js[22m
+
+  [90m~/test/fixture/report/edge-cases/throws.js:1[39m
+
+  [41m 1: throw new Error('throws');[49m
+   [90m2:[39m                           
+
+  Error: throws
+
+---tty-stream-chunk-separator
+  [31m✖ test/fixture/report/edge-cases/throws.js exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [31m✖ No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file[39m
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in test/fixture/report/edge-cases/import-and-use-test-member.js[22m
+
+  [90m~/test/fixture/report/edge-cases/import-and-use-test-member.js:3[39m
+
+   [90m2:[39m                             
+  [41m 3: test('pass', t => t.pass());[49m
+   [90m4:[39m                             
+
+  TypeError: (0 , _.test) is not a function
+
+---tty-stream-chunk-separator
+  [31m✖ test/fixture/report/edge-cases/import-and-use-test-member.js exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+
+  [31m2 uncaught exceptions[39m
+
+---tty-stream-chunk-separator
