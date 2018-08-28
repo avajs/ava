@@ -948,7 +948,7 @@ test('extended config can disable ava/stage-4', t => {
 	});
 
 	return api.run();
-}, {skip: true}); // FIXME https://github.com/babel/babel/issues/7920
+});
 
 test('babel can be disabled for particular files', t => {
 	t.plan(1);
