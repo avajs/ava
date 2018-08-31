@@ -1,9 +1,9 @@
 'use strict';
 require('../helper/report').captureStdIOReliability();
-const {restoreClock} = require('../helper/fix-reporter-env')();
 
 const path = require('path');
 const test = require('tap').test;
+const {restoreClock} = require('../helper/fix-reporter-env')();
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const VerboseReporter = require('../../lib/reporters/verbose');
@@ -27,11 +27,7 @@ const run = (type, sanitizers = []) => t => {
 			tty.end();
 			return tty.asBuffer();
 		})
-		.then(buffer => {
-			console.log('buffer.toString()', 'WM 🌊🏄 ☀️️----', buffer.toString());
-			return report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true});
-		}
-		)
+		.then(buffer => report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true}));
 		.catch(t.threw);
 };
 
@@ -47,6 +43,6 @@ test('verbose reporter - timeout', t => {
 	restoreClock();
 
 	t.test('single file run', run('timeoutInSingleFile'));
-	t.test('multiple files run', run('timeoutInMultiFiles'));
+	t.test('multiple files run', run('timeoutInMultipleFiles'));
 	t.end();
 });

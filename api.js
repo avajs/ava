@@ -61,8 +61,6 @@ class Api extends Emittery {
 		let restartTimer;
 		if (apiOptions.timeout) {
 			const timeout = ms(apiOptions.timeout);
-			console.log('timeout 🍣', timeout);
-			console.log('failFast', 'WM 🌊🏄 ☀️️----', failFast);
 
 			restartTimer = debounce(() => {
 				// If failFast is active, prevent new test files from running after
@@ -71,13 +69,12 @@ class Api extends Emittery {
 					bailed = true;
 				}
 
-				console.log('pendingWorkers', 'WM 🌊🏄 ☀️️----', pendingWorkers);
 				for (const worker of pendingWorkers) {
 					timedOutWorkerFiles.add(worker.file);
 					worker.exit();
 				}
 
-				runStatus.emitStateChange({type: 'timeout', period: timeout});
+				runStatus.emitStateChange({type: 'timeout', period: timeout, timedOutWorkerFiles});
 			}, timeout);
 		} else {
 			restartTimer = Object.assign(() => {}, {cancel() {}});
@@ -127,7 +124,6 @@ class Api extends Emittery {
 					if (record.testFile && !timedOutWorkerFiles.has(record.testFile)) {
 						// Restart the timer whenever there is activity from workers that
 						// haven't already timed out.
-						console.log('restartTimer 130', 'WM 🌊🏄 ☀️️----');
 						restartTimer();
 					}
 
@@ -216,7 +212,6 @@ class Api extends Emittery {
 								worker.promise.then(() => { // eslint-disable-line max-nested-callbacks
 									pendingWorkers.delete(worker);
 								});
-								console.log('restartTimer 219', 'WM 🌊🏄 ☀️️----');
 								restartTimer();
 
 								return worker.promise;
@@ -224,11 +219,9 @@ class Api extends Emittery {
 						}, {concurrency});
 					})
 					.catch(err => {
-						console.log('err', 'WM 🌊🏄 ☀️️----', err);
 						runStatus.emitStateChange({type: 'internal-error', err: serializeError('Internal error', false, err)});
 					})
 					.then(() => {
-						console.log('restartTimer.cancel 230', 'WM 🌊🏄 ☀️️----');
 						restartTimer.cancel();
 						return runStatus;
 					});
