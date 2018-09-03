@@ -3,7 +3,7 @@ import test from '../../..';
 test('test', t => {
 	try {
 		t.throws(throwSync());
-	} catch (err) {}
+	} catch (_) {}
 });
 
 function throwSync() {

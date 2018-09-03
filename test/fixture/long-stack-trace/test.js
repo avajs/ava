@@ -10,6 +10,6 @@ test('test', async t => {
 				a.b.c.d(); // eslint-disable-line no-undef
 			});
 		});
-	}).catch(err => console.error(err.stack));
+	}).catch(error => console.error(error.stack));
 	t.fail();
 });

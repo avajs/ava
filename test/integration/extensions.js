@@ -4,7 +4,7 @@ const figures = require('figures');
 const {execCli} = require('../helper/cli');
 
 test('errors if top-level extensions include "js" without babel=false', t => {
-	execCli(['es2015.js'], {dirname: `fixture/invalid-extensions/top-level`}, (err, stdout, stderr) => {
+	execCli(['es2015.js'], {dirname: 'fixture/invalid-extensions/top-level'}, (err, stdout, stderr) => {
 		t.ok(err);
 
 		let expectedOutput = '\n';
