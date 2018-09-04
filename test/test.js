@@ -471,7 +471,7 @@ test('throws and notThrows work with promises', t => {
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
-			a.throwsAsync(delay.reject(10, new Error('foo')), 'foo'),
+			a.throwsAsync(delay.reject(10, {value: new Error('foo')}), 'foo'),
 			a.notThrowsAsync(delay(20).then(() => {
 				asyncCalled = true;
 			}))
@@ -513,8 +513,8 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		const promises = [];
 		for (let i = 0; i < 3; i++) {
 			promises.push(
-				a.throwsAsync(delay.reject(10, new Error('foo')), 'foo'),
-				a.notThrowsAsync(delay(10), 'foo')
+				a.throwsAsync(delay.reject(10, {value: new Error('foo')}), 'foo'),
+				a.notThrowsAsync(delay(10))
 			);
 		}
 		return Promise.all(promises);
@@ -613,9 +613,9 @@ test('failing tests should fail', t => {
 });
 
 test('failing callback tests should end without error', t => {
-	const err = new Error('failed');
+	const error = new Error('failed');
 	return ava.cb.failing(a => {
-		a.end(err);
+		a.end(error);
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
@@ -651,7 +651,7 @@ test('failing tests must not return a fulfilled promise', t => {
 test('failing tests pass when returning a rejected promise', t => {
 	return ava.failing(a => {
 		a.plan(1);
-		return a.notThrowsAsync(delay(10), 'foo').then(() => Promise.reject());
+		return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => Promise.reject());
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});

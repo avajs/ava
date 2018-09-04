@@ -310,7 +310,7 @@ test('.is()', t => {
 		actual: {foo: 'bar'},
 		expected: {foo: 'bar'},
 		values: [{
-			label: `Values are deeply equal to each other, but they are not the same:`,
+			label: 'Values are deeply equal to each other, but they are not the same:',
 			formatted: /foo/
 		}]
 	});

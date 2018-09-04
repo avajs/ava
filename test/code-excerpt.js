@@ -19,7 +19,7 @@ test('read code excerpt', t => {
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false});
 	const expected = [
 		` ${chalk.grey('1:')} function a() {`,
-		chalk.bgRed(` 2:   alert();    `),
+		chalk.bgRed(' 2:   alert();    '),
 		` ${chalk.grey('3:')} }             `
 	].join('\n');
 
@@ -37,7 +37,7 @@ test('truncate lines', t => {
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false}, {maxWidth: 14});
 	const expected = [
 		` ${chalk.grey('1:')} functio…`,
-		chalk.bgRed(` 2:   alert…`),
+		chalk.bgRed(' 2:   alert…'),
 		` ${chalk.grey('3:')} }       `
 	].join('\n');
 
@@ -63,7 +63,7 @@ test('format line numbers', t => {
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
 	const expected = [
 		` ${chalk.grey(' 9:')} function a() {`,
-		chalk.bgRed(` 10:   alert();    `),
+		chalk.bgRed(' 10:   alert();    '),
 		` ${chalk.grey('11:')} }             `
 	].join('\n');
 

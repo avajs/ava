@@ -3,9 +3,9 @@ import test from '../../..';
 test('test', t => {
 	try {
 		t.throws(throwSync());
-	} catch (err) {
+	} catch (error) {
 		setImmediate(() => {
-			throw err;
+			throw error;
 		});
 	}
 });
