@@ -10,7 +10,7 @@
   2 tests still running in ~/test/fixture/report/timeoutinmultiplefiles/a.js:
 
   ◌ a [90m[2m›[22m[39m a slow
-  ◌ a [90m[2m›[22m[39m a slow two 
+  ◌ a [90m[2m›[22m[39m a slow two
 
 ---tty-stream-chunk-separator
   [32m✔[39m b [90m[2m›[22m[39m b passes
@@ -23,8 +23,8 @@
   3 tests still running in ~/test/fixture/report/timeoutinmultiplefiles/b.js:
 
   ◌ b [90m[2m›[22m[39m b slow
-  ◌ b [90m[2m›[22m[39m b slow two 
-  ◌ b [90m[2m›[22m[39m b slow three 
+  ◌ b [90m[2m›[22m[39m b slow two
+  ◌ b [90m[2m›[22m[39m b slow three
 
 ---tty-stream-chunk-separator
 
