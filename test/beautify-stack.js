@@ -65,13 +65,13 @@ test('beautify stack - removes uninteresting lines', t => {
 				fooFunc();
 			}
 		});
-	} catch (err) {
-		const stack = beautifyStack(err.stack);
+	} catch (error) {
+		const stack = beautifyStack(error.stack);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
 		// The runSingle line is introduced by Runner. It's internal so it should
 		// be stripped.
-		t.match(err.stack, /runSingle/);
+		t.match(error.stack, /runSingle/);
 		t.notMatch(stack, /runSingle/);
 		t.end();
 	}

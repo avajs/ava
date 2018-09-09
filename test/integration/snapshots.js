@@ -16,21 +16,21 @@ for (const obj of [
 		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', obj.rel, obj.dir, 'test.js.snap');
 		try {
 			fs.unlinkSync(snapPath);
-		} catch (err) {
-			if (err.code !== 'ENOENT') {
-				throw err;
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
 			}
 		}
 
 		const dirname = path.join('fixture/snapshots', obj.rel);
 		// Test should pass, and a snapshot gets written
-		execCli(['--update-snapshots'], {dirname}, err => {
-			t.ifError(err);
+		execCli(['--update-snapshots'], {dirname}, error => {
+			t.ifError(error);
 			t.true(fs.existsSync(snapPath));
 
 			// Test should pass, and the snapshot gets used
-			execCli([], {dirname}, err => {
-				t.ifError(err);
+			execCli([], {dirname}, error => {
+				t.ifError(error);
 				t.end();
 			});
 		});
@@ -77,8 +77,8 @@ test('outdated snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
 
-	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout) => {
-		t.ok(err);
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+		t.ok(error);
 		t.match(stdout, /The snapshot file is v0, but only v1 is supported\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
@@ -91,8 +91,8 @@ test('newer snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
 
-	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout) => {
-		t.ok(err);
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+		t.ok(error);
 		t.match(stdout, /The snapshot file is v65535, but only v1 is supported\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
@@ -105,8 +105,8 @@ test('snapshot corruption is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x01, 0x00]));
 
-	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout) => {
-		t.ok(err);
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+		t.ok(error);
 		t.match(stdout, /The snapshot file is corrupted\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
@@ -119,8 +119,8 @@ test('legacy snapshot files are reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
 
-	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (err, stdout) => {
-		t.ok(err);
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+		t.ok(error);
 		t.match(stdout, /The snapshot file was created with AVA 0\.19\. It's not supported by this AVA version\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
@@ -149,9 +149,9 @@ test('snapshots infer their location from sourcemaps', t => {
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
-		} catch (err) {
-			if (err.code !== 'ENOENT') {
-				throw err;
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
 			}
 		}
 	};
@@ -159,8 +159,8 @@ test('snapshots infer their location from sourcemaps', t => {
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
-	execCli([], {dirname: relativeFixtureDir}, (err, stdout) => {
-		t.ifError(err);
+	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
+		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
 		t.end();
@@ -188,9 +188,9 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
-		} catch (err) {
-			if (err.code !== 'ENOENT') {
-				throw err;
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
 			}
 		}
 	};
@@ -198,15 +198,15 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
-	execCli([], {dirname: relativeFixtureDir}, (err, stdout) => {
-		t.ifError(err);
+	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
+		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
 		t.end();
 	});
 });
 
-test(`snapshots are indentical on different platforms`, t => {
+test('snapshots are indentical on different platforms', t => {
 	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
 	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
 	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
@@ -216,9 +216,9 @@ test(`snapshots are indentical on different platforms`, t => {
 	const removeFile = filePath => {
 		try {
 			fs.unlinkSync(filePath);
-		} catch (err) {
-			if (err.code !== 'ENOENT') {
-				throw err;
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
 			}
 		}
 	};
@@ -227,8 +227,8 @@ test(`snapshots are indentical on different platforms`, t => {
 	[reportPath, snapPath].forEach(fp => removeFile(fp));
 
 	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots'], {dirname: fixtureDir}, err => {
-		t.ifError(err);
+	execCli(['--update-snapshots'], {dirname: fixtureDir}, error => {
+		t.ifError(error);
 		t.true(fs.existsSync(reportPath));
 		t.true(fs.existsSync(snapPath));
 

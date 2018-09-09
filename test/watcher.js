@@ -702,21 +702,21 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	}
 
-	test(`reruns previous tests and update snapshots when "u" is entered on stdin`, t => {
+	test('reruns previous tests and update snapshots when "u" is entered on stdin', t => {
 		const options = Object.assign({}, defaultApiOptions, {updateSnapshots: true});
 		const previousFiles = ['test.js'];
 		t.plan(4);
 		api.run.returns(Promise.resolve(runStatus));
 		start(previousFiles).observeStdin(stdin);
 
-		stdin.write(`u\n`);
+		stdin.write('u\n');
 		return delay().then(() => {
 			t.ok(api.run.calledTwice);
 			t.strictDeepEqual(api.run.secondCall.args, [previousFiles, Object.assign({}, options, {
 				runVector: 2
 			})]);
 
-			stdin.write(`\tu  \n`);
+			stdin.write('\tu  \n');
 			return delay();
 		}).then(() => {
 			t.ok(api.run.calledThrice);
@@ -854,8 +854,8 @@ group('chokidar', (beforeEach, test, group) => {
 			// the error, which can then be caught here.
 			try {
 				clock.next();
-			} catch (err) {
-				t.is(err, expected);
+			} catch (error) {
+				t.is(error, expected);
 			}
 		});
 	});
@@ -875,8 +875,8 @@ group('chokidar', (beforeEach, test, group) => {
 			// the error, which can then be caught here.
 			try {
 				clock.next();
-			} catch (err) {
-				t.is(err, expected);
+			} catch (error) {
+				t.is(error, expected);
 			}
 		});
 	});

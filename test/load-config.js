@@ -88,8 +88,8 @@ test('rethrows wrapped module errors', t => {
 	changeDir('throws');
 	try {
 		loadConfig();
-	} catch (err) {
-		t.is(err.parent.message, 'foo');
+	} catch (error) {
+		t.is(error.parent.message, 'foo');
 	}
 });
 

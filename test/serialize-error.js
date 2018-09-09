@@ -13,41 +13,41 @@ const avaAssert = require('../lib/assert');
 const beautifyStack = require('../lib/beautify-stack');
 const serializeError = require('../lib/serialize-error');
 
-const serialize = err => serializeError('Test', true, err);
+const serialize = error => serializeError('Test', true, error);
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
 
 test('serialize standard props', t => {
-	const err = new Error('Hello');
-	const serializedErr = serialize(err);
+	const error = new Error('Hello');
+	const serializedError = serialize(error);
 
-	t.is(Object.keys(serializedErr).length, 8);
-	t.is(serializedErr.avaAssertionError, false);
-	t.is(serializedErr.nonErrorObject, false);
-	t.deepEqual(serializedErr.object, {});
-	t.is(serializedErr.name, 'Error');
-	t.is(serializedErr.stack, beautifyStack(err.stack));
-	t.is(serializedErr.message, 'Hello');
-	t.is(serializedErr.summary, 'Error: Hello');
-	t.is(typeof serializedErr.source.isDependency, 'boolean');
-	t.is(typeof serializedErr.source.isWithinProject, 'boolean');
-	t.is(typeof serializedErr.source.file, 'string');
-	t.is(typeof serializedErr.source.line, 'number');
+	t.is(Object.keys(serializedError).length, 8);
+	t.is(serializedError.avaAssertionError, false);
+	t.is(serializedError.nonErrorObject, false);
+	t.deepEqual(serializedError.object, {});
+	t.is(serializedError.name, 'Error');
+	t.is(serializedError.stack, beautifyStack(error.stack));
+	t.is(serializedError.message, 'Hello');
+	t.is(serializedError.summary, 'Error: Hello');
+	t.is(typeof serializedError.source.isDependency, 'boolean');
+	t.is(typeof serializedError.source.isWithinProject, 'boolean');
+	t.is(typeof serializedError.source.file, 'string');
+	t.is(typeof serializedError.source.line, 'number');
 	t.end();
 });
 
 test('additional error properties are preserved', t => {
-	const serializedErr = serialize(Object.assign(new Error(), {foo: 'bar'}));
-	t.deepEqual(serializedErr.object, {foo: 'bar'});
+	const serializedError = serialize(Object.assign(new Error(), {foo: 'bar'}));
+	t.deepEqual(serializedError.object, {foo: 'bar'});
 	t.end();
 });
 
 test('source file is an absolute path', t => {
-	const err = new Error('Hello');
-	const serializedErr = serialize(err);
+	const error = new Error('Hello');
+	const serializedError = serialize(error);
 
-	t.is(serializedErr.source.file, __filename);
+	t.is(serializedError.source.file, __filename);
 	t.end();
 });
 
@@ -56,9 +56,9 @@ test('source file is an absolute path, after source map correction', t => {
 	try {
 		fixture.require().run();
 		t.fail('Fixture should have thrown');
-	} catch (err) {
-		const serializedErr = serialize(err);
-		t.is(serializedErr.source.file, fixture.sourceFile);
+	} catch (error) {
+		const serializedError = serialize(error);
+		t.is(serializedError.source.file, fixture.sourceFile);
 		t.end();
 	}
 });
@@ -78,9 +78,9 @@ test('source file is an absolute path, after source map correction, even if alre
 	try {
 		require(tmpFile).run();
 		t.fail('Fixture should have thrown');
-	} catch (err) {
-		const serializedErr = serialize(err);
-		t.is(serializedErr.source.file, expectedSourceFile);
+	} catch (error) {
+		const serializedError = serialize(error);
+		t.is(serializedError.source.file, expectedSourceFile);
 		t.end();
 	}
 });
@@ -90,16 +90,16 @@ test('determines whether source file is within the project', t => {
 	try {
 		require(file)();
 		t.fail('Should have thrown');
-	} catch (err) {
-		const serializedErr = serialize(err);
-		t.is(serializedErr.source.file, file);
-		t.is(serializedErr.source.isWithinProject, false);
+	} catch (error2) {
+		const serializedError = serialize(error2);
+		t.is(serializedError.source.file, file);
+		t.is(serializedError.source.isWithinProject, false);
 	}
 
-	const err = new Error('Hello');
-	const serializedErr = serialize(err);
-	t.is(serializedErr.source.file, __filename);
-	t.is(serializedErr.source.isWithinProject, true);
+	const error = new Error('Hello');
+	const serializedError = serialize(error);
+	t.is(serializedError.source.file, __filename);
+	t.is(serializedError.source.isWithinProject, true);
 	t.end();
 });
 
@@ -108,71 +108,71 @@ test('determines whether source file, if within the project, is a dependency', t
 	try {
 		fixture.require().run();
 		t.fail('Fixture should have thrown');
-	} catch (err) {
-		const serializedErr = serialize(err);
-		t.is(serializedErr.source.file, fixture.sourceFile);
-		t.is(serializedErr.source.isWithinProject, true);
-		t.is(serializedErr.source.isDependency, true);
+	} catch (error2) {
+		const serializedError = serialize(error2);
+		t.is(serializedError.source.file, fixture.sourceFile);
+		t.is(serializedError.source.isWithinProject, true);
+		t.is(serializedError.source.isDependency, true);
 	}
 
-	const err = new Error('Hello');
-	const serializedErr = serialize(err);
-	t.is(serializedErr.source.file, __filename);
-	t.is(serializedErr.source.isDependency, false);
+	const error = new Error('Hello');
+	const serializedError = serialize(error);
+	t.is(serializedError.source.file, __filename);
+	t.is(serializedError.source.isDependency, false);
 	t.end();
 });
 
 test('sets avaAssertionError to true if indeed an assertion error', t => {
-	const err = new avaAssert.AssertionError({});
-	const serializedErr = serialize(err);
-	t.true(serializedErr.avaAssertionError);
+	const error = new avaAssert.AssertionError({});
+	const serializedError = serialize(error);
+	t.true(serializedError.avaAssertionError);
 	t.end();
 });
 
 test('includes statements of assertion errors', t => {
-	const err = new avaAssert.AssertionError({
+	const error = new avaAssert.AssertionError({
 		assertion: 'true'
 	});
-	err.statements = [
+	error.statements = [
 		['actual.a[0]', '1'],
 		['actual.a', '[1]'],
 		['actual', '{a: [1]}']
 	];
 
-	const serializedErr = serialize(err);
-	t.is(serializedErr.statements, err.statements);
+	const serializedError = serialize(error);
+	t.is(serializedError.statements, error.statements);
 	t.end();
 });
 
 test('includes values of assertion errors', t => {
-	const err = new avaAssert.AssertionError({
+	const error = new avaAssert.AssertionError({
 		assertion: 'is',
 		values: [{label: 'actual:', formatted: '1'}, {label: 'expected:', formatted: 'a'}]
 	});
 
-	const serializedErr = serialize(err);
-	t.is(serializedErr.values, err.values);
+	const serializedError = serialize(error);
+	t.is(serializedError.values, error.values);
 	t.end();
 });
 
 test('remove non-string error properties', t => {
-	const err = {
+	const error = {
 		name: [42],
 		stack: /re/g
 	};
-	const serializedErr = serialize(err);
-	t.is(serializedErr.name, undefined);
-	t.is(serializedErr.stack, undefined);
+	const serializedError = serialize(error);
+	t.is(serializedError.name, undefined);
+	t.is(serializedError.stack, undefined);
 	t.end();
 });
 
 test('creates multiline summaries for syntax errors', t => {
-	const err = new SyntaxError();
-	Object.defineProperty(err, 'stack', {
+	const error = new SyntaxError();
+	Object.defineProperty(error, 'stack', {
 		value: 'Hello\nThere\nSyntaxError here\nIgnore me'
 	});
-	const serializedErr = serialize(err);
-	t.is(serializedErr.name, 'SyntaxError');
-	t.is(serializedErr.summary, 'Hello\nThere\nSyntaxError here');
+	const serializedError = serialize(error);
+	t.is(serializedError.name, 'SyntaxError');
+	t.is(serializedError.summary, 'Hello\nThere\nSyntaxError here');
 	t.end();
 });

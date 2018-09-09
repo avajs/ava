@@ -36,7 +36,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
-	} catch (err) {}
+	} catch (_) {}
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
 		fs.writeFileSync(logFile, buffer);
 		existing = buffer;

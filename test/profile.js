@@ -21,8 +21,8 @@ function run(files) {
 test('runs the profiler and throws an error when invoked without files to run', t => {
 	t.plan(1);
 	run()
-		.catch(err => {
-			t.ok(/Specify a test file/.test(err.stderr));
+		.catch(error => {
+			t.ok(/Specify a test file/.test(error.stderr));
 			t.end();
 		});
 });
@@ -30,8 +30,8 @@ test('runs the profiler and throws an error when invoked without files to run', 
 test('exits normally when tests pass', t => {
 	t.plan(1);
 	run('es2015')
-		.catch(err => {
-			t.fail(err);
+		.catch(error => {
+			t.fail(error);
 		})
 		.then(() => {
 			t.pass();
@@ -45,8 +45,8 @@ test('exits with a non-zero exit code when one test fails', t => {
 		.then(() => {
 			t.fail();
 		})
-		.catch(err => {
-			t.true(Boolean(err.code));
+		.catch(error => {
+			t.true(Boolean(error.code));
 			t.end();
 		});
 });
@@ -57,8 +57,8 @@ test('exits with a non-zero exit code when there is an uncaught exception', t =>
 		.then(() => {
 			t.fail();
 		})
-		.catch(err => {
-			t.true(Boolean(err.code));
+		.catch(error => {
+			t.true(Boolean(error.code));
 			t.end();
 		});
 });
