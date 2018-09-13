@@ -11,10 +11,12 @@ const Promise = require('bluebird');
 const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
+const escapeStringRegexp = require('escape-string-regexp');
 const babelPipeline = require('./lib/babel-pipeline');
 const RunStatus = require('./lib/run-status');
 const VerboseReporter = require('./lib/reporters/verbose');
 const loadConfig = require('./lib/load-config');
+const normalizeExtensions = require('./lib/extensions');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -70,11 +72,22 @@ if (cli.input.length === 0) {
 const file = path.resolve(cli.input[0]);
 const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
-const precompileFile = babelPipeline.build(process.cwd(), cacheDir, babelPipeline.validate(conf.babel), conf.compileEnhancements === true);
-const precompiled = {};
-if (precompileFile) {
-	precompiled[file] = precompileFile(file);
+const babelConfig = babelPipeline.validate(conf.babel);
+conf.extensions = normalizeExtensions(conf.extensions || [], babelConfig);
+
+const _regexpFullExtensions = new RegExp(
+	`\\.(${conf.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`,
+);
+
+const precompileFull = babelPipeline.build(process.cwd(), cacheDir, babelConfig, conf.compileEnhancements === true);
+
+let precompileEnhancementsOnly = () => null;
+if (conf.compileEnhancements) {
+	precompileEnhancementsOnly = babelPipeline.build(projectDir, cacheDir, null, conf.compileEnhancements);
 }
+
+const precompiled = {};
+precompiled[file] = _regexpFullExtensions.test(file) ? precompileFull(file) : precompileEnhancementsOnly(file);
 
 const opts = {
 	file,
