@@ -1,9 +1,9 @@
 'use strict';
 require('../helper/report').captureStdIOReliability();
-require('../helper/fix-reporter-env')();
 
 const path = require('path');
 const test = require('tap').test;
+const {restoreClock} = require('../helper/fix-reporter-env')();
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const VerboseReporter = require('../../lib/reporters/verbose');
@@ -38,3 +38,11 @@ test('verbose reporter - only run', run('only'));
 test('verbose reporter - watch mode run', run('watch'));
 test('verbose reporter - typescript', run('typescript', [report.sanitizers.lineEndings]));
 test('verbose reporter - edge cases', run('edgeCases'));
+
+test('verbose reporter - timeout', t => {
+	restoreClock();
+
+	t.test('single file run', run('timeoutInSingleFile'));
+	t.test('multiple files run', run('timeoutInMultipleFiles'));
+	t.end();
+});

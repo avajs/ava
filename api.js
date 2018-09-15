@@ -74,7 +74,7 @@ class Api extends Emittery {
 					worker.exit();
 				}
 
-				runStatus.emitStateChange({type: 'timeout', period: timeout});
+				runStatus.emitStateChange({type: 'timeout', period: timeout, timedOutWorkerFiles});
 			}, timeout);
 		} else {
 			restartTimer = Object.assign(() => {}, {cancel() {}});
@@ -212,7 +212,6 @@ class Api extends Emittery {
 								worker.promise.then(() => { // eslint-disable-line max-nested-callbacks
 									pendingWorkers.delete(worker);
 								});
-
 								restartTimer();
 
 								return worker.promise;
