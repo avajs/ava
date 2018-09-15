@@ -160,7 +160,7 @@ $ ava --help
     --tap, -t               Generate TAP output
     --color                 Force color output
     --no-color              Disable color output
-	--reset-cache           Reset AVA's compilation cache and exit
+    --reset-cache           Reset AVA's compilation cache and exit
 
   Examples
     ava
