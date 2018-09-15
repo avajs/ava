@@ -75,9 +75,7 @@ const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(proje
 const babelConfig = babelPipeline.validate(conf.babel);
 conf.extensions = normalizeExtensions(conf.extensions || [], babelConfig);
 
-const _regexpFullExtensions = new RegExp(
-	`\\.(${conf.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`,
-);
+const _regexpFullExtensions = new RegExp(`\\.(${conf.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
 
 const precompileFull = babelPipeline.build(process.cwd(), cacheDir, babelConfig, conf.compileEnhancements === true);
 
