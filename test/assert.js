@@ -713,6 +713,20 @@ test('.throws()', gather(t => {
 		values: [{label: 'Function returned:', formatted: /undefined/}]
 	});
 
+	// Fails because the function throws asynchronously
+	failsWith(t, async () => {
+		await assertions.throws(async () => {
+			try {
+				await assert(false);
+			} catch (error) {
+				throw new Error(error);
+			}
+		});
+	}, {
+		assertion: 'throws',
+		message: 'Function threw asynchronously. Use `t.throwsAsync()` instead'
+	});
+
 	// Fails because thrown exception is not an error
 	failsWith(t, () => {
 		assertions.throws(() => {
