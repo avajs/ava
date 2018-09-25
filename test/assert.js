@@ -714,8 +714,8 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the function throws asynchronously
-	failsWith(t, async () => {
-		await assertions.throws(async () => {
+	failsWith(t, () => {
+		assertions.throws(async () => {
 			try {
 				await assert(false);
 			} catch (error) {
