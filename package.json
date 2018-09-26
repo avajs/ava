@@ -76,6 +76,7 @@
 		"bluebird": "^3.5.1",
 		"chalk": "^2.4.1",
 		"chokidar": "^2.0.4",
+		"chunkd": "^1.0.0",
 		"ci-parallel-vars": "^1.0.0",
 		"clean-stack": "^1.1.1",
 		"clean-yaml-object": "^0.1.0",
