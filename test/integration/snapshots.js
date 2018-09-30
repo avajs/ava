@@ -79,7 +79,7 @@ test('outdated snapshot version is reported to the console', t => {
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
-		t.match(stdout, /The snapshot file is v0, but only v1 is supported\./);
+		t.match(stdout, /The snapshot file is v0, but only v2 is supported\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
 		t.match(stdout, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);
@@ -93,7 +93,7 @@ test('newer snapshot version is reported to the console', t => {
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
-		t.match(stdout, /The snapshot file is v65535, but only v1 is supported\./);
+		t.match(stdout, /The snapshot file is v65535, but only v2 is supported\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
 		t.match(stdout, /You should upgrade AVA\./);
@@ -103,7 +103,7 @@ test('newer snapshot version is reported to the console', t => {
 
 test('snapshot corruption is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
-	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x01, 0x00]));
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x02, 0x00]));
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
