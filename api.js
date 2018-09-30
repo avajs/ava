@@ -13,6 +13,7 @@ const getPort = require('get-port');
 const arrify = require('arrify');
 const makeDir = require('make-dir');
 const ms = require('ms');
+const chunkd = require('chunkd');
 const babelPipeline = require('./lib/babel-pipeline');
 const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
@@ -84,18 +85,15 @@ class Api extends Emittery {
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()
 			.then(files => {
 				if (this.options.parallelRuns) {
-					// The files must be in the same order across all runs, so sort them.
-					files = files.sort((a, b) => a.localeCompare(b, [], {numeric: true}));
-
 					const {currentIndex, totalRuns} = this.options.parallelRuns;
 					const fileCount = files.length;
-					const each = Math.floor(fileCount / totalRuns);
-					const remainder = fileCount % totalRuns;
 
-					const offset = Math.min(currentIndex, remainder) + (currentIndex * each);
-					const currentFileCount = each + (currentIndex < remainder ? 1 : 0);
+					// The files must be in the same order across all runs, so sort them.
+					files = files.sort((a, b) => a.localeCompare(b, [], {numeric: true}));
+					files = chunkd(files, currentIndex, totalRuns);
 
-					files = files.slice(offset, offset + currentFileCount);
+					const currentFileCount = files.length;
+
 					runStatus = new RunStatus(fileCount, {currentFileCount, currentIndex, totalRuns});
 				} else {
 					runStatus = new RunStatus(files.length, null);
