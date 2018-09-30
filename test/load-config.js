@@ -98,3 +98,9 @@ test('throws an error if a config file has no default export', t => {
 	t.throws(loadConfig);
 	t.end();
 });
+
+test('throws an error if a config file contains `ava` property', t => {
+	changeDir('contains-ava-property');
+	t.throws(loadConfig);
+	t.end();
+});
