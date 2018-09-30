@@ -713,16 +713,13 @@ test('.throws()', gather(t => {
 		values: [{label: 'Function returned:', formatted: /undefined/}]
 	});
 
-	// Fails because the function throws asynchronously
+	// Fails because the function returned a promise.
 	failsWith(t, () => {
-		assertions.throws(() => {
-			return new Promise(() => {
-				throw new Error('error');
-			});
-		});
+		assertions.throws(() => Promise.resolve());
 	}, {
 		assertion: 'throws',
-		message: 'Function threw asynchronously. Use `t.throwsAsync()` instead'
+		message: '',
+		values: [{label: 'Function returned a promise. Use `t.throwsAsync()` instead:', formatted: /Promise/}]
 	});
 
 	// Fails because thrown exception is not an error
