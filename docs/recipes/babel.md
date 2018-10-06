@@ -155,6 +155,7 @@ AVA does not currently compile source files. You'll have to load [Babel's `regis
 
 You can enable the `register` module by adding it to AVA's `require` option:
 
+The example below uses `@babel/register` and assumes you're using Babel 7 to compile your source files. If you're using Babel 6, use `babel-register` instead.
 ```json
 {
 	"ava": {
