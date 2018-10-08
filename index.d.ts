@@ -349,6 +349,7 @@ export interface ExecutionContext<Context = {}> extends Assertions {
 	log: LogFn;
 	plan: PlanFn;
 	timeout: TimeoutFn;
+	try: TryFn<Context>;
 }
 
 export interface LogFn {
@@ -377,6 +378,38 @@ export interface TimeoutFn {
 	 */
 	(ms: number): void;
 }
+
+export interface TryFn<Context> {
+	<T extends any[]>(
+		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
+		...args: T
+	): AttemptReturnValue;
+
+	skip(...values: Array<any>): void;
+}
+
+// todo: would rather remove 'null |' from Promise definition
+// that is because in typescript, it will be required to check if it is not
+// null all the time.
+export type AttemptReturnValue = Promise<null | {
+	commit: () => void,
+	discard: () => void,
+	passed: boolean,
+	error: null | Error,
+	duration: number,
+	title: string,
+	logs: string[],
+	metadata: {
+		always: boolean,
+		callback: boolean,
+		exclusive: boolean,
+		failing: boolean,
+		serial: boolean,
+		skipped: boolean,
+		todo: boolean,
+		type: 'test',
+	},
+}> & { discard: () => void }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
 export interface CbExecutionContext<Context = {}> extends ExecutionContext<Context> {
