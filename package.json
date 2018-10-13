@@ -96,6 +96,7 @@
 		"escape-string-regexp": "^1.0.5",
 		"esm": "^3.0.80",
 		"figures": "^2.0.0",
+		"find-up": "^3.0.0",
 		"get-port": "^4.0.0",
 		"globby": "^7.1.1",
 		"ignore-by-default": "^1.0.0",
