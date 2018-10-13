@@ -10,7 +10,9 @@ If you are using Babel for your source files then you must also [configure sourc
 
 ## Customize how AVA compiles your test files
 
-You can override the default Babel configuration AVA uses for test file compilation in `package.json` or `ava.config.js`. For example, the configuration below adds support for JSX syntax and stage 3 features:
+You can override the default Babel configuration AVA uses for test file compilation in `package.json` or `ava.config.js`. For example, the configuration below adds support for JSX syntax and stage 3 features.
+
+**`package.json`:**
 
 ```json
 {
@@ -39,7 +41,9 @@ $ npx ava --reset-cache
 
 ## Add additional extensions
 
-You can configure AVA to recognize additional file extensions and compile those test & helper files using Babel:
+You can configure AVA to recognize additional file extensions and compile those test & helper files using Babel.
+
+**`package.json`:**
 
 ```json
 {
@@ -58,7 +62,9 @@ See also AVA's [`extensions` option](../../readme.md#options).
 
 ## Make AVA skip your project's Babel options
 
-You may not want AVA to use your project's Babel options, for example if your project is relying on Babel 6. You can set the `babelrc` option to `false`:
+You may not want AVA to use your project's Babel options, for example if your project is relying on Babel 6. You can set the `babelrc` option to `false`.
+
+**`package.json`:**
 
 ```json
 {
@@ -74,7 +80,9 @@ You may not want AVA to use your project's Babel options, for example if your pr
 
 ## Disable AVA's stage-4 preset
 
-You can disable AVA's stage-4 preset:
+You can disable AVA's stage-4 preset.
+
+**`package.json`:**
 
 ```json
 {
@@ -96,7 +104,9 @@ If you want, you can disable the preset in your project's Babel configuration.
 
 ## Preserve ES module syntax
 
-By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This can be disabled:
+By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This can be disabled.
+
+**`package.json`:**
 
 ```json
 {
@@ -118,7 +128,9 @@ You'll have to use the [`esm`](https://github.com/standard-things/esm) module so
 
 ## Disable AVA's Babel pipeline
 
-You can completely disable AVA's use of Babel:
+You can completely disable AVA's use of Babel.
+
+**`package.json`:**
 
 ```json
 {
@@ -135,7 +147,9 @@ AVA lets you write your tests using new JavaScript syntax, even on Node.js versi
 
 By loading [Babel's `polyfill` module](https://babeljs.io/docs/usage/polyfill/) you can opt in to these features. Note that this will modify the environment, which may influence how your program behaves.
 
-You can enable the `polyfill` module by adding it to AVA's `require` option:
+You can enable the `polyfill` module by adding it to AVA's `require` option.
+
+**`package.json`:**
 
 ```json
 {
@@ -153,7 +167,9 @@ You'll need to install `@babel/polyfill` yourself.
 
 AVA does not currently compile source files. You'll have to load [Babel's `register` module](http://babeljs.io/docs/usage/require/), which will compile source files as needed.
 
-You can enable the `register` module by adding it to AVA's `require` option:
+You can enable the `register` module by adding it to AVA's `require` option.
+
+**`package.json`:**
 
 ```json
 {
@@ -177,7 +193,9 @@ require('@babel/register')({
 });
 ```
 
-Now instead of requiring `@babel/register`, require `test/_register` instead:
+Now instead of requiring `@babel/register`, require `test/_register` instead.
+
+**`package.json`:**
 
 ```json
 {

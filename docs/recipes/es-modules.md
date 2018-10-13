@@ -12,7 +12,9 @@ First, install [`esm`](https://github.com/standard-things/esm):
 $ npm install esm
 ```
 
-Configure it in your `package.json` or `ava.config.js` file, and add it to AVA's `"require"` option as well. Make sure to add it as the first item:
+Configure it in your `package.json` or `ava.config.js` file, and add it to AVA's `"require"` option as well. Make sure to add it as the first item.
+
+**`package.json`:**
 
 ```json
 {
@@ -45,7 +47,9 @@ test('2 + 2 = 4', t => {
 });
 ```
 
-You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use:
+You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use the following.
+
+**`package.json`:**
 
 ```json
 {

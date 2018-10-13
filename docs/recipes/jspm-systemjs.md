@@ -33,6 +33,8 @@ $ npm install --save-dev ava-jspm-loader @babel/register
 ```
 You will also need to update your AVA config in the `package.json` or `ava.config.js` to use the JSPM loader.
 
+**`package.json`:**
+
 ```json
 {
 	"ava": {
