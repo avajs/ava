@@ -872,6 +872,105 @@ test('babel.testOptions.babelrc (when true) picks up .babelrc.js files', t => {
 		});
 });
 
+test('babel.testOptions.configFile effectively defaults to true', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		projectDir: path.join(__dirname, 'fixture/babel-config')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok((evt.title === 'foo') || (evt.title === 'repeated test: foo'));
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
+test('babel.testOptions.configFile can explicitly be true', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {configFile: true}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babel-config')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok(evt.title === 'foo' || evt.title === 'repeated test: foo');
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
+test('babel.testOptions.configFile can explicitly be false', t => {
+	t.plan(2);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {configFile: false}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babel-config')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.is(evt.title, 'foo');
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+		});
+});
+
+test('babel.testOptions merges plugins with babel.config.js', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				babelrc: true,
+				plugins: [testCapitalizerPlugin]
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babel-config')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok(evt.title === 'FOO' || evt.title === 'repeated test: foo');
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
 test('babel.testOptions can disable ava/stage-4', t => {
 	t.plan(1);
 
@@ -909,6 +1008,34 @@ test('babel.testOptions with extends still merges plugins with .babelrc', t => {
 		},
 		cacheEnabled: false,
 		projectDir: path.join(__dirname, 'fixture/babelrc')
+	});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.ok(evt.title === 'BAR' || evt.title === 'repeated test: bar');
+			}
+		});
+	});
+
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
+test('babel.testOptions with extends still merges plugins with babel.config.js', t => {
+	t.plan(3);
+
+	const api = apiCreator({
+		babelConfig: {
+			testOptions: {
+				plugins: [testCapitalizerPlugin],
+				extends: path.join(__dirname, 'fixture/babel-config/.alt-babelrc')
+			}
+		},
+		cacheEnabled: false,
+		projectDir: path.join(__dirname, 'fixture/babel-config')
 	});
 
 	api.on('run', plan => {
