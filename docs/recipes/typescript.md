@@ -135,3 +135,32 @@ test('foo is bar', macro, 'bar');
 ```
 
 Note that, despite the type cast above, when executing `t.context` is an empty object unless it's assigned.
+
+## Typing `throws` assertions
+
+The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an Error. You can customize the error class using generics:
+
+```ts
+import test from 'ava'
+
+class CustomError extends Error {
+	parent: Error
+
+	constructor (parent) {
+		super(parent.message);
+		this.parent = parent;
+	}
+}
+
+test('throws', t => {
+	const err = t.throws<CustomError>(myFunc);
+	t.is(err.parent.name, 'TypeError');
+});
+
+test('throwsAsync', async t => {
+	const err = await t.throwsAsync<CustomError>(myFunc);
+	t.is(err.parent.name, 'TypeError');
+});
+```
+
+Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
