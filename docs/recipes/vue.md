@@ -12,9 +12,9 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 ## Setup
 
-The first step is setting up a helper to configure the environment to transpile `.vue` files and run in a browser like environment:
+The first step is setting up a helper to configure the environment to transpile `.vue` files and run in a browser like environment.
 
-`package.json`
+**`package.json`:**
 
 ```json
 {

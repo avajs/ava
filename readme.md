@@ -237,6 +237,8 @@ All of the CLI options can be configured in the `ava` section of either your `pa
 
 To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
 
+**`package.json`:**
+
 ```json
 {
 	"ava": {
@@ -1085,6 +1087,8 @@ $ ava --update-snapshots
 ```
 
 You can specify a fixed location for storing the snapshot files in AVA's [`package.json` configuration](#configuration):
+
+**`package.json`:**
 
 ```json
 {

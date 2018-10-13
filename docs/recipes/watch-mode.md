@@ -45,7 +45,9 @@ And then use:
 $ npm run watch:test
 ```
 
-Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config]:
+Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config].
+
+**`package.json`:**
 
 ```json
 {

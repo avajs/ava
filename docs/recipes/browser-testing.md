@@ -52,7 +52,7 @@ global.$ = jQuery(window);
 
 Configure AVA to `require` the helper before every test file.
 
-`package.json`:
+**`package.json`:**
 
 ```json
 {
