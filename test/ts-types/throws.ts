@@ -1,4 +1,4 @@
-import test from '../..'
+import test from '../..';
 
 class CustomError extends Error {
 	foo: string;
