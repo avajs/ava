@@ -27,7 +27,7 @@ module.exports = async fn => {
 
 ## Usage example
 
-`./test/*`
+`./test/main.js`
 
 ```js
 const test = require('ava');
