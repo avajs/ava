@@ -141,12 +141,12 @@ Note that, despite the type cast above, when executing `t.context` is an empty o
 The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an Error. You can customize the error class using generics:
 
 ```ts
-import test from 'ava'
+import test from 'ava';
 
 class CustomError extends Error {
 	parent: Error
 
-	constructor (parent) {
+	constructor(parent) {
 		super(parent.message);
 		this.parent = parent;
 	}
