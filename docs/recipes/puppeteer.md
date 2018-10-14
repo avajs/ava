@@ -21,7 +21,7 @@ export default async function withPage(t, run) {
 	} finally {
 		await page.close();
 		await browser.close();
-	};
+	}
 }
 ```
 
