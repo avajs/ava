@@ -8,20 +8,20 @@
 
 The first step is setting up a helper to configure the environment:
 
-`./test/helpers/setup.js`
+`./test/helpers/withPage.js`
 
 ```js
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
-module.exports = async fn => {
+export default async function withPage(t, run) {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 	try {
-		await fn(page);
+		await run(t, page);
 	} finally {
 		await page.close();
 		await browser.close();
-	}
+	};
 }
 ```
 
@@ -30,38 +30,24 @@ module.exports = async fn => {
 `./test/main.js`
 
 ```js
-const test = require('ava');
-const setup = require('./helpers/setup');
+import test from 'ava';
+import withPage from './helpers/withPage';
 
 const url = 'https://google.com';
 
-test('page title should contain `Google`', t => {
-	return setup(async page => {
-		await page.goto(url);
-		t.true((await page.title()).includes('Google'));
-	});
+test('page title should contain "Google"', withPage, async (t, page) => {
+	await page.goto(url);
+	t.true((await page.title()).includes('Google'));
 });
 
-test('page should contain an element with `#hplogo` selector', t => {
-	return setup(async page => {
-		await page.goto(url);
-		t.not(await page.$('#hplogo'), null);
-	});
+test('page should contain an element with `#hplogo` selector', withPage, async (t, page) => {
+	await page.goto(url);
+	t.not(await page.$('#hplogo'), null);
 });
 
-test('full page should match the snapshot', t => {
-	return setup(async page => {
-		await page.goto(url);
-		let fullHTML = await page.evaluate(() => document.innerHTML);
-		t.snapshot(fullHTML);
-	});
-});
-
-test('search form should match the snapshot', t => {
-	return setup(async page => {
-		await page.goto(url);
-		let searchForm = (await page.$('#searchform')).innerHTML;
-		t.snapshot(searchForm);
-	});
+test('search form should match the snapshot', withPage, async (t, page) => {
+	await page.goto(url);
+	const innerHTML = await page.evaluate(form => form.innerHTML, await page.$('#searchform'));
+	t.snapshot(innerHTML);
 });
 ```
