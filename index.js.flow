@@ -240,31 +240,31 @@ export interface ThrowsAssertion {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 */
-	(fn: () => any, expectations?: null, message?: string): any;
+	<ThrownError: Error>(fn: () => any, expectations?: null, message?: string): ThrownError;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must be an instance of the given constructor.
 	 */
-	(fn: () => any, constructor: Constructor, message?: string): any;
+	<ThrownError: Error>(fn: () => any, constructor: Constructor, message?: string): ThrownError;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must have a message that matches the regular expression.
 	 */
-	(fn: () => any, regex: RegExp, message?: string): any;
+	<ThrownError: Error>(fn: () => any, regex: RegExp, message?: string): ThrownError;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must have a message equal to `errorMessage`.
 	 */
-	(fn: () => any, errorMessage: string, message?: string): any;
+	<ThrownError: Error>(fn: () => any, errorMessage: string, message?: string): ThrownError;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations.
 	 */
-	(fn: () => any, expectations: ThrowsExpectation, message?: string): any;
+	<ThrownError: Error>(fn: () => any, expectations: ThrowsExpectation, message?: string): ThrownError;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
@@ -275,61 +275,61 @@ export interface ThrowsAsyncAssertion {
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result.
 	 */
-	(fn: () => PromiseLike<any>, expectations?: null, message?: string): Promise<any>;
+	<ThrownError: Error>(fn: () => PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must be an instance of the given constructor.
 	 */
-	(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<any>;
+	<ThrownError: Error>(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must have a message that matches the regular expression.
 	 */
-	(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<any>;
+	<ThrownError: Error>(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must have a message equal to `errorMessage`.
 	 */
-	(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<any>;
+	<ThrownError: Error>(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must satisfy all expectations.
 	 */
-	(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<any>;
+	<ThrownError: Error>(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result.
 	 */
-	(promise: PromiseLike<any>, expectations?: null, message?: string): Promise<any>;
+	<ThrownError: Error>(promise: PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result. The error must be an instance of the given constructor.
 	 */
-	(promise: PromiseLike<any>, constructor: Constructor, message?: string): Promise<any>;
+	<ThrownError: Error>(promise: PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result. The error must have a message that matches the regular expression.
 	 */
-	(promise: PromiseLike<any>, regex: RegExp, message?: string): Promise<any>;
+	<ThrownError: Error>(promise: PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result. The error must have a message equal to `errorMessage`.
 	 */
-	(promise: PromiseLike<any>, errorMessage: string, message?: string): Promise<any>;
+	<ThrownError: Error>(promise: PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result. The error must satisfy all expectations.
 	 */
-	(promise: PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<any>;
+	<ThrownError: Error>(promise: PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
