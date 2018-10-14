@@ -171,7 +171,8 @@
 			"media/**",
 			"test/fixture/{source-map-initial,syntax-error}.js",
 			"test/fixture/snapshots/test-sourcemaps/build/**",
-			"**/*.ts"
+			"**/*.ts",
+			"test/flow-types/*"
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off",
