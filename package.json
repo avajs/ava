@@ -141,7 +141,7 @@
 		"update-notifier": "^2.5.0"
 	},
 	"devDependencies": {
-		"cli-table2": "^0.2.0",
+		"cli-table3": "^0.5.1",
 		"codecov": "^3.1.0",
 		"delay": "^4.1.0",
 		"execa": "^1.0.0",
