@@ -152,13 +152,17 @@ class CustomError extends Error {
 	}
 }
 
+function myFunc() {
+	throw new CustomError(TypeError('🙈'));
+};
+
 test('throws', t => {
 	const err = t.throws<CustomError>(myFunc);
 	t.is(err.parent.name, 'TypeError');
 });
 
 test('throwsAsync', async t => {
-	const err = await t.throwsAsync<CustomError>(myFunc);
+	const err = await t.throwsAsync<CustomError>(async () => myFunc());
 	t.is(err.parent.name, 'TypeError');
 });
 ```
