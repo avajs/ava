@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
-const Table = require('cli-table2');
+const Table = require('cli-table3');
 const chalk = require('chalk');
 
 let files = fs.readdirSync(path.join(__dirname, '.results'))
