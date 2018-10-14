@@ -31,9 +31,7 @@ All `.babelrc` options are allowed inside the `testOptions` object.
 
 ## Reset AVA's cache
 
-AVA caches the compiled test and helper files. It automatically recompiles these files when you change them, however it can't detect updates of your Babel plugins and presets, or changes to your Babel configuration files.
-
-Instead run the following to reset AVA's cache when you change the configuration or update plugins or presets:
+AVA caches the compiled test and helper files. It automatically recompiles these files when you change them. AVA tries its best to detect changes to your Babel configuration files, plugins and presets. If it seems like your latest Babel configuration isn't being applied, however, you can reset AVA's cache:
 
 ```console
 $ npx ava --reset-cache
