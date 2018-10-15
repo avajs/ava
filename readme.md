@@ -1219,6 +1219,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 - [Precompiling source files with webpack](docs/recipes/precompiling-with-webpack.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
+- [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
 
 ## Support
 
