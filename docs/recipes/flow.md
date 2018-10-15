@@ -15,7 +15,9 @@ We recommend you use AVA's built-in Babel pipeline to strip Flow type annotation
 	"ava": {
 		"babel": {
 			"testOptions": {
-				"plugins": ["@babel/plugin-transform-flow-strip-types"]
+				"plugins": [
+					"@babel/plugin-transform-flow-strip-types"
+				]
 			}
 		}
 	}
@@ -87,7 +89,7 @@ class CustomError extends Error {
 }
 
 function myFunc() {
-	throw new CustomError(TypeError('🙈'));
+	throw new CustomError(new TypeError('🙈'));
 };
 
 test('throws', t => {

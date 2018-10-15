@@ -51,7 +51,7 @@ import test from 'ava';
 
 const fn = async () => Promise.resolve('foo');
 
-test(async (t) => {
+test(async t => {
 	t.is(await fn(), 'foo');
 });
 ```
@@ -153,7 +153,7 @@ class CustomError extends Error {
 }
 
 function myFunc() {
-	throw new CustomError(TypeError('🙈'));
+	throw new CustomError(new TypeError('🙈'));
 };
 
 test('throws', t => {
