@@ -16,102 +16,92 @@ const changeDir = fixtureDir => {
 
 test('finds config in package.json', (t) => {
 	changeDir('package-only');
-    return loadConf().then((conf) => {
-        return t.test(`check conf`, (t) => {
-			t.is(conf.failFast, true)
-			t.end()
-		})
-	})
+    return loadConf().then(config => {
+        return t.test(`check conf ${config}`, (t) => {
+            t.is(config.failFast, true)
+            t.end()
+        })
+    });
 });
 
-test('throws a warning if both configs are present', (t) => {
+
+test('throws a warning of both configs are present', t => {
 	changeDir('package-yes-file-yes');
-    return loadConf().then((err) => {
-        return t.test(`check conf`, (t) => {
-			t.equal(err.message, 'Conflicting configuration in ava.config.js and package.json')
-			t.end()
-		})
-	})
+	t.rejects(loadConf(), 'Conflicting configuration in ava.config.js and package.json');
+	t.end();
 });
-//	t.throws(loadConf());
-//	t.end();
-//
-//test('merges in defaults passed with initial call', async t => {
-//	changeDir('package-only');
-//	const defaults = {
-//		files: ['123', '!456']
-//	};
-//	const {files, failFast} = await loadConf(defaults);
-//	t.is(failFast, true, 'preserves original props');
-//	t.is(files, defaults.files, 'merges in extra props');
-//	t.end();
-//});
-//
-//test('loads config from file with `export default` syntax', async t => {
-//	changeDir('package-no-file-yes');
-//	const conf = await loadConf();
-//	t.is(conf.files, 'config-file-esm-test-value');
-//	t.end();
-//});
-//
-//test('loads config from factory function', async t => {
-//	changeDir('package-no-file-yes-factory');
-//	const conf = await loadConf();
-//	t.ok(conf.files.startsWith(__dirname));
-//	t.end();
-//});
-//
-//test('accepts a promise from loadConf', t => {
-//	changeDir('factory-no-promise-return');
-//	return loadConf().then(conf => {
-//		return test('err', () => {
-//			t.is(conf.files, 'this-should-not-work');
-//			t.end();
-//		});
-//	});
-//});
-//
-//test('throws an error if a config exports a promise', async t => {
-//	changeDir('no-promise-config');
-//	const conf = await loadConf();
-//	t.is(conf, 'should not work!');
-//	t.end();
-//});
-//
-//test('throws an error if a config factory does not return a plain object', async t => {
+
+test('merges in defaults passed with initial call', t => {
+	changeDir('package-only');
+	const defaults = {
+		files: ['123', '!456']
+	};
+    return loadConf(defaults).then(config => {
+        return t.test(`check conf ${config}`, (t) => {
+			t.is(config.failFast, true, 'preserves original props');
+			t.is(config.files, defaults.files, 'merges in extra props');
+            t.end()
+        })
+    });
+});
+
+test('loads config from file with `export default` syntax', t => {
+	changeDir('package-no-file-yes');
+    return loadConf().then(config => {
+        return t.test(`check conf ${config}`, (t) => {
+			t.is(config.files, 'config-file-esm-test-value');
+            t.end()
+        })
+    });
+});
+
+test('loads config from factory function', t => {
+	changeDir('package-no-file-yes-factory');
+    return loadConf().then(config => {
+        return t.test(`check conf ${config}`, (t) => {
+			t.ok(config.files.startsWith(__dirname));
+			t.end();
+        })
+    });
+});
+
+//test('throws an error if a config factory does not return a plain object', t => {
 //	changeDir('factory-no-plain-return');
-//	t.throws(await loadConf());
+//	t.throws(loadConfig);
 //	t.end();
 //});
 //
 //test('throws an error if a config does not export a plain object', t => {
 //	changeDir('no-plain-config');
-//	t.throws(loadConf);
+//	t.throws(loadConfig);
 //	t.end();
 //});
 //
 //test('receives a `projectDir` property', t => {
 //	changeDir('package-only');
-//	return loadConf().then(conf => {
-//		return test('this is a message', () => {
-//			t.ok(conf.projectDir.startsWith(__dirname));
-//			t.end();
-//		});
-//	})
+//	const conf = loadConfig();
+//	t.ok(conf.projectDir.startsWith(__dirname));
+//	t.end();
 //});
 //
-//test('rethrows wrapped module errors', async t => {
+//test('rethrows wrapped module errors', t => {
 //	t.plan(1);
 //	changeDir('throws');
 //	try {
-//		await loadConf();
+//		loadConfig();
 //	} catch (error) {
 //		t.is(error.parent.message, 'foo');
 //	}
 //});
 //
-//test('throws an error if a config file has no default export', async t => {
+//test('throws an error if a config file has no default export', t => {
 //	changeDir('no-default-export');
-//	t.throws(await loadConf);
+//	t.throws(loadConfig);
+//	t.end();
+//});
+//
+//test('throws an error if a config file contains `ava` property', t => {
+//	changeDir('contains-ava-property');
+//	t.throws(loadConfig);
 //	t.end();
 //});
