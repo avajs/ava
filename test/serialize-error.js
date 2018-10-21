@@ -176,3 +176,29 @@ test('creates multiline summaries for syntax errors', t => {
 	t.is(serializedError.summary, 'Hello\nThere\nSyntaxError here');
 	t.end();
 });
+
+test('skips esm enhancement lines when finding the summary', t => {
+	const error = new Error();
+	Object.defineProperty(error, 'stack', {
+		value: 'file://file.js:1\nHello'
+	});
+	const serializedError = serialize(error);
+	t.is(serializedError.summary, 'Hello');
+	t.end();
+});
+
+test('works around esm\'s insertion of file:// urls', t => {
+	const fixture = sourceMapFixtures.mapFile('throws');
+	try {
+		fixture.require().run();
+		t.fail('Fixture should have thrown');
+	} catch (error) {
+		const expected = serialize(error);
+		Object.defineProperty(error, 'stack', {
+			value: error.stack.split('\n').map(line => line.replace('(/', '(file:///')).join('\n')
+		});
+		const serializedError = serialize(error);
+		t.is(serializedError.source.file, expected.source.file);
+		t.end();
+	}
+});
