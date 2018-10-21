@@ -66,7 +66,7 @@ import test, {Macro} from 'ava';
 const macro: Macro = (t, input: string, expected: number) => {
 	t.is(eval(input), expected);
 };
-macro.title = (providedTitle: string, input: string, expected: number) => `${providedTitle} ${input} = ${expected}`.trim();
+macro.title = (providedTitle = '', input: string, expected: number) => `${providedTitle} ${input} = ${expected}`.trim();
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
