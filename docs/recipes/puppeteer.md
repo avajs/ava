@@ -1,5 +1,7 @@
 # Testing web apps using Puppeteer
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/puppeteer.md)
+
 ## Dependencies
 
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer): `npm install --save-dev puppeteer`
