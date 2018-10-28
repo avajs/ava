@@ -723,12 +723,9 @@ test('assertions are bound', t => {
 test('snapshot assertion can be skipped', t => {
 	const projectDir = path.join(__dirname, 'fixture');
 	const manager = snapshotManager.load({
-		file: __filename,
-		name: 'assert.js',
+		file: path.join(projectDir, 'assert.js'),
 		projectDir,
-		relFile: 'test/assert.js',
 		fixedLocation: null,
-		testDir: projectDir,
 		updating: false
 	});
 

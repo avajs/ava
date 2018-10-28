@@ -129,7 +129,7 @@ test('legacy snapshot files are reported to the console', t => {
 	});
 });
 
-test('snapshots infer their location from sourcemaps', t => {
+test('snapshots infer their location and name from sourcemaps', t => {
 	t.plan(8);
 	const relativeFixtureDir = path.join('fixture/snapshots/test-sourcemaps');
 	const snapDirStructure = [
@@ -141,8 +141,8 @@ test('snapshots infer their location from sourcemaps', t => {
 		.map(snapRelativeDir => {
 			const snapPath = path.join(__dirname, '..', relativeFixtureDir, snapRelativeDir);
 			return [
-				path.join(snapPath, 'test.js.md'),
-				path.join(snapPath, 'test.js.snap')
+				path.join(snapPath, 'test.ts.md'),
+				path.join(snapPath, 'test.ts.snap')
 			];
 		})
 		.reduce((a, b) => a.concat(b), []);
