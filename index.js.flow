@@ -403,13 +403,13 @@ export interface Macro<Context = {}> {
 	 * Implement this function to generate a test (or hook) title whenever this macro is used. `providedTitle` contains
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
 	 */
-	title?: (providedTitle: string, ...args: Array<any>) => string;
+	title?: (providedTitle: string | void, ...args: Array<any>) => string;
 }
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export interface CbMacro<Context = {}> {
 	(t: CbExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
-	title?: (providedTitle: string, ...args: Array<any>) => string;
+	title?: (providedTitle: string | void, ...args: Array<any>) => string;
 }
 
 export interface TestInterface<Context = {}> {
