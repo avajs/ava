@@ -11,7 +11,8 @@ class CustomError extends Error {
 
 test('throws', t => {
 	const err1: Error = t.throws(() => {});
-	// t.is(err1.foo, 'foo');
+	// @ts-ignore
+	t.is(err1.foo, 'foo');
 	const err2: CustomError = t.throws(() => {});
 	t.is(err2.foo, 'foo');
 	const err3 = t.throws<CustomError>(() => {});
@@ -20,7 +21,8 @@ test('throws', t => {
 
 test('throwsAsync', async t => {
 	const err1: Error = await t.throwsAsync(Promise.reject());
-	// t.is(err1.foo, 'foo');
+	// @ts-ignore
+	t.is(err1.foo, 'foo');
 	const err2 = await t.throwsAsync<CustomError>(Promise.reject());
 	t.is(err2.foo, 'foo');
 });
