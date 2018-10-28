@@ -383,34 +383,48 @@ export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => Imp
 export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
 /** A reusable test or hook implementation. */
-export interface Macro<Context = {}> {
-	(t: ExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
+export interface Macro<Args extends any[], Context = {}> {
+	(t: ExecutionContext<Context>, ...args: Args): ImplementationResult;
 
 	/**
 	 * Implement this function to generate a test (or hook) title whenever this macro is used. `providedTitle` contains
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
 	 */
-	title?: (providedTitle: string | undefined, ...args: Array<any>) => string;
+	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
+/** Alias for a single macro, or an array of macros. */
+export type OneOrMoreMacros<Context> = Macro<any, Context> | [Macro<any, Context>, ...Macro<any, Context>[]];
+
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export interface CbMacro<Context = {}> {
-	(t: CbExecutionContext<Context>, ...args: Array<any>): ImplementationResult;
-	title?: (providedTitle: string | undefined, ...args: Array<any>) => string;
+export interface CbMacro<Args extends any[], Context = {}> {
+	(t: CbExecutionContext<Context>, ...args: Args): ImplementationResult;
+	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
+
+/** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
+export type OneOrMoreCbMacros<Context> = CbMacro<any, Context> | [CbMacro<any, Context>, ...CbMacro<any, Context>[]];
+
+/** Infers the types of the additional arguments the macro implementations should be called with. */
+export type InferArgs<OneOrMore> =
+	OneOrMore extends Macro<infer Args, any> ? Args :
+	OneOrMore extends Macro<infer Args, any>[] ? Args :
+	OneOrMore extends CbMacro<infer Args, any> ? Args :
+	OneOrMore extends CbMacro<infer Args, any>[] ? Args :
+	never;
 
 export interface TestInterface<Context = {}> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. The macro
 	 * is responsible for generating a unique test title.
 	 */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -443,13 +457,13 @@ export interface AfterInterface<Context = {}> {
 	(implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. Additional argumens are passed to the macro. */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. Additional argumens are passed to the macro. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
 	always: AlwaysInterface<Context>;
@@ -465,13 +479,13 @@ export interface AlwaysInterface<Context = {}> {
 	(implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests are done. Additional argumens are passed to the macro. */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests are done. Additional argumens are passed to the macro. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that must call `t.end()` when it's done. */
 	cb: HookCbInterface<Context>;
@@ -484,13 +498,13 @@ export interface BeforeInterface<Context = {}> {
 	(implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, before all tests. Additional argumens are passed to the macro. */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that is run once, before all tests. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, before all tests. Additional argumens are passed to the macro. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that must call `t.end()` when it's done. */
 	cb: HookCbInterface<Context>;
@@ -506,13 +520,13 @@ export interface CbInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro.
 	 */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	 */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a test that is expected to fail. */
 	failing: CbFailingInterface<Context>;
@@ -529,14 +543,14 @@ export interface CbFailingInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. The test is expected to fail.
 	 */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	 * The test is expected to fail.
 	 */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	only: CbOnlyInterface<Context>;
 	skip: CbSkipInterface<Context>;
@@ -552,14 +566,14 @@ export interface CbOnlyInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. Only this test and others declared with `.only()` are run.
 	 */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface CbSkipInterface<Context = {}> {
@@ -567,10 +581,10 @@ export interface CbSkipInterface<Context = {}> {
 	(title: string, implementation: CbImplementation<Context>): void;
 
 	/** Skip this test. */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Skip this test. */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface FailingInterface<Context = {}> {
@@ -581,13 +595,13 @@ export interface FailingInterface<Context = {}> {
 	 * Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro.
 	 * The test is expected to fail.
 	 */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. The macro
 	 * is responsible for generating a unique test title. The test is expected to fail.
 	 */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
@@ -601,7 +615,7 @@ export interface HookCbInterface<Context = {}> {
 	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro.
 	 */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a hook that must call `t.end()` when it's done. */
 	(title: string, implementation: CbImplementation<Context>): void;
@@ -610,7 +624,7 @@ export interface HookCbInterface<Context = {}> {
 	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro.
 	 */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	skip: HookCbSkipInterface<Context>;
 }
@@ -620,13 +634,13 @@ export interface HookCbSkipInterface<Context = {}> {
 	(implementation: CbImplementation<Context>): void;
 
 	/** Skip this hook. */
-	(macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Skip this hook. */
 	(title: string, implementation: CbImplementation<Context>): void;
 
 	/** Skip this hook. */
-	(title: string, macro: CbMacro<Context> | CbMacro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreCbMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface HookSkipInterface<Context = {}> {
@@ -634,13 +648,13 @@ export interface HookSkipInterface<Context = {}> {
 	(implementation: Implementation<Context>): void;
 
 	/** Skip this hook. */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Skip this hook. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this hook. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface OnlyInterface<Context = {}> {
@@ -651,13 +665,13 @@ export interface OnlyInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. Additional arguments are passed to the macro.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a test that uses one or more macros. Additional arguments are passed to the macro. The macro
 	 * is responsible for generating a unique test title. Only this test and others declared with `.only()` are run.
 	 */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface SerialInterface<Context = {}> {
@@ -665,13 +679,13 @@ export interface SerialInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a serial test that uses one or more macros. Additional arguments are passed to the macro. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/**
 	 * Declare a serial test that uses one or more macros. Additional arguments are passed to the macro. The macro
 	 * is responsible for generating a unique test title.
 	 */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Declare a serial hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -701,10 +715,10 @@ export interface SkipInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this test. */
-	(title: string, macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(title: string, macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 
 	/** Skip this test. */
-	(macro: Macro<Context> | Macro<Context>[], ...args: Array<any>): void;
+	<OneOrMore extends OneOrMoreMacros<Context>>(macro: OneOrMore, ...args: InferArgs<OneOrMore>): void;
 }
 
 export interface TodoDeclaration {
