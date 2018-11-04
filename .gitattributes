@@ -1,4 +1,6 @@
 * text=auto
 *.js text eol=lf
+*.log text eol=lf
+*.md.expected text eol=lf
 *.ai binary
 *.psd binary

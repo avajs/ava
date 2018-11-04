@@ -1,4 +1,7 @@
 language: node_js
+os:
+  - linux
+  - windows
 node_js:
   - 10
   - 8
@@ -12,22 +15,28 @@ matrix:
       env: FRESH_DEPS=true
     - node_js: 6
       env: FRESH_DEPS=true
-cache:
-  directories:
-    - $HOME/.npm
-before_install:
-  - npm install --global npm@6.3.0
-  - npm --version
-install: |
+    - node_js: 10
+      env: FRESH_DEPS=true # Assume any bugs that occur with fresh dependencies are not platform specific.
+      os: windows
+    - node_js: 6
+      os: windows # npm install --global currently fails on Windows. Skip the tests entirely instead.
+cache: npm
+before_install: if [[ $(node -pe "process.versions.node.split('.')[0]") == "6" ]]; then npm install --global npm@6; fi
+install: npm ci
+before_script: |
   if [[ ${FRESH_DEPS} == "true" ]]; then
-    npm install --no-shrinkwrap --prefer-online;
+    npm install --no-shrinkwrap --prefer-online
   else
-    npm ci;
-    checksum=$(md5sum package-lock.json);
-    npm install --package-lock-only;
+    checksum=$(md5sum package-lock.json)
+    npm install --package-lock-only
     if ! echo ${checksum} | md5sum --quiet -c -; then
-      echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes.";
-      exit 1;
+      echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes."
+      exit 1
     fi
+  fi
+
+  if [[ "${TRAVIS_OS_NAME}" == 'windows' ]]; then
+    git config core.symlinks true
+    git reset --hard
   fi
 after_success: npx codecov --file=./coverage/lcov.info
