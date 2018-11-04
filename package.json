@@ -11,7 +11,10 @@
 	},
 	"scripts": {
 		"lint": "xo",
-		"test": "npm run lint && flow check test/flow-types && tsc --noEmit -p test/ts-types && nyc tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js"
+		"test:flow": "flow check test/flow-types",
+		"test:tap": "tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
+		"test:typescript": "tsc --noEmit -p test/ts-types",
+		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap"
 	},
 	"files": [
 		"lib",
