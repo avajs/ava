@@ -3,6 +3,7 @@ os:
   - linux
   - windows
 node_js:
+  - 11
   - 10
   - 8
   - 6
@@ -11,6 +12,8 @@ env:
   - FRESH_DEPS=true
 matrix:
   exclude:
+    - node_js: 11
+      env: FRESH_DEPS=true
     - node_js: 8
       env: FRESH_DEPS=true
     - node_js: 6
