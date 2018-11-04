@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "xo",
 		"test:flow": "flow check test/flow-types",
-		"test:tap": "tap --no-cov --reporter=classic --timeout=300 test/*.js test/reporters/*.js test/integration/*.js",
+		"test:tap": "tap --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
 		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap"
 	},
