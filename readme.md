@@ -140,11 +140,41 @@ AVA automatically detects whether your CI environment supports parallel builds. 
 
 ## Documentation
 
-Please see the [files in the `docs` directory](./docs).
+Please see the [files in the `docs` directory](./docs):
 
-## Common pitfalls
+* [Writing tests](./docs/01-writing-tests.md)
+* [Execution context](./docs/02-execution-context.md)
+* [Assertions](./docs/03-assertions.md)
+* [Snapshot testing](./docs/04-snapshot-testing.md)
+* [Command line (CLI)](./docs/05-command-line.md)
+* [Configuration](./docs/06-configuration.md)
+* [Test timeouts](./docs/07-test-timeouts.md)
 
-We have a growing list of [common pitfalls](docs/common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
+### Common pitfalls
+
+We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
+
+### Recipes
+
+- [Test setup](docs/recipes/test-setup.md)
+- [Code coverage](docs/recipes/code-coverage.md)
+- [Watch mode](docs/recipes/watch-mode.md)
+- [Endpoint testing](docs/recipes/endpoint-testing.md)
+- [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
+- [Browser testing](docs/recipes/browser-testing.md)
+- [TypeScript](docs/recipes/typescript.md)
+- [Flow](docs/recipes/flow.md)
+- [Configuring Babel][Babel recipe]
+- [Using ES modules](docs/recipes/es-modules.md)
+- [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
+- [Testing React components](docs/recipes/react.md)
+- [Testing Vue.js components](docs/recipes/vue.md)
+- [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
+- [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
+- [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
+- [Precompiling source files with webpack](docs/recipes/precompiling-with-webpack.md)
+- [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
+- [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
 
 ## FAQ
 
@@ -167,28 +197,6 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 ### What is the difference between concurrency and parallelism?
 
 [Concurrency is not parallelism. It enables parallelism.](https://stackoverflow.com/q/1050222)
-
-## Recipes
-
-- [Test setup](docs/recipes/test-setup.md)
-- [Code coverage](docs/recipes/code-coverage.md)
-- [Watch mode](docs/recipes/watch-mode.md)
-- [Endpoint testing](docs/recipes/endpoint-testing.md)
-- [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
-- [Browser testing](docs/recipes/browser-testing.md)
-- [TypeScript](docs/recipes/typescript.md)
-- [Flow](docs/recipes/flow.md)
-- [Configuring Babel][Babel recipe]
-- [Using ES modules](docs/recipes/es-modules.md)
-- [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
-- [Testing React components](docs/recipes/react.md)
-- [Testing Vue.js components](docs/recipes/vue.md)
-- [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
-- [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
-- [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
-- [Precompiling source files with webpack](docs/recipes/precompiling-with-webpack.md)
-- [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
-- [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
 
 ## Support
 
