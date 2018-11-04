@@ -5,7 +5,7 @@
   [32m✔[39m a [90m[2m›[22m[39m a passes two
 ---tty-stream-chunk-separator
   [31m[39m
-  [31m✖ Exited because no new tests completed within the last 1000ms of inactivity[39m
+  [31m✖ Exited because no new tests completed within the last 10000ms of inactivity[39m
 
   2 tests still running in ~/test/fixture/report/timeoutinmultiplefiles/a.js:
 
@@ -18,7 +18,7 @@
   [32m✔[39m b [90m[2m›[22m[39m b passes two
 ---tty-stream-chunk-separator
   [31m[39m
-  [31m✖ Exited because no new tests completed within the last 1000ms of inactivity[39m
+  [31m✖ Exited because no new tests completed within the last 10000ms of inactivity[39m
 
   3 tests still running in ~/test/fixture/report/timeoutinmultiplefiles/b.js:
 
