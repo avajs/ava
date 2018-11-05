@@ -6,6 +6,14 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
+### Transpiling imported modules
+
+AVA currently only transpiles the tests you ask it to run, as well as test helpers (files starting with `_` or in `helpers` directory) inside the test directory. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
+
+If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](./06-configuration.md).
+
+You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests. Example [here](./recipes/precompiling-with-webpack.md).
+
 ## AVA in Docker
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [#751](https://github.com/avajs/ava/issues/751).
