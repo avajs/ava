@@ -707,6 +707,7 @@ export interface SerialInterface<Context = {}> {
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
 	todo: TodoDeclaration;
+	meta: MetaInterface;
 }
 
 export interface SkipInterface<Context = {}> {
@@ -723,6 +724,11 @@ export interface SkipInterface<Context = {}> {
 export interface TodoDeclaration {
 	/** Declare a test that should be implemented later. */
 	(title: string): void;
+}
+
+export interface MetaInterface {
+	/** Path to the test file being executed. */
+	file: string;
 }
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
@@ -757,3 +763,6 @@ declare export var skip: SkipInterface<>;
 
 /** Declare a test that should be implemented later. */
 declare export var todo: TodoDeclaration;
+
+/** Meta data associated with the current process. */
+declare export var meta: MetaInterface;

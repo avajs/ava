@@ -71,6 +71,15 @@ test('async/await support', t => {
 		});
 });
 
+test('test.meta.file', t => {
+	const api = apiCreator();
+
+	return api.run([path.join(__dirname, 'fixture/meta.js')])
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 2);
+		});
+});
+
 test('fail-fast mode - single file & serial', t => {
 	const api = apiCreator({
 		failFast: true
