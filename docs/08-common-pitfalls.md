@@ -12,7 +12,7 @@ AVA currently only transpiles the tests you ask it to run, as well as test helpe
 
 If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](./06-configuration.md).
 
-You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests. Example [here](./recipes/precompiling-with-webpack.md).
+You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
 
 ## AVA in Docker
 
