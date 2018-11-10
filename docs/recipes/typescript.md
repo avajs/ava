@@ -56,7 +56,7 @@ test(async t => {
 });
 ```
 
-## Using [macros](https://github.com/avajs/ava#test-macros)
+## Using [macros](../01-writing-tests.md#reusing-test-logic-through-macros)
 
 In order to be able to assign the `title` property to a macro you need to type the function:
 
@@ -86,7 +86,7 @@ const macro: CbMacro = t => {
 test.cb(macro);
 ```
 
-## Typing [`t.context`](https://github.com/avajs/ava#test-context)
+## Typing [`t.context`](../01-writing-tests.md#test-context)
 
 By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
