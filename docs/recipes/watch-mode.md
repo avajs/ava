@@ -119,5 +119,5 @@ Watch mode is relatively new and there might be some rough edges. Please [report
 [`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
-[`.only` modifier]: https://github.com/avajs/ava#running-specific-tests
-[config]: https://github.com/avajs/ava#configuration
+[`.only` modifier]: ../01-writing-tests.md#running-specific-tests
+[config]: ../06-configuration.md

@@ -49,7 +49,7 @@ test('fetches foo', async t => {
 });
 ```
 
-If you're using callbacks, use [`test.cb`](https://github.com/avajs/ava#callback-support):
+If you're using callbacks, use [`test.cb`](./01-writing-tests.md#callback-support):
 
 ```js
 test.cb('fetches foo', t => {

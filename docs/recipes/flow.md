@@ -41,7 +41,7 @@ test(async (t) => {
 });
 ```
 
-## Typing [`t.context`](https://github.com/avajs/ava#test-context)
+## Typing [`t.context`](../01-writing-tests.md#test-context)
 
 By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
