@@ -10,7 +10,7 @@ This recipe has only been tested with JSPM v0.17.0-beta.22, but it should work w
 
 ### Babel
 
-Configure your .babelrc to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building.
+Set up your Babel options to work with AVA if you have not already. NOTE: You can keep additional configuration in your JSPM config files to override these settings during bundling and building.
 
 ```
 $ npm install --save-dev @babel/preset-env
