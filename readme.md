@@ -172,7 +172,6 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
-- [Precompiling source files with webpack](docs/recipes/precompiling-with-webpack.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
 - [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
 

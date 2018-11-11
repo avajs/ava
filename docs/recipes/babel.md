@@ -27,7 +27,7 @@ You can override the default Babel configuration AVA uses for test file compilat
 }
 ```
 
-All `.babelrc` options are allowed inside the `testOptions` object.
+All [Babel options] are allowed inside the `testOptions` object.
 
 ## Reset AVA's cache
 
@@ -60,7 +60,7 @@ See also AVA's [`extensions` option](../06-configuration.md#options).
 
 ## Make AVA skip your project's Babel options
 
-You may not want AVA to use your project's Babel options, for example if your project is relying on Babel 6. You can set the `babelrc` option to `false`.
+You may not want AVA to use your project's Babel options, for example if your project is relying on Babel 6. Set the `babelrc` and `configFile` options to `false`.
 
 **`package.json`:**
 
@@ -69,7 +69,8 @@ You may not want AVA to use your project's Babel options, for example if your pr
 	"ava": {
 		"babel": {
 			"testOptions": {
-				"babelrc": false
+				"babelrc": false,
+				"configFile": false
 			}
 		}
 	}
@@ -119,8 +120,6 @@ By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This 
 	}
 }
 ```
-
-You **must** configure the preset in the `testOptions` in order to preserve the ES module syntax. AVA will still apply the preset if you configure it in other files (for instance a `.babelrc` file). This is [due to a Babel issue](https://github.com/babel/babel/issues/7920).
 
 You'll have to use the [`esm`](https://github.com/standard-things/esm) module so that AVA can still load your test files. [See our recipe for details](./es-modules.md).
 
@@ -206,3 +205,6 @@ Now instead of requiring `@babel/register`, require `test/_register` instead.
 ```
 
 Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
+
+
+[Babel options]: https://babeljs.io/docs/en/options
