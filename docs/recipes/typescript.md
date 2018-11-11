@@ -58,15 +58,27 @@ test(async t => {
 
 ## Using [macros](../01-writing-tests.md#reusing-test-logic-through-macros)
 
+Macros can receive additional arguments. AVA can infer these to ensure you're using the macro correctly:
+
+```ts
+import test, {ExecutionContext} from 'ava';
+
+const hasLength = (t: ExecutionContext, input: string, expected: number) => {
+	t.is(input.length, expected);
+};
+
+test('bar has length 3', hasLength, 'bar', 3);
+```
+
 In order to be able to assign the `title` property to a macro you need to type the function:
 
 ```ts
 import test, {Macro} from 'ava';
 
-const macro: Macro = (t, input: string, expected: number) => {
+const macro: Macro<[string, number]> = (t, input, expected) => {
 	t.is(eval(input), expected);
 };
-macro.title = (providedTitle = '', input: string, expected: number) => `${providedTitle} ${input} = ${expected}`.trim();
+macro.title = (providedTitle = '', input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);
@@ -78,7 +90,7 @@ You'll need a different type if you're expecting your macro to be used with a ca
 ```ts
 import test, {CbMacro} from 'ava';
 
-const macro: CbMacro = t => {
+const macro: CbMacro<[]> = t => {
 	t.pass();
 	setTimeout(t.end, 100);
 };
@@ -123,7 +135,7 @@ interface Context {
 
 const test = anyTest as TestInterface<Context>;
 
-const macro: Macro<Context> = (t, expected: string) => {
+const macro: Macro<[string], Context> = (t, expected: string) => {
 	t.is(t.context.foo, expected);
 };
 

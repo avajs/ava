@@ -6,7 +6,7 @@ interface Context {
 
 const test = anyTest as TestInterface<Context>;
 
-const macro: Macro<Context> = (t, expected: string) => {
+const macro: Macro<[string], Context> = (t, expected) => {
 	t.is(t.context.foo, expected);
 };
 
