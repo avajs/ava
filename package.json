@@ -1,7 +1,7 @@
 {
 	"name": "ava",
 	"version": "1.0.0-rc.2",
-	"description": "Futuristic test runner 🚀",
+	"description": "Testing can be a slog. AVA's here to help you get it done.",
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://ava.li",
