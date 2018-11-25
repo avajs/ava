@@ -220,7 +220,7 @@ export interface SnapshotAssertion {
 	skip(expected: any, message?: string): void;
 
 	/** Skip this assertion. */
-	(expected: any, options: SnapshotOptions, message?: string): void;
+	skip(expected: any, options: SnapshotOptions, message?: string): void;
 }
 
 export interface ThrowsAssertion {
