@@ -1,7 +1,6 @@
 import test from '../../../..';
 
-// eslint-disable-next-line require-await
-test.serial('first pass', async t => {
+test.serial('first pass', t => {
 	t.pass();
 	return new Promise(resolve => setTimeout(resolve, 3000));
 });
