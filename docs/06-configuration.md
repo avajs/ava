@@ -47,7 +47,7 @@ Arguments passed to the CLI will always take precedence over the configuration i
 ## Options
 
 - `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Files with an underscore prefix are ignored. All matched files in selected directories are run. By default only selects files with `js` extensions, even if the glob pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
-- `source`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `sources`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
