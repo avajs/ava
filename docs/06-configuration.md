@@ -42,7 +42,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 }
 ```
 
-Arguments passed to the CLI will always take precedence over the configuration in `package.json`.
+Arguments passed to the CLI will always take precedence over the CLI options configured in `package.json`.
 
 ## Options
 
