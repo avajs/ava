@@ -30,6 +30,6 @@ These recipes include guides for integrating other tools?
   'vue',
   'watch-mode',
   'when-to-use-plan' ]" :key="page">
-    <a :href="`./${page}.html`">{{page}}</a>
+    <router-link :to="`./${page}.html`">{{page.replace(/-/g, ' ')}}</router-link>
   </li>
 </ul>
