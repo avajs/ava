@@ -1,3 +1,8 @@
+---
+# sidebar: auto
+sidebarDepth: 2
+---
+
 # Writing tests
 
 Tests are run concurrently. You can specify synchronous and asynchronous tests. Tests are considered synchronous unless you return a promise, an [observable](https://github.com/zenparsing/zen-observable), or declare it as a callback test.
@@ -28,7 +33,7 @@ test('my passing test', t => {
 
 ## Running tests serially
 
-Tests are run concurrently by default, however, sometimes you have to write tests that cannot run concurrently. In these rare cases you can use the `.serial` modifier. It will force those tests to run serially *before* the concurrent ones.
+Tests are run concurrently by default, however, sometimes you have to write tests that cannot run concurrently. In these rare cases you can use the `.serial` modifier. It will force those tests to run serially _before_ the concurrent ones.
 
 ```js
 test.serial('passes serially', t => {
@@ -57,7 +62,7 @@ test('resolves with unicorn', t => {
 AVA comes with built-in support for [async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function).
 
 ```js
-test(async function (t) {
+test(async function(t) {
 	const value = await promiseFn();
 	t.true(value);
 });
@@ -73,7 +78,7 @@ test('promises the truth', async t => {
 
 AVA comes with built-in support for [observables](https://github.com/zenparsing/es-observable). If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
 
-*You do not need to use "callback mode" or call `t.end()`.*
+_You do not need to use "callback mode" or call `t.end()`._
 
 ```js
 test('handles observables', t => {
@@ -114,7 +119,7 @@ test.only('will be run', t => {
 
 You can use the `.only` modifier with all tests. It cannot be used with hooks or `.todo()`.
 
-*Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
+_Note:_ The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
 ## Skipping tests
 
@@ -167,7 +172,7 @@ If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, 
 
 Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
 
-`.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are *not* run before other hooks:
+`.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are _not_ run before other hooks:
 
 ```js
 test.before(t => {
@@ -251,7 +256,7 @@ test('context data is foo', t => {
 
 Context created in `.before()` hooks is [cloned](https://www.npmjs.com/package/lodash.clone) before it is passed to `.beforeEach()` hooks and / or tests. The `.after()` and `.after.always()` hooks receive the original context value.
 
-For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context is *not* shared between different tests, allowing you to set up data such that it will not leak to other tests.
+For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context is _not_ shared between different tests, allowing you to set up data such that it will not leak to other tests.
 
 By default `t.context` is an object but you can reassign it:
 
@@ -285,7 +290,8 @@ function macro(t, input, expected) {
 	t.is(eval(input), expected);
 }
 
-macro.title = (providedTitle = '', input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
+macro.title = (providedTitle = '', input, expected) =>
+	`${providedTitle} ${input} = ${expected}`.trim();
 
 test(macro, '2 + 2', 4);
 test(macro, '2 * 3', 6);

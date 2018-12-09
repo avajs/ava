@@ -30,9 +30,9 @@ $ npx ava --help
   test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js
 ```
 
-*Note that the CLI will use your local install of AVA when available, even when run globally.*
+_Note that the CLI will use your local install of AVA when available, even when run globally._
 
-Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are *always* ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
+Directories are recursed, with all `*.js` files being treated as test files. Directories named `fixtures`, `helpers` and `node_modules` are _always_ ignored. So are files starting with `_` which allows you to place helpers in the same directory as your test files.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
@@ -58,7 +58,7 @@ Match titles containing `foo`:
 npx ava --match='*foo*'
 ```
 
-Match titles that are *exactly* `foo` (albeit case insensitively):
+Match titles that are _exactly_ `foo` (albeit case insensitively):
 
 ```console
 npx ava --match='foo'
@@ -100,7 +100,7 @@ test.only('boo will run but not exclusively', t => {
 });
 
 // Won't run, no title
-test(function (t) {
+test(function(t) {
 	t.fail();
 });
 
@@ -118,11 +118,11 @@ AVA caches the compiled test and helper files. It automatically recompiles these
 
 By default AVA uses a minimal reporter:
 
-<img src="../media/mini-reporter.gif" width="460">
+<img src="../../media/mini-reporter.gif" width="460">
 
 Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
 
-<img src="../media/verbose-reporter.png" width="294">
+<img src="../../media/verbose-reporter.png" width="294">
 
 ### TAP reporter
 
@@ -132,6 +132,6 @@ AVA supports the TAP format and thus is compatible with [any TAP reporter](https
 $ npx ava --tap | npx tap-nyan
 ```
 
-<img src="../media/tap-reporter.png" width="420">
+<img src="../../media/tap-reporter.png" width="420">
 
-Please note that the TAP reporter is unavailable when using [watch mode](./recipes/watch-mode.md).
+Please note that the TAP reporter is unavailable when using [watch mode](../recipes/watch-mode.md).

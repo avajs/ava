@@ -10,6 +10,8 @@
 		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=10.0.0"
 	},
 	"scripts": {
+		"docs:dev": "vuepress dev docs",
+		"docs:build": "vuepress build docs",
 		"lint": "xo",
 		"test:flow": "flow check test/flow-types",
 		"test:tap": "tap --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
@@ -165,6 +167,7 @@
 		"touch": "^3.1.0",
 		"ts-node": "^7.0.1",
 		"typescript": "^3.1.6",
+		"vuepress": "^0.14.8",
 		"xo": "^0.23.0",
 		"zen-observable": "^0.8.11"
 	},

@@ -16,7 +16,7 @@ import render from 'react-test-renderer';
 import HelloWorld from '.';
 
 test('HelloWorld component', t => {
-	const tree = render.create(<HelloWorld/>).toJSON();
+	const tree = render.create(<HelloWorld />).toJSON();
 	t.snapshot(tree);
 });
 ```
@@ -27,14 +27,14 @@ Snapshots are stored alongside your test files. If your tests are in a `test` or
 
 Say you have `~/project/test/main.js` which contains snapshot assertions. AVA will create two files:
 
-* `~/project/test/snapshots/main.js.snap`
-* `~/project/test/snapshots/main.js.md`
+- `~/project/test/snapshots/main.js.snap`
+- `~/project/test/snapshots/main.js.md`
 
-The first file contains the actual snapshot and is required for future comparisons. The second file contains your *snapshot report*. It's regenerated when you update your snapshots. If you commit it to source control you can diff it to see the changes to your snapshot.
+The first file contains the actual snapshot and is required for future comparisons. The second file contains your _snapshot report_. It's regenerated when you update your snapshots. If you commit it to source control you can diff it to see the changes to your snapshot.
 
 AVA will show why your snapshot assertion failed:
 
-<img src="../media/snapshot-testing.png" width="1048">
+<img src="../../media/snapshot-testing.png" width="1048">
 
 You can then check your code. If the change was intentional you can use the `--update-snapshots` (or `-u`) flag to update the snapshots:
 
@@ -56,4 +56,4 @@ You can specify a fixed location for storing the snapshot files in AVA's [`packa
 
 The snapshot files will be saved in a directory structure that mirrors that of your test files.
 
-If you are running AVA against precompiled test files, AVA will try and use source maps to determine the location of the original files. Snapshots will be stored next to these files, following the same rules as if AVA had executed the original files directly. This is great if you're writing your tests in TypeScript (see our [TypeScript recipe](./recipes/typescript.md)).
+If you are running AVA against precompiled test files, AVA will try and use source maps to determine the location of the original files. Snapshots will be stored next to these files, following the same rules as if AVA had executed the original files directly. This is great if you're writing your tests in TypeScript (see our [TypeScript recipe](../recipes/typescript.md)).
