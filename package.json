@@ -147,7 +147,7 @@
 		"codecov": "^3.1.0",
 		"delay": "^4.1.0",
 		"execa": "^1.0.0",
-		"flow-bin": "^0.86.0",
+		"flow-bin": "^0.89.0",
 		"get-stream": "^4.1.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
@@ -164,7 +164,7 @@
 		"temp-write": "^3.4.0",
 		"touch": "^3.1.0",
 		"ts-node": "^7.0.1",
-		"typescript": "^3.1.6",
+		"typescript": "^3.2.2",
 		"xo": "^0.23.0",
 		"zen-observable": "^0.8.11"
 	},
