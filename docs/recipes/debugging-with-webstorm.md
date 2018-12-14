@@ -30,7 +30,7 @@ Your `package.json` will look something like this:
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^0.20.0"
+		"ava": "^1.0.0"
 	}
 }
 ```

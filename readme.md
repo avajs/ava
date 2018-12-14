@@ -9,8 +9,6 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Read our [contributing guide](contributing.md) if you're looking to contribute (issues / PRs / etc).
 
-**This documentation covers the 1.0 beta releases, which use Babel 7. The last release that uses Babel 6 is [`v0.25.0`](https://github.com/avajs/ava/tree/v0.25.0).**
-
 ![](media/mini-reporter.gif)
 
 
@@ -41,7 +39,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 To install and set up AVA, run:
 
 ```console
-npx create-ava --next
+npm init ava
 ```
 
 Your `package.json` will then look like this (exact version notwithstanding):
@@ -53,7 +51,7 @@ Your `package.json` will then look like this (exact version notwithstanding):
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "1.0.0-beta.4"
+		"ava": "^1.0.0"
 	}
 }
 ```
@@ -61,13 +59,13 @@ Your `package.json` will then look like this (exact version notwithstanding):
 Or if you prefer using Yarn:
 
 ```console
-yarn add ava@next --dev --exact
+yarn add ava --dev
 ```
 
 Alternatively you can install `ava` manually:
 
 ```console
-npm install --save-dev --save-exact ava@next
+npm install --save-dev
 ```
 
 Don't forget to configure the `test` script in your `package.json` as per above.
