@@ -5,7 +5,7 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const del = require('del');
-const test = require('tap').test;
+const {test} = require('tap');
 const Api = require('../api');
 const babelPipeline = require('../lib/babel-pipeline');
 
@@ -19,6 +19,7 @@ function withNodeEnv(value, run) {
 	const reset = () => {
 		delete process.env.NODE_ENV;
 	};
+
 	const promise = new Promise(resolve => {
 		resolve(run());
 	});
@@ -26,8 +27,7 @@ function withNodeEnv(value, run) {
 	return promise;
 }
 
-function apiCreator(options) {
-	options = options || {};
+function apiCreator(options = {}) {
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
 	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
@@ -37,6 +37,7 @@ function apiCreator(options) {
 	if (!options.precompileHelpers) {
 		instance._precompileHelpers = () => Promise.resolve();
 	}
+
 	return instance;
 }
 

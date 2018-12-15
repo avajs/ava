@@ -50,9 +50,10 @@ function execCli(args, opts, cb) {
 	});
 
 	Promise.all([processPromise, stdout, stderr]).then(args => {
-		cb.apply(null, args);
+		cb(...args);
 	});
 
 	return child;
 }
+
 exports.execCli = execCli;

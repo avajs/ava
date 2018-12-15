@@ -4,7 +4,7 @@ require('../lib/worker/options').set({color: false});
 
 const path = require('path');
 const React = require('react');
-const test = require('tap').test;
+const {test} = require('tap');
 const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
@@ -517,6 +517,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 				a.notThrowsAsync(delay(10))
 			);
 		}
+
 		return Promise.all(promises);
 	});
 	return instance.run().then(result => {

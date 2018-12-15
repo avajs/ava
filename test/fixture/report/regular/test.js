@@ -34,6 +34,7 @@ test('bad throws', t => {
 	const fn = () => {
 		throw new Error('err');
 	};
+
 	t.throws(fn());
 });
 
@@ -41,6 +42,7 @@ test('bad notThrows', t => {
 	const fn = () => {
 		throw new Error('err');
 	};
+
 	t.notThrows(fn());
 });
 

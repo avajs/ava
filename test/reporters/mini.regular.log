@@ -189,11 +189,11 @@ stderr
 
   [1mtest [90m[2m›[1m[39m bad throws[22m
 
-  [90m~/test/fixture/report/regular/test.js:37[39m
+  [90m~/test/fixture/report/regular/test.js:38[39m
 
-   [90m36:[39m   };             
-  [41m 37:   t.throws(fn());[49m
-   [90m38:[39m });              
+   [90m37:[39m                  
+  [41m 38:   t.throws(fn());[49m
+   [90m39:[39m });              
 
   Improper usage of `t.throws()` detected
 
@@ -212,17 +212,17 @@ stderr
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
 
   [90mfn (test.js:35:9)[39m
-  [90mfn (test.js:37:11)[39m
+  [90mfn (test.js:38:11)[39m
 
 
 
   [1mtest [90m[2m›[1m[39m bad notThrows[22m
 
-  [90m~/test/fixture/report/regular/test.js:44[39m
+  [90m~/test/fixture/report/regular/test.js:46[39m
 
-   [90m43:[39m   };                
-  [41m 44:   t.notThrows(fn());[49m
-   [90m45:[39m });                 
+   [90m45:[39m                     
+  [41m 46:   t.notThrows(fn());[49m
+   [90m47:[39m });                 
 
   Improper usage of `t.notThrows()` detected
 
@@ -240,8 +240,8 @@ stderr
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
 
-  [90mfn (test.js:42:9)[39m
-  [90mfn (test.js:44:14)[39m
+  [90mfn (test.js:43:9)[39m
+  [90mfn (test.js:46:14)[39m
 
 
 

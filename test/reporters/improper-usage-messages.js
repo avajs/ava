@@ -1,7 +1,7 @@
 'use strict';
 require('../../lib/chalk').set();
 
-const test = require('tap').test;
+const {test} = require('tap');
 const improperUsageMessages = require('../../lib/reporters/improper-usage-messages');
 
 test('results when nothing is applicable', t => {

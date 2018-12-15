@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const execa = require('execa');
 const arrify = require('arrify');
 

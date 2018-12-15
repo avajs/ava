@@ -2,10 +2,9 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const test = require('tap').test;
+const {test} = require('tap');
 const Runner = require('../lib/runner');
 
-const slice = Array.prototype.slice;
 const noop = () => {};
 
 const promiseEnd = (runner, next) => {
@@ -197,6 +196,7 @@ test('skip test', t => {
 			if (evt.type === 'selected-test' && evt.skip) {
 				t.pass();
 			}
+
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -256,6 +256,7 @@ test('todo test', t => {
 			if (evt.type === 'selected-test' && evt.todo) {
 				t.pass();
 			}
+
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -579,13 +580,13 @@ test('macros: Additional args will be spread as additional args on implementatio
 			}
 		});
 
-		runner.chain.before(function (a) {
-			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
+		runner.chain.before((a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
 
-		runner.chain('test1', function (a) {
-			t.deepEqual(slice.call(arguments, 1), ['foo', 'bar']);
+		runner.chain('test1', (a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
 	});
@@ -606,8 +607,8 @@ test('macros: Customize test names attaching a `title` function', t => {
 		['C']
 	];
 
-	function macroFn(avaT) {
-		t.deepEqual(slice.call(arguments, 1), expectedArgs.shift());
+	function macroFn(avaT, ...rest) {
+		t.deepEqual(rest, expectedArgs.shift());
 		avaT.pass();
 	}
 
@@ -684,16 +685,18 @@ test('arrays of macros', t => {
 		['D']
 	];
 
-	function macroFnA(a) {
-		t.deepEqual(slice.call(arguments, 1), expectedArgsA.shift());
+	function macroFnA(a, ...rest) {
+		t.deepEqual(rest, expectedArgsA.shift());
 		a.pass();
 	}
+
 	macroFnA.title = prefix => `${prefix}.A`;
 
-	function macroFnB(a) {
-		t.deepEqual(slice.call(arguments, 1), expectedArgsB.shift());
+	function macroFnB(a, ...rest) {
+		t.deepEqual(rest, expectedArgsB.shift());
 		a.pass();
 	}
+
 	macroFnB.title = prefix => `${prefix}.B`;
 
 	return promiseEnd(new Runner(), runner => {
@@ -721,17 +724,20 @@ test('match applies to arrays of macros', t => {
 		t.fail();
 		a.pass();
 	}
+
 	fooMacro.title = (title, firstArg) => `${firstArg}foo`;
 
 	function barMacro(avaT) {
 		avaT.pass();
 	}
+
 	barMacro.title = (title, firstArg) => `${firstArg}bar`;
 
 	function bazMacro(a) {
 		t.fail();
 		a.pass();
 	}
+
 	bazMacro.title = (title, firstArg) => `${firstArg}baz`;
 
 	return promiseEnd(new Runner({match: ['foobar']}), runner => {

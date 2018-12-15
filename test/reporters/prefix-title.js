@@ -3,7 +3,7 @@ require('../../lib/chalk').set();
 
 const path = require('path');
 const figures = require('figures');
-const test = require('tap').test;
+const {test} = require('tap');
 const chalk = require('../../lib/chalk').get();
 const prefixTitle = require('../../lib/reporters/prefix-title');
 

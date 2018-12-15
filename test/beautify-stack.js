@@ -3,7 +3,7 @@ require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
 const proxyquire = require('proxyquire').noPreserveCache();
-const test = require('tap').test;
+const {test} = require('tap');
 const Runner = require('../lib/runner');
 
 const beautifyStack = proxyquire('../lib/beautify-stack', {

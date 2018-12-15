@@ -6,7 +6,7 @@ const path = require('path');
 const stripAnsi = require('strip-ansi');
 const React = require('react');
 const renderer = require('react-test-renderer');
-const test = require('tap').test;
+const {test} = require('tap');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
@@ -19,6 +19,7 @@ const assertions = assert.wrapAssertions({
 		if (testObj !== assertions && !(testObj instanceof Test)) {
 			throw new Error('Expected testObj');
 		}
+
 		lastPassed = true;
 	},
 
@@ -57,6 +58,7 @@ function assertFailure(t, subset) {
 		t.is(lastFailure.raw.expected, subset.raw.expected);
 		t.is(lastFailure.raw.actual, subset.raw.actual);
 	}
+
 	if (subset.statements) {
 		t.is(lastFailure.statements.length, subset.statements.length);
 		lastFailure.statements.forEach((s, i) => {
@@ -66,6 +68,7 @@ function assertFailure(t, subset) {
 	} else {
 		t.same(lastFailure.statements, []);
 	}
+
 	if (subset.values) {
 		t.is(lastFailure.values.length, subset.values.length);
 		lastFailure.values.forEach((s, i) => {
@@ -95,10 +98,12 @@ function gather(run) {
 		}
 	};
 }
+
 function add(fn) {
 	if (!gathering) {
 		throw new Error('Cannot add promise, must be called from gather() callback');
 	}
+
 	gatheringPromise = gatheringPromise.then(fn);
 	return gatheringPromise;
 }

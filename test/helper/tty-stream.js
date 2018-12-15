@@ -29,6 +29,7 @@ class TTYStream extends stream.Writable {
 				TTYStream.SEPARATOR
 			);
 		}
+
 		callback();
 	}
 
@@ -37,9 +38,11 @@ class TTYStream extends stream.Writable {
 			this.chunks.push(Buffer.concat(this.spinnerActivity), TTYStream.SEPARATOR);
 			this.spinnerActivity = [];
 		}
+
 		for (const obj of chunks) {
 			this.chunks.push(Buffer.from(this.sanitizers.reduce((str, sanitizer) => sanitizer(str), obj.chunk.toString('utf8')), 'utf8'));
 		}
+
 		this.chunks.push(TTYStream.SEPARATOR);
 		callback();
 	}

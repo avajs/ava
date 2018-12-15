@@ -3,7 +3,7 @@ require('../helper/report').captureStdIOReliability();
 require('../helper/fix-reporter-env')();
 
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
 const MiniReporter = require('../../lib/reporters/mini');

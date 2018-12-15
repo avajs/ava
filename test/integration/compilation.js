@@ -1,6 +1,6 @@
 'use strict';
 const stripAnsi = require('strip-ansi');
-const test = require('tap').test;
+const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
 test('precompiler require hook does not apply to source files', t => {

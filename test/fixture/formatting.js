@@ -84,6 +84,7 @@ test('error thrown in test due to improper throws', t => {
 			date: new Date('1969-07-20T20:17:40.000Z')
 		});
 	};
+
 	t.throws(improper());
 });
 test('test returned rejected promise', () => {
@@ -148,6 +149,7 @@ test('generator function', t => {
 	t.true(function * foo() {}); // eslint-disable-line func-names
 });
 
+/* eslint-disable prefer-rest-params */
 test('arguments formatted', t => {
 	const args = (function () {
 		return arguments;
@@ -169,6 +171,7 @@ test('arguments diff with normal array', t => {
 	})('foo');
 	t.deepEqual(foo, ['bar']);
 });
+/* eslint-enable prefer-rest-params */
 
 if (formatGlobals) {
 	test('global formatted', t => {

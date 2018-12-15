@@ -2,7 +2,7 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const test = require('tap').test;
+const {test} = require('tap');
 const Test = require('../lib/test');
 const Observable = require('zen-observable'); // eslint-disable-line import/order
 

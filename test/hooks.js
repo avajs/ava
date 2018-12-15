@@ -2,7 +2,7 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const test = require('tap').test;
+const {test} = require('tap');
 const Runner = require('../lib/runner');
 
 const promiseEnd = (runner, next) => {

@@ -3,7 +3,7 @@ const path = require('path');
 const tap = require('tap');
 const AvaFiles = require('../lib/ava-files');
 
-const test = tap.test;
+const {test} = tap;
 
 tap.afterEach(done => {
 	// We changed the CWD in some of the tests
@@ -11,10 +11,9 @@ tap.afterEach(done => {
 	done();
 });
 
-function fixture() {
-	const args = Array.prototype.slice.call(arguments);
+function fixture(...args) {
 	args.unshift(__dirname, 'fixture', 'ava-files');
-	return path.join.apply(path, args);
+	return path.join(...args);
 }
 
 test('ignores relativeness in patterns', t => {

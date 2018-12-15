@@ -3,7 +3,7 @@ require('../lib/chalk').set();
 require('../lib/worker/options').set({color: false});
 
 const Promise = require('bluebird');
-const test = require('tap').test;
+const {test} = require('tap');
 const Test = require('../lib/test');
 
 function ava(fn) {

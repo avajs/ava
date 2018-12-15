@@ -20,8 +20,8 @@ module.exports = babel => {
 	return {
 		visitor: {
 			CallExpression: path => {
-				const node = path.node;
-				const callee = node.callee;
+				const {node} = path;
+				const {callee} = node;
 				let args = node.arguments;
 
 				if (callee.type === 'Identifier' && callee.name === 'test') {

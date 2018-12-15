@@ -37,6 +37,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 	try {
 		existing = fs.readFileSync(logFile);
 	} catch (_) {}
+
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
 		fs.writeFileSync(logFile, buffer);
 		existing = buffer;
@@ -73,6 +74,7 @@ exports.sanitizers = {
 		if (hasReliableStdIO) {
 			return str;
 		}
+
 		return str === 'stdout\n' || str === 'stderr\n' ? '' : str;
 	},
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')

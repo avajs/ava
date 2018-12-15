@@ -1,5 +1,5 @@
 'use strict';
-const test = require('tap').test;
+const {test} = require('tap');
 const execa = require('execa');
 
 test('Throws error when required from the REPL', t => {
