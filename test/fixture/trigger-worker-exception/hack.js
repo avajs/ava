@@ -9,9 +9,11 @@ StackUtils.prototype.parseLine = function (line) {
 	if (restored) {
 		return original.call(this, line);
 	}
+
 	if (restoreAfterFirstCall) {
 		restored = true;
 	}
+
 	throw new Error('Forced error');
 };
 

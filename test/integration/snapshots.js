@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const execa = require('execa');
 const uniqueTempDir = require('unique-temp-dir');
-const test = require('tap').test;
+const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
 for (const obj of [
@@ -155,10 +155,12 @@ test('snapshots infer their location and name from sourcemaps', t => {
 			}
 		}
 	};
+
 	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
+
 	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
@@ -194,10 +196,12 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 			}
 		}
 	};
+
 	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
+
 	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));

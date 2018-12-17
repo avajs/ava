@@ -4,7 +4,7 @@ const childProcess = require('child_process');
 const path = require('path');
 const makeDir = require('make-dir');
 const stripAnsi = require('strip-ansi');
-const test = require('tap').test;
+const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
 test('timeout', t => {

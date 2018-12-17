@@ -2,7 +2,7 @@
 require('../helper/report').captureStdIOReliability();
 
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const {restoreClock} = require('../helper/fix-reporter-env')();
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');

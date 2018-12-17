@@ -45,9 +45,8 @@ class Api extends Emittery {
 		this._precompiler = null;
 	}
 
-	run(files, runtimeOptions) {
+	run(files, runtimeOptions = {}) {
 		const apiOptions = this.options;
-		runtimeOptions = runtimeOptions || {};
 
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
@@ -161,9 +160,10 @@ class Api extends Emittery {
 											if (cachePath) {
 												acc[realpath] = cachePath;
 											}
-										} catch (err) {
-											throw Object.assign(err, {file});
+										} catch (error) {
+											throw Object.assign(error, {file});
 										}
+
 										return acc;
 									}, {})
 								};
@@ -175,6 +175,7 @@ class Api extends Emittery {
 						if (apiOptions.concurrency > 0) {
 							concurrency = apiOptions.concurrency;
 						}
+
 						if (apiOptions.serial) {
 							concurrency = 1;
 						}
@@ -198,6 +199,7 @@ class Api extends Emittery {
 								} else {
 									options.precompiled = {};
 								}
+
 								if (runtimeOptions.updateSnapshots) {
 									// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
 									options.updateSnapshots = true;
@@ -245,6 +247,7 @@ class Api extends Emittery {
 			filename => {
 				throw new Error(`Cannot apply full precompilation, possible bad usage: ${filename}`);
 			};
+
 		let precompileEnhancementsOnly = () => null;
 		if (compileEnhancements) {
 			precompileEnhancementsOnly = this.options.extensions.enhancementsOnly.length > 0 ?

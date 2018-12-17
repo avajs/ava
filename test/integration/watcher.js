@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const touch = require('touch');
 const {execCli} = require('../helper/cli');
 
@@ -17,7 +17,7 @@ test('watcher reruns test files when they changed', t => {
 	let passedFirst = false;
 	child.stdout.on('data', str => {
 		buffer += str;
-		if (/1 test passed/.test(buffer)) {
+		if (buffer.includes('1 test passed')) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, '../fixture/watcher/test.js'));
 				buffer = '';
@@ -43,7 +43,7 @@ test('watcher respects custom test file extensions', t => {
 	let passedFirst = false;
 	child.stdout.on('data', str => {
 		buffer += str;
-		if (/1 test passed/.test(buffer)) {
+		if (buffer.includes('1 test passed')) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, '../fixture/watcher/custom-extensions/test.foo'));
 				buffer = '';
@@ -69,11 +69,11 @@ test('watcher reruns test files when source dependencies change', t => {
 	let passedFirst = false;
 	child.stdout.on('data', str => {
 		buffer += str;
-		if (/2 tests passed/.test(buffer) && !passedFirst) {
+		if (buffer.includes('2 tests passed') && !passedFirst) {
 			touch.sync(path.join(__dirname, '../fixture/watcher/with-dependencies/source.js'));
 			buffer = '';
 			passedFirst = true;
-		} else if (/1 test passed/.test(buffer) && !killed) {
+		} else if (buffer.includes('1 test passed') && !killed) {
 			child.kill();
 			killed = true;
 		}
@@ -93,7 +93,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 	let passedFirst = false;
 	child.stdout.on('data', str => {
 		buffer += str;
-		if (/2 tests passed/.test(buffer) && !passedFirst) {
+		if (buffer.includes('2 tests passed') && !passedFirst) {
 			buffer = '';
 			passedFirst = true;
 			setTimeout(() => {
@@ -119,7 +119,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 	let passedFirst = false;
 	child.stdout.on('data', str => {
 		buffer += str;
-		if (/2 tests passed/.test(buffer)) {
+		if (buffer.includes('2 tests passed')) {
 			buffer = '';
 			if (passedFirst) {
 				child.kill();
@@ -146,11 +146,12 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	const testOutput = output => {
 		combined += output;
 		t.notMatch(combined, /TAP/);
-		if (/works/.test(combined)) {
+		if (combined.includes('works')) {
 			child.kill();
 			killed = true;
 		}
 	};
+
 	child.stdout.on('data', testOutput);
 	child.stderr.on('data', testOutput);
 });

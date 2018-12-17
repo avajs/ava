@@ -2,15 +2,14 @@
 'use strict';
 const path = require('path');
 const EventEmitter = require('events');
-const PassThrough = require('stream').PassThrough;
+const {PassThrough} = require('stream');
 const defaultIgnore = require('ignore-by-default').directories();
 const lolex = require('lolex');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const test = require('tap').test;
+const {test} = require('tap');
 const AvaFiles = require('../lib/ava-files');
-
-const setImmediate = require('../lib/now-and-timers').setImmediate;
+const {setImmediate} = require('../lib/now-and-timers');
 
 // Helper to make using beforeEach less arduous
 function makeGroup(test) {
@@ -34,6 +33,7 @@ function makeGroup(test) {
 		});
 	};
 }
+
 const group = makeGroup(test);
 
 group('chokidar', (beforeEach, test, group) => {
@@ -56,10 +56,8 @@ group('chokidar', (beforeEach, test, group) => {
 			{
 				chokidar,
 				debug(name) {
-					return function () {
-						const args = [name];
-						args.push.apply(args, arguments);
-						debug.apply(null, args);
+					return (...args) => {
+						debug(...[name, ...args]);
 					};
 				},
 				'./ava-files': avaFiles
@@ -156,9 +154,11 @@ group('chokidar', (beforeEach, test, group) => {
 	const add = path => {
 		emitChokidar('add', path || 'source.js');
 	};
+
 	const change = path => {
 		emitChokidar('change', path || 'source.js');
 	};
+
 	const unlink = path => {
 		emitChokidar('unlink', path || 'source.js');
 	};
@@ -568,6 +568,7 @@ group('chokidar', (beforeEach, test, group) => {
 			ret.excludePatterns = ['!*bar*'];
 			return ret;
 		};
+
 		Subject = proxyWatcher();
 
 		files = ['foo-{bar,baz}.js'];
@@ -890,6 +891,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.on = (event, fn) => {
 				apiEmitter.on(event, fn);
 			};
+
 			runStatusEmitter = new EventEmitter();
 			runStatus = {
 				stats: {
@@ -1109,6 +1111,7 @@ group('chokidar', (beforeEach, test, group) => {
 				for (let i = index; i >= 0; i--) {
 					relPath = path.join(relPath, String(i));
 				}
+
 				return `${relPath}.js`;
 			});
 
@@ -1217,6 +1220,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.on = (event, fn) => {
 				apiEmitter.on(event, fn);
 			};
+
 			runStatusEmitter = new EventEmitter();
 			runStatus = {
 				stats: {
@@ -1382,6 +1386,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.on = (event, fn) => {
 				apiEmitter.on(event, fn);
 			};
+
 			runStatusEmitter = new EventEmitter();
 			runStatus = {
 				stats: {

@@ -1,5 +1,5 @@
 'use strict';
-const test = require('tap').test;
+const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
 // The AssertionError constructor in Node 10 depends on the TTY interface

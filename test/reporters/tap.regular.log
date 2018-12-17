@@ -139,7 +139,7 @@ not ok 20 - test [90m[2m›[22m[39m bad notThrows
         Error {
           message: 'err',
         }
-    at: 'fn (test.js:42:9)'
+    at: 'fn (test.js:43:9)'
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error

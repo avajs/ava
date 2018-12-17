@@ -4,7 +4,7 @@ require('../lib/chalk').set();
 const fs = require('fs');
 const tempWrite = require('temp-write');
 const chalk = require('chalk');
-const test = require('tap').test;
+const {test} = require('tap');
 const codeExcerpt = require('../lib/code-excerpt');
 
 chalk.enabled = true;

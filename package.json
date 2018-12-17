@@ -178,11 +178,7 @@
 			"test/flow-types/*"
 		],
 		"rules": {
-			"no-use-extend-native/no-use-extend-native": "off",
-			"prefer-destructuring": "off",
-			"prefer-rest-params": "off",
-			"prefer-spread": "off",
-			"unicorn/prefer-spread": "off"
+			"no-use-extend-native/no-use-extend-native": "off"
 		}
 	},
 	"nyc": {

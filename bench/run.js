@@ -101,7 +101,7 @@ for (let i = 0; i < 11; i++) {
 const results = {};
 
 Promise.each(combined, definition => {
-	const args = definition.args;
+	const {args} = definition;
 
 	return runTests(args).then(result => {
 		const key = result.args.join(' ');

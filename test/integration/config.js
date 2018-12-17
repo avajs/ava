@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const execa = require('execa');
 const figures = require('figures');
 const uniqueTempDir = require('unique-temp-dir');

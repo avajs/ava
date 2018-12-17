@@ -13,7 +13,7 @@ module.exports = babel => {
 				// Skip require calls
 				const firstArg = path.get('arguments')[0];
 
-				if (!isRequire(path) && firstArg && firstArg.isStringLiteral() && !/repeated test/.test(firstArg.node.value)) {
+				if (!isRequire(path) && firstArg && firstArg.isStringLiteral() && !firstArg.node.value.includes('repeated test')) {
 					firstArg.replaceWith(t.stringLiteral(firstArg.node.value.toUpperCase()));
 				}
 			}
