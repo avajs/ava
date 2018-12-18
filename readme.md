@@ -65,7 +65,7 @@ yarn add ava --dev
 Alternatively you can install `ava` manually:
 
 ```console
-npm install --save-dev
+npm install --save-dev ava
 ```
 
 Don't forget to configure the `test` script in your `package.json` as per above.
