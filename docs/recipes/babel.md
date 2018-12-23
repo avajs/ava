@@ -208,3 +208,15 @@ Note that loading `@babel/register` in every worker process has a non-trivial pe
 
 
 [Babel options]: https://babeljs.io/docs/en/options
+
+## Use webpack aliases in babel-transpiled files
+
+You'll need to install `babel-plugin-webpack-alias-7` as a devDependency. Then you can add the plugin to your babel config, likely under either `ava.babel.testOptions` or `babel.env.test`.
+
+```json
+{
+	"plugins": [
+		[ "babel-plugin-webpack-alias-7", { "config": "./configs/webpack.config.test.js" } ]
+	]
+}
+```
