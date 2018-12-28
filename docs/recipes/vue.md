@@ -5,15 +5,13 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 ## Dependencies
 
 - [Require extension hooks](https://github.com/jackmellis/require-extension-hooks):
-	- babel v7: `npm i --save-dev require-extension-hooks require-extension-hooks-vue require-extension-hooks-babel@beta`
-	- babel v6: `npm i --save-dev require-extension-hooks require-extension-hooks-vue require-extension-hooks-babel`
+	- `npm i --save-dev require-extension-hooks require-extension-hooks-vue require-extension-hooks-babel@beta`
 
 - [browser-env](browser-testing.md)
 	- `npm i --save-dev browser-env`
 
 - Optional: [babel-plugin-webpack-alias-7](https://github.com/shortminds/babel-plugin-webpack-alias-7) if you want to use [webpack aliases](https://webpack.js.org/configuration/resolve/#resolve-alias) or use them in your source files
-	- babel v7: `npm i --save-dev babel-plugin-webpack-alias-7`
-	- babel v6: `npm i --save-dev babel-plugin-webpack-alias`
+	- `npm i --save-dev babel-plugin-webpack-alias-7`
 
 ## Setup
 
@@ -45,7 +43,7 @@ Vue.config.productionTip = false;
 // Setup vue files to be processed by `require-extension-hooks-vue`
 hooks('vue').plugin('vue').push();
 // Setup vue and js files to be processed by `require-extension-hooks-babel`
-hooks(['vue', 'js']).exclude(({filename}) => filename.includes('node_modules')).plugin('babel').push();
+hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//)).plugin('babel').push();
 ```
 
 **Note:** If you are using _babel-plugin-webpack-alias_ (either babel version), you must also exclude your webpack file - e.g. `filename.includes('node_modules') || filename.includes('webpack.config.test.js')`

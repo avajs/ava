@@ -211,6 +211,8 @@ Note that loading `@babel/register` in every worker process has a non-trivial pe
 
 ## Use webpack aliases in babel-transpiled files
 
+[Webpack aliases](https://webpack.js.org/configuration/resolve/#resolve-alias) can be used to provide a shortcut to deeply nested or otherwise inconvenient paths. If you already use aliases in your source files, you'll need to set this up so Babel can correctly resolve imports. This also could help easily reference your source files from tests - e.g. `import MySource from 'myModule/mySource'` instead of `import MySource from '../../src/myModule/mySource'`.
+
 You'll need to install `babel-plugin-webpack-alias-7` as a devDependency. Then you can add the plugin to your babel config, likely under either `ava.babel.testOptions` or `babel.env.test`.
 
 ```json
