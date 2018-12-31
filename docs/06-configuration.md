@@ -1,5 +1,7 @@
 # Configuration
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/06-configuration.md)
+
 All of the [CLI options](./05-command-line.md) can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).

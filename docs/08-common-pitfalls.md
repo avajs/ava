@@ -1,6 +1,6 @@
 # Common Pitfalls
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/common-pitfalls.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/08-common-pitfalls.md)
 
 ## ESLint plugin
 

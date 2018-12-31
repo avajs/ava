@@ -1,5 +1,7 @@
 # Execution Context (`t` argument)
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/02-execution-context.md)
+
 Each test or hook is called with an execution context. By convention it's named `t`.
 
 ```js
