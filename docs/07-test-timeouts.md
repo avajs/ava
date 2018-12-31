@@ -1,5 +1,7 @@
 # Test timeouts
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/07-test-timeouts.md)
+
 Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests.
 
 You can configure timeouts using the `--timeout` [command line option](./05-command-line.md), or in the [configuration](./06-configuration.md).

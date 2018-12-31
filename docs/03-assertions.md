@@ -1,5 +1,7 @@
 # Assertions
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/03-assertions.md)
+
 Assertions are mixed into the [execution object](./02-execution-context.md) provided to each test implementation:
 
 ```js

@@ -1,5 +1,7 @@
 # CLI
 
+Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
+
 ```console
 $ npx ava --help
 
