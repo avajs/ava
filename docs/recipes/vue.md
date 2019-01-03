@@ -46,7 +46,7 @@ hooks('vue').plugin('vue').push();
 hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//)).plugin('babel').push();
 ```
 
-**Note:** If you are using _babel-plugin-webpack-alias_ (either babel version), you must also exclude your webpack file - e.g. `filename.includes('node_modules') || filename.includes('webpack.config.test.js')`
+**Note:** If you are using _babel-plugin-webpack-alias-7_, you must also exclude your webpack file - e.g. `filename.includes(/\/node_modules\//) || filename.includes('webpack.config.test.js')`
 
 You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
 
