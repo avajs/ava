@@ -206,19 +206,31 @@ Now instead of requiring `@babel/register`, require `test/_register` instead.
 
 Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
 
+## Webpack aliases
 
-[Babel options]: https://babeljs.io/docs/en/options
+[Webpack aliases](https://webpack.js.org/configuration/resolve/#resolve-alias) can be used to provide a shortcut to deeply nested or otherwise inconvenient paths. If you already use aliases in your source files, you'll need to make sure you can use the same aliases in your test files.
 
-## Use webpack aliases in babel-transpiled files
+Install `babel-plugin-webpack-alias-7` as a dev-dependency. Then add the plugin to AVA's Babel config:
 
-[Webpack aliases](https://webpack.js.org/configuration/resolve/#resolve-alias) can be used to provide a shortcut to deeply nested or otherwise inconvenient paths. If you already use aliases in your source files, you'll need to set this up so Babel can correctly resolve imports. This also could help easily reference your source files from tests - e.g. `import MySource from 'myModule/mySource'` instead of `import MySource from '../../src/myModule/mySource'`.
-
-You'll need to install `babel-plugin-webpack-alias-7` as a devDependency. Then you can add the plugin to your babel config, likely under either `ava.babel.testOptions` or `babel.env.test`.
+`package.json`:
 
 ```json
 {
-	"plugins": [
-		[ "babel-plugin-webpack-alias-7", { "config": "./configs/webpack.config.test.js" } ]
-	]
+	"ava": {
+		"babel": {
+			"testOptions": {
+				"plugins": [
+					[
+						"babel-plugin-webpack-alias-7",
+						{
+							"config": "./path/to/webpack.config.test.js"
+						}
+					]
+				]
+			}
+		}
+	}
 }
 ```
+
+[Babel options]: https://babeljs.io/docs/en/options
