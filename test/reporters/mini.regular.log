@@ -209,7 +209,7 @@ stderr
 
   Visit the following URL for more details:
 
-    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
+    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
   [90mfn (test.js:35:9)[39m
   [90mfn (test.js:38:11)[39m
@@ -238,7 +238,7 @@ stderr
 
   Visit the following URL for more details:
 
-    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/readme.md#throwsthrower-expected-message[24m[39m
+    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
   [90mfn (test.js:43:9)[39m
   [90mfn (test.js:46:14)[39m
