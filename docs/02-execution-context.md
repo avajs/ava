@@ -33,3 +33,7 @@ End the test. Only works with `test.cb()`.
 ## `t.log(...values)`
 
 Log values contextually alongside the test result instead of immediately printing them to `stdout`. Behaves somewhat like `console.log`, but without support for placeholder tokens.
+
+## `t.timeout(ms)`
+
+Set a timeout for the test, in milliseconds. The test will fail if this timeout is exceeded. The timeout is reset each time an assertion is made.
