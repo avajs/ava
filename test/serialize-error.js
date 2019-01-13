@@ -29,7 +29,7 @@ test('serialize standard props', t => {
 	t.is(serializedError.name, 'Error');
 	t.is(serializedError.stack, beautifyStack(error.stack));
 	t.is(serializedError.message, 'Hello');
-	t.is(serializedError.summary, error.stack);
+	t.is(serializedError.summary, 'Error: Hello');
 	t.is(typeof serializedError.source.isDependency, 'boolean');
 	t.is(typeof serializedError.source.isWithinProject, 'boolean');
 	t.is(typeof serializedError.source.file, 'string');
