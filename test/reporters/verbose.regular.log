@@ -82,8 +82,33 @@ stderr
 ---tty-stream-chunk-separator
   [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
 ---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m before hook
+    [35mℹ[39m [90mbefore[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    [35mℹ[39m [90mafterEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m cleanup
+    [35mℹ[39m [90mafterAlways[39m
+---tty-stream-chunk-separator
 
-  [31m8 tests failed[39m
+  [31m9 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m
@@ -221,5 +246,17 @@ stderr
   Error thrown in test:
 
   [33mnull[39m
+
+
+
+  [1moutput-in-hook [90m[2m›[1m[39m failing test[22m
+
+  [90m~/test/fixture/report/regular/output-in-hook.js:34[39m
+
+   [90m33:[39m test('failing test', t => {
+  [41m 34:   t.fail();                [49m
+   [90m35:[39m });                        
+
+  Test failed via `t.fail()`
 
 ---tty-stream-chunk-separator

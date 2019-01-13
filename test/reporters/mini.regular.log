@@ -110,10 +110,26 @@ stderr
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* output-in-hook [90m[2m›[22m[39m passing test
+
+  [32m6 passed[39m
+  [31m1 known failure[39m
+  [31m8 tests failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* output-in-hook [90m[2m›[22m[39m failing test
+
+  [32m6 passed[39m
+  [31m1 known failure[39m
+  [31m9 tests failed[39m
+  [33m1 skipped[39m
+  [34m1 todo[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 [?25h
   [31m✖ No tests found in test/fixture/report/regular/bad-test-chain.js[39m
 
-  [31m8 tests failed[39m
+  [31m9 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m
@@ -251,6 +267,18 @@ stderr
   Error thrown in test:
 
   [33mnull[39m
+
+
+
+  [1moutput-in-hook [90m[2m›[1m[39m failing test[22m
+
+  [90m~/test/fixture/report/regular/output-in-hook.js:34[39m
+
+   [90m33:[39m test('failing test', t => {
+  [41m 34:   t.fail();                [49m
+   [90m35:[39m });                        
+
+  Test failed via `t.fail()`
 
 
 

@@ -154,11 +154,23 @@ not ok 21 - test [90m[2m›[22m[39m implementation throws non-error
 # slow › slow
 ok 22 - slow [90m[2m›[22m[39m slow
 ---tty-stream-chunk-separator
+# output-in-hook › passing test
+ok 23 - output-in-hook [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+# output-in-hook › failing test
+not ok 24 - output-in-hook [90m[2m›[22m[39m failing test
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'fail (output-in-hook.js:34:4)'
+  ...
+---tty-stream-chunk-separator
 
-1..16
-# tests 15
-# pass 6
+1..18
+# tests 17
+# pass 7
 # skip 1
-# fail 15
+# fail 16
 
 ---tty-stream-chunk-separator
