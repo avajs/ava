@@ -267,6 +267,16 @@ test('context is unicorn', t => {
 });
 ```
 
+## Retrieving test meta data
+
+Helper files can determine the filename of the test being run by reading `test.meta.file`.  This eliminates the need to pass `__filename` from the test to helpers.
+
+```js
+import test from 'ava';
+
+console.log('Test currently being run: ', test.meta.file);
+```
+
 ## Reusing test logic through macros
 
 Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.

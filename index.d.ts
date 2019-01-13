@@ -468,6 +468,7 @@ export interface TestInterface<Context = {}> {
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
 	todo: TodoDeclaration;
+	meta: MetaInterface;
 }
 
 export interface AfterInterface<Context = {}> {
@@ -740,6 +741,11 @@ export interface TodoDeclaration {
 	(title: string): void;
 }
 
+export interface MetaInterface {
+	/** Path to the test file being executed. */
+	file: string;
+}
+
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 declare const test: TestInterface;
 
@@ -776,6 +782,8 @@ export const skip: SkipInterface;
 /** Declare a test that should be implemented later. */
 export const todo: TodoDeclaration;
 
+/** Meta data associated with the current process. */
+export const meta: MetaInterface;
 
 /*
 Tail type from <https://github.com/tycho01/typical/blob/25f11ed92c960aab1ebbf47fd6ead9e0ae51d947/src/array/Tail.ts>.
