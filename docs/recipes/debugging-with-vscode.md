@@ -48,8 +48,8 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
 	"name": "Run AVA test serially",
 	"program": "${workspaceRoot}/node_modules/ava/profile.js",
 	"args": [
-	  "--serial",
-	  "${file}"
+	  "${file}",
+	  "--serial"
 	],
 	"skipFiles": [
 		"<node_internals>/**/*.js"
