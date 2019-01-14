@@ -16,9 +16,9 @@ npx ava --timeout=100 # 100 milliseconds
 
 Timeouts can also be set individually for each test. These timeouts are reset each time an assertion is made.
 
-```javascript
+```js
 test('foo', t => {
 	t.timeout(100); // 100 milliseconds
-	// write your assertions here
+	// Write your assertions here
 });
 ```
