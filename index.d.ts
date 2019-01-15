@@ -396,19 +396,8 @@ export type AttemptReturnValue = Promise<null | {
 	discard: () => void,
 	passed: boolean,
 	error: null | Error,
-	duration: number,
 	title: string,
 	logs: string[],
-	metadata: {
-		always: boolean,
-		callback: boolean,
-		exclusive: boolean,
-		failing: boolean,
-		serial: boolean,
-		skipped: boolean,
-		todo: boolean,
-		type: 'test',
-	},
 }> & { discard: () => void }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
