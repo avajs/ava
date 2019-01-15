@@ -1,4 +1,3 @@
-/* eslint-disable promise/no-callback-in-promise */
 'use strict';
 const path = require('path');
 const EventEmitter = require('events');

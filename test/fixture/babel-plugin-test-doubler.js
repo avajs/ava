@@ -1,4 +1,6 @@
+/* eslint-disable new-cap */
 'use strict';
+
 /*
  A Babel plugin that causes each AVA test to be duplicated with a new title.
 
@@ -11,8 +13,6 @@
 
   This is used by some integration tests to validate correct handling of Babel config options.
 */
-
-/* eslint-disable new-cap */
 module.exports = babel => {
 	const t = babel.types;
 	let anonCount = 1;
