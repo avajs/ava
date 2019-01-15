@@ -388,6 +388,9 @@ export interface TryFn<Context> {
 	skip(...values: Array<any>): void;
 }
 
+export class AssertionError extends Error {
+}
+
 // todo: would rather remove 'null |' from Promise definition
 // that is because in typescript, it will be required to check if it is not
 // null all the time.
@@ -395,7 +398,7 @@ export type AttemptReturnValue = Promise<null | {
 	commit: () => void,
 	discard: () => void,
 	passed: boolean,
-	error: null | Error,
+	errors: AssertionError[],
 	title: string,
 	logs: string[],
 }> & { discard: () => void }
