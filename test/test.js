@@ -943,9 +943,11 @@ test('try-commit fails when no assertions inside try', t => {
 			.try(() => {})
 			.then(res => {
 				t.false(res.passed);
-				t.ok(res.error);
-				t.match(res.error.message, /Test finished without running any assertions/);
-				t.is(res.error.name, 'Error');
+				t.ok(res.errors);
+				t.is(res.errors.length, 1);
+				const error = res.errors[0];
+				t.match(error.message, /Test finished without running any assertions/);
+				t.is(error.name, 'Error');
 				res.commit();
 			});
 	}).run().then(result => {
@@ -962,9 +964,11 @@ test('try-commit fails when no assertions inside multiple try', t => {
 			}),
 			a.try(() => {}).then(res2 => {
 				t.false(res2.passed);
-				t.ok(res2.error);
-				t.match(res2.error.message, /Test finished without running any assertions/);
-				t.is(res2.error.name, 'Error');
+				t.ok(res2.errors);
+				t.is(res2.errors.length, 1);
+				const error = res2.errors[0];
+				t.match(error.message, /Test finished without running any assertions/);
+				t.is(error.name, 'Error');
 				res2.commit();
 			})
 		]);
@@ -1008,21 +1012,19 @@ test('try-commit has proper titles, when going in depth and width', t => {
 	}).run();
 });
 
-test('try-commit fails when calling commit twice', t => {
+test('try-commit does not fail when calling commit twice', t => {
 	return ava(a => {
 		return a.try(b => b.pass()).then(res => {
 			res.commit();
 			res.commit();
 		});
 	}).run().then(result => {
-		t.false(result.passed);
-		t.ok(result.error);
-		t.match(result.error.message, /The commit\(\) was already called/);
-		t.is(result.error.name, 'Error');
+		t.true(result.passed);
+		t.false(result.error);
 	});
 });
 
-test('try-commit fails when calling discard twice', t => {
+test('try-commit does not fail when calling discard twice', t => {
 	return ava(a => {
 		return a.try(b => b.pass()).then(res => {
 			res.discard();
@@ -1031,12 +1033,12 @@ test('try-commit fails when calling discard twice', t => {
 	}).run().then(result => {
 		t.false(result.passed);
 		t.ok(result.error);
-		t.match(result.error.message, /The discard\(\) was already called/);
+		t.match(result.error.message, /Test finished without running any assertions/);
 		t.is(result.error.name, 'Error');
 	});
 });
 
-test('try-commit fails when calling discard on promise twice', t => {
+test('try-commit does not fail when calling discard on promise twice', t => {
 	return ava(a => {
 		const pr = a.try(b => b.pass());
 		pr.discard();
@@ -1048,12 +1050,12 @@ test('try-commit fails when calling discard on promise twice', t => {
 	}).run().then(result => {
 		t.false(result.passed);
 		t.ok(result.error);
-		t.match(result.error.message, /The discard\(\) was already called/);
+		t.match(result.error.message, /Test finished without running any assertions/);
 		t.is(result.error.name, 'Error');
 	});
 });
 
-test('try-commit fails when calling discard on promise after attempt resolved', t => {
+test('try-commit fails when calling discard on promise after attempt committed', t => {
 	return ava(a => {
 		const attemptPromise = a.try(b => b.pass());
 		return attemptPromise.then(res => {
@@ -1064,7 +1066,23 @@ test('try-commit fails when calling discard on promise after attempt resolved', 
 	}).run().then(result => {
 		t.false(result.passed);
 		t.ok(result.error);
-		t.match(result.error.message, /Attempt is already resolved/);
+		t.match(result.error.message, /Attempt is already committed/);
+		t.is(result.error.name, 'Error');
+	});
+});
+
+test('try-commit does not fail when calling discard on promise after attempt discarded', t => {
+	return ava(a => {
+		const attemptPromise = a.try(b => b.pass());
+		return attemptPromise.then(res => {
+			t.true(res.passed);
+			res.discard();
+			attemptPromise.discard();
+		});
+	}).run().then(result => {
+		t.false(result.passed);
+		t.ok(result.error);
+		t.match(result.error.message, /Test finished without running any assertions/);
 		t.is(result.error.name, 'Error');
 	});
 });
@@ -1108,9 +1126,11 @@ test('try-commit passes with failing test', t => {
 			.try(b => b.fail())
 			.then(res => {
 				t.false(res.passed);
-				t.ok(res.error);
-				t.match(res.error.message, /Test failed via `t\.fail\(\)`/);
-				t.is(res.error.name, 'AssertionError');
+				t.ok(res.errors);
+				t.is(res.errors.length, 1);
+				const error = res.errors[0];
+				t.match(error.message, /Test failed via `t\.fail\(\)`/);
+				t.is(error.name, 'AssertionError');
 				res.commit();
 			});
 	}).run().then(result => {
@@ -1137,9 +1157,11 @@ test('try-commit works with failing callback test', t => {
 			.try(b => b.fail())
 			.then(res => {
 				t.false(res.passed);
-				t.ok(res.error);
-				t.match(res.error.message, /Test failed via `t\.fail\(\)`/);
-				t.is(res.error.name, 'AssertionError');
+				t.ok(res.errors);
+				t.is(res.errors.length, 1);
+				const error = res.errors[0];
+				t.match(error.message, /Test failed via `t\.fail\(\)`/);
+				t.is(error.name, 'AssertionError');
 				res.commit();
 			})
 			.then(() => {
