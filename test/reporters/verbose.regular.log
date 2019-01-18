@@ -50,6 +50,16 @@
 ---tty-stream-chunk-separator
   [31m✖ test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
+---tty-stream-chunk-separator
 stdout
 ---tty-stream-chunk-separator
 stderr
@@ -108,7 +118,7 @@ stderr
     [35mℹ[39m [90mafterAlways[39m
 ---tty-stream-chunk-separator
 
-  [31m9 tests failed[39m
+  [31m14 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m
@@ -116,6 +126,113 @@ stderr
   [31m2 uncaught exceptions[39m
 
   [31mtest [90m[2m›[22m[31m known failure[39m
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throws[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:12[39m
+
+   [90m11:[39m test('throws', t => {                     
+  [41m 12:   t.throws(() => throwError(), TypeError);[49m
+   [90m13:[39m });                                       
+
+  Function threw unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:12:17)[39m
+  [90mthrows (traces-in-t-throws.js:12:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrows[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:16[39m
+
+   [90m15:[39m test('notThrows', t => {          
+  [41m 16:   t.notThrows(() => throwError());[49m
+   [90m17:[39m });                               
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:16:20)[39m
+  [90mnotThrows (traces-in-t-throws.js:16:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrowsAsync[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:20[39m
+
+   [90m19:[39m test('notThrowsAsync', t => {          
+  [41m 20:   t.notThrowsAsync(() => throwError());[49m
+   [90m21:[39m });                                    
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:20:25)[39m
+  [90mnotThrowsAsync (traces-in-t-throws.js:20:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:24[39m
+
+   [90m23:[39m test('throwsAsync', t => {                     
+  [41m 24:   t.throwsAsync(() => throwError(), TypeError);[49m
+   [90m25:[39m });                                            
+
+  Function threw synchronously. Use `t.throws()` instead:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:24:22)[39m
+  [90mthrowsAsync (traces-in-t-throws.js:24:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync different error[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:28[39m
+
+   [90m27:[39m test('throwsAsync different error', t => {               
+  [41m 28:   return t.throwsAsync(returnRejectedPromise, TypeError);[49m
+   [90m29:[39m });                                                      
+
+  Returned promise rejected with unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mreturnRejectedPromise (traces-in-t-throws.js:8:24)[39m
+  [90mthrowsAsync (traces-in-t-throws.js:28:11)[39m
+
+
 
   [1mtest [90m[2m›[1m[39m fails[22m
 

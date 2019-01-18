@@ -15,26 +15,54 @@
 
   [32m3 passed[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* traces-in-t-throws [90m[2m›[22m[39m throws
+
+  [32m3 passed[39m
+  [31m1 test failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* traces-in-t-throws [90m[2m›[22m[39m notThrows
+
+  [32m3 passed[39m
+  [31m2 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
+
+  [32m3 passed[39m
+  [31m3 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* traces-in-t-throws [90m[2m›[22m[39m throwsAsync
+
+  [32m3 passed[39m
+  [31m4 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
+
+  [32m3 passed[39m
+  [31m5 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 stdout
-* uncaught-exception [90m[2m›[22m[39m passes
+* traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
 
-  [32m3 passed[39m---tty-stream-chunk-separator
-[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+  [32m3 passed[39m
+  [31m5 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 stderr
-* uncaught-exception [90m[2m›[22m[39m passes
+* traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
 
-  [32m3 passed[39m---tty-stream-chunk-separator
-[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+  [32m3 passed[39m
+  [31m5 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 * test [90m[2m›[22m[39m passes
 
   [32m4 passed[39m
+  [31m5 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
-[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 * test [90m[2m›[22m[39m fails
 
   [32m4 passed[39m
-  [31m1 test failed[39m
+  [31m6 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -42,7 +70,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m1 test failed[39m
+  [31m6 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -50,7 +78,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m2 tests failed[39m
+  [31m7 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -58,7 +86,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m3 tests failed[39m
+  [31m8 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -66,7 +94,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m4 tests failed[39m
+  [31m9 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -74,7 +102,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m5 tests failed[39m
+  [31m10 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -82,7 +110,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m6 tests failed[39m
+  [31m11 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -90,7 +118,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m7 tests failed[39m
+  [31m12 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -98,7 +126,7 @@ stderr
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m8 tests failed[39m
+  [31m13 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -106,7 +134,7 @@ stderr
 
   [32m5 passed[39m
   [31m1 known failure[39m
-  [31m8 tests failed[39m
+  [31m13 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -114,7 +142,7 @@ stderr
 
   [32m6 passed[39m
   [31m1 known failure[39m
-  [31m8 tests failed[39m
+  [31m13 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -122,14 +150,14 @@ stderr
 
   [32m6 passed[39m
   [31m1 known failure[39m
-  [31m9 tests failed[39m
+  [31m14 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 [?25h
   [31m✖ No tests found in test/fixture/report/regular/bad-test-chain.js[39m
 
-  [31m9 tests failed[39m
+  [31m14 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m
@@ -137,6 +165,113 @@ stderr
   [31m2 uncaught exceptions[39m
 
   [31mtest [90m[2m›[22m[31m known failure[39m
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throws[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:12[39m
+
+   [90m11:[39m test('throws', t => {                     
+  [41m 12:   t.throws(() => throwError(), TypeError);[49m
+   [90m13:[39m });                                       
+
+  Function threw unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:12:17)[39m
+  [90mthrows (traces-in-t-throws.js:12:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrows[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:16[39m
+
+   [90m15:[39m test('notThrows', t => {          
+  [41m 16:   t.notThrows(() => throwError());[49m
+   [90m17:[39m });                               
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:16:20)[39m
+  [90mnotThrows (traces-in-t-throws.js:16:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrowsAsync[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:20[39m
+
+   [90m19:[39m test('notThrowsAsync', t => {          
+  [41m 20:   t.notThrowsAsync(() => throwError());[49m
+   [90m21:[39m });                                    
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:20:25)[39m
+  [90mnotThrowsAsync (traces-in-t-throws.js:20:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:24[39m
+
+   [90m23:[39m test('throwsAsync', t => {                     
+  [41m 24:   t.throwsAsync(() => throwError(), TypeError);[49m
+   [90m25:[39m });                                            
+
+  Function threw synchronously. Use `t.throws()` instead:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mthrowError (traces-in-t-throws.js:4:8)[39m
+  [90mthrowError (traces-in-t-throws.js:24:22)[39m
+  [90mthrowsAsync (traces-in-t-throws.js:24:4)[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync different error[22m
+
+  [90m~/test/fixture/report/regular/traces-in-t-throws.js:28[39m
+
+   [90m27:[39m test('throwsAsync different error', t => {               
+  [41m 28:   return t.throwsAsync(returnRejectedPromise, TypeError);[49m
+   [90m29:[39m });                                                      
+
+  Returned promise rejected with unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mreturnRejectedPromise (traces-in-t-throws.js:8:24)[39m
+  [90mthrowsAsync (traces-in-t-throws.js:28:11)[39m
+
+
 
   [1mtest [90m[2m›[1m[39m fails[22m
 
