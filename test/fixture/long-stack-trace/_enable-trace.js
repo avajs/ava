@@ -1,5 +1,5 @@
 'use strict';
-const Bluebird = require('bluebird'); // eslint-disable-line import/no-extraneous-dependencies
+const Bluebird = require('bluebird');
 
 Bluebird.longStackTraces();
 module.exports = Bluebird;

@@ -1,6 +1,6 @@
 'use strict';
 
-const StackUtils = require('stack-utils'); // eslint-disable-line import/no-extraneous-dependencies
+const StackUtils = require('stack-utils');
 
 const original = StackUtils.prototype.parseLine;
 let restored = false;

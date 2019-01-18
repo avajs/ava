@@ -165,13 +165,14 @@
 		"touch": "^3.1.0",
 		"ts-node": "^7.0.1",
 		"typescript": "^3.2.2",
-		"xo": "^0.23.0",
+		"xo": "^0.24.0",
 		"zen-observable": "^0.8.11"
 	},
 	"typings": "index.d.ts",
 	"xo": {
 		"ignores": [
 			"media/**",
+			"test/fixture/ava-paths/target/test.js",
 			"test/fixture/{source-map-initial,syntax-error}.js",
 			"test/fixture/snapshots/test-sourcemaps/build/**",
 			"**/*.ts",

@@ -40,7 +40,7 @@ test('error formatted, constructor does not match name, and string tag does not 
 	class CustomError extends Error {
 		constructor(message) {
 			super(message);
-			this.name = 'FamousWords'; // eslint-disable-line unicorn/custom-error-definition
+			this.name = 'FamousWords';
 		}
 	}
 	const err = new CustomError('Houston, we have a problem');
@@ -50,7 +50,7 @@ test('error formatted, no name or constructor', t => {
 	class CustomError extends Error {
 		constructor(message) {
 			super(message);
-			this.name = ''; // eslint-disable-line unicorn/custom-error-definition
+			this.name = '';
 		}
 	}
 	const err = new CustomError('Houston, we have a problem');

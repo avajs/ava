@@ -835,7 +835,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
-			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			const err = new TypeError();
 			err.code = 'ERR_TEST';
 			throw err;
 		}, {code: 'ERR_TEST'});
@@ -844,7 +844,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
-			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			const err = new TypeError();
 			err.code = 42;
 			throw err;
 		}, {code: 42});
@@ -853,7 +853,7 @@ test('.throws()', gather(t => {
 	// Fails because the thrown value is not the right one
 	fails(t, () => {
 		assertions.throws(() => {
-			const err = new TypeError(); // eslint-disable-line unicorn/error-message
+			const err = new TypeError();
 			err.code = 'ERR_NOPE';
 			throw err;
 		}, {code: 'ERR_TEST'});
