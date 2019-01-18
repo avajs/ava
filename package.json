@@ -172,6 +172,7 @@
 	"xo": {
 		"ignores": [
 			"media/**",
+			"test/fixture/ava-paths/target/test.js",
 			"test/fixture/{source-map-initial,syntax-error}.js",
 			"test/fixture/snapshots/test-sourcemaps/build/**",
 			"**/*.ts",
