@@ -24,12 +24,12 @@ matrix:
     - node_js: 6
       os: windows # npm install --global currently fails on Windows. Skip the tests entirely instead.
 cache: npm
-before_install: if [[ $(node -pe "process.versions.node.split('.')[0]") == "6" ]]; then npm install --global npm@6; fi
+before_install: if [[ "$(npm -v)" != "6.6.0" ]] && [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then npm install --global npm@6.6.0; fi
 install: npm ci
 before_script: |
   if [[ ${FRESH_DEPS} == "true" ]]; then
     npm install --no-shrinkwrap --prefer-online
-  else
+  elif [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then
     checksum=$(md5sum package-lock.json)
     npm install --package-lock-only
     if ! echo ${checksum} | md5sum --quiet -c -; then
@@ -38,7 +38,7 @@ before_script: |
     fi
   fi
 
-  if [[ "${TRAVIS_OS_NAME}" == 'windows' ]]; then
+  if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
     git config core.symlinks true
     git reset --hard
   fi
