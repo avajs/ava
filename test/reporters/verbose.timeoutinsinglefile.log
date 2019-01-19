@@ -5,9 +5,9 @@
   [32m✔[39m passes two
 ---tty-stream-chunk-separator
   [31m[39m
-  [31m✖ Exited because no new tests completed within the last 10000ms of inactivity[39m
+  [31m✖ Timed out while running tests[39m
 
-  2 tests still running in ~/test/fixture/report/timeoutinsinglefile/a.js:
+  2 tests were pending in ~/test/fixture/report/timeoutinsinglefile/a.js
 
   ◌ slow
   ◌ slow two

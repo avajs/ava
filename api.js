@@ -43,6 +43,11 @@ class Api extends Emittery {
 		this._allExtensions = this.options.extensions.all;
 		this._regexpFullExtensions = new RegExp(`\\.(${this.options.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
 		this._precompiler = null;
+		this._interruptHandler = () => {};
+
+		if (options.ranFromCli) {
+			process.on('SIGINT', () => this._interruptHandler());
+		}
 	}
 
 	run(files, runtimeOptions = {}) {
@@ -69,16 +74,35 @@ class Api extends Emittery {
 					bailed = true;
 				}
 
+				runStatus.emitStateChange({type: 'timeout', period: timeout});
+
 				for (const worker of pendingWorkers) {
 					timedOutWorkerFiles.add(worker.file);
 					worker.exit();
 				}
-
-				runStatus.emitStateChange({type: 'timeout', period: timeout, timedOutWorkerFiles});
 			}, timeout);
 		} else {
 			restartTimer = Object.assign(() => {}, {cancel() {}});
 		}
+
+		this._interruptHandler = () => {
+			if (bailed) {
+				// Exiting already
+				return;
+			}
+
+			// Prevent new test files from running
+			bailed = true;
+
+			// Make sure we don't run the timeout handler
+			restartTimer.cancel();
+
+			runStatus.emitStateChange({type: 'interrupt'});
+
+			for (const worker of pendingWorkers) {
+				worker.exit();
+			}
+		};
 
 		// Find all test files.
 		return new AvaFiles({cwd: apiOptions.resolveTestsFrom, files, extensions: this._allExtensions}).findTestFiles()

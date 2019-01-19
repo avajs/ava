@@ -10,7 +10,7 @@ const {execCli} = require('../helper/cli');
 test('timeout', t => {
 	execCli(['long-running.js', '-T', '1s'], (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /Exited because no new tests completed within the last 1000ms of inactivity/);
+		t.match(stdout, /Timed out/);
 		t.end();
 	});
 });
