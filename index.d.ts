@@ -395,13 +395,17 @@ export class AssertionError extends Error {
 // that is because in typescript, it will be required to check if it is not
 // null all the time.
 export type AttemptReturnValue = Promise<null | {
-	commit: () => void,
-	discard: () => void,
+	commit: (opts?: CommitDiscardOptions) => void,
+	discard: (opts?: CommitDiscardOptions) => void,
 	passed: boolean,
 	errors: AssertionError[],
 	title: string,
 	logs: string[],
 }> & { discard: () => void }
+
+export interface CommitDiscardOptions {
+	retainLogs?: boolean
+}
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
 export interface CbExecutionContext<Context = {}> extends ExecutionContext<Context> {
