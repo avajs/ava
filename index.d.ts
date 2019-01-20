@@ -381,6 +381,11 @@ export interface TimeoutFn {
 
 export interface TryFn<Context> {
 	<T extends any[]>(
+		title: string,
+		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
+		...args: T,
+	): AttemptReturnValue;
+	<T extends any[]>(
 		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
 		...args: T
 	): AttemptReturnValue;
