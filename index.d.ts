@@ -391,17 +391,14 @@ export interface TryFn<Context> {
 export class AssertionError extends Error {
 }
 
-// todo: would rather remove 'null |' from Promise definition
-// that is because in typescript, it will be required to check if it is not
-// null all the time.
-export type AttemptReturnValue = Promise<null | {
+export type AttemptReturnValue = Promise<{
 	commit: (opts?: CommitDiscardOptions) => void,
 	discard: (opts?: CommitDiscardOptions) => void,
 	passed: boolean,
 	errors: AssertionError[],
 	title: string,
 	logs: string[],
-}> & { discard: () => void }
+}>
 
 export interface CommitDiscardOptions {
 	retainLogs?: boolean

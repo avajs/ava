@@ -1038,55 +1038,6 @@ test('try-commit does not fail when calling discard twice', t => {
 	});
 });
 
-test('try-commit does not fail when calling discard on promise twice', t => {
-	return ava(a => {
-		const pr = a.try(b => b.pass());
-		pr.discard();
-		pr.discard();
-
-		return pr.then(res => {
-			t.is(res, null);
-		});
-	}).run().then(result => {
-		t.false(result.passed);
-		t.ok(result.error);
-		t.match(result.error.message, /Test finished without running any assertions/);
-		t.is(result.error.name, 'Error');
-	});
-});
-
-test('try-commit fails when calling discard on promise after attempt committed', t => {
-	return ava(a => {
-		const attemptPromise = a.try(b => b.pass());
-		return attemptPromise.then(res => {
-			t.true(res.passed);
-			res.commit();
-			attemptPromise.discard();
-		});
-	}).run().then(result => {
-		t.false(result.passed);
-		t.ok(result.error);
-		t.match(result.error.message, /Attempt is already committed/);
-		t.is(result.error.name, 'Error');
-	});
-});
-
-test('try-commit does not fail when calling discard on promise after attempt discarded', t => {
-	return ava(a => {
-		const attemptPromise = a.try(b => b.pass());
-		return attemptPromise.then(res => {
-			t.true(res.passed);
-			res.discard();
-			attemptPromise.discard();
-		});
-	}).run().then(result => {
-		t.false(result.passed);
-		t.ok(result.error);
-		t.match(result.error.message, /Test finished without running any assertions/);
-		t.is(result.error.name, 'Error');
-	});
-});
-
 test('try-commit allows planning inside the try', t => {
 	return ava(a => {
 		return a.try(b => {
