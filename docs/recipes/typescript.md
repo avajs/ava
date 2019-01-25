@@ -180,3 +180,9 @@ test('throwsAsync', async t => {
 ```
 
 Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
+
+## Common Problems
+
+"error TS5056: Cannot write file ... because it would be overwritten by multiple input files."
+This can happen in certain situations if you have `"allowJs": true` in your tsconfig. Set ts-node to ignore js using the env. variable TS_NODE_COMPILER_OPTIONS='{"allowJs": false}'.
+
