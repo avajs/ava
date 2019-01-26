@@ -764,3 +764,36 @@ test('implementation runs with null scope', t => {
 		t.is(this, null);
 	}).run();
 });
+
+test('timeout with promise', t => {
+	return ava(a => {
+		a.timeout(10);
+		return delay(200);
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.match(result.error.message, /timeout/);
+	});
+});
+
+test('timeout with cb', t => {
+	return ava.cb(a => {
+		a.timeout(10);
+		setTimeout(() => a.end(), 200);
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.match(result.error.message, /timeout/);
+	});
+});
+
+test('timeout is refreshed on assert', t => {
+	return ava.cb(a => {
+		a.timeout(10);
+		a.plan(3);
+		setTimeout(() => a.pass(), 5);
+		setTimeout(() => a.pass(), 10);
+		setTimeout(() => a.pass(), 15);
+		setTimeout(() => a.end(), 20);
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});

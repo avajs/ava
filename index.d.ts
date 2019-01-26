@@ -348,6 +348,7 @@ export interface ExecutionContext<Context = {}> extends Assertions {
 
 	log: LogFn;
 	plan: PlanFn;
+	timeout: TimeoutFn;
 }
 
 export interface LogFn {
@@ -367,6 +368,14 @@ export interface PlanFn {
 
 	/** Don't plan assertions. */
 	skip(count: number): void;
+}
+
+export interface TimeoutFn {
+	/**
+	 * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
+	 * The timeout is reset each time an assertion is made.
+	 */
+	(ms: number): void;
 }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
