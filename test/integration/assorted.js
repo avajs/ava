@@ -10,10 +10,22 @@ const {execCli} = require('../helper/cli');
 test('timeout', t => {
 	execCli(['long-running.js', '-T', '1s'], (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /Exited because no new tests completed within the last 1000ms of inactivity/);
+		t.match(stdout, /Timed out/);
 		t.end();
 	});
 });
+
+// FIXME: This test fails in CI, but not locally. Re-enable at some point…
+// test('interrupt', t => {
+// 	const proc = execCli(['long-running.js'], (_, stdout) => {
+// 		t.match(stdout, /SIGINT/);
+// 		t.end();
+// 	});
+//
+// 	setTimeout(() => {
+// 		proc.kill('SIGINT');
+// 	}, 2000);
+// });
 
 test('include anonymous functions in error reports', t => {
 	execCli('error-in-anonymous-function.js', (err, stdout) => {
