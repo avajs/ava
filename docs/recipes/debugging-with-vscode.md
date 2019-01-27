@@ -15,7 +15,7 @@ Add following to the `configurations` object:
 	"type": "node",
 	"request": "launch",
 	"name": "Run AVA test",
-	"program": "${workspaceRoot}/node_modules/ava/profile.js",
+	"program": "${workspaceFolder}/node_modules/ava/profile.js",
 	"args": [
 	  "${file}"
 	],
@@ -46,7 +46,7 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
 	"type": "node",
 	"request": "launch",
 	"name": "Run AVA test serially",
-	"program": "${workspaceRoot}/node_modules/ava/profile.js",
+	"program": "${workspaceFolder}/node_modules/ava/profile.js",
 	"args": [
 	  "${file}",
 	  "--serial"
