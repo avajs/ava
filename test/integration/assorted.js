@@ -15,6 +15,17 @@ test('timeout', t => {
 	});
 });
 
+test('interrupt', t => {
+	const proc = execCli(['long-running.js'], (_, stdout) => {
+		t.match(stdout, /SIGINT/);
+		t.end();
+	});
+
+	setTimeout(() => {
+		proc.kill('SIGINT');
+	}, 2000);
+});
+
 test('include anonymous functions in error reports', t => {
 	execCli('error-in-anonymous-function.js', (err, stdout) => {
 		t.ok(err);
