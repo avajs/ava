@@ -384,11 +384,11 @@ export interface TryFn<Context> {
 		title: string,
 		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
 		...args: T,
-	): AttemptReturnValue;
+	): AttemptResult;
 	<T extends any[]>(
 		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
 		...args: T
-	): AttemptReturnValue;
+	): AttemptResult;
 
 	skip(...values: Array<any>): void;
 }
@@ -396,7 +396,7 @@ export interface TryFn<Context> {
 export class AssertionError extends Error {
 }
 
-export type AttemptReturnValue = Promise<{
+export type AttemptResult = Promise<{
 	/**
 	 * Commit the attempt
 	 */
