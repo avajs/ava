@@ -397,15 +397,36 @@ export class AssertionError extends Error {
 }
 
 export type AttemptReturnValue = Promise<{
+	/**
+	 * Commit the attempt
+	 */
 	commit: (opts?: CommitDiscardOptions) => void,
+	/**
+	 * Discard the attempt
+	 */
 	discard: (opts?: CommitDiscardOptions) => void,
+	/**
+	 * The attempt succeeded or failed
+	 */
 	passed: boolean,
+	/**
+	 * Assertion errors raised in the attempt
+	 */
 	errors: AssertionError[],
+	/**
+	 * Title of the attempt to distinguish attempts from each other
+	 */
 	title: string,
+	/**
+	 * Strings that were logged in the attempt
+	 */
 	logs: string[],
 }>
 
 export interface CommitDiscardOptions {
+	/**
+	 * The logs created in the attempt could be either discarded or passed to the parent test
+	 */
 	retainLogs?: boolean
 }
 
