@@ -3,7 +3,7 @@ require('../lib/chalk').set();
 require('../lib/worker/options').set({color: false});
 
 const path = require('path');
-const test = require('tap').test;
+const {test} = require('tap');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
 
