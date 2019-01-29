@@ -16,6 +16,8 @@ $ npx ava --help
     --timeout, -T           Set global timeout
     --serial, -s            Run tests serially
     --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
+    --single-process        Run tests in single process (not isolated)
+    --share-forks           Run tests in shared forks
     --verbose, -v           Enable verbose output
     --tap, -t               Generate TAP output
     --color                 Force color output

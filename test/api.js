@@ -8,6 +8,7 @@ const del = require('del');
 const {test} = require('tap');
 const Api = require('../api');
 const babelPipeline = require('../lib/babel-pipeline');
+const ForkTestPool = require('../lib/test-pools/fork-test-pool');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
@@ -1193,8 +1194,10 @@ test('using --match with matching tests will only report those passing tests', t
 
 function generatePassDebugTests(execArgv, expectedInspectIndex) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
-		return api._computeForkExecArgv()
+		const apiOptions = {testOnlyExecArgv: execArgv};
+		const forkTestPool = new ForkTestPool({apiOptions});
+
+		return forkTestPool._computeForkExecArgv()
 			.then(result => {
 				t.true(result.length === execArgv.length);
 				if (expectedInspectIndex === -1) {

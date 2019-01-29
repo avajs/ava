@@ -27,6 +27,8 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 		"cache": true,
 		"concurrency": 5,
 		"failFast": true,
+		"shareForks": true,
+		"singleProcess": true,
 		"failWithoutAssertions": false,
 		"tap": true,
 		"verbose": true,
@@ -53,6 +55,8 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
+- `shareForks`: run tests in shared forks
+- `singleProcess`: run tests in single process (not isolated, might not work for all tests)
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output

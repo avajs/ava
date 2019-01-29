@@ -2,14 +2,13 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const debug = require('debug')('ava:api');
 const commonPathPrefix = require('common-path-prefix');
 const escapeStringRegexp = require('escape-string-regexp');
 const uniqueTempDir = require('unique-temp-dir');
 const isCi = require('is-ci');
 const resolveCwd = require('resolve-cwd');
 const debounce = require('lodash.debounce');
-const Bluebird = require('bluebird');
-const getPort = require('get-port');
 const arrify = require('arrify');
 const makeDir = require('make-dir');
 const ms = require('ms');
@@ -18,8 +17,11 @@ const babelPipeline = require('./lib/babel-pipeline');
 const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
 const AvaFiles = require('./lib/ava-files');
-const fork = require('./lib/fork');
 const serializeError = require('./lib/serialize-error');
+
+const ForkTestPool = require('./lib/test-pools/fork-test-pool');
+const SharedForkTestPool = require('./lib/test-pools/shared-fork-test-pool');
+const SingleProcessTestPool = require('./lib/test-pools/single-process-test-pool');
 
 function resolveModules(modules) {
 	return arrify(modules).map(name => {
@@ -52,7 +54,7 @@ class Api extends Emittery {
 
 	run(files, runtimeOptions = {}) {
 		const apiOptions = this.options;
-
+		this.bailed = false;
 		// Each run will have its own status. It can only be created when test files
 		// have been found.
 		let runStatus;
@@ -60,7 +62,6 @@ class Api extends Emittery {
 
 		// Track active forks and manage timeouts.
 		const failFast = apiOptions.failFast === true;
-		let bailed = false;
 		const pendingWorkers = new Set();
 		const timedOutWorkerFiles = new Set();
 		let restartTimer;
@@ -71,7 +72,7 @@ class Api extends Emittery {
 				// If failFast is active, prevent new test files from running after
 				// the current ones are exited.
 				if (failFast) {
-					bailed = true;
+					this.bailed = true;
 				}
 
 				runStatus.emitStateChange({type: 'timeout', period: timeout});
@@ -86,13 +87,13 @@ class Api extends Emittery {
 		}
 
 		this._interruptHandler = () => {
-			if (bailed) {
+			if (this.bailed) {
 				// Exiting already
 				return;
 			}
 
 			// Prevent new test files from running
-			bailed = true;
+			this.bailed = true;
 
 			// Make sure we don't run the timeout handler
 			restartTimer.cancel();
@@ -150,7 +151,7 @@ class Api extends Emittery {
 
 					if (failFast && (record.type === 'hook-failed' || record.type === 'test-failed' || record.type === 'worker-failed')) {
 						// Prevent new test files from running once a test has failed.
-						bailed = true;
+						this.bailed = true;
 
 						// Try to stop currently scheduled tests.
 						for (const worker of pendingWorkers) {
@@ -204,43 +205,28 @@ class Api extends Emittery {
 							concurrency = 1;
 						}
 
-						// Try and run each file, limited by `concurrency`.
-						return Bluebird.map(files, file => {
-							// No new files should be run once a test has timed out or failed,
-							// and failFast is enabled.
-							if (bailed) {
-								return;
-							}
+						// Default to using a new fork for each test (provides most isolation)
+						let ProcessPool = ForkTestPool;
 
-							return this._computeForkExecArgv().then(execArgv => {
-								const options = Object.assign({}, apiOptions, {
-									// If we're looking for matches, run every single test process in exclusive-only mode
-									runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
-								});
-								if (precompilation) {
-									options.cacheDir = precompilation.cacheDir;
-									options.precompiled = precompilation.map;
-								} else {
-									options.precompiled = {};
-								}
+						if (apiOptions.shareForks) {
+							ProcessPool = SharedForkTestPool;
+						} else if (apiOptions.singleProcess) {
+							ProcessPool = SingleProcessTestPool;
+						}
 
-								if (runtimeOptions.updateSnapshots) {
-									// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
-									options.updateSnapshots = true;
-								}
+						debug('using ', ProcessPool.name);
 
-								const worker = fork(file, options, execArgv);
-								runStatus.observeWorker(worker, file);
+						const testPool = new ProcessPool({
+							api: this,
+							runStatus,
+							apiOptions,
+							concurrency,
+							restartTimer,
+							pendingWorkers,
+							precompilation
+						});
 
-								pendingWorkers.add(worker);
-								worker.promise.then(() => { // eslint-disable-line max-nested-callbacks
-									pendingWorkers.delete(worker);
-								});
-								restartTimer();
-
-								return worker.promise;
-							});
-						}, {concurrency});
+						return testPool.run(files, runtimeOptions);
 					})
 					.catch(err => {
 						runStatus.emitStateChange({type: 'internal-error', err: serializeError('Internal error', false, err)});
@@ -288,54 +274,6 @@ class Api extends Emittery {
 			precompileFull
 		};
 		return this._precompiler;
-	}
-
-	_computeForkExecArgv() {
-		const execArgv = this.options.testOnlyExecArgv || process.execArgv;
-		if (execArgv.length === 0) {
-			return Promise.resolve(execArgv);
-		}
-
-		let debugArgIndex = -1;
-
-		// --inspect-brk is used in addition to --inspect to break on first line and wait
-		execArgv.some((arg, index) => {
-			const isDebugArg = /^--inspect(-brk)?($|=)/.test(arg);
-			if (isDebugArg) {
-				debugArgIndex = index;
-			}
-
-			return isDebugArg;
-		});
-
-		const isInspect = debugArgIndex >= 0;
-		if (!isInspect) {
-			execArgv.some((arg, index) => {
-				const isDebugArg = /^--debug(-brk)?($|=)/.test(arg);
-				if (isDebugArg) {
-					debugArgIndex = index;
-				}
-
-				return isDebugArg;
-			});
-		}
-
-		if (debugArgIndex === -1) {
-			return Promise.resolve(execArgv);
-		}
-
-		return getPort().then(port => {
-			const forkExecArgv = execArgv.slice();
-			let flagName = isInspect ? '--inspect' : '--debug';
-			const oldValue = forkExecArgv[debugArgIndex];
-			if (oldValue.indexOf('brk') > 0) {
-				flagName += '-brk';
-			}
-
-			forkExecArgv[debugArgIndex] = `${flagName}=${port}`;
-
-			return forkExecArgv;
-		});
 	}
 }
 
