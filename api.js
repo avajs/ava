@@ -214,7 +214,25 @@ class Api extends Emittery {
 							ProcessPool = SingleProcessTestPool;
 						}
 
+						debug('got concurrency', apiOptions.concurrency);
 						debug('using ', ProcessPool.name);
+
+						// Initialize options to pass to workers
+						const workerOptions = Object.assign({}, apiOptions, {
+							// If we're looking for matches, run every single test process in exclusive-only mode
+							runOnlyExclusive: apiOptions.match.length > 0 || runtimeOptions.runOnlyExclusive === true
+						});
+						if (precompilation) {
+							workerOptions.cacheDir = precompilation.cacheDir;
+							workerOptions.precompiled = precompilation.map;
+						} else {
+							workerOptions.precompiled = {};
+						}
+
+						if (runtimeOptions.updateSnapshots) {
+							// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
+							workerOptions.updateSnapshots = true;
+						}
 
 						const testPool = new ProcessPool({
 							api: this,
@@ -222,6 +240,7 @@ class Api extends Emittery {
 							apiOptions,
 							concurrency,
 							restartTimer,
+							workerOptions,
 							pendingWorkers,
 							precompilation
 						});

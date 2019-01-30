@@ -42,6 +42,26 @@ function apiCreator(options = {}) {
 	return instance;
 }
 
+test('runs test in single process mode correctly', t => {
+	const api = apiCreator({singleProcess: true});
+
+	return api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+			t.is(runStatus.stats.failedTests, 1);
+		});
+});
+
+test('runs test in shared fork correctly', t => {
+	const api = apiCreator({shareForks: true});
+
+	return api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
+		.then(runStatus => {
+			t.is(runStatus.stats.passedTests, 1);
+			t.is(runStatus.stats.failedTests, 1);
+		});
+});
+
 test('ES2015 support', t => {
 	const api = apiCreator();
 
