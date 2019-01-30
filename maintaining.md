@@ -65,13 +65,19 @@ $ npm install --global iron-node devtool
 In the root of a project using AVA, run:
 
 ```
-$ iron-node node_modules/ava/profile.js <test-file>
+$ iron-node node_modules/ava/cli.js --single-process <test-file>
 ```
 
 Or:
 
 ```
-$ devtool node_modules/ava/profile.js <test-file>
+$ devtool node_modules/ava/cli.js --single-process <test-file>
+```
+
+Or:
+
+```
+$ node --inspect node_modules/ava/cli.js --single-process <test-file>
 ```
 
 Once the Dev Tools window has loaded, activate Memory or CPU profiling, and then hit <kbd>Cmd</kbd> <kbd>R</kbd> to rerun the tests.
