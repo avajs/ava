@@ -30,7 +30,7 @@ function withNodeEnv(value, run) {
 
 function apiCreator(options = {}) {
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
-	options.concurrency = 2;
+	options.concurrency = options.concurrency || 2;
 	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
@@ -53,12 +53,15 @@ test('runs test in single process mode correctly', t => {
 });
 
 test('runs test in shared fork correctly', t => {
-	const api = apiCreator({shareForks: true});
+	const api = apiCreator({shareForks: true, concurrency: 1});
 
-	return api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
+	return api.run([
+		path.join(__dirname, 'fixture/one-pass-one-fail.js'),
+		path.join(__dirname, 'fixture/test-count.js')
+	])
 		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 1);
-			t.is(runStatus.stats.failedTests, 1);
+			t.is(runStatus.stats.passedTests, 2);
+			t.is(runStatus.stats.failedTests, 2);
 		});
 });
 

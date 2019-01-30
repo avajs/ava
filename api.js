@@ -217,6 +217,8 @@ class Api extends Emittery {
 						debug('got concurrency', apiOptions.concurrency);
 						debug('using ', ProcessPool.name);
 
+						debug('use workers', apiOptions.workerThreads);
+
 						// Initialize options to pass to workers
 						const workerOptions = Object.assign({}, apiOptions, {
 							// If we're looking for matches, run every single test process in exclusive-only mode

@@ -56,6 +56,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `shareForks`: run tests in shared forks
+- `workerThreads`: run tests in worker threads (requires supported node version)
 - `singleProcess`: run tests in single process (not isolated, might not work for all tests)
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
