@@ -216,7 +216,6 @@ class Api extends Emittery {
 
 						debug('got concurrency', apiOptions.concurrency);
 						debug('using ', ProcessPool.name);
-
 						debug('use workers', apiOptions.workerThreads);
 
 						// Initialize options to pass to workers
