@@ -42,6 +42,23 @@ function apiCreator(options = {}) {
 	return instance;
 }
 
+// Can only run Worker Threads test in node >= 11.8
+const versionParts = process.versions.node.split('.');
+const majorVersion = parseInt(versionParts[0], 10);
+const minorVersion = parseInt(versionParts[1], 10);
+
+if (majorVersion > 10 && minorVersion > 7) {
+	test('runs test in worker thread correctly', t => {
+		const api = apiCreator({workerThreads: true});
+
+		return api.run([path.join(__dirname, 'fixture/one-pass-one-fail.js')])
+			.then(runStatus => {
+				t.is(runStatus.stats.passedTests, 1);
+				t.is(runStatus.stats.failedTests, 1);
+			});
+	});
+}
+
 test('runs test in single process mode correctly', t => {
 	const api = apiCreator({singleProcess: true});
 
