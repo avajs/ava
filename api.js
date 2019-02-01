@@ -17,6 +17,7 @@ const babelPipeline = require('./lib/babel-pipeline');
 const Emittery = require('./lib/emittery');
 const RunStatus = require('./lib/run-status');
 const AvaFiles = require('./lib/ava-files');
+const Fork = require('./lib/fork');
 const serializeError = require('./lib/serialize-error');
 
 const ForkTestPool = require('./lib/test-pools/fork-test-pool');
@@ -234,6 +235,8 @@ class Api extends Emittery {
 							// Don't use in Object.assign() since it'll override options.updateSnapshots even when false.
 							workerOptions.updateSnapshots = true;
 						}
+
+						this.Fork = Fork;
 
 						const testPool = new ProcessPool({
 							api: this,
