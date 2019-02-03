@@ -52,6 +52,13 @@ test('loads config from factory function', t => {
 	t.end();
 });
 
+test('supports require() inside config file', t => {
+	changeDir('require');
+	const conf = loadConfig();
+	t.is(conf.files, 'config-file-cjs-test-value');
+	t.end();
+});
+
 test('throws an error if a config factory returns a promise', t => {
 	changeDir('factory-no-promise-return');
 	t.throws(loadConfig);

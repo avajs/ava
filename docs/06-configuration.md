@@ -69,8 +69,9 @@ Note that providing files on the CLI overrides the `files` option. If you've con
 
 To use an `ava.config.js` file:
 
- 1. It must be in the same directory as your `package.json`
- 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
+1. It must be in the same directory as your `package.json`
+2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
+3. You must use `export default`, though [`require()`](https://nodejs.org/api/modules.html#modules_require_id) is available to load non-ES modules
 
 The config file must have a default export, using ES modules. It can either be a plain object or a factory function which returns a plain object:
 
