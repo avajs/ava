@@ -116,7 +116,9 @@ runStatus.observeWorker({
 		process.send = data => {
 			if (data && data.ava) {
 				const evt = data.ava;
-				if (evt.type === 'ping') {
+				if (evt.type === 'ready-for-options') {
+					process.emit('message', {ava: {type: 'options', options: opts}});
+				} else if (evt.type === 'ping') {
 					if (console.profileEnd) {
 						console.profileEnd();
 					}
@@ -151,10 +153,6 @@ reporter.startRun({
 process.on('beforeExit', () => {
 	process.exitCode = process.exitCode || runStatus.suggestExitCode({matching: false});
 });
-
-// The "subprocess" will read process.argv[2] for options
-process.argv[2] = JSON.stringify(opts);
-process.argv.length = 3;
 
 if (console.profile) {
 	console.profile('AVA test-worker process');
