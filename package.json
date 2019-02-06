@@ -16,7 +16,8 @@
 		"test:flow": "flow check test/flow-types",
 		"test:tap": "tap --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
-		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap"
+		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap",
+		"postversion": "./docs/updateVersions.js"
 	},
 	"files": [
 		"lib",
@@ -153,6 +154,7 @@
 		"get-stream": "^4.1.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
+		"ky": "^0.7.1",
 		"lolex": "^3.0.0",
 		"nyc": "^13.1.0",
 		"proxyquire": "^2.1.0",

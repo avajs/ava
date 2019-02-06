@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/babel.md)
 
-AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. We do this by compiling test and helper files using our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset. We also use a [second preset, `@ava/transform-test-files`](https://github.com/avajs/babel-preset-transform-test-files) to enable [enhanced assertion messages](../03-assertions.md#enhanced-assertion-messages) and detect improper use of `t.throws()` assertions.
+AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. We do this by compiling test and helper files using our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset. We also use a [second preset, `@ava/transform-test-files`](https://github.com/avajs/babel-preset-transform-test-files) to enable [enhanced assertion messages](../gui../guide/03-assertions.md#enhanced-assertion-messages) and detect improper use of `t.throws()` assertions.
 
 By default our Babel pipeline is applied to test and helper files ending in `.js`. If your project uses Babel then we'll automatically compile these files using your project's Babel configuration. The `@ava/transform-helper-files` preset is applied first, and the `@ava/stage-4` last.
 
@@ -47,16 +47,13 @@ You can configure AVA to recognize additional file extensions and compile those 
 {
 	"ava": {
 		"babel": {
-			"extensions": [
-				"js",
-				"jsx"
-			]
+			"extensions": ["js", "jsx"]
 		}
 	}
 }
 ```
 
-See also AVA's [`extensions` option](../06-configuration.md#options).
+See also AVA's [`extensions` option](../guide/06-configuration.md#options).
 
 ## Make AVA skip your project's Babel options
 
@@ -88,16 +85,14 @@ You can disable AVA's stage-4 preset.
 	"ava": {
 		"babel": {
 			"testOptions": {
-				"presets": [
-					["module:ava/stage-4", false]
-				]
+				"presets": [["module:ava/stage-4", false]]
 			}
 		}
 	}
 }
 ```
 
-Note that this *does not* stop AVA from compiling your test files using Babel.
+Note that this _does not_ stop AVA from compiling your test files using Babel.
 
 If you want, you can disable the preset in your project's Babel configuration.
 
@@ -112,9 +107,7 @@ By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This 
 	"ava": {
 		"babel": {
 			"testOptions": {
-				"presets": [
-					["module:ava/stage-4", {"modules": false}]
-				]
+				"presets": [["module:ava/stage-4", { "modules": false }]]
 			}
 		}
 	}
@@ -151,9 +144,7 @@ You can enable the `polyfill` module by adding it to AVA's `require` option.
 ```json
 {
 	"ava": {
-		"require": [
-			"@babel/polyfill"
-		]
+		"require": ["@babel/polyfill"]
 	}
 }
 ```
@@ -171,23 +162,21 @@ You can enable the `register` module by adding it to AVA's `require` option.
 ```json
 {
 	"ava": {
-		"require": [
-			"@babel/register"
-		]
+		"require": ["@babel/register"]
 	}
 }
 ```
 
 You'll need to install `@babel/register` yourself.
 
-`@babel/register` will *also* process your test and helper files. For most use cases this is unnecessary. If you create a new file that requires `@babel/register` you can tell it which file paths to ignore. For instance in your `test` directory create `_register.js`:
+`@babel/register` will _also_ process your test and helper files. For most use cases this is unnecessary. If you create a new file that requires `@babel/register` you can tell it which file paths to ignore. For instance in your `test` directory create `_register.js`:
 
 ```js
 // test/_register.js:
 require('@babel/register')({
 	// These patterns are relative to the project directory (where the `package.json` file lives):
 	ignore: ['node_modules/*', 'test/*']
-});
+})
 ```
 
 Now instead of requiring `@babel/register`, require `test/_register` instead.
@@ -197,14 +186,11 @@ Now instead of requiring `@babel/register`, require `test/_register` instead.
 ```json
 {
 	"ava": {
-		"require": [
-			"test/_register.js"
-		]
+		"require": ["test/_register.js"]
 	}
 }
 ```
 
-Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources *before* running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
+Note that loading `@babel/register` in every worker process has a non-trivial performance cost. If you have lots of test files, you may want to consider using a build step to compile your sources _before_ running your tests. This isn't ideal, since it complicates using AVA's watch mode, so we recommend using `@babel/register` until the performance penalty becomes too great. Setting up a precompilation step is out of scope for this document, but we recommend you check out one of the many [build systems that support Babel](http://babeljs.io/docs/setup/). There is an [issue](https://github.com/avajs/ava/issues/577) discussing ways we could make this experience better.
 
-
-[Babel options]: https://babeljs.io/docs/en/options
+[babel options]: https://babeljs.io/docs/en/options

@@ -45,7 +45,7 @@ And then use:
 $ npm run watch:test
 ```
 
-Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config].
+Finally you could configure AVA to _always_ run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config].
 
 **`package.json`:**
 
@@ -61,11 +61,11 @@ Please note that the TAP reporter is unavailable when using watch mode.
 
 ## Requirements
 
-AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
+AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the _[Install Troubleshooting]_ section of `chokidar` documentation for how to resolve the installation problems with chokidar.
 
 ## Source files and test files
 
-In AVA there's a distinction between *source files* and *test files*. As you can imagine the *test files* contain your tests. *Source files* are all other files that are needed for the tests to run, be it your source code or test fixtures.
+In AVA there's a distinction between _source files_ and _test files_. As you can imagine the _test files_ contain your tests. _Source files_ are all other files that are needed for the tests to run, be it your source code or test fixtures.
 
 By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
@@ -117,7 +117,7 @@ $ npm test -- --watch --verbose
 Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/avajs/ava/issues) any issues you encounter. Thanks!
 
 [`chokidar`]: https://github.com/paulmillr/chokidar
-[Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
+[install troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
-[`.only` modifier]: ../01-writing-tests.md#running-specific-tests
-[config]: ../06-configuration.md
+[`.only` modifier]: ../guide/01-writing-tests.md#running-specific-tests
+[config]: ../guide/06-configuration.md
