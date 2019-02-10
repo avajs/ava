@@ -384,11 +384,11 @@ export interface TryFn<Context> {
 		title: string,
 		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
 		...args: T,
-	): AttemptResult;
+	): Promise<AttemptResult>;
 	<T extends any[]>(
 		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
 		...args: T
-	): AttemptResult;
+	): Promise<AttemptResult>;
 
 	skip(...values: Array<any>): void;
 }
@@ -396,36 +396,41 @@ export interface TryFn<Context> {
 export class AssertionError extends Error {
 }
 
-export type AttemptResult = Promise<{
+export interface AttemptResult {
 	/**
-	 * Commit the attempt
+	 * Commit the attempt.
 	 */
-	commit: (opts?: CommitDiscardOptions) => void,
-	/**
-	 * Discard the attempt
-	 */
-	discard: (opts?: CommitDiscardOptions) => void,
-	/**
-	 * The attempt succeeded or failed
-	 */
-	passed: boolean,
-	/**
-	 * Assertion errors raised in the attempt
-	 */
-	errors: AssertionError[],
-	/**
-	 * Title of the attempt to distinguish attempts from each other
-	 */
-	title: string,
-	/**
-	 * Strings that were logged in the attempt
-	 */
-	logs: string[],
-}>
+	commit: (opts?: CommitDiscardOptions) => void;
 
-export interface CommitDiscardOptions {
 	/**
-	 * The logs created in the attempt could be either discarded or passed to the parent test
+	 * Discard the attempt.
+	 */
+	discard: (opts?: CommitDiscardOptions) => void;
+
+	/**
+	 * Indicates whether attempt passed or failed.
+	 */
+	passed: boolean;
+
+	/**
+	 * Assertion errors raised during the attempt.
+	 */
+	errors: AssertionError[];
+
+	/**
+	 * Title of the attempt, helps you distinguish attempts from each other.
+	 */
+	title: string;
+
+	/**
+	 * Logs created during the attempt. Contains formatted values.
+	 */
+	logs: string[];
+}
+
+export type CommitDiscardOptions = {
+	/**
+	 * Whether the logs should be included in the parent test.
 	 */
 	retainLogs?: boolean
 }
