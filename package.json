@@ -168,7 +168,6 @@
 		"xo": "^0.24.0",
 		"zen-observable": "^0.8.13"
 	},
-	"typings": "index.d.ts",
 	"xo": {
 		"ignores": [
 			"media/**",
