@@ -1,6 +1,5 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({});
 
 const proxyquire = require('proxyquire').noPreserveCache();
 const {test} = require('tap');

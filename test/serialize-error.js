@@ -1,6 +1,5 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({});
 
 const fs = require('fs');
 const path = require('path');
