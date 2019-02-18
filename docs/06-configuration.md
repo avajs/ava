@@ -62,6 +62,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
 - `babel`: test file specific Babel options. See our [Babel recipe](./recipes/babel.md#configuring-babel) for more details
 - `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
+- `timeouts`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [Timeout tests](./test-timeouts.md#Test-timouts) for more timeout options.
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
