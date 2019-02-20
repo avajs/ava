@@ -26,7 +26,7 @@ test('formatted', t => {
 });
 
 test('power-assert', t => {
-	const foo = 'bar';
+	const foo = '';
 	t.assert(foo);
 });
 
