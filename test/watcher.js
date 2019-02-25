@@ -71,7 +71,10 @@ group('chokidar', (beforeEach, test, group) => {
 		debug = sinon.spy();
 
 		reporter = {
-			endRun: sinon.spy()
+			endRun: sinon.spy(),
+			lineWriter: {
+				writeLine: sinon.spy()
+			}
 		};
 
 		api = {
@@ -221,7 +224,7 @@ group('chokidar', (beforeEach, test, group) => {
 	});
 
 	test('starts running the initial tests', t => {
-		t.plan(4);
+		t.plan(6);
 
 		let done;
 		api.run.returns(new Promise(resolve => {
@@ -234,11 +237,13 @@ group('chokidar', (beforeEach, test, group) => {
 		t.ok(api.run.calledOnce);
 		t.strictDeepEqual(api.run.firstCall.args, [files, defaultApiOptions]);
 
-		// The endRun method is only called after the run promise fulfils
+		// The endRun and lineWriter.writeLine methods are only called after the run promise fulfils
 		t.ok(reporter.endRun.notCalled);
+		t.ok(reporter.lineWriter.writeLine.notCalled);
 		done();
 		return delay().then(() => {
 			t.ok(reporter.endRun.calledOnce);
+			t.ok(reporter.lineWriter.writeLine.calledOnce)
 		});
 	});
 
