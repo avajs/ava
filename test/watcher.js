@@ -243,7 +243,7 @@ group('chokidar', (beforeEach, test, group) => {
 		done();
 		return delay().then(() => {
 			t.ok(reporter.endRun.calledOnce);
-			t.ok(reporter.lineWriter.writeLine.calledOnce)
+			t.ok(reporter.lineWriter.writeLine.calledOnce);
 		});
 	});
 
