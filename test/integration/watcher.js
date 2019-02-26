@@ -4,6 +4,8 @@ const {test} = require('tap');
 const touch = require('touch');
 const {execCli} = require('../helper/cli');
 
+const END_MESSAGE = 'Type `r` and press enter to rerun tests\nType `u` and press enter to update snapshots'.replace(/\s/g, '');
+
 test('watcher reruns test files when they changed', t => {
 	let killed = false;
 
@@ -101,7 +103,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 				killed = true;
 			}, 500);
 		} else if (passedFirst && !killed) {
-			t.is(buffer.replace(/\s/g, ''), '');
+			t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE, ''), '');
 		}
 	});
 });
