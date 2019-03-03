@@ -160,7 +160,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.2.6",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^12.5.3",
+		"tap": "~12.4.1",
 		"temp-write": "^3.4.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.0.2",
