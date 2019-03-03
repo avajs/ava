@@ -326,12 +326,15 @@ stderr
   [90m~/test/fixture/report/regular/test.js:30[39m
 
    [90m29:[39m   const foo = 'bar';
-  [41m 30:   t.falsy(foo);     [49m
+  [41m 30:   t.assert(!foo);   [49m
    [90m31:[39m });                 
 
-  Value is not falsy:
+  Value is not truthy:
 
-  [34m'[39m[34mbar[39m[34m'[39m
+  [33mfalse[39m
+
+  !foo
+  [90m=>[39m [33mfalse[39m
 
   foo
   [90m=>[39m [34m'[39m[34mbar[39m[34m'[39m
