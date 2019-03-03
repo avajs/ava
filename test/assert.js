@@ -1505,7 +1505,7 @@ test('.regex() fails if passed a bad value', t => {
 		assertions.regex(42, /foo/);
 	}, {
 		assertion: 'regex',
-		imporoperUsage: true,
+		improperUsage: true,
 		message: '`t.regex()` must be called with a string',
 		values: [{label: 'Called with:', formatted: /42/}]
 	});
