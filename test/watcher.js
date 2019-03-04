@@ -10,6 +10,8 @@ const {test} = require('tap');
 const AvaFiles = require('../lib/ava-files');
 const {setImmediate} = require('../lib/now-and-timers');
 
+require('../lib/chalk').set({});
+
 // Helper to make using beforeEach less arduous
 function makeGroup(test) {
 	return (desc, fn) => {
