@@ -44,5 +44,6 @@ test('verbose reporter - timeout', t => {
 
 	t.test('single file run', run('timeoutInSingleFile'));
 	t.test('multiple files run', run('timeoutInMultipleFiles'));
+	t.test('single file with only certain tests matched run', run('timeoutWithMatch'));
 	t.end();
 });
