@@ -84,7 +84,7 @@ test('skip assertion', t => {
 
 ## Enhanced assertion messages
 
-AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) built-in, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
+AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) enabled function `.assert`, giving you more descriptive assertion messages. It reads your test and tries to infer more information from the code.
 
 Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
 
@@ -101,24 +101,24 @@ If you paste that into a Node REPL it'll return:
 AssertionError: false == true
 ```
 
-In AVA however, this test:
+With AVA's `.assert` however, this test:
 
 ```js
 test('enhanced assertions', t => {
 	const a = /foo/;
 	const b = 'bar';
 	const c = 'baz';
-	t.true(a.test(b) || b === c);
+	t.assert(a.test(b) || b === c);
 });
 ```
 
 Will output:
 
 ```
-t.true(a.test(b) || b === c)
-       |      |     |     |
-       |      "bar" "bar" "baz"
-       false
+t.assert(a.test(b) || b === c)
+         |      |     |     |
+         |      "bar" "bar" "baz"
+         false
 ```
 
 ## Custom assertions
@@ -146,6 +146,10 @@ Passing assertion.
 ### `.fail([message])`
 
 Failing assertion.
+
+### `.assert(value, [message])`
+
+Asserts that `value` is truthy. This is [`power-assert`](https://github.com/power-assert-js/power-assert) enabled.
 
 ### `.truthy(value, [message])`
 
