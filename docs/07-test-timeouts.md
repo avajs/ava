@@ -22,3 +22,4 @@ test('foo', t => {
 	// Write your assertions here
 });
 ```
+Important: There is _no default timeout_ in AVA!
