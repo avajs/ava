@@ -47,6 +47,30 @@ test('2 + 2 = 4', t => {
 });
 ```
 
+If you want to use module resolution with `esm` relative to a specific directory (such as if you use webpack's resolve.modules) you cant do so by using the `module-alias` package.
+
+First, install [`module-alias`](https://github.com/ilearnio/module-alias):
+
+```
+$ npm install module-alias
+```
+
+Then you need to configure it inside your ava configuration:
+
+**`package.json`:**
+
+```json
+{
+	"_moduleDirectories": ["my_custom/module_path"],
+	"ava": {
+		"require": [
+			"esm",
+			"module-alias/register"
+		]
+	}
+}
+
+
 You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use the following.
 
 **`package.json`:**
