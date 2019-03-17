@@ -448,10 +448,9 @@ export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
 export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
+export type UntitledMacro<Args extends any[], Context = {}> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
 /** A reusable test or hook implementation. */
-export interface Macro<Args extends any[], Context = {}> {
-	(t: ExecutionContext<Context>, ...args: Args): ImplementationResult;
-
+export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Context> & {
 	/**
 	 * Implement this function to generate a test (or hook) title whenever this macro is used. `providedTitle` contains
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
@@ -459,56 +458,32 @@ export interface Macro<Args extends any[], Context = {}> {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-/** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = Macro<Args, Context> | [Macro<Args, Context>, ...Macro<Args, Context>[]];
+type _Macro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
+/** Alias for a single macro, or an array of macros. */
+export type OneOrMoreMacros<Args extends any[], Context> = _Macro<Args, Context> | [_Macro<Args, Context>, ..._Macro<Args, Context>[]];
+
+export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export interface CbMacro<Args extends any[], Context = {}> {
 	(t: CbExecutionContext<Context>, ...args: Args): ImplementationResult;
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
+type _CbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
+
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = CbMacro<Args, Context> | [CbMacro<Args, Context>, ...CbMacro<Args, Context>[]];
-
-/** Infers the types of the additional arguments the macro implementations should be called with. */
-export type InferArgs<OneOrMore> =
-	OneOrMore extends Macro<infer Args, any> ? Args :
-	OneOrMore extends Macro<infer Args, any>[] ? Args :
-	OneOrMore extends CbMacro<infer Args, any> ? Args :
-	OneOrMore extends CbMacro<infer Args, any>[] ? Args :
-	never;
-
-export type TitleOrMacro<Context> = string | OneOrMoreMacros<any, Context>
-
-export type MacroOrFirstArg<TitleOrMacro, Context> =
-	TitleOrMacro extends string ? OneOrMoreMacros<any, Context> :
-	TitleOrMacro extends OneOrMoreMacros<any, Context> ? InferArgs<TitleOrMacro>[0] :
-	never
-
-export type TitleOrCbMacro<Context> = string | OneOrMoreCbMacros<any, Context>
-
-export type CbMacroOrFirstArg<TitleOrMacro, Context> =
-	TitleOrMacro extends string ? OneOrMoreCbMacros<any, Context> :
-	TitleOrMacro extends OneOrMoreCbMacros<any, Context> ? InferArgs<TitleOrMacro>[0] :
-	never
-
-export type RestArgs<TitleOrMacro, MacroOrFirstArg, Context> =
-	MacroOrFirstArg extends OneOrMoreMacros<any, Context> ? InferArgs<MacroOrFirstArg> :
-	MacroOrFirstArg extends OneOrMoreCbMacros<any, Context> ? InferArgs<MacroOrFirstArg> :
-	TitleOrMacro extends OneOrMoreMacros<any, Context> ? Tail<InferArgs<TitleOrMacro>> :
-	TitleOrMacro extends OneOrMoreCbMacros<any, Context> ? Tail<InferArgs<TitleOrMacro>> :
-	never
+export type OneOrMoreCbMacros<Args extends any[], Context> = _CbMacro<Args, Context> | [_CbMacro<Args, Context>, ..._CbMacro<Args, Context>[]];
 
 export interface TestInterface<Context = {}> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void
 
 	/** Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -545,10 +520,10 @@ export interface AfterInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. Additional arguments are passed to the macro. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
 	always: AlwaysInterface<Context>;
@@ -567,10 +542,10 @@ export interface AlwaysInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests are done. Additional arguments are passed to the macro. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that must call `t.end()` when it's done. */
 	cb: HookCbInterface<Context>;
@@ -586,10 +561,10 @@ export interface BeforeInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, before all tests. Additional arguments are passed to the macro. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, before all tests. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that must call `t.end()` when it's done. */
 	cb: HookCbInterface<Context>;
@@ -605,13 +580,13 @@ export interface CbInterface<Context = {}> {
 	 * Declare a concurrent test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro.
 	 */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a concurrent test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * The macro is responsible for generating a unique test title.
 	 */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a test that is expected to fail. */
 	failing: CbFailingInterface<Context>;
@@ -628,13 +603,13 @@ export interface CbFailingInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. The test is expected to fail.
 	 */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * The test is expected to fail.
 	 */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	only: CbOnlyInterface<Context>;
 	skip: CbSkipInterface<Context>;
@@ -650,13 +625,13 @@ export interface CbOnlyInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. Only this test and others declared with `.only()` are run.
 	 */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro. Only this test and others declared with `.only()` are run.
 	 */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
 export interface CbSkipInterface<Context = {}> {
@@ -664,10 +639,10 @@ export interface CbSkipInterface<Context = {}> {
 	(title: string, implementation: CbImplementation<Context>): void;
 
 	/** Skip this test. */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this test. */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
 export interface FailingInterface<Context = {}> {
@@ -678,13 +653,13 @@ export interface FailingInterface<Context = {}> {
 	 * Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro.
 	 * The test is expected to fail.
 	 */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title.
 	 * The test is expected to fail.
 	 */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
@@ -701,12 +676,12 @@ export interface HookCbInterface<Context = {}> {
 	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
 	 * Additional arguments are passed to the macro.
 	 */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
 	 */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	skip: HookCbSkipInterface<Context>;
 }
@@ -719,10 +694,10 @@ export interface HookCbSkipInterface<Context = {}> {
 	(title: string, implementation: CbImplementation<Context>): void;
 
 	/** Skip this hook. */
-	<ToM extends TitleOrCbMacro<Context>, MoA extends CbMacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this hook. */
-	(macro: OneOrMoreCbMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
 export interface HookSkipInterface<Context = {}> {
@@ -733,10 +708,10 @@ export interface HookSkipInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this hook. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this hook. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
 export interface OnlyInterface<Context = {}> {
@@ -747,13 +722,13 @@ export interface OnlyInterface<Context = {}> {
 	 * Declare a test that uses one or more macros. Additional arguments are passed to the macro.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a test that uses one or more macros. The macro is responsible for generating a unique test title.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
 export interface SerialInterface<Context = {}> {
@@ -761,12 +736,12 @@ export interface SerialInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a serial test that uses one or more macros. Additional arguments are passed to the macro. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/**
 	 * Declare a serial test that uses one or more macros. The macro is responsible for generating a unique test title.
 	 */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a serial hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -796,10 +771,10 @@ export interface SkipInterface<Context = {}> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this test. */
-	<ToM extends TitleOrMacro<Context>, MoA extends MacroOrFirstArg<ToM, Context>>(titleOrMacro: ToM, macroOrArg: MoA, ...rest: RestArgs<ToM, MoA, Context>): void;
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this test. */
-	(macro: OneOrMoreMacros<[], Context>): void
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
 export interface TodoDeclaration {
@@ -850,33 +825,3 @@ export const todo: TodoDeclaration;
 
 /** Meta data associated with the current process. */
 export const meta: MetaInterface;
-
-/*
-Tail type from <https://github.com/tycho01/typical/blob/25f11ed92c960aab1ebbf47fd6ead9e0ae51d947/src/array/Tail.ts>.
-
-MIT License
-
-Copyright (c) 2017 Thomas Crockett
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-/** Get all but the first element of a tuple. */
-export type Tail<T extends any[]> =
-	((...args: T) => any) extends ((head: any, ...tail: infer R) => any) ? R : never;
