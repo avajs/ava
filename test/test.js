@@ -1228,3 +1228,29 @@ test('try-commit returns results in the same shape as when implementations are p
 		t.true(result.passed);
 	});
 });
+
+test('try-commit abides timeout', t => {
+	return ava(a => {
+		a.timeout(10);
+		return a.try(b => {
+			b.pass();
+			return delay(200);
+		}).then(result => result.commit());
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.match(result.error.message, /timeout/);
+	});
+});
+
+test('try-commit refreshes the timeout on commit/discard', t => {
+	return ava.cb(a => {
+		a.timeout(10);
+		a.plan(3);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 5);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 10);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 15);
+		setTimeout(() => a.end(), 20);
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
