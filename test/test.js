@@ -822,6 +822,17 @@ test('try-commit works', t => {
 		});
 });
 
+test('try-commit discards failed attempt', t => {
+	return ava(a => {
+		return a
+			.try(b => b.fail())
+			.then(res => res.discard())
+			.then(() => a.pass());
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
 test('try-commit can discard produced result', t => {
 	return ava(a => {
 		return a
