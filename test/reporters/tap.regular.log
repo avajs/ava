@@ -177,7 +177,7 @@ not ok 23 - test [90m[2m›[22m[39m power-assert
     assertion: assert
     operator: '!!'
     values:
-      'Value is not truthy:': 'false'
+      'Value is not truthy:': ''''''
     at: 'assert (test.js:30:4)'
   ...
 ---tty-stream-chunk-separator
