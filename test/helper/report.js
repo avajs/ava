@@ -64,6 +64,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 
 exports.sanitizers = {
 	cwd: str => replaceString(str, process.cwd(), '~'),
+	experimentalWarning: str => str.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
@@ -80,7 +81,7 @@ exports.sanitizers = {
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
-const run = (type, reporter) => {
+const run = (type, reporter, match = []) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
 	const options = {
@@ -95,7 +96,7 @@ const run = (type, reporter) => {
 		require: [],
 		cacheEnabled: true,
 		compileEnhancements: true,
-		match: [],
+		match,
 		babelConfig: {testOptions: {}},
 		resolveTestsFrom: projectDir,
 		projectDir,
@@ -143,6 +144,7 @@ exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
 exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
+exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
 exports.edgeCases = reporter => run('edge-cases', reporter);

@@ -857,6 +857,14 @@ test('.throws()', gather(t => {
 			throw err;
 		}, {code: 'ERR_TEST'});
 	});
+
+	fails(t, () => {
+		assertions.throws(() => {
+			const err = new TypeError();
+			err.code = 1;
+			throw err;
+		}, {code: 42});
+	});
 }));
 
 test('.throws() returns the thrown error', t => {

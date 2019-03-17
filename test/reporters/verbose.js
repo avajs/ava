@@ -15,7 +15,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
 	});
 	const reporter = new VerboseReporter({
 		reportStream: tty,
@@ -44,5 +44,6 @@ test('verbose reporter - timeout', t => {
 
 	t.test('single file run', run('timeoutInSingleFile'));
 	t.test('multiple files run', run('timeoutInMultipleFiles'));
+	t.test('single file with only certain tests matched run', run('timeoutWithMatch'));
 	t.end();
 });
