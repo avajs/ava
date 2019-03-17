@@ -848,6 +848,18 @@ test('try-commit can discard produced result', t => {
 	});
 });
 
+test('try-commit fails when not all assertions were committed/discarded', t => {
+	return ava(a => {
+		a.pass();
+		return a.try(b => b.pass());
+	}).run().then(result => {
+		t.false(result.passed);
+		t.ok(result.error);
+		t.match(result.error.message, /not all attempts were committed/);
+		t.is(result.error.name, 'Error');
+	});
+});
+
 test('try-commit works with values', t => {
 	const testValue1 = 123;
 	const testValue2 = 123;
