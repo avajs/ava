@@ -207,16 +207,16 @@ class Api extends Emittery {
 						}
 
 						// Default to using a new fork for each test (provides most isolation)
-						let ProcessPool = ForkTestPool;
+						let TestPool = ForkTestPool;
 
 						if (apiOptions.shareForks) {
-							ProcessPool = SharedForkTestPool;
+							TestPool = SharedForkTestPool;
 						} else if (apiOptions.singleProcess) {
-							ProcessPool = SingleProcessTestPool;
+							TestPool = SingleProcessTestPool;
 						}
 
 						debug('got concurrency', apiOptions.concurrency);
-						debug('using ', ProcessPool.name);
+						debug('using ', TestPool.name);
 						debug('use workers', apiOptions.workerThreads);
 
 						// Initialize options to pass to workers
@@ -238,7 +238,7 @@ class Api extends Emittery {
 
 						this.Fork = Fork;
 
-						const testPool = new ProcessPool({
+						const testPool = new TestPool({
 							api: this,
 							runStatus,
 							apiOptions,

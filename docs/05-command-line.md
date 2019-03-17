@@ -17,8 +17,8 @@ $ npx ava --help
     --serial, -s            Run tests serially
     --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --single-process        Run tests in single process (not isolated)
-    --share-forks           Run tests in shared forks
-    --worker-threads        Run tests in worker threads
+    --share-forks           Run tests in shared forks (not isolated)
+    --worker-threads        Run tests in worker threads (requires node v10 with flag or v11 without)
     --verbose, -v           Enable verbose output
     --tap, -t               Generate TAP output
     --color                 Force color output
