@@ -869,7 +869,11 @@ test('try-commit works with values', t => {
 test('try-commit is properly counted', t => {
 	const instance = ava(a => {
 		return a
-			.try(b => b.pass())
+			.try(b => {
+				b.is(1, 1);
+				b.is(2, 2);
+				b.pass();
+			})
 			.then(res => {
 				t.true(res.passed);
 				t.is(instance.pendingAttemptCount, 1);
@@ -880,7 +884,7 @@ test('try-commit is properly counted', t => {
 
 	return instance.run().then(result => {
 		t.true(result.passed);
-		t.is(instance.attemptCount, 1);
+		t.is(instance.attemptCount, 3);
 	});
 });
 
