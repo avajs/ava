@@ -380,15 +380,8 @@ export interface TimeoutFn {
 }
 
 export interface TryFn<Context> {
-	<T extends any[]>(
-		title: string,
-		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
-		...args: T,
-	): Promise<AttemptResult>;
-	<T extends any[]>(
-		impl: (t: ExecutionContext<Context>, ...args: T) => ImplementationResult,
-		...args: T
-	): Promise<AttemptResult>;
+	<T extends any[]>(title: string, fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
+	<T extends any[]>(fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
 
 	skip(...values: Array<any>): void;
 }
