@@ -1169,3 +1169,62 @@ test('try-commit can be discarded', t => {
 		t.is(instance.assertCount, 0);
 	});
 });
+
+test('try-commit accepts macros', t => {
+	const macro = b => {
+		t.is(b.title, ' Title');
+		b.pass();
+	};
+
+	macro.title = providedTitle => `${providedTitle ? providedTitle : ''} Title`;
+
+	return ava(a => {
+		return a
+			.try(macro)
+			.then(res => {
+				t.true(res.passed);
+				res.commit();
+			});
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
+test('try-commit accepts multiple macros', t => {
+	const macros = [b => b.pass(), b => b.fail()];
+	return ava(a => {
+		return a.try(macros)
+			.then(([res1, res2]) => {
+				t.true(res1.passed);
+				res1.commit();
+				t.false(res2.passed);
+				res2.discard();
+			});
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
+test('try-commit returns results in the same shape as when implementations are passed', t => {
+	return ava(a => {
+		return Promise.all([
+			a.try(b => b.pass()).then(results => {
+				t.match(results, {passed: true});
+				results.commit();
+			}),
+			a.try([b => b.pass()]).then(results => {
+				t.is(results.length, 1);
+				t.match(results, [{passed: true}]);
+				results[0].commit();
+			}),
+			a.try([b => b.pass(), b => b.fail()]).then(results => {
+				t.is(results.length, 2);
+				t.match(results, [{passed: true}, {passed: false}]);
+				results[0].commit();
+				results[1].discard();
+			})
+		]);
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
