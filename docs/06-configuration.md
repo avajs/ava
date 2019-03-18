@@ -28,6 +28,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 		"concurrency": 5,
 		"failFast": true,
 		"shareForks": true,
+		"cacheRequire": true,
 		"workerThreads": true,
 		"singleProcess": false,
 		"failWithoutAssertions": false,
@@ -56,6 +57,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
+- `cacheRequire`: used with `shareForks` and `singleProcess` to only process `require` option once instead of before each test file
 - `shareForks`: run tests in shared forks (not isolated, might not work for all tests)
 - `workerThreads`: run tests in worker threads (requires node v10 with `--experimental-worker` flag or v11 without)
 - `singleProcess`: run tests in single process (not isolated, might not work for all tests)
