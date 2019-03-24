@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "xo",
 		"test:flow": "flow check test/flow-types",
-		"test:tap": "tap --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
+		"test:tap": "tap --no-esm --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
 		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap"
 	},
@@ -160,7 +160,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.3.0",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "~12.4.1",
+		"tap": "^12.6.1",
 		"temp-write": "^3.4.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.0.3",
