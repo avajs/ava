@@ -174,11 +174,11 @@ not ok 22 - test [90m[2m›[22m[39m formatted
 not ok 23 - test [90m[2m›[22m[39m power-assert
   ---
     name: AssertionError
-    assertion: falsy
-    operator: '!'
+    assertion: assert
+    operator: '!!'
     values:
-      'Value is not falsy:': '''bar'''
-    at: 'falsy (test.js:30:4)'
+      'Value is not truthy:': ''''''
+    at: 'assert (test.js:30:4)'
   ...
 ---tty-stream-chunk-separator
 # test › bad throws

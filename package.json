@@ -61,7 +61,7 @@
 	],
 	"dependencies": {
 		"@ava/babel-preset-stage-4": "^2.0.0",
-		"@ava/babel-preset-transform-test-files": "^4.0.1",
+		"@ava/babel-preset-transform-test-files": "^5.0.0",
 		"@ava/write-file-atomic": "^2.2.0",
 		"@babel/core": "^7.3.4",
 		"@babel/generator": "^7.3.4",

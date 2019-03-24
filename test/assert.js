@@ -1513,6 +1513,7 @@ test('.regex() fails if passed a bad value', t => {
 		assertions.regex(42, /foo/);
 	}, {
 		assertion: 'regex',
+		improperUsage: true,
 		message: '`t.regex()` must be called with a string',
 		values: [{label: 'Called with:', formatted: /42/}]
 	});
@@ -1573,6 +1574,33 @@ test('.notRegex() fails if passed a bad value', t => {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
 		values: [{label: 'Called with:', formatted: /\{\}/}]
+	});
+
+	t.end();
+});
+
+test('.assert()', t => {
+	failsWith(t, () => {
+		assertions.assert(0);
+	}, {
+		assertion: 'assert',
+		message: '',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /0/}]
+	});
+
+	failsWith(t, () => {
+		assertions.assert(false, 'my message');
+	}, {
+		assertion: 'assert',
+		message: 'my message',
+		operator: '!!',
+		values: [{label: 'Value is not truthy:', formatted: /false/}]
+	});
+
+	passes(t, () => {
+		assertions.assert(1);
+		assertions.assert(true);
 	});
 
 	t.end();
