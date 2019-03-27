@@ -68,6 +68,7 @@ exports.sanitizers = {
 	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
+	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
 	// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr. This
 	// causes the reporter to emit in a different order, resulting in a test
 	// failure. "Fix" by not asserting on the stdout/stderr reporting at all.
