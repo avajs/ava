@@ -22,7 +22,7 @@ not ok 5 - Error: Can't catch me
   ---
     name: Error
     message: Can't catch me
-    at: 't (unhandled-rejection.js:4:17)'
+    at: 'passes (unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
 # unhandled-rejection
