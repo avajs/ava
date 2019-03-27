@@ -22,7 +22,7 @@
 
   [90m~/test/fixture/report/regular/unhandled-rejection.js:4[39m
 
-   [90m3:[39m test('passes', t => {                          
+   [90m3:[39m const passes = t => {                          
   [41m 4:   Promise.reject(new Error('Can/'t catch me'));[49m
    [90m5:[39m   t.pass();                                    
 
