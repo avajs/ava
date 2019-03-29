@@ -419,8 +419,7 @@ export type OneOrMoreMacros<Args extends any[], Context> = _Macro<Args, Context>
 
 export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export interface CbMacro<Args extends any[], Context = {}> {
-	(t: CbExecutionContext<Context>, ...args: Args): ImplementationResult;
+export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
