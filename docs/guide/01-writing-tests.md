@@ -62,7 +62,7 @@ test('resolves with unicorn', t => {
 AVA comes with built-in support for [async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function).
 
 ```js
-test(async function(t) {
+test(async function (t) {
 	const value = await promiseFn();
 	t.true(value);
 });
@@ -78,7 +78,7 @@ test('promises the truth', async t => {
 
 AVA comes with built-in support for [observables](https://github.com/zenparsing/es-observable). If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
 
-_You do not need to use "callback mode" or call `t.end()`._
+*You do not need to use "callback mode" or call `t.end()`.*
 
 ```js
 test('handles observables', t => {
