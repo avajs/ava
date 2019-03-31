@@ -856,6 +856,27 @@ test('.throws()', gather(t => {
 			throw err;
 		}, {code: 42});
 	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	fails(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, false);
+	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	passes(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, null);
+	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	fails(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, undefined);
+	});
 }));
 
 test('.throws() returns the thrown error', t => {
