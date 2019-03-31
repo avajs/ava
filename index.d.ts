@@ -402,6 +402,7 @@ export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
 export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
+/** A reusable test or hook implementation. */
 export type UntitledMacro<Args extends any[], Context = {}> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
 /** A reusable test or hook implementation. */
 export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Context> & {
@@ -417,6 +418,7 @@ type _Macro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<
 /** Alias for a single macro, or an array of macros. */
 export type OneOrMoreMacros<Args extends any[], Context> = _Macro<Args, Context> | [_Macro<Args, Context>, ..._Macro<Args, Context>[]];
 
+/** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Context> & {
