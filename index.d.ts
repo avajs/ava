@@ -413,7 +413,7 @@ export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Contex
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
+export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros. */
 export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
@@ -425,7 +425,7 @@ export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Co
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
+export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
 export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
