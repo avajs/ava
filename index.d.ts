@@ -413,10 +413,10 @@ export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Contex
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type _Macro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
+type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = _Macro<Args, Context> | [_Macro<Args, Context>, ..._Macro<Args, Context>[]];
+export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
@@ -425,10 +425,10 @@ export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Co
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type _CbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
+type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = _CbMacro<Args, Context> | [_CbMacro<Args, Context>, ..._CbMacro<Args, Context>[]];
+export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
 
 export interface TestInterface<Context = {}> {
 	/** Declare a concurrent test. */
