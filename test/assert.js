@@ -1277,13 +1277,25 @@ test('.snapshot()', t => {
 		}(_title);
 	};
 
-	passes(t, () => {
+	{
 		const assertions = setup('passes');
-		assertions.snapshot({foo: 'bar'});
-		assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
-		assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-	});
+
+		passes(t, () => {
+			assertions.snapshot({foo: 'bar'});
+		});
+
+		passes(t, () => {
+			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+		});
+
+		passes(t, () => {
+			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+		});
+
+		passes(t, () => {
+			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		});
+	}
 
 	{
 		const assertions = setup('fails');
