@@ -1150,6 +1150,27 @@ test('try-commit works with failing callback test', t => {
 	});
 });
 
+test('try-commit does not allow to use .end() in attempt when parent is callback test', t => {
+	return ava.cb(a => {
+		a
+			.try(b => {
+				b.pass();
+				b.end();
+			})
+			.then(res => {
+				res.commit();
+				a.end();
+			});
+	}).run().then(result => {
+		t.false(result.passed);
+		t.ok(result.error);
+		t.match(result.error.message, /Error thrown in test/);
+		t.is(result.error.name, 'AssertionError');
+		t.match(result.error.values[0].formatted, /t\.end.*not supported/);
+		t.match(result.error.values[0].formatted, /return promise for asynchronous attempt/);
+	});
+});
+
 test('try-commit can be discarded', t => {
 	const instance = ava(a => {
 		const p = a.try(b => {
