@@ -20,19 +20,19 @@ const assertions = new class extends assert.Assertions {
 			pass: () => {
 				lastPassed = true;
 			},
-			pending: (promise) => {
+			pending: promise => {
 				promise.then(() => {
 					lastPassed = true;
 				}, err => {
 					lastFailure = err;
 				});
 			},
-			fail: (error) => {
+			fail: error => {
 				lastFailure = error;
 			},
 			skip: () => {},
-			...overwrites,
-		})
+			...overwrites
+		});
 	}
 }();
 
@@ -1262,7 +1262,7 @@ test('.snapshot()', t => {
 		return new class extends assertions.constructor {
 			constructor(title) {
 				super({
-					compareWithSnapshot: (assertionOptions) => {
+					compareWithSnapshot: assertionOptions => {
 						return manager.compare({
 							belongsTo: assertionOptions.id || this.title,
 							expected: assertionOptions.expected,
