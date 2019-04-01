@@ -896,7 +896,7 @@ test('try-commit is properly counted', t => {
 
 	return instance.run().then(result => {
 		t.true(result.passed);
-		t.is(instance.attemptCount, 3);
+		t.is(instance.assertCount, 3);
 	});
 });
 
