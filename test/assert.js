@@ -15,23 +15,25 @@ let lastFailure = null;
 let lastPassed = false;
 
 const assertions = new class extends assert.Assertions {
-	_pass() {
-		lastPassed = true;
+	constructor(overwrites = {}) {
+		super({
+			pass: () => {
+				lastPassed = true;
+			},
+			pending: (promise) => {
+				promise.then(() => {
+					lastPassed = true;
+				}, err => {
+					lastFailure = err;
+				});
+			},
+			fail: (error) => {
+				lastFailure = error;
+			},
+			skip: () => {},
+			...overwrites,
+		})
 	}
-
-	_pending(promise) {
-		promise.then(() => {
-			lastPassed = true;
-		}, err => {
-			lastFailure = err;
-		});
-	}
-
-	_fail(error) {
-		lastFailure = error;
-	}
-
-	_skip() {}
 }();
 
 function assertFailure(t, subset) {
@@ -1259,18 +1261,18 @@ test('.snapshot()', t => {
 	const setup = _title => {
 		return new class extends assertions.constructor {
 			constructor(title) {
-				super();
+				super({
+					compareWithSnapshot: (assertionOptions) => {
+						return manager.compare({
+							belongsTo: assertionOptions.id || this.title,
+							expected: assertionOptions.expected,
+							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
+							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
+						});
+					}
+				});
 				this.title = title;
 				this.snapshotInvocationCount = 0;
-			}
-
-			_compareWithSnapshot(assertionOptions) {
-				return manager.compare({
-					belongsTo: assertionOptions.id || this.title,
-					expected: assertionOptions.expected,
-					index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
-					label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
-				});
 			}
 		}(_title);
 	};
