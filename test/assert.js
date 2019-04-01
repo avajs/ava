@@ -1279,7 +1279,7 @@ test('.snapshot()', t => {
 
 	passes(t, () => {
 		const assertions = setup('passes');
-		assertions.snapshot({foo: 'ar'});
+		assertions.snapshot({foo: 'bar'});
 		assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
 		assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
