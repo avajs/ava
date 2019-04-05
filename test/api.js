@@ -474,6 +474,7 @@ test('enhanced assertion formatting necessary whitespace and empty strings', t =
 			/foo/
 		],
 		[
+			/!\(new Object\(foo\) instanceof Object\)/,
 			/new Object\(foo\) instanceof Object/,
 			/Object/,
 			/new Object\(foo\)/,
@@ -488,7 +489,7 @@ test('enhanced assertion formatting necessary whitespace and empty strings', t =
 		]
 	];
 
-	t.plan(14);
+	t.plan(15);
 	const api = apiCreator();
 	const errors = [];
 	api.on('run', plan => {

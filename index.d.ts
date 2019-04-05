@@ -29,6 +29,9 @@ export type SnapshotOptions = {
 };
 
 export interface Assertions {
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
+	assert: AssertAssertion;
+
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
 
@@ -94,6 +97,14 @@ export interface Assertions {
 
 	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
 	truthy: TruthyAssertion;
+}
+
+export interface AssertAssertion {
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
+	(actual: any, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(actual: any, message?: string): void;
 }
 
 export interface DeepEqualAssertion {
