@@ -170,6 +170,11 @@ test('.pass()', t => {
 		assertions.pass();
 	});
 
+	passes(t, () => {
+		const {pass} = assertions;
+		pass();
+	});
+
 	t.end();
 });
 
@@ -188,12 +193,25 @@ test('.fail()', t => {
 		message: 'my message'
 	});
 
+	failsWith(t, () => {
+		const {fail} = assertions;
+		fail();
+	}, {
+		assertion: 'fail',
+		message: 'Test failed via `t.fail()`'
+	});
+
 	t.end();
 });
 
 test('.is()', t => {
 	passes(t, () => {
 		assertions.is('foo', 'foo');
+	});
+
+	passes(t, () => {
+		const {is} = assertions;
+		is('foo', 'foo');
 	});
 
 	passes(t, () => {
@@ -373,6 +391,11 @@ test('.not()', t => {
 		assertions.not('foo', 'bar');
 	});
 
+	passes(t, () => {
+		const {not} = assertions;
+		not('foo', 'bar');
+	});
+
 	fails(t, () => {
 		assertions.not(NaN, NaN);
 	});
@@ -417,6 +440,11 @@ test('.deepEqual()', t => {
 			b: 'b',
 			a: 'a'
 		});
+	});
+
+	passes(t, () => {
+		const {deepEqual} = assertions;
+		deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
@@ -663,6 +691,11 @@ test('.notDeepEqual()', t => {
 	});
 
 	passes(t, () => {
+		const {notDeepEqual} = assertions;
+		notDeepEqual({a: 'a'}, {a: 'b'});
+	});
+
+	passes(t, () => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
@@ -694,6 +727,15 @@ test('.throws()', gather(t => {
 	// Fails because function doesn't throw.
 	failsWith(t, () => {
 		assertions.throws(() => {});
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: [{label: 'Function returned:', formatted: /undefined/}]
+	});
+
+	failsWith(t, () => {
+		const {throws} = assertions;
+		throws(() => {});
 	}, {
 		assertion: 'throws',
 		message: '',
@@ -895,6 +937,15 @@ test('.throws() returns the thrown error', t => {
 test('.throwsAsync()', gather(t => {
 	// Fails because the promise is resolved, not rejected.
 	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
+		assertion: 'throwsAsync',
+		message: '',
+		values: [{label: 'Promise resolved with:', formatted: /'foo'/}]
+	});
+
+	eventuallyFailsWith(t, () => {
+		const {throwsAsync} = assertions;
+		return throwsAsync(Promise.resolve('foo'));
+	}, {
 		assertion: 'throwsAsync',
 		message: '',
 		values: [{label: 'Promise resolved with:', formatted: /'foo'/}]
@@ -1140,6 +1191,11 @@ test('.notThrows()', gather(t => {
 		assertions.notThrows(() => {});
 	});
 
+	passes(t, () => {
+		const {notThrows} = assertions;
+		notThrows(() => {});
+	});
+
 	// Fails because the function throws.
 	failsWith(t, () => {
 		assertions.notThrows(() => {
@@ -1167,6 +1223,11 @@ test('.notThrows()', gather(t => {
 test('.notThrowsAsync()', gather(t => {
 	// Passes because the promise is resolved
 	eventuallyPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
+
+	eventuallyPasses(t, () => {
+		const {notThrowsAsync} = assertions;
+		return notThrowsAsync(Promise.resolve());
+	});
 
 	// Fails because the promise is rejected
 	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
@@ -1405,6 +1466,12 @@ test('.truthy()', t => {
 		assertions.truthy(true);
 	});
 
+	passes(t, () => {
+		const {truthy} = assertions;
+		truthy(1);
+		truthy(true);
+	});
+
 	t.end();
 });
 
@@ -1430,6 +1497,12 @@ test('.falsy()', t => {
 	passes(t, () => {
 		assertions.falsy(0);
 		assertions.falsy(false);
+	});
+
+	passes(t, () => {
+		const {falsy} = assertions;
+		falsy(0);
+		falsy(false);
 	});
 
 	t.end();
@@ -1472,6 +1545,11 @@ test('.true()', t => {
 		assertions.true(true);
 	});
 
+	passes(t, () => {
+		const {true: trueFn} = assertions;
+		trueFn(true);
+	});
+
 	t.end();
 });
 
@@ -1512,12 +1590,22 @@ test('.false()', t => {
 		assertions.false(false);
 	});
 
+	passes(t, () => {
+		const {false: falseFn} = assertions;
+		falseFn(false);
+	});
+
 	t.end();
 });
 
 test('.regex()', t => {
 	passes(t, () => {
 		assertions.regex('abc', /^abc$/);
+	});
+
+	passes(t, () => {
+		const {regex} = assertions;
+		regex('abc', /^abc$/);
 	});
 
 	failsWith(t, () => {
@@ -1569,6 +1657,11 @@ test('.regex() fails if passed a bad value', t => {
 test('.notRegex()', t => {
 	passes(t, () => {
 		assertions.notRegex('abc', /def/);
+	});
+
+	passes(t, () => {
+		const {notRegex} = assertions;
+		notRegex('abc', /def/);
 	});
 
 	failsWith(t, () => {
@@ -1638,6 +1731,12 @@ test('.assert()', t => {
 	passes(t, () => {
 		assertions.assert(1);
 		assertions.assert(true);
+	});
+
+	passes(t, () => {
+		const {assert} = assertions;
+		assert(1);
+		assert(true);
 	});
 
 	t.end();
