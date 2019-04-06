@@ -1346,6 +1346,11 @@ test('.snapshot()', t => {
 		});
 
 		passes(t, () => {
+			const {snapshot} = assertions;
+			snapshot({foo: 'bar'});
+		});
+
+		passes(t, () => {
 			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
 		});
 

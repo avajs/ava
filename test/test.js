@@ -737,6 +737,7 @@ test('snapshot assertion can be skipped', t => {
 		title: 'passes',
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
+			t.snapshot.skip({not: {b: 'match'}});
 			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		}
 	}).run().then(result => {
