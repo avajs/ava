@@ -798,3 +798,54 @@ test('timeout is refreshed on assert', t => {
 		t.is(result.passed, true);
 	});
 });
+
+test('.log() is bound', t => {
+	return ava(a => {
+		const {log} = a;
+		[1, 2, 3].forEach(val => {
+			log('value: ' + val);
+		});
+		['value foo', 'value bar'].forEach(val => log(val));
+	}).run().then(result => {
+		t.deepEqual(result.logs, [
+			'value: 1',
+			'value: 2',
+			'value: 3',
+			'value foo',
+			'value bar'
+		]);
+	});
+});
+
+test('.plan() is bound', t => {
+	return ava(a => {
+		const {plan} = a;
+		plan(3);
+
+		a.pass();
+		a.is(2, 2);
+		a.truthy('string');
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
+test('.timeout() is bound', t => {
+	return ava(a => {
+		const {timeout} = a;
+		timeout(10);
+		a.pass();
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
+test('.end() is bound', t => {
+	return ava.cb(a => {
+		const {end} = a;
+		a.pass();
+		end();
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
