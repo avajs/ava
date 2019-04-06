@@ -404,6 +404,7 @@ export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) =>
 
 /** A reusable test or hook implementation. */
 export type UntitledMacro<Args extends any[], Context = {}> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
+
 /** A reusable test or hook implementation. */
 export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Context> & {
 	/**
@@ -420,6 +421,7 @@ export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Con
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
+
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
