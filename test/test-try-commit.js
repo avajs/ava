@@ -31,6 +31,16 @@ test('try-commit works', t => {
 		});
 });
 
+test('try-commit is bound', t => {
+	return ava(a => {
+		const {try: tryFn} = a;
+		return tryFn(b => b.pass())
+			.then(res => res.commit());
+	}).run().then(result => {
+		t.true(result.passed);
+	});
+});
+
 test('try-commit discards failed attempt', t => {
 	return ava(a => {
 		return a
