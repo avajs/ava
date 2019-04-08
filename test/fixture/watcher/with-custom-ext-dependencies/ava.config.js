@@ -1,3 +1,3 @@
 export default {
-	sources: ['source.custom-ext']
+	sources: ['source.custom-ext', 'setup.js']
 };
