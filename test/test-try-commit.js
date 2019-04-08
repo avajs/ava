@@ -7,6 +7,22 @@ const delay = require('delay');
 const Test = require('../lib/test');
 const {ava} = require('./helper/ava-test');
 
+const contextAva = fn => new Test({
+	contextRef: {
+		val: {foo: 'bar'},
+		get() {
+			return this.val;
+		},
+		set(newVal) {
+			this.val = newVal;
+		}
+	},
+	failWithoutAssertions: true,
+	metadata: {type: 'test'},
+	title: 'foo',
+	fn
+});
+
 test('try-commit are present', t => {
 	return ava(a => {
 		a.pass();
@@ -490,6 +506,33 @@ test('try-commit refreshes the timeout on commit/discard', t => {
 		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 10);
 		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 15);
 		setTimeout(() => a.end(), 20);
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
+
+test('try-commit cannot access parent test context', t => {
+	return contextAva(a => {
+		return a.try(b => {
+			b.pass();
+			const ctx = b.context;
+			t.is(ctx, undefined);
+		}).then(res => res.commit());
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
+
+test('try-commit cannot set parent test context', t => {
+	return contextAva(a => {
+		t.strictDeepEqual(a.context, {foo: 'bar'});
+		return a.try(b => {
+			b.pass();
+			b.context = {bar: 'foo'};
+		}).then(res => {
+			res.commit();
+			t.strictDeepEqual(a.context, {foo: 'bar'});
+		});
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
