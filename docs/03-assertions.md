@@ -302,3 +302,63 @@ Assert that `contents` does not match `regex`.
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
+
+### `.try([title], implementation)`
+### `.try([title], macro, [arg1, [arg2, [arg3, ...]]])`
+### `.try([title], macro[], [arg1, [arg2, [arg3, ...]]])`
+
+Attempt to run the function and return the result of the execution.
+The API largely reminds the api of the `test()` function, however the title is always optional.
+This function accepts either implementation and zero arguments passed to it, or a macro with any number of arguments passed to it.
+Additionally the macro function could also have the title generating function, which will be used as a title for the given attempt.
+
+This function always returns the promise which fulfills with the result of attempt and two functions `commit()` and `discard()` to act on the result of the attempt.
+Each attempt has to either be committed or discarded, and they cannot be left in the undefined state.
+Additionally, within each attempt there has to be at least one assertion done.
+
+The promise is fulfilled with the following signature:
+
+```typescript
+interface ReturnType {
+	passed: boolean,
+	errors: AssertionError[],
+	title: string,
+	logs: string[],
+	commit: (options?: Options) => void,
+	discard: (options?: Options) => void,
+}
+
+interface Options {
+	retainLogs?: boolean
+}
+```
+
+Example:
+
+```js
+const twoRndInts = () => {
+	const rnd = Math.round(Math.random() * 100);
+	const x = rnd % 10;
+	const y = Math.floor(rnd / 10);
+	return [x, y];
+};
+
+test('flaky macro', async t => {
+	const result = await t.try((t, a, b) => {
+		t.is(a, b);
+	}, ...twoRndInts());
+
+	if (result.passed) {
+		result.commit();
+	} else {
+		t.log(result.error);
+		result.discard();
+
+		const result1 = await t.try((t, a, b) => {
+			t.is(a, b);
+		}, ...twoRndInts());
+
+		result1.commit();
+	}
+});
+```
