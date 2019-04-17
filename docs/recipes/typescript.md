@@ -8,7 +8,7 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Configuring AVA to compile TypeScript files on the fly
 
-You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly.
+You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly. Also you will need to install `esm` to add support for `import` & `export`.
 
 **`package.json`:**
 
@@ -20,7 +20,8 @@ You can configure AVA to recognize TypeScript files. Then, with `ts-node` instal
 			"ts"
 		],
 		"require": [
-			"ts-node/register"
+			"ts-node/register",
+			"esm"
 		]
 	}
 }
