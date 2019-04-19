@@ -13,7 +13,7 @@ In the `JavaScript file` field specify the path to AVA in the project's `node_mo
 
 In the `Application parameters` pass the CLI flags you're using and the test files you would like to debug, for example `--verbose test.js`.
 
-In the `Node parameters`, for Node.js 7+, pass the `--inspect-brk` flag to enable the Node inspector. For earlier versions use `--debug-brk`.
+In the `Node parameters`, pass the `--inspect-brk` flag to enable the Node inspector.
 
 Save the configuration.
 
@@ -44,7 +44,7 @@ Use the following configuration parameters:
 
 Your IDE will then execute `npm run test` and thus call `node_modules/.bin/ava` and the AVA-configuration you have specified in your package.json.
 
-In the `Node parameters`, for Node.js 7+ pass `--inspect-brk` or `--debug-brk` for earlier versions.
+In the `Node parameters`, pass `--inspect-brk`.
 
 Don't forget to select a Node.js interpreter.
 
