@@ -54,9 +54,9 @@ Vue.config.productionTip = false;
 // https://github.com/nuxt/create-nuxt-app/issues/180
 window.Date = global.Date = Date;
 
-// Setup `.vue`` files to be processed by `require-extension-hooks-vue`
+// Setup `.vue` files to be processed by `require-extension-hooks-vue`
 hooks('vue').plugin('vue').push();
-// Setup `.vue`` and `.js`` files to be processed by `require-extension-hooks-babel`
+// Setup `.vue` and `.js` files to be processed by `require-extension-hooks-babel`
 hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//)).plugin('babel').push();
 ```
 
