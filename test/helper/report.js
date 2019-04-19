@@ -10,8 +10,8 @@ const pkg = require('../../package.json');
 let _Api = null;
 const createApi = options => {
 	if (!_Api) {
-		_Api = proxyquire('../../api', {
-			'./lib/fork': proxyquire('../../lib/fork', {
+		_Api = proxyquire('../../lib/api', {
+			'./fork': proxyquire('../../lib/fork', {
 				child_process: Object.assign({}, childProcess, { // eslint-disable-line camelcase
 					fork(filename, argv, options) {
 						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, options);

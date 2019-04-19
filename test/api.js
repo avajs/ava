@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const del = require('del');
 const {test} = require('tap');
-const Api = require('../api');
+const Api = require('../lib/api');
 const babelPipeline = require('../lib/babel-pipeline');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
