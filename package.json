@@ -7,7 +7,7 @@
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=10.0.0"
+		"node": ">=8.9.4 <9 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo",
