@@ -180,7 +180,15 @@
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off"
-		}
+		},
+		"overrides": [
+			{
+				"files": "test/**/*.js",
+				"rules": {
+					"promise/prefer-await-to-then": "off"
+				}
+			}
+		]
 	},
 	"nyc": {
 		"reporter": [
