@@ -8,7 +8,7 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Configuring AVA to compile TypeScript files on the fly
 
-You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly. Also you will need to install `esm` to add support for `import` & `export`.
+You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly.
 
 **`package.json`:**
 
@@ -20,14 +20,30 @@ You can configure AVA to recognize TypeScript files. Then, with `ts-node` instal
 			"ts"
 		],
 		"require": [
-			"ts-node/register",
-			"esm"
+			"ts-node/register"
 		]
 	}
 }
 ```
 
 It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+
+If you are using `"module": "esnext"` in your `tsconfig.json` file, you also will need to install `esm@3.2.20` to add support for `import` & `export`. After install add `esm` to the `require` section.
+**Warning:** versions 3.2.21 and 3.2.22 have reported issues: https://github.com/standard-things/esm/issues/782
+
+**`package.json`:**
+
+```json
+{
+	"ava": {
+		...
+		"require": [
+			...
+			"esm"
+		]
+	}
+}
+```
 
 ## Compiling TypeScript files before running AVA
 
