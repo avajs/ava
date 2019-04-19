@@ -13,7 +13,7 @@
 
 ## Setup
 
-The first step is setting up a helper to configure the environment to transpile `.vue` files and run in a browser like environment.
+First set up a helper to configure the environment to transpile `.vue` files and run in a browser like environment.
 
 **`package.json`:**
 
@@ -32,8 +32,11 @@ The first step is setting up a helper to configure the environment to transpile 
 // ./test/helpers/register.js
 
 require('@babel/register')({
-  // These patterns are relative to the project directory (where the `package.json` file lives):
-  ignore: ['node_modules/*', 'test/*'],
+	// These patterns are relative to the project root directory (where the `package.json` file lives):
+	ignore: [
+		'node_modules/*',
+		'test/*'
+	]
 });
 ```
 
@@ -51,46 +54,46 @@ Vue.config.productionTip = false;
 // https://github.com/nuxt/create-nuxt-app/issues/180
 window.Date = global.Date = Date;
 
-// Setup vue files to be processed by `require-extension-hooks-vue`
+// Setup `.vue`` files to be processed by `require-extension-hooks-vue`
 hooks('vue').plugin('vue').push();
-// Setup vue and js files to be processed by `require-extension-hooks-babel`
+// Setup `.vue`` and `.js`` files to be processed by `require-extension-hooks-babel`
 hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//)).plugin('babel').push();
 ```
 
 **`.babelrc`:**
 ```json
 {
-  "env": {
-    "test": {
-      "plugins": [
-        [
-          "module-resolver",
-          {
-            "root": [
-              "./"
-            ],
-            "alias": {
-              "@": "./",
-              "~": "./"
-            }
-          }
-        ]
-      ],
-      "ignore": [
-        "ava.config.js"
-      ],
-      "presets": [
-        [
-          "@babel/preset-env",
-          {
-            "targets": {
-              "node": "current"
-            }
-          }
-        ]
-      ]
-    }
-  }
+	"env": {
+		"test": {
+			"plugins": [
+				[
+					"module-resolver",
+					{
+						"root": [
+							"."
+						],
+						"alias": {
+							"@": ".",
+							"~": "."
+						}
+					}
+				]
+			],
+			"ignore": [
+				"ava.config.js"
+			],
+			"presets": [
+				[
+					"@babel/preset-env",
+					{
+						"targets": {
+							"node": "current"
+						}
+					}
+				]
+			]
+		}
+	}
 }
 ```
 
@@ -99,7 +102,7 @@ You can find more information about setting up Babel with AVA in the [Babel reci
 ## Sample snapshot test
 
 ```js
-import { mount, createLocalVue } from '@vue/test-utils';
+import {mount, createLocalVue} from '@vue/test-utils';
 import test from 'ava';
 import Index from '@/pages/index.vue';
 
@@ -107,23 +110,23 @@ let wrapper;
 const localVue = createLocalVue();
 
 test.beforeEach(() => {
-  wrapper = mount(Index, {
-    localVue,
-  });
+	wrapper = mount(Index, {
+		localVue,
+	});
 });
 
 test('is a Vue instance', t => {
-  t.is(wrapper.isVueInstance(), true);
+	t.is(wrapper.isVueInstance(), true);
 });
 
 test('renders correct snapshot', t => {
-  t.snapshot(wrapper.vm.$el.outerHTML);
+	t.snapshot(wrapper.vm.$el.outerHTML);
 });
 ```
 
 ## Coverage reporting
 
-Follow the [coverage reporting recipe](code-coverage.md), additionally adding the `.vue` extension to the `nyc` config to instrument `.vue` files.
+Follow the [coverage reporting recipe](code-coverage.md), and also add the `.vue` extension to the `nyc` config to instrument `.vue` files.
 
 ```json
 {
@@ -136,4 +139,4 @@ Follow the [coverage reporting recipe](code-coverage.md), additionally adding th
 }
 ```
 
-**Note:** For a demo project using nuxt, ava for e2e & unit testing, [go here](https://github.com/vinayakkulkarni/nuxt-ava-e2e-unit-testing)
+**Note:** [Demo project using Nuxt.js and AVA for E2E and unit testing.](https://github.com/vinayakkulkarni/nuxt-ava-e2e-unit-testing)
