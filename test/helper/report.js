@@ -12,11 +12,12 @@ const createApi = options => {
 	if (!_Api) {
 		_Api = proxyquire('../../lib/api', {
 			'./fork': proxyquire('../../lib/fork', {
-				child_process: Object.assign({}, childProcess, { // eslint-disable-line camelcase
+				child_process: { // eslint-disable-line camelcase
+					...childProcess,
 					fork(filename, argv, options) {
 						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, options);
 					}
-				})
+				}
 			})
 		});
 	}

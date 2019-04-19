@@ -332,5 +332,5 @@ test('deep structure, diff', t => {
 			}
 		}
 	};
-	t.deepEqual(deep, Object.assign({corge: 'grault'}, deep));
+	t.deepEqual(deep, {corge: 'grault', ...deep});
 });
