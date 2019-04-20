@@ -1,6 +1,0 @@
-[include]
-../../*.js.flow$
-
-[options]
-emoji=true
-suppress_comment=\\(.\\|\n\\)*\\$ExpectError
