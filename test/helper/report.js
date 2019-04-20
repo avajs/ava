@@ -10,13 +10,14 @@ const pkg = require('../../package.json');
 let _Api = null;
 const createApi = options => {
 	if (!_Api) {
-		_Api = proxyquire('../../api', {
-			'./lib/fork': proxyquire('../../lib/fork', {
-				child_process: Object.assign({}, childProcess, { // eslint-disable-line camelcase
+		_Api = proxyquire('../../lib/api', {
+			'./fork': proxyquire('../../lib/fork', {
+				child_process: { // eslint-disable-line camelcase
+					...childProcess,
 					fork(filename, argv, options) {
 						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, options);
 					}
-				})
+				}
 			})
 		});
 	}
@@ -24,15 +25,7 @@ const createApi = options => {
 	return new _Api(options);
 };
 
-// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr
-let hasReliableStdIO = true;
-exports.captureStdIOReliability = () => {
-	if (process.platform === 'win32' && parseInt(process.versions.node, 10) < 8) {
-		hasReliableStdIO = false;
-	}
-};
-
-exports.assert = (t, logFile, buffer, stripOptions) => {
+exports.assert = (t, logFile, buffer) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
@@ -43,14 +36,7 @@ exports.assert = (t, logFile, buffer, stripOptions) => {
 		existing = buffer;
 	}
 
-	let expected = existing.toString('utf8');
-	// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr. This
-	// causes the reporter to emit in a different order, resulting in a test
-	// failure. "Fix" by not asserting on the stdout/stderr reporting at all.
-	if (stripOptions.stripStdIO && !hasReliableStdIO) {
-		expected = expected.replace(/(---tty-stream-chunk-separator\n)(stderr|stdout)\n/g, stripOptions.alsoStripSeparator ? '' : '$1');
-	}
-
+	const expected = existing.toString('utf8');
 	const actual = buffer.toString('utf8');
 	if (actual === expected) {
 		t.pass();
@@ -68,16 +54,7 @@ exports.sanitizers = {
 	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
-	// At least in Appveyor with Node.js 6, IPC can overtake stdout/stderr. This
-	// causes the reporter to emit in a different order, resulting in a test
-	// failure. "Fix" by not asserting on the stdout/stderr reporting at all.
-	unreliableProcessIO(str) {
-		if (hasReliableStdIO) {
-			return str;
-		}
-
-		return str === 'stdout\n' || str === 'stderr\n' ? '' : str;
-	},
+	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 

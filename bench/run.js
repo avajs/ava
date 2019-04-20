@@ -100,29 +100,28 @@ for (let i = 0; i < 11; i++) {
 
 const results = {};
 
-Promise.each(combined, definition => {
+Promise.each(combined, async definition => {
 	const {args} = definition;
 
-	return runTests(args).then(result => {
-		const key = result.args.join(' ');
-		const passedOrFaild = result.err ? 'failed' : 'passed';
-		const seconds = result.time / 1000;
+	const result = await runTests(args);
+	const key = result.args.join(' ');
+	const passedOrFaild = result.err ? 'failed' : 'passed';
+	const seconds = result.time / 1000;
 
-		console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
+	console.log('%s %s in %d seconds', key, passedOrFaild, seconds);
 
-		if (result.err && !definition.shouldFail) {
-			console.log(result.stdout);
-			console.log(result.stderr);
-			throw result.err;
-		}
+	if (result.err && !definition.shouldFail) {
+		console.log(result.stdout);
+		console.log(result.stderr);
+		throw result.err;
+	}
 
-		results[key] = results[key] || [];
+	results[key] = results[key] || [];
 
-		results[key].push({
-			passed: !results.err,
-			shouldFail: definition.shouldFail,
-			time: seconds
-		});
+	results[key].push({
+		passed: !results.err,
+		shouldFail: definition.shouldFail,
+		time: seconds
 	});
 }).then(() => {
 	makeDir.sync(path.join(__dirname, '.results'));

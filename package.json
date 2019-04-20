@@ -1,13 +1,13 @@
 {
 	"name": "ava",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"description": "Testing can be a drag. AVA helps you get it done.",
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=10.0.0"
+		"node": ">=8.9.4 <9 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo",
@@ -180,7 +180,15 @@
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off"
-		}
+		},
+		"overrides": [
+			{
+				"files": "test/**/*.js",
+				"rules": {
+					"promise/prefer-await-to-then": "off"
+				}
+			}
+		]
 	},
 	"nyc": {
 		"reporter": [

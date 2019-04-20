@@ -62,3 +62,14 @@ import test, {ExecutionContext, Macro} from '../..';
 		t.is(input.length, expected)
 	}, 'bar', 3)
 }
+
+// Completely infer parameters
+{
+	test('has length 3', (t, input, expected) => {
+		t.is(input.length, expected);
+	}, 'foo', 3);
+
+	test((t, input, expected) => {
+		t.is(input.length, expected)
+	}, 'foo', 3);
+}
