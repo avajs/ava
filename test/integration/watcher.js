@@ -61,7 +61,7 @@ test('watcher respects custom test file extensions', t => {
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', 'test-*.js'], {dirname: 'fixture/watcher/with-dependencies', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-dependencies', env: {CI: ''}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();

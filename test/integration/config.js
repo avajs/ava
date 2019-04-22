@@ -43,17 +43,6 @@ test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none ar
 	});
 });
 
-test('pkg-conf(resolve-dir): resolves tests process.cwd() if globs are passed on the command line', t => {
-	execCli(['--verbose', 'dir-a/*.js'], {dirname: 'fixture/pkg-conf/resolve-dir/dir-a-wrapper'}, (err, stdout) => {
-		t.ifError(err);
-		t.match(stdout, /dir-a-wrapper-3/);
-		t.match(stdout, /dir-a-wrapper-4/);
-		t.notMatch(stdout, /dir-a-base/);
-		t.notMatch(stdout, /dir-a-base/);
-		t.end();
-	});
-});
-
 test('use current working directory if `package.json` is not found', () => {
 	const cwd = uniqueTempDir({create: true});
 	const testFilePath = path.join(cwd, 'test.js');
