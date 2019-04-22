@@ -6,6 +6,12 @@ const uniqueTempDir = require('unique-temp-dir');
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
+const overrideCIChecks = {
+	CI: '',
+	TRAVIS: '',
+	CONTINUOUS_INTEGRATION: ''
+};
+
 for (const obj of [
 	{type: 'colocated', rel: '', dir: ''},
 	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
@@ -24,7 +30,7 @@ for (const obj of [
 
 		const dirname = path.join('fixture/snapshots', obj.rel);
 		// Test should pass, and a snapshot gets written
-		execCli(['--update-snapshots'], {dirname}, error => {
+		execCli(['--update-snapshots', '--verbose'], {dirname, env: overrideCIChecks}, error => {
 			t.ifError(error);
 			t.true(fs.existsSync(snapPath));
 
@@ -50,7 +56,7 @@ test('one', t => {
 })`;
 	fs.writeFileSync(path.join(cwd, 'test.js'), initial);
 
-	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, env: {CI: '1'}, reject: false});
+	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, env: overrideCIChecks, reject: false});
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
@@ -161,7 +167,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
-	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
+	execCli(['--verbose'], {dirname: relativeFixtureDir, env: overrideCIChecks}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
@@ -202,7 +208,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
-	execCli([], {dirname: relativeFixtureDir}, (error, stdout) => {
+	execCli(['--verbose'], {dirname: relativeFixtureDir, env: overrideCIChecks}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
@@ -231,7 +237,7 @@ test('snapshots are indentical on different platforms', t => {
 	[reportPath, snapPath].forEach(fp => removeFile(fp));
 
 	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots'], {dirname: fixtureDir}, error => {
+	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: overrideCIChecks}, error => {
 		t.ifError(error);
 		t.true(fs.existsSync(reportPath));
 		t.true(fs.existsSync(snapPath));
@@ -243,6 +249,33 @@ test('snapshots are indentical on different platforms', t => {
 
 		t.true(reportContents.equals(expectedReportContents), 'report file contents matches snapshot');
 		t.true(snapContents.equals(expectedSnapContents), 'snap file contents matches snapshot');
+		t.end();
+	});
+});
+
+test('in CI, new snapshots are not recorded', t => {
+	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
+	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
+	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
+
+	const removeFile = filePath => {
+		try {
+			fs.unlinkSync(filePath);
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
+			}
+		}
+	};
+
+	// Clear current snapshots
+	[reportPath, snapPath].forEach(fp => removeFile(fp));
+
+	// Test should fail, no snapshot gets written
+	execCli([], {dirname: fixtureDir}, (_, stdout) => {
+		t.match(stdout, 'No snapshot available — new snapshots are not created in CI environments');
+		t.false(fs.existsSync(reportPath));
+		t.false(fs.existsSync(snapPath));
 		t.end();
 	});
 });
