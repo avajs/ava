@@ -5,7 +5,7 @@ const {execCli} = require('../helper/cli');
 test('correctly distributes the test files', t => {
 	t.plan(3);
 	for (let i = 0; i < 3; i++) {
-		execCli('*.js', {
+		execCli([], {
 			dirname: 'fixture/parallel-runs',
 			env: {
 				CI: '1',

@@ -8,6 +8,7 @@ const del = require('del');
 const {test} = require('tap');
 const Api = require('../lib/api');
 const babelPipeline = require('../lib/babel-pipeline');
+const {normalizeGlobs} = require('../lib/globs');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
@@ -31,6 +32,7 @@ function apiCreator(options = {}) {
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
 	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
+	options.globs = normalizeGlobs(options.files, options.sources, options.extensions.all);
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
@@ -550,9 +552,9 @@ test('absolute paths', t => {
 });
 
 test('symlink to directory containing test files', t => {
-	const api = apiCreator();
+	const api = apiCreator({files: ['test/fixture/symlink/*.js']});
 
-	return api.run([path.join(__dirname, 'fixture/symlink')])
+	return api.run()
 		.then(runStatus => {
 			t.is(runStatus.stats.passedTests, 1);
 		});
@@ -567,16 +569,6 @@ test('symlink to test file directly', t => {
 		});
 });
 
-test('search directories recursively for files', t => {
-	const api = apiCreator();
-
-	return api.run([path.join(__dirname, 'fixture/subdir')])
-		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 2);
-			t.is(runStatus.stats.failedTests, 1);
-		});
-});
-
 test('test file in node_modules is ignored', t => {
 	t.plan(1);
 
@@ -587,25 +579,16 @@ test('test file in node_modules is ignored', t => {
 		});
 });
 
-test('test file in fixtures is ignored', t => {
-	t.plan(1);
-
-	const api = apiCreator();
-	return api.run([path.join(__dirname, 'fixture/ignored-dirs/fixtures/test.js')])
-		.then(runStatus => {
-			t.is(runStatus.stats.declaredTests, 0);
-		});
-});
-
-test('test file in helpers is ignored', t => {
-	t.plan(1);
-
-	const api = apiCreator();
-	return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')])
-		.then(runStatus => {
-			t.is(runStatus.stats.declaredTests, 0);
-		});
-});
+// TODO: Re-enable to test helpers patterns.
+// test('test file in helpers is ignored', t => {
+// 	t.plan(1);
+//
+// 	const api = apiCreator();
+// 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')])
+// 		.then(runStatus => {
+// 			t.is(runStatus.stats.declaredTests, 0);
+// 		});
+// });
 
 test('Node.js-style --require CLI argument', t => {
 	const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
@@ -686,6 +669,7 @@ test('emits dependencies for test files', t => {
 	t.plan(8);
 
 	const api = apiCreator({
+		files: ['test/fixture/with-dependencies/*test*.js'],
 		require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
 	});
 
@@ -711,7 +695,7 @@ test('emits dependencies for test files', t => {
 		});
 	});
 
-	return api.run(['test/fixture/with-dependencies/*test*.js']);
+	return api.run();
 });
 
 test('verify test count', t => {

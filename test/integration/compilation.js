@@ -55,7 +55,7 @@ test('power-assert when babel=false and compileEnhancements=true', t => {
 });
 
 test('power-assert with custom extension and no regular babel pipeline', t => {
-	execCli(['.'], {dirname: 'fixture/just-enhancement-compilation/custom-extension'}, (err, stdout) => {
+	execCli(['power-assert.foo'], {dirname: 'fixture/just-enhancement-compilation/custom-extension'}, (err, stdout) => {
 		t.ok(err);
 		t.match(stripAnsi(stdout), /bool\n.*=> false/);
 		t.end();
