@@ -2,9 +2,11 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/flow.md)
 
-AVA comes bundled with a Flow definition file. This allows developers to leverage Flow for writing tests.
+Until [1.4.1](https://github.com/avajs/ava/releases/tag/v1.4.1) AVA came bundled with a Flow definition file. This allows developers to leverage Flow for writing tests.
 
-This guide assumes you've already set up Flow for your project. Note that AVA's definition as been tested with version 0.91.0.
+**We need some help publishing the type definitions outside of AVA. Please join us in https://github.com/avajs/flow-typed/issues/1 if you'd like to help out.**
+
+This guide assumes you've already set up Flow for your project. Note that AVA's definition as been tested with version 0.95.1.
 
 We recommend you use AVA's built-in Babel pipeline to strip Flow type annotations and declarations. AVA automatically applies your project's Babel configuration, so everything may just work without changes. Alternatively install [`@babel/plugin-transform-flow-strip-types`](https://www.npmjs.com/package/@babel/plugin-transform-flow-strip-types) and customize AVA's configuration in the `package.json` file (or the `ava.config.js` file) as follows.
 

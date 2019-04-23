@@ -29,6 +29,9 @@ export type SnapshotOptions = {
 };
 
 export interface Assertions {
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
+	assert: AssertAssertion;
+
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
 
@@ -94,6 +97,14 @@ export interface Assertions {
 
 	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
 	truthy: TruthyAssertion;
+}
+
+export interface AssertAssertion {
+	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
+	(actual: any, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(actual: any, message?: string): void;
 }
 
 export interface DeepEqualAssertion {
@@ -441,7 +452,9 @@ export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
 export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
+/** A reusable test or hook implementation. */
 export type UntitledMacro<Args extends any[], Context = {}> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
+
 /** A reusable test or hook implementation. */
 export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Context> & {
 	/**
@@ -451,22 +464,23 @@ export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Contex
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type _Macro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
+export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = _Macro<Args, Context> | [_Macro<Args, Context>, ..._Macro<Args, Context>[]];
+export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
 
-export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export interface CbMacro<Args extends any[], Context = {}> {
-	(t: CbExecutionContext<Context>, ...args: Args): ImplementationResult;
+export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
+
+/** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
+export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
-type _CbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
+export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = _CbMacro<Args, Context> | [_CbMacro<Args, Context>, ..._CbMacro<Args, Context>[]];
+export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
 
 export interface TestInterface<Context = {}> {
 	/** Declare a concurrent test. */

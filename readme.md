@@ -127,7 +127,7 @@ AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript synt
 
 We aim support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
 
-Please note that we do not add or modify built-ins. For example, if you use [`Object.entries()`](https://github.com/tc39/proposal-object-values-entries) in your tests, they will crash in Node.js 6 which does not implement this method.
+Please note that we do not add or modify built-ins. For example, if you use [`Object.fromEntries()`](https://github.com/tc39/proposal-object-from-entries) in your tests, they will crash in Node.js 10 which does not implement this method.
 
 You can disable this syntax support, or otherwise customize AVA's Babel pipeline. See our [Babel recipe] for more details.
 
@@ -184,7 +184,7 @@ In contrast AVA is highly opinionated and runs tests concurrently, with a separa
 
 ### How is the name written and pronounced?
 
-AVA, not Ava or ava. Pronounced [/ˈeɪvə/ ay-və](media/pronunciation.m4a?raw=true).
+AVA, not Ava or ava. Pronounced [`/ˈeɪvə/`](media/pronunciation.m4a?raw=true): Ay (f**a**ce, m**a**de) V (**v**ie, ha**v**e) A (comm**a**, **a**go)
 
 ### What is the header background?
 

@@ -6,7 +6,6 @@ node_js:
   - 11
   - 10
   - 8
-  - 6
 env:
   - FRESH_DEPS=false
   - FRESH_DEPS=true
@@ -16,15 +15,11 @@ matrix:
       env: FRESH_DEPS=true
     - node_js: 8
       env: FRESH_DEPS=true
-    - node_js: 6
-      env: FRESH_DEPS=true
     - node_js: 10
       env: FRESH_DEPS=true # Assume any bugs that occur with fresh dependencies are not platform specific.
       os: windows
-    - node_js: 6
-      os: windows # npm install --global currently fails on Windows. Skip the tests entirely instead.
 cache: npm
-before_install: if [[ "$(npm -v)" != "6.6.0" ]] && [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then npm install --global npm@6.6.0; fi
+before_install: if [[ "$(npm -v)" != "6.9.0" ]] && [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then npm install --global npm@6.9.0; fi
 install: npm ci
 before_script: |
   if [[ ${FRESH_DEPS} == "true" ]]; then

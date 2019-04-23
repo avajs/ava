@@ -73,6 +73,9 @@ test('sourceMatcher - defaults', t => {
 	isSource('fixtures/foo.js');
 	isSource('helpers/foo.js');
 
+	isSource('snapshots/foo.js.snap');
+	isSource('snapshots/bar.js.snap');
+
 	// TODO: Watcher should probably track any required file that matches the source pattern and has a require extension installed for the given extension.
 	notSource('foo-bar.json');
 	notSource('foo-bar.coffee');

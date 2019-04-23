@@ -57,11 +57,12 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `compileEnhancements`: if `false`, disables [power-assert](https://github.com/power-assert-js/power-assert) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
-- `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable power-assert and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
+- `compileEnhancements`: if `false`, disables [`power-assert`](./03-assertions.md#enhanced-assertion-messages) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
+- `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable `power-assert` and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
-- `babel`: test file specific Babel options. See our [Babel recipe] for more details
+- `babel`: test file specific Babel options. See our [Babel recipe](./recipes/babel.md#configuring-babel) for more details
 - `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
+- `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 
 Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
 
@@ -69,8 +70,9 @@ Note that providing files on the CLI overrides the `files` option. If you've con
 
 To use an `ava.config.js` file:
 
- 1. It must be in the same directory as your `package.json`
- 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
+1. It must be in the same directory as your `package.json`
+2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
+3. You must use `export default`, though [`require()`](https://nodejs.org/api/modules.html#modules_require_id) is available to load non-ES modules
 
 The config file must have a default export, using ES modules. It can either be a plain object or a factory function which returns a plain object:
 
