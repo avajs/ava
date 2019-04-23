@@ -36,11 +36,9 @@ Create a `test.js` file.
 // @flow
 import test from 'ava';
 
-const fn = async () => Promise.resolve('foo');
+const fn = () => 'foo';
 
-test(async (t) => {
-	t.is(await fn(), 'foo');
-});
+test(t => t.is(fn(), 'foo'));
 ```
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
