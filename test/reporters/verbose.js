@@ -1,6 +1,4 @@
 'use strict';
-require('../helper/report').captureStdIOReliability();
-
 const path = require('path');
 const {test} = require('tap');
 const {restoreClock} = require('../helper/fix-reporter-env')();
@@ -15,7 +13,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.version]
 	});
 	const reporter = new VerboseReporter({
 		reportStream: tty,
@@ -27,7 +25,7 @@ const run = (type, sanitizers = []) => t => {
 			tty.end();
 			return tty.asBuffer();
 		})
-		.then(buffer => report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true}))
+		.then(buffer => report.assert(t, logFile, buffer))
 		.catch(t.threw);
 };
 

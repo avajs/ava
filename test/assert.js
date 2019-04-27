@@ -8,40 +8,32 @@ const renderer = require('react-test-renderer');
 const {test} = require('tap');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
-const Test = require('../lib/test');
 const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
 let lastPassed = false;
-const assertions = assert.wrapAssertions({
-	pass(testObj) {
-		if (testObj !== assertions && !(testObj instanceof Test)) {
-			throw new Error('Expected testObj');
-		}
 
-		lastPassed = true;
-	},
-
-	pending(testObj, promise) {
-		if (testObj !== assertions && !(testObj instanceof Test)) {
-			throw new Error('Expected testObj');
-		}
-
-		promise.then(() => {
-			lastPassed = true;
-		}, err => {
-			lastFailure = err;
+const assertions = new class extends assert.Assertions {
+	constructor(overwrites = {}) {
+		super({
+			pass: () => {
+				lastPassed = true;
+			},
+			pending: promise => {
+				promise.then(() => {
+					lastPassed = true;
+				}, err => {
+					lastFailure = err;
+				});
+			},
+			fail: error => {
+				lastFailure = error;
+			},
+			skip: () => {},
+			...overwrites
 		});
-	},
-
-	fail(testObj, error) {
-		if (testObj !== assertions && !(testObj instanceof Test)) {
-			throw new Error('Expected testObj');
-		}
-
-		lastFailure = error;
 	}
-});
+}();
 
 function assertFailure(t, subset) {
 	if (!lastFailure) {
@@ -177,6 +169,11 @@ test('.pass()', t => {
 		assertions.pass();
 	});
 
+	passes(t, () => {
+		const {pass} = assertions;
+		pass();
+	});
+
 	t.end();
 });
 
@@ -195,12 +192,25 @@ test('.fail()', t => {
 		message: 'my message'
 	});
 
+	failsWith(t, () => {
+		const {fail} = assertions;
+		fail();
+	}, {
+		assertion: 'fail',
+		message: 'Test failed via `t.fail()`'
+	});
+
 	t.end();
 });
 
 test('.is()', t => {
 	passes(t, () => {
 		assertions.is('foo', 'foo');
+	});
+
+	passes(t, () => {
+		const {is} = assertions;
+		is('foo', 'foo');
 	});
 
 	passes(t, () => {
@@ -380,6 +390,11 @@ test('.not()', t => {
 		assertions.not('foo', 'bar');
 	});
 
+	passes(t, () => {
+		const {not} = assertions;
+		not('foo', 'bar');
+	});
+
 	fails(t, () => {
 		assertions.not(NaN, NaN);
 	});
@@ -424,6 +439,11 @@ test('.deepEqual()', t => {
 			b: 'b',
 			a: 'a'
 		});
+	});
+
+	passes(t, () => {
+		const {deepEqual} = assertions;
+		deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
@@ -670,6 +690,11 @@ test('.notDeepEqual()', t => {
 	});
 
 	passes(t, () => {
+		const {notDeepEqual} = assertions;
+		notDeepEqual({a: 'a'}, {a: 'b'});
+	});
+
+	passes(t, () => {
 		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
@@ -701,6 +726,15 @@ test('.throws()', gather(t => {
 	// Fails because function doesn't throw.
 	failsWith(t, () => {
 		assertions.throws(() => {});
+	}, {
+		assertion: 'throws',
+		message: '',
+		values: [{label: 'Function returned:', formatted: /undefined/}]
+	});
+
+	failsWith(t, () => {
+		const {throws} = assertions;
+		throws(() => {});
 	}, {
 		assertion: 'throws',
 		message: '',
@@ -865,6 +899,27 @@ test('.throws()', gather(t => {
 			throw err;
 		}, {code: 42});
 	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	fails(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, false);
+	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	passes(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, null);
+	});
+
+	// Regression test for https://github.com/avajs/ava/issues/1676
+	fails(t, () => {
+		assertions.throws(() => {
+			throw new Error('foo');
+		}, undefined);
+	});
 }));
 
 test('.throws() returns the thrown error', t => {
@@ -881,6 +936,15 @@ test('.throws() returns the thrown error', t => {
 test('.throwsAsync()', gather(t => {
 	// Fails because the promise is resolved, not rejected.
 	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
+		assertion: 'throwsAsync',
+		message: '',
+		values: [{label: 'Promise resolved with:', formatted: /'foo'/}]
+	});
+
+	eventuallyFailsWith(t, () => {
+		const {throwsAsync} = assertions;
+		return throwsAsync(Promise.resolve('foo'));
+	}, {
 		assertion: 'throwsAsync',
 		message: '',
 		values: [{label: 'Promise resolved with:', formatted: /'foo'/}]
@@ -1126,6 +1190,11 @@ test('.notThrows()', gather(t => {
 		assertions.notThrows(() => {});
 	});
 
+	passes(t, () => {
+		const {notThrows} = assertions;
+		notThrows(() => {});
+	});
+
 	// Fails because the function throws.
 	failsWith(t, () => {
 		assertions.notThrows(() => {
@@ -1153,6 +1222,11 @@ test('.notThrows()', gather(t => {
 test('.notThrowsAsync()', gather(t => {
 	// Passes because the promise is resolved
 	eventuallyPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
+
+	eventuallyPasses(t, () => {
+		const {notThrowsAsync} = assertions;
+		return notThrowsAsync(Promise.resolve());
+	});
 
 	// Fails because the promise is rejected
 	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
@@ -1244,28 +1318,57 @@ test('.snapshot()', t => {
 		fixedLocation: null,
 		updating
 	});
-	const setup = title => {
-		return new Test({
-			title,
-			compareTestSnapshot: options => manager.compare(options)
-		});
+	const setup = _title => {
+		return new class extends assertions.constructor {
+			constructor(title) {
+				super({
+					compareWithSnapshot: assertionOptions => {
+						return manager.compare({
+							belongsTo: assertionOptions.id || this.title,
+							expected: assertionOptions.expected,
+							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
+							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
+						});
+					}
+				});
+				this.title = title;
+				this.snapshotInvocationCount = 0;
+			}
+		}(_title);
 	};
 
-	passes(t, () => {
-		const testInstance = setup('passes');
-		assertions.snapshot.call(testInstance, {foo: 'bar'});
-		assertions.snapshot.call(testInstance, {foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Sindre'}));
-		assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-	});
+	{
+		const assertions = setup('passes');
+
+		passes(t, () => {
+			assertions.snapshot({foo: 'bar'});
+		});
+
+		passes(t, () => {
+			const {snapshot} = assertions;
+			snapshot({foo: 'bar'});
+		});
+
+		passes(t, () => {
+			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+		});
+
+		passes(t, () => {
+			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+		});
+
+		passes(t, () => {
+			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+		});
+	}
 
 	{
-		const testInstance = setup('fails');
+		const assertions = setup('fails');
 		if (updating) {
-			assertions.snapshot.call(testInstance, {foo: 'bar'});
+			assertions.snapshot({foo: 'bar'});
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(testInstance, {foo: 'not bar'});
+				assertions.snapshot({foo: 'not bar'});
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
@@ -1275,8 +1378,8 @@ test('.snapshot()', t => {
 	}
 
 	failsWith(t, () => {
-		const testInstance = setup('fails (fixed id)');
-		assertions.snapshot.call(testInstance, {foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
+		const assertions = setup('fails (fixed id)');
+		assertions.snapshot({foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
 	}, {
 		assertion: 'snapshot',
 		message: 'different message, also not included in snapshot report',
@@ -1284,12 +1387,12 @@ test('.snapshot()', t => {
 	});
 
 	{
-		const testInstance = setup('fails');
+		const assertions = setup('fails');
 		if (updating) {
-			assertions.snapshot.call(testInstance, {foo: 'bar'}, 'my message');
+			assertions.snapshot({foo: 'bar'}, 'my message');
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(testInstance, {foo: 'not bar'}, 'my message');
+				assertions.snapshot({foo: 'not bar'}, 'my message');
 			}, {
 				assertion: 'snapshot',
 				message: 'my message',
@@ -1299,23 +1402,23 @@ test('.snapshot()', t => {
 	}
 
 	{
-		const testInstance = setup('rendered comparison');
+		const assertions = setup('rendered comparison');
 		if (updating) {
-			assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			passes(t, () => {
-				assertions.snapshot.call(testInstance, React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+				assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
 			});
 		}
 	}
 
 	{
-		const testInstance = setup('rendered comparison');
+		const assertions = setup('rendered comparison');
 		if (updating) {
-			assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(testInstance, renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
+				assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
@@ -1325,12 +1428,12 @@ test('.snapshot()', t => {
 	}
 
 	{
-		const testInstance = setup('element comparison');
+		const assertions = setup('element comparison');
 		if (updating) {
-			assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Sindre'}));
+			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		} else {
 			failsWith(t, () => {
-				assertions.snapshot.call(testInstance, React.createElement(HelloMessage, {name: 'Vadim'}));
+				assertions.snapshot(React.createElement(HelloMessage, {name: 'Vadim'}));
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
@@ -1367,6 +1470,12 @@ test('.truthy()', t => {
 		assertions.truthy(true);
 	});
 
+	passes(t, () => {
+		const {truthy} = assertions;
+		truthy(1);
+		truthy(true);
+	});
+
 	t.end();
 });
 
@@ -1392,6 +1501,12 @@ test('.falsy()', t => {
 	passes(t, () => {
 		assertions.falsy(0);
 		assertions.falsy(false);
+	});
+
+	passes(t, () => {
+		const {falsy} = assertions;
+		falsy(0);
+		falsy(false);
 	});
 
 	t.end();
@@ -1434,6 +1549,11 @@ test('.true()', t => {
 		assertions.true(true);
 	});
 
+	passes(t, () => {
+		const {true: trueFn} = assertions;
+		trueFn(true);
+	});
+
 	t.end();
 });
 
@@ -1474,12 +1594,22 @@ test('.false()', t => {
 		assertions.false(false);
 	});
 
+	passes(t, () => {
+		const {false: falseFn} = assertions;
+		falseFn(false);
+	});
+
 	t.end();
 });
 
 test('.regex()', t => {
 	passes(t, () => {
 		assertions.regex('abc', /^abc$/);
+	});
+
+	passes(t, () => {
+		const {regex} = assertions;
+		regex('abc', /^abc$/);
 	});
 
 	failsWith(t, () => {
@@ -1531,6 +1661,11 @@ test('.regex() fails if passed a bad value', t => {
 test('.notRegex()', t => {
 	passes(t, () => {
 		assertions.notRegex('abc', /def/);
+	});
+
+	passes(t, () => {
+		const {notRegex} = assertions;
+		notRegex('abc', /def/);
 	});
 
 	failsWith(t, () => {
@@ -1600,6 +1735,12 @@ test('.assert()', t => {
 	passes(t, () => {
 		assertions.assert(1);
 		assertions.assert(true);
+	});
+
+	passes(t, () => {
+		const {assert} = assertions;
+		assert(1);
+		assert(true);
 	});
 
 	t.end();

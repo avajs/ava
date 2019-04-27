@@ -7,19 +7,17 @@
 	"homepage": "https://ava.li",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=6.12.3 <7 || >=8.9.4 <9 || >=10.0.0"
+		"node": ">=8.9.4 <9 || >=10.0.0"
 	},
 	"scripts": {
 		"lint": "xo",
-		"test:flow": "flow check test/flow-types",
 		"test:tap": "tap --no-esm --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
-		"test": "npm run lint && npm run test:flow && npm run test:typescript && nyc npm run test:tap"
+		"test": "npm run lint && npm run test:typescript && nyc npm run test:tap"
 	},
 	"files": [
 		"lib",
 		"*.js",
-		"*.js.flow",
 		"index.d.ts"
 	],
 	"keywords": [
@@ -56,8 +54,7 @@
 		"unit",
 		"snapshot",
 		"expect",
-		"typescript",
-		"flow"
+		"typescript"
 	],
 	"dependencies": {
 		"@ava/babel-preset-stage-4": "^2.0.0",
@@ -75,6 +72,7 @@
 		"array-union": "^1.0.1",
 		"array-uniq": "^2.0.0",
 		"arrify": "^1.0.0",
+		"async-sema": "^3.0.0",
 		"bluebird": "^3.5.3",
 		"chalk": "^2.4.2",
 		"chokidar": "^2.1.5",
@@ -147,7 +145,6 @@
 		"codecov": "^3.2.0",
 		"delay": "^4.1.0",
 		"execa": "^1.0.0",
-		"flow-bin": "^0.95.1",
 		"get-stream": "^4.1.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
@@ -180,7 +177,15 @@
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off"
-		}
+		},
+		"overrides": [
+			{
+				"files": "test/**/*.js",
+				"rules": {
+					"promise/prefer-await-to-then": "off"
+				}
+			}
+		]
 	},
 	"nyc": {
 		"reporter": [

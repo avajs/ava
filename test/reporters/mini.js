@@ -1,5 +1,4 @@
 'use strict';
-require('../helper/report').captureStdIOReliability();
 require('../helper/fix-reporter-env')();
 
 // Excessive writes occur in Node.js 11. These don't have a visual impact but prevent the integration tests from passing.
@@ -20,7 +19,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.unreliableProcessIO, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.version]
 	});
 	const reporter = new MiniReporter({
 		spinner: {
@@ -37,7 +36,7 @@ const run = (type, sanitizers = []) => t => {
 			tty.end();
 			return tty.asBuffer();
 		})
-		.then(buffer => report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: false}))
+		.then(buffer => report.assert(t, logFile, buffer))
 		.catch(t.threw);
 };
 

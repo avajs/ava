@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const del = require('del');
 const {test} = require('tap');
-const Api = require('../api');
+const Api = require('../lib/api');
 const babelPipeline = require('../lib/babel-pipeline');
 const ForkTestPool = require('../lib/test-pools/fork-test-pool');
 
@@ -1233,7 +1233,7 @@ test('using --match with matching tests will only report those passing tests', t
 	});
 });
 
-function generatePassDebugTests(execArgv, expectedInspectIndex) {
+function generatePassDebugTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		const apiOptions = {testOnlyExecArgv: execArgv};
 		const forkTestPool = new ForkTestPool({apiOptions});
@@ -1241,21 +1241,7 @@ function generatePassDebugTests(execArgv, expectedInspectIndex) {
 		return forkTestPool._computeForkExecArgv()
 			.then(result => {
 				t.true(result.length === execArgv.length);
-				if (expectedInspectIndex === -1) {
-					t.true(/--debug=\d+/.test(result[0]));
-				} else {
-					t.true(/--inspect=\d+/.test(result[expectedInspectIndex]));
-				}
-			});
-	});
-}
-
-function generatePassDebugIntegrationTests(execArgv) {
-	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
-		return api.run([path.join(__dirname, 'fixture/debug-arg.js')])
-			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.true(/--inspect=\d+/.test(result[0]));
 			});
 	});
 }
@@ -1270,27 +1256,11 @@ function generatePassInspectIntegrationTests(execArgv) {
 	});
 }
 
-generatePassDebugTests(['--debug=0'], -1);
-generatePassDebugTests(['--debug'], -1);
+generatePassDebugTests(['--inspect=0']);
+generatePassDebugTests(['--inspect']);
 
-generatePassDebugTests(['--inspect=0'], 0);
-generatePassDebugTests(['--inspect'], 0);
-
-// --inspect takes precedence
-generatePassDebugTests(['--inspect=0', '--debug-brk'], 0);
-generatePassDebugTests(['--inspect', '--debug-brk'], 0);
-
-// --inspect takes precedence, though --debug-brk is still passed to the worker
-generatePassDebugTests(['--debug-brk', '--inspect=0'], 1);
-generatePassDebugTests(['--debug-brk', '--inspect'], 1);
-
-if (Number(process.version.split('.')[0].slice(1)) < 8) {
-	generatePassDebugIntegrationTests(['--debug=0']);
-	generatePassDebugIntegrationTests(['--debug']);
-} else {
-	generatePassInspectIntegrationTests(['--inspect=9229']);
-	generatePassInspectIntegrationTests(['--inspect']);
-}
+generatePassInspectIntegrationTests(['--inspect=9229']);
+generatePassInspectIntegrationTests(['--inspect']);
 
 test('`esm` package support', t => {
 	const api = apiCreator({

@@ -56,10 +56,10 @@ test('returns empty string without any arguments', t => {
 	t.end();
 });
 
-test('beautify stack - removes uninteresting lines', t => {
+test('beautify stack - removes uninteresting lines', async t => {
 	try {
 		const runner = new Runner();
-		runner.runSingle({
+		await runner.runSingle({
 			run() {
 				fooFunc();
 			}

@@ -1,5 +1,4 @@
 'use strict';
-require('../helper/report').captureStdIOReliability();
 require('../helper/fix-reporter-env')();
 
 const path = require('path');
@@ -15,7 +14,7 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timeout, report.sanitizers.unreliableProcessIO]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timeout]
 	});
 	const reporter = new TapReporter({
 		reportStream: tty,
@@ -26,7 +25,7 @@ const run = (type, sanitizers = []) => t => {
 			tty.end();
 			return tty.asBuffer();
 		})
-		.then(buffer => report.assert(t, logFile, buffer, {stripStdIO: true, alsoStripSeparator: true}))
+		.then(buffer => report.assert(t, logFile, buffer))
 		.catch(t.threw);
 };
 
