@@ -72,7 +72,6 @@
 		"array-union": "^1.0.1",
 		"array-uniq": "^2.0.0",
 		"arrify": "^1.0.0",
-		"async-sema": "^3.0.0",
 		"bluebird": "^3.5.3",
 		"chalk": "^2.4.2",
 		"chokidar": "^2.1.5",
