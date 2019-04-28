@@ -90,8 +90,8 @@ test('catches unhandled-rejection in single-process', t => {
 
 test('fail-fast multiple files in single-process', t => {
 	const files = ['fails.js', 'passes-slow.js', 'passes.js'].map(file => {
-		return path.join('fail-fast/multiple-files', file)
-	})
+		return path.join('fail-fast/multiple-files', file);
+	});
 
 	execCli([...files, '--fail-fast', ...sharedArgs], (err, stdout) => {
 		t.is(err.code, 1);
