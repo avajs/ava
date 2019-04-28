@@ -3,6 +3,7 @@ os:
   - windows
   - linux
 node_js:
+  - 12
   - 11
   - 10
   - 8
@@ -11,13 +12,20 @@ env:
   - FRESH_DEPS=true
 matrix:
   exclude:
+    - node_js: 12
+      env: FRESH_DEPS=true # Assume any bugs that occur with fresh dependencies are not platform specific.
+      os: windows
+    - node_js: 12
+      env: FRESH_DEPS=false
+      os: linux # Windows already tests without fresh dependencies, and we test *with* on Linux.
     - node_js: 11
+      os: windows # We don't need to test odd-version releases very hard.
+    - node_js: 11
+      env: FRESH_DEPS=true
+    - node_js: 10
       env: FRESH_DEPS=true
     - node_js: 8
       env: FRESH_DEPS=true
-    - node_js: 10
-      env: FRESH_DEPS=true # Assume any bugs that occur with fresh dependencies are not platform specific.
-      os: windows
 cache: npm
 before_install: if [[ "$(npm -v)" != "6.9.0" ]] && [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then npm install --global npm@6.9.0; fi
 install: npm ci
