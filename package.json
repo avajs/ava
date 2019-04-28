@@ -93,7 +93,7 @@
 		"empower-core": "^1.2.0",
 		"equal-length": "^1.0.0",
 		"escape-string-regexp": "^2.0.0",
-		"esm": "^3.2.22",
+		"esm": "^3.2.20",
 		"figures": "^3.0.0",
 		"find-up": "^3.0.0",
 		"get-port": "^5.0.0",
