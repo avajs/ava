@@ -6,6 +6,7 @@ const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
 const pkg = require('../../package.json');
+const {normalizeGlobs} = require('../../lib/globs');
 
 let _Api = null;
 const createApi = options => {
@@ -93,10 +94,27 @@ const run = (type, reporter, match = []) => {
 		pattern = '*.ts';
 	}
 
+	options.globs = normalizeGlobs(undefined, undefined, options.extensions.all);
+
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync(pattern, {cwd: projectDir}).sort();
+	const files = globby.sync(pattern, {
+		absolute: true,
+		brace: true,
+		case: false,
+		cwd: projectDir,
+		dot: false,
+		expandDirectories: false,
+		extglob: true,
+		followSymlinkedDirectories: true,
+		gitignore: false,
+		globstar: true,
+		matchBase: false,
+		onlyFiles: true,
+		stats: false,
+		unique: true
+	}).sort();
 	if (type !== 'watch') {
 		return api.run(files).then(() => {
 			reporter.endRun();

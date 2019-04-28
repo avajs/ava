@@ -200,6 +200,18 @@ test('.fail()', t => {
 		message: 'Test failed via `t.fail()`'
 	});
 
+	failsWith(t, () => {
+		assertions.fail(null);
+	}, {
+		assertion: 'fail',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -382,6 +394,18 @@ test('.is()', t => {
 		]
 	});
 
+	failsWith(t, () => {
+		assertions.is(0, 0, null);
+	}, {
+		assertion: 'is',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -418,6 +442,18 @@ test('.not()', t => {
 		assertion: 'not',
 		message: 'my message',
 		values: [{label: 'Value is the same as:', formatted: /foo/}]
+	});
+
+	failsWith(t, () => {
+		assertions.not(0, 1, null);
+	}, {
+		assertion: 'not',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 
 	t.end();
@@ -681,6 +717,18 @@ test('.deepEqual()', t => {
 		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
 	});
 
+	failsWith(t, () => {
+		assertions.deepEqual({}, {}, null);
+	}, {
+		assertion: 'deepEqual',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -717,6 +765,18 @@ test('.notDeepEqual()', t => {
 		assertion: 'notDeepEqual',
 		message: 'my message',
 		values: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}]
+	});
+
+	failsWith(t, () => {
+		assertions.notDeepEqual({}, [], null);
+	}, {
+		assertion: 'notDeepEqual',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 
 	t.end();
@@ -920,6 +980,18 @@ test('.throws()', gather(t => {
 			throw new Error('foo');
 		}, undefined);
 	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, null, null);
+	}, {
+		assertion: 'throws',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
 }));
 
 test('.throws() returns the thrown error', t => {
@@ -1001,6 +1073,16 @@ test('.throwsAsync()', gather(t => {
 		values: [
 			{label: 'Function returned:', formatted: /undefined/}
 		]
+	});
+
+	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), null, null), {
+		assertion: 'throwsAsync',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 }));
 
@@ -1217,6 +1299,18 @@ test('.notThrows()', gather(t => {
 		message: 'my message',
 		values: [{label: 'Function threw:', formatted: /foo/}]
 	});
+
+	failsWith(t, () => {
+		assertions.notThrows(() => {}, null);
+	}, {
+		assertion: 'notThrows',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
 }));
 
 test('.notThrowsAsync()', gather(t => {
@@ -1263,6 +1357,16 @@ test('.notThrowsAsync()', gather(t => {
 		values: [
 			{label: 'Function did not return a promise. Use `t.notThrows()` instead:', formatted: /undefined/}
 		]
+	});
+
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
+		assertion: 'notThrowsAsync',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 }));
 
@@ -1442,6 +1546,21 @@ test('.snapshot()', t => {
 		}
 	}
 
+	{
+		const assertions = setup('bad message');
+		failsWith(t, () => {
+			assertions.snapshot(null, null, null);
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'The assertion message must be a string',
+			values: [{
+				label: 'Called with:',
+				formatted: /null/
+			}]
+		});
+	}
+
 	manager.save();
 	t.end();
 });
@@ -1476,6 +1595,18 @@ test('.truthy()', t => {
 		truthy(true);
 	});
 
+	failsWith(t, () => {
+		assertions.truthy(true, null);
+	}, {
+		assertion: 'truthy',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -1507,6 +1638,18 @@ test('.falsy()', t => {
 		const {falsy} = assertions;
 		falsy(0);
 		falsy(false);
+	});
+
+	failsWith(t, () => {
+		assertions.falsy(false, null);
+	}, {
+		assertion: 'falsy',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 
 	t.end();
@@ -1554,6 +1697,18 @@ test('.true()', t => {
 		trueFn(true);
 	});
 
+	failsWith(t, () => {
+		assertions.true(true, null);
+	}, {
+		assertion: 'true',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -1599,6 +1754,18 @@ test('.false()', t => {
 		falseFn(false);
 	});
 
+	failsWith(t, () => {
+		assertions.false(false, null);
+	}, {
+		assertion: 'false',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -1632,6 +1799,18 @@ test('.regex()', t => {
 			{label: 'Value must match expression:', formatted: /foo/},
 			{label: 'Regular expression:', formatted: /\/\^abc\$\//}
 		]
+	});
+
+	failsWith(t, () => {
+		assertions.regex('foo', /^abc$/, null);
+	}, {
+		assertion: 'regex',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 
 	t.end();
@@ -1690,6 +1869,18 @@ test('.notRegex()', t => {
 		]
 	});
 
+	failsWith(t, () => {
+		assertions.notRegex('abc', /abc/, null);
+	}, {
+		assertion: 'notRegex',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
 	t.end();
 });
 
@@ -1741,6 +1932,18 @@ test('.assert()', t => {
 		const {assert} = assertions;
 		assert(1);
 		assert(true);
+	});
+
+	failsWith(t, () => {
+		assertions.assert(null, null);
+	}, {
+		assertion: 'assert',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
 	});
 
 	t.end();

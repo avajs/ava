@@ -1,5 +1,5 @@
 {
 	"ava": {
-		"files": "tests"
+		"files": ["tests/test.js"]
 	}
 }

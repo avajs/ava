@@ -71,8 +71,6 @@ By default AVA watches for changes to the test files, snapshot files, `package.j
 
 You can configure patterns for the source files in the [`ava` section of your `package.json`, or `ava.config.js` file][config], using the `sources` key.
 
-You can specify patterns to match files in the folders that would otherwise be ignored, e.g. use `node_modules/some-dependency/*.js` to specify all `.js` files in `node_modules/some-dependency` as a source, even though normally all files in `node_modules` are ignored. Note that you need to specify an exact directory; `{bower_components,node_modules}/**/*.js` won't work.
-
 If your tests write to disk they may trigger the watcher to rerun your tests. Configure patterns for the source files to avoid this.
 
 ## Dependency tracking
