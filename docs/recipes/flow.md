@@ -36,9 +36,11 @@ Create a `test.js` file.
 // @flow
 import test from 'ava';
 
-const fn = () => 'foo';
+const getFoo = () => 'foo';
 
-test(t => t.is(fn(), 'foo'));
+test('check getFoo', t => {
+	t.is(getFoo(), 'foo');
+});
 ```
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
