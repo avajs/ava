@@ -148,7 +148,7 @@
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
 		"lolex": "^4.0.1",
-		"nyc": "^14.0.0",
+		"nyc": "^13.3.0",
 		"proxyquire": "^2.1.0",
 		"react": "^16.8.6",
 		"react-test-renderer": "^16.8.6",
