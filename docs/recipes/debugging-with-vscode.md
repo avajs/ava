@@ -4,6 +4,8 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 ## Setup
 
+You first need to cache the tests, so run the test file outside debugging run beforehand.
+
 In the sidebar click the `Debug` handle.
 
 Add a new configuration in the dropdown menu next to the green `Debug` button: `Add configuration`. This will open `launch.json` with all debug configurations.
