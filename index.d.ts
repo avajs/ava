@@ -1,5 +1,6 @@
 export interface ObservableLike {
-	subscribe(observer: (value: any) => void): void;
+	subscribe(observer: (value: unknown) => void): void;
+	[Symbol.observable](): ObservableLike;
 }
 
 export type Constructor = (new (...args: Array<any>) => any);
