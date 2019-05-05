@@ -70,8 +70,8 @@ test('isSource with defaults', t => {
 	isSource('foo/blah.js');
 	isSource('bar/foo.js');
 
-	isSource('_foo-bar.js');
-	isSource('foo/_foo-bar.js');
+	notSource('_foo-bar.js');
+	notSource('foo/_foo-bar.js');
 	isSource('fixtures/foo.js');
 	isSource('helpers/foo.js');
 
