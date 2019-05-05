@@ -30,7 +30,7 @@ $ npx ava --help
 
   The above relies on your shell expanding the glob patterns.
   Without arguments, AVA uses the following patterns:
-    **/test.js **/test-*.js **/*.test.js **/test/**/*.js **/__tests__/**/*.js
+    **/test.js **/test-*.js **/*.spec.js **/*.test.js **/test/**/*.js **/__tests__/**/*.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
@@ -39,6 +39,7 @@ AVA searches for test files using the following patterns:
 
 * `**/test.js`
 * `**/test-*.js`
+* `**/*.spec.js`
 * `**/*.test.js`
 * `**/test/**/*.js`
 * `**/__tests__/**/*.js`
