@@ -49,7 +49,7 @@ Create a `test.ts` file.
 ```ts
 import test from 'ava';
 
-const fn = () => Promise.resolve('foo');
+const fn = () => 'foo';
 
 test('fn() returns foo', t => {
 	t.is(fn(), 'foo');
