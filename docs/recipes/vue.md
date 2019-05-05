@@ -23,14 +23,14 @@ The first step is setting up a helper to configure the environment to transpile 
 {
 	"ava": {
 		"require": [
-			"./test/helpers/setup.js"
+			"./test/_setup.js"
 		]
 	}
 }
 ```
 
 ```js
-// ./test/helpers/setup.js
+// ./test/_setup.js
 
 // Setup browser environment
 require('browser-env')();
