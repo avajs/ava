@@ -190,7 +190,7 @@ require('@babel/register')({
 });
 ```
 
-Now instead of requiring `@babel/register`, require `test/_register` instead.
+Now instead of requiring `@babel/register`, require `./test/_register` instead.
 
 **`package.json`:**
 
@@ -198,7 +198,7 @@ Now instead of requiring `@babel/register`, require `test/_register` instead.
 {
 	"ava": {
 		"require": [
-			"test/_register.js"
+			"./test/_register.js"
 		]
 	}
 }
