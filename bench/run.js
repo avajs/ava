@@ -8,6 +8,7 @@ const makeDir = require('make-dir');
 const branch = require('git-branch').sync(path.join(__dirname, '..'));
 
 const cliPath = require.resolve('../cli');
+const boundJson = require('../lib/bound-builtins').json;
 
 function runTests(_args) {
 	return new Promise(resolve => {
@@ -129,6 +130,6 @@ Promise.each(combined, async definition => {
 
 	fs.writeFileSync(
 		path.join(__dirname, '.results', `${branch}.json`),
-		JSON.stringify(results, null, 4)
+		boundJson.stringify(results, null, 4)
 	);
 });

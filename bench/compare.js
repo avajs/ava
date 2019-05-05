@@ -3,10 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const Table = require('cli-table3');
 const chalk = require('chalk');
+const boundJson = require('../lib/bound-builtins').json;
 
 let files = fs.readdirSync(path.join(__dirname, '.results'))
 	.map(file => {
-		const result = JSON.parse(fs.readFileSync(path.join(__dirname, '.results', file), 'utf8'));
+		const result = boundJson.parse(fs.readFileSync(path.join(__dirname, '.results', file), 'utf8'));
 		result['.file'] = path.basename(file, '.json');
 		return result;
 	})

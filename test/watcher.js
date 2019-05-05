@@ -8,7 +8,7 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const {test} = require('tap');
 const {normalizeGlobs} = require('../lib/globs');
-const {setImmediate} = require('../lib/now-and-timers');
+const {setImmediate} = require('../lib/bound-builtins').timers;
 
 require('../lib/chalk').set({});
 
