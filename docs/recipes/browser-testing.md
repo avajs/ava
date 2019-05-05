@@ -22,9 +22,9 @@ $ npm install --save-dev browser-env
 
 ## Setup browser-env
 
-Create a helper file and place it in the `test/helpers` folder. This ensures AVA does not treat it as a test.
+Create a helper file, prefixed with an underscore. This ensures AVA does not treat it as a test.
 
-`test/helpers/setup-browser-env.js`:
+`test/_setup-browser-env.js`:
 
 ```js
 import browserEnv from 'browser-env';
@@ -58,7 +58,7 @@ Configure AVA to `require` the helper before every test file.
 {
 	"ava": {
 		"require": [
-			"./test/helpers/setup-browser-env.js"
+			"./test/_setup-browser-env.js"
 		]
 	}
 }
