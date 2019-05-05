@@ -49,10 +49,10 @@ Create a `test.ts` file.
 ```ts
 import test from 'ava';
 
-const fn = async () => Promise.resolve('foo');
+const fn = () => 'foo';
 
-test(async t => {
-	t.is(await fn(), 'foo');
+test('fn() returns foo', t => {
+	t.is(fn(), 'foo');
 });
 ```
 
