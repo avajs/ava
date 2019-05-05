@@ -108,6 +108,7 @@ test('findHelpersAndTests finds tests (just .js)', async t => {
 
 	const expected = [
 		'sub/directory/__tests__/foo.js',
+		'sub/directory/bar.spec.js',
 		'sub/directory/bar.test.js',
 		'test-foo.js',
 		'test.js',
