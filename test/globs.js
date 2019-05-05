@@ -30,11 +30,11 @@ test('isTest', t => {
 	);
 
 	function isTest(file) {
-		t.true(globs.isTest(fixture(file), options), `${file} should be a test`);
+		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
 	}
 
 	function notTest(file) {
-		t.false(globs.isTest(fixture(file), options), `${file} should not be a test`);
+		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
 	}
 
 	isTest('foo-bar.js');
@@ -58,11 +58,11 @@ test('isSource with defaults', t => {
 	const options = globs.normalizeGlobs(undefined, undefined, ['js']);
 
 	function isSource(file) {
-		t.true(globs.isSource(file, options), `${file} should be a source`);
+		t.true(globs.classify(file, options).isSource, `${file} should be a source`);
 	}
 
 	function notSource(file) {
-		t.false(globs.isSource(file, options), `${file} should not be a source`);
+		t.false(globs.classify(file, options).isSource, `${file} should not be a source`);
 	}
 
 	isSource('foo-bar.js');
@@ -96,9 +96,9 @@ test('isSource with negation negation patterns', t => {
 		['js']
 	);
 
-	t.false(globs.isSource('node_modules/foo/foo.js', options));
-	t.false(globs.isSource('bar.js', options));
-	t.false(globs.isSource('foo/bar.js', options));
+	t.false(globs.classify('node_modules/foo/foo.js', options).isSource);
+	t.false(globs.classify('bar.js', options).isSource);
+	t.false(globs.classify('foo/bar.js', options).isSource);
 	t.end();
 });
 
