@@ -4,7 +4,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 All of the [CLI options](./05-command-line.md) can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
-To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
+To ignore files, prefix the pattern with an `!` (exclamation mark).
 
 **`package.json`:**
 
@@ -12,13 +12,12 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 {
 	"ava": {
 		"files": [
-			"my-test-directory/**/*.js",
-			"!my-test-directory/exclude-this-directory",
-			"!**/exclude-this-file.js"
+			"test/**/*",
+			"!test/exclude-files-in-this-directory",
+			"!**/exclude-files-with-this-name.*"
 		],
 		"sources": [
-			"**/*.{js,jsx}",
-			"!dist"
+			"src/**/*"
 		],
 		"match": [
 			"*oo",
@@ -35,7 +34,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"@babel/register"
 		],
 		"babel": {
-			"extensions": ["jsx"],
+			"extensions": ["js", "jsx"],
 			"testOptions": {
 				"babelrc": false
 			}
@@ -48,8 +47,8 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 ## Options
 
-- `files`: glob patterns that select which files AVA will run tests from. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the glob pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
-- `sources`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
+- `sources`: an array of glob patterns to match files that, when changed, cause tests to be re-run (when in watch mode). See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
