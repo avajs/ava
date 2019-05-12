@@ -136,7 +136,7 @@ test('findHelpersAndTests finds tests (.js, .jsx)', async t => {
 
 	const {tests: actual} = await globs.findHelpersAndTests({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs(['!**/fixtures/*.*', '!**/helpers/*.*'], undefined, ['js', 'jsx'])
+		...globs.normalizeGlobs(['!**/fixtures/*', '!**/helpers/*'], undefined, ['js', 'jsx'])
 	});
 	actual.sort();
 	t.deepEqual(actual, expected);
