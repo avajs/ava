@@ -23,12 +23,15 @@ test('ignores relativeness in patterns', t => {
 });
 
 test('isTest', t => {
-	const options = globs.normalizeGlobs(
-		['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],
-		undefined,
-		undefined,
-		['js']
-	);
+	const options = {
+		...globs.normalizeGlobs(
+			['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],
+			undefined,
+			undefined,
+			['js']
+		),
+		cwd: fixture()
+	};
 
 	function isTest(file) {
 		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
@@ -55,15 +58,54 @@ test('isTest', t => {
 	t.end();
 });
 
+test('isTest (pattern starts with directory)', t => {
+	const options = {
+		...globs.normalizeGlobs(
+			['bar/**/*'],
+			undefined,
+			undefined,
+			['js']
+		),
+		cwd: fixture()
+	};
+
+	function isTest(file) {
+		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
+	}
+
+	function notTest(file) {
+		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
+	}
+
+	notTest('foo-bar.js');
+	notTest('foo.js');
+	notTest('foo/blah.js');
+	isTest('bar/foo.js');
+	isTest('bar/foo-bar/baz/buz.js');
+	isTest('bar/baz/buz.js');
+	notTest('bar.js');
+	isTest('bar/bar.js');
+	notTest('bar/_foo-bar.js');
+	notTest('foo/_foo-bar.js');
+	notTest('foo-bar.txt');
+	notTest('node_modules/foo.js');
+	notTest('fixtures/foo.js');
+	notTest('helpers/foo.js');
+	t.end();
+});
+
 test('isSource with defaults', t => {
-	const options = globs.normalizeGlobs(undefined, undefined, undefined, ['js']);
+	const options = {
+		...globs.normalizeGlobs(undefined, undefined, undefined, ['js']),
+		cwd: fixture()
+	};
 
 	function isSource(file) {
-		t.true(globs.classify(file, options).isSource, `${file} should be a source`);
+		t.true(globs.classify(fixture(file), options).isSource, `${file} should be a source`);
 	}
 
 	function notSource(file) {
-		t.false(globs.classify(file, options).isSource, `${file} should not be a source`);
+		t.false(globs.classify(fixture(file), options).isSource, `${file} should not be a source`);
 	}
 
 	isSource('foo-bar.js');
@@ -91,28 +133,51 @@ test('isSource with defaults', t => {
 });
 
 test('isSource with negation negation patterns', t => {
-	const options = globs.normalizeGlobs(
-		['**/foo*'],
-		undefined,
-		['!**/bar*'],
-		['js']
-	);
+	const options = {
+		...globs.normalizeGlobs(
+			['**/foo*'],
+			undefined,
+			['!**/bar*'],
+			['js']
+		),
+		cwd: fixture()
+	};
 
-	t.false(globs.classify('node_modules/foo/foo.js', options).isSource);
-	t.false(globs.classify('bar.js', options).isSource);
-	t.false(globs.classify('foo/bar.js', options).isSource);
+	t.false(globs.classify(fixture('node_modules/foo/foo.js'), options).isSource);
+	t.false(globs.classify(fixture('bar.js'), options).isSource);
+	t.false(globs.classify(fixture('foo/bar.js'), options).isSource);
+	t.end();
+});
+
+test('isSource (pattern starts with directory)', t => {
+	const options = {
+		...globs.normalizeGlobs(
+			['**/foo*'],
+			undefined,
+			['foo/**/*'],
+			['js']
+		),
+		cwd: fixture()
+	};
+
+	t.false(globs.classify(fixture('node_modules/foo/foo.js'), options).isSource);
+	t.false(globs.classify(fixture('bar.js'), options).isSource);
+	t.true(globs.classify(fixture('foo/bar.js'), options).isSource);
 	t.end();
 });
 
 test('isHelper (prefixed only)', t => {
-	const options = globs.normalizeGlobs(undefined, undefined, undefined, ['js']);
+	const options = {
+		...globs.normalizeGlobs(undefined, undefined, undefined, ['js']),
+		cwd: fixture()
+	};
 
 	function isHelper(file) {
-		t.true(globs.classify(file, options).isHelper, `${file} should be a helper`);
+		t.true(globs.classify(fixture(file), options).isHelper, `${file} should be a helper`);
 	}
 
 	function notHelper(file) {
-		t.false(globs.classify(file, options).isHelper, `${file} should not be a helper`);
+		t.false(globs.classify(fixture(file), options).isHelper, `${file} should not be a helper`);
 	}
 
 	notHelper('foo.js');
@@ -133,14 +198,17 @@ test('isHelper (prefixed only)', t => {
 });
 
 test('isHelper (with patterns)', t => {
-	const options = globs.normalizeGlobs(undefined, ['**/f*.*'], undefined, ['js']);
+	const options = {
+		...globs.normalizeGlobs(undefined, ['**/f*.*'], undefined, ['js']),
+		cwd: fixture()
+	};
 
 	function isHelper(file) {
-		t.true(globs.classify(file, options).isHelper, `${file} should be a helper`);
+		t.true(globs.classify(fixture(file), options).isHelper, `${file} should be a helper`);
 	}
 
 	function notHelper(file) {
-		t.false(globs.classify(file, options).isHelper, `${file} should not be a helper`);
+		t.false(globs.classify(fixture(file), options).isHelper, `${file} should not be a helper`);
 	}
 
 	isHelper('foo.js');
@@ -151,6 +219,37 @@ test('isHelper (with patterns)', t => {
 	isHelper('foo/_foo.js');
 	isHelper('fixtures/foo.js');
 	isHelper('helpers/foo.js');
+
+	notHelper('snapshots/foo.js.snap');
+
+	notHelper('foo.json');
+	notHelper('foo.coffee');
+	notHelper('node_modules/foo.js');
+	t.end();
+});
+
+test('isHelper (pattern stars with directory)', t => {
+	const options = {
+		...globs.normalizeGlobs(undefined, ['foo/**/*'], undefined, ['js']),
+		cwd: fixture()
+	};
+
+	function isHelper(file) {
+		t.true(globs.classify(fixture(file), options).isHelper, `${file} should be a helper`);
+	}
+
+	function notHelper(file) {
+		t.false(globs.classify(fixture(file), options).isHelper, `${file} should not be a helper`);
+	}
+
+	notHelper('foo.js');
+	isHelper('foo/bar.js');
+	notHelper('bar/foo.js');
+
+	isHelper('_foo.js');
+	isHelper('foo/_foo.js');
+	notHelper('fixtures/foo.js');
+	notHelper('helpers/foo.js');
 
 	notHelper('snapshots/foo.js.snap');
 
@@ -272,6 +371,24 @@ test('findTests finds tests (.js, .jsx)', async t => {
 	const {tests: actual} = await globs.findTests({
 		cwd: fixtureDir,
 		...globs.normalizeGlobs(['!**/fixtures/*', '!**/helpers/*'], undefined, undefined, ['js', 'jsx'])
+	});
+	actual.sort();
+	t.deepEqual(actual, expected);
+});
+
+test('findTests excludes helpers', async t => {
+	const fixtureDir = fixture('custom-extension');
+	process.chdir(fixtureDir);
+
+	const expected = [
+		'test/do-not-compile.js',
+		'test/foo.jsx',
+		'test/sub/bar.jsx'
+	].sort().map(file => path.join(fixtureDir, file));
+
+	const {tests: actual} = await globs.findTests({
+		cwd: fixtureDir,
+		...globs.normalizeGlobs(['!**/fixtures/*'], ['test/helpers/**/*'], undefined, ['js', 'jsx'])
 	});
 	actual.sort();
 	t.deepEqual(actual, expected);
