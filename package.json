@@ -4,7 +4,7 @@
 	"description": "Testing can be a drag. AVA helps you get it done.",
 	"license": "MIT",
 	"repository": "avajs/ava",
-	"homepage": "https://ava.li",
+	"homepage": "https://avajs.dev",
 	"bin": "cli.js",
 	"engines": {
 		"node": ">=8.9.4 <9 || >=10.0.0"
