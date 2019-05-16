@@ -732,7 +732,7 @@ export interface SkipInterface<Context = {}> {
 	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this test. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
 export interface TodoDeclaration {

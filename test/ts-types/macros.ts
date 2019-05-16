@@ -72,4 +72,8 @@ import test, {ExecutionContext, Macro} from '../..';
 	test((t, input, expected) => {
 		t.is(input.length, expected)
 	}, 'foo', 3);
+
+	test.skip((t, input, expected) => {
+		t.is(input.length, expected)
+	}, 'foo', 3);
 }
