@@ -28,6 +28,9 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 		"concurrency": 5,
 		"failFast": true,
 		"failWithoutAssertions": false,
+		"environmentVariables": {
+			"MY_ENVIRONMENT_VARIABLE": "some value"
+		},
 		"tap": true,
 		"verbose": true,
 		"compileEnhancements": false,
@@ -54,6 +57,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
+- `environmentVariables`: specifies default environment variables to be injected in the processes that run the test files
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
