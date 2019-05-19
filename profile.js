@@ -22,7 +22,7 @@ function resolveModules(modules) {
 	return arrify(modules).map(name => {
 		const modulePath = resolveCwd.silent(name);
 
-		if (modulePath === null) {
+		if (modulePath === undefined) {
 			throw new Error(`Could not resolve required module '${name}'`);
 		}
 
