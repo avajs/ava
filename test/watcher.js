@@ -145,7 +145,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs(files, sources, ['js'])});
+	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs(files, undefined, sources, ['js']), resolveTestsFrom: ''});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -1086,7 +1086,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(debug.calledThrice);
-				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Sources remain that cannot be traced to specific tests: %O', ['cannot-be-mapped.js']]);
+				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Helpers & sources remain that cannot be traced to specific tests: %O', ['cannot-be-mapped.js']]);
 				t.strictDeepEqual(debug.thirdCall.args, ['ava:watcher', 'Rerunning all tests']);
 			});
 		});

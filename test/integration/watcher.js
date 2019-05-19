@@ -156,6 +156,33 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 	});
 });
 
+test('watcher does not rerun test files when files change that are neither tests, helpers nor sources', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/ignored-files', env: {CI: ''}}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stdout.on('data', str => {
+		buffer += str;
+		if (buffer.includes('1 test passed') && !passedFirst) {
+			touch.sync(path.join(__dirname, '../fixture/watcher/ignored-files/ignored.js'));
+			buffer = '';
+			passedFirst = true;
+			setTimeout(() => {
+				child.kill();
+				killed = true;
+			}, 500);
+		} else if (passedFirst && !killed) {
+			t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
+		}
+	});
+});
+
 test('watcher reruns test files when snapshot dependencies change', t => {
 	let killed = false;
 

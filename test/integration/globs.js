@@ -16,6 +16,19 @@ test('errors if top-level files is an empty array', t => {
 	});
 });
 
+test('errors if top-level helpers is an empty array', t => {
+	execCli(['es2015.js'], {dirname: 'fixture/invalid-globs/helpers'}, (err, stdout, stderr) => {
+		t.ok(err);
+
+		let expectedOutput = '\n';
+		expectedOutput += figures.cross + ' The \'helpers\' configuration must be an array containing glob patterns.';
+		expectedOutput += '\n';
+
+		t.is(stderr, expectedOutput);
+		t.end();
+	});
+});
+
 test('errors if top-level sources is an empty array', t => {
 	execCli(['es2015.js'], {dirname: 'fixture/invalid-globs/sources'}, (err, stdout, stderr) => {
 		t.ok(err);

@@ -32,7 +32,7 @@ function apiCreator(options = {}) {
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
 	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
-	options.globs = normalizeGlobs(options.files, options.sources, options.extensions.all);
+	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions.all);
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
@@ -579,16 +579,15 @@ test('test file in node_modules is ignored', t => {
 		});
 });
 
-// TODO: Re-enable to test helpers patterns.
-// test('test file in helpers is ignored', t => {
-// 	t.plan(1);
-//
-// 	const api = apiCreator();
-// 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/helpers/test.js')])
-// 		.then(runStatus => {
-// 			t.is(runStatus.stats.declaredTests, 0);
-// 		});
-// });
+test('test file in helpers is ignored', t => {
+	t.plan(1);
+
+	const api = apiCreator({helpers: ['**/helpers/*'], projectDir: path.join(__dirname, 'fixture/ignored-dirs')});
+	return api.run()
+		.then(runStatus => {
+			t.is(runStatus.stats.declaredTests, 1);
+		});
+});
 
 test('Node.js-style --require CLI argument', t => {
 	const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
