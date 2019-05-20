@@ -21,16 +21,15 @@ First set up a helper to configure the environment to transpile `.vue` files and
 {
 	"ava": {
 		"require": [
-			"./test/helpers/setup.js"
 			"@babel/register",
+			"./test/_setup.js"
 		]
 	}
 }
 ```
 
 ```js
-```js
-// ./test/helpers/setup.js
+// ./test/_setup.js
 
 // Setup browser environment
 require('browser-env')();
