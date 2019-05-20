@@ -47,41 +47,35 @@ hooks('vue').plugin('vue').push();
 hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//)).plugin('babel').push();
 ```
 
-**`.babelrc`:**
-```json
-{
-	"env": {
-		"test": {
-			"plugins": [
-				[
-					"module-resolver",
-					{
-						"root": [
-							"."
-						],
-						"alias": {
-							"@": ".",
-							"~": "."
-						}
-					}
-				]
-			],
-			"ignore": [
-				"ava.config.js"
-			],
-			"presets": [
-				[
-					"@babel/preset-env",
-					{
-						"targets": {
-							"node": "current"
-						}
-					}
-				]
-			]
-		}
-	}
-}
+**`babel.config.js`:**
+```js
+module.exports = {
+  "env": {
+    "test": {
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": [
+              "."
+            ],
+            "alias": {
+              "@": ".",
+              "~": "."
+            }
+          }
+        ]
+      ],
+      "presets": [
+        [ "@babel/env", {
+          targets: {
+            node: "current"
+          }
+        }]
+      ]
+    }
+  },
+};
 ```
 
 You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
