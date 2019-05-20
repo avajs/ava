@@ -116,7 +116,7 @@ test.beforeEach(() => {
 });
 
 test('is a Vue instance', t => {
-	t.is(wrapper.isVueInstance(), true);
+	t.true(wrapper.isVueInstance());
 });
 
 test('renders correct snapshot', t => {
