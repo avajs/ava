@@ -221,6 +221,12 @@ not ok 26 - test [90m[2m›[22m[39m implementation throws non-error
 # slow › slow
 ok 27 - slow [90m[2m›[22m[39m slow
 ---tty-stream-chunk-separator
+  * before
+---tty-stream-chunk-separator
+  * beforeEach
+---tty-stream-chunk-separator
+  * beforeEach
+---tty-stream-chunk-separator
 # output-in-hook › passing test
 ok 28 - output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
@@ -232,6 +238,14 @@ not ok 29 - output-in-hook [90m[2m›[22m[39m failing test
     assertion: fail
     at: 'fail (output-in-hook.js:34:4)'
   ...
+---tty-stream-chunk-separator
+  * afterEach
+---tty-stream-chunk-separator
+  * afterEachAlways
+---tty-stream-chunk-separator
+  * afterEachAlways
+---tty-stream-chunk-separator
+  * afterAlways
 ---tty-stream-chunk-separator
 
 1..23
