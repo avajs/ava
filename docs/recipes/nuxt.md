@@ -21,25 +21,14 @@ First set up a helper to configure the environment to transpile `.vue` files and
 {
 	"ava": {
 		"require": [
-			"./test/helpers/register.js",
 			"./test/helpers/setup.js"
+			"@babel/register",
 		]
 	}
 }
 ```
 
 ```js
-// ./test/helpers/register.js
-
-require('@babel/register')({
-	// These patterns are relative to the project root directory (where the `package.json` file lives):
-	ignore: [
-		'node_modules/*',
-		'test/*'
-	]
-});
-```
-
 ```js
 // ./test/helpers/setup.js
 
