@@ -21,7 +21,6 @@ First set up a helper to configure the environment to transpile `.vue` files and
 {
 	"ava": {
 		"require": [
-			"@babel/register",
 			"./test/_setup.js"
 		]
 	}
