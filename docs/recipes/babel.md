@@ -101,6 +101,31 @@ Note that this *does not* stop AVA from compiling your test files using Babel.
 
 If you want, you can disable the preset in your project's Babel configuration.
 
+## Change Power Assert's patterns
+
+If you prefer to name your `t` argument something else, or access `assert` with destructuring assignment, you need to tell [`power-assert`](https://github.com/power-assert-js/power-assert) which patterns to look for.
+
+**`package.json`:**
+
+```json
+{
+	"ava": {
+		"babel": {
+			"testOptions": {
+				"plugins": [
+					["babel-plugin-espower", {
+						"patterns": [
+							"assert(value, [message])",
+							"test.assert(value, [message])"
+						]
+					}]
+				]
+			}
+		}
+	}
+}
+```
+
 ## Preserve ES module syntax
 
 By default AVA's stage-4 preset will convert ES module syntax to CommonJS. This can be disabled.
