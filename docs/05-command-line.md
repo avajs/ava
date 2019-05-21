@@ -122,6 +122,8 @@ test(function foo(t) {
 });
 ```
 
+> Note: You need to use double-quotes when using [Windows](https://github.com/avajs/ava/issues/1691#issuecomment-363355143).
+
 ## Resetting AVA's cache
 
 AVA caches the compiled test and helper files. It automatically recompiles these files when you change them. AVA tries its best to detect changes to your Babel configuration files, plugins and presets. If it seems like your latest Babel configuration isn't being applied, however, you can run AVA with the `--reset-cache` flag to reset AVA's cache. If set, all files in the `node_modules/.cache/ava` directory are deleted. Run AVA as normal to apply your new Babel configuration.
