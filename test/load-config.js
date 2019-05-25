@@ -21,6 +21,13 @@ test('finds config in package.json', t => {
 	t.end();
 });
 
+test('loads config from a particular directory', t => {
+	changeDir('throws');
+	const conf = loadConfig(path.resolve(__dirname, 'fixture', 'load-config', 'package-only'));
+	t.is(conf.failFast, true);
+	t.end();
+});
+
 test('throws a warning of both configs are present', t => {
 	changeDir('package-yes-file-yes');
 	t.throws(loadConfig);
@@ -32,7 +39,7 @@ test('merges in defaults passed with initial call', t => {
 	const defaults = {
 		files: ['123', '!456']
 	};
-	const {files, failFast} = loadConfig(defaults);
+	const {files, failFast} = loadConfig(undefined, defaults);
 	t.is(failFast, true, 'preserves original props');
 	t.is(files, defaults.files, 'merges in extra props');
 	t.end();
