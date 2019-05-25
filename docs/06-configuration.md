@@ -110,17 +110,18 @@ Note that the final configuration must not be a promise.
 
 ## Object printing depth
 
-By default, Ava prints nested objects to a depth of 3. However, when debugging tests it's sometimes useful to print more detail in highly nested objects. This can be done by setting [`util.inspect.defaultOptions.depth`](https://nodejs.org/api/util.html#util_util_inspect_defaultoptions) to the desired depth, before the test is executed:
+By default, AVA prints nested objects to a depth of `3`. However, when debugging tests with deeply nested objects, it can be useful to print with more detail. This can be done by setting [`util.inspect.defaultOptions.depth`](https://nodejs.org/api/util.html#util_util_inspect_defaultoptions) to the desired depth, before the test is executed:
 
 ```js
+import util from 'util';
+
 import test from 'ava';
-import util from 'util';  // import the "util" module from Node.js
 
-util.inspect.defaultOptions.depth = 5;  // set the depth
+util.inspect.defaultOptions.depth = 5;  // Increase AVA's printing depth
 
-...
-
-test("My test", ...);
+test('My test', t => {
+	t.deepEqual(someDeeplyNestedObject, theExpectedValue);
+});
 ```
 
-The minimum object printing depth is 3. If it's set lower than 3, Ava will still print 3 levels of nested objects.
+AVA has a minimum depth of `3`.
