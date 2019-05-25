@@ -32,7 +32,7 @@ function resolveModules(modules) {
 
 Promise.longStackTraces();
 
-const conf = loadConfig({
+const conf = loadConfig(undefined, {
 	babel: {
 		testOptions: {}
 	},
