@@ -404,13 +404,26 @@ export interface TryFn<Context> {
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
-	<Args extends any[]>(title: string, fn: OneOrMoreMacros<Args, Context>, ...args: Args): Promise<AttemptResult>;
+	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<AttemptResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
+	 * one another.
+	 */
+	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<AttemptResult[]>;
 
 	/**
 	* Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
-	<Args extends any[]>(fn: OneOrMoreMacros<Args, Context>, ...args: Args): Promise<AttemptResult>;
+	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<AttemptResult>;
+
+	/**
+	* Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* the test will fail. A macro may be provided.
+	*/
+	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<AttemptResult[]>;
 }
 
 export interface AssertionError extends Error {}

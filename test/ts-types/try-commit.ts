@@ -23,6 +23,16 @@ import test, {ExecutionContext, Macro} from '../..';
 		);
 		attempt.commit();
 	});
+
+	test('multiple attempts', async t => {
+		const attempts = [
+			...await t.try([tt => tt.pass(), tt => tt.pass()]),
+			...await t.try('title', [tt => tt.pass(), tt => tt.pass()]),
+		];
+		for (const attempt of attempts) {
+			attempt.commit();
+		}
+	});
 }
 
 {
