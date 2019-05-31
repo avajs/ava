@@ -394,8 +394,6 @@ export interface TimeoutFn {
 export interface TryFn<Context> {
 	<T extends any[]>(title: string, fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
 	<T extends any[]>(fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
-
-	skip(...values: Array<any>): void;
 }
 
 export class AssertionError extends Error {
