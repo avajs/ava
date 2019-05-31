@@ -23,6 +23,13 @@ export type ThrowsExpectation = {
 	name?: string;
 };
 
+export type CommitDiscardOptions = {
+	/**
+	 * Whether the logs should be included in those of the parent test.
+	 */
+	retainLogs?: boolean
+}
+
 /** Options that can be passed to the `t.snapshot()` assertion. */
 export type SnapshotOptions = {
 	/** If provided and not an empty string, used to select the snapshot to compare the `expected` value against. */
@@ -392,49 +399,53 @@ export interface TimeoutFn {
 }
 
 export interface TryFn<Context> {
-	<T extends any[]>(title: string, fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
-	<T extends any[]>(fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
+	 * one another.
+	 */
+	<Args extends any[]>(title: string, fn: OneOrMoreMacros<Args, Context>, ...args: Args): Promise<AttemptResult>;
+
+	/**
+	* Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* the test will fail. A macro may be provided.
+	*/
+	<Args extends any[]>(fn: OneOrMoreMacros<Args, Context>, ...args: Args): Promise<AttemptResult>;
 }
 
 export interface AssertionError extends Error {}
 
 export interface AttemptResult {
 	/**
-	 * Commit the attempt.
+	* Title of the attempt, helping you tell attempts aparts.
+	*/
+	title: string;
+
+	/**
+	* Indicates whether all assertions passed, or at least one failed.
+	*/
+	passed: boolean;
+
+	/**
+	* Errors raised for each failed assertion.
+	*/
+	errors: AssertionError[];
+
+	/**
+	 * Logs created during the attempt using `t.log()`. Contains formatted values.
 	 */
-	commit: (opts?: CommitDiscardOptions) => void;
+	logs: string[];
+
+	/**
+	 * Commit the attempt. Counts as one assertion for the plan count. If the
+	 * attempt failed, calling this will also cause your test to fail.
+	 */
+	commit(options?: CommitDiscardOptions): void;
 
 	/**
 	 * Discard the attempt.
 	 */
-	discard: (opts?: CommitDiscardOptions) => void;
-
-	/**
-	 * Indicates whether attempt passed or failed.
-	 */
-	passed: boolean;
-
-	/**
-	 * Assertion errors raised during the attempt.
-	 */
-	errors: AssertionError[];
-
-	/**
-	 * Title of the attempt, helps you distinguish attempts from each other.
-	 */
-	title: string;
-
-	/**
-	 * Logs created during the attempt. Contains formatted values.
-	 */
-	logs: string[];
-}
-
-export type CommitDiscardOptions = {
-	/**
-	 * Whether the logs should be included in the parent test.
-	 */
-	retainLogs?: boolean
+	discard(options?: CommitDiscardOptions): void;
 }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
