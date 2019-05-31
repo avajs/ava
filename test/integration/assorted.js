@@ -61,7 +61,7 @@ test('handles NODE_PATH', t => {
 });
 
 test('works when no files are found', t => {
-	execCli('!*', (err, stdout) => {
+	execCli([], {dirname: 'fixture/globs/no-files'}, (err, stdout) => {
 		t.is(err.code, 1);
 		t.match(stdout, 'Couldn\'t find any files to test');
 		t.end();

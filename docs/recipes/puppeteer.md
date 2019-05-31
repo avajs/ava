@@ -10,7 +10,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 The first step is setting up a helper to configure the environment:
 
-`./test/helpers/withPage.js`
+`./test/_withPage.js`
 
 ```js
 import puppeteer from 'puppeteer';
@@ -33,7 +33,7 @@ export default async function withPage(t, run) {
 
 ```js
 import test from 'ava';
-import withPage from './helpers/withPage';
+import withPage from './_withPage';
 
 const url = 'https://google.com';
 

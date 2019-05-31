@@ -7,7 +7,7 @@ const lolex = require('lolex');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const {test} = require('tap');
-const AvaFiles = require('../lib/ava-files');
+const {normalizeGlobs} = require('../lib/globs');
 const {setImmediate} = require('../lib/now-and-timers');
 
 require('../lib/chalk').set({});
@@ -42,7 +42,6 @@ group('chokidar', (beforeEach, test, group) => {
 	let debug;
 	let reporter;
 	let api;
-	let avaFiles;
 	let Subject;
 	let runStatus;
 	let resetRunStatus;
@@ -60,8 +59,7 @@ group('chokidar', (beforeEach, test, group) => {
 					return (...args) => {
 						debug(...[name, ...args]);
 					};
-				},
-				'./ava-files': avaFiles
+				}
 			});
 	}
 
@@ -125,13 +123,11 @@ group('chokidar', (beforeEach, test, group) => {
 		chokidarEmitter = new EventEmitter();
 		chokidar.watch.returns(chokidarEmitter);
 
-		avaFiles = AvaFiles;
-
 		api.run.returns(new Promise(() => {}));
 		files = [
 			'test.js',
 			'test-*.js',
-			'test'
+			'test/**/*.js'
 		];
 		defaultApiOptions = {
 			clearLogOnNextRun: false,
@@ -149,7 +145,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || files, sources: sources || []});
+	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs(files, undefined, sources, ['js']), resolveTestsFrom: ''});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -189,9 +185,9 @@ group('chokidar', (beforeEach, test, group) => {
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['package.json', '**/*.js', '**/*.snap'].concat(files),
+			['**/*.snap', 'ava.config.js', 'package.json', '**/*.js', ...files],
 			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`),
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
 				ignoreInitial: true
 			}
 		]);
@@ -205,21 +201,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
 			['foo.js', 'baz.js'].concat(files),
 			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('bar.js', 'qux.js'),
-				ignoreInitial: true
-			}
-		]);
-	});
-
-	test('configured sources can override default ignore patterns', t => {
-		t.plan(2);
-		start(null, ['node_modules/foo/*.js']);
-
-		t.ok(chokidar.watch.calledOnce);
-		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['node_modules/foo/*.js'].concat(files),
-			{
-				ignored: defaultIgnore.map(dir => `${dir}/**/*`).concat('!node_modules/foo/*.js'),
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
 				ignoreInitial: true
 			}
 		]);
@@ -237,7 +219,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		start();
 		t.ok(api.run.calledOnce);
-		t.strictDeepEqual(api.run.firstCall.args, [files, defaultApiOptions]);
+		t.strictDeepEqual(api.run.firstCall.args, [[], defaultApiOptions]);
 
 		// The endRun and lineWriter.writeLine methods are only called after the run promise fulfils
 		t.ok(reporter.endRun.notCalled);
@@ -307,7 +289,7 @@ group('chokidar', (beforeEach, test, group) => {
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
 				// No explicit files are provided
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
@@ -349,7 +331,7 @@ group('chokidar', (beforeEach, test, group) => {
 			api.run.returns(Promise.resolve(resetRunStatus()));
 			change();
 			return debounce().then(() => {
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
 					runVector: 2
@@ -358,7 +340,7 @@ group('chokidar', (beforeEach, test, group) => {
 				change();
 				return debounce();
 			}).then(() => {
-				t.strictDeepEqual(api.run.thirdCall.args, [files, {
+				t.strictDeepEqual(api.run.thirdCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 3
@@ -533,7 +515,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// No explicit files are provided
-			t.strictDeepEqual(api.run.secondCall.args, [files, {
+			t.strictDeepEqual(api.run.secondCall.args, [[], {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
@@ -571,56 +553,6 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	test('initial exclude patterns override whether something is a test file', t => {
-		t.plan(2);
-
-		avaFiles = function (options) {
-			const ret = new AvaFiles(options);
-			// Note: There is no way for users to actually set exclude patterns yet.
-			// This test just validates that internal updates to the default excludes pattern will be obeyed.
-			ret.excludePatterns = ['!*bar*'];
-			return ret;
-		};
-
-		Subject = proxyWatcher();
-
-		files = ['foo-{bar,baz}.js'];
-		api.run.returns(Promise.resolve(runStatus));
-		start();
-
-		add('foo-bar.js');
-		add('foo-baz.js');
-		return debounce(2).then(() => {
-			t.ok(api.run.calledTwice);
-			// `foo-bar.js` is excluded from being a test file, thus the initial tests
-			// are run
-			t.strictDeepEqual(api.run.secondCall.args, [files, {
-				...defaultApiOptions,
-				clearLogOnNextRun: true,
-				runVector: 2
-			}]);
-		});
-	});
-
-	test('test files must end in .js', t => {
-		t.plan(2);
-
-		files = ['foo.bar'];
-		api.run.returns(Promise.resolve(runStatus));
-		start();
-
-		add('foo.bar');
-		return debounce(2).then(() => {
-			t.ok(api.run.calledTwice);
-			// `foo.bar` cannot be a test file, thus the initial tests are run
-			t.strictDeepEqual(api.run.secondCall.args, [files, {
-				...defaultApiOptions,
-				clearLogOnNextRun: true,
-				runVector: 2
-			}]);
-		});
-	});
-
 	test('test files must not start with an underscore', t => {
 		t.plan(2);
 
@@ -632,64 +564,7 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// `_foo.bar` cannot be a test file, thus the initial tests are run
-			t.strictDeepEqual(api.run.secondCall.args, [files, {
-				...defaultApiOptions,
-				clearLogOnNextRun: true,
-				runVector: 2
-			}]);
-		});
-	});
-
-	test('files patterns may match directories', t => {
-		t.plan(2);
-
-		files = ['dir', 'another-dir/*/deeper'];
-		api.run.returns(Promise.resolve(runStatus));
-		start();
-
-		add(path.join('dir', 'test.js'));
-		add(path.join('dir', 'nested', 'test.js'));
-		add(path.join('another-dir', 'nested', 'deeper', 'test.js'));
-		return debounce(3).then(() => {
-			t.ok(api.run.calledTwice);
-			t.strictDeepEqual(api.run.secondCall.args, [
-				[
-					path.join('dir', 'test.js'),
-					path.join('dir', 'nested', 'test.js'),
-					path.join('another-dir', 'nested', 'deeper', 'test.js')
-				],
-				{
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 2
-				}
-			]);
-		});
-	});
-
-	test('exclude patterns override directory matches', t => {
-		t.plan(2);
-
-		avaFiles = function (options) {
-			const ret = new AvaFiles(options);
-			// Note: There is no way for users to actually set exclude patterns yet.
-			// This test just validates that internal updates to the default excludes pattern will be obeyed.
-			ret.excludePatterns = ['!**/exclude/**'];
-			return ret;
-		};
-
-		Subject = proxyWatcher();
-
-		files = ['dir'];
-		api.run.returns(Promise.resolve(runStatus));
-		start();
-
-		add(path.join('dir', 'exclude', 'foo.js'));
-		return debounce(2).then(() => {
-			t.ok(api.run.calledTwice);
-			// `dir/exclude/foo.js` is excluded from being a test file, thus the initial
-			// tests are run
-			t.strictDeepEqual(api.run.secondCall.args, [files, {
+			t.strictDeepEqual(api.run.secondCall.args, [[], {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
@@ -706,13 +581,13 @@ group('chokidar', (beforeEach, test, group) => {
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [files, {...defaultApiOptions, runVector: 2}]);
+				t.strictDeepEqual(api.run.secondCall.args, [[], {...defaultApiOptions, runVector: 2}]);
 
 				stdin.write(`\t${input}  \n`);
 				return delay();
 			}).then(() => {
 				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [files, {...defaultApiOptions, runVector: 3}]);
+				t.strictDeepEqual(api.run.thirdCall.args, [[], {...defaultApiOptions, runVector: 3}]);
 			});
 		});
 	}
@@ -746,7 +621,7 @@ group('chokidar', (beforeEach, test, group) => {
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
 					runVector: 2,
@@ -979,7 +854,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
@@ -1076,7 +951,7 @@ group('chokidar', (beforeEach, test, group) => {
 					t.ok(api.run.calledTwice);
 					// Expect all tests to be rerun since `dep-2.js` is not a tracked
 					// dependency
-					t.strictDeepEqual(api.run.secondCall.args, [files, {
+					t.strictDeepEqual(api.run.secondCall.args, [[], {
 						...defaultApiOptions,
 						clearLogOnNextRun: true,
 						runVector: 2
@@ -1110,7 +985,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledThrice);
 				// Expect all tests to be rerun since `foo.bar` is not a tracked
 				// dependency
-				t.strictDeepEqual(api.run.thirdCall.args, [files, {
+				t.strictDeepEqual(api.run.thirdCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 3
@@ -1148,25 +1023,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledTwice);
 				// Since the excluded files are not tracked as a dependency, all tests
 				// are expected to be rerun
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 2
-				}]);
-			});
-		});
-
-		test('allows default exclusion patterns to be overriden', t => {
-			t.plan(2);
-			seed(['node_modules/foo/*.js']);
-
-			const dep = path.join('node_modules', 'foo', 'index.js');
-			emitDependencies(path.join('test', '1.js'), [path.resolve(dep)]);
-			change(dep);
-
-			return debounce(1).then(() => {
-				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
@@ -1193,7 +1050,7 @@ group('chokidar', (beforeEach, test, group) => {
 				// wouldn't even be picked up. However this lets us test dependency
 				// tracking without directly inspecting the internal state of the
 				// watcher.
-				t.strictDeepEqual(api.run.secondCall.args, [files, {
+				t.strictDeepEqual(api.run.secondCall.args, [[], {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
@@ -1229,7 +1086,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(debug.calledThrice);
-				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Sources remain that cannot be traced to specific tests: %O', ['cannot-be-mapped.js']]);
+				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Helpers & sources remain that cannot be traced to specific tests: %O', ['cannot-be-mapped.js']]);
 				t.strictDeepEqual(debug.thirdCall.args, ['ava:watcher', 'Rerunning all tests']);
 			});
 		});

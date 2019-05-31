@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 3.3.4000.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 3.4.5.
 
 ## Configuring AVA to compile TypeScript files on the fly
 
@@ -49,10 +49,10 @@ Create a `test.ts` file.
 ```ts
 import test from 'ava';
 
-const fn = async () => Promise.resolve('foo');
+const fn = () => 'foo';
 
-test(async t => {
-	t.is(await fn(), 'foo');
+test('fn() returns foo', t => {
+	t.is(fn(), 'foo');
 });
 ```
 

@@ -1,5 +1,6 @@
 export interface ObservableLike {
-	subscribe(observer: (value: any) => void): void;
+	subscribe(observer: (value: unknown) => void): void;
+	[Symbol.observable](): ObservableLike;
 }
 
 export type Constructor = (new (...args: Array<any>) => any);
@@ -781,7 +782,7 @@ export interface SkipInterface<Context = {}> {
 	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Skip this test. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
 export interface TodoDeclaration {

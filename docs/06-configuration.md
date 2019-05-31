@@ -4,7 +4,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 All of the [CLI options](./05-command-line.md) can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
-To ignore a file or directory, prefix the pattern with an `!` (exclamation mark).
+To ignore files, prefix the pattern with an `!` (exclamation mark).
 
 **`package.json`:**
 
@@ -12,13 +12,15 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 {
 	"ava": {
 		"files": [
-			"my-test-directory/**/*.js",
-			"!my-test-directory/exclude-this-directory/**/*.js",
-			"!**/exclude-this-file.js"
+			"test/**/*",
+			"!test/exclude-files-in-this-directory",
+			"!**/exclude-files-with-this-name.*"
+		],
+		"helpers": [
+			"**/helpers/**/*"
 		],
 		"sources": [
-			"**/*.{js,jsx}",
-			"!dist/**/*"
+			"src/**/*"
 		],
 		"match": [
 			"*oo",
@@ -35,7 +37,7 @@ To ignore a file or directory, prefix the pattern with an `!` (exclamation mark)
 			"@babel/register"
 		],
 		"babel": {
-			"extensions": ["jsx"],
+			"extensions": ["js", "jsx"],
 			"testOptions": {
 				"babelrc": false
 			}
@@ -48,8 +50,9 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 ## Options
 
-- `files`: file & directory paths and glob patterns that select which files AVA will run tests from. Files with an underscore prefix are ignored. All matched files in selected directories are run. By default only selects files with `js` extensions, even if the glob pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
-- `sources`: files that, when changed, cause tests to be re-run in watch mode. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
+- `helpers`: an array of glob patterns to select helper files. Files matched here are never considered as tests. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
+- `sources`: an array of glob patterns to match files that, when changed, cause tests to be re-run (when in watch mode). See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
@@ -64,7 +67,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 
-Note that providing files on the CLI overrides the `files` option. If you've configured a glob pattern, for instance `test/**/*.test.js`, you may want to repeat it when using the CLI: `ava 'test/integration/*.test.js'`.
+Note that providing files on the CLI overrides the `files` option.
 
 ## Using `ava.config.js`
 
@@ -107,3 +110,21 @@ export default ({projectDir}) => {
 ```
 
 Note that the final configuration must not be a promise.
+
+## Object printing depth
+
+By default, AVA prints nested objects to a depth of `3`. However, when debugging tests with deeply nested objects, it can be useful to print with more detail. This can be done by setting [`util.inspect.defaultOptions.depth`](https://nodejs.org/api/util.html#util_util_inspect_defaultoptions) to the desired depth, before the test is executed:
+
+```js
+import util from 'util';
+
+import test from 'ava';
+
+util.inspect.defaultOptions.depth = 5;  // Increase AVA's printing depth
+
+test('My test', t => {
+	t.deepEqual(someDeeplyNestedObject, theExpectedValue);
+});
+```
+
+AVA has a minimum depth of `3`.

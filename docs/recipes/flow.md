@@ -36,10 +36,10 @@ Create a `test.js` file.
 // @flow
 import test from 'ava';
 
-const fn = async () => Promise.resolve('foo');
+const getFoo = () => 'foo';
 
-test(async (t) => {
-	t.is(await fn(), 'foo');
+test('check getFoo', t => {
+	t.is(getFoo(), 'foo');
 });
 ```
 

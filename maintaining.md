@@ -56,22 +56,16 @@ Use the `assigned` label when somebody is working on the issue so we can avoid d
 
 ## Profiling
 
-You should first install [`iron-node`](https://github.com/s-a/iron-node) and / or [`devtool`](https://github.com/Jam3/devtool) globally:
+You should first install [`iron-node`](https://github.com/s-a/iron-node) globally:
 
 ```
-$ npm install --global iron-node devtool
+$ npm install --global iron-node
 ```
 
 In the root of a project using AVA, run:
 
 ```
 $ iron-node node_modules/ava/profile.js <test-file>
-```
-
-Or:
-
-```
-$ devtool node_modules/ava/profile.js <test-file>
 ```
 
 Once the Dev Tools window has loaded, activate Memory or CPU profiling, and then hit <kbd>Cmd</kbd> <kbd>R</kbd> to rerun the tests.
@@ -82,7 +76,6 @@ You may also want to check out the Settings page in Dev Tools and enable one or 
 
 ##### Helpful resources
 
- - [An introduction to Node.js debugging with `devtool`](http://mattdesl.svbtle.com/debugging-nodejs-in-chrome-devtools).
  - [A video introduction to Chrome DevTools CPU and Memory profiling](https://www.youtube.com/watch?v=KKwmdTByxLk).
 
 
