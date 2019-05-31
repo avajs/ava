@@ -30,7 +30,7 @@ $ npx ava --help
 
   The above relies on your shell expanding the glob patterns.
   Without arguments, AVA uses the following patterns:
-    **/test.js **/test-*.js **/*.spec.js **/*.test.js **/test/**/*.js **/__tests__/**/*.js
+    **/test.js **/test-*.js **/*.spec.js **/*.test.js **/test/**/*.js **/tests/**/*.js **/__tests__/**/*.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
@@ -42,6 +42,7 @@ AVA searches for test files using the following patterns:
 * `**/*.spec.js`
 * `**/*.test.js`
 * `**/test/**/*.js`
+* `**/tests/**/*.js`
 * `**/__tests__/**/*.js`
 
 Files inside `node_modules` are *always* ignored. So are files starting with `_`. These are treated as helpers.
