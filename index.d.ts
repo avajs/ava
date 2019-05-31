@@ -396,8 +396,7 @@ export interface TryFn<Context> {
 	<T extends any[]>(fn: OneOrMoreMacros<T, Context>, ...args: T): Promise<AttemptResult>;
 }
 
-export class AssertionError extends Error {
-}
+export interface AssertionError extends Error {}
 
 export interface AttemptResult {
 	/**
