@@ -1,5 +1,5 @@
 const config = require('.');
 
 export default {
-	environmentVariables: {[config.name]: config.defaultValue}
+	environmentVariables: {[config.name]: config.value}
 };

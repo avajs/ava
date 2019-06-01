@@ -1,6 +1,6 @@
 import test from '../../..';
-import {defaultValue, expectedName, name} from '.';
+import {name, value} from '.';
 
 test('works', t => {
-	t.is(process.env[name], process.env[expectedName] || defaultValue);
+	t.is(process.env[name], value);
 });

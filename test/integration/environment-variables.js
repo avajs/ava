@@ -1,7 +1,7 @@
 'use strict';
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
-const {expectedName, name, value} = require('../fixture/environment-variables');
+const {name, value} = require('../fixture/environment-variables');
 
 test('sets default environment variables from the config', t => {
 	execCli(['test.js'], {dirname: 'fixture/environment-variables'}, (err, stdout) => {
@@ -11,8 +11,8 @@ test('sets default environment variables from the config', t => {
 	});
 });
 
-test('skips already set environment variables', t => {
-	const env = {[name]: value, [expectedName]: value};
+test('overrides environment variables provided through the CLI', t => {
+	const env = {[name]: `${value} (updated)`};
 
 	execCli(['test.js'], {dirname: 'fixture/environment-variables', env}, (err, stdout) => {
 		t.ifError(err);

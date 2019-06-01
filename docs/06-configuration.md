@@ -57,7 +57,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
-- `environmentVariables`: specifies default environment variables to be injected in the processes that run the test files
+- `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
