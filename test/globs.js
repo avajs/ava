@@ -270,7 +270,9 @@ test('findHelpersAndTests finds tests (just .js)', async t => {
 		'test-foo.js',
 		'test.js',
 		'test/baz.js',
-		'test/deep/deep.js'
+		'test/deep/deep.js',
+		'tests/baz.js',
+		'tests/deep/deep.js'
 	].map(file => path.join(fixtureDir, file)).sort();
 
 	const {tests: actual} = await globs.findHelpersAndTests({
@@ -307,7 +309,9 @@ test('findHelpersAndTests finds helpers (just .js)', async t => {
 		'sub/directory/__tests__/helpers/foo.js',
 		'sub/directory/__tests__/_foo.js',
 		'test/helpers/test.js',
-		'test/_foo-help.js'
+		'test/_foo-help.js',
+		'tests/_foo-help.js',
+		'tests/helpers/test.js'
 	].sort().map(file => path.join(fixtureDir, file));
 
 	const {helpers: actual} = await globs.findHelpersAndTests({
@@ -347,7 +351,9 @@ test('findTests finds tests (just .js)', async t => {
 		'test-foo.js',
 		'test.js',
 		'test/baz.js',
-		'test/deep/deep.js'
+		'test/deep/deep.js',
+		'tests/baz.js',
+		'tests/deep/deep.js'
 	].map(file => path.join(fixtureDir, file)).sort();
 
 	const {tests: actual} = await globs.findTests({
