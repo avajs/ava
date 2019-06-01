@@ -13,7 +13,7 @@ $ npx ava --help
     --match, -m             Only run tests with matching title (Can be repeated)
     --update-snapshots, -u  Update snapshots
     --fail-fast             Stop after first test failure
-    --timeout, -T           Set global timeout (millis or human-readable, e.g. 10s, 2m)
+    --timeout, -T           Set global timeout (milliseconds or human-readable, e.g. 10s, 2m)
     --serial, -s            Run tests serially
     --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
     --verbose, -v           Enable verbose output
