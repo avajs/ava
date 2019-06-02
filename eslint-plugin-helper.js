@@ -4,15 +4,34 @@ const normalizeExtensions = require('./lib/extensions');
 const {hasExtension, normalizeGlobs, classify} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
 
-const cache = new Map();
+const configCache = new Map();
+const helperCache = new Map();
 
-function load(projectDir) {
-	if (cache.has(projectDir)) {
-		return cache.get(projectDir);
+function load(projectDir, overrides) {
+	const cacheKey = `${JSON.stringify(overrides)}\n${projectDir}`;
+	if (helperCache.has(cacheKey)) {
+		return helperCache.get(cacheKey);
 	}
 
-	const conf = loadConfig(projectDir);
-	const babelConfig = babelPipeline.validate(conf.babel);
+	let conf;
+	let babelConfig;
+	if (configCache.has(projectDir)) {
+		({conf, babelConfig} = configCache.get(projectDir));
+	} else {
+		conf = loadConfig(projectDir);
+		babelConfig = babelPipeline.validate(conf.babel);
+		configCache.set(projectDir, {conf, babelConfig});
+	}
+
+	if (overrides) {
+		conf = {...conf, ...overrides};
+		if (overrides.extensions) {
+			// Ignore extensions from the Babel config. Assume all extensions are
+			// provided in the override.
+			babelConfig = null;
+		}
+	}
+
 	const extensions = normalizeExtensions(conf.extensions || [], babelConfig);
 	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions.all)};
 
@@ -30,7 +49,7 @@ function load(projectDir) {
 			return classify(`${importPath}.${globs.extensions[0]}`, globs);
 		}
 	});
-	cache.set(projectDir, helper);
+	helperCache.set(cacheKey, helper);
 	return helper;
 }
 
