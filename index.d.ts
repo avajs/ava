@@ -398,7 +398,7 @@ export interface TimeoutFn {
 	(ms: number): void;
 }
 
-export interface TryFn<Context> {
+export interface TryFn<Context = {}> {
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
