@@ -404,31 +404,31 @@ export interface TryFn<Context = unknown> {
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
-	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<AttemptResult>;
+	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
-	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<AttemptResult[]>;
+	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
 
 	/**
 	* Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
-	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<AttemptResult>;
+	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
 	* Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
-	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<AttemptResult[]>;
+	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
 }
 
 export interface AssertionError extends Error {}
 
-export interface AttemptResult {
+export interface TryResult {
 	/**
 	* Title of the attempt, helping you tell attempts aparts.
 	*/
