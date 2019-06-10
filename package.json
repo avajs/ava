@@ -11,9 +11,9 @@
 	},
 	"scripts": {
 		"lint": "xo",
-		"test:tap": "tap --no-esm --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
+		"test:tap": "tap --no-esm",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
-		"test": "npm run lint && npm run test:typescript && nyc npm run test:tap"
+		"test": "npm run lint && npm run test:typescript && npm run test:tap"
 	},
 	"files": [
 		"lib",
@@ -144,7 +144,6 @@
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
 		"lolex": "^4.1.0",
-		"nyc": "^14.1.1",
 		"proxyquire": "^2.1.0",
 		"react": "^16.8.6",
 		"react-test-renderer": "^16.8.6",
@@ -152,7 +151,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.3.2",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^12.6.1",
+		"tap": "^14.2.2",
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.2.0",
@@ -182,11 +181,23 @@
 			}
 		]
 	},
-	"nyc": {
-		"reporter": [
+	"tap": {
+		"browser": false,
+		"coverage-report": [
 			"html",
 			"lcov",
 			"text"
-		]
+		],
+		"esm": false,
+		"files": [
+			"test/*.js",
+			"test/reporters/*.js",
+			"test/integration/*.js"
+		],
+		"flow": false,
+		"jobs": 2,
+		"jsx": false,
+		"timeout": 300,
+		"ts": false
 	}
 }
