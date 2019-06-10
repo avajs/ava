@@ -57,7 +57,10 @@ not ok 10 - traces-in-t-throws [90m[2m›[22m[39m throws
           message: 'uh-oh',
         }
       'Expected instance of:': 'Function TypeError {}'
-    at: 'throwError (traces-in-t-throws.js:4:8)'
+    at: |-
+      throwError (traces-in-t-throws.js:4:8)
+      throwError (traces-in-t-throws.js:12:17)
+      throws (traces-in-t-throws.js:12:4)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrows
@@ -70,7 +73,10 @@ not ok 11 - traces-in-t-throws [90m[2m›[22m[39m notThrows
         Error {
           message: 'uh-oh',
         }
-    at: 'throwError (traces-in-t-throws.js:4:8)'
+    at: |-
+      throwError (traces-in-t-throws.js:4:8)
+      throwError (traces-in-t-throws.js:16:20)
+      notThrows (traces-in-t-throws.js:16:4)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrowsAsync
@@ -83,7 +89,10 @@ not ok 12 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
         Error {
           message: 'uh-oh',
         }
-    at: 'throwError (traces-in-t-throws.js:4:8)'
+    at: |-
+      throwError (traces-in-t-throws.js:4:8)
+      throwError (traces-in-t-throws.js:20:25)
+      notThrowsAsync (traces-in-t-throws.js:20:4)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync
@@ -96,7 +105,10 @@ not ok 13 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
         Error {
           message: 'uh-oh',
         }
-    at: 'throwError (traces-in-t-throws.js:4:8)'
+    at: |-
+      throwError (traces-in-t-throws.js:4:8)
+      throwError (traces-in-t-throws.js:24:22)
+      throwsAsync (traces-in-t-throws.js:24:4)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync different error
@@ -110,7 +122,9 @@ not ok 14 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
           message: 'uh-oh',
         }
       'Expected instance of:': 'Function TypeError {}'
-    at: 'returnRejectedPromise (traces-in-t-throws.js:8:24)'
+    at: |-
+      returnRejectedPromise (traces-in-t-throws.js:8:24)
+      throwsAsync (traces-in-t-throws.js:28:11)
   ...
 ---tty-stream-chunk-separator
 stdout
@@ -192,7 +206,9 @@ not ok 24 - test [90m[2m›[22m[39m bad throws
         Error {
           message: 'err',
         }
-    at: 'fn (test.js:35:9)'
+    at: |-
+      fn (test.js:35:9)
+      fn (test.js:38:11)
   ...
 ---tty-stream-chunk-separator
 # test › bad notThrows
@@ -206,7 +222,9 @@ not ok 25 - test [90m[2m›[22m[39m bad notThrows
         Error {
           message: 'err',
         }
-    at: 'fn (test.js:43:9)'
+    at: |-
+      fn (test.js:43:9)
+      fn (test.js:46:14)
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error
