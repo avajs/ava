@@ -11,9 +11,9 @@
 	},
 	"scripts": {
 		"lint": "xo",
-		"test:tap": "tap --no-esm --no-cov --reporter=classic --timeout=300 --jobs=2 test/*.js test/reporters/*.js test/integration/*.js",
+		"test:tap": "tap --no-esm",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
-		"test": "npm run lint && npm run test:typescript && nyc npm run test:tap"
+		"test": "npm run lint && npm run test:typescript && npm run test:tap"
 	},
 	"files": [
 		"lib",
@@ -73,7 +73,7 @@
 		"arrify": "^2.0.1",
 		"bluebird": "^3.5.5",
 		"chalk": "^2.4.2",
-		"chokidar": "^3.0.0",
+		"chokidar": "^3.0.1",
 		"chunkd": "^1.0.0",
 		"ci-parallel-vars": "^1.0.0",
 		"clean-stack": "^2.1.0",
@@ -87,7 +87,7 @@
 		"currently-unhandled": "^0.4.1",
 		"debug": "^4.1.1",
 		"del": "^4.1.1",
-		"dot-prop": "^5.0.0",
+		"dot-prop": "^5.0.1",
 		"emittery": "^0.4.1",
 		"empower-core": "^1.2.0",
 		"equal-length": "^1.0.0",
@@ -112,7 +112,7 @@
 		"md5-hex": "^3.0.0",
 		"meow": "^5.0.0",
 		"micromatch": "^4.0.2",
-		"ms": "^2.1.1",
+		"ms": "^2.1.2",
 		"observable-to-promise": "^1.0.0",
 		"ora": "^3.4.0",
 		"package-hash": "^4.0.0",
@@ -135,7 +135,7 @@
 		"write-file-atomic": "^3.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^8.10.49",
+		"@types/node": "^10.14.8",
 		"cli-table3": "^0.5.1",
 		"codecov": "^3.5.0",
 		"delay": "^4.2.0",
@@ -143,8 +143,7 @@
 		"get-stream": "^5.1.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
-		"lolex": "^4.0.1",
-		"nyc": "^14.1.1",
+		"lolex": "^4.1.0",
 		"proxyquire": "^2.1.0",
 		"react": "^16.8.6",
 		"react-test-renderer": "^16.8.6",
@@ -152,7 +151,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.3.2",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^12.6.1",
+		"tap": "^14.2.2",
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.2.0",
@@ -182,11 +181,23 @@
 			}
 		]
 	},
-	"nyc": {
-		"reporter": [
+	"tap": {
+		"browser": false,
+		"coverage-report": [
 			"html",
 			"lcov",
 			"text"
-		]
+		],
+		"esm": false,
+		"files": [
+			"test/*.js",
+			"test/reporters/*.js",
+			"test/integration/*.js"
+		],
+		"flow": false,
+		"jobs": 2,
+		"jsx": false,
+		"timeout": 300,
+		"ts": false
 	}
 }
