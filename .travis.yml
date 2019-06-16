@@ -1,3 +1,7 @@
+branches:
+  only:
+    - master
+    - /v\d.+/
 language: node_js
 os:
   - windows

@@ -1,6 +1,6 @@
 'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options').set({color: false});
+require('../lib/chalk').set({enabled: false});
+require('../lib/worker/options').set({});
 
 const path = require('path');
 const React = require('react');

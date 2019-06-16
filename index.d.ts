@@ -1,3 +1,5 @@
+/// <reference types="node"/>
+
 export interface ObservableLike {
 	subscribe(observer: (value: unknown) => void): void;
 	[Symbol.observable](): ObservableLike;
