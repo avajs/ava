@@ -1,6 +1,6 @@
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
-[![Build Status](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava) [![Coverage Status](https://codecov.io/gh/avajs/ava/branch/master/graph/badge.svg)](https://codecov.io/gh/avajs/ava/branch/master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/ava)
+[![Build Status](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava)  [![Coverage Status](https://codecov.io/gh/avajs/ava/branch/master/graph/badge.svg)](https://codecov.io/gh/avajs/ava/branch/master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/ava)
 [![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
 
 Testing can be a drag. AVA helps you get it done. AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that let you write tests more effectively. So you can ship more awesome code. 🚀
@@ -11,7 +11,9 @@ Read our [contributing guide](contributing.md) if you're looking to contribute (
 
 ![](media/mini-reporter.gif)
 
+
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
+
 
 ## Why AVA?
 
@@ -30,6 +32,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - [Enhanced assertion messages](./docs/03-assertions.md#enhanced-assertion-messages)
 - [Automatic parallel test runs in CI](#parallel-runs-in-ci)
 - [TAP reporter](./docs/05-command-line.md#tap-reporter)
+
 
 ## Usage
 
@@ -122,7 +125,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. There is no extra setup required. You don't need to be using Babel in your own project for this to work either.
 
-We aim to support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
+We aim support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
 
 Please note that we do not add or modify built-ins. For example, if you use [`Object.fromEntries()`](https://github.com/tc39/proposal-object-from-entries) in your tests, they will crash in Node.js 10 which does not implement this method.
 
@@ -136,13 +139,13 @@ AVA automatically detects whether your CI environment supports parallel builds. 
 
 Please see the [files in the `docs` directory](./docs):
 
-- [Writing tests](./docs/01-writing-tests.md)
-- [Execution context](./docs/02-execution-context.md)
-- [Assertions](./docs/03-assertions.md)
-- [Snapshot testing](./docs/04-snapshot-testing.md)
-- [Command line (CLI)](./docs/05-command-line.md)
-- [Configuration](./docs/06-configuration.md)
-- [Test timeouts](./docs/07-test-timeouts.md)
+* [Writing tests](./docs/01-writing-tests.md)
+* [Execution context](./docs/02-execution-context.md)
+* [Assertions](./docs/03-assertions.md)
+* [Snapshot testing](./docs/04-snapshot-testing.md)
+* [Command line (CLI)](./docs/05-command-line.md)
+* [Configuration](./docs/06-configuration.md)
+* [Test timeouts](./docs/07-test-timeouts.md)
 
 ### Common pitfalls
 
@@ -158,7 +161,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
 - [Flow](docs/recipes/flow.md)
-- [Configuring Babel][babel recipe]
+- [Configuring Babel][Babel recipe]
 - [Using ES modules](docs/recipes/es-modules.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
 - [Testing React components](docs/recipes/react.md)
@@ -216,9 +219,9 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Team
 
-| [![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes) |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [Mark Wubben](https://novemberborn.net)                                                         | [Sindre Sorhus](http://sindresorhus.com)                                                          | [Vadim Demedes](https://github.com/vadimdemedes)                                                  |
+[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes)
+---|---|---
+[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](http://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes)
 
 ###### Former
 
@@ -226,6 +229,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [James Talmage](https://github.com/jamestalmage)
 - [Juan Soto](https://github.com/sotojuan)
 - [Jeroen Engels](https://github.com/jfmengels)
+
 
 <div align="center">
 	<br>
@@ -238,4 +242,4 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 </div>
 
-[babel recipe]: docs/recipes/babel.md
+[Babel recipe]: docs/recipes/babel.md
