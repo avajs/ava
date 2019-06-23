@@ -166,8 +166,7 @@
 			"test/fixture/{source-map-initial,syntax-error}.js",
 			"test/fixture/snapshots/test-sourcemaps/build/**",
 			"test/fixture/power-assert.js",
-			"**/*.ts",
-			"test/flow-types/*"
+			"**/*.ts"
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off"

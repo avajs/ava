@@ -22,7 +22,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
-- Includes TypeScript & Flow type definitions
+- Includes TypeScript definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
 - [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
