@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/06-configuration.md)
 
-All of the [CLI options](./05-command-line.md) can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
+All of the [CLI options][CLI] can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore files, prefix the pattern with an `!` (exclamation mark).
 
@@ -115,6 +115,33 @@ export default ({projectDir}) => {
 
 Note that the final configuration must not be a promise.
 
+## Alternative configuration files
+
+The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file is processed just like an `ava.config.js` file would be. When the `--config` flag is set, the provided file will override configuration from the `package.json` and `ava.config.js` files.
+
+You can use this to customize configuration for a specific test run. For instance, you may want to run unit tests separately from integration tests:
+
+`ava.config.js`:
+
+```js
+export default {
+	files: ['unit-tests/**/*']
+};
+```
+
+`integration-tests.config.js`:
+
+```js
+import baseConfig from './ava.config.js';
+
+export default {
+	...baseConfig,
+	files: ['integration-tests/**/*']
+};
+```
+
+You can now run your unit tests through `npx ava` and the integration tests through `npx ava --config integration-tests.config.js`.
+
 ## Object printing depth
 
 By default, AVA prints nested objects to a depth of `3`. However, when debugging tests with deeply nested objects, it can be useful to print with more detail. This can be done by setting [`util.inspect.defaultOptions.depth`](https://nodejs.org/api/util.html#util_util_inspect_defaultoptions) to the desired depth, before the test is executed:
@@ -132,3 +159,5 @@ test('My test', t => {
 ```
 
 AVA has a minimum depth of `3`.
+
+[CLI]: ./05-command-line.md

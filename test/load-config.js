@@ -23,7 +23,7 @@ test('finds config in package.json', t => {
 
 test('loads config from a particular directory', t => {
 	changeDir('throws');
-	const conf = loadConfig(path.resolve(__dirname, 'fixture', 'load-config', 'package-only'));
+	const conf = loadConfig({resolveFrom: path.resolve(__dirname, 'fixture', 'load-config', 'package-only')});
 	t.is(conf.failFast, true);
 	t.end();
 });
@@ -34,12 +34,19 @@ test('throws a warning of both configs are present', t => {
 	t.end();
 });
 
+test('explicit configFile option overrides package.json config', t => {
+	changeDir('package-yes-explicit-yes');
+	const {files} = loadConfig({configFile: 'explicit.js'});
+	t.is(files, 'package-yes-explicit-yes-test-value');
+	t.end();
+});
+
 test('merges in defaults passed with initial call', t => {
 	changeDir('package-only');
 	const defaults = {
 		files: ['123', '!456']
 	};
-	const {files, failFast} = loadConfig(undefined, defaults);
+	const {files, failFast} = loadConfig({defaults});
 	t.is(failFast, true, 'preserves original props');
 	t.is(files, defaults.files, 'merges in extra props');
 	t.end();
