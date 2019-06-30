@@ -28,9 +28,9 @@ test('loads config from a particular directory', t => {
 	t.end();
 });
 
-test('throws a warning of both configs are present', t => {
+test('throws a warning if both configs are present', t => {
 	changeDir('package-yes-file-yes');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /Conflicting configuration in ava.config.js and package.json/);
 	t.end();
 });
 
@@ -75,25 +75,25 @@ test('supports require() inside config file', t => {
 
 test('throws an error if a config factory returns a promise', t => {
 	changeDir('factory-no-promise-return');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /Factory method exported by ava.config.js must not return a promise/);
 	t.end();
 });
 
 test('throws an error if a config exports a promise', t => {
 	changeDir('no-promise-config');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /ava.config.js must not export a promise/);
 	t.end();
 });
 
 test('throws an error if a config factory does not return a plain object', t => {
 	changeDir('factory-no-plain-return');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /Factory method exported by ava.config.js must return a plain object/);
 	t.end();
 });
 
 test('throws an error if a config does not export a plain object', t => {
 	changeDir('no-plain-config');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /ava.config.js must export a plain object or factory function/);
 	t.end();
 });
 
@@ -116,12 +116,12 @@ test('rethrows wrapped module errors', t => {
 
 test('throws an error if a config file has no default export', t => {
 	changeDir('no-default-export');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /ava.config.js must have a default export, using ES module syntax/);
 	t.end();
 });
 
 test('throws an error if a config file contains `ava` property', t => {
 	changeDir('contains-ava-property');
-	t.throws(loadConfig);
+	t.throws(loadConfig, /Encountered 'ava' property in ava.config.js; avoid wrapping the configuration/);
 	t.end();
 });
