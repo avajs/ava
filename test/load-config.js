@@ -41,6 +41,12 @@ test('explicit configFile option overrides package.json config', t => {
 	t.end();
 });
 
+test('throws if configFile option is not in the same directory as the package.json file', t => {
+	changeDir('package-yes-explicit-yes');
+	t.throws(() => loadConfig({configFile: 'nested/explicit.js'}), /Config files must be located next to the package.json file/);
+	t.end();
+});
+
 test('merges in defaults passed with initial call', t => {
 	changeDir('package-only');
 	const defaults = {
