@@ -117,7 +117,7 @@ Note that the final configuration must not be a promise.
 
 ## Alternative configuration files
 
-The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file is processed just like an `ava.config.js` file would be. When the `--config` flag is set, the provided file will override configuration from the `package.json` and `ava.config.js` files.
+The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file is processed just like an `ava.config.js` file would be. When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js` files. The configuration is not merged.
 
 You can use this to customize configuration for a specific test run. For instance, you may want to run unit tests separately from integration tests:
 
