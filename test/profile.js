@@ -46,7 +46,7 @@ test('exits with a non-zero exit code when one test fails', t => {
 			t.fail();
 		})
 		.catch(error => {
-			t.true(Boolean(error.code));
+			t.true(Boolean(error.exitCode));
 			t.end();
 		});
 });
@@ -58,7 +58,7 @@ test('exits with a non-zero exit code when there is an uncaught exception', t =>
 			t.fail();
 		})
 		.catch(error => {
-			t.true(Boolean(error.code));
+			t.true(Boolean(error.exitCode));
 			t.end();
 		});
 });
