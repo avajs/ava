@@ -20,6 +20,7 @@ const contextAva = fn => new Test({
 	failWithoutAssertions: true,
 	metadata: {type: 'test'},
 	title: 'foo',
+	registerUniqueTitle: () => true,
 	fn
 });
 
