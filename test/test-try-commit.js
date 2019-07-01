@@ -237,25 +237,21 @@ test('test fails when try-commit committed to failed state', t => {
 
 test('try-commit has proper titles, when going in depth and width', t => {
 	t.plan(6);
-	return new Test({
-		fn(a) {
-			t.is(a.title, 'foo');
+	return ava(a => {
+		t.is(a.title, 'test');
 
-			return Promise.all([
-				a.try(b => {
-					t.is(b.title, 'foo.A0');
-					return Promise.all([
-						b.try(c => t.is(c.title, 'foo.A0.A0')),
-						b.try(c => t.is(c.title, 'foo.A0.A1'))
-					]);
-				}),
-				a.try(b => t.is(b.title, 'foo.A1')),
-				a.try(b => t.is(b.title, 'foo.A2'))
-			]);
-		},
-		failWithoutAssertions: false,
-		metadata: {type: 'test', callback: false},
-		title: 'foo'
+		return Promise.all([
+			a.try(b => {
+				t.is(b.title, 'test (attempt 1)');
+
+				return Promise.all([
+					b.try(c => t.is(c.title, 'test (attempt 1) (attempt 1)')),
+					b.try(c => t.is(c.title, 'test (attempt 1) (attempt 2)'))
+				]);
+			}),
+			a.try(b => t.is(b.title, 'test (attempt 2)')),
+			a.try(b => t.is(b.title, 'test (attempt 3)'))
+		]);
 	}).run();
 });
 
