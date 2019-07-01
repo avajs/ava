@@ -507,15 +507,16 @@ test('try-commit can access parent test context', t => {
 
 test('try-commit cannot set parent test context', t => {
 	const context = new ContextRef();
-	context.set({foo: 'bar'});
+	const data = {foo: 'bar'};
+	context.set(data);
 	return ava(a => {
-		t.strictDeepEqual(a.context, {foo: 'bar'});
+		t.strictDeepEqual(a.context, data);
 		return a.try(b => {
 			b.pass();
 			b.context = {bar: 'foo'};
 		}).then(res => {
 			res.commit();
-			t.strictDeepEqual(a.context, {foo: 'bar'});
+			t.strictDeepEqual(a.context, data);
 		});
 	}, context).run().then(result => {
 		t.is(result.passed, true);
