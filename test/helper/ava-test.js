@@ -1,18 +1,5 @@
 const Test = require('../../lib/test');
-
-class ContextRef {
-	constructor() {
-		this.value = {};
-	}
-
-	get() {
-		return this.value;
-	}
-
-	set(newValue) {
-		this.value = newValue;
-	}
-}
+const ContextRef = require('../../lib/context-ref');
 
 function ava(fn, contextRef) {
 	return new Test({
