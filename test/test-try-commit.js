@@ -491,14 +491,14 @@ test('try-commit refreshes the timeout on commit/discard', t => {
 	});
 });
 
-test('try-commit cannot access parent test context', t => {
+test('try-commit can access parent test context', t => {
 	const context = new ContextRef();
-	context.set({foo: 'bar'});
+	const data = {foo: 'bar'};
+	context.set(data);
 	return ava(a => {
 		return a.try(b => {
 			b.pass();
-			const ctx = b.context;
-			t.is(ctx, undefined);
+			t.strictDeepEqual(b.context, data);
 		}).then(res => res.commit());
 	}, context).run().then(result => {
 		t.is(result.passed, true);
