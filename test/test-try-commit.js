@@ -383,7 +383,6 @@ test('try-commit does not allow to use .end() in attempt when parent is callback
 		t.match(result.error.message, /Error thrown in test/);
 		t.is(result.error.name, 'AssertionError');
 		t.match(result.error.values[0].formatted, /t\.end.*not supported/);
-		t.match(result.error.values[0].formatted, /return promise for asynchronous attempt/);
 	});
 });
 
