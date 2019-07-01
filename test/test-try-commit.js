@@ -4,7 +4,6 @@ require('../lib/worker/options').set({color: false});
 
 const {test} = require('tap');
 const delay = require('delay');
-const Test = require('../lib/test');
 const ContextRef = require('../lib/context-ref');
 const {ava} = require('./helper/ava-test');
 
