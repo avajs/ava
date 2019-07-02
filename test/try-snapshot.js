@@ -6,6 +6,7 @@ const path = require('path');
 const {test} = require('tap');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
+const ContextRef = require('../lib/context-ref');
 
 function setup(fn) {
 	// Set to `true` to update the snapshot, then run:
@@ -27,6 +28,8 @@ function setup(fn) {
 		fn,
 		failWithoutAssertions: true,
 		metadata: {type: 'test', callback: false},
+		contextRef: new ContextRef(),
+		registerUniqueTitle: () => true,
 		title: 'test',
 		compareTestSnapshot: options => manager.compare(options)
 	});
