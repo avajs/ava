@@ -19,7 +19,8 @@ function setup(fn) {
 		file: path.join(projectDir, 'try-snapshot.js'),
 		projectDir,
 		fixedLocation: null,
-		updating
+		updating,
+		recordNewSnapshots: updating
 	});
 
 	const ava = new Test({
