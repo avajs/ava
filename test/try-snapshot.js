@@ -83,7 +83,10 @@ test(async t => {
 		});
 
 		return ava.run().then(result => {
-			t.true(result.passed);
+			t.false(result.passed);
+			t.ok(result.error);
+			t.match(result.error.message, /not run concurrent snapshot assertions when using `t\.try\(\)`/);
+			t.is(result.error.name, 'Error');
 		});
 	});
 
