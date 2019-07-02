@@ -8,7 +8,7 @@ const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
 const ContextRef = require('../lib/context-ref');
 
-function setup(fn) {
+function setup(title, fn) {
 	// Set to `true` to update the snapshot, then run:
 	// "$(npm bin)"/tap --no-cov -R spec test/try-snapshot.js
 	//
@@ -30,7 +30,7 @@ function setup(fn) {
 		metadata: {type: 'test', callback: false},
 		contextRef: new ContextRef(),
 		registerUniqueTitle: () => true,
-		title: 'test',
+		title,
 		compareTestSnapshot: options => manager.compare(options)
 	});
 
@@ -38,7 +38,7 @@ function setup(fn) {
 }
 
 test('try-commit snapshots serially', t => {
-	const {ava, manager} = setup(a => {
+	const {ava, manager} = setup('serial', a => {
 		a.snapshot('hello');
 
 		const attempt1 = t2 => {
@@ -67,7 +67,7 @@ test('try-commit snapshots serially', t => {
 });
 
 test('try-commit snapshots concurrently', t => {
-	const {ava, manager} = setup(a => {
+	const {ava, manager} = setup('concurrent', a => {
 		a.snapshot('hello');
 
 		const attempt1 = t2 => {
