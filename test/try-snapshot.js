@@ -8,7 +8,19 @@ const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
 const ContextRef = require('../lib/context-ref');
 
-function setup(title, fn) {
+function setup(title, manager, fn) {
+	return new Test({
+		fn,
+		failWithoutAssertions: true,
+		metadata: {type: 'test', callback: false},
+		contextRef: new ContextRef(),
+		registerUniqueTitle: () => true,
+		title,
+		compareTestSnapshot: options => manager.compare(options)
+	});
+}
+
+test(async t => {
 	// Set to `true` to update the snapshot, then run:
 	// "$(npm bin)"/tap --no-cov -R spec test/try-snapshot.js
 	//
@@ -24,74 +36,62 @@ function setup(title, fn) {
 		recordNewSnapshots: updating
 	});
 
-	const ava = new Test({
-		fn,
-		failWithoutAssertions: true,
-		metadata: {type: 'test', callback: false},
-		contextRef: new ContextRef(),
-		registerUniqueTitle: () => true,
-		title,
-		compareTestSnapshot: options => manager.compare(options)
-	});
+	await t.test('try-commit snapshots serially', t => {
+		const ava = setup('serial', manager, a => {
+			a.snapshot('hello');
 
-	return {ava, manager};
-}
+			const attempt1 = t2 => {
+				t2.snapshot(true);
+				t2.snapshot({boo: 'far'});
+			};
 
-test('try-commit snapshots serially', t => {
-	const {ava, manager} = setup('serial', a => {
-		a.snapshot('hello');
+			const attempt2 = t2 => {
+				t2.snapshot({foo: 'bar'});
+			};
 
-		const attempt1 = t2 => {
-			t2.snapshot(true);
-			t2.snapshot({boo: 'far'});
-		};
+			return a.try(attempt1).then(first => {
+				first.commit();
+				return a.try(attempt2);
+			}).then(second => {
+				second.commit();
+			});
+		});
 
-		const attempt2 = t2 => {
-			t2.snapshot({foo: 'bar'});
-		};
-
-		return a.try(attempt1).then(first => {
-			first.commit();
-			return a.try(attempt2);
-		}).then(second => {
-			second.commit();
+		return ava.run().then(result => {
+			t.true(result.passed);
+			if (!result.passed) {
+				console.log(result.error);
+			}
 		});
 	});
 
-	return ava.run().then(result => {
-		manager.save();
-		t.true(result.passed);
-		if (!result.passed) {
-			console.log(result.error);
-		}
+	await t.test('try-commit snapshots concurrently', t => {
+		const ava = setup('concurrent', manager, a => {
+			a.snapshot('hello');
+
+			const attempt1 = t2 => {
+				t2.snapshot(true);
+				t2.snapshot({boo: 'far'});
+			};
+
+			const attempt2 = t2 => {
+				t2.snapshot({foo: 'bar'});
+			};
+
+			return Promise.all([a.try(attempt1), a.try(attempt2)])
+				.then(([first, second]) => {
+					first.commit();
+					second.commit();
+				});
+		});
+
+		return ava.run().then(result => {
+			t.true(result.passed);
+			if (!result.passed) {
+				console.log(result.error);
+			}
+		});
 	});
-});
 
-test('try-commit snapshots concurrently', t => {
-	const {ava, manager} = setup('concurrent', a => {
-		a.snapshot('hello');
-
-		const attempt1 = t2 => {
-			t2.snapshot(true);
-			t2.snapshot({boo: 'far'});
-		};
-
-		const attempt2 = t2 => {
-			t2.snapshot({foo: 'bar'});
-		};
-
-		return Promise.all([a.try(attempt1), a.try(attempt2)])
-			.then(([first, second]) => {
-				first.commit();
-				second.commit();
-			});
-	});
-
-	return ava.run().then(result => {
-		manager.save();
-		t.true(result.passed);
-		if (!result.passed) {
-			console.log(result.error);
-		}
-	});
+	manager.save();
 });
