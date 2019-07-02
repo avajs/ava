@@ -43,6 +43,7 @@ test('try-commit snapshots serially', t => {
 
 		const attempt1 = t2 => {
 			t2.snapshot(true);
+			t2.snapshot({boo: 'far'});
 		};
 
 		const attempt2 = t2 => {
@@ -72,6 +73,7 @@ test('try-commit snapshots concurrently', t => {
 
 		const attempt1 = t2 => {
 			t2.snapshot(true);
+			t2.snapshot({boo: 'far'});
 		};
 
 		const attempt2 = t2 => {
