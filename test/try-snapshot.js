@@ -59,9 +59,6 @@ test(async t => {
 
 		return ava.run().then(result => {
 			t.true(result.passed);
-			if (!result.passed) {
-				console.log(result.error);
-			}
 		});
 	});
 
@@ -87,9 +84,6 @@ test(async t => {
 
 		return ava.run().then(result => {
 			t.true(result.passed);
-			if (!result.passed) {
-				console.log(result.error);
-			}
 		});
 	});
 
