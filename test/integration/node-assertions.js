@@ -8,7 +8,8 @@ test('node assertion failures are reported to the console when running in a term
 		dirname: 'fixture/node-assertions',
 		env: {
 			AVA_SIMULATE_TTY: true,
-			AVA_TTY_COLOR_DEPTH: 8
+			AVA_TTY_COLOR_DEPTH: 8,
+			AVA_TTY_HAS_COLORS: typeof process.stderr.hasColors === 'function'
 		}
 	};
 
