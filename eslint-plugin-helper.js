@@ -18,7 +18,7 @@ function load(projectDir, overrides) {
 	if (configCache.has(projectDir)) {
 		({conf, babelConfig} = configCache.get(projectDir));
 	} else {
-		conf = loadConfig(projectDir);
+		conf = loadConfig({resolveFrom: projectDir});
 		babelConfig = babelPipeline.validate(conf.babel);
 		configCache.set(projectDir, {conf, babelConfig});
 	}
