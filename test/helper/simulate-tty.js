@@ -1,4 +1,5 @@
 'use strict';
+const makeHasColors = require('../../lib/worker/fake-tty-has-colors');
 
 const simulateTTY = (stream, colorDepth, hasColors) => {
 	stream.isTTY = true;
@@ -10,7 +11,7 @@ const simulateTTY = (stream, colorDepth, hasColors) => {
 	}
 
 	if (hasColors) {
-		stream.hasColors = count => count >= colorDepth;
+		stream.hasColors = makeHasColors(colorDepth);
 	}
 };
 
