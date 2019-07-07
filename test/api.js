@@ -611,7 +611,7 @@ test('Node.js-style --require CLI argument module not found', t => {
 });
 
 test('caching is enabled by default', t => {
-	del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+	del.sync(path.posix.join(__dirname, 'fixture/caching/node_modules'));
 
 	const api = apiCreator({
 		projectDir: path.join(__dirname, 'fixture/caching')
@@ -627,7 +627,7 @@ test('caching is enabled by default', t => {
 });
 
 test('caching can be disabled', t => {
-	del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
+	del.sync(path.posix.join(__dirname, 'fixture/caching/node_modules'));
 
 	const api = apiCreator({
 		resolveTestsFrom: path.join(__dirname, 'fixture/caching'),
