@@ -8,7 +8,6 @@ os:
   - linux
 node_js:
   - 12
-  - 11
   - 10
   - 8
 env:
@@ -22,10 +21,6 @@ matrix:
     - node_js: 12
       env: FRESH_DEPS=false
       os: linux # Windows already tests without fresh dependencies, and we test *with* on Linux.
-    - node_js: 11
-      os: windows # We don't need to test odd-version releases very hard.
-    - node_js: 11
-      env: FRESH_DEPS=true
     - node_js: 10
       env: FRESH_DEPS=true
     - node_js: 8
