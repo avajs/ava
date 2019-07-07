@@ -135,11 +135,11 @@
 		"write-file-atomic": "^3.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^10.14.10",
+		"@types/node": "^10.14.12",
 		"cli-table3": "^0.5.1",
 		"codecov": "^3.5.0",
 		"delay": "^4.3.0",
-		"execa": "^2.0.1",
+		"execa": "^2.0.3",
 		"get-stream": "^5.1.0",
 		"git-branch": "^2.0.1",
 		"has-ansi": "^3.0.0",
@@ -151,7 +151,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.3.2",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^14.3.1",
+		"tap": "^14.4.1",
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.3.0",
