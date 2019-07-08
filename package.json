@@ -86,7 +86,7 @@
 		"convert-source-map": "^1.6.0",
 		"currently-unhandled": "^0.4.1",
 		"debug": "^4.1.1",
-		"del": "^5.0.0",
+		"del": "^4.1.1",
 		"dot-prop": "^5.1.0",
 		"emittery": "^0.4.1",
 		"empower-core": "^1.2.0",
