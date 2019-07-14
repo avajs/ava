@@ -40,19 +40,15 @@ test(async t => {
 		const ava = setup('serial', manager, async a => {
 			a.snapshot('hello');
 
-			const attempt1 = t2 => {
+			const first = await a.try(t2 => {
 				t2.snapshot(true);
 				t2.snapshot({boo: 'far'});
-			};
-
-			const attempt2 = t2 => {
-				t2.snapshot({foo: 'bar'});
-			};
-
-			const first = await a.try(attempt1);
+			});
 			first.commit();
 
-			const second = await a.try(attempt2);
+			const second = await a.try(t2 => {
+				t2.snapshot({foo: 'bar'});
+			});
 			second.commit();
 		});
 
@@ -64,18 +60,14 @@ test(async t => {
 		const ava = setup('concurrent', manager, async a => {
 			a.snapshot('hello');
 
-			const attempt1 = t2 => {
-				t2.snapshot(true);
-				t2.snapshot({boo: 'far'});
-			};
-
-			const attempt2 = t2 => {
-				t2.snapshot({foo: 'bar'});
-			};
-
 			const [first, second] = await Promise.all([
-				a.try(attempt1),
-				a.try(attempt2)
+				a.try(t2 => {
+					t2.snapshot(true);
+					t2.snapshot({boo: 'far'});
+				}),
+				a.try(t2 => {
+					t2.snapshot({foo: 'bar'});
+				})
 			]);
 			first.commit();
 			second.commit();
