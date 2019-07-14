@@ -504,6 +504,30 @@ test('try-commit refreshes the timeout on commit/discard', async t => {
 	t.is(result1.passed, true);
 });
 
+test('assertions within try-commit do not refresh the timeout', async t => {
+	const result = await ava(async a => {
+		a.timeout(15);
+		a.pass();
+
+		// Attempt by itself will refresh timeout, so it has to finish after
+		// timeout of the test in order to make sure that it does not refresh the
+		// timeout. However, if assert within attempt is called before test timeout
+		// expires and will refresh the timeout (which is faulty behavior), then
+		// the entire test will not fail by timeout.
+		const res = await a.try(async b => {
+			await delay(10);
+			b.is(1, 1);
+			await delay(10);
+		});
+		res.commit();
+	}).run();
+
+	t.false(result.passed);
+	t.ok(result.error);
+	t.match(result.error.message, /Test timeout exceeded/);
+	t.is(result.error.name, 'Error');
+});
+
 test('try-commit inherits the test context', async t => {
 	const context = new ContextRef();
 	const data = {foo: 'bar'};
