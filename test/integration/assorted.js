@@ -30,7 +30,7 @@ test('timeout', t => {
 test('Should throw error if passed file does not exist', t => {
 	execCli('no-such-file.js', (err, e, stdout) => {
 		t.ok(err);
-		t.equal(stdout.includes('Error: No such file:'), true, 'Error: No sush file:');
+		t.equal(stdout.includes('Error: No such file:'), true);
 		t.end();
 	});
 });
@@ -38,7 +38,7 @@ test('Should throw error if passed file does not exist', t => {
 test('Should throw error if passed file is a directory', t => {
 	execCli('ava-paths', (err, e, stdout) => {
 		t.ok(err);
-		t.equal(stdout.includes('ava-paths should be a file'), true, 'ava-paths should be a file');
+		t.equal(stdout.includes('ava-paths should be a file'), true);
 		t.end();
 	});
 });
