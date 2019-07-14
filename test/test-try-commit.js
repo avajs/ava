@@ -7,13 +7,6 @@ const delay = require('delay');
 const ContextRef = require('../lib/context-ref');
 const {ava} = require('./helper/ava-test');
 
-test('try-commit are present', t => {
-	return ava(a => {
-		a.pass();
-		t.type(a.try, Function);
-	}).run();
-});
-
 test('try-commit works', t => {
 	const instance = ava(a => {
 		return a
