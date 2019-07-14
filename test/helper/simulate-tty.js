@@ -1,12 +1,17 @@
 'use strict';
+const makeHasColors = require('../../lib/worker/fake-tty-has-colors');
 
-const simulateTTY = (stream, colorDepth) => {
+const simulateTTY = (stream, colorDepth, hasColors) => {
 	stream.isTTY = true;
 	stream.columns = 80;
 	stream.rows = 24;
 
 	if (colorDepth) {
 		stream.getColorDepth = () => colorDepth;
+	}
+
+	if (hasColors) {
+		stream.hasColors = makeHasColors(colorDepth);
 	}
 };
 
@@ -17,7 +22,8 @@ if (process.env.AVA_SIMULATE_TTY) {
 	const colorDepth = process.env.AVA_TTY_COLOR_DEPTH ?
 		parseInt(process.env.AVA_TTY_COLOR_DEPTH, 10) :
 		undefined;
+	const hasColors = process.env.AVA_TTY_HAS_COLORS !== undefined;
 
-	simulateTTY(process.stderr, colorDepth);
-	simulateTTY(process.stdout, colorDepth);
+	simulateTTY(process.stderr, colorDepth, hasColors);
+	simulateTTY(process.stdout, colorDepth, hasColors);
 }

@@ -16,7 +16,13 @@ const createApi = options => {
 				child_process: { // eslint-disable-line camelcase
 					...childProcess,
 					fork(filename, argv, options) {
-						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, options);
+						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, {
+							...options,
+							env: {
+								...options.env,
+								NODE_NO_WARNINGS: '1'
+							}
+						});
 					}
 				}
 			})

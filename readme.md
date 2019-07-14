@@ -22,7 +22,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Runs tests concurrently
 - Enforces writing atomic tests
 - No implicit globals
-- Includes TypeScript & Flow type definitions
+- Includes TypeScript definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
 - [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
@@ -125,7 +125,7 @@ AVA automatically removes unrelated lines in stack traces, allowing you to find 
 
 AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. There is no extra setup required. You don't need to be using Babel in your own project for this to work either.
 
-We aim support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
+We aim to support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
 
 Please note that we do not add or modify built-ins. For example, if you use [`Object.fromEntries()`](https://github.com/tc39/proposal-object-from-entries) in your tests, they will crash in Node.js 10 which does not implement this method.
 
@@ -168,6 +168,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
+- [Debugging tests with VSCode](docs/recipes/debugging-with-vscode.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
 - [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
