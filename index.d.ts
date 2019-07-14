@@ -353,7 +353,7 @@ export interface TruthyAssertion {
 }
 
 /** The `t` value passed to test & hook implementations. */
-export interface ExecutionContext<Context = {}> extends Assertions {
+export interface ExecutionContext<Context = unknown> extends Assertions {
 	/** Test context, shared with hooks. */
 	context: Context;
 
@@ -393,7 +393,7 @@ export interface TimeoutFn {
 }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
-export interface CbExecutionContext<Context = {}> extends ExecutionContext<Context> {
+export interface CbExecutionContext<Context = unknown> extends ExecutionContext<Context> {
 	/**
 	 * End the test. If `error` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) the test or hook
 	 * will fail.
@@ -402,14 +402,14 @@ export interface CbExecutionContext<Context = {}> extends ExecutionContext<Conte
 }
 
 export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
-export type Implementation<Context = {}> = (t: ExecutionContext<Context>) => ImplementationResult;
-export type CbImplementation<Context = {}> = (t: CbExecutionContext<Context>) => ImplementationResult;
+export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
+export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
 /** A reusable test or hook implementation. */
-export type UntitledMacro<Args extends any[], Context = {}> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
+export type UntitledMacro<Args extends any[], Context = unknown> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
 
 /** A reusable test or hook implementation. */
-export type Macro<Args extends any[], Context = {}> = UntitledMacro<Args, Context> & {
+export type Macro<Args extends any[], Context = unknown> = UntitledMacro<Args, Context> & {
 	/**
 	 * Implement this function to generate a test (or hook) title whenever this macro is used. `providedTitle` contains
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
@@ -423,10 +423,10 @@ export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | Un
 export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type UntitledCbMacro<Args extends any[], Context = {}> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
+export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type CbMacro<Args extends any[], Context = {}> = UntitledCbMacro<Args, Context> & {
+export type CbMacro<Args extends any[], Context = unknown> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
 }
 
@@ -435,7 +435,7 @@ export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
 export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
 
-export interface TestInterface<Context = {}> {
+export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
@@ -472,7 +472,7 @@ export interface TestInterface<Context = {}> {
 	meta: MetaInterface;
 }
 
-export interface AfterInterface<Context = {}> {
+export interface AfterInterface<Context = unknown> {
 	/** Declare a hook that is run once, after all tests have passed. */
 	(implementation: Implementation<Context>): void;
 
@@ -494,7 +494,7 @@ export interface AfterInterface<Context = {}> {
 	skip: HookSkipInterface<Context>;
 }
 
-export interface AlwaysInterface<Context = {}> {
+export interface AlwaysInterface<Context = unknown> {
 	/** Declare a hook that is run once, after all tests are done. */
 	(implementation: Implementation<Context>): void;
 
@@ -513,7 +513,7 @@ export interface AlwaysInterface<Context = {}> {
 	skip: HookSkipInterface<Context>;
 }
 
-export interface BeforeInterface<Context = {}> {
+export interface BeforeInterface<Context = unknown> {
 	/** Declare a hook that is run once, before all tests. */
 	(implementation: Implementation<Context>): void;
 
@@ -532,7 +532,7 @@ export interface BeforeInterface<Context = {}> {
 	skip: HookSkipInterface<Context>;
 }
 
-export interface CbInterface<Context = {}> {
+export interface CbInterface<Context = unknown> {
 	/** Declare a test that must call `t.end()` when it's done. */
 	(title: string, implementation: CbImplementation<Context>): void;
 
@@ -555,7 +555,7 @@ export interface CbInterface<Context = {}> {
 	skip: CbSkipInterface<Context>;
 }
 
-export interface CbFailingInterface<Context = {}> {
+export interface CbFailingInterface<Context = unknown> {
 	/** Declare a test that must call `t.end()` when it's done. The test is expected to fail. */
 	(title: string, implementation: CbImplementation<Context>): void;
 
@@ -575,7 +575,7 @@ export interface CbFailingInterface<Context = {}> {
 	skip: CbSkipInterface<Context>;
 }
 
-export interface CbOnlyInterface<Context = {}> {
+export interface CbOnlyInterface<Context = unknown> {
 	/**
 	 * Declare a test that must call `t.end()` when it's done. Only this test and others declared with `.only()` are run.
 	 */
@@ -594,7 +594,7 @@ export interface CbOnlyInterface<Context = {}> {
 	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
-export interface CbSkipInterface<Context = {}> {
+export interface CbSkipInterface<Context = unknown> {
 	/** Skip this test. */
 	(title: string, implementation: CbImplementation<Context>): void;
 
@@ -605,7 +605,7 @@ export interface CbSkipInterface<Context = {}> {
 	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
-export interface FailingInterface<Context = {}> {
+export interface FailingInterface<Context = unknown> {
 	/** Declare a concurrent test. The test is expected to fail. */
 	(title: string, implementation: Implementation<Context>): void;
 
@@ -625,7 +625,7 @@ export interface FailingInterface<Context = {}> {
 	skip: SkipInterface<Context>;
 }
 
-export interface HookCbInterface<Context = {}> {
+export interface HookCbInterface<Context = unknown> {
 	/** Declare a hook that must call `t.end()` when it's done. */
 	(implementation: CbImplementation<Context>): void;
 
@@ -646,7 +646,7 @@ export interface HookCbInterface<Context = {}> {
 	skip: HookCbSkipInterface<Context>;
 }
 
-export interface HookCbSkipInterface<Context = {}> {
+export interface HookCbSkipInterface<Context = unknown> {
 	/** Skip this hook. */
 	(implementation: CbImplementation<Context>): void;
 
@@ -660,7 +660,7 @@ export interface HookCbSkipInterface<Context = {}> {
 	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
-export interface HookSkipInterface<Context = {}> {
+export interface HookSkipInterface<Context = unknown> {
 	/** Skip this hook. */
 	(implementation: Implementation<Context>): void;
 
@@ -674,7 +674,7 @@ export interface HookSkipInterface<Context = {}> {
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
-export interface OnlyInterface<Context = {}> {
+export interface OnlyInterface<Context = unknown> {
 	/** Declare a test. Only this test and others declared with `.only()` are run. */
 	(title: string, implementation: Implementation<Context>): void;
 
@@ -691,7 +691,7 @@ export interface OnlyInterface<Context = {}> {
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 }
 
-export interface SerialInterface<Context = {}> {
+export interface SerialInterface<Context = unknown> {
 	/** Declare a serial test. */
 	(title: string, implementation: Implementation<Context>): void;
 
@@ -726,7 +726,7 @@ export interface SerialInterface<Context = {}> {
 	todo: TodoDeclaration;
 }
 
-export interface SkipInterface<Context = {}> {
+export interface SkipInterface<Context = unknown> {
 	/** Skip this test. */
 	(title: string, implementation: Implementation<Context>): void;
 
