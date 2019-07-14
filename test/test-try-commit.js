@@ -306,7 +306,7 @@ test('try-commit fails when plan is not reached inside the try', t => {
 	});
 });
 
-test('try-commit passes with failing test', t => {
+test('test expected to fail will pass with failing try-commit within the test', t => {
 	return ava.failing(a => {
 		return a
 			.try(b => b.fail())
