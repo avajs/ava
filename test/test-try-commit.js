@@ -425,7 +425,7 @@ test('try-commit refreshes the timeout on commit/discard', async t => {
 	t.is(result1.passed, true);
 });
 
-test('try-commit can access parent test context', async t => {
+test('try-commit inherits the test context', async t => {
 	const context = new ContextRef();
 	const data = {foo: 'bar'};
 	context.set(data);
@@ -440,7 +440,7 @@ test('try-commit can access parent test context', async t => {
 	t.is(result.passed, true);
 });
 
-test('try-commit cannot set parent test context', async t => {
+test('assigning context in try-commit does not affect parent', async t => {
 	const context = new ContextRef();
 	const data = {foo: 'bar'};
 	context.set(data);
