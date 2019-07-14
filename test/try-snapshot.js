@@ -36,8 +36,8 @@ test(async t => {
 		recordNewSnapshots: updating
 	});
 
-	await t.test('try-commit snapshots serially', t => {
-		const ava = setup('serial', manager, a => {
+	await t.test('try-commit snapshots serially', async t => {
+		const ava = setup('serial', manager, async a => {
 			a.snapshot('hello');
 
 			const attempt1 = t2 => {
@@ -49,21 +49,19 @@ test(async t => {
 				t2.snapshot({foo: 'bar'});
 			};
 
-			return a.try(attempt1).then(first => {
-				first.commit();
-				return a.try(attempt2);
-			}).then(second => {
-				second.commit();
-			});
+			const first = await a.try(attempt1);
+			first.commit();
+
+			const second = await a.try(attempt2);
+			second.commit();
 		});
 
-		return ava.run().then(result => {
-			t.true(result.passed);
-		});
+		const result = await ava.run();
+		t.true(result.passed);
 	});
 
-	await t.test('try-commit snapshots concurrently', t => {
-		const ava = setup('concurrent', manager, a => {
+	await t.test('try-commit snapshots concurrently', async t => {
+		const ava = setup('concurrent', manager, async a => {
 			a.snapshot('hello');
 
 			const attempt1 = t2 => {
@@ -75,19 +73,19 @@ test(async t => {
 				t2.snapshot({foo: 'bar'});
 			};
 
-			return Promise.all([a.try(attempt1), a.try(attempt2)])
-				.then(([first, second]) => {
-					first.commit();
-					second.commit();
-				});
+			const [first, second] = await Promise.all([
+				a.try(attempt1),
+				a.try(attempt2)
+			]);
+			first.commit();
+			second.commit();
 		});
 
-		return ava.run().then(result => {
-			t.false(result.passed);
-			t.ok(result.error);
-			t.match(result.error.message, /not run concurrent snapshot assertions when using `t\.try\(\)`/);
-			t.is(result.error.name, 'Error');
-		});
+		const result = await ava.run();
+		t.false(result.passed);
+		t.ok(result.error);
+		t.match(result.error.message, /not run concurrent snapshot assertions when using `t\.try\(\)`/);
+		t.is(result.error.name, 'Error');
 	});
 
 	manager.save();
