@@ -378,26 +378,6 @@ test('try-commit does not allow to use .end() in attempt when parent is callback
 	});
 });
 
-test('try-commit can be discarded', t => {
-	const instance = ava(a => {
-		const p = a.try(b => {
-			return new Promise(resolve => setTimeout(resolve, 500))
-				.then(() => b.pass());
-		});
-
-		p.discard();
-
-		return p.then(res => {
-			t.is(res, null);
-		});
-	});
-
-	return instance.run().then(result => {
-		t.false(result.passed);
-		t.is(instance.assertCount, 0);
-	});
-});
-
 test('try-commit accepts macros', t => {
 	const macro = b => {
 		t.is(b.title, ' Title');
