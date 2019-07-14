@@ -275,6 +275,45 @@ test('try-commit fails when plan is not reached inside the try', async t => {
 	t.false(result.passed);
 });
 
+test('plan within try-commit is not affected by assertions outside', async t => {
+	const result = await ava(async a => {
+		const attempt = a.try(b => {
+			b.plan(3);
+		});
+
+		a.is(1, 1);
+		a.is(2, 2);
+
+		const res = await attempt;
+		t.false(res.passed);
+		res.commit();
+	}).run();
+
+	t.false(result.passed);
+	t.ok(result.error);
+	t.match(result.error.message, /Planned for 3 assertions, but got 0/);
+});
+
+test('assertions within try-commit do not affect plan in the parent test', async t => {
+	const result = await ava(async a => {
+		a.plan(2);
+
+		const res = await a.try(b => {
+			b.plan(3);
+			b.pass();
+			b.pass();
+			b.pass();
+		});
+
+		t.true(res.passed);
+		res.commit();
+	}).run();
+
+	t.false(result.passed);
+	t.ok(result.error);
+	t.match(result.error.message, /Planned for 2 assertions, but got 1/);
+});
+
 test('test expected to fail will pass with failing try-commit within the test', async t => {
 	const result = await ava.failing(async a => {
 		const res = await a.try(b => b.fail());
@@ -335,6 +374,23 @@ test('try-commit does not allow to use .end() in attempt when parent is callback
 				res.commit();
 				a.end();
 			});
+	}).run();
+
+	t.false(result.passed);
+	t.ok(result.error);
+	t.match(result.error.message, /Error thrown in test/);
+	t.is(result.error.name, 'AssertionError');
+	t.match(result.error.values[0].formatted, /t\.end.*not supported/);
+});
+
+test('try-commit does not allow to use .end() in attempt when parent is regular test', async t => {
+	const result = await ava(async a => {
+		const res = await a.try(b => {
+			b.pass();
+			b.end();
+		});
+
+		res.commit();
 	}).run();
 
 	t.false(result.passed);
@@ -410,6 +466,29 @@ test('try-commit abides timeout', async t => {
 
 	t.is(result1.passed, false);
 	t.match(result1.error.message, /timeout/);
+});
+
+test('try-commit fails when it exceeds its own timeout', async t => {
+	const result = await ava(async a => {
+		a.timeout(200);
+		const result = await a.try(async b => {
+			b.timeout(50);
+			b.pass();
+			await delay(100);
+		});
+
+		t.false(result.passed);
+		t.ok(result.errors);
+		t.is(result.errors.length, 1);
+		const error = result.errors[0];
+		t.match(error.message, /Test timeout exceeded/);
+		t.is(error.name, 'Error');
+
+		result.discard();
+		a.pass();
+	}).run();
+
+	t.true(result.passed);
 });
 
 test('try-commit refreshes the timeout on commit/discard', async t => {
