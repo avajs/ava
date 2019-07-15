@@ -30,7 +30,7 @@ test('timeout', t => {
 test('Should throw error if passed file does not exist', t => {
 	execCli('no-such-file.js', (err, e, stdout) => {
 		t.ok(err);
-		t.match(stdout, /No sush file:/);
+		t.match(stdout, /No such file:/);
 		t.end();
 	});
 });
