@@ -1092,6 +1092,87 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
+	group('failure counts are correctly reset', (beforeEach, test) => {
+		let apiEmitter;
+		let runStatus;
+		let runStatusEmitter;
+		beforeEach(() => {
+			apiEmitter = new EventEmitter();
+			api.on = (event, fn) => {
+				apiEmitter.on(event, fn);
+			};
+
+			runStatusEmitter = new EventEmitter();
+			runStatus = {
+				stats: {
+					byFile: new Map(),
+					declaredTests: 0,
+					failedHooks: 0,
+					failedTests: 0,
+					failedWorkers: 0,
+					files,
+					finishedWorkers: 0,
+					internalErrors: 0,
+					remainingTests: 0,
+					passedKnownFailingTests: 0,
+					passedTests: 0,
+					selectedTests: 0,
+					skippedTests: 0,
+					timeouts: 0,
+					todoTests: 0,
+					uncaughtExceptions: 0,
+					unhandledRejections: 0
+				},
+				on(event, fn) {
+					runStatusEmitter.on(event, fn);
+				}
+			};
+		});
+
+		const t1 = path.join('test', '1.js');
+		const t1Absolute = path.resolve(t1);
+
+		const seed = () => {
+			let done;
+			api.run.returns(new Promise(resolve => {
+				done = () => {
+					resolve(runStatus);
+				};
+			}));
+
+			const watcher = start();
+			apiEmitter.emit('run', {
+				files: [t1Absolute],
+				status: runStatus
+			});
+
+			runStatusEmitter.emit('stateChange', {
+				type: 'test-failed',
+				testFile: t1Absolute
+			});
+
+			done();
+			api.run.returns(new Promise(() => {}));
+			return watcher;
+		};
+
+		test('when failed test is changed', t => {
+			const options = {...defaultApiOptions};
+			t.plan(2);
+			seed();
+
+			change(t1);
+			return debounce(2).then(() => {
+				t.ok(api.run.calledTwice);
+				t.strictDeepEqual(api.run.secondCall.args, [[t1Absolute], {
+					...options,
+					clearLogOnNextRun: true,
+					runVector: 2
+				}]);
+			});
+		});
+	});
+
 	group('.only is sticky', (beforeEach, test) => {
 		let apiEmitter;
 		let runStatus;
