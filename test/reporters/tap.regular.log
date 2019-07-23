@@ -281,8 +281,6 @@ not ok 29 - output-in-hook [90m[2m›[22m[39m failing test
 ---tty-stream-chunk-separator
   # afterAlways
 ---tty-stream-chunk-separator
-# Failed hook: failing-hook › before hook
----tty-stream-chunk-separator
 
 1..23
 # tests 22
