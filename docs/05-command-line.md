@@ -6,7 +6,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 $ npx ava --help
 
   Usage
-    ava [<file> ...]
+    ava [<file[:line]> ...]
 
   Options
     --watch, -w             Re-run tests when tests and source files change
@@ -27,6 +27,7 @@ $ npx ava --help
   Examples
     ava
     ava test.js test2.js
+    ava test.js:5 test2.js:4-5,9
     ava test-*.js
     ava test
 
@@ -124,6 +125,48 @@ test(function foo(t) {
 	t.fail();
 });
 ```
+
+## Running tests residing on a given line
+
+Sometimes during development it's helpful to run a test that is on a specific line. AVA allows you to run tests based on their location in the source code.
+
+Match the test on line `5`:
+
+```console
+npx ava test.js:5
+```
+
+It is also possible to use a range:
+
+```console
+npx ava test.js:5-10
+```
+
+Using multiple ranges is also possible:
+
+```console
+npx ava test.js:5-10,18,10
+```
+
+To run a test you can use any line from where you call `test` until your next call to the `test` function, as an example you can use any of the lines from 3 to 6 in the following code to run `foo`.
+
+```js
+ 1 import test from 'ava';
+ 2
+ 3 test('foo', t => {
+ 4 	t.pass();
+ 5 });
+ 6
+ 7 test('bar', async t => {
+ 8 	const bar = Promise.resolve('bar');
+ 9 	t.is(await bar, 'bar');
+10 });
+```
+
+> Please note that using any number more than the maximum line-number will execute the last test.
+
+Using `--match` beside this feature will only match the tests on the given area.
+
 
 ## Resetting AVA's cache
 

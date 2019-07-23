@@ -1212,3 +1212,25 @@ test('`esm` package support', t => {
 			t.is(runStatus.stats.passedTests, 1);
 		});
 });
+
+test('`range` should filter tests', t => {
+	const api = apiCreator();
+	const tests = [];
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', evt => {
+			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
+				tests.push(evt.title);
+			}
+		});
+	});
+
+	const filename = path.join(__dirname, 'fixture/range.js');
+
+	return api.run([filename], {ranges: new Map([[filename, [8]]])})
+		.then(runStatus => {
+			t.strictDeepEqual(tests, ['unicorn']);
+			t.is(runStatus.stats.passedTests, 1);
+			t.is(runStatus.stats.declaredTests, 3);
+		});
+});
