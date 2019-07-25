@@ -1,8 +1,8 @@
 
 ---tty-stream-chunk-separator
-  [32m✔[39m a [90m[2m›[22m[39m only
+  [32m✔[39m [2me90e64e828[22m a [90m[2m›[22m[39m only
 ---tty-stream-chunk-separator
-  [32m✔[39m b [90m[2m›[22m[39m passes
+  [32m✔[39m [2m63d04ac302[22m b [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 
   [32m2 tests passed[39m

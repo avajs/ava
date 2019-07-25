@@ -1,6 +1,6 @@
 
 ---tty-stream-chunk-separator
-  [31m✖[39m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+  [31m✖[39m [2m9eaac03e61[22m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
 
   [31m1 test failed[39m

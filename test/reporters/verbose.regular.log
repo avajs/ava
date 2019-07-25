@@ -13,9 +13,9 @@
 ---tty-stream-chunk-separator
   [31m✖ test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
+  [32m✔[39m [2m63d04ac302[22m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+  [32m✔[39m [2mb44eae8674[22m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
 ---tty-stream-chunk-separator
 
   [1mUnhandled rejection in test/fixture/report/regular/unhandled-rejection.js[22m
@@ -34,7 +34,7 @@
   [33mnull[39m
 
 ---tty-stream-chunk-separator
-  [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
+  [32m✔[39m [2m63d04ac302[22m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 
   [1mUncaught exception in test/fixture/report/regular/uncaught-exception.js[22m
@@ -50,71 +50,71 @@
 ---tty-stream-chunk-separator
   [31m✖ test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
+  [31m✖[39m [2m9507681c96[22m traces-in-t-throws [90m[2m›[22m[39m throws 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
+  [31m✖[39m [2m99e87f2b1a[22m traces-in-t-throws [90m[2m›[22m[39m notThrows 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
+  [31m✖[39m [2m23931cf3aa[22m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
+  [31m✖[39m [2ma1f7fc6863[22m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
+  [31m✖[39m [2m8cfa623137[22m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
 ---tty-stream-chunk-separator
 stdout
 ---tty-stream-chunk-separator
 stderr
 ---tty-stream-chunk-separator
-  [33m- test [90m[2m›[22m[33m skip[39m
+  [33m- dcdac2905b test [90m[2m›[22m[33m skip[39m
 ---tty-stream-chunk-separator
-  [34m- test [90m[2m›[22m[34m todo[39m
+  [34m- 19a13f2a6c test [90m[2m›[22m[34m todo[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m test [90m[2m›[22m[39m passes
+  [32m✔[39m [2m63d04ac302[22m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+  [31m✖[39m [2m9eaac03e61[22m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
-  [31m✔[39m [31mtest [90m[2m›[22m[31m known failure[39m
+  [31m✔[39m [2ma6ca6858c0[22m [31mtest [90m[2m›[22m[31m known failure[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
+  [31m✖[39m [2m81c2e00085[22m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
+  [31m✖[39m [2m5f363d84ec[22m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m formatted 
+  [31m✖[39m [2m964fac7e8e[22m test [90m[2m›[22m[39m formatted 
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m power-assert 
+  [31m✖[39m [2m66b52c3d09[22m test [90m[2m›[22m[39m power-assert 
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m bad throws [31mImproper usage of `t.throws()` detected[39m
+  [31m✖[39m [2mea408ec6c1[22m test [90m[2m›[22m[39m bad throws [31mImproper usage of `t.throws()` detected[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m bad notThrows [31mImproper usage of `t.notThrows()` detected[39m
+  [31m✖[39m [2m6b26aa87ad[22m test [90m[2m›[22m[39m bad notThrows [31mImproper usage of `t.notThrows()` detected[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
+  [31m✖[39m [2mf86d05e5da[22m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
+  [32m✔[39m [2ma172f324e1[22m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m before hook
+    e2795187d9 output-in-hook [90m[2m›[22m[39m before hook
     [35mℹ[39m [90mbefore[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    9a5cf57f11 output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    0b958afd77 output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+  [32m✔[39m [2m4f05f173c9[22m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
-  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+  [31m✖[39m [2m222e7143b4[22m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    f7fe2b1cfe output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
     [35mℹ[39m [90mafterEach[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    b9941c5eef output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
     [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    ea197df294 output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
     [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m cleanup
+    2b9e0faadf output-in-hook [90m[2m›[22m[39m cleanup
     [35mℹ[39m [90mafterAlways[39m
 ---tty-stream-chunk-separator
 

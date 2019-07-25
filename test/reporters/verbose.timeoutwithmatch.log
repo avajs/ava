@@ -1,6 +1,6 @@
 
 ---tty-stream-chunk-separator
-  [32m✔[39m passes needle
+  [32m✔[39m [2m581779f4d9[22m passes needle
 ---tty-stream-chunk-separator
   [31m[39m
   [31m✖ Timed out while running tests[39m

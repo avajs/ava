@@ -49,6 +49,7 @@ test('runner emits "stateChange" events', t => {
 		if (evt.type === 'declared-test') {
 			t.deepEqual(evt, {
 				type: 'declared-test',
+				hash: '7cd3edacc4',
 				title: 'foo',
 				knownFailing: false,
 				todo: false

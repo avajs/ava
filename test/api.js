@@ -112,12 +112,15 @@ test('fail-fast mode - single file & serial', t => {
 			t.ok(api.options.failFast);
 			t.strictDeepEqual(tests, [{
 				ok: true,
+				hash: '1221417f85',
 				title: 'first pass'
 			}, {
 				ok: false,
+				hash: 'a9039c8aa0',
 				title: 'second fail'
 			}, {
 				ok: true,
+				hash: '09fda0bbf9',
 				title: 'third pass'
 			}]);
 			t.is(runStatus.stats.passedTests, 2);
@@ -162,10 +165,12 @@ test('fail-fast mode - multiple files & serial', t => {
 			t.strictDeepEqual(tests, [{
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				hash: '1221417f85',
 				title: 'first pass'
 			}, {
 				ok: false,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				hash: 'a9039c8aa0',
 				title: 'second fail'
 			}]);
 			t.is(runStatus.stats.passedTests, 1);
@@ -210,18 +215,22 @@ test('fail-fast mode - multiple files & interrupt', t => {
 			t.strictDeepEqual(tests, [{
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				hash: '1221417f85',
 				title: 'first pass'
 			}, {
 				ok: false,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				hash: 'a9039c8aa0',
 				title: 'second fail'
 			}, {
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				hash: '09fda0bbf9',
 				title: 'third pass'
 			}, {
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
+				hash: '1221417f85',
 				title: 'first pass'
 			}]);
 			t.is(runStatus.stats.passedTests, 3);
