@@ -94,11 +94,13 @@ test('fail-fast mode - single file & serial', t => {
 			if (evt.type === 'test-failed') {
 				tests.push({
 					ok: false,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'test-passed') {
 				tests.push({
 					ok: true,
+					hash: evt.hash,
 					title: evt.title
 				});
 			}
@@ -137,12 +139,14 @@ test('fail-fast mode - multiple files & serial', t => {
 				tests.push({
 					ok: false,
 					testFile: evt.testFile,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'test-passed') {
 				tests.push({
 					ok: true,
 					testFile: evt.testFile,
+					hash: evt.hash,
 					title: evt.title
 				});
 			}
@@ -183,12 +187,14 @@ test('fail-fast mode - multiple files & interrupt', t => {
 				tests.push({
 					ok: false,
 					testFile: evt.testFile,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'test-passed') {
 				tests.push({
 					ok: true,
 					testFile: evt.testFile,
+					hash: evt.hash,
 					title: evt.title
 				});
 			}
@@ -237,11 +243,13 @@ test('fail-fast mode - crash & serial', t => {
 			if (evt.type === 'test-failed') {
 				tests.push({
 					ok: false,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'test-passed') {
 				tests.push({
 					ok: true,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'worker-failed') {
@@ -279,11 +287,13 @@ test('fail-fast mode - timeout & serial', t => {
 			if (evt.type === 'test-failed') {
 				tests.push({
 					ok: false,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'test-passed') {
 				tests.push({
 					ok: true,
+					hash: evt.hash,
 					title: evt.title
 				});
 			} else if (evt.type === 'timeout') {
