@@ -20,6 +20,8 @@ You could do all these things using plain setup functions, but there are tradeof
 | ✅ &nbsp; failure has friendly output| ⛔️ &nbsp; errors are attributed to the test
 | ✅ &nbsp; corresponding `afterEach` and `afterEach.always` for cleanup| ⛔️ &nbsp; cannot easily clean up
 
+An important consideration if you are modifying or adding Node global variables (and cleaning them after each test), it might introduce undesired effects in global test contexts since tests are run concurrently by default. In this edge cases you can pass the `--serial` flag, this will ensure that any modification inside hooks like `beforeEach` are preparing the setup for each test correctly.
+
 ## Complex test setup
 
 In this example, we have both a `beforeEach()` hook, and then more modifications within each test.
