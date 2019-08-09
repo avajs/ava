@@ -130,6 +130,34 @@ test('watcher reruns all tests when one of the configured files in the `require`
 	});
 });
 
+test('watcher reruns only test cases declared with `.only`', t => {
+	let killed = false;
+
+	const child = execCli(['--verbose', '--watch', 'test-only.js'], {dirname: 'fixture/watcher/with-only', env: {CI: ''}}, err => {
+		t.ok(killed);
+		t.ifError(err);
+		t.end();
+	});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stdout.on('data', str => {
+		buffer += str;
+		if (buffer.includes('1 test passed') && !passedFirst) {
+			touch.sync(path.join(__dirname, '../fixture/watcher/with-only/test-only.js'));
+			buffer = '';
+			passedFirst = true;
+		} else if (buffer.includes('1 test passed') && !killed) {
+			child.kill();
+			killed = true;
+		} else if (buffer.includes('tests passed') && !killed) {
+			t.fail('Expected a single test declared with `.only` to run');
+			child.kill();
+			killed = true;
+		}
+	});
+});
+
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
