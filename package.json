@@ -135,7 +135,7 @@
 		"write-file-atomic": "^3.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^10.14.12",
+		"@types/node": "^10.14.15",
 		"cli-table3": "^0.5.1",
 		"codecov": "^3.5.0",
 		"delay": "^4.3.0",
@@ -155,7 +155,7 @@
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.3.0",
-		"typescript": "^3.5.2",
+		"typescript": "^3.5.3",
 		"xo": "^0.24.0",
 		"zen-observable": "^0.8.14"
 	},
