@@ -151,6 +151,15 @@ Please see the [files in the `docs` directory](./docs):
 
 We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
 
+- [ESLint plugin](docs/08-common-pitfalls.md#eslint-plugin)
+- [Transpiling imported modules](docs/08-common-pitfalls.md#transpiling-imported-modules)
+- [AVA in Docker](docs/08-common-pitfalls.md#ava-in-docker)
+- [AVA and connected client limits](docs/08-common-pitfalls.md#ava-and-connected-client-limits)
+- [Asynchronous operations](docs/08-common-pitfalls.md#asynchronous-operations)
+- [Attributing uncaught exceptions to tests](docs/08-common-pitfalls.md#attributing-uncaught-exceptions-to-tests)
+- [Why are the enhanced assertion messages not shown?](docs/08-common-pitfalls.md#why-are-the-enhanced-assertion-messages-not-shown)
+- [Why global variables are not reset before tests?](docs/08-common-pitfalls.md#why-global-variables-are-not-reset-before-tests)
+
 ### Recipes
 
 - [Test setup](docs/recipes/test-setup.md)

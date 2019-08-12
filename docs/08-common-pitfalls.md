@@ -83,6 +83,66 @@ test('one is one', t => {
 });
 ```
 
+### Why global variables are not reset before tests?
+
+By default AVA runs tests concurrently, this doesn't alter the order test hooks like `beforeEach` and `afterEach` are executed, but could lead to tests having _polluted_ global variables.
+
+```js
+import test from 'ava';
+import addOne from './src/index.js';
+
+global.acum = 0;
+
+test.beforeEach(() => {
+	// reset global
+	global.acum = 0;
+});
+
+test.beforeEach(() => {
+	global.acum = null;
+});
+
+test('modifies global variable', t => {
+	acum = addOne(acum);
+	t.assert(acum, 1);
+});
+
+test('could fail because of concurrent execution', t => {
+	acum = addOne(addOne(acum));
+	t.assert(acum, 2);
+});
+```
+
+Concurrent tests allow a faster test suite excution, but if they rely on globals been cleaned after each case, then is recommended to use `serial` execution.
+
+
+```diff
+- import test from 'ava';
++ import { serial as test } from 'ava';
+import addOne from './src/index.js';
+
+global.acum = 0;
+
+test.beforeEach(() => {
+	// reset global
+	global.acum = 0;
+});
+
+test.beforeEach(() => {
+	global.acum = null;
+});
+
+test('modifies global variable', t => {
+	acum = addOne(acum);
+	t.assert(acum, 1);
+});
+
+test('could fail because of concurrent execution', t => {
+	acum = addOne(addOne(acum));
+	t.assert(acum, 2);
+});
+```
+
 ---
 
 Is your problem not listed here? Submit a pull request or comment on [this issue](https://github.com/avajs/ava/issues/404).
