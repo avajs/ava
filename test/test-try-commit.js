@@ -277,12 +277,12 @@ test('try-commit fails when plan is not reached inside the try', async t => {
 
 test('plan within try-commit is not affected by assertions outside', async t => {
 	const result = await ava(async a => {
+		a.is(1, 1);
+		a.is(2, 2);
+
 		const attempt = a.try(b => {
 			b.plan(3);
 		});
-
-		a.is(1, 1);
-		a.is(2, 2);
 
 		const res = await attempt;
 		t.false(res.passed);
@@ -558,4 +558,30 @@ test('assigning context in try-commit does not affect parent', async t => {
 	}, context).run();
 
 	t.is(result.passed, true);
+});
+
+test('do not run assertions outside of an active attempt', async t => {
+	const passing = await ava(async a => {
+		await a.try(() => {});
+		a.pass();
+	}).run();
+
+	t.false(passing.passed);
+	t.match(passing.error.message, /Assertion passed, but an attempt is pending. Use the attempt’s assertions instead/);
+
+	const pending = await ava(async a => {
+		await a.try(() => {});
+		await a.throwsAsync(Promise.reject(new Error('')));
+	}).run();
+
+	t.false(pending.passed);
+	t.match(pending.error.message, /Assertion started, but an attempt is pending. Use the attempt’s assertions instead/);
+
+	const failing = await ava(async a => {
+		await a.try(() => {});
+		a.fail();
+	}).run();
+
+	t.false(failing.passed);
+	t.match(failing.error.message, /Assertion failed, but an attempt is pending. Use the attempt’s assertions instead/);
 });
