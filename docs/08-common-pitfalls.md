@@ -2,11 +2,9 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/08-common-pitfalls.md)
 
-## ESLint plugin
-
 If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
-### Transpiling imported modules
+## Transpiling imported modules
 
 AVA currently only transpiles test and helper files. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
 
@@ -69,17 +67,75 @@ test('fetches foo', async t => {
 });
 ```
 
-### Attributing uncaught exceptions to tests
+## Attributing uncaught exceptions to tests
 
 AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
 
-### Why are the enhanced assertion messages not shown?
+## Why are the enhanced assertion messages not shown?
 
 Ensure that the first parameter passed into your test is named `t`. This is a requirement of [`power-assert`](https://github.com/power-assert-js/power-assert), the library that provides the [enhanced messages](./03-assertions.md#enhanced-assertion-messages).
 
 ```js
 test('one is one', t => {
 	t.assert(1 === 1);
+});
+```
+
+## Sharing variables between asynchronous tests
+
+By default AVA executes tests concurrently. This can cause problems if your tests are asynchronous and share variables.
+
+Take this contrived example:
+
+```js
+import test from 'ava';
+
+let count = 0;
+const incr = async () => {
+	await true;
+	count = count + 1;
+};
+
+test.beforeEach('reset the count', () => {
+	count = 0;
+});
+
+test('increment once', async t => {
+	await incr();
+	t.is(count, 1);
+});
+
+test('increment twice', async t => {
+	await incr();
+	await incr();
+	t.is(count, 2);
+});
+```
+
+Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
+
+```js
+import test from 'ava';
+
+let count = 0;
+const incr = async () => {
+	await true;
+	count = count + 1;
+};
+
+test.beforeEach('reset the count', () => {
+	count = 0;
+});
+
+test.serial('increment once', async t => {
+	await incr();
+	t.is(count, 1);
+});
+
+test.serial('increment twice', async t => {
+	await incr();
+	await incr();
+	t.is(count, 2);
 });
 ```
 
