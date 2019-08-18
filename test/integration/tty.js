@@ -62,3 +62,17 @@ test('test worker TTYs inherit color support from the parent TTY', t => {
 		t.end();
 	});
 });
+
+test('test worker TTYs take / do not take callbacks', t => {
+	const options = {
+		dirname: 'fixture/tty',
+		env: {
+			AVA_SIMULATE_TTY: true
+		}
+	};
+
+	execCli('callbacks.js', options, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
