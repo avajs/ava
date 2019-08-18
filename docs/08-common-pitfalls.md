@@ -81,63 +81,61 @@ test('one is one', t => {
 });
 ```
 
-### Why global variables are not reset before tests?
+## Sharing variables between asynchronous tests
 
-By default AVA runs tests concurrently, this doesn't alter the order test hooks like `beforeEach` and `afterEach` are executed, but could lead to tests having _polluted_ global variables.
+By default AVA executes tests concurrently. This can cause problems if your tests are asynchronous and share variables.
+
+Take this contrived example:
 
 ```js
 import test from 'ava';
-import addOne from './src/index.js';
 
-global.acum = 0;
+let count = 0;
+const incr = async () => {
+	await true;
+	count = count + 1;
+};
 
-test.beforeEach(() => {
-	// reset global
-	global.acum = 0;
+test.beforeEach('reset the count', () => {
+	count = 0;
 });
 
-test.beforeEach(() => {
-	global.acum = null;
+test('increment once', async t => {
+	await incr();
+	t.is(count, 1);
 });
 
-test('modifies global variable', t => {
-	acum = addOne(acum);
-	t.assert(acum, 1);
-});
-
-test('could fail because of concurrent execution', t => {
-	acum = addOne(addOne(acum));
-	t.assert(acum, 2);
+test('increment twice', async t => {
+	await incr();
+	await incr();
+	t.is(count, 2);
 });
 ```
 
-Concurrent tests allow a faster test suite excution, but if they rely on globals been cleaned after each case, then is recommended to use `serial` execution.
+Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
+```js
+import test from 'ava';
 
-```diff
-- import test from 'ava';
-+ import { serial as test } from 'ava';
-import addOne from './src/index.js';
+let count = 0;
+const incr = async () => {
+	await true;
+	count = count + 1;
+};
 
-global.acum = 0;
-
-test.beforeEach(() => {
-	// reset global
-	global.acum = 0;
+test.beforeEach('reset the count', () => {
+	count = 0;
 });
 
-test.beforeEach(() => {
-	global.acum = null;
+test.serial('increment once', async t => {
+	await incr();
+	t.is(count, 1);
 });
 
-test('modifies global variable', t => {
-	acum = addOne(acum);
-	t.assert(acum, 1);
-});
-
-test('could fail because of concurrent execution', t => {
-	acum = addOne(addOne(acum));
-	t.assert(acum, 2);
+test.serial('increment twice', async t => {
+	await incr();
+	await incr();
+	t.is(count, 2);
 });
 ```
 
