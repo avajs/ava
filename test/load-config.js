@@ -131,3 +131,15 @@ test('throws an error if a config file contains `ava` property', t => {
 	t.throws(loadConfig, /Encountered 'ava' property in ava.config.js; avoid wrapping the configuration/);
 	t.end();
 });
+
+test('throws an error if a config file contains a non-object `nonSemVerExperiments` property', t => {
+	changeDir('non-object-experiments');
+	t.throws(loadConfig, /nonSemVerExperiments from ava.config.js must be an object/);
+	t.end();
+});
+
+test('throws an error if a config file enables an unsupported experiment', t => {
+	changeDir('unsupported-experiments');
+	t.throws(loadConfig, /nonSemVerExperiments.unsupported from ava.config.js is not a supported experiment/);
+	t.end();
+});

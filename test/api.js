@@ -32,6 +32,7 @@ function apiCreator(options = {}) {
 	options.babelConfig = babelPipeline.validate(options.babelConfig);
 	options.concurrency = 2;
 	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
+	options.experiments = {};
 	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions.all);
 	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;

@@ -80,6 +80,7 @@ const run = (type, reporter, match = []) => {
 		require: [],
 		cacheEnabled: true,
 		compileEnhancements: true,
+		experiments: {},
 		match,
 		babelConfig: {testOptions: {}},
 		resolveTestsFrom: projectDir,
