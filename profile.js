@@ -145,6 +145,7 @@ runStatus.observeWorker({
 }, file);
 
 reporter.startRun({
+	experiments: [],
 	failFastEnabled: false,
 	files: [file],
 	matching: false,
