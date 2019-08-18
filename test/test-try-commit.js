@@ -96,7 +96,7 @@ test('try-commit is properly counted', async t => {
 	const result = await instance.run();
 
 	t.true(result.passed);
-	t.is(instance.assertCount, 3);
+	t.is(instance.assertCount, 1);
 });
 
 test('try-commit is properly counted multiple', async t => {
