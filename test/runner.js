@@ -592,6 +592,66 @@ test('macros: Additional args will be spread as additional args on implementatio
 	});
 });
 
+test('Test\'s additional args will be spread and passed down to beforeEach, afterEach implementation functions', t => {
+	t.plan(5);
+
+	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
+		runner.chain.beforeEach((a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
+			a.pass();
+		});
+		runner.chain.afterEach((a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
+			a.pass();
+		});
+		runner.chain.afterEach.always((a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
+			a.pass();
+		});
+
+		runner.chain('test1', (a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
+			a.pass();
+		}, 'foo', 'bar');
+	});
+});
+
+test('Test\'s additional args will be concatenated with args of beforeEach, afterEach args', t => {
+	t.plan(5);
+
+	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
+		runner.chain.beforeEach((a, ...rest) => {
+			t.deepEqual(rest, ['baz', 'foo', 'bar']);
+			a.pass();
+		}, 'baz');
+		runner.chain.afterEach((a, ...rest) => {
+			t.deepEqual(rest, ['baz', 'foo', 'bar']);
+			a.pass();
+		}, 'baz');
+		runner.chain.afterEach.always((a, ...rest) => {
+			t.deepEqual(rest, ['baz', 'foo', 'bar']);
+			a.pass();
+		}, 'baz');
+
+		runner.chain('test1', (a, ...rest) => {
+			t.deepEqual(rest, ['foo', 'bar']);
+			a.pass();
+		}, 'foo', 'bar');
+	});
+});
+
 test('macros: Customize test names attaching a `title` function', t => {
 	t.plan(6);
 
