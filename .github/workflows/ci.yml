@@ -1,0 +1,66 @@
+name: Install and test AVA
+on: push
+jobs:
+  nodejs:
+    name: Node.js
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Hardcoded versions due to https://github.com/actions/setup-node/issues/27,
+        # which means that sometimes too old a version gets installed.
+        node-version: [8.16.1, ^10.0.0, ^12.0.0]
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Enable symlinks
+        if: matrix.os == 'windows-latest'
+        run: |
+          git config core.symlinks true
+          git reset --hard
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci --no-audit
+      - run: npm test
+      - run: npx codecov --file=./coverage/lcov.info
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+
+  lockfile_churn:
+    name: Test package-lock for unexpected modifications
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^12.0.0
+      - name: Upgrade npm
+        run: if [[ "$(npm -v)" != "6.9.0" ]]; then npm install --global npm@6.9.0; fi
+      - run: npm ci --no-audit
+      - name: Test package-lock for unexpected modifications
+        run: |
+          npm -v
+          checksum=$(md5sum package-lock.json)
+          npm install --package-lock-only --no-audit
+          if ! echo ${checksum} | md5sum --quiet -c -; then
+            echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes."
+            exit 1
+          fi
+
+  without_lockfile:
+    name: Install dependencies without using a lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^12.0.0
+      - run: npm install --no-shrinkwrap --no-audit
+      - run: npm test

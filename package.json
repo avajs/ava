@@ -134,7 +134,6 @@
 	"devDependencies": {
 		"@types/node": "^10.14.15",
 		"cli-table3": "^0.5.1",
-		"codecov": "^3.5.0",
 		"delay": "^4.3.0",
 		"execa": "^2.0.3",
 		"get-stream": "^5.1.0",
