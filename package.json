@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"lint": "xo",
-		"test:tap": "tap --no-esm",
+		"test:tap": "tap",
 		"test:typescript": "tsc --noEmit -p test/ts-types",
 		"test": "npm run lint && npm run test:typescript && npm run test:tap"
 	},
