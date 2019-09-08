@@ -402,27 +402,27 @@ export interface TimeoutFn {
 
 export interface TryFn<Context = unknown> {
 	/**
-	 * EXPERIMENTAL. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
 	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* EXPERIMENTAL. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
 	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
 
 	/**
-	* EXPERIMENTAL. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
 	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* EXPERIMENTAL. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
 	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;

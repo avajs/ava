@@ -164,7 +164,7 @@ AVA has a minimum depth of `3`.
 
 ## Experiments
 
-From time to time, AVA will implement experimental features. These may change or be removed at any time, not just when there's a new major version. You can opt-in to such a feature by enabling it in the `nonSemVerExperiments` configuration.
+From time to time, AVA will implement experimental features. These may change or be removed at any time, not just when there's a new major version. You can opt in to such a feature by enabling it in the `nonSemVerExperiments` configuration.
 
 `ava.config.js`:
 ```js
@@ -175,6 +175,15 @@ export default {
 };
 ```
 
-There are currently no such features available.
+You can opt in to the new `t.try()` assertion by specifying `tryAssertion`:
+
+`ava.config.js`:
+```js
+export default {
+	nonSemVerExperiments: {
+		tryAssertion: true
+	}
+};
+```
 
 [CLI]: ./05-command-line.md

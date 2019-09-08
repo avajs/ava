@@ -5,7 +5,9 @@ require('../lib/worker/options').set({color: false});
 const {test} = require('tap');
 const delay = require('delay');
 const ContextRef = require('../lib/context-ref');
-const {ava} = require('./helper/ava-test');
+const {withExperiments} = require('./helper/ava-test');
+
+const ava = withExperiments({tryAssertion: true});
 
 test('try-commit works', async t => {
 	const instance = ava(async a => {
