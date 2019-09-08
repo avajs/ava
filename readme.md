@@ -216,6 +216,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [AVA stickers, t-shirts, etc](https://www.redbubble.com/people/sindresorhus/works/30330590-ava-logo)
 - [Awesome list](https://github.com/avajs/awesome-ava)
 - [AVA Casts](http://avacasts.com)
+- [Do you like AVA? Donate here!](https://opencollective.com/ava)
 - [More…](https://github.com/avajs/awesome-ava)
 
 ## Team
