@@ -15,3 +15,8 @@ test.beforeEach(t => {
 });
 
 test('foo is bar', macro, 'bar');
+
+anyTest('default context is unknown', t => {
+	// @ts-ignore
+	t.is(t.context.foo, 'bar')
+})

@@ -25,6 +25,13 @@ export type ThrowsExpectation = {
 	name?: string;
 };
 
+export type CommitDiscardOptions = {
+	/**
+	 * Whether the logs should be included in those of the parent test.
+	 */
+	retainLogs?: boolean
+}
+
 /** Options that can be passed to the `t.snapshot()` assertion. */
 export type SnapshotOptions = {
 	/** If provided and not an empty string, used to select the snapshot to compare the `expected` value against. */
@@ -363,6 +370,7 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 	log: LogFn;
 	plan: PlanFn;
 	timeout: TimeoutFn;
+	try: TryFn<Context>;
 }
 
 export interface LogFn {
@@ -390,6 +398,69 @@ export interface TimeoutFn {
 	 * The timeout is reset each time an assertion is made.
 	 */
 	(ms: number): void;
+}
+
+export interface TryFn<Context = unknown> {
+	/**
+	 * Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
+	 * one another.
+	 */
+	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
+
+	/**
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
+	 * one another.
+	 */
+	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+
+	/**
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* the test will fail. A macro may be provided.
+	*/
+	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
+
+	/**
+	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	* the test will fail. A macro may be provided.
+	*/
+	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+}
+
+export interface AssertionError extends Error {}
+
+export interface TryResult {
+	/**
+	* Title of the attempt, helping you tell attempts aparts.
+	*/
+	title: string;
+
+	/**
+	* Indicates whether all assertions passed, or at least one failed.
+	*/
+	passed: boolean;
+
+	/**
+	* Errors raised for each failed assertion.
+	*/
+	errors: AssertionError[];
+
+	/**
+	 * Logs created during the attempt using `t.log()`. Contains formatted values.
+	 */
+	logs: string[];
+
+	/**
+	 * Commit the attempt. Counts as one assertion for the plan count. If the
+	 * attempt failed, calling this will also cause your test to fail.
+	 */
+	commit(options?: CommitDiscardOptions): void;
+
+	/**
+	 * Discard the attempt.
+	 */
+	discard(options?: CommitDiscardOptions): void;
 }
 
 /** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
