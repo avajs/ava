@@ -15,3 +15,5 @@ We try to avoid *accidentally* dropping support for non-latest Node.js releases.
 We may explicitly drop support for non-latest Node.js releases. If this occurs we will bump AVA's major version number. This may be due to adoption of backported APIs or the availability of newer V8 releases in later Node.js versions, either in AVA itself or one of our dependencies.
 
 We may drop support for a Node.js version, in a major-version-bumping-pre-release, if that new AVA version is expected to become stable around or after the end-of-life date of the Node.js version in question.
+
+Experimental features opted into through the `nonSemVerExperiments` configuration may be changed or removed at any time.

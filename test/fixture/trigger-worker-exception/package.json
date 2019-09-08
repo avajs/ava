@@ -1,5 +1,8 @@
 {
   "ava": {
     "require": "./hack.js"
-  }
+  },
+	"dependencies": {
+		"stack-utils": "*"
+	}
 }

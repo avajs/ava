@@ -4,6 +4,7 @@ require('../lib/worker/options').set({});
 
 const fs = require('fs');
 const path = require('path');
+const makeDir = require('make-dir');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
 const tempWrite = require('temp-write');
@@ -17,6 +18,16 @@ const serialize = error => serializeError('Test', true, error);
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
+
+const makeTempDir = () => {
+	if (process.platform !== 'win32') {
+		return uniqueTempDir({create: true});
+	}
+
+	const dir = path.join(__dirname, '.tmpdir', `serialize-error.${process.pid}`);
+	makeDir.sync(dir);
+	return dir;
+};
 
 test('serialize standard props', t => {
 	const error = new Error('Hello');
@@ -67,7 +78,7 @@ test('source file is an absolute path, after source map correction, even if alre
 	const fixture = sourceMapFixtures.mapFile('throws');
 	const map = JSON.parse(fs.readFileSync(fixture.file + '.map'));
 
-	const tmp = uniqueTempDir({create: true});
+	const tmp = makeTempDir();
 	const sourceRoot = path.join(tmp, 'src');
 	const expectedSourceFile = path.join(sourceRoot, map.file);
 
