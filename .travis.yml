@@ -1,5 +1,5 @@
 branches:
-  only:
+  except:
     - master
     - /v\d.+/
 language: node_js
@@ -8,30 +8,10 @@ os:
   - linux
 node_js:
   - 12
-  - 10
-  - 8
-env:
-  - FRESH_DEPS=false
-  - FRESH_DEPS=true
-matrix:
-  exclude:
-    - node_js: 12
-      env: FRESH_DEPS=true # Assume any bugs that occur with fresh dependencies are not platform specific.
-      os: windows
-    - node_js: 12
-      env: FRESH_DEPS=false
-      os: linux # Windows already tests without fresh dependencies, and we test *with* on Linux.
-    - node_js: 10
-      env: FRESH_DEPS=true
-    - node_js: 8
-      env: FRESH_DEPS=true
-cache: npm
 before_install: if [[ "$(npm -v)" != "6.9.0" ]] && [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then npm install --global npm@6.9.0; fi
 install: npm ci
 before_script: |
-  if [[ ${FRESH_DEPS} == "true" ]]; then
-    npm install --no-shrinkwrap --prefer-online
-  elif [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then
+  if [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then
     checksum=$(md5sum package-lock.json)
     npm install --package-lock-only
     if ! echo ${checksum} | md5sum --quiet -c -; then
