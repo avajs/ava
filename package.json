@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "2.3.0",
+	"version": "2.4.0",
 	"description": "Testing can be a drag. AVA helps you get it done.",
 	"license": "MIT",
 	"repository": "avajs/ava",
