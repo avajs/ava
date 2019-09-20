@@ -30,9 +30,9 @@ It's worth noting that with this configuration tests will fail if there are Type
 
 ## Using module path mapping
 
-Install the [tsconfig-paths](https://github.com/dividab/tsconfig-paths#readme) package.
+Install the [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme) package.
 
-Add the `tsconfig-paths/register` entry to the `require` section of AVA's config
+Add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
 
 ```json
 {
@@ -43,7 +43,7 @@ Add the `tsconfig-paths/register` entry to the `require` section of AVA's config
 		],
 		"require": [
 			"ts-node/register",
-            "tsconfig-paths/register"
+			"tsconfig-paths/register"
 		]
 	}
 }
@@ -54,17 +54,19 @@ Then you can start using module aliases:
 `tsconfig.json`:
 ```json
 {
-"baseUrl": "./",
-"paths": {
-      "@helpers/*": ["helpers/*"]
-    }
+	"baseUrl": ".",
+	"paths": {
+		"@helpers/*": ["helpers/*"]
+	}
 }
 ```
 
 Test:
-```typescript
+
+```ts
 import myHelper from '@helpers/myHelper';
-// rest of the file
+
+// Rest of the file
 ```
 
 ## Compiling TypeScript files before running AVA
