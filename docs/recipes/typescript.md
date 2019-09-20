@@ -28,6 +28,45 @@ You can configure AVA to recognize TypeScript files. Then, with `ts-node` instal
 
 It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
+## Using module path mapping
+
+Install the [tsconfig-paths](https://github.com/dividab/tsconfig-paths#readme) package.
+
+Add the `tsconfig-paths/register` entry to the `require` section of AVA's config
+
+```json
+{
+	"ava": {
+		"compileEnhancements": false,
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register",
+            "tsconfig-paths/register"
+		]
+	}
+}
+```
+
+Then you can start using module aliases:
+
+`tsconfig.json`:
+```json
+{
+"baseUrl": "./",
+"paths": {
+      "@helpers/*": ["helpers/*"]
+    }
+}
+```
+
+Test:
+```typescript
+import myHelper from '@helpers/myHelper';
+// rest of the file
+```
+
 ## Compiling TypeScript files before running AVA
 
 Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
