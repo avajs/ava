@@ -30,9 +30,12 @@ It's worth noting that with this configuration tests will fail if there are Type
 
 ## Using module path mapping
 
-Install the [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme) package.
+`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138) out of the box
+(and not going to do it in the future). To use this feature do the following: 
 
-Add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
+1) Install the [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme) package.
+
+2) Add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
 
 ```json
 {
