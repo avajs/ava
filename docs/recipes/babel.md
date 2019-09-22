@@ -138,6 +138,56 @@ You can completely disable AVA's use of Babel.
 }
 ```
 
+## Experimental feature: No Babel out of the box
+
+A future release of AVA will not use Babel out of the box. You can opt in to this feature. **This feature may change or be removed at any time**:
+
+**`package.json`:**
+
+```js
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"noBabelOutOfTheBox": true
+		}
+	}
+}
+```
+
+This disables AVA's Babel pipeline, though you can still enable it by configuring it as described above.
+
+`compileEnhancements` can no longer be configured on the top-level AVA configuration. It must be configured in AVA's `babel` configuration instead. It defaults to `true`.
+
+**`package.json`:**
+
+```json
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"noBabelOutOfTheBox": true
+		},
+		"babel": {
+			"compileEnhancements": false
+		}
+	}
+}
+```
+
+You can disable the non-enhancement compilation of your test files by setting `testOptions` to `false`.
+
+```json
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"noBabelOutOfTheBox": true
+		},
+		"babel": {
+			"testOptions": false
+		}
+	}
+}
+```
+
 ## Use Babel polyfills
 
 AVA lets you write your tests using new JavaScript syntax, even on Node.js versions that otherwise wouldn't support it. However, it doesn't add or modify built-ins of your current environment. Using AVA would, for example, not provide modern features such as `Object.entries()` to an underlying Node.js 6 environment.
