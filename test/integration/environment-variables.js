@@ -26,7 +26,7 @@ test('errors if environment variables are not string values', t => {
 	execCli(['es2015.js'], {dirname: 'fixture/invalid-environment-variables'}, (err, stdout, stderr) => {
 		t.ok(err);
 
-		let expectedOutput = '\n';
+		let expectedOutput = '\n  ';
 		expectedOutput += figures.cross + ' The \'environmentVariables\' configuration must be an object containing string values.';
 		expectedOutput += '\n';
 

@@ -7,7 +7,7 @@ test('errors if top-level extensions include "js" without babel=false', t => {
 	execCli(['es2015.js'], {dirname: 'fixture/invalid-extensions/top-level'}, (err, stdout, stderr) => {
 		t.ok(err);
 
-		let expectedOutput = '\n';
+		let expectedOutput = '\n  ';
 		expectedOutput += figures.cross + ' Cannot specify generic \'js\' extension without disabling AVA\'s Babel usage.';
 		expectedOutput += '\n';
 
@@ -25,7 +25,7 @@ for (const [where, which, msg = '\'js\', \'jsx\''] of [
 		execCli(['es2015.js'], {dirname: `fixture/invalid-extensions/${which}`}, (err, stdout, stderr) => {
 			t.ok(err);
 
-			let expectedOutput = '\n';
+			let expectedOutput = '\n  ';
 			expectedOutput += figures.cross + ` Unexpected duplicate extensions in options: ${msg}.`;
 			expectedOutput += '\n';
 
