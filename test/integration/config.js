@@ -13,7 +13,7 @@ test('formats errors from ava.config.js', t => {
 
 		const lines = stderr.split('\n');
 		t.is(lines[0], '');
-		t.is(lines[1], figures.cross + ' Error loading ava.config.js');
+		t.is(lines[1], '  ' + figures.cross + ' Error loading ava.config.js');
 		t.is(lines[2], '');
 		t.match(lines[3], /ava\.config\.js/);
 		t.match(lines[4], /foo/);
