@@ -10,7 +10,7 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly.
 
-**`package.json`:**
+`package.json`:
 
 ```json
 {
@@ -28,14 +28,13 @@ You can configure AVA to recognize TypeScript files. Then, with `ts-node` instal
 
 It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
-## Using module path mapping
+### Using module path mapping
 
-`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138) out of the box
-(and not going to do it in the future). To use this feature do the following: 
+`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138), however you can use [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme).
 
-1) Install the [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme) package.
+Once installed, add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
 
-2) Add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
+`package.json`:
 
 ```json
 {
