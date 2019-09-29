@@ -3,13 +3,15 @@ const stripAnsi = require('strip-ansi');
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
+const reImportError = /SyntaxError.*(token|reserved word|import|identifier).*/;
+
 test('precompiler require hook does not apply to source files', t => {
 	t.plan(3);
 
 	execCli('babel-hook.js', (err, stdout) => {
 		t.ok(err);
 		t.is(err.code, 1);
-		t.match(stdout, /Unexpected (token|reserved word)/);
+		t.match(stdout, reImportError);
 		t.end();
 	});
 });
@@ -17,7 +19,7 @@ test('precompiler require hook does not apply to source files', t => {
 test('skips test file compilation when babel=false and compileEnhancements=false', t => {
 	execCli(['import.js'], {dirname: 'fixture/no-babel-compilation'}, (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import|identifier)/);
+		t.match(stdout, reImportError);
 		t.end();
 	});
 });
@@ -41,7 +43,7 @@ test('no power-assert when babel=false and compileEnhancements=false', t => {
 test('skips stage-4 transform when babel=false and compileEnhancements=true', t => {
 	execCli(['import.js'], {dirname: 'fixture/just-enhancement-compilation'}, (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /SyntaxError: Unexpected (reserved word|token import|identifier)/);
+		t.match(stdout, reImportError);
 		t.end();
 	});
 });
