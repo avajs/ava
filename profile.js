@@ -12,7 +12,7 @@ const uniqueTempDir = require('unique-temp-dir');
 const arrify = require('arrify');
 const resolveCwd = require('resolve-cwd');
 const escapeStringRegexp = require('escape-string-regexp');
-const babelPipeline = require('./lib/babel-pipeline');
+const babelManager = require('./lib/babel-manager');
 const RunStatus = require('./lib/run-status');
 const VerboseReporter = require('./lib/reporters/verbose');
 const loadConfig = require('./lib/load-config');
@@ -74,29 +74,32 @@ if (cli.input.length === 0) {
 const file = path.resolve(cli.input[0]);
 const cacheDir = conf.cacheEnabled === false ? uniqueTempDir() : path.join(projectDir, 'node_modules', '.cache', 'ava');
 
-const babelConfig = babelPipeline.validate(conf.babel);
-conf.extensions = normalizeExtensions(conf.extensions || [], babelConfig);
-
-const _regexpFullExtensions = new RegExp(`\\.(${conf.extensions.full.map(ext => escapeStringRegexp(ext)).join('|')})$`);
-
-const precompileFull = babelPipeline.build(process.cwd(), cacheDir, babelConfig, conf.compileEnhancements === true);
-
-let precompileEnhancementsOnly = () => null;
-if (conf.compileEnhancements) {
-	precompileEnhancementsOnly = babelPipeline.build(projectDir, cacheDir, null, conf.compileEnhancements);
+const {nonSemVerExperiments: experiments} = conf;
+let babelProvider;
+if (!experiments.noBabelOutOfTheBox || conf.babel !== undefined) {
+	babelProvider = babelManager({experiments, projectDir});
+	babelProvider.validateConfig(conf.babel, conf.compileEnhancements !== false);
 }
 
-const precompiled = {};
-precompiled[file] = _regexpFullExtensions.test(file) ? precompileFull(file) : precompileEnhancementsOnly(file);
+conf.extensions = normalizeExtensions(conf.extensions, babelProvider, {experiments});
+
+const _regexpBabelExtensions = new RegExp(`\\.(${conf.extensions.babelOnly.map(ext => escapeStringRegexp(ext)).join('|')})$`);
+
+const babelState = _regexpBabelExtensions.test(file) ?
+	babelProvider.compile({cacheDir, testFiles: [file], helperFiles: []}) :
+	babelProvider.legacy && babelProvider.compileEnhancementsOnly !== null ?
+		babelProvider.compileEnhancementsOnly({cacheDir, testFiles: [file], helperFiles: []}) :
+		null;
 
 const opts = {
+	experiments,
 	file,
 	projectDir,
 	failFast: cli.flags.failFast,
 	serial: cli.flags.serial,
 	tty: false,
 	cacheDir,
-	precompiled,
+	babelState,
 	require: resolveModules(conf.require)
 };
 

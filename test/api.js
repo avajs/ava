@@ -7,7 +7,7 @@ const fs = require('fs');
 const del = require('del');
 const {test} = require('tap');
 const Api = require('../lib/api');
-const babelPipeline = require('../lib/babel-pipeline');
+const babelManager = require('../lib/babel-manager');
 const {normalizeGlobs} = require('../lib/globs');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
@@ -29,12 +29,13 @@ function withNodeEnv(value, run) {
 }
 
 function apiCreator(options = {}) {
-	options.babelConfig = babelPipeline.validate(options.babelConfig);
+	options.projectDir = options.projectDir || ROOT_DIR;
+	options.babelProvider = babelManager({experiments: {}, projectDir: options.projectDir});
+	options.babelProvider.validateConfig(options.babelConfig, options.compileEnhancements !== false);
 	options.concurrency = 2;
-	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], full: ['js']};
+	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], babelOnly: ['js']};
 	options.experiments = {};
 	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions.all);
-	options.projectDir = options.projectDir || ROOT_DIR;
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
 	if (!options.precompileHelpers) {
@@ -1119,7 +1120,7 @@ test('uses "development" Babel environment if NODE_ENV is the empty string', t =
 		});
 });
 
-test('full extensions take precedence over enhancements-only', t => {
+test('babelOnly extensions take precedence over enhancements-only', t => {
 	t.plan(2);
 
 	const api = apiCreator({
@@ -1131,7 +1132,7 @@ test('full extensions take precedence over enhancements-only', t => {
 		extensions: {
 			all: ['foo.bar', 'bar'],
 			enhancementsOnly: ['bar'],
-			full: ['foo.bar']
+			babelOnly: ['foo.bar']
 		},
 		cacheEnabled: false,
 		projectDir: path.join(__dirname, 'fixture/extensions')

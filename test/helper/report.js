@@ -6,6 +6,7 @@ const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
 const pkg = require('../../package.json');
+const babelManager = require('../../lib/babel-manager');
 const {normalizeGlobs} = require('../../lib/globs');
 
 let _Api = null;
@@ -68,21 +69,25 @@ exports.sanitizers = {
 const run = (type, reporter, match = []) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
+	const babelProvider = babelManager({experiments: {}, projectDir});
+	const compileEnhancements = true;
+	babelProvider.validateConfig({testOptions: {}}, compileEnhancements);
+
 	const options = {
 		extensions: {
 			all: ['js'],
 			enhancementsOnly: [],
-			full: ['js']
+			babelOnly: ['js']
 		},
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
 		cacheEnabled: true,
-		compileEnhancements: true,
+		compileEnhancements,
 		experiments: {},
 		match,
-		babelConfig: {testOptions: {}},
+		babelProvider,
 		resolveTestsFrom: projectDir,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '10s' : undefined,

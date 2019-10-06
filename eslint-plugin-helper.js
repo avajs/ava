@@ -1,5 +1,5 @@
 'use strict';
-const babelPipeline = require('./lib/babel-pipeline');
+const babelManager = require('./lib/babel-manager');
 const normalizeExtensions = require('./lib/extensions');
 const {hasExtension, normalizeGlobs, classify} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
@@ -14,13 +14,19 @@ function load(projectDir, overrides) {
 	}
 
 	let conf;
-	let babelConfig;
+	let babelProvider;
 	if (configCache.has(projectDir)) {
-		({conf, babelConfig} = configCache.get(projectDir));
+		({conf, babelProvider} = configCache.get(projectDir));
 	} else {
 		conf = loadConfig({resolveFrom: projectDir});
-		babelConfig = babelPipeline.validate(conf.babel);
-		configCache.set(projectDir, {conf, babelConfig});
+		const {nonSemVerExperiments: experiments} = conf;
+
+		if (!experiments.noBabelOutOfTheBox || conf.babel !== undefined) {
+			babelProvider = babelManager({experiments, projectDir});
+			babelProvider.validateConfig(conf.babel, conf.compileEnhancements !== false);
+		}
+
+		configCache.set(projectDir, {conf, babelProvider});
 	}
 
 	if (overrides) {
@@ -28,11 +34,11 @@ function load(projectDir, overrides) {
 		if (overrides.extensions) {
 			// Ignore extensions from the Babel config. Assume all extensions are
 			// provided in the override.
-			babelConfig = null;
+			babelProvider = undefined;
 		}
 	}
 
-	const extensions = normalizeExtensions(conf.extensions || [], babelConfig);
+	const extensions = normalizeExtensions(conf.extensions, babelProvider, {experiments: conf.nonSemVerExperiments});
 	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions.all)};
 
 	const helper = Object.freeze({
