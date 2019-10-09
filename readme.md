@@ -245,3 +245,4 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 </div>
 
 [Babel recipe]: docs/recipes/babel.md
+Thank you all
