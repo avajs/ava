@@ -12,7 +12,7 @@ We will drop support for odd-numbered Node.js versions (e.g. `11` or `13`) *with
 
 We try to avoid *accidentally* dropping support for non-latest Node.js releases. If such breakage does occur we'll accept pull requests to restore functionality. We might decide to deprecate the offending AVA release and bump AVA's major version number instead.
 
-We may explicitly drop support for non-latest Node.js releases. If this occurs we will bump AVA's major version number. This may be due to adoption of backported APIs or the availability of newer V8 releases in later Node.js versions, either in AVA itself or one of our dependencies.
+Whenever we bump AVA's major version number, we *will* explicitly drop support for non-latest Node.js releases. This ensures we can rely on backported APIs or the availability of newer V8 releases in later Node.js versions, either in AVA itself or one of our dependencies.
 
 We may drop support for a Node.js version, in a major-version-bumping-pre-release, if that new AVA version is expected to become stable around or after the end-of-life date of the Node.js version in question.
 
