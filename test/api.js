@@ -37,6 +37,7 @@ function apiCreator(options = {}) {
 	options.experiments = {};
 	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions.all);
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
+	options.nodeArguments = options.nodeArguments || [];
 	const instance = new Api(options);
 	if (!options.precompileHelpers) {
 		instance._precompileHelpers = () => Promise.resolve();
@@ -1179,7 +1180,7 @@ test('using --match with matching tests will only report those passing tests', t
 
 function generatePassDebugTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
+		const api = apiCreator({nodeArguments: execArgv});
 		return api._computeForkExecArgv()
 			.then(result => {
 				t.true(result.length === execArgv.length);
@@ -1190,7 +1191,7 @@ function generatePassDebugTests(execArgv) {
 
 function generatePassInspectIntegrationTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
+		const api = apiCreator({nodeArguments: execArgv});
 		return api.run([path.join(__dirname, 'fixture/inspect-arg.js')])
 			.then(runStatus => {
 				t.is(runStatus.stats.passedTests, 1);

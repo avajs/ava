@@ -21,6 +21,7 @@ $ npx ava --help
     --color                 Force color output
     --no-color              Disable color output
     --reset-cache           Reset AVA's compilation cache and exit
+    --node-arguments        Configure options to be passed to child node processes when running tests
     --config                JavaScript file for AVA to read its config from, instead of using package.json
                             or ava.config.js files
 
