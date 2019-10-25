@@ -1,1 +1,1 @@
-module.exports = require('@ava/babel-preset-stage-4');
+module.exports = require('@ava/babel/stage-4');

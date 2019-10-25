@@ -1,7 +1,0 @@
-{
-  "ava": {
-    "babel": {
-			"extensions": "js"
-		}
-  }
-}
