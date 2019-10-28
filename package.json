@@ -70,7 +70,7 @@
 		"arrify": "^2.0.1",
 		"bluebird": "^3.5.5",
 		"chalk": "^2.4.2",
-		"chokidar": "^3.0.2",
+		"chokidar": "^3.2.1",
 		"chunkd": "^1.0.0",
 		"ci-parallel-vars": "^1.0.0",
 		"clean-stack": "^2.2.0",
