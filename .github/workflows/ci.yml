@@ -9,7 +9,7 @@ jobs:
       matrix:
         # Hardcoded versions due to https://github.com/actions/setup-node/issues/27,
         # which means that sometimes too old a version gets installed.
-        node-version: [8.16.1, ^10.0.0, ^12.0.0]
+        node-version: [8.16.1, ^10.0.0, ^12.0.0, ^13.0.0]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: ^12.0.0
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "6.9.0" ]]; then npm install --global npm@6.9.0; fi
+        run: if [[ "$(npm -v)" != "6.12.1" ]]; then npm install --global npm@6.12.1; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
