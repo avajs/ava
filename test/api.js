@@ -367,7 +367,7 @@ test('stack traces for exceptions are corrected using a source map file', t => {
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'uncaught-exception') {
 				t.match(evt.err.message, /Thrown by source-map-fixtures/);
-				t.match(evt.err.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(evt.err.stack, /^.*?Object\.run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
 			}
 		});
@@ -417,7 +417,7 @@ test('stack traces for exceptions are corrected using a source map file in what 
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'uncaught-exception') {
 				t.match(evt.err.message, /Thrown by source-map-fixtures/);
-				t.match(evt.err.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(evt.err.stack, /^.*?Object\.run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:7.*$/m);
 			}
 		});
@@ -486,7 +486,7 @@ test('stack traces for exceptions are corrected using a source map file (cache o
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'uncaught-exception') {
 				t.match(evt.err.message, /Thrown by source-map-fixtures/);
-				t.match(evt.err.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(evt.err.stack, /^.*?Object\.run\b.*source-map-fixtures.src.throws.js:1.*$/m);
 				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
 			}
 		});
@@ -509,7 +509,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'uncaught-exception') {
 				t.match(evt.err.message, /Thrown by source-map-fixtures/);
-				t.match(evt.err.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(evt.err.stack, /^.*?Object\.t.*?\[?as run\]?\b.*source-map-fixtures.src.throws.js:1.*$/m);
 				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
 			}
 		});
@@ -532,7 +532,7 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'uncaught-exception') {
 				t.match(evt.err.message, /Thrown by source-map-fixtures/);
-				t.match(evt.err.stack, /^.*?Object\.t.*?as run\b.*source-map-fixtures.src.throws.js:1.*$/m);
+				t.match(evt.err.stack, /^.*?Object\.t.*?\[?as run\]?\b.*source-map-fixtures.src.throws.js:1.*$/m);
 				t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
 			}
 		});

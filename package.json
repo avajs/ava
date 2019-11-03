@@ -141,7 +141,7 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.4.2",
 		"source-map-fixtures": "^2.1.0",
-		"source-map-support": "^0.5.13",
+		"source-map-support": "^0.5.16",
 		"tap": "^14.6.4",
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",
