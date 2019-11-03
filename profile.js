@@ -1,10 +1,6 @@
 'use strict';
 require('./lib/worker/load-chalk'); // eslint-disable-line import/no-unassigned-import
 
-// Iron-node does not work with forked processes
-// This cli command will run a single file in the current process.
-// Intended to be used with iron-node for profiling purposes.
-
 const path = require('path');
 const meow = require('meow');
 const Promise = require('bluebird');
@@ -45,7 +41,7 @@ const {projectDir} = conf;
 // Define a minimal set of options from the main CLI
 const cli = meow(`
 	Usage
-	  $ iron-node node_modules/ava/profile.js <test-file>
+	  $ node_modules/ava/profile.js <test-file>
 
 	Options
 	  --fail-fast   Stop after first test failure
