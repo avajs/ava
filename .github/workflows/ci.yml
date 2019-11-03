@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: ^12.0.0
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "6.9.0" ]]; then npm install --global npm@6.9.0; fi
+        run: if [[ "$(npm -v)" != "6.12.1" ]]; then npm install --global npm@6.12.1; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
