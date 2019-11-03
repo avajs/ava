@@ -83,9 +83,9 @@ const _regexpBabelExtensions = new RegExp(`\\.(${conf.extensions.babelOnly.map(e
 
 const babelState = _regexpBabelExtensions.test(file) ?
 	babelProvider.compile({cacheDir, testFiles: [file], helperFiles: []}) :
-	babelProvider.legacy && babelProvider.compileEnhancementsOnly !== null ?
+	(babelProvider.legacy && babelProvider.compileEnhancementsOnly !== null ?
 		babelProvider.compileEnhancementsOnly({cacheDir, testFiles: [file], helperFiles: []}) :
-		null;
+		null);
 
 const opts = {
 	experiments,

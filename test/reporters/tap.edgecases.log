@@ -8,7 +8,7 @@ not ok 2 - Error: throws
   ---
     name: Error
     message: throws
-    at: 'Object.<anonymous> (throws.js:1:7)'
+    at: 'throws.js:1:7'
   ...
 ---tty-stream-chunk-separator
 # test/fixture/report/edge-cases/throws.js exited with a non-zero exit code: 1
@@ -22,7 +22,7 @@ not ok 5 - TypeError: (0 , _.test) is not a function
   ---
     name: TypeError
     message: '(0 , _.test) is not a function'
-    at: 'Object.<anonymous> (import-and-use-test-member.js:3:1)'
+    at: 'import-and-use-test-member.js:3:1'
   ...
 ---tty-stream-chunk-separator
 # test/fixture/report/edge-cases/import-and-use-test-member.js exited with a non-zero exit code: 1

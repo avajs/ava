@@ -5,7 +5,7 @@ not ok 1 - TypeError: _.default.serial.test is not a function
   ---
     name: TypeError
     message: _.default.serial.test is not a function
-    at: 'Object.test (bad-test-chain.js:3:13)'
+    at: 'bad-test-chain.js:3:13'
   ...
 ---tty-stream-chunk-separator
 # test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
@@ -22,7 +22,7 @@ not ok 5 - Error: Can't catch me
   ---
     name: Error
     message: Can't catch me
-    at: 'passes (unhandled-rejection.js:4:17)'
+    at: 'unhandled-rejection.js:4:17'
   ...
 ---tty-stream-chunk-separator
 # unhandled-rejection
@@ -40,7 +40,7 @@ not ok 8 - Error: Can't catch me
   ---
     name: Error
     message: Can't catch me
-    at: 'Timeout.setTimeout (uncaught-exception.js:5:9)'
+    at: 'uncaught-exception.js:5:9'
   ...
 ---tty-stream-chunk-separator
 # test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1
@@ -58,9 +58,9 @@ not ok 10 - traces-in-t-throws [90m[2m›[22m[39m throws
         }
       'Expected instance of:': 'Function TypeError {}'
     at: |-
-      throwError (traces-in-t-throws.js:4:8)
-      throwError (traces-in-t-throws.js:12:17)
-      throws (traces-in-t-throws.js:12:4)
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:12:17
+      traces-in-t-throws.js:12:4
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrows
@@ -74,9 +74,9 @@ not ok 11 - traces-in-t-throws [90m[2m›[22m[39m notThrows
           message: 'uh-oh',
         }
     at: |-
-      throwError (traces-in-t-throws.js:4:8)
-      throwError (traces-in-t-throws.js:16:20)
-      notThrows (traces-in-t-throws.js:16:4)
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:16:20
+      traces-in-t-throws.js:16:4
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrowsAsync
@@ -90,9 +90,9 @@ not ok 12 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
           message: 'uh-oh',
         }
     at: |-
-      throwError (traces-in-t-throws.js:4:8)
-      throwError (traces-in-t-throws.js:20:25)
-      notThrowsAsync (traces-in-t-throws.js:20:4)
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:20:25
+      traces-in-t-throws.js:20:4
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync
@@ -106,9 +106,9 @@ not ok 13 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
           message: 'uh-oh',
         }
     at: |-
-      throwError (traces-in-t-throws.js:4:8)
-      throwError (traces-in-t-throws.js:24:22)
-      throwsAsync (traces-in-t-throws.js:24:4)
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:24:22
+      traces-in-t-throws.js:24:4
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync different error
@@ -123,8 +123,8 @@ not ok 14 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
         }
       'Expected instance of:': 'Function TypeError {}'
     at: |-
-      returnRejectedPromise (traces-in-t-throws.js:8:24)
-      throwsAsync (traces-in-t-throws.js:28:11)
+      traces-in-t-throws.js:8:24
+      traces-in-t-throws.js:28:11
   ...
 ---tty-stream-chunk-separator
 stdout
@@ -146,7 +146,7 @@ not ok 18 - test [90m[2m›[22m[39m fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 'fail (test.js:12:22)'
+    at: 'test.js:12:22'
   ...
 ---tty-stream-chunk-separator
 # test › known failure
@@ -169,7 +169,7 @@ not ok 21 - test [90m[2m›[22m[39m logs
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 'fail (test.js:21:4)'
+    at: 'test.js:21:4'
   ...
 ---tty-stream-chunk-separator
 # test › formatted
@@ -181,7 +181,7 @@ not ok 22 - test [90m[2m›[22m[39m formatted
       'Difference:': |-
         - 'foo'
         + 'bar'
-    at: 'deepEqual (test.js:25:4)'
+    at: 'test.js:25:4'
   ...
 ---tty-stream-chunk-separator
 # test › power-assert
@@ -192,7 +192,7 @@ not ok 23 - test [90m[2m›[22m[39m power-assert
     operator: '!!'
     values:
       'Value is not truthy:': ''''''
-    at: 'assert (test.js:30:4)'
+    at: 'test.js:30:4'
   ...
 ---tty-stream-chunk-separator
 # test › bad throws
@@ -207,8 +207,8 @@ not ok 24 - test [90m[2m›[22m[39m bad throws
           message: 'err',
         }
     at: |-
-      fn (test.js:35:9)
-      fn (test.js:38:11)
+      test.js:35:9
+      test.js:38:11
   ...
 ---tty-stream-chunk-separator
 # test › bad notThrows
@@ -223,8 +223,8 @@ not ok 25 - test [90m[2m›[22m[39m bad notThrows
           message: 'err',
         }
     at: |-
-      fn (test.js:43:9)
-      fn (test.js:46:14)
+      test.js:43:9
+      test.js:46:14
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error
@@ -262,7 +262,7 @@ not ok 29 - output-in-hook [90m[2m›[22m[39m failing test
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 'fail (output-in-hook.js:34:4)'
+    at: 'output-in-hook.js:34:4'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test

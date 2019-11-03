@@ -63,6 +63,7 @@ exports.sanitizers = {
 	posix: str => replaceString(str, '\\', '/'),
 	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
 	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
+	traces: str => str.replace(/(\[...)?[^\s'[]+\s\((.+\.js:\d+:\d+)\)/g, '$1$2'),
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 

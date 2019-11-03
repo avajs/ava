@@ -184,9 +184,9 @@ stderr
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90mthrowError (traces-in-t-throws.js:4:8)[39m
-  [90mthrowError (traces-in-t-throws.js:12:17)[39m
-  [90mthrows (traces-in-t-throws.js:12:4)[39m
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:12:17[39m
+  [90mtraces-in-t-throws.js:12:4[39m
 
 
 
@@ -204,9 +204,9 @@ stderr
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mthrowError (traces-in-t-throws.js:4:8)[39m
-  [90mthrowError (traces-in-t-throws.js:16:20)[39m
-  [90mnotThrows (traces-in-t-throws.js:16:4)[39m
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:16:20[39m
+  [90mtraces-in-t-throws.js:16:4[39m
 
 
 
@@ -224,9 +224,9 @@ stderr
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mthrowError (traces-in-t-throws.js:4:8)[39m
-  [90mthrowError (traces-in-t-throws.js:20:25)[39m
-  [90mnotThrowsAsync (traces-in-t-throws.js:20:4)[39m
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:20:25[39m
+  [90mtraces-in-t-throws.js:20:4[39m
 
 
 
@@ -244,9 +244,9 @@ stderr
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mthrowError (traces-in-t-throws.js:4:8)[39m
-  [90mthrowError (traces-in-t-throws.js:24:22)[39m
-  [90mthrowsAsync (traces-in-t-throws.js:24:4)[39m
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:24:22[39m
+  [90mtraces-in-t-throws.js:24:4[39m
 
 
 
@@ -268,8 +268,8 @@ stderr
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90mreturnRejectedPromise (traces-in-t-throws.js:8:24)[39m
-  [90mthrowsAsync (traces-in-t-throws.js:28:11)[39m
+  [90mtraces-in-t-throws.js:8:24[39m
+  [90mtraces-in-t-throws.js:28:11[39m
 
 
 
@@ -362,8 +362,8 @@ stderr
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  [90mfn (test.js:35:9)[39m
-  [90mfn (test.js:38:11)[39m
+  [90mtest.js:35:9[39m
+  [90mtest.js:38:11[39m
 
 
 
@@ -391,8 +391,8 @@ stderr
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  [90mfn (test.js:43:9)[39m
-  [90mfn (test.js:46:14)[39m
+  [90mtest.js:43:9[39m
+  [90mtest.js:46:14[39m
 
 
 
