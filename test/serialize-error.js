@@ -101,8 +101,8 @@ test('determines whether source file is within the project', t => {
 	try {
 		require(file)();
 		t.fail('Should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, file);
 		t.is(serializedError.source.isWithinProject, false);
 	}
@@ -119,8 +119,8 @@ test('determines whether source file, if within the project, is a dependency', t
 	try {
 		fixture.require().run();
 		t.fail('Fixture should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, fixture.sourceFile);
 		t.is(serializedError.source.isWithinProject, true);
 		t.is(serializedError.source.isDependency, true);
