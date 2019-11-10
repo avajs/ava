@@ -45,10 +45,10 @@ To ignore files, prefix the pattern with an `!` (exclamation mark).
 				"babelrc": false
 			}
 		},
-        "nodeArguments": [
-            "--trace-deprecation",
-            "--napi-modules"
-        ]
+		"nodeArguments": [
+				"--trace-deprecation",
+				"--napi-modules"
+		]
 	}
 }
 ```
@@ -74,7 +74,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `babel`: test file specific Babel options. See our [Babel recipe](./recipes/babel.md#configuring-babel) for more details
 - `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
-- `nodeArguments`: Configure options to be passed to child node processes when running tests
+- `nodeArguments`: Configure Node.js arguments used to launch worker processes.
 
 Note that providing files on the CLI overrides the `files` option.
 
