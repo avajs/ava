@@ -1177,6 +1177,94 @@ test('using --match with matching tests will only report those passing tests', t
 	});
 });
 
+test('select test by line number', async t => {
+	t.plan(2);
+
+	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+	const api = apiCreator({lineNumbers: {[testFilePath]: [3]}});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', event => {
+			if (event.type === 'selected-test') {
+				t.is(event.title, 'unicorn');
+			}
+		});
+	});
+
+	const runStatus = await api.run([testFilePath]);
+	t.is(runStatus.stats.selectedTests, 1);
+});
+
+test('select serial test by line number', async t => {
+	t.plan(2);
+
+	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+	const api = apiCreator({lineNumbers: {[testFilePath]: [12]}});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', event => {
+			if (event.type === 'selected-test') {
+				t.is(event.title, 'cat');
+			}
+		});
+	});
+
+	const runStatus = await api.run([testFilePath]);
+	t.is(runStatus.stats.selectedTests, 1);
+});
+
+test('select todo test by line number', async t => {
+	t.plan(4);
+
+	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+	const api = apiCreator({lineNumbers: {[testFilePath]: [15]}});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', event => {
+			if (event.type === 'selected-test') {
+				t.is(event.title, 'dog');
+				t.true(event.todo);
+			}
+		});
+	});
+
+	const runStatus = await api.run([testFilePath]);
+	t.is(runStatus.stats.selectedTests, 1);
+	t.is(runStatus.stats.todoTests, 1);
+});
+
+test('select tests by line number range', async t => {
+	t.plan(3);
+
+	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+	const api = apiCreator({lineNumbers: {[testFilePath]: [5, 6, 7]}});
+
+	api.on('run', plan => {
+		plan.status.on('stateChange', event => {
+			if (event.type === 'selected-test') {
+				t.match(event.title, /(unicorn|rainbow)/);
+			}
+		});
+	});
+
+	const runStatus = await api.run([testFilePath]);
+	t.is(runStatus.stats.selectedTests, 2);
+});
+
+test('no test selected by line number => emit error', async t => {
+	t.plan(1);
+
+	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+	const api = apiCreator({lineNumbers: {[testFilePath]: [6]}});
+
+	api.on('error', message => {
+		t.is(message, 'No tests selected by line numbers.');
+	});
+
+	const runStatus = await api.run([testFilePath]);
+	t.is(runStatus.stats.selectedTests, 0);
+});
+
 function generatePassDebugTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
 		const api = apiCreator({testOnlyExecArgv: execArgv});
