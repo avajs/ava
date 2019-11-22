@@ -40,7 +40,7 @@ First, include the libraries you need:
 // Libraries required for testing
 import test from 'ava'
 import request from 'supertest'
-import { MongoMemoryServer }  from 'mongodb-memory-server'
+import {MongoMemoryServer}  from 'mongodb-memory-server'
 import mongoose from 'mongoose'
 
 // Your server and models
