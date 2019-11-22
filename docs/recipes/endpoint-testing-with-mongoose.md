@@ -40,7 +40,7 @@ First, include the libraries you need:
 // Libraries required for testing
 import test from 'ava'
 import request from 'supertest'
-import MongodbMemoryServer from 'mongodb-memory-server'
+import { MongoMemoryServer }  from 'mongodb-memory-server'
 import mongoose from 'mongoose'
 
 // Your server and models
@@ -52,7 +52,7 @@ Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
 // Start MongoDB instance
-const mongod = new MongodbMemoryServer()
+const mongod = new MongoMemoryServer()
 
 // Create connection to Mongoose before tests are run
 test.before(async () => {
