@@ -5,9 +5,9 @@ const {test} = require('tap');
 const AST = require('recast');
 const parseTestSourceInFile = require('../lib/test-ast');
 
-const resolveRelativePath = relativePath => path.join(__dirname, relativePath);
 const printAsOneLine = ast => AST.print(ast).code.replace(/\n/g, ' ').replace(/\s+/g, ' ');
-const testFilePath = resolveRelativePath('fixture/test-ast.js');
+
+const testFilePath = path.join(__dirname, 'fixture/test-ast.js');
 
 test('test matches start line number', t => {
   const unicornTestSource = `test('unicorn', t => { t.pass(); })`;

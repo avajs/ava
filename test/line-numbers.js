@@ -5,6 +5,7 @@ const {test} = require('tap');
 const {
   parseLineNumbers,
   parseLineNumbersInPath,
+  parseLineNumbersInPaths,
   hasLineNumbersSuffix,
   stripLineNumbersSuffix,
   resolveEndLineNumberForTestInFile,
@@ -112,6 +113,27 @@ test('parse invalid input -> throws', t => {
 
 test('parse line numbers in path', t => {
   t.strictDeepEqual(parseLineNumbersInPath('test/foo.js:3,8-10'), [3, 8, 9, 10]);
+  t.end();
+});
+
+test('parse line numbers in paths without suffix', t => {
+  t.strictDeepEqual(parseLineNumbersInPaths(['test/foo.js']), {});
+  t.end();
+});
+
+test('group line numbers by path', t => {
+  t.strictDeepEqual(
+    parseLineNumbersInPaths(['test/foo.js:3', 'test/bar.js:2-4']),
+    {'test/foo.js': [3], 'test/bar.js': [2, 3, 4]}
+  );
+  t.end();
+});
+
+test('deduplicate line numbers for same path', t => {
+  t.strictDeepEqual(
+    parseLineNumbersInPaths(['test/foo.js:3', 'test/foo.js:2-4']),
+    {'test/foo.js': [2, 3, 4]}
+  );
   t.end();
 });
 
