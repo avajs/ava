@@ -1,5 +1,10 @@
 name: Install and test AVA
-on: push
+on:
+  pull_request:
+    paths-ignore:
+    - '*.md'
+    - 'docs/**'
+    - 'media/**'
 jobs:
   nodejs:
     name: Node.js
