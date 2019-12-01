@@ -1,10 +1,5 @@
 name: Install and test AVA
 on:
-  push:
-    paths-ignore:
-    - '*.md'
-    - 'docs/**'
-    - 'media/**'
   pull_request:
     paths-ignore:
     - '*.md'
