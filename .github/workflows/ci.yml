@@ -1,5 +1,7 @@
 name: Install and test AVA
-on: push
+on:
+  - push
+  - pull_request
 jobs:
   nodejs:
     name: Node.js
