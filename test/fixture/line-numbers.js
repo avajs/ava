@@ -1,15 +1,15 @@
-import test from '../..'
+import test from '../..';
 
 test('unicorn', t => {
-  t.pass();
+	t.pass();
 });
 
 test('rainbow', t => {
-  t.pass();
+	t.pass();
 });
 
 test.serial('cat', t => {
-  t.pass();
+	t.pass();
 });
 
 test.todo('dog');
