@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const escapeStringRegExp = require('escape-string-regexp');
 const {test} = require('tap');
 const AST = require('recast');
 const parseTestSourceInFile = require('../lib/test-ast');
@@ -8,6 +9,8 @@ const parseTestSourceInFile = require('../lib/test-ast');
 const printAsOneLine = ast => AST.print(ast).code.replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
 const testFilePath = path.join(__dirname, 'fixture/test-ast.js');
+// Escaping needed for Windows
+const escapedTestFilePath = escapeStringRegExp(testFilePath);
 
 test('test matches start line number', t => {
 	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })';
@@ -39,14 +42,14 @@ test('two tests on same start line number', t => {
 
 test('no test matches start line number -> throws', t => {
 	t.throws(() => parseTestSourceInFile({startLineNumber: 6, title: 'unicorn'}, testFilePath),
-		new RegExp(`No test starting at line number 6 in ${testFilePath}.`)
+		new RegExp(`No test starting at line number 6 in ${escapedTestFilePath}.`)
 	);
 	t.end();
 });
 
 test('mismatching title -> throws', t => {
 	t.throws(() => parseTestSourceInFile({startLineNumber: 3, title: 'rainbow'}, testFilePath),
-		new RegExp(`No test \`rainbow\` starting at line number 3 in ${testFilePath}.`)
+		new RegExp(`No test \`rainbow\` starting at line number 3 in ${escapedTestFilePath}.`)
 	);
 	t.end();
 });
@@ -70,7 +73,7 @@ test('non-existing file -> throws', t => {
 	const nonExistingFilePath = path.join(__dirname, 'fixture/nonexistent');
 	t.throws(
 		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, nonExistingFilePath),
-		new RegExp(`File ${nonExistingFilePath} not found.`)
+		new RegExp(`File ${escapeStringRegExp(nonExistingFilePath)} not found.`)
 	);
 	t.end();
 });
@@ -79,7 +82,7 @@ test('directory -> throws', t => {
 	const directoryFilePath = path.join(__dirname, 'fixture');
 	t.throws(
 		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, directoryFilePath),
-		new RegExp(`${directoryFilePath} is not a file.`)
+		new RegExp(`${escapeStringRegExp(directoryFilePath)} is not a file.`)
 	);
 	t.end();
 });

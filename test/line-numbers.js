@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const escapeStringRegExp = require('escape-string-regexp');
 const {test} = require('tap');
 const {
 	parseLineNumbers,
@@ -15,6 +16,8 @@ const {
 
 const noop = () => {};
 const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
+// Escaping needed for Windows
+const escapedTestFilePath = escapeStringRegExp(testFilePath);
 const stubCallSite = ({fileName, lineNumber}) => ({
 	getFileName: () => fileName,
 	getLineNumber: () => lineNumber,
@@ -192,7 +195,8 @@ test('resolve end line number for test', t => {
 test('resolve end line number with no test starting at line number -> throws', t => {
 	t.throws(() => resolveEndLineNumberForTestInFile({startLineNumber: 6, title: 'horse'}, testFilePath),
 		new RegExp(
-			`Failed to resolve end line number for test \`horse\` starting at line number 6 in ${testFilePath}: No test .*`
+			`Failed to resolve end line number for test \`horse\` starting at line number 6 in ${escapedTestFilePath}: ` +
+			'No test .*'
 		)
 	);
 	t.end();
@@ -216,7 +220,7 @@ test('get line number range for test in file', t => {
 
 test('get line number range for test in file never being called -> throws', t => {
 	t.throws(() => getLineNumberRangeForTestInFile('unicorn', testFilePath),
-		new RegExp(`Failed to resolve line number range for test in ${testFilePath}: Test never called.`)
+		new RegExp(`Failed to resolve line number range for test in ${escapedTestFilePath}: Test never called.`)
 	);
 	t.end();
 });
