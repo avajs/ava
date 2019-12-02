@@ -39,14 +39,14 @@ test('two tests on same start line number', t => {
 
 test('no test matches start line number -> throws', t => {
 	t.throws(() => parseTestSourceInFile({startLineNumber: 6, title: 'unicorn'}, testFilePath),
-		/No test starting at line number 6 in .*\/fixture\/test-ast\.js\./
+		new RegExp(`No test starting at line number 6 in ${testFilePath}\.`)
 	);
 	t.end();
 });
 
 test('mismatching title -> throws', t => {
 	t.throws(() => parseTestSourceInFile({startLineNumber: 3, title: 'rainbow'}, testFilePath),
-		/No test `rainbow` starting at line number 3 in .*\/fixture\/test-ast\.js\./
+		new RegExp(`No test \`rainbow\` starting at line number 3 in ${testFilePath}\.`)
 	);
 	t.end();
 });
@@ -70,7 +70,8 @@ test('non-existing file -> throws', t => {
 	const nonExistingFilePath = path.join(__dirname, 'fixture/nonexistent');
 	t.throws(
 		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, nonExistingFilePath),
-		/File .*\/fixture\/nonexistent not found\./);
+		new RegExp(`File ${nonExistingFilePath} not found\.`)
+	);
 	t.end();
 });
 
@@ -78,6 +79,7 @@ test('directory -> throws', t => {
 	const directoryFilePath = path.join(__dirname, 'fixture');
 	t.throws(
 		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, directoryFilePath),
-		/.*\/fixture is not a file\./);
+		new RegExp(`${directoryFilePath} is not a file\.`)
+	);
 	t.end();
 });

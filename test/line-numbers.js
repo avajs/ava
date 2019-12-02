@@ -191,7 +191,7 @@ test('resolve end line number for test', t => {
 
 test('resolve end line number with no test starting at line number -> throws', t => {
 	t.throws(() => resolveEndLineNumberForTestInFile({startLineNumber: 6, title: 'horse'}, testFilePath),
-		/Failed to resolve end line number for test `horse` starting at line number 6 in .*\/fixture\/line-numbers\.js: No test .*/
+		new RegExp(`Failed to resolve end line number for test \`horse\` starting at line number 6 in ${testFilePath}: No test .*`)
 	);
 	t.end();
 });
@@ -214,7 +214,7 @@ test('get line number range for test in file', t => {
 
 test('get line number range for test in file never being called -> throws', t => {
 	t.throws(() => getLineNumberRangeForTestInFile('unicorn', testFilePath),
-		/Failed to resolve line number range for test in .*\/fixture\/line-numbers\.js: Test never called\./
+		new RegExp(`Failed to resolve line number range for test in ${testFilePath}: Test never called\.`)
 	);
 	t.end();
 });
