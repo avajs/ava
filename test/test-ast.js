@@ -27,11 +27,11 @@ test('two tests on same start line number', t => {
 	const catTestSource = 'test(\'cat\', t => t.pass())';
 	const dogTestSource = 'test(\'dog\', t => { t.pass(); })';
 	t.is(
-		AST.print(parseTestSourceInFile({startLineNumber: 11, title: 'cat'}, testFilePath)).code,
+		AST.print(parseTestSourceInFile({startLineNumber: 12, title: 'cat'}, testFilePath)).code,
 		catTestSource
 	);
 	t.is(
-		printAsOneLine(parseTestSourceInFile({startLineNumber: 11, title: 'dog'}, testFilePath)),
+		printAsOneLine(parseTestSourceInFile({startLineNumber: 12, title: 'dog'}, testFilePath)),
 		dogTestSource
 	);
 	t.end();
