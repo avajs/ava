@@ -170,6 +170,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with VSCode](docs/recipes/debugging-with-vscode.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
+- [Debugging tests with node-inspect](docs/recipes/debugging-with-node-inspect.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
 - [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
 
