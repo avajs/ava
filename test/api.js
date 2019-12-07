@@ -5,7 +5,7 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const del = require('del');
-const minimist = require('minimist');
+const yargs = require('yargs-parser');
 const {test} = require('tap');
 const Api = require('../lib/api');
 const babelManager = require('../lib/babel-manager');
@@ -1181,7 +1181,7 @@ test('using --match with matching tests will only report those passing tests', t
 
 function generatePassDebugTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({nodeArguments: minimist(execArgv)});
+		const api = apiCreator({nodeArguments: yargs(execArgv)});
 		return api._computeForkExecArgv()
 			.then(result => {
 				t.true(result.length === execArgv.length);
@@ -1192,7 +1192,7 @@ function generatePassDebugTests(execArgv) {
 
 function generatePassInspectIntegrationTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({nodeArguments: minimist(execArgv)});
+		const api = apiCreator({nodeArguments: yargs(execArgv)});
 		return api.run([path.join(__dirname, 'fixture/inspect-arg.js')])
 			.then(runStatus => {
 				t.is(runStatus.stats.passedTests, 1);
