@@ -23,5 +23,6 @@ test('normalizes node arguments from config and cli', t => {
 
 test('normalizes single node arguments from cli', t => {
 	t.deepEqual(normalizeNodeArguments([], '--test-flag'), {'test-flag': true});
+	t.deepEqual(normalizeNodeArguments([], '--test-flag="a & b"'), {'test-flag': 'a & b'});
 	t.end();
 });

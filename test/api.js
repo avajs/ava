@@ -5,11 +5,11 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const del = require('del');
-const yargs = require('yargs-parser');
 const {test} = require('tap');
 const Api = require('../lib/api');
 const babelManager = require('../lib/babel-manager');
 const {normalizeGlobs} = require('../lib/globs');
+const nodeArguments = require('../lib/node-arguments');
 
 const testCapitalizerPlugin = require.resolve('./fixture/babel-plugin-test-capitalizer');
 
@@ -1181,7 +1181,7 @@ test('using --match with matching tests will only report those passing tests', t
 
 function generatePassDebugTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({nodeArguments: yargs(execArgv)});
+		const api = apiCreator({nodeArguments: nodeArguments(execArgv)});
 		return api._computeForkExecArgv()
 			.then(result => {
 				t.true(result.length === execArgv.length);
@@ -1192,7 +1192,7 @@ function generatePassDebugTests(execArgv) {
 
 function generatePassInspectIntegrationTests(execArgv) {
 	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({nodeArguments: yargs(execArgv)});
+		const api = apiCreator({nodeArguments: nodeArguments(execArgv)});
 		return api.run([path.join(__dirname, 'fixture/inspect-arg.js')])
 			.then(runStatus => {
 				t.is(runStatus.stats.passedTests, 1);
