@@ -26,7 +26,7 @@ function execCli(args, opts, cb) {
 	const processPromise = new Promise(resolve => {
 		// Spawning a child with piped IO means that the CLI will never see a TTY.
 		// Inserting a shim here allows us to fake a TTY.
-		child = childProcess.spawn(process.execPath, ['-r', ttySimulator, cliPath].concat(args), {
+		child = childProcess.spawn(process.execPath, ['--require', ttySimulator, cliPath].concat(args), {
 			cwd: dirname,
 			env: {CI: '1', ...env}, // Force CI to ensure the correct reporter is selected
 			// env,
