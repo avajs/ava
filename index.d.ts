@@ -1,5 +1,15 @@
 /// <reference types="node"/>
 
+export interface ObserverLike {
+	next: (value: any) => void;
+	error: (err: any) => void;
+	complete: () => void;
+}
+
+export interface SubscribableLike {
+	subscribe(observer: ObserverLike): void;
+}
+
 export interface ObservableLike {
 	subscribe(observer: (value: unknown) => void): void;
 	[Symbol.observable](): ObservableLike;
@@ -472,7 +482,7 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
+export type ImplementationResult = PromiseLike<void> | ObservableLike | SubscribableLike | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
