@@ -66,7 +66,7 @@ stderr
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
-* [31mtest [90m[2m›[22m[31m known failure[39m
+* [31mtest [90m[2m›[22m[39m[31m known failure[39m
 
   [32m4 passed[39m
   [31m1 known failure[39m
@@ -164,9 +164,9 @@ stderr
   [31m2 unhandled rejections[39m
   [31m2 uncaught exceptions[39m
 
-  [31mtest [90m[2m›[22m[31m known failure[39m
+  [31mtest [90m[2m›[22m[39m[31m known failure[39m
 
-  [1mtraces-in-t-throws [90m[2m›[1m[39m throws[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
 
   [90m~/test/fixture/report/regular/traces-in-t-throws.js:12[39m
 
@@ -190,7 +190,7 @@ stderr
 
 
 
-  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrows[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
 
   [90m~/test/fixture/report/regular/traces-in-t-throws.js:16[39m
 
@@ -210,7 +210,7 @@ stderr
 
 
 
-  [1mtraces-in-t-throws [90m[2m›[1m[39m notThrowsAsync[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
 
   [90m~/test/fixture/report/regular/traces-in-t-throws.js:20[39m
 
@@ -230,7 +230,7 @@ stderr
 
 
 
-  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
 
   [90m~/test/fixture/report/regular/traces-in-t-throws.js:24[39m
 
@@ -250,7 +250,7 @@ stderr
 
 
 
-  [1mtraces-in-t-throws [90m[2m›[1m[39m throwsAsync different error[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
 
   [90m~/test/fixture/report/regular/traces-in-t-throws.js:28[39m
 
@@ -273,7 +273,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m fails[22m
+  [1mtest [90m[2m›[22m[1m[39m fails[22m
 
   [90m~/test/fixture/report/regular/test.js:12[39m
 
@@ -285,14 +285,14 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m no longer failing[22m
+  [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
 
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
 
 
-  [1mtest [90m[2m›[1m[39m logs[22m
+  [1mtest [90m[2m›[22m[1m[39m logs[22m
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 
@@ -306,7 +306,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m formatted[22m
+  [1mtest [90m[2m›[22m[1m[39m formatted[22m
 
   [90m~/test/fixture/report/regular/test.js:25[39m
 
@@ -321,7 +321,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m power-assert[22m
+  [1mtest [90m[2m›[22m[1m[39m power-assert[22m
 
   [90m~/test/fixture/report/regular/test.js:30[39m
 
@@ -338,7 +338,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m bad throws[22m
+  [1mtest [90m[2m›[22m[1m[39m bad throws[22m
 
   [90m~/test/fixture/report/regular/test.js:38[39m
 
@@ -367,7 +367,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m bad notThrows[22m
+  [1mtest [90m[2m›[22m[1m[39m bad notThrows[22m
 
   [90m~/test/fixture/report/regular/test.js:46[39m
 
@@ -396,7 +396,7 @@ stderr
 
 
 
-  [1mtest [90m[2m›[1m[39m implementation throws non-error[22m
+  [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
 
 
   Error thrown in test:
@@ -405,7 +405,7 @@ stderr
 
 
 
-  [1moutput-in-hook [90m[2m›[1m[39m failing test[22m
+  [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
 
   [90m~/test/fixture/report/regular/output-in-hook.js:34[39m
 
