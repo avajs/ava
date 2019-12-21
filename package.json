@@ -7,7 +7,7 @@
 	"homepage": "https://avajs.dev",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0"
+		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0"
 	},
 	"scripts": {
 		"lint": "xo",

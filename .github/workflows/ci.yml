@@ -12,9 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Hardcoded versions due to https://github.com/actions/setup-node/issues/27,
-        # which means that sometimes too old a version gets installed.
-        node-version: [8.16.1, ^10.0.0, ^12.0.0, ^13.0.0]
+        node-version: [^10.18.0, ^12.14.0, ^13.5.0]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
@@ -43,9 +41,9 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
-          node-version: ^12.0.0
+          node-version: ^12.14.0
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "6.12.1" ]]; then npm install --global npm@6.12.1; fi
+        run: if [[ "$(npm -v)" != "6.13.4" ]]; then npm install --global npm@6.13.4; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
@@ -66,6 +64,6 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
-          node-version: ^12.0.0
+          node-version: ^12.14.0
       - run: npm install --no-shrinkwrap --no-audit
       - run: npm test
