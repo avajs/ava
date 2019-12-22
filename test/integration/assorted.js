@@ -169,13 +169,13 @@ test('additional arguments are forwarded to the worker', t => {
 	});
 });
 
-test('--reset-cache resets cache', t => {
+test('reset-cache resets cache', t => {
 	const cacheDir = path.join(__dirname, '..', 'fixture', 'reset-cache', 'node_modules', '.cache', 'ava');
 	execCli([], {dirname: 'fixture/reset-cache'}, err => {
 		t.ifError(err);
 		t.true(fs.readdirSync(cacheDir).length > 0);
 
-		execCli(['--reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
+		execCli(['reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
 			t.ifError(err);
 			t.true(fs.readdirSync(cacheDir).length === 0);
 			t.end();

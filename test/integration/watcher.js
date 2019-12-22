@@ -133,7 +133,7 @@ test('watcher reruns all tests when one of the configured files in the `require`
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {CI: ''}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -186,7 +186,7 @@ test('watcher does not rerun test files when files change that are neither tests
 test('watcher reruns test files when snapshot dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {CI: ''}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -204,7 +204,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 			} else {
 				passedFirst = true;
 				setTimeout(() => {
-					touch.sync(path.join(__dirname, '../fixture/snapshots/test.js.snap'));
+					touch.sync(path.join(__dirname, '../fixture/snapshots/watcher-rerun/test.js.snap'));
 				}, 500);
 			}
 		}
@@ -233,24 +233,18 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 	child.stderr.on('data', testOutput);
 });
 
-for (const watchFlag of ['--watch', '-w']) {
-	for (const tapFlag of ['--tap', '-t']) {
-		test(`bails when ${tapFlag} reporter is used while ${watchFlag} is given`, t => {
-			execCli([tapFlag, watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, (err, stdout, stderr) => {
-				t.is(err.code, 1);
-				t.match(stderr, 'The TAP reporter is not available when using watch mode.');
-				t.end();
-			});
-		});
-	}
-}
-
-for (const watchFlag of ['--watch', '-w']) {
-	test(`bails when CI is used while ${watchFlag} is given`, t => {
-		execCli([watchFlag, 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
-			t.is(err.code, 1);
-			t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
-			t.end();
-		});
+test('bails when --tap reporter is used while --watch is given', t => {
+	execCli(['--tap', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, (err, stdout, stderr) => {
+		t.is(err.code, 1);
+		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
+		t.end();
 	});
-}
+});
+
+test('bails when CI is used while --watch is given', t => {
+	execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
+		t.is(err.code, 1);
+		t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
+		t.end();
+	});
+});
