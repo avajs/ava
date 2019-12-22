@@ -3,12 +3,13 @@
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
 
 ```console
-$ npx ava --help
 ava <files>
+ava debug <file>
 ava reset-cache
 
 Commands:
   ava              Run tests                                           [default]
+  ava debug        Activate Node.js inspector and run the test file
   ava reset-cache  Reset AVA's compilation cache and exit
 
 Positionals:

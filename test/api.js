@@ -1177,33 +1177,6 @@ test('using --match with matching tests will only report those passing tests', t
 	});
 });
 
-function generatePassDebugTests(execArgv) {
-	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
-		return api._computeForkExecArgv()
-			.then(result => {
-				t.true(result.length === execArgv.length);
-				t.true(/--inspect=\d+/.test(result[0]));
-			});
-	});
-}
-
-function generatePassInspectIntegrationTests(execArgv) {
-	test(`pass ${execArgv.join(' ')} to fork`, t => {
-		const api = apiCreator({testOnlyExecArgv: execArgv});
-		return api.run([path.join(__dirname, 'fixture/inspect-arg.js')])
-			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
-			});
-	});
-}
-
-generatePassDebugTests(['--inspect=0']);
-generatePassDebugTests(['--inspect']);
-
-generatePassInspectIntegrationTests(['--inspect=9229']);
-generatePassInspectIntegrationTests(['--inspect']);
-
 test('`esm` package support', t => {
 	const api = apiCreator({
 		require: [require.resolve('esm')]
