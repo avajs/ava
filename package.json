@@ -102,7 +102,6 @@
 		"make-dir": "^3.0.0",
 		"matcher": "^2.1.0",
 		"md5-hex": "^3.0.1",
-		"meow": "^6.0.0",
 		"micromatch": "^4.0.2",
 		"ms": "^2.1.2",
 		"observable-to-promise": "^1.0.0",
@@ -120,7 +119,8 @@
 		"trim-right": "^1.0.1",
 		"unique-temp-dir": "^1.0.0",
 		"update-notifier": "^4.0.0",
-		"write-file-atomic": "^3.0.1"
+		"write-file-atomic": "^3.0.1",
+		"yargs": "^15.0.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.7.7",

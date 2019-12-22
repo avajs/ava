@@ -4,35 +4,40 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 ```console
 $ npx ava --help
+ava <files>
+ava reset-cache
 
-  Usage
-    ava [<file> ...]
+Commands:
+  ava              Run tests                                           [default]
+  ava reset-cache  Reset AVA's compilation cache and exit
 
-  Options
-    --watch, -w             Re-run tests when tests and source files change
-    --match, -m             Only run tests with matching title (Can be repeated)
-    --update-snapshots, -u  Update snapshots
-    --fail-fast             Stop after first test failure
-    --timeout, -T           Set global timeout (milliseconds or human-readable, e.g. 10s, 2m)
-    --serial, -s            Run tests serially
-    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
-    --verbose, -v           Enable verbose output
-    --tap, -t               Generate TAP output
-    --color                 Force color output
-    --no-color              Disable color output
-    --reset-cache           Reset AVA's compilation cache and exit
-    --config                JavaScript file for AVA to read its config from, instead of using package.json
-                            or ava.config.js files
+Positionals:
+  files  Paths to individual test files. Leave empty if you want AVA to search
+         for files instead.                                             [string]
 
-  Examples
-    ava
-    ava test.js test2.js
-    ava test-*.js
-    ava test
+Options:
+  --version               Show version number                          [boolean]
+  --color                 Force color output                           [boolean]
+  --config                JavaScript file for AVA to read its config from,
+                          instead of using package.json or ava.config.js files
+  --help                  Show help                                    [boolean]
+  --concurrency, -c       Max number of test files running at the same time
+                          (Default: CPU cores)                          [number]
+  --fail-fast             Stop after first test failure                [boolean]
+  --match, -m             Only run tests with matching title (Can be repeated)
+                                                                        [string]
+  --serial, -s            Run tests serially                           [boolean]
+  --tap, -t               Generate TAP output                          [boolean]
+  --timeout, -T           Set global timeout (milliseconds or human-readable,
+                          e.g. 10s, 2m)                                 [string]
+  --update-snapshots, -u  Update snapshots                             [boolean]
+  --verbose, -v           Enable verbose output                        [boolean]
+  --watch, -w             Re-run tests when tests and source files change
+                                                                       [boolean]
 
-  The above relies on your shell expanding the glob patterns.
-  Without arguments, AVA uses the following patterns:
-    **/test.js **/test-*.js **/*.spec.js **/*.test.js **/test/**/*.js **/tests/**/*.js **/__tests__/**/*.js
+Examples:
+  ava
+  ava test.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
