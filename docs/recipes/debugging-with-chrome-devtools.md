@@ -2,12 +2,32 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-chrome-devtools.md)
 
-Use [inspect-process](https://github.com/jaridmargolin/inspect-process) to easily launch a debugging session with Chrome DevTools.
+**This recipe describes the new `inspect` command in the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/debugging-with-chrome-devtools.md) documentation instead.**
+
+You can debug your tests using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools).
+
+Open Chrome, then navigate to <chrome://inspect/>. Click the *Open dedicated DevTools for Node* link within the *Devices* section.
+
+In the *DevTools for Node* window, navigate to *Sources* and in the left-hand column select *Filesystem*. Add your project directory to the workspace. Make sure to grant permission.
+
+Now run a specific test file:
 
 ```console
-$ npm install --global inspect-process
+npx ava debug test.js
 ```
 
+The DevTools should connect automatically and your tests will run. Use DevTools to set breakpoints, or use the `debugger` keyword.
+
+Run with the `--break` option to ensure the DevTools hit a breakpoint right before the test file is loaded:
+
 ```console
-$ inspect node_modules/ava/profile.js some/test/file.js
+npx ava debug --break test.js
 ```
+
+You can also customize the port. It defaults to `9229`:
+
+```console
+npx ava debug --port 9230 test.js
+```
+
+You'll have to add a connection for this port in the *Connection* tab. AVA only binds to `localhost`.
