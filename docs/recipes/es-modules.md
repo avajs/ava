@@ -26,8 +26,6 @@ Configure it in your `package.json` or `ava.config.js` file, and add it to AVA's
 }
 ```
 
-By default AVA converts ES module syntax to CommonJS. [You can disable this](./babel.md#preserve-es-module-syntax).
-
 You can now use native ES modules with AVA:
 
 ```js
@@ -47,43 +45,15 @@ test('2 + 2 = 4', t => {
 });
 ```
 
-You need to configure AVA to recognize `.mjs` extensions. If you want AVA to apply its Babel presets use the following.
+You need to configure AVA to recognize `.mjs` extensions;
 
 **`package.json`:**
 
 ```json
 {
 	"ava": {
-		"babel": {
-			"extensions": [
-				"js",
-				"mjs"
-			]
-		}
-	}
-}
-```
-
-Alternatively you can use:
-
-```json
-{
-	"ava": {
-		"babel": false,
 		"extensions": [
 			"js",
-			"mjs"
-		]
-	}
-}
-```
-
-Or leave Babel enabled (which means it's applied to `.js` files), but don't apply it to `.mjs` files:
-
-```json
-{
-	"ava": {
-		"extensions": [
 			"mjs"
 		]
 	}
