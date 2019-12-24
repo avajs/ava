@@ -1,4 +1,4 @@
-import test from '../..';
+const test = require('../..');
 
 Error.stackTraceLimit = 1;
 

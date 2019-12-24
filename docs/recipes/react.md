@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 ## Setting up Babel
 
-AVA automatically extends your regular (project-level) Babel configuration. You should be able to use React in your test files without any additional configuration.
+When you [enable Babel](https://github.com/avajs/babel), AVA will automatically extend your regular (project-level) Babel configuration. You should be able to use React in your test files without any additional configuration.
 
 However if you want to set it up explicitly, add the preset to the test options in AVA's Babel pipeline by modifying your `package.json` or `ava.config.js` file.
 
@@ -22,7 +22,7 @@ However if you want to set it up explicitly, add the preset to the test options 
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
+You can find more information in [`@ava/babel`](https://github.com/avajs/babel).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 

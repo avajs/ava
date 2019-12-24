@@ -26,25 +26,16 @@ To ignore files, prefix the pattern with an `!` (exclamation mark).
 			"*oo",
 			"!foo"
 		],
-		"cache": true,
 		"concurrency": 5,
 		"failFast": true,
 		"failWithoutAssertions": false,
 		"environmentVariables": {
 			"MY_ENVIRONMENT_VARIABLE": "some value"
 		},
-		"tap": true,
 		"verbose": true,
-		"compileEnhancements": false,
 		"require": [
-			"@babel/register"
-		],
-		"babel": {
-			"extensions": ["js", "jsx"],
-			"testOptions": {
-				"babelrc": false
-			}
-		}
+			"./my-helper-module.js"
+		]
 	}
 }
 ```
@@ -53,8 +44,8 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 ## Options
 
-- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
-- `helpers`: an array of glob patterns to select helper files. Files matched here are never considered as tests. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` and `babel.extensions` to allow other file extensions
+- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
+- `helpers`: an array of glob patterns to select helper files. Files matched here are never considered as tests. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
 - `sources`: an array of glob patterns to match files that, when changed, cause tests to be re-run (when in watch mode). See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
@@ -64,14 +55,13 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `compileEnhancements`: if `false`, disables [`power-assert`](./03-assertions.md#enhanced-assertion-messages) — which otherwise helps provide more descriptive error messages — and detection of improper use of the `t.throws()` assertion
-- `extensions`: extensions of test files that are not precompiled using AVA's Babel presets. Note that files are still compiled to enable `power-assert` and other features, so you may also need to set `compileEnhancements` to `false` if your files are not valid JavaScript. Setting this overrides the default `"js"` value, so make sure to include that extension in the list, as long as it's not included in `babel.extensions`
+- `extensions`: extensions of test files. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
-- `babel`: test file specific Babel options. See our [Babel recipe](./recipes/babel.md#configuring-babel) for more details
-- `babel.extensions`: extensions of test files that will be precompiled using AVA's Babel presets. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 
 Note that providing files on the CLI overrides the `files` option.
+
+Provide the `babel` option (and install [`@ava/babel`](https://github.com/avajs/babel) as an additional dependency) to enable Babel compilation.
 
 ## Using `ava.config.js`
 

@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 console.log('stdout');
 console.error('stderr');

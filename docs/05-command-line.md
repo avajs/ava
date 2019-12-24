@@ -133,7 +133,13 @@ test(function foo(t) {
 
 ## Resetting AVA's cache
 
-AVA caches the compiled test and helper files. It automatically recompiles these files when you change them. AVA tries its best to detect changes to your Babel configuration files, plugins and presets. If it seems like your latest Babel configuration isn't being applied, however, you can run AVA with the `--reset-cache` flag to reset AVA's cache. If set, all files in the `node_modules/.cache/ava` directory are deleted. Run AVA as normal to apply your new Babel configuration.
+AVA may cache certain files, especially when you use our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can reset the cache by running:
+
+```console
+npx ava reset-cache
+```
+
+This deletes all files in the `node_modules/.cache/ava` directory.
 
 ## Reporters
 

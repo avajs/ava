@@ -50,7 +50,7 @@ test('appends to existing snapshots', t => {
 	const cwd = uniqueTempDir({create: true});
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
-	const initial = `import test from ${JSON.stringify(avaPath)}
+	const initial = `const test = require(${JSON.stringify(avaPath)})
 test('one', t => {
 	t.snapshot({one: true})
 })`;

@@ -57,8 +57,6 @@
 		"typescript"
 	],
 	"dependencies": {
-		"@ava/babel": "^0.1.0",
-		"@babel/generator": "^7.7.7",
 		"@concordance/react": "^2.0.0",
 		"ansi-escapes": "^4.3.0",
 		"ansi-styles": "^4.2.0",
@@ -80,9 +78,7 @@
 		"currently-unhandled": "^0.4.1",
 		"debug": "^4.1.1",
 		"del": "^5.1.0",
-		"dot-prop": "^5.2.0",
 		"emittery": "^0.5.1",
-		"empower-core": "^1.2.0",
 		"equal-length": "^1.0.0",
 		"escape-string-regexp": "^2.0.0",
 		"esm": "^3.2.25",
@@ -111,6 +107,7 @@
 		"pretty-ms": "^5.1.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
+		"source-map-support": "^0.5.16",
 		"stack-utils": "^2.0.1",
 		"strip-ansi": "^6.0.0",
 		"supertap": "^1.0.0",
@@ -123,6 +120,7 @@
 		"yargs": "^15.0.2"
 	},
 	"devDependencies": {
+		"@ava/babel": "^0.2.0",
 		"@babel/core": "^7.7.7",
 		"@types/node": "^10.17.11",
 		"cli-table3": "^0.5.1",
@@ -139,7 +137,6 @@
 		"signal-exit": "^3.0.0",
 		"sinon": "^7.5.0",
 		"source-map-fixtures": "^2.1.0",
-		"source-map-support": "^0.5.16",
 		"tap": "^14.10.5",
 		"temp-write": "^4.0.0",
 		"touch": "^3.1.0",

@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 test.serial('first pass', t => {
 	t.pass();

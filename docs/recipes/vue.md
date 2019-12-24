@@ -48,7 +48,7 @@ hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//))
 
 **Note:** If you are using _babel-plugin-webpack-alias-7_, you must also exclude your webpack file - e.g. `filename.includes(/\/node_modules\//) || filename.includes('webpack.config.test.js')`
 
-You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
+You can find more information about setting up Babel with AVA in [`@ava/babel`](https://github.com/avajs/babel).
 
 ## Sample snapshot test
 

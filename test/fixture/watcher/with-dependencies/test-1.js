@@ -1,5 +1,5 @@
-import test from '../../../..';
-import dependency from './source';
+const test = require('../../../..');
+const dependency = require('./source');
 
 test('works', t => {
 	t.truthy(dependency);

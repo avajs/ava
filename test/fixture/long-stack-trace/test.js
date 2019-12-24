@@ -1,5 +1,5 @@
-import test from '../../..';
-import Bluebird from './_enable-trace';
+const test = require('../../..');
+const Bluebird = require('./_enable-trace');
 
 // This promise throwing pattern was used in bluebird documentation for long stack traces
 // http://bluebirdjs.com/docs/api/promise.longstacktraces.html

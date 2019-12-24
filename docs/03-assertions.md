@@ -84,7 +84,7 @@ test('skip assertion', t => {
 
 ## Enhanced assertion messages
 
-AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) built-in, giving you more descriptive assertion messages.
+Enabling [Babel](./recipes/babel.md) will also enable [`power-assert`](https://github.com/power-assert-js/power-assert), giving you more descriptive assertion messages.
 
 Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
 

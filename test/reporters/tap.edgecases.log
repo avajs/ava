@@ -17,11 +17,11 @@ not ok 3 - test/fixture/report/edge-cases/throws.js exited with a non-zero exit 
 # No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file
 not ok 4 - No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file
 ---tty-stream-chunk-separator
-# TypeError: (0 , _.test) is not a function
-not ok 5 - TypeError: (0 , _.test) is not a function
+# TypeError: test is not a function
+not ok 5 - TypeError: test is not a function
   ---
     name: TypeError
-    message: '(0 , _.test) is not a function'
+    message: test is not a function
     at: 'import-and-use-test-member.js:3:1'
   ...
 ---tty-stream-chunk-separator

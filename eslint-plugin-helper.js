@@ -19,11 +19,10 @@ function load(projectDir, overrides) {
 		({conf, babelProvider} = configCache.get(projectDir));
 	} else {
 		conf = loadConfig({resolveFrom: projectDir});
-		const {nonSemVerExperiments: experiments} = conf;
 
-		if (!experiments.noBabelOutOfTheBox || conf.babel !== undefined) {
-			babelProvider = babelManager({experiments, projectDir});
-			babelProvider.validateConfig(conf.babel, conf.compileEnhancements !== false);
+		if (Reflect.has(conf, 'babel')) {
+			babelProvider = babelManager({projectDir});
+			babelProvider.validateConfig(conf.babel);
 		}
 
 		configCache.set(projectDir, {conf, babelProvider});
@@ -38,7 +37,7 @@ function load(projectDir, overrides) {
 		}
 	}
 
-	const extensions = normalizeExtensions(conf.extensions, babelProvider, {experiments: conf.nonSemVerExperiments});
+	const extensions = normalizeExtensions(conf.extensions, babelProvider);
 	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions.all)};
 
 	const helper = Object.freeze({

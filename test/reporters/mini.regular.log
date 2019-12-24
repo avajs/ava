@@ -425,7 +425,7 @@ stderr
   [41m 3: test.serial.test('passes', t => t.pass());[49m
    [90m4:[39m                                           
 
-  TypeError: _.default.serial.test is not a function
+  TypeError: test.serial.test is not a function
 
 
 
