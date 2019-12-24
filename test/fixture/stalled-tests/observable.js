@@ -1,5 +1,5 @@
-import Observable from 'zen-observable';
-import test from '../../..';
+const Observable = require('zen-observable');
+const test = require('../../..');
 
 test('test', t => {
 	return new Observable(() => {

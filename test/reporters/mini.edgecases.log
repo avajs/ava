@@ -34,6 +34,6 @@
   [41m 3: test('pass', t => t.pass());[49m
    [90m4:[39m                             
 
-  TypeError: (0 , _.test) is not a function
+  TypeError: test is not a function
 
 ---tty-stream-chunk-separator

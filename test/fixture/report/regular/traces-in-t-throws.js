@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 function throwError() {
 	throw new Error('uh-oh');

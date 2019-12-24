@@ -1,4 +1,4 @@
-import test from '../../../../../../..';
+const test = require('../../../../../../..');
 
 test('feature test title', t => {
 	t.snapshot({foo: 'bar'});

@@ -70,9 +70,8 @@ exports.sanitizers = {
 const run = (type, reporter, match = []) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-	const babelProvider = babelManager({experiments: {}, projectDir});
-	const compileEnhancements = true;
-	babelProvider.validateConfig({testOptions: {}}, compileEnhancements);
+	const babelProvider = babelManager({projectDir});
+	babelProvider.validateConfig(true);
 
 	const options = {
 		extensions: {
@@ -85,7 +84,6 @@ const run = (type, reporter, match = []) => {
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
 		cacheEnabled: true,
-		compileEnhancements,
 		experiments: {},
 		match,
 		babelProvider,
@@ -102,7 +100,6 @@ const run = (type, reporter, match = []) => {
 	if (type === 'typescript') {
 		options.extensions.all.push('ts');
 		options.extensions.enhancementsOnly.push('ts');
-		options.compileEnhancements = false;
 		options.require = ['ts-node/register'];
 		pattern = '*.ts';
 	}

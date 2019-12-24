@@ -1,6 +1,6 @@
-import test from '../../..';
+const test = require('../../..');
 
-const takesCallbackAndReturnWriteResult = require('tty').WriteStream.prototype.clearLine.length === 1;
+const takesCallbackAndReturnWriteResult = require('tty').WriteStream.prototype.clearLine.length === 1; // eslint-disable-line import/order
 
 const assert = takesCallbackAndReturnWriteResult ?
 	async (t, stream) => {

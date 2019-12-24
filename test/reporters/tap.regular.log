@@ -1,10 +1,10 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# TypeError: _.default.serial.test is not a function
-not ok 1 - TypeError: _.default.serial.test is not a function
+# TypeError: test.serial.test is not a function
+not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
-    message: _.default.serial.test is not a function
+    message: test.serial.test is not a function
     at: 'bad-test-chain.js:3:13'
   ...
 ---tty-stream-chunk-separator

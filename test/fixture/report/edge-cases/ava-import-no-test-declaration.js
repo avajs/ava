@@ -1,1 +1,1 @@
-import '../../../..'; // eslint-disable-line import/no-unassigned-import
+require('../../../..'); // eslint-disable-line import/no-unassigned-import
