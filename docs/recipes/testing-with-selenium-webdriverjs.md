@@ -1,0 +1,128 @@
+# Setting up AVA with Selenium WebDriverJs
+
+This recipe shows you how to use the Selenium WebDriverJs (official JavaScript implementation) with AVA to test web applications.
+
+## Setup
+
+This recipe uses the following libraries:
+
+1. [selenium-webdriver](https://www.npmjs.com/package/selenium-webdriver)
+2. [chromedriver](https://www.npmjs.com/package/chromedriver)
+
+Install the above two libraries by running the following commands:
+
+```console
+$ npm install selenium-webdriver
+$ npm install chromedriver
+```
+
+As part of this recipe, we will use Selenium to verify web searches on [Bing](http://www.bing.com) and [Google](http://www.google.com)
+
+## Test files
+
+Create the following files
+
+`./test/bingtest.js`
+
+`./test/googletest.js`
+
+In both files, let's first include the libraries
+
+```js
+import test from 'ava';
+import {Builder, By, Key, until} from'selenium-webdriver';
+
+require("chromedriver");
+```
+
+In the `bingtest.js` file, add the following code, which tests whether searching for 'webdriver' on Bing, returns results
+
+```js
+test('Bing Search', async t => {
+	let keyword = "webdriver";
+	let driver = new Builder().forBrowser("chrome").build();
+	await driver.get("http://www.bing.com");
+	await driver.findElement(By.name("q")).sendKeys(keyword + Key.ENTER);
+	await driver.wait(until.titleIs(keyword + " - Bing"));
+	t.true((await driver.findElements(By.css("#b_content #b_results li"))).length > 0);
+	await driver.close();
+}); 
+```
+
+In the `googletest.js` file, instead of a single test, lets add two tests, one each for the terms 'webdriver' and 'avajs'.
+
+Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](https://github.com/avajs/ava/blob/master/docs/01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each test()
+
+```js
+test.beforeEach(async t => {
+	t.context.driver = new Builder().forBrowser("chrome").build();
+	await t.context.driver.get("http://www.google.com");
+});
+
+test.afterEach("cleanup", async t => await t.context.driver.close());
+```
+
+Now lets add the test code,
+```js
+test('Google Search for avajs', async t => {
+	let driver = t.context.driver;	
+	await searchGoogle(driver, "avajs");
+	t.true((await driver.findElement(By.id("resultStats")).getText()).includes("results"));
+});
+
+test('Google Search for webdriver', async t => {
+	let driver = t.context.driver;
+	await searchGoogle(driver, "webdriver");
+	t.true((await driver.findElement(By.id("resultStats")).getText()).includes("results"));
+});
+
+async function searchGoogle(driver, keyword) {
+	await driver.findElement(By.name("q")).sendKeys(keyword + Key.ENTER);
+	await driver.wait(until.titleIs(keyword + " - Google Search"));
+}
+```
+
+## Running the tests
+
+We can run all the tests, by the following command
+
+```console
+npm test
+```
+Since I ran the above command on a laptop with 4 CPU cores, AVA ran both `bingtest.js` and `googletest.js` in parallel. See below output
+```console
+DevTools listening on ws://127.0.0.1:49852/devtools/browser/adfcad21-9612-46ff-adc3-09adc0737f4a
+
+DevTools listening on ws://127.0.0.1:49853/devtools/browser/304aab40-c81e-4f26-b19c-5616472d568a
+
+DevTools listening on ws://127.0.0.1:49855/devtools/browser/8f6b7206-ea2b-4d41-b6aa-10a42a562387
+
+  3 tests passed
+```
+
+Dependending upon the number of CPU cores, those many test files will run at the same time. This count can be changed either via terminal (--concurrency or -c) or via the `"ava"` section in the package.json. For e.g.
+```js
+"ava":{    
+    "concurrency": 1,
+    "verbose": true
+  }
+```
+
+The `concurrency: 1` value will only allow AVA to run one file at a time. It however cannot control how many tests in that file can run at the same time.
+
+The `verbose: true` value will enable verbose output which helps readability IMO.
+
+Now if we run the same `npm test` command
+```console
+DevTools listening on ws://127.0.0.1:49720/devtools/browser/9ebf4394-447b-4916-91cc-692d06d88896
+  √ bingtest » Bing Search (7.2s)
+
+DevTools listening on ws://127.0.0.1:49756/devtools/browser/6e19d9fe-4de6-40a3-b120-17067b3125ca
+
+DevTools listening on ws://127.0.0.1:49757/devtools/browser/ac12c2da-eeed-40d8-9b23-4d2103ec8fac
+  √ googletest » Google Search for avajs (2.5s)
+  √ googletest » Google Search for webdriver (3.3s)
+
+  3 tests passed
+```
+As you can see from the output, AVA ran the `bingtest.js` file first, waited for the only test to complete and then ran `googletest.js` file next where both the tests ran in parallel.
