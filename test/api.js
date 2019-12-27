@@ -14,14 +14,13 @@ const ROOT_DIR = path.join(__dirname, '..');
 function apiCreator(options = {}) {
 	options.projectDir = options.projectDir || ROOT_DIR;
 	if (options.babelConfig !== undefined) {
-		options.babelProvider = babelManager({projectDir: options.projectDir});
-		options.babelProvider.validateConfig(options.babelConfig);
+		options.babelProvider = babelManager({projectDir: options.projectDir}).main({config: options.babelConfig});
 	}
 
 	options.concurrency = 2;
-	options.extensions = options.extensions || {all: ['js'], enhancementsOnly: [], babelOnly: ['js']};
+	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
-	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions.all);
+	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions);
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
 

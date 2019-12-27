@@ -80,7 +80,6 @@
 		"del": "^5.1.0",
 		"emittery": "^0.5.1",
 		"equal-length": "^1.0.0",
-		"escape-string-regexp": "^2.0.0",
 		"esm": "^3.2.25",
 		"figures": "^3.1.0",
 		"get-port": "^5.1.0",
@@ -120,7 +119,7 @@
 		"yargs": "^15.0.2"
 	},
 	"devDependencies": {
-		"@ava/babel": "^0.2.0",
+		"@ava/babel": "^0.3.0",
 		"@babel/core": "^7.7.7",
 		"@types/node": "^10.17.11",
 		"cli-table3": "^0.5.1",

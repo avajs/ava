@@ -21,24 +21,24 @@ function load(projectDir, overrides) {
 		conf = loadConfig({resolveFrom: projectDir});
 
 		if (Reflect.has(conf, 'babel')) {
-			babelProvider = babelManager({projectDir});
-			babelProvider.validateConfig(conf.babel);
+			babelProvider = babelManager({projectDir}).main({config: conf.babel});
 		}
 
 		configCache.set(projectDir, {conf, babelProvider});
 	}
 
+	let ignoreBabelExtensions = false;
 	if (overrides) {
 		conf = {...conf, ...overrides};
 		if (overrides.extensions) {
 			// Ignore extensions from the Babel config. Assume all extensions are
 			// provided in the override.
-			babelProvider = undefined;
+			ignoreBabelExtensions = true;
 		}
 	}
 
-	const extensions = normalizeExtensions(conf.extensions, babelProvider);
-	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions.all)};
+	const extensions = normalizeExtensions(conf.extensions, ignoreBabelExtensions ? undefined : babelProvider);
+	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions)};
 
 	const helper = Object.freeze({
 		classifyFile: file => classify(file, globs),
