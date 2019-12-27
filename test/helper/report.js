@@ -70,15 +70,10 @@ exports.sanitizers = {
 const run = (type, reporter, match = []) => {
 	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-	const babelProvider = babelManager({projectDir});
-	babelProvider.validateConfig(true);
+	const babelProvider = babelManager({projectDir}).main({config: true});
 
 	const options = {
-		extensions: {
-			all: ['js'],
-			enhancementsOnly: [],
-			babelOnly: ['js']
-		},
+		extensions: ['js'],
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
@@ -98,13 +93,12 @@ const run = (type, reporter, match = []) => {
 	let pattern = '*.js';
 
 	if (type === 'typescript') {
-		options.extensions.all.push('ts');
-		options.extensions.enhancementsOnly.push('ts');
+		options.extensions.push('ts');
 		options.require = ['ts-node/register'];
 		pattern = '*.ts';
 	}
 
-	options.globs = normalizeGlobs(undefined, undefined, undefined, options.extensions.all);
+	options.globs = normalizeGlobs(undefined, undefined, undefined, options.extensions);
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
