@@ -20,7 +20,7 @@ function apiCreator(options = {}) {
 	options.concurrency = 2;
 	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
-	options.globs = normalizeGlobs(options.files, options.helpers, options.sources, options.extensions);
+	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions});
 	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
 
@@ -503,16 +503,6 @@ test('test file in node_modules is ignored', t => {
 	return api.run([path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')])
 		.then(runStatus => {
 			t.is(runStatus.stats.declaredTests, 0);
-		});
-});
-
-test('test file in helpers is ignored', t => {
-	t.plan(1);
-
-	const api = apiCreator({helpers: ['**/helpers/*'], projectDir: path.join(__dirname, 'fixture/ignored-dirs')});
-	return api.run()
-		.then(runStatus => {
-			t.is(runStatus.stats.declaredTests, 1);
 		});
 });
 

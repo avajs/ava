@@ -33,7 +33,7 @@ Options:
                           e.g. 10s, 2m)                                 [string]
   --update-snapshots, -u  Update snapshots                             [boolean]
   --verbose, -v           Enable verbose output                        [boolean]
-  --watch, -w             Re-run tests when tests and source files change
+  --watch, -w             Re-run tests when files change
                                                                        [boolean]
 
 Examples:
@@ -53,7 +53,7 @@ AVA searches for test files using the following patterns:
 * `**/tests/**/*.js`
 * `**/__tests__/**/*.js`
 
-Files inside `node_modules` are *always* ignored. So are files starting with `_`. These are treated as helpers.
+Files inside `node_modules` are *always* ignored. So are files starting with `_`.
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 

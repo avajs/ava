@@ -2,6 +2,8 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/watch-mode.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/watch-mode.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/watch-mode.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/watch-mode.md)
 
+**This documents the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/watch-mode.md) documentation instead.**
+
 AVA comes with an intelligent watch mode. It watches for files to change and runs just those tests that are affected.
 
 ## Running tests with watch mode enabled
@@ -63,15 +65,13 @@ Please note that the TAP reporter is unavailable when using watch mode.
 
 AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
 
-## Source files and test files
+## Ignoring changes
 
-In AVA there's a distinction between *source files* and *test files*. As you can imagine the *test files* contain your tests. *Source files* are all other files that are needed for the tests to run, be it your source code or test fixtures.
+By default AVA watches for changes to all files, except for those with a `.snap.md` extension, `ava.config.js` and files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
+You can configure additional patterns for files to ignore in the [`ava` section of your `package.json`, or `ava.config.js` file][config], using the `ignoredByWatcher` key.
 
-You can configure patterns for the source files in the [`ava` section of your `package.json`, or `ava.config.js` file][config], using the `sources` key.
-
-If your tests write to disk they may trigger the watcher to rerun your tests. Configure patterns for the source files to avoid this.
+If your tests write to disk they may trigger the watcher to rerun your tests. Configuring additional ignore patterns helps avoid this.
 
 ## Dependency tracking
 
