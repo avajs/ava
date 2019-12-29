@@ -6,7 +6,7 @@ const {execCli} = require('../helper/cli');
 
 const END_MESSAGE = 'Type `r` and press enter to rerun tests\nType `u` and press enter to update snapshots\n';
 
-test('watcher reruns test files when they changed', t => {
+test('watcher reruns test files upon change', t => {
 	let killed = false;
 
 	const child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, err => {
@@ -22,32 +22,6 @@ test('watcher reruns test files when they changed', t => {
 		if (buffer.includes('1 test passed')) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, '../fixture/watcher/test.js'));
-				buffer = '';
-				passedFirst = true;
-			} else if (!killed) {
-				child.kill();
-				killed = true;
-			}
-		}
-	});
-});
-
-test('watcher respects custom test file extensions', t => {
-	let killed = false;
-
-	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/custom-extensions', env: {CI: ''}}, err => {
-		t.ok(killed);
-		t.ifError(err);
-		t.end();
-	});
-
-	let buffer = '';
-	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
-		if (buffer.includes('1 test passed')) {
-			if (!passedFirst) {
-				touch.sync(path.join(__dirname, '../fixture/watcher/custom-extensions/test.foo'));
 				buffer = '';
 				passedFirst = true;
 			} else if (!killed) {
@@ -82,54 +56,6 @@ test('watcher reruns test files when source dependencies change', t => {
 	});
 });
 
-test('watcher reruns ONLY test files that depend on a changed source with custom extension', t => {
-	let killed = false;
-
-	const child = execCli(['--verbose', '--require', './setup.js', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-custom-ext-dependencies', env: {CI: ''}}, err => {
-		t.ok(killed);
-		t.ifError(err);
-		t.end();
-	});
-
-	let buffer = '';
-	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
-		if (buffer.includes('2 tests passed') && !passedFirst) {
-			touch.sync(path.join(__dirname, '../fixture/watcher/with-custom-ext-dependencies/source.custom-ext'));
-			buffer = '';
-			passedFirst = true;
-		} else if (buffer.includes('1 test passed') && !killed) {
-			child.kill();
-			killed = true;
-		}
-	});
-});
-
-test('watcher reruns all tests when one of the configured files in the `require` option changes', t => {
-	let killed = false;
-
-	const child = execCli(['--verbose', '--require', './setup.js', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-custom-ext-dependencies', env: {CI: ''}}, err => {
-		t.ok(killed);
-		t.ifError(err);
-		t.end();
-	});
-
-	let buffer = '';
-	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
-		if (buffer.includes('2 tests passed') && !passedFirst) {
-			touch.sync(path.join(__dirname, '../fixture/watcher/with-custom-ext-dependencies/setup.js'));
-			buffer = '';
-			passedFirst = true;
-		} else if (buffer.includes('2 tests passed') && !killed) {
-			child.kill();
-			killed = true;
-		}
-	});
-});
-
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
@@ -156,7 +82,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 	});
 });
 
-test('watcher does not rerun test files when files change that are neither tests, helpers nor sources', t => {
+test('watcher does not rerun test files when ignored files change', t => {
 	let killed = false;
 
 	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/ignored-files', env: {CI: ''}}, err => {

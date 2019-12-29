@@ -1,7 +1,8 @@
 'use strict';
+const path = require('path');
 const babelManager = require('./lib/babel-manager');
 const normalizeExtensions = require('./lib/extensions');
-const {hasExtension, normalizeGlobs, classify} = require('./lib/globs');
+const {classify, hasExtension, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
 
 const configCache = new Map();
@@ -27,31 +28,49 @@ function load(projectDir, overrides) {
 		configCache.set(projectDir, {conf, babelProvider});
 	}
 
-	let ignoreBabelExtensions = false;
-	if (overrides) {
-		conf = {...conf, ...overrides};
-		if (overrides.extensions) {
-			// Ignore extensions from the Babel config. Assume all extensions are
-			// provided in the override.
-			ignoreBabelExtensions = true;
+	const extensions = overrides && overrides.extensions ?
+		normalizeExtensions(overrides.extensions) :
+		normalizeExtensions(conf.extensions, babelProvider);
+
+	let helperPatterns = [];
+	if (overrides && overrides.helpers !== undefined) {
+		if (!Array.isArray(overrides.helpers) || overrides.helpers.length === 0) {
+			throw new Error('The \'helpers\' override must be an array containing glob patterns.');
 		}
+
+		helperPatterns = normalizePatterns(overrides.helpers);
 	}
 
-	const extensions = normalizeExtensions(conf.extensions, ignoreBabelExtensions ? undefined : babelProvider);
-	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions)};
+	const globs = {
+		cwd: projectDir,
+		...normalizeGlobs({
+			extensions,
+			files: overrides && overrides.files ? overrides.files : conf.files
+		})
+	};
+
+	const classifyForESLint = file => {
+		const {isTest} = classify(file, globs);
+		let isHelper = false;
+		if (!isTest && hasExtension(globs.extensions, file)) {
+			isHelper = path.basename(file).startsWith('_') || (helperPatterns.length > 0 && matches(normalizeFileForMatching(projectDir, file), helperPatterns));
+		}
+
+		return {isHelper, isTest};
+	};
 
 	const helper = Object.freeze({
-		classifyFile: file => classify(file, globs),
+		classifyFile: classifyForESLint,
 		classifyImport: importPath => {
 			if (hasExtension(globs.extensions, importPath)) {
 				// The importPath has one of the test file extensions: we can classify
 				// it directly.
-				return classify(importPath, globs);
+				return classifyForESLint(importPath);
 			}
 
 			// Add the first extension. If multiple extensions are available, assume
 			// patterns are not biased to any particular extension.
-			return classify(`${importPath}.${globs.extensions[0]}`, globs);
+			return classifyForESLint(`${importPath}.${globs.extensions[0]}`);
 		}
 	});
 	helperCache.set(cacheKey, helper);

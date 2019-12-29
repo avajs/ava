@@ -2,6 +2,8 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/06-configuration.md)
 
+**This documents the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/06-configuration.md) documentation instead.**
+
 All of the [CLI options][CLI] can be configured in the `ava` section of either your `package.json` file, or an `ava.config.js` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore files, prefix the pattern with an `!` (exclamation mark).
@@ -15,12 +17,6 @@ To ignore files, prefix the pattern with an `!` (exclamation mark).
 			"test/**/*",
 			"!test/exclude-files-in-this-directory",
 			"!**/exclude-files-with-this-name.*"
-		],
-		"helpers": [
-			"**/helpers/**/*"
-		],
-		"sources": [
-			"src/**/*"
 		],
 		"match": [
 			"*oo",
@@ -45,10 +41,9 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 ## Options
 
 - `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
-- `helpers`: an array of glob patterns to select helper files. Files matched here are never considered as tests. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
-- `sources`: an array of glob patterns to match files that, when changed, cause tests to be re-run (when in watch mode). See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md#source-files-and-test-files)
+- `ignoredByWatcher`: an array of glob patterns to match files that, even if changed, are ignored by the watcher. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
-- `cache`: cache compiled test and helper files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
+- `cache`: cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`

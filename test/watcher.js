@@ -145,7 +145,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs(files, undefined, sources, ['js']), resolveTestsFrom: process.cwd()});
+	const start = (specificFiles, ignoredByWatcher) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs({files, ignoredByWatcher, extensions: ['js']}), projectDir: process.cwd()});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -179,29 +179,30 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	};
 
-	test('watches for default source file changes, as well as test files', t => {
+	test('watches for all file changes, except for the ignored ones', t => {
 		t.plan(2);
 		start();
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['**/*.snap', 'ava.config.js', 'package.json', '**/*.js', ...files],
+			['**/*'],
 			{
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js'],
 				ignoreInitial: true
 			}
 		]);
 	});
 
-	test('watched source files are configurable', t => {
+	test('ignored files are configurable', t => {
 		t.plan(2);
-		start(null, ['foo.js', '!bar.js', 'baz.js', '!qux.js']);
+		const ignoredByWatcher = ['!foo.js', 'bar.js', '!baz.js', 'qux.js'];
+		start(null, ignoredByWatcher);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(files),
+			['**/*'],
 			{
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'bar.js', 'qux.js'],
 				ignoreInitial: true
 			}
 		]);
@@ -723,7 +724,7 @@ group('chokidar', (beforeEach, test, group) => {
 		api.run.returns(Promise.resolve(runStatus));
 		start();
 
-		emitChokidar('foo');
+		emitChokidar('foo', 'foo.js');
 		return debounce().then(() => {
 			t.ok(api.run.calledOnce);
 		});
@@ -809,7 +810,7 @@ group('chokidar', (beforeEach, test, group) => {
 			runStatusEmitter.emit('stateChange', {type: 'dependencies', testFile, dependencies});
 		};
 
-		const seed = sources => {
+		const seed = ignoredByWatcher => {
 			let done;
 			api.run.returns(new Promise(resolve => {
 				done = () => {
@@ -817,7 +818,7 @@ group('chokidar', (beforeEach, test, group) => {
 				};
 			}));
 
-			const watcher = start(null, sources);
+			const watcher = start(null, ignoredByWatcher);
 			const files = [path.join('test', '1.js'), path.join('test', '2.js')];
 			const absFiles = files.map(relFile => path.resolve(relFile));
 			apiEmitter.emit('run', {
@@ -931,17 +932,17 @@ group('chokidar', (beforeEach, test, group) => {
 
 		[
 			{
-				desc: 'only tracks source dependencies',
-				sources: ['dep-1.js']
+				desc: 'does not track ignored dependencies',
+				ignoredByWatcher: ['dep-2.js']
 			},
 			{
 				desc: 'exclusion patterns affect tracked source dependencies',
-				sources: ['!dep-2.js']
+				ignoredByWatcher: ['dep-2.js']
 			}
 		].forEach(variant => {
 			test(variant.desc, t => {
 				t.plan(2);
-				seed(variant.sources);
+				seed(variant.ignoredByWatcher);
 
 				// `dep-2.js` isn't treated as a source and therefore it's not tracked as
 				// a dependency for `test/2.js`. Pretend Chokidar detected a change to
@@ -960,8 +961,8 @@ group('chokidar', (beforeEach, test, group) => {
 			});
 		});
 
-		test('uses default source patterns', t => {
-			t.plan(4);
+		test('uses default ignoredByWatcher patterns', t => {
+			t.plan(2);
 			seed();
 
 			emitDependencies(path.join('test', '1.js'), [path.resolve('package.json'), path.resolve('index.js'), path.resolve('lib/util.js')]);
@@ -978,18 +979,6 @@ group('chokidar', (beforeEach, test, group) => {
 					clearLogOnNextRun: true,
 					runVector: 2
 				}]);
-
-				change('foo.bar');
-				return debounce();
-			}).then(() => {
-				t.ok(api.run.calledThrice);
-				// Expect all tests to be rerun since `foo.bar` is not a tracked
-				// dependency
-				t.strictDeepEqual(api.run.thirdCall.args, [[], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 3
-				}]);
 			});
 		});
 
@@ -997,7 +986,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.plan(2);
 
 			// Ensure each directory is treated as containing sources
-			seed(['**/*']);
+			seed();
 
 			// Synthesize an excluded file for each directory that's ignored by
 			// default. Apply deeper nesting for each file.
@@ -1031,43 +1020,6 @@ group('chokidar', (beforeEach, test, group) => {
 			});
 		});
 
-		test('ignores dependencies outside of the current working directory', t => {
-			t.plan(4);
-			seed(['**/*.js', '..foo.js']);
-
-			emitDependencies(path.resolve(path.join('test', '1.js')), [path.resolve('../outside.js')]);
-			emitDependencies(path.resolve(path.join('test', '2.js')), [path.resolve('..foo.js')]);
-			// Pretend Chokidar detected a change to verify (normally Chokidar would
-			// also be ignoring this file but hey)
-			change(path.join('..', 'outside.js'));
-
-			api.run.returns(Promise.resolve(runStatus));
-			return debounce().then(() => {
-				t.ok(api.run.calledTwice);
-				// If `../outside.js` was tracked as a dependency of test/1.js this would
-				// have caused `test/1.js` to be rerun. Instead expect all tests to be
-				// rerun. This is somewhat artifical: normally changes to `../outside.js`
-				// wouldn't even be picked up. However this lets us test dependency
-				// tracking without directly inspecting the internal state of the
-				// watcher.
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 2
-				}]);
-
-				change('..foo.js');
-				return debounce();
-			}).then(() => {
-				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [[path.resolve(path.join('test', '2.js'))], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 3
-				}]);
-			});
-		});
-
 		test('logs a debug message when a dependent test is found', t => {
 			t.plan(2);
 			seed();
@@ -1086,7 +1038,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(debug.calledThrice);
-				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Helpers & sources remain that cannot be traced to specific tests: %O', [path.resolve('cannot-be-mapped.js')]]);
+				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Files remain that cannot be traced to specific tests: %O', [path.resolve('cannot-be-mapped.js')]]);
 				t.strictDeepEqual(debug.thirdCall.args, ['ava:watcher', 'Rerunning all tests']);
 			});
 		});
