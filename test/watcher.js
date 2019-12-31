@@ -187,6 +187,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
 			['**/*'],
 			{
+				cwd: process.cwd(),
 				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js'],
 				ignoreInitial: true
 			}
@@ -202,6 +203,7 @@ group('chokidar', (beforeEach, test, group) => {
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
 			['**/*'],
 			{
+				cwd: process.cwd(),
 				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'bar.js', 'qux.js'],
 				ignoreInitial: true
 			}
