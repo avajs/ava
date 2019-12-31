@@ -22,7 +22,77 @@ test('ignores relativeness in patterns', t => {
 	t.end();
 });
 
-test('isTest', t => {
+test('isTest with defaults', t => {
+	const options = {
+		...globs.normalizeGlobs({
+			extensions: ['js']
+		}),
+		cwd: fixture()
+	};
+
+	function isTest(file) {
+		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
+	}
+
+	function notTest(file) {
+		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
+	}
+
+	isTest('__tests__/foo.js');
+	isTest('__tests__/foo/bar.js');
+	isTest('foo.spec.js');
+	isTest('foo.test.js');
+	isTest('test-foo.js');
+	isTest('test.js');
+	isTest('foo/test.js');
+	isTest('test/foo.js');
+	isTest('tests/foo.js');
+	notTest('foo-bar.js');
+	notTest('foo.js');
+	notTest('foo/blah.js');
+	notTest('bar/foo.js');
+	notTest('bar/foo-bar/baz/buz.js');
+	notTest('bar/baz/buz.js');
+	notTest('bar.js');
+	notTest('bar/bar.js');
+	notTest('_foo-bar.js');
+	notTest('foo/_foo-bar.js');
+	notTest('foo-bar.txt');
+	notTest('node_modules/foo.js');
+	notTest('fixtures/foo.js');
+	notTest('helpers/foo.js');
+	notTest('__tests__/__helper__/foo.js');
+	notTest('__tests__/__helper__/test.js');
+	notTest('__tests__/__helpers__/foo.js');
+	notTest('__tests__/__helpers__/test.js');
+	notTest('__tests__/__fixture__/foo.js');
+	notTest('__tests__/__fixture__/test.js');
+	notTest('__tests__/__fixtures__/foo.js');
+	notTest('__tests__/__fixtures__/test.js');
+	isTest('__tests__/helper/foo.js');
+	isTest('__tests__/fixtures/foo.js');
+	notTest('test/helper/foo.js');
+	notTest('test/helper/test.js');
+	notTest('test/helpers/foo.js');
+	notTest('test/helpers/test.js');
+	notTest('test/fixture/foo.js');
+	notTest('test/fixture/test.js');
+	notTest('test/fixtures/foo.js');
+	notTest('test/fixtures/test.js');
+	notTest('tests/helper/foo.js');
+	notTest('tests/helper/test.js');
+	notTest('tests/helpers/foo.js');
+	notTest('tests/helpers/test.js');
+	notTest('tests/fixture/foo.js');
+	notTest('tests/fixture/test.js');
+	notTest('tests/fixtures/foo.js');
+	notTest('tests/fixtures/test.js');
+	isTest('tests/__helper__/test.js');
+	isTest('tests/__fixtures__/test.js');
+	t.end();
+});
+
+test('isTest with patterns', t => {
 	const options = {
 		...globs.normalizeGlobs({
 			files: ['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],

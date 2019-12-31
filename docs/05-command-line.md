@@ -53,7 +53,20 @@ AVA searches for test files using the following patterns:
 * `**/tests/**/*.js`
 * `**/__tests__/**/*.js`
 
-Files inside `node_modules` are *always* ignored. So are files starting with `_`.
+Files inside `node_modules` are *always* ignored. So are files starting with `_`. Additionally, files matching these patterns are ignored by default, unless different patterns are configured:
+
+* `**/__tests__/**/__helper__/**/*`
+* `**/__tests__/**/__helpers__/**/*`
+* `**/__tests__/**/__fixture__/**/*`
+* `**/__tests__/**/__fixtures__/**/*`
+* `**/test/**/helper/**/*`
+* `**/test/**/helpers/**/*`
+* `**/test/**/fixture/**/*`
+* `**/test/**/fixtures/**/*`
+* `**/tests/**/helper/**/*`
+* `**/tests/**/helpers/**/*`
+* `**/tests/**/fixture/**/*`
+* `**/tests/**/fixtures/**/*`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
