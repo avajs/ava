@@ -377,7 +377,10 @@ test('enhanced assertion formatting necessary whitespace and empty strings', t =
 	];
 
 	t.plan(15);
-	const api = apiCreator({babelConfig: true});
+	const api = apiCreator({
+		files: ['test/fixture/enhanced-assertion-formatting.js'],
+		babelConfig: true
+	});
 	const errors = [];
 	api.on('run', plan => {
 		plan.status.on('stateChange', evt => {
