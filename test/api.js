@@ -21,7 +21,6 @@ function apiCreator(options = {}) {
 	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
 	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions});
-	options.resolveTestsFrom = options.resolveTestsFrom || options.projectDir;
 	const instance = new Api(options);
 
 	return instance;
@@ -548,7 +547,7 @@ test('caching can be disabled', t => {
 	del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 	const api = apiCreator({
-		resolveTestsFrom: path.join(__dirname, 'fixture/caching'),
+		projectDir: path.join(__dirname, 'fixture/caching'),
 		cacheEnabled: false
 	});
 

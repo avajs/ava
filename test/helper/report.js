@@ -82,7 +82,6 @@ const run = (type, reporter, match = []) => {
 		experiments: {},
 		match,
 		babelProvider,
-		resolveTestsFrom: projectDir,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '10s' : undefined,
 		concurrency: 1,
