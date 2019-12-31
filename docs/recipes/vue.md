@@ -53,9 +53,9 @@ You can find more information about setting up Babel with AVA in [`@ava/babel`](
 ## Sample snapshot test
 
 ```js
-import test from 'ava';
-import Vue from 'vue';
-import Component from 'component.vue';
+const test = require('ava');
+const Vue = require('vue');
+const Component = require('component.vue');
 
 test('renders', t => {
 	const vm = new Vue(Component).$mount();

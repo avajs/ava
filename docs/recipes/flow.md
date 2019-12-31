@@ -34,7 +34,7 @@ Create a `test.js` file.
 
 ```js
 // @flow
-import test from 'ava';
+const test = require('ava');
 
 const getFoo = () => 'foo';
 
@@ -49,8 +49,8 @@ By default, the type of `t.context` will be the empty object (`{}`). AVA exposes
 
 ```js
 // @flow
-import anyTest from 'ava';
-import type {TestInterface} from 'ava';
+const anyTest = require('ava');
+const type {TestInterface} = require('ava');
 
 const test: TestInterface<{foo: string}> = (anyTest: any);
 
@@ -79,7 +79,7 @@ The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an 
 
 ```js
 // @flow
-import test from 'ava';
+const test = require('ava');
 
 class CustomError extends Error {
 	parent: Error;

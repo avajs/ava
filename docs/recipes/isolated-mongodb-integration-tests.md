@@ -23,8 +23,8 @@ In your test file, import the module, and run the server.
 **Make sure to run the server at the start of your file, outside of any test cases.**
 
 ```js
-import test from 'ava';
-import {MongoDBServer} from 'mongomem';
+const test = require('ava');
+const {MongoDBServer} = require('mongomem');
 
 test.before('start server', async t => {
 	await MongoDBServer.start();

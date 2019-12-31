@@ -82,7 +82,7 @@ By default AVA executes tests concurrently. This can cause problems if your test
 Take this contrived example:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 let count = 0;
 const incr = async () => {
@@ -109,7 +109,7 @@ test('increment twice', async t => {
 Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 let count = 0;
 const incr = async () => {
