@@ -45,7 +45,9 @@ Examples:
 
 AVA searches for test files using the following patterns:
 
-* `**/test.js`
+* `test.js`
+* `src/test.js`
+* `source/test.js`
 * `**/test-*.js`
 * `**/*.spec.js`
 * `**/*.test.js`
