@@ -44,7 +44,7 @@ test('isTest with defaults', t => {
 	isTest('foo.test.js');
 	isTest('test-foo.js');
 	isTest('test.js');
-	isTest('foo/test.js');
+	notTest('foo/test.js');
 	isTest('test/foo.js');
 	isTest('tests/foo.js');
 	notTest('foo-bar.js');
