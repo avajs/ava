@@ -1,5 +1,6 @@
 {
   "ava": {
+    "files": ["*.*"],
     "babel": true
   }
 }
