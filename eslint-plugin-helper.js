@@ -1,8 +1,7 @@
 'use strict';
-const path = require('path');
 const babelManager = require('./lib/babel-manager');
 const normalizeExtensions = require('./lib/extensions');
-const {classify, hasExtension, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
+const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
 
 const configCache = new Map();
@@ -53,7 +52,8 @@ function load(projectDir, overrides) {
 		const {isTest} = classify(file, globs);
 		let isHelper = false;
 		if (!isTest && hasExtension(globs.extensions, file)) {
-			isHelper = path.basename(file).startsWith('_') || (helperPatterns.length > 0 && matches(normalizeFileForMatching(projectDir, file), helperPatterns));
+			file = normalizeFileForMatching(projectDir, file);
+			isHelper = isHelperish(file) || (helperPatterns.length > 0 && matches(file, helperPatterns));
 		}
 
 		return {isHelper, isTest};
