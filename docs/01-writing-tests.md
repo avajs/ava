@@ -21,7 +21,7 @@ To declare a test you call the `test` function you imported from AVA. Provide th
 **Note:** In order for the [enhanced assertion messages](./03-assertions.md#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 test('my passing test', t => {
 	t.pass();
@@ -272,7 +272,7 @@ test('context is unicorn', t => {
 Helper files can determine the filename of the test being run by reading `test.meta.file`.  This eliminates the need to pass `__filename` from the test to helpers.
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 console.log('Test currently being run: ', test.meta.file);
 ```

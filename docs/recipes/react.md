@@ -39,9 +39,9 @@ $ npm install --save-dev enzyme react-addons-test-utils react-dom
 Then you can use Enzyme straight away:
 
 ```js
-import test from 'ava';
-import React from 'react';
-import {shallow} from 'enzyme';
+const test = require('ava');
+const React = require('react');
+const {shallow} = require('enzyme');
 
 const Foo = ({children}) =>
 	<div className="Foo">
@@ -91,9 +91,9 @@ $ npm install --save-dev jsx-test-helpers
 Usage example:
 
 ```js
-import test from 'ava';
-import React from 'react';
-import {renderJSX, JSX} from 'jsx-test-helpers';
+const test = require('ava');
+const React = require('react');
+const {renderJSX, JSX} = require('jsx-test-helpers');
 
 const Foo = ({children}) =>
 	<div className="Foo">
