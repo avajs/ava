@@ -55,7 +55,7 @@ AVA searches for test files using the following patterns:
 * `**/tests/**/*.js`
 * `**/__tests__/**/*.js`
 
-Files inside `node_modules` are *always* ignored. So are files starting with `_`. Additionally, files matching these patterns are ignored by default, unless different patterns are configured:
+Files inside `node_modules` are *always* ignored. So are files starting with `_` or inside of directories that start with a single `_`. Additionally, files matching these patterns are ignored by default, unless different patterns are configured:
 
 * `**/__tests__/**/__helper__/**/*`
 * `**/__tests__/**/__helpers__/**/*`

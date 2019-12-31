@@ -61,6 +61,7 @@ test('isTest with defaults', t => {
 	notTest('node_modules/foo.js');
 	notTest('fixtures/foo.js');
 	notTest('helpers/foo.js');
+	notTest('_foo/bar.js');
 	notTest('__tests__/__helper__/foo.js');
 	notTest('__tests__/__helper__/test.js');
 	notTest('__tests__/__helpers__/foo.js');
@@ -71,6 +72,8 @@ test('isTest with defaults', t => {
 	notTest('__tests__/__fixtures__/test.js');
 	isTest('__tests__/helper/foo.js');
 	isTest('__tests__/fixtures/foo.js');
+	isTest('test/foo.js');
+	notTest('test/_foo/bar.js');
 	notTest('test/helper/foo.js');
 	notTest('test/helper/test.js');
 	notTest('test/helpers/foo.js');
