@@ -1,41 +1,39 @@
-# Setting up AVA with Selenium WebDriverJs
+# Setting up AVA with Selenium WebDriverJS
 
-This recipe shows you how to use the Selenium WebDriverJs (official JavaScript implementation) with AVA to test web applications.
+This recipe shows you how to use the Selenium WebDriverJS (official JavaScript implementation) with AVA to test web apps.
 
 ## Setup
 
-This recipe uses the following libraries:
+This recipe uses the following packages:
 
 1. [selenium-webdriver](https://www.npmjs.com/package/selenium-webdriver)
 2. [chromedriver](https://www.npmjs.com/package/chromedriver)
 
-Install the above two libraries by running the following commands:
+Install them with:
 
 ```console
-$ npm install selenium-webdriver
-$ npm install chromedriver
+$ npm install selenium-webdriver chromedriver
 ```
 
-As part of this recipe, we will use Selenium to verify web searches on [Bing](http://www.bing.com) and [Google](http://www.google.com)
+As part of this recipe, we will use Selenium to verify web searches on [Bing](https://www.bing.com) and [Google](https://www.google.com)
 
 ## Test files
 
-Create the following files
+Create the following files:
 
-`./test/bingtest.js`
+- `./test/bingtest.js`
+- `./test/googletest.js`
 
-`./test/googletest.js`
-
-In both files, let's first include the libraries
+In both files, let's first include the packages:
 
 ```js
 import test from 'ava';
-import {Builder, By, Key, until} from'selenium-webdriver';
+import {Builder, By, Key, until} from 'selenium-webdriver';
 
-require("chromedriver");
+require('chromedriver');
 ```
 
-In the `bingtest.js` file, add the following code, which tests whether searching for 'webdriver' on Bing, returns results
+In the `bingtest.js` file, add the following code, which tests whether searching for `webdriver` on Bing, returns results.
 
 ```js
 test('Bing Search', async t => {
@@ -89,7 +87,9 @@ We can run all the tests, by the following command
 ```console
 npm test
 ```
-Since I ran the above command on a laptop with 4 CPU cores, AVA ran both `bingtest.js` and `googletest.js` in parallel. See below output
+
+Since I ran the above command on a laptop with 4 CPU cores, AVA ran both `bingtest.js` and `googletest.js` in parallel. See below output.
+
 ```console
 DevTools listening on ws://127.0.0.1:49852/devtools/browser/adfcad21-9612-46ff-adc3-09adc0737f4a
 
@@ -101,6 +101,7 @@ DevTools listening on ws://127.0.0.1:49855/devtools/browser/8f6b7206-ea2b-4d41-b
 ```
 
 Dependending upon the number of CPU cores, those many test files will run at the same time. This count can be changed either via terminal (--concurrency or -c) or via the `"ava"` section in the package.json. For e.g.
+
 ```js
 "ava":{    
     "concurrency": 1,
@@ -113,6 +114,7 @@ The `concurrency: 1` value will only allow AVA to run one file at a time. It how
 The `verbose: true` value will enable verbose output which helps readability IMO.
 
 Now if we run the same `npm test` command
+
 ```console
 DevTools listening on ws://127.0.0.1:49720/devtools/browser/9ebf4394-447b-4916-91cc-692d06d88896
   √ bingtest » Bing Search (7.2s)
@@ -125,4 +127,5 @@ DevTools listening on ws://127.0.0.1:49757/devtools/browser/ac12c2da-eeed-40d8-9
 
   3 tests passed
 ```
+
 As you can see from the output, AVA ran the `bingtest.js` file first, waited for the only test to complete and then ran `googletest.js` file next where both the tests ran in parallel.
