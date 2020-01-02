@@ -119,18 +119,18 @@ const run = (type, reporter, match = []) => {
 		unique: true
 	}).sort();
 	if (type !== 'watch') {
-		return api.run(files).then(() => {
+		return api.run({files}).then(() => {
 			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}).then(() => {
+	return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: true, previousFailures: 2, runVector: 2});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 3});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
 	}).then(() => {
 		reporter.endRun();
 	});

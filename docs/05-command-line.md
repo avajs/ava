@@ -3,18 +3,19 @@
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
 
 ```console
-ava <files>
-ava debug <file>
+ava [<pattern>...]
+ava debug [<pattern>...]
 ava reset-cache
 
 Commands:
-  ava              Run tests                                           [default]
-  ava debug        Activate Node.js inspector and run the test file
-  ava reset-cache  Reset AVA's compilation cache and exit
+  ava [<pattern>...]        Run tests                                  [default]
+  ava debug [<pattern>...]  Activate Node.js inspector and run a single test
+                            file
+  ava reset-cache           Reset AVA's compilation cache and exit
 
 Positionals:
-  files  Paths to individual test files. Leave empty if you want AVA to search
-         for files instead.                                             [string]
+  pattern  Glob patterns to select what test files to run. Leave empty if you
+           want AVA to run all test files instead                       [string]
 
 Options:
   --version               Show version number                          [boolean]
@@ -33,8 +34,7 @@ Options:
                           e.g. 10s, 2m)                                 [string]
   --update-snapshots, -u  Update snapshots                             [boolean]
   --verbose, -v           Enable verbose output                        [boolean]
-  --watch, -w             Re-run tests when files change
-                                                                       [boolean]
+  --watch, -w             Re-run tests when files change               [boolean]
 
 Examples:
   ava

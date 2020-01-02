@@ -162,6 +162,12 @@
 				"rules": {
 					"promise/prefer-await-to-then": "off"
 				}
+			},
+			{
+				"files": "test/fixture/**/*.js",
+				"rules": {
+					"import/no-extraneous-dependencies": "off"
+				}
 			}
 		]
 	},
