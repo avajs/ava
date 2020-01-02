@@ -7,7 +7,7 @@
 
   [1ma [90m[2m›[22m[1m[39m fails[22m
 
-  [90m~/test/fixture/report/failfast2/a.js:3[39m
+  [90ma.js:3[39m
 
    [90m2:[39m                               
   [41m 3: test('fails', t => t.fail()); [49m

@@ -67,8 +67,10 @@ exports.sanitizers = {
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
+exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
+
 const run = (type, reporter, match = []) => {
-	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
+	const projectDir = exports.projectDir(type);
 
 	const babelProvider = babelManager({projectDir}).main({config: true});
 
@@ -145,4 +147,4 @@ exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', repor
 exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
-exports.edgeCases = reporter => run('edge-cases', reporter);
+exports.edgeCases = reporter => run('edgeCases', reporter);

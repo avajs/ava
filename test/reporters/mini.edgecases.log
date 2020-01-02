@@ -3,21 +3,21 @@
 ---tty-stream-chunk-separator
 * ---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js[39m---tty-stream-chunk-separator
+* [31m✖ No tests found in ava-import-no-test-declaration.js[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file[39m---tty-stream-chunk-separator
+* [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
 [?25h
-  [31m✖ No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file[39m
-  [31m✖ No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js[39m
-  [31m✖ No tests found in test/fixture/report/edge-cases/throws.js[39m
-  [31m✖ No tests found in test/fixture/report/edge-cases/import-and-use-test-member.js[39m
+  [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
+  [31m✖ No tests found in ava-import-no-test-declaration.js[39m
+  [31m✖ No tests found in throws.js[39m
+  [31m✖ No tests found in import-and-use-test-member.js[39m
 
   [31m2 uncaught exceptions[39m
 
-  [1mUncaught exception in test/fixture/report/edge-cases/throws.js[22m
+  [1mUncaught exception in throws.js[22m
 
-  [90m~/test/fixture/report/edge-cases/throws.js:1[39m
+  [90mthrows.js:1[39m
 
   [41m 1: throw new Error('throws');[49m
    [90m2:[39m                           
@@ -26,9 +26,9 @@
 
 
 
-  [1mUncaught exception in test/fixture/report/edge-cases/import-and-use-test-member.js[22m
+  [1mUncaught exception in import-and-use-test-member.js[22m
 
-  [90m~/test/fixture/report/edge-cases/import-and-use-test-member.js:3[39m
+  [90mimport-and-use-test-member.js:3[39m
 
    [90m2:[39m                             
   [41m 3: test('pass', t => t.pass());[49m
