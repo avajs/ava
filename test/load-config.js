@@ -72,10 +72,9 @@ test('loads config from factory function', t => {
 	t.end();
 });
 
-test('supports require() inside config file', t => {
+test('does not support require() inside config.js files', t => {
 	changeDir('require');
-	const conf = loadConfig();
-	t.is(conf.files, 'config-file-cjs-test-value');
+	t.throws(loadConfig, /require\(\) is not available in ava\.config\.js\. Use a \.cjs file instead/);
 	t.end();
 });
 

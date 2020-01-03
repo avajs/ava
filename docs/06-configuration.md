@@ -64,7 +64,7 @@ To use an `ava.config.js` file:
 
 1. It must be in the same directory as your `package.json`
 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
-3. You must use `export default`, though [`require()`](https://nodejs.org/api/modules.html#modules_require_id) is available to load non-ES modules
+3. You must use `export default`. ["Module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope) nor ESM import syntax is available
 
 The config file must have a default export, using ES modules. It can either be a plain object or a factory function which returns a plain object:
 
@@ -105,6 +105,8 @@ Note that the final configuration must not be a promise.
 The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file is processed just like an `ava.config.js` file would be. When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js` files. The configuration is not merged.
 
 The configuration file *must* be in the same directory as the `package.json` file.
+
+**FIXME: Change example to use .cjs files**
 
 You can use this to customize configuration for a specific test run. For instance, you may want to run unit tests separately from integration tests:
 
