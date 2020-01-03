@@ -1,4 +1,4 @@
-import test from '../..';
+const test = require('../..');
 
 test('NODE_ENV is test', t => {
 	t.plan(1);

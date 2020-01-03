@@ -12,7 +12,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 Each test file is run in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another. It's also great for performance on modern multi-core processors, allowing multiple test files to execute in parallel.
 
-AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to, or environment-specific Babel options). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
+AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
 
 ## Declaring tests
 
@@ -21,7 +21,7 @@ To declare a test you call the `test` function you imported from AVA. Provide th
 **Note:** In order for the [enhanced assertion messages](./03-assertions.md#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 test('my passing test', t => {
 	t.pass();
@@ -272,7 +272,7 @@ test('context is unicorn', t => {
 Helper files can determine the filename of the test being run by reading `test.meta.file`.  This eliminates the need to pass `__filename` from the test to helpers.
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 console.log('Test currently being run: ', test.meta.file);
 ```

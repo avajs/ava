@@ -145,7 +145,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = (specificFiles, sources) => new Subject({reporter, api, files: specificFiles || [], globs: normalizeGlobs(files, undefined, sources, ['js']), resolveTestsFrom: process.cwd()});
+	const start = ignoredByWatcher => new Subject({reporter, api, filter: [], globs: normalizeGlobs({files, ignoredByWatcher, extensions: ['js']}), projectDir: process.cwd()});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);
@@ -179,29 +179,32 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	};
 
-	test('watches for default source file changes, as well as test files', t => {
+	test('watches for all file changes, except for the ignored ones', t => {
 		t.plan(2);
 		start();
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['**/*.snap', 'ava.config.js', 'package.json', '**/*.js', ...files],
+			['**/*'],
 			{
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
+				cwd: process.cwd(),
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js'],
 				ignoreInitial: true
 			}
 		]);
 	});
 
-	test('watched source files are configurable', t => {
+	test('ignored files are configurable', t => {
 		t.plan(2);
-		start(null, ['foo.js', '!bar.js', 'baz.js', '!qux.js']);
+		const ignoredByWatcher = ['!foo.js', 'bar.js', '!baz.js', 'qux.js'];
+		start(ignoredByWatcher);
 
 		t.ok(chokidar.watch.calledOnce);
 		t.strictDeepEqual(chokidar.watch.firstCall.args, [
-			['foo.js', 'baz.js'].concat(files),
+			['**/*'],
 			{
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*'],
+				cwd: process.cwd(),
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'bar.js', 'qux.js'],
 				ignoreInitial: true
 			}
 		]);
@@ -219,7 +222,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 		start();
 		t.ok(api.run.calledOnce);
-		t.strictDeepEqual(api.run.firstCall.args, [[], defaultApiOptions]);
+		t.strictDeepEqual(api.run.firstCall.args, [{files: [], filter: [], runtimeOptions: defaultApiOptions}]);
 
 		// The endRun and lineWriter.writeLine methods are only called after the run promise fulfils
 		t.ok(reporter.endRun.notCalled);
@@ -289,11 +292,11 @@ group('chokidar', (beforeEach, test, group) => {
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
 				// No explicit files are provided
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 
 				// Finish is only called after the run promise fulfils
 				t.ok(reporter.endRun.calledOnce);
@@ -331,20 +334,20 @@ group('chokidar', (beforeEach, test, group) => {
 			api.run.returns(Promise.resolve(resetRunStatus()));
 			change();
 			return debounce().then(() => {
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
 					runVector: 2
-				}]);
+				}}]);
 
 				change();
 				return debounce();
 			}).then(() => {
-				t.strictDeepEqual(api.run.thirdCall.args, [[], {
+				t.strictDeepEqual(api.run.thirdCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 3
-				}]);
+				}}]);
 			});
 		});
 	});
@@ -469,11 +472,11 @@ group('chokidar', (beforeEach, test, group) => {
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
 				// The `test.js` file is provided
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve('test.js')], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve('test.js')], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 
 				// The endRun method is only called after the run promise fulfills
 				t.ok(reporter.endRun.calledOnce);
@@ -497,11 +500,11 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// The test files are provided
-			t.strictDeepEqual(api.run.secondCall.args, [[path.resolve('test-one.js'), path.resolve('test-two.js')], {
+			t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve('test-one.js'), path.resolve('test-two.js')], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
-			}]);
+			}}]);
 		});
 	});
 
@@ -515,11 +518,11 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// No explicit files are provided
-			t.strictDeepEqual(api.run.secondCall.args, [[], {
+			t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
-			}]);
+			}}]);
 		});
 	});
 
@@ -545,11 +548,11 @@ group('chokidar', (beforeEach, test, group) => {
 		add('foo-baz.js');
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
-			t.strictDeepEqual(api.run.secondCall.args, [[path.resolve('foo-bar.js'), path.resolve('foo-baz.js')], {
+			t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve('foo-bar.js'), path.resolve('foo-baz.js')], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
-			}]);
+			}}]);
 		});
 	});
 
@@ -564,11 +567,11 @@ group('chokidar', (beforeEach, test, group) => {
 		return debounce(2).then(() => {
 			t.ok(api.run.calledTwice);
 			// `_foo.bar` cannot be a test file, thus the initial tests are run
-			t.strictDeepEqual(api.run.secondCall.args, [[], {
+			t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
 				runVector: 2
-			}]);
+			}}]);
 		});
 	});
 
@@ -581,35 +584,38 @@ group('chokidar', (beforeEach, test, group) => {
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[], {...defaultApiOptions, runVector: 2}]);
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {...defaultApiOptions, runVector: 2}}]);
 
 				stdin.write(`\t${input}  \n`);
 				return delay();
 			}).then(() => {
 				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [[], {...defaultApiOptions, runVector: 3}]);
+				t.strictDeepEqual(api.run.thirdCall.args, [{files: [], filter: [], runtimeOptions: {...defaultApiOptions, runVector: 3}}]);
 			});
 		});
 	}
 
-	test('reruns previous tests and update snapshots when "u" is entered on stdin', t => {
+	test('reruns previous tests and update snapshots when "u" is entered on stdin', async t => {
 		const options = {...defaultApiOptions, updateSnapshots: true};
-		const previousFiles = ['test.js'];
-		t.plan(4);
+		t.plan(5);
 		api.run.returns(Promise.resolve(runStatus));
-		start(previousFiles).observeStdin(stdin);
+		start().observeStdin(stdin);
+
+		add('test-one.js');
+		await debounce();
+		t.ok(api.run.calledTwice);
 
 		stdin.write('u\n');
-		return delay().then(() => {
-			t.ok(api.run.calledTwice);
-			t.strictDeepEqual(api.run.secondCall.args, [previousFiles, {...options, runVector: 2}]);
+		await delay();
 
-			stdin.write('\tu  \n');
-			return delay();
-		}).then(() => {
-			t.ok(api.run.calledThrice);
-			t.strictDeepEqual(api.run.thirdCall.args, [previousFiles, {...options, runVector: 3}]);
-		});
+		t.ok(api.run.calledThrice);
+		t.strictDeepEqual(api.run.thirdCall.args, [{files: [path.resolve('test-one.js')], filter: [], runtimeOptions: {...options, runVector: 3}}]);
+
+		stdin.write('\tu  \n');
+		await delay();
+
+		t.is(api.run.callCount, 4);
+		t.strictDeepEqual(api.run.lastCall.args, [{files: [path.resolve('test-one.js')], filter: [], runtimeOptions: {...options, runVector: 4}}]);
 	});
 
 	for (const input of ['r', 'rs', 'u']) {
@@ -621,12 +627,12 @@ group('chokidar', (beforeEach, test, group) => {
 			stdin.write(`${input}\n`);
 			return delay().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
 					runVector: 2,
 					updateSnapshots: input === 'u'
-				}]);
+				}}]);
 			});
 		});
 
@@ -723,7 +729,7 @@ group('chokidar', (beforeEach, test, group) => {
 		api.run.returns(Promise.resolve(runStatus));
 		start();
 
-		emitChokidar('foo');
+		emitChokidar('foo', 'foo.js');
 		return debounce().then(() => {
 			t.ok(api.run.calledOnce);
 		});
@@ -809,7 +815,7 @@ group('chokidar', (beforeEach, test, group) => {
 			runStatusEmitter.emit('stateChange', {type: 'dependencies', testFile, dependencies});
 		};
 
-		const seed = sources => {
+		const seed = ignoredByWatcher => {
 			let done;
 			api.run.returns(new Promise(resolve => {
 				done = () => {
@@ -817,7 +823,7 @@ group('chokidar', (beforeEach, test, group) => {
 				};
 			}));
 
-			const watcher = start(null, sources);
+			const watcher = start(ignoredByWatcher);
 			const files = [path.join('test', '1.js'), path.join('test', '2.js')];
 			const absFiles = files.map(relFile => path.resolve(relFile));
 			apiEmitter.emit('run', {
@@ -839,11 +845,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-1.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(path.join('test', '1.js'))], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.js'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -854,11 +860,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -870,14 +876,15 @@ group('chokidar', (beforeEach, test, group) => {
 			change(path.join('test', '2.js'));
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [
-					[path.resolve(path.join('test', '2.js')), path.resolve(path.join('test', '1.js'))],
-					{
+				t.strictDeepEqual(api.run.secondCall.args, [{
+					files: [path.resolve(path.join('test', '2.js')), path.resolve(path.join('test', '1.js'))],
+					filter: [],
+					runtimeOptions: {
 						...defaultApiOptions,
 						clearLogOnNextRun: true,
 						runVector: 2
 					}
-				]);
+				}]);
 			});
 		});
 
@@ -889,11 +896,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-1.js');
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(path.join('test', '1.js'))], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.js'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -905,11 +912,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-3.js');
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(path.join('test', '2.js'))], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '2.js'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -921,27 +928,27 @@ group('chokidar', (beforeEach, test, group) => {
 			change('dep-4.js');
 			return debounce().then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(path.join('test', '1.js'))], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.js'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
 		[
 			{
-				desc: 'only tracks source dependencies',
-				sources: ['dep-1.js']
+				desc: 'does not track ignored dependencies',
+				ignoredByWatcher: ['dep-2.js']
 			},
 			{
 				desc: 'exclusion patterns affect tracked source dependencies',
-				sources: ['!dep-2.js']
+				ignoredByWatcher: ['dep-2.js']
 			}
 		].forEach(variant => {
 			test(variant.desc, t => {
 				t.plan(2);
-				seed(variant.sources);
+				seed(variant.ignoredByWatcher);
 
 				// `dep-2.js` isn't treated as a source and therefore it's not tracked as
 				// a dependency for `test/2.js`. Pretend Chokidar detected a change to
@@ -951,17 +958,17 @@ group('chokidar', (beforeEach, test, group) => {
 					t.ok(api.run.calledTwice);
 					// Expect all tests to be rerun since `dep-2.js` is not a tracked
 					// dependency
-					t.strictDeepEqual(api.run.secondCall.args, [[], {
+					t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 						...defaultApiOptions,
 						clearLogOnNextRun: true,
 						runVector: 2
-					}]);
+					}}]);
 				});
 			});
 		});
 
-		test('uses default source patterns', t => {
-			t.plan(4);
+		test('uses default ignoredByWatcher patterns', t => {
+			t.plan(2);
 			seed();
 
 			emitDependencies(path.join('test', '1.js'), [path.resolve('package.json'), path.resolve('index.js'), path.resolve('lib/util.js')]);
@@ -973,23 +980,11 @@ group('chokidar', (beforeEach, test, group) => {
 			api.run.returns(Promise.resolve(runStatus));
 			return debounce(3).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.join('test', '1.js')], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.join('test', '1.js')], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
-
-				change('foo.bar');
-				return debounce();
-			}).then(() => {
-				t.ok(api.run.calledThrice);
-				// Expect all tests to be rerun since `foo.bar` is not a tracked
-				// dependency
-				t.strictDeepEqual(api.run.thirdCall.args, [[], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 3
-				}]);
+				}}]);
 			});
 		});
 
@@ -997,7 +992,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.plan(2);
 
 			// Ensure each directory is treated as containing sources
-			seed(['**/*']);
+			seed();
 
 			// Synthesize an excluded file for each directory that's ignored by
 			// default. Apply deeper nesting for each file.
@@ -1023,48 +1018,11 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(api.run.calledTwice);
 				// Since the excluded files are not tracked as a dependency, all tests
 				// are expected to be rerun
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
-			});
-		});
-
-		test('ignores dependencies outside of the current working directory', t => {
-			t.plan(4);
-			seed(['**/*.js', '..foo.js']);
-
-			emitDependencies(path.resolve(path.join('test', '1.js')), [path.resolve('../outside.js')]);
-			emitDependencies(path.resolve(path.join('test', '2.js')), [path.resolve('..foo.js')]);
-			// Pretend Chokidar detected a change to verify (normally Chokidar would
-			// also be ignoring this file but hey)
-			change(path.join('..', 'outside.js'));
-
-			api.run.returns(Promise.resolve(runStatus));
-			return debounce().then(() => {
-				t.ok(api.run.calledTwice);
-				// If `../outside.js` was tracked as a dependency of test/1.js this would
-				// have caused `test/1.js` to be rerun. Instead expect all tests to be
-				// rerun. This is somewhat artifical: normally changes to `../outside.js`
-				// wouldn't even be picked up. However this lets us test dependency
-				// tracking without directly inspecting the internal state of the
-				// watcher.
-				t.strictDeepEqual(api.run.secondCall.args, [[], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 2
-				}]);
-
-				change('..foo.js');
-				return debounce();
-			}).then(() => {
-				t.ok(api.run.calledThrice);
-				t.strictDeepEqual(api.run.thirdCall.args, [[path.resolve(path.join('test', '2.js'))], {
-					...defaultApiOptions,
-					clearLogOnNextRun: true,
-					runVector: 3
-				}]);
+				}}]);
 			});
 		});
 
@@ -1086,7 +1044,7 @@ group('chokidar', (beforeEach, test, group) => {
 			change('cannot-be-mapped.js');
 			return debounce().then(() => {
 				t.ok(debug.calledThrice);
-				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Helpers & sources remain that cannot be traced to specific tests: %O', [path.resolve('cannot-be-mapped.js')]]);
+				t.strictDeepEqual(debug.secondCall.args, ['ava:watcher', 'Files remain that cannot be traced to specific tests: %O', [path.resolve('cannot-be-mapped.js')]]);
 				t.strictDeepEqual(debug.thirdCall.args, ['ava:watcher', 'Rerunning all tests']);
 			});
 		});
@@ -1164,11 +1122,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t1);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t1Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 	});
@@ -1269,11 +1227,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1Absolute, t2Absolute, t3Absolute, t4Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute, t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1286,11 +1244,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1Absolute, t2Absolute, t4Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1302,11 +1260,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t2);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t1Absolute, t2Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1321,11 +1279,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(2).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t3Absolute, t4Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1339,11 +1297,11 @@ group('chokidar', (beforeEach, test, group) => {
 			change(t4);
 			return debounce(4).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[t3Absolute, t4Absolute], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 	});
@@ -1451,12 +1409,12 @@ group('chokidar', (beforeEach, test, group) => {
 
 			return rerun(other, path.resolve(other)).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(other)], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(other)], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					previousFailures: 2,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1481,12 +1439,12 @@ group('chokidar', (beforeEach, test, group) => {
 
 			return rerun(first, path.resolve(first)).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(first)], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(first)], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					previousFailures: 1,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1511,12 +1469,12 @@ group('chokidar', (beforeEach, test, group) => {
 
 			return rerun(same, path.resolve(same)).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(same)], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(same)], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					previousFailures: 0,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 
@@ -1545,12 +1503,12 @@ group('chokidar', (beforeEach, test, group) => {
 
 			return debounce().then(() => rerun(other, path.resolve(other))).then(() => {
 				t.ok(api.run.calledTwice);
-				t.strictDeepEqual(api.run.secondCall.args, [[path.resolve(other)], {
+				t.strictDeepEqual(api.run.secondCall.args, [{files: [path.resolve(other)], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					previousFailures: 0,
 					clearLogOnNextRun: true,
 					runVector: 2
-				}]);
+				}}]);
 			});
 		});
 	});

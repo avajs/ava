@@ -61,35 +61,29 @@ exports.sanitizers = {
 	experimentalWarning: str => str.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
-	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
+	slow: str => str.replace(/(?<slow>slow.+?)\(\d+m?s\)/g, '$<slow> (000ms)'),
 	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
-	traces: str => str.replace(/(\[...)?[^\s'[]+\s\((.+\.js:\d+:\d+)\)/g, '$1$2'),
+	traces: str => str.replace(/(\[...)?[^\s'[]+\s\((.+\.js:\d+:\d+)\)/g, '$1$2'), // eslint-disable-line prefer-named-capture-group
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
-const run = (type, reporter, match = []) => {
-	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
+exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-	const babelProvider = babelManager({experiments: {}, projectDir});
-	const compileEnhancements = true;
-	babelProvider.validateConfig({testOptions: {}}, compileEnhancements);
+const run = (type, reporter, match = []) => {
+	const projectDir = exports.projectDir(type);
+
+	const babelProvider = babelManager({projectDir}).main({config: true});
 
 	const options = {
-		extensions: {
-			all: ['js'],
-			enhancementsOnly: [],
-			babelOnly: ['js']
-		},
+		extensions: ['js'],
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
 		cacheEnabled: true,
-		compileEnhancements,
 		experiments: {},
 		match,
 		babelProvider,
-		resolveTestsFrom: projectDir,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '10s' : undefined,
 		concurrency: 1,
@@ -100,14 +94,12 @@ const run = (type, reporter, match = []) => {
 	let pattern = '*.js';
 
 	if (type === 'typescript') {
-		options.extensions.all.push('ts');
-		options.extensions.enhancementsOnly.push('ts');
-		options.compileEnhancements = false;
+		options.extensions.push('ts');
 		options.require = ['ts-node/register'];
 		pattern = '*.ts';
 	}
 
-	options.globs = normalizeGlobs(undefined, undefined, undefined, options.extensions.all);
+	options.globs = normalizeGlobs({extensions: options.extensions});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
@@ -129,18 +121,18 @@ const run = (type, reporter, match = []) => {
 		unique: true
 	}).sort();
 	if (type !== 'watch') {
-		return api.run(files).then(() => {
+		return api.run({files}).then(() => {
 			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}).then(() => {
+	return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: true, previousFailures: 2, runVector: 2});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 3});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
 	}).then(() => {
 		reporter.endRun();
 	});
@@ -155,4 +147,4 @@ exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', repor
 exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
-exports.edgeCases = reporter => run('edge-cases', reporter);
+exports.edgeCases = reporter => run('edgeCases', reporter);

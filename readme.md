@@ -25,7 +25,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Includes TypeScript definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
-- [Write your tests using the latest JavaScript syntax](#latest-javascript-support)
+- [Write your tests using the latest JavaScript syntax](https://github.com/avajs/babel)
 - [Promise support](./docs/01-writing-tests.md#promise-support)
 - [Async function support](./docs/01-writing-tests.md#async-function-support)
 - [Observable support](./docs/01-writing-tests.md#observable-support)
@@ -75,7 +75,7 @@ Don't forget to configure the `test` script in your `package.json` as per above.
 Create a file named `test.js` in the project root directory:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 test('foo', t => {
 	t.pass();
@@ -121,16 +121,6 @@ AVA adds code excerpts and clean diffs for actual and expected values. If values
 
 AVA automatically removes unrelated lines in stack traces, allowing you to find the source of an error much faster, as seen above.
 
-### Latest JavaScript support
-
-AVA uses [Babel 7](https://babeljs.io) so you can use the latest JavaScript syntax in your tests. There is no extra setup required. You don't need to be using Babel in your own project for this to work either.
-
-We aim to support all [finished syntax proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md), as well as all syntax from ratified JavaScript versions (e.g. ES2017). See our [`@ava/stage-4`](https://github.com/avajs/babel-preset-stage-4) preset for the currently supported proposals.
-
-Please note that we do not add or modify built-ins. For example, if you use [`Object.fromEntries()`](https://github.com/tc39/proposal-object-from-entries) in your tests, they will crash in Node.js 10 which does not implement this method.
-
-You can disable this syntax support, or otherwise customize AVA's Babel pipeline. See our [Babel recipe] for more details.
-
 ### Parallel runs in CI
 
 AVA automatically detects whether your CI environment supports parallel builds. Each build will run a subset of all test files, while still making sure all tests get executed. See the [`ci-parallel-vars`](https://www.npmjs.com/package/ci-parallel-vars) package for a list of supported CI environments.
@@ -161,7 +151,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
 - [Flow](docs/recipes/flow.md)
-- [Configuring Babel][Babel recipe]
+- [Configuring Babel](https://github.com/avajs/babel)
 - [Using ES modules](docs/recipes/es-modules.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
 - [Testing React components](docs/recipes/react.md)
@@ -243,5 +233,3 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 </div>
-
-[Babel recipe]: docs/recipes/babel.md

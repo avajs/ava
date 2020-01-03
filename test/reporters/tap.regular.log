@@ -1,15 +1,15 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# TypeError: _.default.serial.test is not a function
-not ok 1 - TypeError: _.default.serial.test is not a function
+# TypeError: test.serial.test is not a function
+not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
-    message: _.default.serial.test is not a function
+    message: test.serial.test is not a function
     at: 'bad-test-chain.js:3:13'
   ...
 ---tty-stream-chunk-separator
-# test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
-not ok 2 - test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
+# bad-test-chain.js exited with a non-zero exit code: 1
+not ok 2 - bad-test-chain.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 # unhandled-rejection › passes
 ok 3 - unhandled-rejection [90m[2m›[22m[39m passes
@@ -43,8 +43,8 @@ not ok 8 - Error: Can't catch me
     at: 'uncaught-exception.js:5:9'
   ...
 ---tty-stream-chunk-separator
-# test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1
-not ok 9 - test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1
+# uncaught-exception.js exited with a non-zero exit code: 1
+not ok 9 - uncaught-exception.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throws
 not ok 10 - traces-in-t-throws [90m[2m›[22m[39m throws

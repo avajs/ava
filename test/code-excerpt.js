@@ -1,13 +1,13 @@
 'use strict';
-require('../lib/chalk').set();
+require('../lib/chalk').set({level: 1});
 
 const fs = require('fs');
 const tempWrite = require('temp-write');
-const chalk = require('chalk');
+const {Instance: ChalkInstance} = require('chalk');
 const {test} = require('tap');
 const codeExcerpt = require('../lib/code-excerpt');
 
-chalk.enabled = true;
+const chalk = new ChalkInstance({level: 1});
 
 test('read code excerpt', t => {
 	const file = tempWrite.sync([

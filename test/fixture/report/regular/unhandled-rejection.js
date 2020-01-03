@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 const passes = t => {
 	Promise.reject(new Error('Can\'t catch me'));

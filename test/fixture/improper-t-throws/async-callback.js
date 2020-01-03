@@ -1,4 +1,4 @@
-import test from '../../..';
+const test = require('../../..');
 
 test.cb('test', t => {
 	setTimeout(() => {

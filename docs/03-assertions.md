@@ -84,7 +84,7 @@ test('skip assertion', t => {
 
 ## Enhanced assertion messages
 
-AVA comes with [`power-assert`](https://github.com/power-assert-js/power-assert) built-in, giving you more descriptive assertion messages.
+Enabling [Babel](./recipes/babel.md) will also enable [`power-assert`](https://github.com/power-assert-js/power-assert), giving you more descriptive assertion messages.
 
 Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
 
@@ -154,7 +154,7 @@ This won't give you as nice an experience as you'd get with the [built-in assert
 You'll have to configure AVA to not fail tests if no assertions are executed, because AVA can't tell if custom assertions pass. Set the `failWithoutAssertions` option to `false` in AVA's [`package.json` configuration](./06-configuration.md).
 
 ```js
-import assert from 'assert';
+const assert = require('assert');
 
 test('custom assertion', t => {
 	assert(true);

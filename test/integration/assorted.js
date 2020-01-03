@@ -27,26 +27,10 @@ test('timeout', t => {
 // 	}, 2000);
 // });
 
-test('Should throw error if passed file does not exist', t => {
-	execCli('no-such-file.js', (err, e, stdout) => {
-		t.ok(err);
-		t.match(stdout, /no-such-file\.js does not exist\./);
-		t.end();
-	});
-});
-
-test('Should throw error if passed file is a directory', t => {
-	execCli('ava-paths', (err, e, stdout) => {
-		t.ok(err);
-		t.match(stdout, /ava-paths is not a test file\./);
-		t.end();
-	});
-});
-
 test('include anonymous functions in error reports', t => {
 	execCli('error-in-anonymous-function.js', (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
+		t.match(stdout, /error-in-anonymous-function\.js:4:8/);
 		t.end();
 	});
 });
@@ -169,16 +153,15 @@ test('additional arguments are forwarded to the worker', t => {
 	});
 });
 
-test('--reset-cache resets cache', t => {
+test('reset-cache resets cache', t => {
 	const cacheDir = path.join(__dirname, '..', 'fixture', 'reset-cache', 'node_modules', '.cache', 'ava');
-	execCli([], {dirname: 'fixture/reset-cache'}, err => {
-		t.ifError(err);
-		t.true(fs.readdirSync(cacheDir).length > 0);
+	fs.mkdirSync(cacheDir, {recursive: true});
+	fs.writeFileSync(path.join(cacheDir, 'file'), '');
+	t.true(fs.readdirSync(cacheDir).length > 0);
 
-		execCli(['--reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
-			t.ifError(err);
-			t.true(fs.readdirSync(cacheDir).length === 0);
-			t.end();
-		});
+	execCli(['reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
+		t.ifError(err);
+		t.true(fs.readdirSync(cacheDir).length === 0);
+		t.end();
 	});
 });
