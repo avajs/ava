@@ -3,8 +3,8 @@
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
 
 ```console
-ava [<pattern>[:<line-numbers>]...]
-ava debug [<pattern>[:<line-numbers>]...]
+ava [<pattern>...]
+ava debug [<pattern>...]
 ava reset-cache
 
 Commands:
@@ -15,7 +15,8 @@ Commands:
 
 Positionals:
   pattern  Glob patterns to select what test files to run. Leave empty if you
-           want AVA to run all test files instead                       [string]
+           want AVA to run all test files instead. Add a colon and specify line
+           numbers of specific tests to run                             [string]
 
 Options:
   --version               Show version number                          [boolean]
@@ -39,6 +40,7 @@ Options:
 Examples:
   ava
   ava test.js
+  ava test.js:4,7-9
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
@@ -150,13 +152,13 @@ test(function foo(t) {
 
 AVA lets you run tests exclusively by referring to their line numbers. Target a single line, a range of lines or both. You can select any line number of a test.
 
->**Format:** *Comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.*
+The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
 
-**Note:** *This feature is only available from the command line.*
+This feature is only available from the command line.
 
 ### Running a single test
 
-To only run a particular test in a file, append the line number of the test to the path passed to AVA.
+To only run a particular test in a file, append the line number of the test to the path or pattern passed to AVA.
 
 Running
 
@@ -180,13 +182,13 @@ for the following tests would result in:
 9: });
 ```
 
-**Note:** *Any line number between `2` and `4` would select the `unicorn` test above.*
+Any line number between `2` and `4` would select the `unicorn` test above.
 
 ### Running multiple tests
 
 To run multiple tests, either target them one by one or select a range of line numbers. As line numbers are given per file, you can run multiple files with different line numbers for each file. If the same file is provided multiple times, line numbers are merged and only run once.
 
-#### Examples
+### Examples
 
 Single line numbers:
 
@@ -212,12 +214,7 @@ Different files:
 npx ava test.js:3 test2.js:4,7-9
 ```
 
-**Note:** *Running a file with and without line numbers, line numbers takes precedence.*
-
-### Restrictions
-
-* At least one test needs to be selected by line numbers
-* The `--watch` option is *not* compatible with line numbers
+When running a file with and without line numbers, line numbers takes precedence.
 
 ## Resetting AVA's cache
 

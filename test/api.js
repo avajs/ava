@@ -663,7 +663,8 @@ test('select test by line number', async t => {
 	t.plan(2);
 
 	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
-	const api = apiCreator({lineNumbers: {[testFilePath]: [3]}});
+	const filter = [{pattern: '**/*', lineNumbers: [3]}];
+	const api = apiCreator();
 
 	api.on('run', plan => {
 		plan.status.on('stateChange', event => {
@@ -673,7 +674,7 @@ test('select test by line number', async t => {
 		});
 	});
 
-	const runStatus = await api.run([testFilePath]);
+	const runStatus = await api.run({filter, files: [testFilePath]});
 	t.is(runStatus.stats.selectedTests, 1);
 });
 
@@ -681,7 +682,8 @@ test('select serial test by line number', async t => {
 	t.plan(2);
 
 	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
-	const api = apiCreator({lineNumbers: {[testFilePath]: [12]}});
+	const filter = [{pattern: '**/*', lineNumbers: [12]}];
+	const api = apiCreator();
 
 	api.on('run', plan => {
 		plan.status.on('stateChange', event => {
@@ -691,7 +693,7 @@ test('select serial test by line number', async t => {
 		});
 	});
 
-	const runStatus = await api.run([testFilePath]);
+	const runStatus = await api.run({filter, files: [testFilePath]});
 	t.is(runStatus.stats.selectedTests, 1);
 });
 
@@ -699,7 +701,8 @@ test('select todo test by line number', async t => {
 	t.plan(4);
 
 	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
-	const api = apiCreator({lineNumbers: {[testFilePath]: [15]}});
+	const filter = [{pattern: '**/*', lineNumbers: [15]}];
+	const api = apiCreator();
 
 	api.on('run', plan => {
 		plan.status.on('stateChange', event => {
@@ -710,7 +713,7 @@ test('select todo test by line number', async t => {
 		});
 	});
 
-	const runStatus = await api.run([testFilePath]);
+	const runStatus = await api.run({filter, files: [testFilePath]});
 	t.is(runStatus.stats.selectedTests, 1);
 	t.is(runStatus.stats.todoTests, 1);
 });
@@ -719,7 +722,8 @@ test('select tests by line number range', async t => {
 	t.plan(3);
 
 	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
-	const api = apiCreator({lineNumbers: {[testFilePath]: [5, 6, 7]}});
+	const filter = [{pattern: '**/*', lineNumbers: [5, 6, 7]}];
+	const api = apiCreator();
 
 	api.on('run', plan => {
 		plan.status.on('stateChange', event => {
@@ -729,7 +733,7 @@ test('select tests by line number range', async t => {
 		});
 	});
 
-	const runStatus = await api.run([testFilePath]);
+	const runStatus = await api.run({filter, files: [testFilePath]});
 	t.is(runStatus.stats.selectedTests, 2);
 });
 
@@ -737,13 +741,14 @@ test('no test selected by line number => emit error', async t => {
 	t.plan(1);
 
 	const testFilePath = path.join(__dirname, 'fixture/line-numbers.js');
-	const api = apiCreator({lineNumbers: {[testFilePath]: [6]}});
+	const filter = [{pattern: '**/*', lineNumbers: [6]}];
+	const api = apiCreator();
 
 	api.on('error', message => {
 		t.is(message, 'No tests selected by line numbers.');
 	});
 
-	const runStatus = await api.run([testFilePath]);
+	const runStatus = await api.run({filter, files: [testFilePath]});
 	t.is(runStatus.stats.selectedTests, 0);
 });
 

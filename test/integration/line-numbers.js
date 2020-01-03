@@ -14,11 +14,3 @@ test('can select tests by line numbers', t => {
 		t.end();
 	});
 });
-
-test('bails when --watch is used while line numbers are given', t => {
-	execCli(['--watch', 'line-numbers.js:3'], {env: {CI: ''}}, (error, stdout, stderr) => {
-		t.is(error.code, 1);
-		t.match(stderr, 'Watch mode is not available when selecting individual line numbers.');
-		t.end();
-	});
-});
