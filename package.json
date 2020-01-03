@@ -104,6 +104,7 @@
 		"pkg-conf": "^3.1.0",
 		"plur": "^3.1.1",
 		"pretty-ms": "^5.1.0",
+		"read-pkg": "^5.2.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
 		"source-map-support": "^0.5.16",
