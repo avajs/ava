@@ -165,3 +165,11 @@ test('reset-cache resets cache', t => {
 		t.end();
 	});
 });
+
+test('selects .cjs test files', t => {
+	execCli('cjs.cjs', (err, stdout) => {
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
+	});
+});

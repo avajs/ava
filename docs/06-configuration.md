@@ -40,7 +40,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 ## Options
 
-- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
+- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `cjs` & `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
 - `ignoredByWatcher`: an array of glob patterns to match files that, even if changed, are ignored by the watcher. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
@@ -50,7 +50,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `extensions`: extensions of test files. Setting this overrides the default `"js"` value, so make sure to include that extension in the list
+- `extensions`: extensions of test files. Setting this overrides the default `["cjs", "js"]` value, so make sure to include those extensions in the list
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 
