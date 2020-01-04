@@ -10,21 +10,10 @@
 [?25h
   [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
   [31m✖ No tests found in ava-import-no-test-declaration.js[39m
-  [31m✖ No tests found in throws.js[39m
   [31m✖ No tests found in import-and-use-test-member.js[39m
+  [31m✖ No tests found in throws.js[39m
 
   [31m2 uncaught exceptions[39m
-
-  [1mUncaught exception in throws.js[22m
-
-  [90mthrows.js:1[39m
-
-  [41m 1: throw new Error('throws');[49m
-   [90m2:[39m                           
-
-  Error: throws
-
-
 
   [1mUncaught exception in import-and-use-test-member.js[22m
 
@@ -35,5 +24,16 @@
    [90m4:[39m                             
 
   TypeError: test is not a function
+
+
+
+  [1mUncaught exception in throws.js[22m
+
+  [90mthrows.js:1[39m
+
+  [41m 1: throw new Error('throws');[49m
+   [90m2:[39m                           
+
+  Error: throws
 
 ---tty-stream-chunk-separator

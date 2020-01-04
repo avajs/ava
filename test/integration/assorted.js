@@ -2,7 +2,6 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 const path = require('path');
-const makeDir = require('make-dir');
 const stripAnsi = require('strip-ansi');
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
@@ -94,7 +93,7 @@ test('workers ensure test files load the same version of ava', t => {
 
 	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
 	const targetInstall = path.join(target, 'node_modules/ava');
-	makeDir.sync(targetInstall);
+	fs.mkdirSync(targetInstall, {recursive: true});
 	fs.writeFileSync(
 		path.join(targetInstall, 'index.js'),
 		fs.readFileSync(path.join(__dirname, '../../index.js'))
