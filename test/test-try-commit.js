@@ -1,6 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({color: false});
+require('../lib/worker/options').set({chalkOptions: {level: 0}});
 
 const {test} = require('tap');
 const delay = require('delay');
