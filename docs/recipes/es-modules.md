@@ -16,7 +16,7 @@ First, install `esm`:
 $ npm install esm
 ```
 
-Configure it in your `package.json` or `ava.config.js` file, and add it to AVA's `"require"` option as well. Make sure to add it as the first item.
+Configure it in your `package.json` or `ava.config.*` file, and add it to AVA's `"require"` option as well. Make sure to add it as the first item.
 
 **`package.json`:**
 

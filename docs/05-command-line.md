@@ -20,8 +20,9 @@ Positionals:
 Options:
   --version               Show version number                          [boolean]
   --color                 Force color output                           [boolean]
-  --config                JavaScript file for AVA to read its config from,
-                          instead of using package.json or ava.config.js files
+  --config                Specific JavaScript file for AVA to read its config
+                          from, instead of using package.json or ava.config.*
+                          files
   --help                  Show help                                    [boolean]
   --concurrency, -c       Max number of test files running at the same time
                           (Default: CPU cores)                          [number]
