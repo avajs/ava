@@ -188,7 +188,7 @@ group('chokidar', (beforeEach, test, group) => {
 			['**/*'],
 			{
 				cwd: process.cwd(),
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js'],
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'ava.config.cjs'],
 				ignoreInitial: true
 			}
 		]);
@@ -204,7 +204,7 @@ group('chokidar', (beforeEach, test, group) => {
 			['**/*'],
 			{
 				cwd: process.cwd(),
-				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'bar.js', 'qux.js'],
+				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'ava.config.cjs', 'bar.js', 'qux.js'],
 				ignoreInitial: true
 			}
 		]);

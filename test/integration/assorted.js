@@ -165,3 +165,27 @@ test('reset-cache resets cache', t => {
 		t.end();
 	});
 });
+
+test('selects .cjs test files', t => {
+	execCli('cjs.cjs', (err, stdout) => {
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
+	});
+});
+
+test('refuses to load .mjs test files', t => {
+	execCli('mjs.mjs', (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
+		t.end();
+	});
+});
+
+test('refuses to load .js test files as ESM modules', t => {
+	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
+		t.end();
+	});
+});
