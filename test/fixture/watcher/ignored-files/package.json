@@ -1,6 +1,6 @@
 {
 	"ava": {
-		"files": ["test.js", "!ignore.js"],
-		"sources": ["source.js"]
+		"files": ["test.js"],
+		"ignoredByWatcher": ["ignored.js"]
 	}
 }

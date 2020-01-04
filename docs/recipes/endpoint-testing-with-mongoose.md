@@ -38,14 +38,14 @@ First, include the libraries you need:
 
 ```js
 // Libraries required for testing
-import test from 'ava'
-import request from 'supertest'
-import {MongoMemoryServer} from 'mongodb-memory-server'
-import mongoose from 'mongoose'
+const test = require('ava');
+const request = require('supertest');
+const {MongoMemoryServer} = require('mongodb-memory-server');
+const mongoose = require('mongoose');
 
 // Your server and models
-import app from '../server'
-import User from '../models/User'
+const app = require('../server');
+const User = require('../models/User');
 ```
 
 Next start the in-memory MongoDB instance and connect to Mongoose:

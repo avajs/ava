@@ -1,4 +1,4 @@
-import test from '../../..';
+const test = require('../../..');
 
 const assertNoColor = (t, stream) => {
 	t.true(stream.isTTY);

@@ -3,43 +3,52 @@
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
 
 ```console
-$ npx ava --help
+ava [<pattern>...]
+ava debug [<pattern>...]
+ava reset-cache
 
-  Usage
-    ava [<file> ...]
+Commands:
+  ava [<pattern>...]        Run tests                                  [default]
+  ava debug [<pattern>...]  Activate Node.js inspector and run a single test
+                            file
+  ava reset-cache           Reset AVA's compilation cache and exit
 
-  Options
-    --watch, -w             Re-run tests when tests and source files change
-    --match, -m             Only run tests with matching title (Can be repeated)
-    --update-snapshots, -u  Update snapshots
-    --fail-fast             Stop after first test failure
-    --timeout, -T           Set global timeout (milliseconds or human-readable, e.g. 10s, 2m)
-    --serial, -s            Run tests serially
-    --concurrency, -c       Max number of test files running at the same time (Default: CPU cores)
-    --verbose, -v           Enable verbose output
-    --tap, -t               Generate TAP output
-    --color                 Force color output
-    --no-color              Disable color output
-    --reset-cache           Reset AVA's compilation cache and exit
-    --config                JavaScript file for AVA to read its config from, instead of using package.json
-                            or ava.config.js files
+Positionals:
+  pattern  Glob patterns to select what test files to run. Leave empty if you
+           want AVA to run all test files instead                       [string]
 
-  Examples
-    ava
-    ava test.js test2.js
-    ava test-*.js
-    ava test
+Options:
+  --version               Show version number                          [boolean]
+  --color                 Force color output                           [boolean]
+  --config                Specific JavaScript file for AVA to read its config
+                          from, instead of using package.json or ava.config.*
+                          files
+  --help                  Show help                                    [boolean]
+  --concurrency, -c       Max number of test files running at the same time
+                          (Default: CPU cores)                          [number]
+  --fail-fast             Stop after first test failure                [boolean]
+  --match, -m             Only run tests with matching title (Can be repeated)
+                                                                        [string]
+  --serial, -s            Run tests serially                           [boolean]
+  --tap, -t               Generate TAP output                          [boolean]
+  --timeout, -T           Set global timeout (milliseconds or human-readable,
+                          e.g. 10s, 2m)                                 [string]
+  --update-snapshots, -u  Update snapshots                             [boolean]
+  --verbose, -v           Enable verbose output                        [boolean]
+  --watch, -w             Re-run tests when files change               [boolean]
 
-  The above relies on your shell expanding the glob patterns.
-  Without arguments, AVA uses the following patterns:
-    **/test.js **/test-*.js **/*.spec.js **/*.test.js **/test/**/*.js **/tests/**/*.js **/__tests__/**/*.js
+Examples:
+  ava
+  ava test.js
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
 
 AVA searches for test files using the following patterns:
 
-* `**/test.js`
+* `test.js`
+* `src/test.js`
+* `source/test.js`
 * `**/test-*.js`
 * `**/*.spec.js`
 * `**/*.test.js`
@@ -47,7 +56,20 @@ AVA searches for test files using the following patterns:
 * `**/tests/**/*.js`
 * `**/__tests__/**/*.js`
 
-Files inside `node_modules` are *always* ignored. So are files starting with `_`. These are treated as helpers.
+Files inside `node_modules` are *always* ignored. So are files starting with `_` or inside of directories that start with a single `_`. Additionally, files matching these patterns are ignored by default, unless different patterns are configured:
+
+* `**/__tests__/**/__helper__/**/*`
+* `**/__tests__/**/__helpers__/**/*`
+* `**/__tests__/**/__fixture__/**/*`
+* `**/__tests__/**/__fixtures__/**/*`
+* `**/test/**/helper/**/*`
+* `**/test/**/helpers/**/*`
+* `**/test/**/fixture/**/*`
+* `**/test/**/fixtures/**/*`
+* `**/tests/**/helper/**/*`
+* `**/tests/**/helpers/**/*`
+* `**/tests/**/fixture/**/*`
+* `**/tests/**/fixtures/**/*`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
 
@@ -127,7 +149,13 @@ test(function foo(t) {
 
 ## Resetting AVA's cache
 
-AVA caches the compiled test and helper files. It automatically recompiles these files when you change them. AVA tries its best to detect changes to your Babel configuration files, plugins and presets. If it seems like your latest Babel configuration isn't being applied, however, you can run AVA with the `--reset-cache` flag to reset AVA's cache. If set, all files in the `node_modules/.cache/ava` directory are deleted. Run AVA as normal to apply your new Babel configuration.
+AVA may cache certain files, especially when you use our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can reset the cache by running:
+
+```console
+npx ava reset-cache
+```
+
+This deletes all files in the `node_modules/.cache/ava` directory.
 
 ## Reporters
 

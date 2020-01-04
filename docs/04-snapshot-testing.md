@@ -13,9 +13,9 @@ export default HelloWorld;
 
 ```js
 // Your test
-import test from 'ava';
-import render from 'react-test-renderer';
-import HelloWorld from '.';
+const test = require('ava');
+const render = require('react-test-renderer');
+const HelloWorld = require('.');
 
 test('HelloWorld component', t => {
 	const tree = render.create(<HelloWorld/>).toJSON();

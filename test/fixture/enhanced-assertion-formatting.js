@@ -1,4 +1,4 @@
-import test from '../..';
+const test = require('../..');
 
 const foo = 'foo';
 

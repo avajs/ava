@@ -1,6 +1,5 @@
 {
 	"ava": {
-		"babel": false,
 		"extensions": ["js", "js", "jsx", "jsx"]
 	}
 }

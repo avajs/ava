@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 test('b passes', t => t.pass());
 

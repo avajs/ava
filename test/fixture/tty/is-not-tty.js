@@ -1,4 +1,4 @@
-import test from '../../..';
+const test = require('../../..');
 
 const assertNotTTY = (t, stream) => {
 	t.falsy(stream.isTTY);

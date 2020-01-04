@@ -2,40 +2,43 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-vscode.md)
 
-## Setup
+**This recipe describes the new `inspect` command in the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/debugging-with-vscode.md) documentation instead.**
 
-In the sidebar click the `Debug` handle.
+You can debug your tests using [Visual Studio Code](https://code.visualstudio.com/).
 
-Add a new configuration in the dropdown menu next to the green `Debug` button: `Add configuration`. This will open `launch.json` with all debug configurations.
+## Creating a launch configuration
 
-Add following to the `configurations` object:
+1. Open a workspace for your project.
+1. In the sidebar click the *Debug* handle.
+1. Create a `launch.json` file.
+1. Select the Node.js environment.
+1. Add following to the `configurations` object:
 
-```json
-{
-	"type": "node",
-	"request": "launch",
-	"name": "Run AVA test",
-	"program": "${workspaceFolder}/node_modules/ava/profile.js",
-	"args": [
-	  "${file}"
-	],
-	"skipFiles": [
-		"<node_internals>/**/*.js"
-	]
-}
-```
+  ```json
+  {
+    "type": "node",
+    "request": "launch",
+    "name": "Debug AVA test file",
+    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
+    "runtimeArgs": [
+      "debug",
+      "--break",
+      "${file}"
+    ],
+    "port": 9229,
+    "outputCapture": "std",
+    "skipFiles": [
+      "<node_internals>/**/*.js"
+    ]
+  }
+  ```
+1. Save your changes to the `launch.json` file.
 
-Save this configuration after you added it.
+## Using the debugger
 
-## Debug
+Open the file(s) you want to debug. You can set breakpoints or use the `debugger` keyword.
 
-> **Note:** The file you want to debug, must be open and active
-
-> **Note:** The breakpoints in VSCode are a bit buggy sometimes (especially with async code). `debugger;` always works fine.
-
-Set breakpoints in the code **or** write `debugger;` at the point where it should stop.
-
-Hit the green `Debug` button next to the list of configurations on the top left in the `Debug` view. Once the breakpoint is hit, you can evaluate variables and step through the code.
+Now, *with a test file open*, from the *Debug* menu run the *Debug AVA test file* configuration.
 
 ## Serial debugging
 
@@ -43,17 +46,21 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
 
 ```json
 {
-	"type": "node",
-	"request": "launch",
-	"name": "Run AVA test serially",
-	"program": "${workspaceFolder}/node_modules/ava/profile.js",
-	"args": [
-	  "${file}",
-	  "--serial"
-	],
-	"skipFiles": [
-		"<node_internals>/**/*.js"
-	]
+  "type": "node",
+  "request": "launch",
+  "name": "Debug AVA test file",
+  "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
+  "runtimeArgs": [
+    "debug",
+    "--break",
+    "--serial",
+    "${file}"
+  ],
+  "port": 9229,
+  "outputCapture": "std",
+  "skipFiles": [
+    "<node_internals>/**/*.js"
+  ]
 }
 ```
 

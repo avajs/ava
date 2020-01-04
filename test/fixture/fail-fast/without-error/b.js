@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 setTimeout(() => {
 	test.serial('pass', t => t.pass());

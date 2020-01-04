@@ -22,6 +22,7 @@ const run = (type, sanitizers = []) => t => {
 		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.traces, report.sanitizers.version]
 	});
 	const reporter = new MiniReporter({
+		projectDir: report.projectDir(type),
 		spinner: {
 			interval: 60 * 60 * 1000, // No need to update the spinner
 			color: false,

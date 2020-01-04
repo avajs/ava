@@ -2,7 +2,6 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 const path = require('path');
-const makeDir = require('make-dir');
 const stripAnsi = require('strip-ansi');
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
@@ -27,26 +26,10 @@ test('timeout', t => {
 // 	}, 2000);
 // });
 
-test('Should throw error if passed file does not exist', t => {
-	execCli('no-such-file.js', (err, e, stdout) => {
-		t.ok(err);
-		t.match(stdout, /no-such-file\.js does not exist\./);
-		t.end();
-	});
-});
-
-test('Should throw error if passed file is a directory', t => {
-	execCli('ava-paths', (err, e, stdout) => {
-		t.ok(err);
-		t.match(stdout, /ava-paths is not a test file\./);
-		t.end();
-	});
-});
-
 test('include anonymous functions in error reports', t => {
 	execCli('error-in-anonymous-function.js', (err, stdout) => {
 		t.ok(err);
-		t.match(stdout, /test\/fixture\/error-in-anonymous-function\.js:4:8/);
+		t.match(stdout, /error-in-anonymous-function\.js:4:8/);
 		t.end();
 	});
 });
@@ -110,7 +93,7 @@ test('workers ensure test files load the same version of ava', t => {
 
 	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
 	const targetInstall = path.join(target, 'node_modules/ava');
-	makeDir.sync(targetInstall);
+	fs.mkdirSync(targetInstall, {recursive: true});
 	fs.writeFileSync(
 		path.join(targetInstall, 'index.js'),
 		fs.readFileSync(path.join(__dirname, '../../index.js'))
@@ -169,16 +152,39 @@ test('additional arguments are forwarded to the worker', t => {
 	});
 });
 
-test('--reset-cache resets cache', t => {
+test('reset-cache resets cache', t => {
 	const cacheDir = path.join(__dirname, '..', 'fixture', 'reset-cache', 'node_modules', '.cache', 'ava');
-	execCli([], {dirname: 'fixture/reset-cache'}, err => {
-		t.ifError(err);
-		t.true(fs.readdirSync(cacheDir).length > 0);
+	fs.mkdirSync(cacheDir, {recursive: true});
+	fs.writeFileSync(path.join(cacheDir, 'file'), '');
+	t.true(fs.readdirSync(cacheDir).length > 0);
 
-		execCli(['--reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
-			t.ifError(err);
-			t.true(fs.readdirSync(cacheDir).length === 0);
-			t.end();
-		});
+	execCli(['reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
+		t.ifError(err);
+		t.true(fs.readdirSync(cacheDir).length === 0);
+		t.end();
+	});
+});
+
+test('selects .cjs test files', t => {
+	execCli('cjs.cjs', (err, stdout) => {
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
+	});
+});
+
+test('refuses to load .mjs test files', t => {
+	execCli('mjs.mjs', (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
+		t.end();
+	});
+});
+
+test('refuses to load .js test files as ESM modules', t => {
+	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
+		t.end();
 	});
 });

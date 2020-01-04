@@ -28,7 +28,6 @@ The [`question` label](https://github.com/avajs/ava/labels/question) is a good p
 
 You can use issue labels to discover issues you could help out with:
 
-* [`babel` issues](https://github.com/avajs/ava/labels/babel) relate to our Babel infrastructure
 * [`blocked` issues](https://github.com/avajs/ava/labels/blocked) need help getting unstuck
 * [`bug` issues](https://github.com/avajs/ava/labels/bug) are known bugs we'd like to fix
 * [`enhancement` issues](https://github.com/avajs/ava/labels/enhancement) are features we're open to including

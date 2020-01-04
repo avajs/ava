@@ -1,6 +1,6 @@
-import foo from 'nested/foo';
-import bar from 'the-path/bar';
-import test from '../..';
+const foo = require('nested/foo');
+const bar = require('the-path/bar');
+const test = require('../..');
 
 test('relative require', t => {
 	t.is(foo, 'bar');

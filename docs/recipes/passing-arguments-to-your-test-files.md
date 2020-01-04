@@ -6,7 +6,7 @@ You can pass command line arguments to your test files. Use the `--` argument te
 
 ```js
 // test.js
-import test from 'ava';
+const test = require('ava');
 
 test('argv', t => {
 	t.deepEqual(process.argv.slice(2), ['--hello', 'world']);

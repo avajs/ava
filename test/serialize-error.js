@@ -4,11 +4,10 @@ require('../lib/worker/options').set({});
 
 const fs = require('fs');
 const path = require('path');
-const makeDir = require('make-dir');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
 const tempWrite = require('temp-write');
-const uniqueTempDir = require('unique-temp-dir');
+const tempy = require('tempy');
 const {test} = require('tap');
 const avaAssert = require('../lib/assert');
 const beautifyStack = require('../lib/beautify-stack');
@@ -21,11 +20,11 @@ sourceMapSupport.install({environment: 'node'});
 
 const makeTempDir = () => {
 	if (process.platform !== 'win32') {
-		return uniqueTempDir({create: true});
+		return tempy.directory();
 	}
 
 	const dir = path.join(__dirname, '.tmpdir', `serialize-error.${process.pid}`);
-	makeDir.sync(dir);
+	fs.mkdirSync(dir, {recursive: true});
 	return dir;
 };
 
