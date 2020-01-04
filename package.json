@@ -114,7 +114,7 @@
 	},
 	"devDependencies": {
 		"@ava/babel": "^0.4.0",
-		"@types/node": "^10.17.11",
+		"@types/node": "^10.17.13",
 		"delay": "^4.3.0",
 		"esm": "^3.2.25",
 		"execa": "^4.0.0",
@@ -124,7 +124,7 @@
 		"react": "^16.12.0",
 		"react-test-renderer": "^16.12.0",
 		"replace-string": "^3.0.0",
-		"sinon": "^7.5.0",
+		"sinon": "^8.0.2",
 		"source-map-fixtures": "^2.1.0",
 		"tap": "^14.10.5",
 		"temp-write": "^4.0.0",
