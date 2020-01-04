@@ -17,6 +17,7 @@ function apiCreator(options = {}) {
 		options.babelProvider = babelManager({projectDir: options.projectDir}).main({config: options.babelConfig});
 	}
 
+	options.chalkOptions = {level: 0};
 	options.concurrency = 2;
 	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
