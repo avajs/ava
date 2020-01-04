@@ -59,7 +59,7 @@
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
 		"ansi-escapes": "^4.3.0",
-		"ansi-styles": "^4.2.0",
+		"ansi-styles": "^4.2.1",
 		"arrify": "^2.0.1",
 		"chalk": "^3.0.0",
 		"chokidar": "^3.3.1",
@@ -110,7 +110,7 @@
 		"trim-off-newlines": "^1.0.1",
 		"update-notifier": "^4.0.0",
 		"write-file-atomic": "^3.0.1",
-		"yargs": "^15.0.2"
+		"yargs": "^15.1.0"
 	},
 	"devDependencies": {
 		"@ava/babel": "^0.4.0",
