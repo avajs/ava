@@ -68,6 +68,8 @@ To use these files:
 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
 3. You must not both have an `ava.config.js` *and* an `ava.config.cjs` file
 
+AVA recognizes `ava.config.mjs` files but refuses to load them.
+
 ### `ava.config.js`
 
 For `ava.config.js` files you must use `export default`. You cannot use ["module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope). You cannot import dependencies.

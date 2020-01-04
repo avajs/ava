@@ -49,7 +49,7 @@ test('throws if configFile option is not in the same directory as the package.js
 
 test('throws if configFile option has an unsupported extension', t => {
 	changeDir('explicit-bad-extension');
-	t.throws(() => loadConfig({configFile: 'explicit.txt'}), /Config files must have .js or .cjs extensions/);
+	t.throws(() => loadConfig({configFile: 'explicit.txt'}), /Config files must have .js, .cjs or .mjs extensions/);
 	t.end();
 });
 
@@ -161,3 +161,15 @@ test('throws an error if both .js and .cjs configs are present', t => {
 	t.throws(loadConfig, /Conflicting configuration in ava.config.js and ava.config.cjs/);
 	t.end();
 });
+
+test('refuses to load .mjs config', t => {
+	changeDir('mjs');
+	t.throws(loadConfig, /AVA cannot yet load ava.config.mjs files/);
+	t.end();
+});
+
+test('throws an error if .js, .cjs and .mjs configs are present', t => {
+	changeDir('file-yes-cjs-yes');
+	t.throws(loadConfig, /Conflicting configuration in ava.config.js and ava.config.cjs & ava.config.mjs/);
+	t.end();
+}, {todo: true});
