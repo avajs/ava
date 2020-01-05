@@ -275,9 +275,9 @@ stderr
 
   [90mtraces-in-t-throws.js:12[39m
 
-   [90m11:[39m test('throws', t => {                     
-  [41m 12:   t.throws(() => throwError(), TypeError);[49m
-   [90m13:[39m });                                       
+   [90m11:[39m test('throws', t => {                                   
+  [41m 12:   t.throws(() => throwError(), {instanceOf: TypeError});[49m
+   [90m13:[39m });                                                     
 
   Function threw unexpected exception:
 
@@ -339,9 +339,9 @@ stderr
 
   [90mtraces-in-t-throws.js:24[39m
 
-   [90m23:[39m test('throwsAsync', t => {                     
-  [41m 24:   t.throwsAsync(() => throwError(), TypeError);[49m
-   [90m25:[39m });                                            
+   [90m23:[39m test('throwsAsync', t => {                                   
+  [41m 24:   t.throwsAsync(() => throwError(), {instanceOf: TypeError});[49m
+   [90m25:[39m });                                                          
 
   Function threw synchronously. Use `t.throws()` instead:
 
@@ -359,9 +359,9 @@ stderr
 
   [90mtraces-in-t-throws.js:28[39m
 
-   [90m27:[39m test('throwsAsync different error', t => {               
-  [41m 28:   return t.throwsAsync(returnRejectedPromise, TypeError);[49m
-   [90m29:[39m });                                                      
+   [90m27:[39m test('throwsAsync different error', t => {                             
+  [41m 28:   return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[49m
+   [90m29:[39m });                                                                    
 
   Returned promise rejected with unexpected exception:
 

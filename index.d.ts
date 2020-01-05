@@ -254,24 +254,6 @@ export interface ThrowsAssertion {
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(fn: () => any, constructor: Constructor, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(fn: () => any, regex: RegExp, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(fn: () => any, errorMessage: string, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations.
 	 */
 	<ThrownError extends Error>(fn: () => any, expectations: ThrowsExpectation, message?: string): ThrownError;
@@ -289,24 +271,6 @@ export interface ThrowsAsyncAssertion {
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must satisfy all expectations.
 	 */
 	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
@@ -316,24 +280,6 @@ export interface ThrowsAsyncAssertion {
 	 * rejection reason. You must await the result.
 	 */
 	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the

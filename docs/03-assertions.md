@@ -207,19 +207,19 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
-### `.throws(fn, [expected, [message]])`
+### `.throws(fn, [expectation, [message]])`
 
 Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
-`expected` can be a constructor, in which case the thrown error must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. You can also specify a matcher object with one or more of the following properties:
+`expectation` can be an object with one or more of the following properties:
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
-* `is`: the thrown error must be strictly equal to `expected.is`
+* `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
 
 Example:
 
@@ -231,27 +231,27 @@ const fn = () => {
 test('throws', t => {
 	const error = t.throws(() => {
 		fn();
-	}, TypeError);
+	}, {instanceOf: TypeError});
 
 	t.is(error.message, '🦄');
 });
 ```
 
-### `.throwsAsync(thrower, [expected, [message]])`
+### `.throwsAsync(thrower, [expectation, [message]])`
 
 Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
 The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
-`expected` can be a constructor, in which case the thrown error must be an instance of the constructor. It can be a string, which is compared against the thrown error's message, or a regular expression which is matched against this message. You can also specify a matcher object with one or more of the following properties:
+`expectation` can be an object with one or more of the following properties:
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
-* `is`: the thrown error must be strictly equal to `expected.is`
+* `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expected` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
 
 Example:
 
