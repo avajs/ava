@@ -58,7 +58,6 @@
 	],
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
-		"ansi-escapes": "^4.3.0",
 		"ansi-styles": "^4.2.1",
 		"arrify": "^2.0.1",
 		"chalk": "^3.0.0",
@@ -113,6 +112,7 @@
 	"devDependencies": {
 		"@ava/babel": "^0.5.0",
 		"@types/node": "^10.17.13",
+		"ansi-escapes": "^4.3.0",
 		"delay": "^4.3.0",
 		"esm": "^3.2.25",
 		"execa": "^4.0.0",
