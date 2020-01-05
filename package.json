@@ -110,7 +110,7 @@
 		"yargs": "^15.1.0"
 	},
 	"devDependencies": {
-		"@ava/babel": "^0.5.0",
+		"@ava/babel": "^0.6.0",
 		"@types/node": "^10.17.13",
 		"ansi-escapes": "^4.3.0",
 		"delay": "^4.3.0",
