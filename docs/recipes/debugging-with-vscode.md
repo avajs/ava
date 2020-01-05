@@ -15,22 +15,18 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
 1. Add following to the `configurations` object:
 
   ```json
-  {
+{
     "type": "node",
     "request": "launch",
-    "name": "Debug AVA test file",
-    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
-    "runtimeArgs": [
-      "debug",
-      "--break",
-      "${file}"
+    "name": "Run AVA test",
+    "program": "${workspaceRoot}/node_modules/ava/profile.js",
+    "args": [
+        "${file}"
     ],
-    "port": 9229,
-    "outputCapture": "std",
     "skipFiles": [
-      "<node_internals>/**/*.js"
+        "<node_internals>/**/*.js"
     ]
-  }
+}
   ```
 1. Save your changes to the `launch.json` file.
 
@@ -46,21 +42,17 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
 
 ```json
 {
-  "type": "node",
-  "request": "launch",
-  "name": "Debug AVA test file",
-  "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
-  "runtimeArgs": [
-    "debug",
-    "--break",
-    "--serial",
-    "${file}"
-  ],
-  "port": 9229,
-  "outputCapture": "std",
-  "skipFiles": [
-    "<node_internals>/**/*.js"
-  ]
+    "type": "node",
+    "request": "launch",
+    "name": "Run AVA test",
+    "program": "${workspaceRoot}/node_modules/ava/profile.js",
+    "args": [
+        "${file}",
+        "--serial"
+    ],
+    "skipFiles": [
+        "<node_internals>/**/*.js"
+    ]
 }
 ```
 
