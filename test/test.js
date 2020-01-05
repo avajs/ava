@@ -418,7 +418,7 @@ test('throws and notThrows work with promises', t => {
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
-			a.throwsAsync(delay.reject(10, {value: new Error('foo')}), 'foo'),
+			a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
 			a.notThrowsAsync(delay(20).then(() => {
 				asyncCalled = true;
 			}))
@@ -460,7 +460,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		const promises = [];
 		for (let i = 0; i < 3; i++) {
 			promises.push(
-				a.throwsAsync(delay.reject(10, {value: new Error('foo')}), 'foo'),
+				a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
 				a.notThrowsAsync(delay(10))
 			);
 		}
