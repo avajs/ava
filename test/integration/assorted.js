@@ -50,15 +50,6 @@ for (const tapFlag of ['--tap', '-t']) {
 	});
 }
 
-test('handles NODE_PATH', t => {
-	const nodePaths = `node-paths/modules${path.delimiter}node-paths/deep/nested`;
-
-	execCli('node-paths.js', {env: {NODE_PATH: nodePaths}}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
 test('works when no files are found', t => {
 	execCli([], {dirname: 'fixture/globs/no-files'}, (err, stdout) => {
 		t.is(err.code, 1);
