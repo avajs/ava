@@ -163,51 +163,51 @@ test('custom assertion', t => {
 
 ## Built-in assertions
 
-### `.pass([message])`
+### `.pass(message?)`
 
 Passing assertion.
 
-### `.fail([message])`
+### `.fail(message?)`
 
 Failing assertion.
 
-### `.assert(value, [message])`
+### `.assert(value, message?)`
 
 Asserts that `value` is truthy. This is [`power-assert`](#enhanced-assertion-messages) enabled.
 
-### `.truthy(value, [message])`
+### `.truthy(value, message?)`
 
 Assert that `value` is truthy.
 
-### `.falsy(value, [message])`
+### `.falsy(value, message?)`
 
 Assert that `value` is falsy.
 
-### `.true(value, [message])`
+### `.true(value, message?)`
 
 Assert that `value` is `true`.
 
-### `.false(value, [message])`
+### `.false(value, message?)`
 
 Assert that `value` is `false`.
 
-### `.is(value, expected, [message])`
+### `.is(value, expected, message?)`
 
 Assert that `value` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
-### `.not(value, expected, [message])`
+### `.not(value, expected, message?)`
 
 Assert that `value` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
-### `.deepEqual(value, expected, [message])`
+### `.deepEqual(value, expected, message?)`
 
 Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
-### `.notDeepEqual(value, expected, [message])`
+### `.notDeepEqual(value, expected, message?)`
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
-### `.throws(fn, [expectation, [message]])`
+### `.throws(fn, expectation?, message?)`
 
 Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
@@ -237,7 +237,7 @@ test('throws', t => {
 });
 ```
 
-### `.throwsAsync(thrower, [expectation, [message]])`
+### `.throwsAsync(thrower, expectation?, message?)`
 
 Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
@@ -272,11 +272,11 @@ test('rejects', async t => {
 });
 ```
 
-### `.notThrows(fn, [message])`
+### `.notThrows(fn, message?)`
 
 Assert that no error is thrown. `fn` must be a function which shouldn't throw.
 
-### `.notThrowsAsync(nonThrower, [message])`
+### `.notThrowsAsync(nonThrower, message?)`
 
 Assert that no error is thrown. `nonThrower` can be an async function which shouldn't throw, or a promise that should resolve.
 
@@ -288,16 +288,16 @@ test('resolves', async t => {
 });
 ```
 
-### `.regex(contents, regex, [message])`
+### `.regex(contents, regex, message?)`
 
 Assert that `contents` matches `regex`.
 
-### `.notRegex(contents, regex, [message])`
+### `.notRegex(contents, regex, message?)`
 
 Assert that `contents` does not match `regex`.
 
-### `.snapshot(expected, [message])`
-### `.snapshot(expected, [options], [message])`
+### `.snapshot(expected, message?)`
+### `.snapshot(expected, options?, message?)`
 
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
 
