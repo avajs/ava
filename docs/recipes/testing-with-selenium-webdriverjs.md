@@ -15,7 +15,7 @@ Install them with:
 $ npm install selenium-webdriver chromedriver
 ```
 
-As part of this recipe, we will use Selenium to verify web searches on [Bing](https://www.bing.com) and [Google](https://www.google.com)
+As part of this recipe, we will use Selenium to verify web searches on [Bing](https://www.bing.com) and [Google](https://www.google.com).
 
 ## Test files
 
@@ -27,8 +27,8 @@ Create the following files:
 In both files, let's first include the packages:
 
 ```js
-import test from 'ava';
-import {Builder, By, Key, until} from 'selenium-webdriver';
+const test = require('ava');
+const {Builder, By, Key, until} = require('selenium-webdriver');
 
 require('chromedriver');
 ```
@@ -37,58 +37,53 @@ In the `bingtest.js` file, add the following code, which tests whether searching
 
 ```js
 test('Bing Search', async t => {
-	let keyword = "webdriver";
-	let driver = new Builder().forBrowser("chrome").build();
-	await driver.get("http://www.bing.com");
-	await driver.findElement(By.name("q")).sendKeys(keyword + Key.ENTER);
-	await driver.wait(until.titleIs(keyword + " - Bing"));
-	t.true((await driver.findElements(By.css("#b_content #b_results li"))).length > 0);
+	const keyword = 'webdriver';
+	let driver = new Builder().forBrowser('chrome').build();
+	await driver.get('https://www.bing.com');
+	await driver.findElement(By.name('q')).sendKeys(keyword + Key.ENTER);
+	await driver.wait(until.titleIs(keyword + ' - Bing'));
+	t.true((await driver.findElements(By.css('#b_content #b_results li'))).length > 0);
 	await driver.close();
-}); 
+});
 ```
 
 In the `googletest.js` file, instead of a single test, lets add two tests, one each for the terms 'webdriver' and 'avajs'.
 
-Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](https://github.com/avajs/ava/blob/master/docs/01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each test()
+Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](https://github.com/avajs/ava/blob/master/docs/01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each `test()`.
 
 ```js
 test.beforeEach(async t => {
-	t.context.driver = new Builder().forBrowser("chrome").build();
-	await t.context.driver.get("http://www.google.com");
+	t.context.driver = new Builder().forBrowser('chrome').build();
+	await t.context.driver.get('https://www.google.com');
 });
 
-test.afterEach("cleanup", async t => await t.context.driver.close());
+test.afterEach('cleanup', async t => await t.context.driver.close());
 ```
 
-Now lets add the test code,
+Now lets add the test code:
 ```js
 test('Google Search for avajs', async t => {
-	let driver = t.context.driver;	
-	await searchGoogle(driver, "avajs");
-	t.true((await driver.findElement(By.id("resultStats")).getText()).includes("results"));
+	let driver = t.context.driver;
+	await searchGoogle(driver, 'avajs');
+	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
 
 test('Google Search for webdriver', async t => {
 	let driver = t.context.driver;
-	await searchGoogle(driver, "webdriver");
-	t.true((await driver.findElement(By.id("resultStats")).getText()).includes("results"));
+	await searchGoogle(driver, 'webdriver');
+	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
 
 async function searchGoogle(driver, keyword) {
-	await driver.findElement(By.name("q")).sendKeys(keyword + Key.ENTER);
-	await driver.wait(until.titleIs(keyword + " - Google Search"));
+	await driver.findElement(By.name('q')).sendKeys(keyword + Key.ENTER);
+	await driver.wait(until.titleIs(keyword + ' - Google Search'));
 }
 ```
 
 ## Running the tests
 
-We can run all the tests, by the following command
-
-```console
-npm test
-```
-
-Since I ran the above command on a laptop with 4 CPU cores, AVA ran both `bingtest.js` and `googletest.js` in parallel. See below output.
+Now if we run these tests using `npx ava`, then AVA will execute test files in parallel based on number of CPUs. 
+For e.g. if we run the above command on a laptop with 4 CPU cores, AVA will execute tests in both `bingtest.js` and `googletest.js` files in parallel. See below output:
 
 ```console
 DevTools listening on ws://127.0.0.1:49852/devtools/browser/adfcad21-9612-46ff-adc3-09adc0737f4a
@@ -100,10 +95,10 @@ DevTools listening on ws://127.0.0.1:49855/devtools/browser/8f6b7206-ea2b-4d41-b
   3 tests passed
 ```
 
-Dependending upon the number of CPU cores, those many test files will run at the same time. This count can be changed either via terminal (--concurrency or -c) or via the `"ava"` section in the package.json. For e.g.
+We can change how many test files can run at the same time either via the [`command-line`](https://github.com/avajs/ava/blob/master/docs/05-command-line.md) or the [`configuration`](https://github.com/avajs/ava/blob/master/docs/06-configuration.md) section. For e.g. if our ava configuration section looks like the one below:
 
 ```js
-"ava":{    
+"ava":{
     "concurrency": 1,
     "verbose": true
   }
@@ -111,9 +106,9 @@ Dependending upon the number of CPU cores, those many test files will run at the
 
 The `concurrency: 1` value will only allow AVA to run one file at a time. It however cannot control how many tests in that file can run at the same time.
 
-The `verbose: true` value will enable verbose output which helps readability IMO.
+The `verbose: true` value will enable verbose output.
 
-Now if we run the same `npm test` command
+Now if we run the same `npx ava` command:
 
 ```console
 DevTools listening on ws://127.0.0.1:49720/devtools/browser/9ebf4394-447b-4916-91cc-692d06d88896
