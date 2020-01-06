@@ -49,7 +49,7 @@ test('Bing Search', async t => {
 
 In the `googletest.js` file, instead of a single test, lets add two tests, one each for the terms 'webdriver' and 'avajs'.
 
-Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](https://github.com/avajs/ava/blob/master/docs/01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each `test()`.
+Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](../01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each `test()`.
 
 ```js
 test.beforeEach(async t => {
@@ -57,33 +57,36 @@ test.beforeEach(async t => {
 	await t.context.driver.get('https://www.google.com');
 });
 
-test.afterEach('cleanup', async t => await t.context.driver.close());
+test.afterEach('cleanup', async t => {
+	await t.context.driver.close();
+});
 ```
 
 Now lets add the test code:
+
 ```js
+async function searchGoogle(driver, keyword) {
+	await driver.findElement(By.name('q')).sendKeys(keyword + Key.ENTER);
+	await driver.wait(until.titleIs(`${keyword} - Google Search`));
+}
+
 test('Google Search for avajs', async t => {
-	let driver = t.context.driver;
+	let {driver} = t.context;
 	await searchGoogle(driver, 'avajs');
 	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
 
 test('Google Search for webdriver', async t => {
-	let driver = t.context.driver;
+	let {driver} = t.context;
 	await searchGoogle(driver, 'webdriver');
 	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
-
-async function searchGoogle(driver, keyword) {
-	await driver.findElement(By.name('q')).sendKeys(keyword + Key.ENTER);
-	await driver.wait(until.titleIs(keyword + ' - Google Search'));
-}
 ```
 
 ## Running the tests
 
 Now if we run these tests using `npx ava`, then AVA will execute test files in parallel based on number of CPUs. 
-For e.g. if we run the above command on a laptop with 4 CPU cores, AVA will execute tests in both `bingtest.js` and `googletest.js` files in parallel. See below output:
+For example, if we run the above command on a laptop with 4 CPU cores, AVA will execute tests in both `bingtest.js` and `googletest.js` files concurrently. See the below output:
 
 ```console
 DevTools listening on ws://127.0.0.1:49852/devtools/browser/adfcad21-9612-46ff-adc3-09adc0737f4a
@@ -95,13 +98,15 @@ DevTools listening on ws://127.0.0.1:49855/devtools/browser/8f6b7206-ea2b-4d41-b
   3 tests passed
 ```
 
-We can change how many test files can run at the same time either via the [`command-line`](https://github.com/avajs/ava/blob/master/docs/05-command-line.md) or the [`configuration`](https://github.com/avajs/ava/blob/master/docs/06-configuration.md) section. For e.g. if our ava configuration section looks like the one below:
+We can change how many test files can run at the same time either via the [`command-line`](../05-command-line.md) or the [`configuration`](../06-configuration.md) section. For example, if our AVA config section looks like this:
 
-```js
-"ava":{
-    "concurrency": 1,
-    "verbose": true
-  }
+```json
+{
+	"ava":{
+		"concurrency": 1,
+		"verbose": true
+	}
+}
 ```
 
 The `concurrency: 1` value will only allow AVA to run one file at a time. It however cannot control how many tests in that file can run at the same time.
