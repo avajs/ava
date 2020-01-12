@@ -162,6 +162,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
 - [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
+- [Testing web apps using Selenium WebDriverJS](docs/recipes/testing-with-selenium-webdriverjs.md)
 
 ## FAQ
 
