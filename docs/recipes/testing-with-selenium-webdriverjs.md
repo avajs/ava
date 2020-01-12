@@ -17,8 +17,6 @@ $ npm install selenium-webdriver chromedriver
 
 As part of this recipe, we will use Selenium to verify web searches on [Bing](https://www.bing.com) and [Google](https://www.google.com).
 
-## Test files
-
 Create the following files:
 
 - `./test/bingtest.js`
@@ -83,49 +81,19 @@ test('Google Search for webdriver', async t => {
 });
 ```
 
-## Running the tests
-
-Now if we run these tests using `npx ava`, then AVA will execute test files in parallel based on number of CPUs. 
-For example, if we run the above command on a laptop with 4 CPU cores, AVA will execute tests in both `bingtest.js` and `googletest.js` files concurrently. See the below output:
+You're now ready to run the tests. The output should look something like this:
 
 ```console
-DevTools listening on ws://127.0.0.1:49852/devtools/browser/adfcad21-9612-46ff-adc3-09adc0737f4a
-
-DevTools listening on ws://127.0.0.1:49853/devtools/browser/304aab40-c81e-4f26-b19c-5616472d568a
-
-DevTools listening on ws://127.0.0.1:49855/devtools/browser/8f6b7206-ea2b-4d41-b6aa-10a42a562387
-
-  3 tests passed
-```
-
-We can change how many test files can run at the same time either via the [`command-line`](../05-command-line.md) or the [`configuration`](../06-configuration.md) section. For example, if our AVA config section looks like this:
-
-```json
-{
-	"ava":{
-		"concurrency": 1,
-		"verbose": true
-	}
-}
-```
-
-The `concurrency: 1` value will only allow AVA to run one file at a time. It however cannot control how many tests in that file can run at the same time.
-
-The `verbose: true` value will enable verbose output.
-
-Now if we run the same `npx ava` command:
-
-```console
+npx ava
 DevTools listening on ws://127.0.0.1:49720/devtools/browser/9ebf4394-447b-4916-91cc-692d06d88896
-  √ bingtest » Bing Search (7.2s)
 
 DevTools listening on ws://127.0.0.1:49756/devtools/browser/6e19d9fe-4de6-40a3-b120-17067b3125ca
 
 DevTools listening on ws://127.0.0.1:49757/devtools/browser/ac12c2da-eeed-40d8-9b23-4d2103ec8fac
-  √ googletest » Google Search for avajs (2.5s)
-  √ googletest » Google Search for webdriver (3.3s)
+
+  bingtest » Bing Search (7.2s)
+  googletest » Google Search for avajs (2.5s)
+  googletest » Google Search for webdriver (3.3s)
 
   3 tests passed
 ```
-
-As you can see from the output, AVA ran the `bingtest.js` file first, waited for the only test to complete and then ran `googletest.js` file next where both the tests ran in parallel.
