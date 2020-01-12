@@ -1,6 +1,6 @@
-import path from 'path';
-import pkgConf from 'pkg-conf';
-import test from '../..';
+const path = require('path');
+const pkgConf = require('pkg-conf');
+const test = require('../..');
 
 test('test', t => {
 	const conf = pkgConf.sync('ava');

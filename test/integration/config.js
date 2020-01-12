@@ -4,7 +4,7 @@ const path = require('path');
 const {test} = require('tap');
 const execa = require('execa');
 const figures = require('figures');
-const uniqueTempDir = require('unique-temp-dir');
+const tempy = require('tempy');
 const {execCli} = require('../helper/cli');
 
 test('formats errors from ava.config.js', t => {
@@ -44,12 +44,12 @@ test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none ar
 });
 
 test('use current working directory if `package.json` is not found', () => {
-	const cwd = uniqueTempDir({create: true});
+	const cwd = tempy.directory();
 	const testFilePath = path.join(cwd, 'test.js');
 	const cliPath = require.resolve('../../cli.js');
 	const avaPath = require.resolve('../../');
 
-	fs.writeFileSync(testFilePath, `import test from ${JSON.stringify(avaPath)};\ntest('test', t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test', t => { t.pass(); });`);
 
 	return execa(process.execPath, [cliPath], {cwd, env: {CI: '1'}});
 });

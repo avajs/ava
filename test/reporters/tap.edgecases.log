@@ -1,32 +1,32 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js
-not ok 1 - No tests found in test/fixture/report/edge-cases/ava-import-no-test-declaration.js
+# No tests found in ava-import-no-test-declaration.js
+not ok 1 - No tests found in ava-import-no-test-declaration.js
+---tty-stream-chunk-separator
+# TypeError: test is not a function
+not ok 2 - TypeError: test is not a function
+  ---
+    name: TypeError
+    message: test is not a function
+    at: 'import-and-use-test-member.js:3:1'
+  ...
+---tty-stream-chunk-separator
+# import-and-use-test-member.js exited with a non-zero exit code: 1
+not ok 3 - import-and-use-test-member.js exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+# No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file
+not ok 4 - No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file
 ---tty-stream-chunk-separator
 # Error: throws
-not ok 2 - Error: throws
+not ok 5 - Error: throws
   ---
     name: Error
     message: throws
     at: 'throws.js:1:7'
   ...
 ---tty-stream-chunk-separator
-# test/fixture/report/edge-cases/throws.js exited with a non-zero exit code: 1
-not ok 3 - test/fixture/report/edge-cases/throws.js exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-# No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file
-not ok 4 - No tests found in test/fixture/report/edge-cases/no-ava-import.js, make sure to import "ava" at the top of your test file
----tty-stream-chunk-separator
-# TypeError: (0 , _.test) is not a function
-not ok 5 - TypeError: (0 , _.test) is not a function
-  ---
-    name: TypeError
-    message: '(0 , _.test) is not a function'
-    at: 'import-and-use-test-member.js:3:1'
-  ...
----tty-stream-chunk-separator
-# test/fixture/report/edge-cases/import-and-use-test-member.js exited with a non-zero exit code: 1
-not ok 6 - test/fixture/report/edge-cases/import-and-use-test-member.js exited with a non-zero exit code: 1
+# throws.js exited with a non-zero exit code: 1
+not ok 6 - throws.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
 1..0

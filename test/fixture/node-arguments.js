@@ -1,4 +1,4 @@
-import test from '../..';
+const test = require('../..');
 
 test('exec arguments includes --throw-deprecation and --zero-fill-buffers', t => {
 	t.plan(2);

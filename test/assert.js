@@ -1,6 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({color: false});
+require('../lib/worker/options').set({chalkOptions: {level: 0}});
 
 const path = require('path');
 const stripAnsi = require('strip-ansi');
@@ -835,44 +835,6 @@ test('.throws()', gather(t => {
 		]
 	});
 
-	// Fails because thrown error's message is not equal to 'bar'
-	failsWith(t, () => {
-		const err = new Error('foo');
-		assertions.throws(() => {
-			throw err;
-		}, 'bar');
-	}, {
-		assertion: 'throws',
-		message: '',
-		values: [
-			{label: 'Function threw unexpected exception:', formatted: /foo/},
-			{label: 'Expected message to equal:', formatted: /bar/}
-		]
-	});
-
-	// Fails because thrown error is not the right instance
-	failsWith(t, () => {
-		const err = new Error('foo');
-		assertions.throws(() => {
-			throw err;
-		}, class Foo {});
-	}, {
-		assertion: 'throws',
-		message: '',
-		values: [
-			{label: 'Function threw unexpected exception:', formatted: /foo/},
-			{label: 'Expected instance of:', formatted: /Foo/}
-		]
-	});
-
-	// Passes because thrown error's message is equal to 'bar'
-	passes(t, () => {
-		const err = new Error('foo');
-		assertions.throws(() => {
-			throw err;
-		}, 'foo');
-	});
-
 	// Passes because an error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
@@ -1043,19 +1005,6 @@ test('.throwsAsync()', gather(t => {
 	// Passes because the function returned a promise rejected with an error.
 	eventuallyPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
 
-	// Passes because the error's message matches the regex
-	eventuallyPasses(t, () => assertions.throwsAsync(Promise.reject(new Error('abc')), /abc/));
-
-	// Fails because the error's message does not match the regex
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.reject(new Error('abc')), /def/), {
-		assertion: 'throwsAsync',
-		message: '',
-		values: [
-			{label: 'Promise rejected with unexpected exception:', formatted: /Error/},
-			{label: 'Expected message to match:', formatted: /\/def\//}
-		]
-	});
-
 	// Fails because the function throws synchronously
 	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {
 		throw new Error('sync');
@@ -1136,15 +1085,39 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, true);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /true/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, 'foo');
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /foo/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, /baz/);
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /baz/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throws(() => {}, class Bar {});
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
 	failsWith(t, () => {
 		assertions.throws(() => {}, {});
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
@@ -1152,7 +1125,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, []);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /\[\]/}]
 	});
 
@@ -1204,15 +1177,39 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, true);
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /true/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throwsAsync(() => {}, 'foo');
+	}, {
+		assertion: 'throwsAsync',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /foo/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throwsAsync(() => {}, /baz/);
+	}, {
+		assertion: 'throwsAsync',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /baz/}]
+	});
+
+	failsWith(t, () => {
+		assertions.throwsAsync(() => {}, class Bar {});
+	}, {
+		assertion: 'throwsAsync',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
 	failsWith(t, () => {
 		assertions.throwsAsync(() => {}, {});
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
@@ -1220,7 +1217,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, []);
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be a function, string, regular expression, expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
 		values: [{label: 'Called with:', formatted: /\[\]/}]
 	});
 

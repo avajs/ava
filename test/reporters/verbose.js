@@ -16,6 +16,7 @@ const run = (type, sanitizers = []) => t => {
 		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.slow, report.sanitizers.traces, report.sanitizers.version]
 	});
 	const reporter = new VerboseReporter({
+		projectDir: report.projectDir(type),
 		reportStream: tty,
 		stdStream: tty,
 		watching: type === 'watch'

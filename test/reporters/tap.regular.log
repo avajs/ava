@@ -1,243 +1,15 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# TypeError: _.default.serial.test is not a function
-not ok 1 - TypeError: _.default.serial.test is not a function
+# TypeError: test.serial.test is not a function
+not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
-    message: _.default.serial.test is not a function
+    message: test.serial.test is not a function
     at: 'bad-test-chain.js:3:13'
   ...
 ---tty-stream-chunk-separator
-# test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
-not ok 2 - test/fixture/report/regular/bad-test-chain.js exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-# unhandled-rejection › passes
-ok 3 - unhandled-rejection [90m[2m›[22m[39m passes
----tty-stream-chunk-separator
-# unhandled-rejection › unhandled non-error rejection
-ok 4 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
----tty-stream-chunk-separator
-# Error: Can't catch me
-not ok 5 - Error: Can't catch me
-  ---
-    name: Error
-    message: Can't catch me
-    at: 'unhandled-rejection.js:4:17'
-  ...
----tty-stream-chunk-separator
-# unhandled-rejection
-not ok 6 - unhandled-rejection
-  ---
-    message: Non-error object
-    formatted: 'null'
-  ...
----tty-stream-chunk-separator
-# uncaught-exception › passes
-ok 7 - uncaught-exception [90m[2m›[22m[39m passes
----tty-stream-chunk-separator
-# Error: Can't catch me
-not ok 8 - Error: Can't catch me
-  ---
-    name: Error
-    message: Can't catch me
-    at: 'uncaught-exception.js:5:9'
-  ...
----tty-stream-chunk-separator
-# test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1
-not ok 9 - test/fixture/report/regular/uncaught-exception.js exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-# traces-in-t-throws › throws
-not ok 10 - traces-in-t-throws [90m[2m›[22m[39m throws
-  ---
-    name: AssertionError
-    assertion: throws
-    values:
-      'Function threw unexpected exception:': |-
-        Error {
-          message: 'uh-oh',
-        }
-      'Expected instance of:': 'Function TypeError {}'
-    at: |-
-      traces-in-t-throws.js:4:8
-      traces-in-t-throws.js:12:17
-      traces-in-t-throws.js:12:4
-  ...
----tty-stream-chunk-separator
-# traces-in-t-throws › notThrows
-not ok 11 - traces-in-t-throws [90m[2m›[22m[39m notThrows
-  ---
-    name: AssertionError
-    assertion: notThrows
-    values:
-      'Function threw:': |-
-        Error {
-          message: 'uh-oh',
-        }
-    at: |-
-      traces-in-t-throws.js:4:8
-      traces-in-t-throws.js:16:20
-      traces-in-t-throws.js:16:4
-  ...
----tty-stream-chunk-separator
-# traces-in-t-throws › notThrowsAsync
-not ok 12 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
-  ---
-    name: AssertionError
-    assertion: notThrowsAsync
-    values:
-      'Function threw:': |-
-        Error {
-          message: 'uh-oh',
-        }
-    at: |-
-      traces-in-t-throws.js:4:8
-      traces-in-t-throws.js:20:25
-      traces-in-t-throws.js:20:4
-  ...
----tty-stream-chunk-separator
-# traces-in-t-throws › throwsAsync
-not ok 13 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
-  ---
-    name: AssertionError
-    assertion: throwsAsync
-    values:
-      'Function threw synchronously. Use `t.throws()` instead:': |-
-        Error {
-          message: 'uh-oh',
-        }
-    at: |-
-      traces-in-t-throws.js:4:8
-      traces-in-t-throws.js:24:22
-      traces-in-t-throws.js:24:4
-  ...
----tty-stream-chunk-separator
-# traces-in-t-throws › throwsAsync different error
-not ok 14 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
-  ---
-    name: AssertionError
-    assertion: throwsAsync
-    values:
-      'Returned promise rejected with unexpected exception:': |-
-        Error {
-          message: 'uh-oh',
-        }
-      'Expected instance of:': 'Function TypeError {}'
-    at: |-
-      traces-in-t-throws.js:8:24
-      traces-in-t-throws.js:28:11
-  ...
----tty-stream-chunk-separator
-stdout
----tty-stream-chunk-separator
-stderr
----tty-stream-chunk-separator
-# test › skip
-ok 15 - test [90m[2m›[22m[39m skip # SKIP
----tty-stream-chunk-separator
-# test › todo
-not ok 16 - test [90m[2m›[22m[39m todo # TODO
----tty-stream-chunk-separator
-# test › passes
-ok 17 - test [90m[2m›[22m[39m passes
----tty-stream-chunk-separator
-# test › fails
-not ok 18 - test [90m[2m›[22m[39m fails
-  ---
-    name: AssertionError
-    message: Test failed via `t.fail()`
-    assertion: fail
-    at: 'test.js:12:22'
-  ...
----tty-stream-chunk-separator
-# test › known failure
-ok 19 - test [90m[2m›[22m[39m known failure
----tty-stream-chunk-separator
-# test › no longer failing
-not ok 20 - test [90m[2m›[22m[39m no longer failing
-  ---
-    name: Error
-    message: >-
-      Test was expected to fail, but succeeded, you should stop marking the test as
-      failing
-  ...
----tty-stream-chunk-separator
-# test › logs
-not ok 21 - test [90m[2m›[22m[39m logs
-  * hello
-  * world
-  ---
-    name: AssertionError
-    message: Test failed via `t.fail()`
-    assertion: fail
-    at: 'test.js:21:4'
-  ...
----tty-stream-chunk-separator
-# test › formatted
-not ok 22 - test [90m[2m›[22m[39m formatted
-  ---
-    name: AssertionError
-    assertion: deepEqual
-    values:
-      'Difference:': |-
-        - 'foo'
-        + 'bar'
-    at: 'test.js:25:4'
-  ...
----tty-stream-chunk-separator
-# test › power-assert
-not ok 23 - test [90m[2m›[22m[39m power-assert
-  ---
-    name: AssertionError
-    assertion: assert
-    operator: '!!'
-    values:
-      'Value is not truthy:': ''''''
-    at: 'test.js:30:4'
-  ...
----tty-stream-chunk-separator
-# test › bad throws
-not ok 24 - test [90m[2m›[22m[39m bad throws
-  ---
-    name: AssertionError
-    message: Improper usage of `t.throws()` detected
-    assertion: throws
-    values:
-      'The following error was thrown, possibly before `t.throws()` could be called:': |-
-        Error {
-          message: 'err',
-        }
-    at: |-
-      test.js:35:9
-      test.js:38:11
-  ...
----tty-stream-chunk-separator
-# test › bad notThrows
-not ok 25 - test [90m[2m›[22m[39m bad notThrows
-  ---
-    name: AssertionError
-    message: Improper usage of `t.notThrows()` detected
-    assertion: notThrows
-    values:
-      'The following error was thrown, possibly before `t.notThrows()` could be called:': |-
-        Error {
-          message: 'err',
-        }
-    at: |-
-      test.js:43:9
-      test.js:46:14
-  ...
----tty-stream-chunk-separator
-# test › implementation throws non-error
-not ok 26 - test [90m[2m›[22m[39m implementation throws non-error
-  ---
-    name: AssertionError
-    message: Error thrown in test
-    values:
-      'Error thrown in test:': 'null'
-  ...
----tty-stream-chunk-separator
-# slow › slow
-ok 27 - slow [90m[2m›[22m[39m slow
+# bad-test-chain.js exited with a non-zero exit code: 1
+not ok 2 - bad-test-chain.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
 ---tty-stream-chunk-separator
@@ -254,10 +26,10 @@ ok 27 - slow [90m[2m›[22m[39m slow
   # beforeEach
 ---tty-stream-chunk-separator
 # output-in-hook › passing test
-ok 28 - output-in-hook [90m[2m›[22m[39m passing test
+ok 3 - output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
 # output-in-hook › failing test
-not ok 29 - output-in-hook [90m[2m›[22m[39m failing test
+not ok 4 - output-in-hook [90m[2m›[22m[39m failing test
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
@@ -280,6 +52,234 @@ not ok 29 - output-in-hook [90m[2m›[22m[39m failing test
 # output-in-hook › cleanup
 ---tty-stream-chunk-separator
   # afterAlways
+---tty-stream-chunk-separator
+# slow › slow
+ok 5 - slow [90m[2m›[22m[39m slow
+---tty-stream-chunk-separator
+stdout
+---tty-stream-chunk-separator
+stderr
+---tty-stream-chunk-separator
+# test › skip
+ok 6 - test [90m[2m›[22m[39m skip # SKIP
+---tty-stream-chunk-separator
+# test › todo
+not ok 7 - test [90m[2m›[22m[39m todo # TODO
+---tty-stream-chunk-separator
+# test › passes
+ok 8 - test [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+# test › fails
+not ok 9 - test [90m[2m›[22m[39m fails
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test.js:12:22'
+  ...
+---tty-stream-chunk-separator
+# test › known failure
+ok 10 - test [90m[2m›[22m[39m known failure
+---tty-stream-chunk-separator
+# test › no longer failing
+not ok 11 - test [90m[2m›[22m[39m no longer failing
+  ---
+    name: Error
+    message: >-
+      Test was expected to fail, but succeeded, you should stop marking the test as
+      failing
+  ...
+---tty-stream-chunk-separator
+# test › logs
+not ok 12 - test [90m[2m›[22m[39m logs
+  * hello
+  * world
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test.js:21:4'
+  ...
+---tty-stream-chunk-separator
+# test › formatted
+not ok 13 - test [90m[2m›[22m[39m formatted
+  ---
+    name: AssertionError
+    assertion: deepEqual
+    values:
+      'Difference:': |-
+        - 'foo'
+        + 'bar'
+    at: 'test.js:25:4'
+  ...
+---tty-stream-chunk-separator
+# test › power-assert
+not ok 14 - test [90m[2m›[22m[39m power-assert
+  ---
+    name: AssertionError
+    assertion: assert
+    operator: '!!'
+    values:
+      'Value is not truthy:': ''''''
+    at: 'test.js:30:4'
+  ...
+---tty-stream-chunk-separator
+# test › bad throws
+not ok 15 - test [90m[2m›[22m[39m bad throws
+  ---
+    name: AssertionError
+    message: Improper usage of `t.throws()` detected
+    assertion: throws
+    values:
+      'The following error was thrown, possibly before `t.throws()` could be called:': |-
+        Error {
+          message: 'err',
+        }
+    at: |-
+      test.js:35:9
+      test.js:38:11
+  ...
+---tty-stream-chunk-separator
+# test › bad notThrows
+not ok 16 - test [90m[2m›[22m[39m bad notThrows
+  ---
+    name: AssertionError
+    message: Improper usage of `t.notThrows()` detected
+    assertion: notThrows
+    values:
+      'The following error was thrown, possibly before `t.notThrows()` could be called:': |-
+        Error {
+          message: 'err',
+        }
+    at: |-
+      test.js:43:9
+      test.js:46:14
+  ...
+---tty-stream-chunk-separator
+# test › implementation throws non-error
+not ok 17 - test [90m[2m›[22m[39m implementation throws non-error
+  ---
+    name: AssertionError
+    message: Error thrown in test
+    values:
+      'Error thrown in test:': 'null'
+  ...
+---tty-stream-chunk-separator
+# traces-in-t-throws › throws
+not ok 18 - traces-in-t-throws [90m[2m›[22m[39m throws
+  ---
+    name: AssertionError
+    assertion: throws
+    values:
+      'Function threw unexpected exception:': |-
+        Error {
+          message: 'uh-oh',
+        }
+      'Expected instance of:': 'Function TypeError {}'
+    at: |-
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:12:17
+      traces-in-t-throws.js:12:4
+  ...
+---tty-stream-chunk-separator
+# traces-in-t-throws › notThrows
+not ok 19 - traces-in-t-throws [90m[2m›[22m[39m notThrows
+  ---
+    name: AssertionError
+    assertion: notThrows
+    values:
+      'Function threw:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: |-
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:16:20
+      traces-in-t-throws.js:16:4
+  ...
+---tty-stream-chunk-separator
+# traces-in-t-throws › notThrowsAsync
+not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
+  ---
+    name: AssertionError
+    assertion: notThrowsAsync
+    values:
+      'Function threw:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: |-
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:20:25
+      traces-in-t-throws.js:20:4
+  ...
+---tty-stream-chunk-separator
+# traces-in-t-throws › throwsAsync
+not ok 21 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
+  ---
+    name: AssertionError
+    assertion: throwsAsync
+    values:
+      'Function threw synchronously. Use `t.throws()` instead:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: |-
+      traces-in-t-throws.js:4:8
+      traces-in-t-throws.js:24:22
+      traces-in-t-throws.js:24:4
+  ...
+---tty-stream-chunk-separator
+# traces-in-t-throws › throwsAsync different error
+not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
+  ---
+    name: AssertionError
+    assertion: throwsAsync
+    values:
+      'Returned promise rejected with unexpected exception:': |-
+        Error {
+          message: 'uh-oh',
+        }
+      'Expected instance of:': 'Function TypeError {}'
+    at: |-
+      traces-in-t-throws.js:8:24
+      traces-in-t-throws.js:28:11
+  ...
+---tty-stream-chunk-separator
+# uncaught-exception › passes
+ok 23 - uncaught-exception [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+# Error: Can't catch me
+not ok 24 - Error: Can't catch me
+  ---
+    name: Error
+    message: Can't catch me
+    at: 'uncaught-exception.js:5:9'
+  ...
+---tty-stream-chunk-separator
+# uncaught-exception.js exited with a non-zero exit code: 1
+not ok 25 - uncaught-exception.js exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+# unhandled-rejection › passes
+ok 26 - unhandled-rejection [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+# unhandled-rejection › unhandled non-error rejection
+ok 27 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+---tty-stream-chunk-separator
+# Error: Can't catch me
+not ok 28 - Error: Can't catch me
+  ---
+    name: Error
+    message: Can't catch me
+    at: 'unhandled-rejection.js:4:17'
+  ...
+---tty-stream-chunk-separator
+# unhandled-rejection
+not ok 29 - unhandled-rejection
+  ---
+    message: Non-error object
+    formatted: 'null'
+  ...
 ---tty-stream-chunk-separator
 
 1..23

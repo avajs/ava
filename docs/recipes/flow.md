@@ -8,7 +8,7 @@ Until [1.4.1](https://github.com/avajs/ava/releases/tag/v1.4.1) AVA came bundled
 
 This guide assumes you've already set up Flow for your project. Note that AVA's definition as been tested with version 0.95.1.
 
-We recommend you use AVA's built-in Babel pipeline to strip Flow type annotations and declarations. AVA automatically applies your project's Babel configuration, so everything may just work without changes. Alternatively install [`@babel/plugin-transform-flow-strip-types`](https://www.npmjs.com/package/@babel/plugin-transform-flow-strip-types) and customize AVA's configuration in the `package.json` file (or the `ava.config.js` file) as follows.
+We recommend you use AVA's [Babel support](https://github.com/avajs/babel) to strip Flow type annotations and declarations. AVA automatically applies your project's Babel configuration, so everything may just work without changes. Alternatively install [`@babel/plugin-transform-flow-strip-types`](https://www.npmjs.com/package/@babel/plugin-transform-flow-strip-types) and customize AVA's configuration in the `package.json` file (or the `ava.config.*` file) as follows.
 
 **`package.json`:**
 
@@ -26,7 +26,7 @@ We recommend you use AVA's built-in Babel pipeline to strip Flow type annotation
 }
 ```
 
-See our [Babel documentation](babel.md) for more details.
+See our [`@ava/babel`](https://github.com/avajs/babel) for more details.
 
 ## Writing tests
 
@@ -34,7 +34,7 @@ Create a `test.js` file.
 
 ```js
 // @flow
-import test from 'ava';
+const test = require('ava');
 
 const getFoo = () => 'foo';
 
@@ -49,8 +49,8 @@ By default, the type of `t.context` will be the empty object (`{}`). AVA exposes
 
 ```js
 // @flow
-import anyTest from 'ava';
-import type {TestInterface} from 'ava';
+const anyTest = require('ava');
+const type {TestInterface} = require('ava');
 
 const test: TestInterface<{foo: string}> = (anyTest: any);
 
@@ -79,7 +79,7 @@ The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an 
 
 ```js
 // @flow
-import test from 'ava';
+const test = require('ava');
 
 class CustomError extends Error {
 	parent: Error;

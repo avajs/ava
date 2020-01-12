@@ -1,6 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({color: false});
+require('../lib/worker/options').set({chalkOptions: {level: 0}});
 
 const {test} = require('tap');
 const delay = require('delay');
@@ -495,12 +495,12 @@ test('try-commit fails when it exceeds its own timeout', async t => {
 
 test('try-commit refreshes the timeout on commit/discard', async t => {
 	const result1 = await ava.cb(a => {
-		a.timeout(10);
+		a.timeout(100);
 		a.plan(3);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 5);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 10);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 15);
-		setTimeout(() => a.end(), 20);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 50);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 100);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 150);
+		setTimeout(() => a.end(), 200);
 	}).run();
 
 	t.is(result1.passed, true);

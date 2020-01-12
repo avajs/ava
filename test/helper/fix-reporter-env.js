@@ -21,7 +21,7 @@ module.exports = () => {
 	Object.defineProperty(os, 'EOL', {value: '\n'});
 
 	fixColors();
-	require('../../lib/chalk').set({enabled: true, level: 3});
+	require('../../lib/chalk').set({level: 3});
 
 	return {
 		restoreClock() {
