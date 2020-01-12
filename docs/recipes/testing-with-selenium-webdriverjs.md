@@ -38,7 +38,7 @@ In the `bingtest.js` file, add the following code, which tests whether searching
 ```js
 test('Bing Search', async t => {
 	const keyword = 'webdriver';
-	let driver = new Builder().forBrowser('chrome').build();
+	const driver = new Builder().forBrowser('chrome').build();
 	await driver.get('https://www.bing.com');
 	await driver.findElement(By.name('q')).sendKeys(keyword + Key.ENTER);
 	await driver.wait(until.titleIs(keyword + ' - Bing'));
@@ -71,13 +71,13 @@ async function searchGoogle(driver, keyword) {
 }
 
 test('Google Search for avajs', async t => {
-	let {driver} = t.context;
+	const {driver} = t.context;
 	await searchGoogle(driver, 'avajs');
 	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
 
 test('Google Search for webdriver', async t => {
-	let {driver} = t.context;
+	const {driver} = t.context;
 	await searchGoogle(driver, 'webdriver');
 	t.true((await driver.findElement(By.id('resultStats')).getText()).includes('results'));
 });
