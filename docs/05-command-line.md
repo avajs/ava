@@ -29,9 +29,9 @@ Options:
   --fail-fast             Stop after first test failure                [boolean]
   --match, -m             Only run tests with matching title (Can be repeated)
                                                                         [string]
-  --node-arguments        Configure Node.js arguments used to launch worker
-                          processes (be sure to surround the value by double
-                          quotes)                                       [string]
+  --node-arguments        Additional Node.js arguments for launching worker
+                          processes (specify as a single string; only use
+                          trusted values)                               [string]
   --serial, -s            Run tests serially                           [boolean]
   --tap, -t               Generate TAP output                          [boolean]
   --timeout, -T           Set global timeout (milliseconds or human-readable,
@@ -181,3 +181,17 @@ $ npx ava --tap | npx tap-nyan
 <img src="../media/tap-reporter.png" width="420">
 
 Please note that the TAP reporter is unavailable when using [watch mode](./recipes/watch-mode.md).
+
+## Node arguments
+
+The `--node-arguments` argument may be used to specify additional arguments for launching worker processes. These are combined with the `nodeArguments` configuration and any arguments passed to the `node` binary when starting AVA.
+
+**Only pass trusted values.**
+
+Specify the arguments as a single string:
+
+```console
+npx ava --node-arguments="--throw-deprecation --zero-fill-buffers"
+```
+
+**Only pass trusted values.**

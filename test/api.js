@@ -8,7 +8,6 @@ const {test} = require('tap');
 const Api = require('../lib/api');
 const babelManager = require('../lib/babel-manager');
 const {normalizeGlobs} = require('../lib/globs');
-const nodeArguments = require('../lib/node-arguments');
 
 const ROOT_DIR = path.join(__dirname, '..');
 
@@ -23,7 +22,6 @@ function apiCreator(options = {}) {
 	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
 	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions});
-	options.nodeArguments = options.nodeArguments || {};
 	const instance = new Api(options);
 
 	return instance;

@@ -73,7 +73,6 @@
 		"concordance": "^4.0.0",
 		"convert-source-map": "^1.7.0",
 		"currently-unhandled": "^0.4.1",
-		"dargs": "^7.0.0",
 		"debug": "^4.1.1",
 		"del": "^5.1.0",
 		"emittery": "^0.5.1",
@@ -108,8 +107,7 @@
 		"trim-off-newlines": "^1.0.1",
 		"update-notifier": "^4.0.0",
 		"write-file-atomic": "^3.0.1",
-		"yargs": "^15.1.0",
-		"yargs-parser": "^16.1.0"
+		"yargs": "^15.1.0"
 	},
 	"devDependencies": {
 		"@ava/babel": "^0.7.0",
