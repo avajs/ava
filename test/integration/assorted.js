@@ -2,7 +2,6 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 const path = require('path');
-const makeDir = require('make-dir');
 const stripAnsi = require('strip-ansi');
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
@@ -51,15 +50,6 @@ for (const tapFlag of ['--tap', '-t']) {
 	});
 }
 
-test('handles NODE_PATH', t => {
-	const nodePaths = `node-paths/modules${path.delimiter}node-paths/deep/nested`;
-
-	execCli('node-paths.js', {env: {NODE_PATH: nodePaths}}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
 test('works when no files are found', t => {
 	execCli([], {dirname: 'fixture/globs/no-files'}, (err, stdout) => {
 		t.is(err.code, 1);
@@ -94,7 +84,7 @@ test('workers ensure test files load the same version of ava', t => {
 
 	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
 	const targetInstall = path.join(target, 'node_modules/ava');
-	makeDir.sync(targetInstall);
+	fs.mkdirSync(targetInstall, {recursive: true});
 	fs.writeFileSync(
 		path.join(targetInstall, 'index.js'),
 		fs.readFileSync(path.join(__dirname, '../../index.js'))
@@ -162,6 +152,30 @@ test('reset-cache resets cache', t => {
 	execCli(['reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
 		t.ifError(err);
 		t.true(fs.readdirSync(cacheDir).length === 0);
+		t.end();
+	});
+});
+
+test('selects .cjs test files', t => {
+	execCli('cjs.cjs', (err, stdout) => {
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
+	});
+});
+
+test('refuses to load .mjs test files', t => {
+	execCli('mjs.mjs', (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
+		t.end();
+	});
+});
+
+test('refuses to load .js test files as ESM modules', t => {
+	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
+		t.ok(err);
+		t.match(stdout, /AVA cannot yet load ESM files/);
 		t.end();
 	});
 });

@@ -2,8 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 const execa = require('execa');
-const uniqueTempDir = require('unique-temp-dir');
 const {test} = require('tap');
+const tempy = require('tempy');
 const {execCli} = require('../helper/cli');
 
 const overrideCIChecks = {
@@ -47,7 +47,7 @@ test('appends to existing snapshots', t => {
 	const cliPath = require.resolve('../../cli.js');
 	const avaPath = require.resolve('../../');
 
-	const cwd = uniqueTempDir({create: true});
+	const cwd = tempy.directory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
 	const initial = `const test = require(${JSON.stringify(avaPath)})

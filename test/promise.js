@@ -2,7 +2,6 @@
 require('../lib/chalk').set({level: 0});
 require('../lib/worker/options').set({});
 
-const Promise = require('bluebird');
 const {test} = require('tap');
 const Test = require('../lib/test');
 
@@ -59,16 +58,12 @@ test('assertion plan is tested after returned promise resolves', t => {
 	const instance = ava(a => {
 		a.plan(2);
 
-		const defer = Promise.defer();
-
-		setTimeout(() => {
-			defer.resolve();
-		}, 500);
-
 		a.pass();
 		a.pass();
 
-		return defer.promise;
+		return new Promise(resolve => {
+			setTimeout(() => resolve(), 500);
+		});
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
@@ -82,14 +77,12 @@ test('missing assertion will fail the test', t => {
 	return ava(a => {
 		a.plan(2);
 
-		const defer = Promise.defer();
-
-		setTimeout(() => {
-			a.pass();
-			defer.resolve();
-		}, 200);
-
-		return defer.promise;
+		return new Promise(resolve => {
+			setTimeout(() => {
+				a.pass();
+				resolve();
+			}, 200);
+		});
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.assertion, 'plan');
@@ -100,19 +93,17 @@ test('extra assertion will fail the test', t => {
 	return ava(a => {
 		a.plan(2);
 
-		const defer = Promise.defer();
-
 		setTimeout(() => {
 			a.pass();
 			a.pass();
 		}, 200);
 
-		setTimeout(() => {
-			a.pass();
-			defer.resolve();
-		}, 500);
-
-		return defer.promise;
+		return new Promise(resolve => {
+			setTimeout(() => {
+				a.pass();
+				resolve();
+			}, 500);
+		});
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.assertion, 'plan');

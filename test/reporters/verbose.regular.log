@@ -13,52 +13,32 @@
 ---tty-stream-chunk-separator
   [31m✖ bad-test-chain.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
+    output-in-hook [90m[2m›[22m[39m before hook
+    [35mℹ[39m [90mbefore[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-
-  [1mUnhandled rejection in unhandled-rejection.js[22m
-
-  [90munhandled-rejection.js:4[39m
-
-   [90m3:[39m const passes = t => {                          
-  [41m 4:   Promise.reject(new Error('Can/'t catch me'));[49m
-   [90m5:[39m   t.pass();                                    
-
-  Error: Can't catch me
-
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-  [1mUnhandled rejection in unhandled-rejection.js[22m
-
-  [33mnull[39m
-
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
-  [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
+  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
-
-  [1mUncaught exception in uncaught-exception.js[22m
-
-  [90muncaught-exception.js:5[39m
-
-   [90m4:[39m   setTimeout(() => {                   
-  [41m 5:     throw new Error('Can/'t catch me');[49m
-   [90m6:[39m   });                                  
-
-  Error: Can't catch me
-
+    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    [35mℹ[39m [90mafterEach[39m
 ---tty-stream-chunk-separator
-  [31m✖ uncaught-exception.js exited with a non-zero exit code: 1[39m
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
+    output-in-hook [90m[2m›[22m[39m cleanup
+    [35mℹ[39m [90mafterAlways[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
----tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
----tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
+  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
 ---tty-stream-chunk-separator
 stdout
 ---tty-stream-chunk-separator
@@ -90,32 +70,52 @@ stderr
 ---tty-stream-chunk-separator
   [31m✖[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m before hook
-    [35mℹ[39m [90mbefore[39m
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
-    [35mℹ[39m [90mbeforeEach[39m
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
-    [35mℹ[39m [90mbeforeEach[39m
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
 ---tty-stream-chunk-separator
-  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
 ---tty-stream-chunk-separator
-  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+  [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
-    [35mℹ[39m [90mafterEach[39m
+
+  [1mUncaught exception in uncaught-exception.js[22m
+
+  [90muncaught-exception.js:5[39m
+
+   [90m4:[39m   setTimeout(() => {                   
+  [41m 5:     throw new Error('Can/'t catch me');[49m
+   [90m6:[39m   });                                  
+
+  Error: Can't catch me
+
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
-    [35mℹ[39m [90mafterEachAlways[39m
+  [31m✖ uncaught-exception.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
-    [35mℹ[39m [90mafterEachAlways[39m
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m cleanup
-    [35mℹ[39m [90mafterAlways[39m
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+---tty-stream-chunk-separator
+
+  [1mUnhandled rejection in unhandled-rejection.js[22m
+
+  [90munhandled-rejection.js:4[39m
+
+   [90m3:[39m const passes = t => {                          
+  [41m 4:   Promise.reject(new Error('Can/'t catch me'));[49m
+   [90m5:[39m   t.pass();                                    
+
+  Error: Can't catch me
+
+---tty-stream-chunk-separator
+  [1mUnhandled rejection in unhandled-rejection.js[22m
+
+  [33mnull[39m
+
 ---tty-stream-chunk-separator
 
   [31m14 tests failed[39m
@@ -127,110 +127,15 @@ stderr
 
   [31mtest [90m[2m›[22m[39m[31m known failure[39m
 
-  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
+  [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
 
-  [90mtraces-in-t-throws.js:12[39m
+  [90moutput-in-hook.js:34[39m
 
-   [90m11:[39m test('throws', t => {                     
-  [41m 12:   t.throws(() => throwError(), TypeError);[49m
-   [90m13:[39m });                                       
+   [90m33:[39m test('failing test', t => {
+  [41m 34:   t.fail();                [49m
+   [90m35:[39m });                        
 
-  Function threw unexpected exception:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  Expected instance of:
-
-  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
-
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:12:17[39m
-  [90mtraces-in-t-throws.js:12:4[39m
-
-
-
-  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
-
-  [90mtraces-in-t-throws.js:16[39m
-
-   [90m15:[39m test('notThrows', t => {          
-  [41m 16:   t.notThrows(() => throwError());[49m
-   [90m17:[39m });                               
-
-  Function threw:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:16:20[39m
-  [90mtraces-in-t-throws.js:16:4[39m
-
-
-
-  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
-
-  [90mtraces-in-t-throws.js:20[39m
-
-   [90m19:[39m test('notThrowsAsync', t => {          
-  [41m 20:   t.notThrowsAsync(() => throwError());[49m
-   [90m21:[39m });                                    
-
-  Function threw:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:20:25[39m
-  [90mtraces-in-t-throws.js:20:4[39m
-
-
-
-  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
-
-  [90mtraces-in-t-throws.js:24[39m
-
-   [90m23:[39m test('throwsAsync', t => {                     
-  [41m 24:   t.throwsAsync(() => throwError(), TypeError);[49m
-   [90m25:[39m });                                            
-
-  Function threw synchronously. Use `t.throws()` instead:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:24:22[39m
-  [90mtraces-in-t-throws.js:24:4[39m
-
-
-
-  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
-
-  [90mtraces-in-t-throws.js:28[39m
-
-   [90m27:[39m test('throwsAsync different error', t => {               
-  [41m 28:   return t.throwsAsync(returnRejectedPromise, TypeError);[49m
-   [90m29:[39m });                                                      
-
-  Returned promise rejected with unexpected exception:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  Expected instance of:
-
-  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
-
-  [90mtraces-in-t-throws.js:8:24[39m
-  [90mtraces-in-t-throws.js:28:11[39m
+  Test failed via `t.fail()`
 
 
 
@@ -366,14 +271,109 @@ stderr
 
 
 
-  [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
 
-  [90moutput-in-hook.js:34[39m
+  [90mtraces-in-t-throws.js:12[39m
 
-   [90m33:[39m test('failing test', t => {
-  [41m 34:   t.fail();                [49m
-   [90m35:[39m });                        
+   [90m11:[39m test('throws', t => {                                   
+  [41m 12:   t.throws(() => throwError(), {instanceOf: TypeError});[49m
+   [90m13:[39m });                                                     
 
-  Test failed via `t.fail()`
+  Function threw unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:12:17[39m
+  [90mtraces-in-t-throws.js:12:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
+
+  [90mtraces-in-t-throws.js:16[39m
+
+   [90m15:[39m test('notThrows', t => {          
+  [41m 16:   t.notThrows(() => throwError());[49m
+   [90m17:[39m });                               
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:16:20[39m
+  [90mtraces-in-t-throws.js:16:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
+
+  [90mtraces-in-t-throws.js:20[39m
+
+   [90m19:[39m test('notThrowsAsync', t => {          
+  [41m 20:   t.notThrowsAsync(() => throwError());[49m
+   [90m21:[39m });                                    
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:20:25[39m
+  [90mtraces-in-t-throws.js:20:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
+
+  [90mtraces-in-t-throws.js:24[39m
+
+   [90m23:[39m test('throwsAsync', t => {                                   
+  [41m 24:   t.throwsAsync(() => throwError(), {instanceOf: TypeError});[49m
+   [90m25:[39m });                                                          
+
+  Function threw synchronously. Use `t.throws()` instead:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90mtraces-in-t-throws.js:4:8[39m
+  [90mtraces-in-t-throws.js:24:22[39m
+  [90mtraces-in-t-throws.js:24:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
+
+  [90mtraces-in-t-throws.js:28[39m
+
+   [90m27:[39m test('throwsAsync different error', t => {                             
+  [41m 28:   return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[49m
+   [90m29:[39m });                                                                    
+
+  Returned promise rejected with unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90mtraces-in-t-throws.js:8:24[39m
+  [90mtraces-in-t-throws.js:28:11[39m
 
 ---tty-stream-chunk-separator

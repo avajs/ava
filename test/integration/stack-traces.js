@@ -2,14 +2,6 @@
 const {test} = require('tap');
 const {execCli} = require('../helper/cli');
 
-test('enabling long stack traces will provide detailed debug information', t => {
-	execCli('long-stack-trace/test.js', (err, stdout, stderr) => {
-		t.ok(err);
-		t.match(stderr, /From previous event/);
-		t.end();
-	});
-});
-
 test('`AssertionError` should capture infinity stack trace', t => {
 	execCli('infinity-stack-trace.js', (err, stdout) => {
 		t.ok(err);
