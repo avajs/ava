@@ -4,7 +4,8 @@ const {execCli} = require('../helper/cli');
 
 test('passes node arguments to workers', t => {
 	t.plan(1);
-	execCli(['--node-arguments="--throw-deprecation --zero-fill-buffers"', 'node-arguments.js'], err => t.ifError(err));
+	execCli(['--node-arguments="--throw-deprecation --zero-fill-buffers"', 'node-arguments.js'],
+		(err, stdout, stderr) => t.ifError(err, null, {stdout, stderr}));
 });
 
 test('reads node arguments from config', t => {
