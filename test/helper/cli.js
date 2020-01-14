@@ -30,7 +30,8 @@ function execCli(args, opts, cb) {
 			cwd: dirname,
 			env: {CI: '1', ...env}, // Force CI to ensure the correct reporter is selected
 			// env,
-			stdio: [null, 'pipe', 'pipe']
+			stdio: [null, 'pipe', 'pipe'],
+			shell: true
 		});
 
 		child.on('close', (code, signal) => {
