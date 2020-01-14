@@ -11,5 +11,5 @@ test('reads node arguments from config', t => {
 	t.plan(1);
 	execCli(['test.js'], {
 		dirname: 'fixture/node-arguments'
-	}, err => t.ifError(err));
+	}, (err, stdout, stderr) => t.ifError(err, null, { stdout, stderr }));
 });
