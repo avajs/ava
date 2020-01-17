@@ -12,7 +12,7 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
 1. In the sidebar click the *Debug* handle.
 1. Create a `launch.json` file.
 1. Select the Node.js environment.
-1. Add following to the `configurations` object:
+1. Add following to the `configurations` array:
 
   ```json
   {
