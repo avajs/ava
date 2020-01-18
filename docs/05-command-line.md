@@ -30,8 +30,7 @@ Options:
   --match, -m             Only run tests with matching title (can be repeated)
                                                                         [string]
   --node-arguments        Additional Node.js arguments for launching worker
-                          processes (specify as a single string; only use
-                          trusted values)                               [string]
+                          processes (specify as a single string)        [string]
   --serial, -s            Run tests serially                           [boolean]
   --tap, -t               Generate TAP output                          [boolean]
   --timeout, -T           Set global timeout (milliseconds or human-readable,

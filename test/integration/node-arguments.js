@@ -14,3 +14,11 @@ test('reads node arguments from config', t => {
 		dirname: 'fixture/node-arguments'
 	}, (err, stdout, stderr) => t.ifError(err, null, {stdout, stderr}));
 });
+
+test('detects incomplete --node-arguments', t => {
+	t.plan(2);
+	execCli(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], (err, stdout, stderr) => {
+		t.ok(err);
+		t.match(stderr, /Could not parse `--node-arguments` value. Make sure all strings are closed and backslashes are used correctly./);
+	});
+});
