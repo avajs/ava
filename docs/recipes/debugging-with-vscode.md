@@ -12,7 +12,7 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
 1. In the sidebar click the *Debug* handle.
 1. Create a `launch.json` file.
 1. Select the Node.js environment.
-1. Add following to the `configurations` array:
+1. Add following to the `configurations` array and save changes:
 
   ```json
   {
@@ -32,13 +32,38 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
     ]
   }
   ```
-1. Save your changes to the `launch.json` file.
 
 ## Using the debugger
 
 Open the file(s) you want to debug. You can set breakpoints or use the `debugger` keyword.
 
 Now, *with a test file open*, from the *Debug* menu run the *Debug AVA test file* configuration.
+
+## Debugging precompiled tests
+
+If you compile your test files into a different directory, and run the tests *from* that directory, the above configuration won't work.
+
+Assuming the names of your test files are unique you could try the following configuration instead. This assumes the compile output is written to the `build` directory. Adjust as appropriate:
+
+
+```json
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Debug AVA test file",
+  "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
+  "runtimeArgs": [
+    "debug",
+    "--break",
+    "build/**/${fileBasenameNoExtension}.*"
+  ],
+  "port": 9229,
+  "outputCapture": "std",
+  "skipFiles": [
+    "<node_internals>/**/*.js"
+  ]
+}
+```
 
 ## Serial debugging
 
