@@ -31,6 +31,10 @@ To ignore files, prefix the pattern with an `!` (exclamation mark).
 		"verbose": true,
 		"require": [
 			"./my-helper-module.js"
+		],
+		"nodeArguments": [
+			"--trace-deprecation",
+			"--napi-modules"
 		]
 	}
 }
@@ -53,6 +57,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
+- `nodeArguments`: Configure Node.js arguments used to launch worker processes.
 
 Note that providing files on the CLI overrides the `files` option.
 
@@ -218,5 +223,9 @@ export default {
 	}
 };
 ```
+
+## Node arguments
+
+The `nodeArguments` configuration may be used to specify additional arguments for launching worker processes. These are combined with `--node-arguments` passed on the CLI and any arguments passed to the `node` binary when starting AVA.
 
 [CLI]: ./05-command-line.md

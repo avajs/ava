@@ -59,6 +59,7 @@
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
 		"ansi-styles": "^4.2.1",
+		"arrgv": "^1.0.2",
 		"arrify": "^2.0.1",
 		"chalk": "^3.0.0",
 		"chokidar": "^3.3.1",
