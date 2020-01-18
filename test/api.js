@@ -123,7 +123,7 @@ test('fail-fast mode - multiple files & serial', t => {
 		});
 });
 
-test('fail-fast mode - multiple files & interrupt', t => {
+test('fail-fast mode - multiple files & interrupt', async t => {
 	const api = apiCreator({
 		failFast: true,
 		concurrency: 2
@@ -149,32 +149,35 @@ test('fail-fast mode - multiple files & interrupt', t => {
 		});
 	});
 
-	return api.run({files: [
-		path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
-		path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js')
-	]})
-		.then(runStatus => {
-			t.ok(api.options.failFast);
-			t.strictDeepEqual(tests, [{
-				ok: true,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
-				title: 'first pass'
-			}, {
-				ok: false,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
-				title: 'second fail'
-			}, {
-				ok: true,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
-				title: 'third pass'
-			}, {
-				ok: true,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
-				title: 'first pass'
-			}]);
-			t.is(runStatus.stats.passedTests, 3);
-			t.is(runStatus.stats.failedTests, 1);
-		});
+	const fails = path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js');
+	const passesSlow = path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js');
+
+	const runStatus = await api.run({files: [fails, passesSlow]});
+	t.ok(api.options.failFast);
+	t.ok(runStatus.stats.passedTests >= 2); // Results from passes-slow are not always received on Windows.
+	t.ok(runStatus.stats.passedTests <= 3);
+	t.is(runStatus.stats.failedTests, 1);
+
+	t.strictDeepEqual(tests.filter(({testFile}) => testFile === fails), [{
+		ok: true,
+		testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+		title: 'first pass'
+	}, {
+		ok: false,
+		testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+		title: 'second fail'
+	}, {
+		ok: true,
+		testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+		title: 'third pass'
+	}]);
+	if (runStatus.stats.passedTests === 3) {
+		t.strictDeepEqual(tests.filter(({testFile}) => testFile === passesSlow), [{
+			ok: true,
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
+			title: 'first pass'
+		}]);
+	}
 });
 
 test('fail-fast mode - crash & serial', t => {
