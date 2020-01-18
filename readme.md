@@ -228,7 +228,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 	<br>
-	<a href="https://ava.li">
+	<a href="https://avajs.dev">
 		<img src="media/logo.svg" width="200" alt="AVA">
 	</a>
 	<br>
