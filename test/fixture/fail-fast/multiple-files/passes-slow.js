@@ -1,8 +1,17 @@
+const pEvent = require('p-event');
 const test = require('../../../..');
 
-test.serial('first pass', t => {
+test.serial('first pass', async t => {
 	t.pass();
-	return new Promise(resolve => setTimeout(resolve, 60000));
+	const timer = setTimeout(() => {}, 60000); // Ensure process stays alive.
+	await pEvent(process, 'message', message => {
+		if (message.ava) {
+			return message.ava.type === 'peer-failed';
+		}
+
+		return false;
+	});
+	clearTimeout(timer);
 });
 
 test.serial('second pass', t => {
