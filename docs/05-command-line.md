@@ -25,9 +25,9 @@ Options:
                           files
   --help                  Show help                                    [boolean]
   --concurrency, -c       Max number of test files running at the same time
-                          (Default: CPU cores)                          [number]
+                          (default: CPU cores)                          [number]
   --fail-fast             Stop after first test failure                [boolean]
-  --match, -m             Only run tests with matching title (Can be repeated)
+  --match, -m             Only run tests with matching title (can be repeated)
                                                                         [string]
   --node-arguments        Additional Node.js arguments for launching worker
                           processes (specify as a single string; only use
