@@ -2,8 +2,6 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-chrome-devtools.md)
 
-**This recipe describes the new `inspect` command in the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/debugging-with-chrome-devtools.md) documentation instead.**
-
 You can debug your tests using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools).
 
 Open Chrome, then navigate to <chrome://inspect/>. Click the *Open dedicated DevTools for Node* link within the *Devices* section.

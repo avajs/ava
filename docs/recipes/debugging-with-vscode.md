@@ -2,8 +2,6 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-vscode.md)
 
-**This recipe describes the new `inspect` command in the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/debugging-with-vscode.md) documentation instead.**
-
 You can debug your tests using [Visual Studio Code](https://code.visualstudio.com/).
 
 ## Creating a launch configuration
