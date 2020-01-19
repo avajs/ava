@@ -2,8 +2,6 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/06-configuration.md)
 
-**This documents the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/06-configuration.md) documentation instead.**
-
 All of the [CLI options][CLI] can be configured in the `ava` section of either your `package.json` file, or an `ava.config.*` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 
 To ignore files, prefix the pattern with an `!` (exclamation mark).
