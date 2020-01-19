@@ -2,7 +2,7 @@
 
 ## Conduct
 
-**Be kind to everyone.** Read and adhere to the [Code of Conduct](code-of-conduct.md).
+**Be kind to everyone.** Read and adhere to the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
 
 ## Testing
 
@@ -32,7 +32,7 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 ## Pull requests
 
 * New features should come with tests and documentation.
-* Ensure the [contributing guidelines](contributing.md) are followed.
+* Ensure the [contributing guidelines](.github/CONTRIBUTING.md) are followed.
 * Squash commits when merging.
 
 ## Experiments
