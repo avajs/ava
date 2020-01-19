@@ -7,7 +7,7 @@ Testing can be a drag. AVA helps you get it done. AVA is a test runner for Node.
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
-Read our [contributing guide](contributing.md) if you're looking to contribute (issues / PRs / etc).
+Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to contribute (issues / PRs / etc).
 
 ![](media/mini-reporter.gif)
 
