@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggestions for new or different behavior.
+about: Suggestions for new or different behavior
 labels: question
 ---
 
