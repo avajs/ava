@@ -22,7 +22,7 @@ Some issues are created with missing information, not reproducible, or plain inv
 
 We're always looking for more opinions on discussions in the issue tracker. It's a good opportunity to influence the future direction of AVA.
 
-The [`question` label](https://github.com/avajs/ava/labels/question) is a good place to find ongoing discussions.
+The [`needs triage`](https://github.com/avajs/ava/labels/needs%20triage) and [`question`](https://github.com/avajs/ava/labels/question) labels are a good place to find ongoing discussions.
 
 ### Help out
 

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Babel
+    url: https://github.com/avajs/babel/issues
+    about: Ask about using Babel with AVA
+  - name: AVA on Spectrum
+    url: https://spectrum.chat/ava
+    about: Ask questions and discuss in our Spectrum community
+  - name: Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/ava
+    about: Tag your question on Stack Overflow
