@@ -12,7 +12,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/con
 
 As a user of AVA you're the perfect candidate to help us improve our documentation. Typo corrections, error fixes, better explanations, more examples, etc. Open issues for things that could be improved. [Help translate our docs.](https://github.com/avajs/ava-docs) Anything. Even improvements to this document.
 
-Use the [`docs` label](https://github.com/avajs/ava/labels/docs) to find suggestions for what we'd love to see more documentation on.
+Use the [`scope:documentation` label](https://github.com/avajs/ava/labels/scope%3Adocumentation) to find suggestions for what we'd love to see more documentation on.
 
 ### Improve issues
 
@@ -24,7 +24,7 @@ We're always looking for more opinions on discussions in the issue tracker. It's
 
 The [`question` label](https://github.com/avajs/ava/labels/question) is a good place to find ongoing discussions.
 
-### Write code
+### Help out
 
 You can use issue labels to discover issues you could help out with:
 
@@ -35,38 +35,38 @@ You can use issue labels to discover issues you could help out with:
 
 The [`help wanted`](https://github.com/avajs/ava/labels/help%20wanted) and [`good for beginner`](https://github.com/avajs/ava/labels/good%20for%20beginner) labels are especially useful.
 
-You may find an issue is assigned, or has the [`assigned` label](https://github.com/avajs/ava/labels/assigned). Please double-check before starting on this issue because somebody else is likely already working on it.
+You may find an issue is assigned. Please double-check before starting on this issue because somebody else is likely already working on it.
 
 We'd like to fix [`priority` issues](https://github.com/avajs/ava/labels/priority) first. We'd love to see progress on [`low-priority` issues](https://github.com/avajs/ava/labels/low%20priority) too. [`future` issues](https://github.com/avajs/ava/labels/future) are those that we'd like to get to, but not anytime soon. Please check before working on these since we may not yet want to take on the burden of supporting those features.
 
-If you're updating dependencies, please make sure you use npm@5.6.0 and commit the updated `package-lock.json` file.
+Read on for tips on contributing code.
 
 ### Hang out in our chat
 
 We have a [chat](https://spectrum.chat/ava). Jump in there and lurk, talk to us, and help others.
 
-## Submitting an issue
+## Contributing code
 
-- The issue tracker is for issues. Use our [chat](https://spectrum.chat/ava) or [Stack Overflow](https://stackoverflow.com/questions/tagged/ava) for support.
-- Search the issue tracker before opening an issue.
-- Ensure you're using the latest version of AVA.
-- Use a clear and descriptive title.
-- Include as much information as possible: Steps to reproduce the issue, error message, Node.js version, operating system, etc.
-- The more time you put into an issue, the more we will.
-- [The best issue report is a failing test proving it.](https://twitter.com/sindresorhus/status/579306280495357953)
+Once you find an issue you'd like to work on leave a comment so others are aware. We'll then assign you to the issue.
 
-## Submitting a pull request
+Of course you can work on things that do not yet have an issue. However if you're going to be putting in a lot of effort it's best to discuss it first.
 
-- Non-trivial changes are often best discussed in an issue first, to prevent you from doing unnecessary work.
-- For ambitious tasks, you should try to get your work in front of the community for feedback as soon as possible. Open a pull request as soon as you have done the minimum needed to demonstrate your idea. At this early stage, don't worry about making things perfect, or 100% complete. Add a [WIP] prefix to the title, and describe what you still need to do. This lets reviewers know not to nit-pick small details or point out improvements you already know you need to make.
-- New features should be accompanied with tests and documentation.
-- Don't include unrelated changes.
-- Lint and test before submitting the pull request by running `$ npm test`.
-- Make the pull request from a [topic branch](https://github.com/dchelimsky/rspec/wiki/Topic-Branches), not master.
-- Use a clear and descriptive title for the pull request and commits.
-- Write a convincing description of why we should land your pull request. It's your job to convince us. Answer "why" it's needed and provide use-cases.
-- You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/knowledge/blob/master/github/amending-a-commit-guide.md)
+When you're ready to get feedback on your work, open a [draft pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests#draft-pull-requests). It's fine if the work's not yet done, but please do let us know what's remaining. This lets reviewers know not to nit-pick small details or point out improvements you already know you need to make.
 
-Note: when making code changes, try to remember AVA's mantra (stolen from Python) of having preferably one way to do something. For example, a request to add an alias to part of the API ([like this](https://github.com/avajs/ava/pull/663)) will likely be rejected without some other substantial benefit.
+Reviewing large pull requests can take a lot of time. Time that may not always be available. Smaller pull requests may land more quickly. If you're introducing a new feature think about how it might be broken up. It's OK to land features as [opt-in experiments](https://github.com/avajs/ava/blob/master/docs/06-configuration.md#experiments). These require less documentation and test coverage.
 
-*Looking to make your first ever contribution to an open-source project? Look no further! AVA may be one of the most welcoming projects and communities out there. Check out ["Making your first contribution"](https://medium.com/@vadimdemedes/making-your-first-contribution-de6576ddb190) blog post to start off the right way and make your work a part of AVA!*
+Try and avoid making breaking changes. Those take more time to ship. Instead make the new behavior opt-in. This way your feature can ship, and you can use it, on its own schedule.
+
+Non-experimental features should be accompanied with tests and documentation.
+
+Don't include unrelated changes in your pull request. Make sure tests pass on your machine by running `npm test`. You can run specific test files as well using `npx tap --no-cov test/{file}.js`.
+
+When you make a pull request please use a clear and descriptive title. Be specific about what's changed and why.
+
+Please make sure the *Allow edits from maintainers* box is checked. That way we can make certain minor changes ourselves, allowing your pull request to be merged sooner.
+
+You might be asked to make changes to your pull request. There's never a need to open another pull request. Push more commits to your existing branch. We'll squash them when we merge the PR.
+
+Dependencies are managed using `npm`. Only update dependencies when needed for your pull request. Don't rebuild the lockfile.
+
+And finally, have fun!
