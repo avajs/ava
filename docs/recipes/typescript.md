@@ -38,7 +38,6 @@ Once installed, add the `tsconfig-paths/register` entry to the `require` section
 ```json
 {
 	"ava": {
-		"compileEnhancements": false,
 		"extensions": [
 			"ts"
 		],
