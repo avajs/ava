@@ -10,31 +10,11 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly.
 
-There are some minor changes between AVA version 3 and previous versions of AVA. In V3, the `compileEnhancements` configuration is no longer necessary unless you are planning to use AVA's Babel support, as AVA no longer ships with it's Babel setup.
-
-### AVA Version 3
-
 `package.json`:
 
 ```json
 {
 	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	}
-}
-```
-
-### Other AVA Versions
-
-```json
-{
-	"ava": {
-		"compileEnhancements": false,
 		"extensions": [
 			"ts"
 		],
