@@ -15,7 +15,6 @@ You can configure AVA to recognize TypeScript files. Then, with `ts-node` instal
 ```json
 {
 	"ava": {
-		"compileEnhancements": false,
 		"extensions": [
 			"ts"
 		],
@@ -39,7 +38,6 @@ Once installed, add the `tsconfig-paths/register` entry to the `require` section
 ```json
 {
 	"ava": {
-		"compileEnhancements": false,
 		"extensions": [
 			"ts"
 		],
