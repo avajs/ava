@@ -28,6 +28,13 @@ function load(projectDir, overrides) {
 			});
 		}
 
+		if (Reflect.has(conf, 'typescript')) {
+			providers.push({
+				type: 'typescript',
+				main: providerManager.typescript(projectDir).main({config: conf.typescript})
+			});
+		}
+
 		configCache.set(projectDir, {conf, providers});
 	}
 
