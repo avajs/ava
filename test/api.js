@@ -6,15 +6,18 @@ const fs = require('fs');
 const del = require('del');
 const {test} = require('tap');
 const Api = require('../lib/api');
-const babelManager = require('../lib/babel-manager');
 const {normalizeGlobs} = require('../lib/globs');
+const providerManager = require('../lib/provider-manager');
 
 const ROOT_DIR = path.join(__dirname, '..');
 
 function apiCreator(options = {}) {
 	options.projectDir = options.projectDir || ROOT_DIR;
 	if (options.babelConfig !== undefined) {
-		options.babelProvider = babelManager({projectDir: options.projectDir}).main({config: options.babelConfig});
+		options.providers = [{
+			type: 'babel',
+			main: providerManager.babel(options.projectDir).main({config: options.babelConfig})
+		}];
 	}
 
 	options.chalkOptions = {level: 0};
