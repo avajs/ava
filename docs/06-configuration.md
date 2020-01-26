@@ -61,6 +61,8 @@ Note that providing files on the CLI overrides the `files` option.
 
 Provide the `babel` option (and install [`@ava/babel`](https://github.com/avajs/babel) as an additional dependency) to enable Babel compilation.
 
+Provide the `typescript` option (and install [`@ava/typescript`](https://github.com/avajs/typescript) as an additional dependency) to enable (rudimentary) TypeScript support.
+
 ## Using `ava.config.*` files
 
 Rather than specifying the configuration in the `package.json` file you can use `ava.config.js` or `ava.config.cjs` files.

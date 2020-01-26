@@ -4,84 +4,15 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
+Out of the box AVA does not load TypeScript test files, however. Rudimentary support is available via the [`@ava/typescript`] package. You can also use AVA with [`ts-node`]. Read on for details.
+
 This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 3.7.5.
 
-## Configuring AVA to compile TypeScript files on the fly
+## Enabling AVA's TypeScript support
 
-You can configure AVA to recognize TypeScript files. Then, with `ts-node` installed, you can compile them on the fly.
+Currently, AVA's TypeScript support is designed to work for projects that precompile TypeScript. Please see [`@ava/typescript`] for setup instructions.
 
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	}
-}
-```
-
-It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
-
-### Using module path mapping
-
-`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138), however you can use [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme).
-
-Once installed, add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
-
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register",
-			"tsconfig-paths/register"
-		]
-	}
-}
-```
-
-Then you can start using module aliases:
-
-`tsconfig.json`:
-```json
-{
-	"baseUrl": ".",
-	"paths": {
-		"@helpers/*": ["helpers/*"]
-	}
-}
-```
-
-Test:
-
-```ts
-import myHelper from '@helpers/myHelper';
-
-// Rest of the file
-```
-
-## Compiling TypeScript files before running AVA
-
-Add a `test` script in the `package.json` file. It will compile the project first and then run AVA.
-
-```json
-{
-	"scripts": {
-		"test": "tsc && ava"
-	}
-}
-```
-
-Make sure that AVA runs your built TypeScript files.
+Read on until the end to learn how to use [`ts-node`] with AVA.
 
 ## Writing tests
 
@@ -221,3 +152,69 @@ test('throwsAsync', async t => {
 ```
 
 Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
+
+## On the fly compilation using `ts-node`
+
+If [`@ava/typescript`] doesn't do the trick you can use [`ts-node`]. Make sure it's installed and then configure AVA to recognize TypeScript files and register [`ts-node`]:
+
+`package.json`:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	}
+}
+```
+
+It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+
+### Using module path mapping
+
+`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138), however you can use [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme).
+
+Once installed, add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
+
+`package.json`:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register",
+			"tsconfig-paths/register"
+		]
+	}
+}
+```
+
+Then you can start using module aliases:
+
+`tsconfig.json`:
+```json
+{
+	"baseUrl": ".",
+	"paths": {
+		"@helpers/*": ["helpers/*"]
+	}
+}
+```
+
+Test:
+
+```ts
+import myHelper from '@helpers/myHelper';
+
+// Rest of the file
+```
+
+[`@ava/typescript`]: https://github.com/avajs/typescript
+[`ts-node`]: https://www.npmjs.com/package/ts-node

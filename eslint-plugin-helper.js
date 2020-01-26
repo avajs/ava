@@ -1,8 +1,8 @@
 'use strict';
-const babelManager = require('./lib/babel-manager');
 const normalizeExtensions = require('./lib/extensions');
 const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
+const providerManager = require('./lib/provider-manager');
 
 const configCache = new Map();
 const helperCache = new Map();
@@ -14,22 +14,33 @@ function load(projectDir, overrides) {
 	}
 
 	let conf;
-	let babelProvider;
+	let providers;
 	if (configCache.has(projectDir)) {
-		({conf, babelProvider} = configCache.get(projectDir));
+		({conf, providers} = configCache.get(projectDir));
 	} else {
 		conf = loadConfig({resolveFrom: projectDir});
 
+		providers = [];
 		if (Reflect.has(conf, 'babel')) {
-			babelProvider = babelManager({projectDir}).main({config: conf.babel});
+			providers.push({
+				type: 'babel',
+				main: providerManager.babel(projectDir).main({config: conf.babel})
+			});
 		}
 
-		configCache.set(projectDir, {conf, babelProvider});
+		if (Reflect.has(conf, 'typescript')) {
+			providers.push({
+				type: 'typescript',
+				main: providerManager.typescript(projectDir).main({config: conf.typescript})
+			});
+		}
+
+		configCache.set(projectDir, {conf, providers});
 	}
 
 	const extensions = overrides && overrides.extensions ?
 		normalizeExtensions(overrides.extensions) :
-		normalizeExtensions(conf.extensions, babelProvider);
+		normalizeExtensions(conf.extensions, providers);
 
 	let helperPatterns = [];
 	if (overrides && overrides.helpers !== undefined) {

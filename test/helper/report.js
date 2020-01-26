@@ -6,8 +6,8 @@ const globby = require('globby');
 const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
 const pkg = require('../../package.json');
-const babelManager = require('../../lib/babel-manager');
 const {normalizeGlobs} = require('../../lib/globs');
+const providerManager = require('../../lib/provider-manager');
 
 let _Api = null;
 const createApi = options => {
@@ -72,7 +72,10 @@ exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLo
 const run = (type, reporter, match = []) => {
 	const projectDir = exports.projectDir(type);
 
-	const babelProvider = babelManager({projectDir}).main({config: true});
+	const providers = [{
+		type: 'babel',
+		main: providerManager.babel(projectDir).main({config: true})
+	}];
 
 	const options = {
 		extensions: ['js'],
@@ -83,7 +86,7 @@ const run = (type, reporter, match = []) => {
 		cacheEnabled: true,
 		experiments: {},
 		match,
-		babelProvider,
+		providers,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '10s' : undefined,
 		concurrency: 1,
