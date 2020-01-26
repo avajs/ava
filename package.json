@@ -15,6 +15,7 @@
 	"files": [
 		"lib",
 		"*.js",
+		"!*.config.js",
 		"index.d.ts"
 	],
 	"keywords": [
@@ -159,32 +160,6 @@
 					"import/no-extraneous-dependencies": "off"
 				}
 			}
-		]
-	},
-	"tap": {
-		"browser": false,
-		"coverage": false,
-		"esm": false,
-		"files": [
-			"test-tap/*.js",
-			"test-tap/reporters/*.js",
-			"test-tap/integration/*.js"
-		],
-		"flow": false,
-		"jobs": 2,
-		"jsx": false,
-		"timeout": 300,
-		"ts": false
-	},
-	"nyc": {
-		"all": true,
-		"exclude": [
-			"{coverage,media,test-d,test-tap}/**"
-		],
-		"reporter": [
-			"html",
-			"lcov",
-			"text"
 		]
 	}
 }
