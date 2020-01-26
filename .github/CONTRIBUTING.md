@@ -59,7 +59,7 @@ Try and avoid making breaking changes. Those take more time to ship. Instead mak
 
 Non-experimental features should be accompanied with tests and documentation.
 
-Don't include unrelated changes in your pull request. Make sure tests pass on your machine by running `npm test`. You can run specific test files as well using `npx tap --no-cov test/{file}.js`.
+Don't include unrelated changes in your pull request. Make sure tests pass on your machine by running `npm test`. You can run specific test files as well using `npx tap --no-cov test-tap/{file}.js`.
 
 When you make a pull request please use a clear and descriptive title. Be specific about what's changed and why.
 

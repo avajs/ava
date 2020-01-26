@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "xo",
 		"test:tap": "tap",
-		"test:typescript": "tsc --noEmit -p test/ts-types",
+		"test:typescript": "tsc --noEmit -p test-tap/ts-types",
 		"test": "npm run lint && npm run test:typescript && npm run test:tap"
 	},
 	"files": [
@@ -137,10 +137,10 @@
 	"xo": {
 		"ignores": [
 			"media/**",
-			"test/fixture/ava-paths/target/test.js",
-			"test/fixture/{source-map-initial,syntax-error}.js",
-			"test/fixture/snapshots/test-sourcemaps/build/**",
-			"test/fixture/power-assert.js",
+			"test-tap/fixture/ava-paths/target/test.js",
+			"test-tap/fixture/{source-map-initial,syntax-error}.js",
+			"test-tap/fixture/snapshots/test-sourcemaps/build/**",
+			"test-tap/fixture/power-assert.js",
 			"**/*.ts"
 		],
 		"rules": {
@@ -148,13 +148,13 @@
 		},
 		"overrides": [
 			{
-				"files": "test/**/*.js",
+				"files": "test-tap/**/*.js",
 				"rules": {
 					"promise/prefer-await-to-then": "off"
 				}
 			},
 			{
-				"files": "test/fixture/**/*.js",
+				"files": "test-tap/fixture/**/*.js",
 				"rules": {
 					"import/no-extraneous-dependencies": "off"
 				}
@@ -170,9 +170,9 @@
 		],
 		"esm": false,
 		"files": [
-			"test/*.js",
-			"test/reporters/*.js",
-			"test/integration/*.js"
+			"test-tap/*.js",
+			"test-tap/reporters/*.js",
+			"test-tap/integration/*.js"
 		],
 		"flow": false,
 		"jobs": 2,

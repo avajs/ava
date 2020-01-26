@@ -7,7 +7,7 @@
 ## Testing
 
 * `npm test`: Lint the code and run the entire test suite with coverage.
-* `npx tap --no-cov test/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
+* `npx tap --no-cov test-tap/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
 
 ## CI
 
