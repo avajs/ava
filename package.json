@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "xo",
 		"test:tap": "tap",
-		"test:typescript": "tsc --noEmit -p test-tap/ts-types",
+		"test:typescript": "tsd",
 		"test": "npm run lint && npm run test:typescript && npm run test:tap"
 	},
 	"files": [
@@ -130,6 +130,7 @@
 		"tempy": "^0.4.0",
 		"touch": "^3.1.0",
 		"ts-node": "^8.6.2",
+		"tsd": "^0.11.0",
 		"typescript": "^3.7.5",
 		"xo": "^0.26.1",
 		"zen-observable": "^0.8.15"

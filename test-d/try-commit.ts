@@ -1,10 +1,13 @@
-import test, {ExecutionContext, Macro} from '../..';
+import {expectError, expectType} from 'tsd';
+import test, {ExecutionContext, Macro} from '..';
 
 {
 	test('attempt', async t => {
 		const attempt = await t.try(
 			(u, a, b) => {
-				u.is(a.length, b);
+				expectType<ExecutionContext>(u);
+				expectType<string>(a);
+				expectType<number>(b);
 			},
 			'string',
 			6
@@ -16,7 +19,9 @@ import test, {ExecutionContext, Macro} from '../..';
 		const attempt = await t.try(
 			'attempt title',
 			(u, a, b) => {
-				u.is(a.length, b);
+				expectType<ExecutionContext>(u);
+				expectType<string>(a);
+				expectType<number>(b);
 			},
 			'string',
 			6
@@ -46,7 +51,7 @@ import test, {ExecutionContext, Macro} from '../..';
 	});
 
 	test('attempt with title', async t => {
-		const attempt = await t.try(lengthCheck, 'string', 6);
+		const attempt = await t.try('title', lengthCheck, 'string', 6);
 		attempt.commit();
 	});
 }
