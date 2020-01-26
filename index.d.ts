@@ -250,13 +250,13 @@ export interface ThrowsAssertion {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations?: null, message?: string): ThrownError;
+	<ThrownError extends Error>(fn: () => any): ThrownError;
 
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations: ThrowsExpectation, message?: string): ThrownError;
+	<ThrownError extends Error>(fn: () => any, expectations: ThrowsExpectation | null, message?: string): ThrownError;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
@@ -267,25 +267,25 @@ export interface ThrowsAsyncAssertion {
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result.
 	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
+	<ThrownError extends Error>(fn: () => PromiseLike<any>): Promise<ThrownError>;
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
+	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations: ThrowsExpectation | null, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result.
 	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
+	<ThrownError extends Error>(promise: PromiseLike<any>): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. You must await the result. The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
+	<ThrownError extends Error>(promise: PromiseLike<any>, expectations: ThrowsExpectation | null, message?: string): Promise<ThrownError>;
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
