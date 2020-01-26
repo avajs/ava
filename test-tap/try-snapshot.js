@@ -23,7 +23,7 @@ function setup(title, manager, fn) {
 
 test(async t => {
 	// Set to `true` to update the snapshot, then run:
-	// "$(npm bin)"/tap --no-cov -R spec test/try-snapshot.js
+	// "$(npm bin)"/tap -R spec test/try-snapshot.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;

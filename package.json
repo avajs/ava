@@ -10,7 +10,7 @@
 		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0"
 	},
 	"scripts": {
-		"test": "xo && tsd && tap"
+		"test": "xo && tsd && nyc tap"
 	},
 	"files": [
 		"lib",
@@ -115,6 +115,8 @@
 		"esm": "^3.2.25",
 		"execa": "^4.0.0",
 		"get-stream": "^5.1.0",
+		"lolex": "^5.1.2",
+		"nyc": "^15.0.0",
 		"p-event": "^4.1.0",
 		"proxyquire": "^2.1.3",
 		"react": "^16.12.0",
@@ -161,11 +163,7 @@
 	},
 	"tap": {
 		"browser": false,
-		"coverage-report": [
-			"html",
-			"lcov",
-			"text"
-		],
+		"coverage": false,
 		"esm": false,
 		"files": [
 			"test-tap/*.js",
@@ -177,5 +175,16 @@
 		"jsx": false,
 		"timeout": 300,
 		"ts": false
+	},
+	"nyc": {
+		"all": true,
+		"exclude": [
+			"{coverage,media,test-d,test-tap}/**"
+		],
+		"reporter": [
+			"html",
+			"lcov",
+			"text"
+		]
 	}
 }
