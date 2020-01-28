@@ -166,7 +166,7 @@ test('selects .cjs test files', t => {
 
 test('refuses to load .mjs test files (node < 13)', t => {
 	execCli('mjs.mjs', (err, stdout) => {
-		if (Number.parseFloat(process.version.slice(1)) >= 13) {
+		if (Number.parseFloat(process.version.slice(1)) >= 13 && process.platform !== 'win32') {
 			t.ifError(err);
 			t.match(stdout, /1 test passed/);
 			t.end();
@@ -180,7 +180,7 @@ test('refuses to load .mjs test files (node < 13)', t => {
 
 test('refuses to load .js test files as ESM modules (node < 13)', t => {
 	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
-		if (Number.parseFloat(process.version.slice(1)) >= 13) {
+		if (Number.parseFloat(process.version.slice(1)) >= 13 && process.platform !== 'win32') {
 			t.ifError(err);
 			t.match(stdout, /1 test passed/);
 			t.end();
