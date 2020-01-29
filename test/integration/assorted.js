@@ -164,7 +164,7 @@ test('selects .cjs test files', t => {
 	});
 });
 
-test('refuses to load .mjs test files (node < 13)', t => {
+test('load .mjs test files (when node supports it)', t => {
 	execCli('mjs.mjs', (err, stdout) => {
 		if (Number.parseFloat(process.version.slice(1)) >= 13 && process.platform !== 'win32') {
 			t.ifError(err);
@@ -178,7 +178,7 @@ test('refuses to load .mjs test files (node < 13)', t => {
 	});
 });
 
-test('refuses to load .js test files as ESM modules (node < 13)', t => {
+test('load .js test files as ESM modules (when node supports it)', t => {
 	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
 		if (Number.parseFloat(process.version.slice(1)) >= 13 && process.platform !== 'win32') {
 			t.ifError(err);
