@@ -17,7 +17,7 @@ function fixture(...args) {
 }
 
 test('ignores relativeness in patterns', t => {
-	const {filePatterns} = globs.normalizeGlobs({files: ['./foo.js', '!./bar'], extensions: ['js']});
+	const {filePatterns} = globs.normalizeGlobs({files: ['./foo.js', '!./bar'], extensions: ['js'], providers: []});
 	t.deepEqual(filePatterns, ['foo.js', '!bar']);
 	t.end();
 });
@@ -25,7 +25,8 @@ test('ignores relativeness in patterns', t => {
 test('isTest with defaults', t => {
 	const options = {
 		...globs.normalizeGlobs({
-			extensions: ['js']
+			extensions: ['js'],
+			providers: []
 		}),
 		cwd: fixture()
 	};
@@ -99,7 +100,8 @@ test('isTest with patterns', t => {
 	const options = {
 		...globs.normalizeGlobs({
 			files: ['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],
-			extensions: ['js']
+			extensions: ['js'],
+			providers: []
 		}),
 		cwd: fixture()
 	};
@@ -133,7 +135,8 @@ test('isTest (pattern starts with directory)', t => {
 	const options = {
 		...globs.normalizeGlobs({
 			files: ['bar/**/*'],
-			extensions: ['js']
+			extensions: ['js'],
+			providers: []
 		}),
 		cwd: fixture()
 	};
@@ -163,9 +166,35 @@ test('isTest (pattern starts with directory)', t => {
 	t.end();
 });
 
+test('isTest after provider modifications', t => {
+	const options = {
+		...globs.normalizeGlobs({
+			extensions: ['js'],
+			providers: [{
+				level: 2,
+				main: {
+					updateGlobs({filePatterns, ignoredByWatcherPatterns}) {
+						t.true(filePatterns.length > 0);
+						t.true(ignoredByWatcherPatterns.length > 0);
+						return {
+							filePatterns: ['foo.js'],
+							ignoredByWatcherPatterns
+						};
+					}
+				}
+			}]
+		}),
+		cwd: fixture()
+	};
+
+	t.true(globs.classify(fixture('foo.js'), options).isTest);
+	t.false(globs.classify(fixture('bar.js'), options).isTest);
+	t.end();
+});
+
 test('isIgnoredByWatcher with defaults', t => {
 	const options = {
-		...globs.normalizeGlobs({extensions: ['js']}),
+		...globs.normalizeGlobs({extensions: ['js'], providers: []}),
 		cwd: fixture()
 	};
 
@@ -203,7 +232,8 @@ test('isIgnoredByWatcher with patterns', t => {
 		...globs.normalizeGlobs({
 			files: ['**/foo*'],
 			ignoredByWatcher: ['**/bar*'],
-			extensions: ['js']
+			extensions: ['js'],
+			providers: []
 		}),
 		cwd: fixture()
 	};
@@ -219,7 +249,8 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 		...globs.normalizeGlobs({
 			files: ['**/foo*'],
 			ignoredByWatcher: ['foo/**/*'],
-			extensions: ['js']
+			extensions: ['js'],
+			providers: []
 		}),
 		cwd: fixture()
 	};
@@ -227,6 +258,32 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 	t.true(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
 	t.false(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
 	t.true(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
+	t.end();
+});
+
+test('isIgnoredByWatcher after provider modifications', t => {
+	const options = {
+		...globs.normalizeGlobs({
+			extensions: ['js'],
+			providers: [{
+				level: 2,
+				main: {
+					updateGlobs({filePatterns, ignoredByWatcherPatterns}) {
+						t.true(filePatterns.length > 0);
+						t.true(ignoredByWatcherPatterns.length > 0);
+						return {
+							filePatterns,
+							ignoredByWatcherPatterns: ['foo.js']
+						};
+					}
+				}
+			}]
+		}),
+		cwd: fixture()
+	};
+
+	t.true(globs.classify(fixture('foo.js'), options).isIgnoredByWatcher);
+	t.false(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -251,7 +308,7 @@ test('findFiles finds non-ignored files (just .js)', async t => {
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['js']})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['js'], providers: []})
 	});
 	actual.sort();
 	t.deepEqual(actual, expected);
@@ -270,7 +327,7 @@ test('findFiles finds non-ignored files (.js, .jsx)', async t => {
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['js', 'jsx']})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['js', 'jsx'], providers: []})
 	});
 	actual.sort();
 	t.deepEqual(actual, expected);

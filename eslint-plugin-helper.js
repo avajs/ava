@@ -22,16 +22,20 @@ function load(projectDir, overrides) {
 
 		providers = [];
 		if (Reflect.has(conf, 'babel')) {
+			const {level, main} = providerManager.babel(projectDir);
 			providers.push({
-				type: 'babel',
-				main: providerManager.babel(projectDir).main({config: conf.babel})
+				level,
+				main: main({config: conf.babel}),
+				type: 'babel'
 			});
 		}
 
 		if (Reflect.has(conf, 'typescript')) {
+			const {level, main} = providerManager.typescript(projectDir);
 			providers.push({
-				type: 'typescript',
-				main: providerManager.typescript(projectDir).main({config: conf.typescript})
+				level,
+				main: main({config: conf.typescript}),
+				type: 'typescript'
 			});
 		}
 
@@ -55,7 +59,8 @@ function load(projectDir, overrides) {
 		cwd: projectDir,
 		...normalizeGlobs({
 			extensions,
-			files: overrides && overrides.files ? overrides.files : conf.files
+			files: overrides && overrides.files ? overrides.files : conf.files,
+			providers
 		})
 	};
 
