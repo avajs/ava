@@ -172,7 +172,7 @@ test('load .mjs test files (when node supports it)', t => {
 			t.end();
 		} else {
 			t.ok(err);
-			t.match(stdout, /AVA cannot yet load ESM files/);
+			t.match(stdout, /Node version cannot load ESM files./);
 			t.end();
 		}
 	});
@@ -186,7 +186,7 @@ test('load .js test files as ESM modules (when node supports it)', t => {
 			t.end();
 		} else {
 			t.ok(err);
-			t.match(stdout, /AVA cannot yet load ESM files/);
+			t.match(stdout, /Node version cannot load ESM files./);
 			t.end();
 		}
 	});
