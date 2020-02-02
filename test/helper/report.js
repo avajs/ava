@@ -102,7 +102,7 @@ const run = (type, reporter, match = []) => {
 		pattern = '*.ts';
 	}
 
-	options.globs = normalizeGlobs({extensions: options.extensions});
+	options.globs = normalizeGlobs({extensions: options.extensions, providers: []});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));

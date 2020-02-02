@@ -24,7 +24,7 @@ function apiCreator(options = {}) {
 	options.concurrency = 2;
 	options.extensions = options.extensions || ['js'];
 	options.experiments = {};
-	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions});
+	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions, providers: []});
 	const instance = new Api(options);
 
 	return instance;
