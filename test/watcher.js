@@ -145,7 +145,7 @@ group('chokidar', (beforeEach, test, group) => {
 		Subject = proxyWatcher();
 	});
 
-	const start = ignoredByWatcher => new Subject({reporter, api, filter: [], globs: normalizeGlobs({files, ignoredByWatcher, extensions: ['js']}), projectDir: process.cwd()});
+	const start = ignoredByWatcher => new Subject({reporter, api, filter: [], globs: normalizeGlobs({files, ignoredByWatcher, extensions: ['js'], providers: []}), projectDir: process.cwd(), providers: []});
 
 	const emitChokidar = (event, path) => {
 		chokidarEmitter.emit('all', event, path);

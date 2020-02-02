@@ -59,7 +59,8 @@ function load(projectDir, overrides) {
 		cwd: projectDir,
 		...normalizeGlobs({
 			extensions,
-			files: overrides && overrides.files ? overrides.files : conf.files
+			files: overrides && overrides.files ? overrides.files : conf.files,
+			providers
 		})
 	};
 
