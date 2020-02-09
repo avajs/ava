@@ -172,7 +172,7 @@ test('load .mjs test files (when node supports it)', t => {
 			t.end();
 		} else {
 			t.ok(err);
-			t.match(stdout, /ESM files cannot be loaded in this version of Node.js./);
+			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
 			t.end();
 		}
 	});
@@ -186,7 +186,7 @@ test('load .js test files as ESM modules (when node supports it)', t => {
 			t.end();
 		} else {
 			t.ok(err);
-			t.match(stdout, /ESM files cannot be loaded in this version of Node.js./);
+			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
 			t.end();
 		}
 	});
