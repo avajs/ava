@@ -2,15 +2,25 @@ const Test = require('../../lib/test');
 const ContextRef = require('../../lib/context-ref');
 
 function withExperiments(experiments = {}) {
-	function ava(fn, contextRef) {
+	const uniqueTestTitles = new Set();
+	const registerUniqueTitle = title => {
+		if (uniqueTestTitles.has(title)) {
+			return false;
+		}
+
+		uniqueTestTitles.add(title);
+		return true;
+	};
+
+	function ava(fn, contextRef, title = 'test') {
 		return new Test({
 			contextRef: contextRef || new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
-			registerUniqueTitle: () => true,
+			registerUniqueTitle,
 			metadata: {type: 'test', callback: false},
-			title: 'test'
+			title
 		});
 	}
 
@@ -20,7 +30,7 @@ function withExperiments(experiments = {}) {
 			experiments,
 			failWithoutAssertions: true,
 			fn,
-			registerUniqueTitle: () => true,
+			registerUniqueTitle,
 			metadata: {type: 'test', callback: false, failing: true},
 			title: 'test.failing'
 		});
@@ -32,7 +42,7 @@ function withExperiments(experiments = {}) {
 			experiments,
 			failWithoutAssertions: true,
 			fn,
-			registerUniqueTitle: () => true,
+			registerUniqueTitle,
 			metadata: {type: 'test', callback: true},
 			title: 'test.cb'
 		});
@@ -44,7 +54,7 @@ function withExperiments(experiments = {}) {
 			experiments,
 			failWithoutAssertions: true,
 			fn,
-			registerUniqueTitle: () => true,
+			registerUniqueTitle,
 			metadata: {type: 'test', callback: true, failing: true},
 			title: 'test.cb.failing'
 		});
