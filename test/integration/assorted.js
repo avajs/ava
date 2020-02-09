@@ -164,18 +164,30 @@ test('selects .cjs test files', t => {
 	});
 });
 
-test('refuses to load .mjs test files', t => {
+test('load .mjs test files (when node supports it)', t => {
 	execCli('mjs.mjs', (err, stdout) => {
-		t.ok(err);
-		t.match(stdout, /AVA cannot yet load ESM files/);
-		t.end();
+		if (Number.parseFloat(process.version.slice(1)) >= 13) {
+			t.ifError(err);
+			t.match(stdout, /1 test passed/);
+			t.end();
+		} else {
+			t.ok(err);
+			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
+			t.end();
+		}
 	});
 });
 
-test('refuses to load .js test files as ESM modules', t => {
-	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
-		t.ok(err);
-		t.match(stdout, /AVA cannot yet load ESM files/);
-		t.end();
+test('load .js test files as ESM modules (when node supports it)', t => {
+	execCli('test.js', {dirname: 'fixture/pkg-type-module'}, (err, stdout) => {
+		if (Number.parseFloat(process.version.slice(1)) >= 13) {
+			t.ifError(err);
+			t.match(stdout, /1 test passed/);
+			t.end();
+		} else {
+			t.ok(err);
+			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
+			t.end();
+		}
 	});
 });
