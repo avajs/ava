@@ -671,7 +671,7 @@ test('`esm` package support', t => {
 		require: [require.resolve('esm')]
 	});
 
-	return api.run({files: [path.join(__dirname, 'fixture/esm-pkg/test.js')]})
+	return api.run({files: [path.join(__dirname, 'fixture/userland-esm-package/test.js')]})
 		.then(runStatus => {
 			t.is(runStatus.stats.passedTests, 1);
 		});
