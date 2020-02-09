@@ -179,7 +179,7 @@ test('load .mjs test files (when node supports it)', t => {
 });
 
 test('load .js test files as ESM modules (when node supports it)', t => {
-	execCli('test.js', {dirname: 'fixture/esm'}, (err, stdout) => {
+	execCli('test.js', {dirname: 'fixture/pkg-type-module'}, (err, stdout) => {
 		if (Number.parseFloat(process.version.slice(1)) >= 13) {
 			t.ifError(err);
 			t.match(stdout, /1 test passed/);
