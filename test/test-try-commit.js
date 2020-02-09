@@ -209,15 +209,15 @@ test('try-commit has proper titles, when going in depth and width', async t => {
 
 		await Promise.all([
 			a.try(async b => {
-				t.is(b.title, 'test (attempt 1)');
+				t.is(b.title, 'test ─ attempt 1');
 
 				await Promise.all([
-					b.try(c => t.is(c.title, 'test (attempt 1) (attempt 1)')),
-					b.try(c => t.is(c.title, 'test (attempt 1) (attempt 2)'))
+					b.try(c => t.is(c.title, 'test ─ attempt 1 ─ attempt 1')),
+					b.try(c => t.is(c.title, 'test ─ attempt 1 ─ attempt 2'))
 				]);
 			}),
-			a.try(b => t.is(b.title, 'test (attempt 2)')),
-			a.try(b => t.is(b.title, 'test (attempt 3)'))
+			a.try(b => t.is(b.title, 'test ─ attempt 2')),
+			a.try(b => t.is(b.title, 'test ─ attempt 3'))
 		]);
 	}).run();
 });
@@ -404,11 +404,11 @@ test('try-commit does not allow to use .end() in attempt when parent is regular 
 
 test('try-commit accepts macros', async t => {
 	const macro = b => {
-		t.is(b.title, ' Title');
+		t.is(b.title, 'test ─ Title');
 		b.pass();
 	};
 
-	macro.title = providedTitle => `${providedTitle ? providedTitle : ''} Title`;
+	macro.title = (providedTitle = '') => `${providedTitle} Title`.trim();
 
 	const result = await ava(async a => {
 		const res = await a.try(macro);
