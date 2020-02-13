@@ -35,6 +35,7 @@ The first step is setting up a helper to configure the environment to transpile 
 ```js
 // ./test/_setup.js
 
+// https://github.com/vuejs/vue-test-utils/issues/936
 // from @vue/cli-plugin-unit-mocha/setup.js
 require('jsdom-global')()
 
@@ -44,7 +45,6 @@ require('jsdom-global')()
 window.Date = Date
 
 // Setup browser environment
-require('browser-env')();
 const hooks = require('require-extension-hooks');
 const Vue = require('vue');
 
