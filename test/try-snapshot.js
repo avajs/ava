@@ -10,7 +10,7 @@ const ContextRef = require('../lib/context-ref');
 
 function setup(title, manager, fn) {
 	return new Test({
-		experiments: {tryAssertion: true},
+		experiments: {},
 		fn,
 		failWithoutAssertions: true,
 		metadata: {type: 'test', callback: false},

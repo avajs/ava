@@ -307,8 +307,6 @@ Snapshot assertions cannot be skipped when snapshots are being updated.
 
 `.try()` allows you to *try* assertions without causing the test to fail.
 
-*This assertion is experimental. [Enable the `tryAssertion` experiment](./06-configuration.md#experiments) to use it.*
-
 The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implemetation or macro function.
 
 `.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail.
