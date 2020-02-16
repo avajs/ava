@@ -95,7 +95,7 @@
 		"p-map": "^3.0.0",
 		"picomatch": "^2.2.1",
 		"pkg-conf": "^3.1.0",
-		"plur": "^3.1.1",
+		"plur": "^4.0.0",
 		"pretty-ms": "^6.0.0",
 		"read-pkg": "^5.2.0",
 		"resolve-cwd": "^3.0.0",
