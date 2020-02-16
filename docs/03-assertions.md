@@ -303,40 +303,26 @@ Compares the `expected` value with a previously recorded snapshot. Snapshots are
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
 
-### `.try([title], implementation)`
-### `.try([title], macro, [arg1, [arg2, [arg3, ...]]])`
-### `.try([title], macro[], [arg1, [arg2, [arg3, ...]]])`
+### `.try(title?, implementation | macro | macro[], ...args?)`
 
-Attempt to run the function and return the result of the execution.
-The API largely reminds the api of the `test()` function, however the title is always optional.
-This function accepts either implementation and zero arguments passed to it, or a macro with any number of arguments passed to it.
-Additionally the macro function could also have the title generating function, which will be used as a title for the given attempt.
+`.try()` allows you to *try* assertions without causing the test to fail.
 
-This function always returns the promise which fulfills with the result of attempt and two functions `commit()` and `discard()` to act on the result of the attempt.
-Each attempt has to either be committed or discarded, and they cannot be left in the undefined state.
-Additionally, within each attempt there has to be at least one assertion done.
+The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implemetation or macro function.
 
-The promise is fulfilled with the following signature:
+`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail.
 
-```typescript
-interface ReturnType {
-	passed: boolean,
-	errors: AssertionError[],
-	title: string,
-	logs: string[],
-	commit: (options?: Options) => void,
-	discard: (options?: Options) => void,
-}
+You can check whether the attempt passed using the `passed` property. Any assertion errors are available through the `errors` property. The attempt title is available through the `title` property.
 
-interface Options {
-	retainLogs?: boolean
-}
-```
+Logs from `t.log()` are available through the `logs` property. You can choose to retain these logs as part of your test by passing `{retainLogs: true}` to the `commit()` and `discard()` methods.
+
+The implementation function receives its own [execution context](./02-execution-context.md), just like a test function. You must be careful to only perform assertions using the attempt's execution context. At least one assertion must pass for your attempt to pass.
+
+You may run multiple attempts concurrently, within a single test. However you can't use snapshots when you do so.
 
 Example:
 
 ```js
-const twoRndInts = () => {
+const twoRandomIntegers = () => {
 	const rnd = Math.round(Math.random() * 100);
 	const x = rnd % 10;
 	const y = Math.floor(rnd / 10);
@@ -344,21 +330,21 @@ const twoRndInts = () => {
 };
 
 test('flaky macro', async t => {
-	const result = await t.try((t, a, b) => {
+	const firstTry = await t.try((t, a, b) => {
 		t.is(a, b);
-	}, ...twoRndInts());
+	}, ...randomIntegers());
 
-	if (result.passed) {
-		result.commit();
-	} else {
-		t.log(result.error);
-		result.discard();
-
-		const result1 = await t.try((t, a, b) => {
-			t.is(a, b);
-		}, ...twoRndInts());
-
-		result1.commit();
+	if (firstTry.passed) {
+		firstTry.commit();
+		return;
 	}
+
+	firstTry.discard();
+	t.log(firstTry.errors);
+
+	const secondTry = await t.try((t, a, b) => {
+		t.is(a, b);
+	}, ...randomIntegers());
+	secondTry.commit();
 });
 ```
