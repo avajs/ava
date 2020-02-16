@@ -330,8 +330,8 @@ const twoRandomIntegers = () => {
 };
 
 test('flaky macro', async t => {
-	const firstTry = await t.try((t, a, b) => {
-		t.is(a, b);
+	const firstTry = await t.try((tt, a, b) => {
+		tt.is(a, b);
 	}, ...randomIntegers());
 
 	if (firstTry.passed) {
@@ -342,8 +342,8 @@ test('flaky macro', async t => {
 	firstTry.discard();
 	t.log(firstTry.errors);
 
-	const secondTry = await t.try((t, a, b) => {
-		t.is(a, b);
+	const secondTry = await t.try((tt, a, b) => {
+		tt.is(a, b);
 	}, ...randomIntegers());
 	secondTry.commit();
 });
