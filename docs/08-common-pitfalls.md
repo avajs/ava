@@ -4,14 +4,6 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 If you use [ESLint](http://eslint.org/), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
-## Transpiling imported modules
-
-AVA currently only transpiles test and helper files. *It will not transpile modules you `import` from outside of the test.* This may be unexpected but there are workarounds.
-
-If you use Babel you can use its [require hook](https://babeljs.io/docs/usage/require/) to transpile imported modules on-the-fly. To add it, [configure it in your `package.json`](./06-configuration.md).
-
-You can also transpile your modules in a separate process and refer to the transpiled files rather than the sources from your tests.
-
 ## AVA in Docker
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [#751](https://github.com/avajs/ava/issues/751).
@@ -81,6 +73,8 @@ test('one is one', t => {
 });
 ```
 
+Also make sure to enable [Babel](./recipes/babel.md).
+
 ## Sharing variables between asynchronous tests
 
 By default AVA executes tests concurrently. This can cause problems if your tests are asynchronous and share variables.
@@ -88,7 +82,7 @@ By default AVA executes tests concurrently. This can cause problems if your test
 Take this contrived example:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 let count = 0;
 const incr = async () => {
@@ -115,7 +109,7 @@ test('increment twice', async t => {
 Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 let count = 0;
 const incr = async () => {

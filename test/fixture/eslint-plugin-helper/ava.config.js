@@ -1,6 +1,8 @@
 export default {
-	babel: false,
-	extensions: ['foo'],
+	extensions: [],
 	files: ['tests/**/*'],
-	helpers: ['helpers/*']
+	babel: {
+		compileAsTests: ['helpers/*'],
+		extensions: ['foo']
+	}
 };

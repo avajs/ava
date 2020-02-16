@@ -1,4 +1,4 @@
-import test from '../..';
+const test = require('../..');
 
 test.before(() => {
 	throw new Error('should not run');

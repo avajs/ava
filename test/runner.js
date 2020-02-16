@@ -612,7 +612,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 		avaT.pass();
 	}
 
-	macroFn.title = (title = 'default', firstArg) => title + firstArg;
+	macroFn.title = (title = 'default', firstArg = undefined) => title + firstArg;
 
 	return promiseEnd(new Runner(), runner => {
 		runner.on('stateChange', evt => {

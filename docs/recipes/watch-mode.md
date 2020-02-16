@@ -45,7 +45,7 @@ And then use:
 $ npm run watch:test
 ```
 
-Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.js` file][config].
+Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.*` file][config].
 
 **`package.json`:**
 
@@ -63,21 +63,19 @@ Please note that the TAP reporter is unavailable when using watch mode.
 
 AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
 
-## Source files and test files
+## Ignoring changes
 
-In AVA there's a distinction between *source files* and *test files*. As you can imagine the *test files* contain your tests. *Source files* are all other files that are needed for the tests to run, be it your source code or test fixtures.
+By default AVA watches for changes to all files, except for those with a `.snap.md` extension, `ava.config.*` and files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-By default AVA watches for changes to the test files, snapshot files, `package.json`, and any other `.js` files. It'll ignore files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
+You can configure additional patterns for files to ignore in the [`ava` section of your `package.json`, or `ava.config.*` file][config], using the `ignoredByWatcher` key.
 
-You can configure patterns for the source files in the [`ava` section of your `package.json`, or `ava.config.js` file][config], using the `sources` key.
-
-If your tests write to disk they may trigger the watcher to rerun your tests. Configure patterns for the source files to avoid this.
+If your tests write to disk they may trigger the watcher to rerun your tests. Configuring additional ignore patterns helps avoid this.
 
 ## Dependency tracking
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.js` file][config], and not from inside your test file. Files accessed using the `fs` module are not tracked.
+Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.*` file][config], and not from inside your test file. Files accessed using the `fs` module are not tracked.
 
 ## Watch mode and the `.only` modifier
 

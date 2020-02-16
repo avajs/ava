@@ -27,22 +27,22 @@ Create a helper file, prefixed with an underscore. This ensures AVA does not tre
 `test/_setup-browser-env.js`:
 
 ```js
-import browserEnv from 'browser-env';
+const browserEnv = require('browser-env');
 browserEnv();
 ```
 
 By default, `browser-env` will add all global browser variables to the Node.js global scope, creating a full browser environment. This should have good compatibility with most front-end libraries, however, it's generally not a good idea to create lots of global variables if you don't need to. If you know exactly which browser globals you need, you can pass an array of them.
 
 ```js
-import browserEnv from 'browser-env';
+const browserEnv = require('browser-env');
 browserEnv(['window', 'document', 'navigator']);
 ```
 
 You can expose more global variables by assigning them to the `global` object. For instance, jQuery is typically available through the `$` variable:
 
 ```js
-import browserEnv from 'browser-env';
-import jQuery from 'jquery';
+const browserEnv = require('browser-env');
+const jQuery = require('jquery');
 
 browserEnv();
 global.$ = jQuery(window);
@@ -71,7 +71,7 @@ Write your tests and enjoy a mocked browser environment.
 `test.js`:
 
 ```js
-import test from 'ava';
+const test = require('ava');
 
 test('Insert to DOM', t => {
 	const div = document.createElement('div');

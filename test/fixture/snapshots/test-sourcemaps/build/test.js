@@ -1,4 +1,4 @@
-import test from '../../../../..';
+const test = require('../../../../..');
 test('top level test title', t => {
     t.snapshot({ foo: 'bar' });
     t.snapshot({ answer: 42 });

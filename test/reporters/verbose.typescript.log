@@ -1,12 +1,12 @@
 
 ---tty-stream-chunk-separator
-  [1mUncaught exception in test/fixture/report/typescript/build-error.ts[22m
+  [1mUncaught exception in build-error.ts[22m
 
   [90mbuild-error.ts(1,1): error TS2304: Cannot find name 'trigger'.[39m
   [90mbuild-error.ts(2,1): error TS2304: Cannot find name 'lets'.[39m
 
 ---tty-stream-chunk-separator
-  [31m✖ test/fixture/report/typescript/build-error.ts exited with a non-zero exit code: 1[39m
+  [31m✖ build-error.ts exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
 
   [31m1 uncaught exception[39m

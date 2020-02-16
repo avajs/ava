@@ -14,9 +14,10 @@ const run = (type, sanitizers = []) => t => {
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timeout]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timeout, report.sanitizers.traces]
 	});
 	const reporter = new TapReporter({
+		projectDir: report.projectDir(type),
 		reportStream: tty,
 		stdStream: tty
 	});

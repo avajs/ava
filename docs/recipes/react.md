@@ -4,9 +4,9 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 ## Setting up Babel
 
-AVA automatically extends your regular (project-level) Babel configuration. You should be able to use React in your test files without any additional configuration.
+When you [enable Babel](https://github.com/avajs/babel), AVA will automatically extend your regular (project-level) Babel configuration. You should be able to use React in your test files without any additional configuration.
 
-However if you want to set it up explicitly, add the preset to the test options in AVA's Babel pipeline by modifying your `package.json` or `ava.config.js` file.
+However if you want to set it up explicitly, add the preset to the test options in AVA's Babel pipeline by modifying your `package.json` or `ava.config.*` file.
 
 **`package.json`:**
 
@@ -22,7 +22,7 @@ However if you want to set it up explicitly, add the preset to the test options 
 }
 ```
 
-You can find more information about setting up Babel with AVA in the [Babel recipe](babel.md).
+You can find more information in [`@ava/babel`](https://github.com/avajs/babel).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
@@ -39,9 +39,9 @@ $ npm install --save-dev enzyme react-addons-test-utils react-dom
 Then you can use Enzyme straight away:
 
 ```js
-import test from 'ava';
-import React from 'react';
-import {shallow} from 'enzyme';
+const test = require('ava');
+const React = require('react');
+const {shallow} = require('enzyme');
 
 const Foo = ({children}) =>
 	<div className="Foo">
@@ -91,9 +91,9 @@ $ npm install --save-dev jsx-test-helpers
 Usage example:
 
 ```js
-import test from 'ava';
-import React from 'react';
-import {renderJSX, JSX} from 'jsx-test-helpers';
+const test = require('ava');
+const React = require('react');
+const {renderJSX, JSX} = require('jsx-test-helpers');
 
 const Foo = ({children}) =>
 	<div className="Foo">

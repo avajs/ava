@@ -7,7 +7,7 @@
   [31m[39m
   [31m✖ Timed out while running tests[39m
 
-  2 tests were pending in ~/test/fixture/report/timeoutinmultiplefiles/a.js
+  2 tests were pending in a.js
 
   ◌ a [90m[2m›[22m[39m a slow
   ◌ a [90m[2m›[22m[39m a slow two
@@ -20,7 +20,7 @@
   [31m[39m
   [31m✖ Timed out while running tests[39m
 
-  3 tests were pending in ~/test/fixture/report/timeoutinmultiplefiles/b.js
+  3 tests were pending in b.js
 
   ◌ b [90m[2m›[22m[39m b slow
   ◌ b [90m[2m›[22m[39m b slow two

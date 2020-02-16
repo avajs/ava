@@ -1,8 +1,8 @@
 'use strict';
-const babelPipeline = require('./lib/babel-pipeline');
 const normalizeExtensions = require('./lib/extensions');
-const {hasExtension, normalizeGlobs, classify} = require('./lib/globs');
+const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
+const providerManager = require('./lib/provider-manager');
 
 const configCache = new Map();
 const helperCache = new Map();
@@ -14,39 +14,79 @@ function load(projectDir, overrides) {
 	}
 
 	let conf;
-	let babelConfig;
+	let providers;
 	if (configCache.has(projectDir)) {
-		({conf, babelConfig} = configCache.get(projectDir));
+		({conf, providers} = configCache.get(projectDir));
 	} else {
 		conf = loadConfig({resolveFrom: projectDir});
-		babelConfig = babelPipeline.validate(conf.babel);
-		configCache.set(projectDir, {conf, babelConfig});
-	}
 
-	if (overrides) {
-		conf = {...conf, ...overrides};
-		if (overrides.extensions) {
-			// Ignore extensions from the Babel config. Assume all extensions are
-			// provided in the override.
-			babelConfig = null;
+		providers = [];
+		if (Reflect.has(conf, 'babel')) {
+			const {level, main} = providerManager.babel(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.babel}),
+				type: 'babel'
+			});
 		}
+
+		if (Reflect.has(conf, 'typescript')) {
+			const {level, main} = providerManager.typescript(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.typescript}),
+				type: 'typescript'
+			});
+		}
+
+		configCache.set(projectDir, {conf, providers});
 	}
 
-	const extensions = normalizeExtensions(conf.extensions || [], babelConfig);
-	const globs = {cwd: projectDir, ...normalizeGlobs(conf.files, conf.helpers, conf.sources, extensions.all)};
+	const extensions = overrides && overrides.extensions ?
+		normalizeExtensions(overrides.extensions) :
+		normalizeExtensions(conf.extensions, providers);
+
+	let helperPatterns = [];
+	if (overrides && overrides.helpers !== undefined) {
+		if (!Array.isArray(overrides.helpers) || overrides.helpers.length === 0) {
+			throw new Error('The \'helpers\' override must be an array containing glob patterns.');
+		}
+
+		helperPatterns = normalizePatterns(overrides.helpers);
+	}
+
+	const globs = {
+		cwd: projectDir,
+		...normalizeGlobs({
+			extensions,
+			files: overrides && overrides.files ? overrides.files : conf.files,
+			providers
+		})
+	};
+
+	const classifyForESLint = file => {
+		const {isTest} = classify(file, globs);
+		let isHelper = false;
+		if (!isTest && hasExtension(globs.extensions, file)) {
+			file = normalizeFileForMatching(projectDir, file);
+			isHelper = isHelperish(file) || (helperPatterns.length > 0 && matches(file, helperPatterns));
+		}
+
+		return {isHelper, isTest};
+	};
 
 	const helper = Object.freeze({
-		classifyFile: file => classify(file, globs),
+		classifyFile: classifyForESLint,
 		classifyImport: importPath => {
 			if (hasExtension(globs.extensions, importPath)) {
 				// The importPath has one of the test file extensions: we can classify
 				// it directly.
-				return classify(importPath, globs);
+				return classifyForESLint(importPath);
 			}
 
 			// Add the first extension. If multiple extensions are available, assume
 			// patterns are not biased to any particular extension.
-			return classify(`${importPath}.${globs.extensions[0]}`, globs);
+			return classifyForESLint(`${importPath}.${globs.extensions[0]}`);
 		}
 	});
 	helperCache.set(cacheKey, helper);

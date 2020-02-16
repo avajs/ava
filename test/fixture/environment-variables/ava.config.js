@@ -1,5 +1,3 @@
-const config = require('.');
-
 export default {
-	environmentVariables: {[config.name]: config.value}
+	environmentVariables: {MY_ENVIRONMENT_VARIABLE: 'some value'}
 };

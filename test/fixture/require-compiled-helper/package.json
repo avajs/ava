@@ -1,7 +1,0 @@
-{
-	"ava": {
-		"require": [
-			"./test/_helper"
-		]
-	}
-}

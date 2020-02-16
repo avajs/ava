@@ -7,6 +7,7 @@ const proxyquire = require('proxyquire');
 const replaceString = require('replace-string');
 const pkg = require('../../package.json');
 const {normalizeGlobs} = require('../../lib/globs');
+const providerManager = require('../../lib/provider-manager');
 
 let _Api = null;
 const createApi = options => {
@@ -60,48 +61,48 @@ exports.sanitizers = {
 	experimentalWarning: str => str.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: str => replaceString(str, '\r\n', '\n'),
 	posix: str => replaceString(str, '\\', '/'),
-	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
+	slow: str => str.replace(/(?<slow>slow.+?)\(\d+m?s\)/g, '$<slow> (000ms)'),
 	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
+	traces: str => str.replace(/(\[...)?[^\s'[]+\s\((.+\.js:\d+:\d+)\)/g, '$1$2'),
 	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
+exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
+
 const run = (type, reporter, match = []) => {
-	const projectDir = path.join(__dirname, '../fixture/report', type.toLowerCase());
+	const projectDir = exports.projectDir(type);
+
+	const providers = [{
+		type: 'babel',
+		main: providerManager.babel(projectDir).main({config: true})
+	}];
 
 	const options = {
-		extensions: {
-			all: ['js'],
-			enhancementsOnly: [],
-			full: ['js']
-		},
+		extensions: ['js'],
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
 		cacheEnabled: true,
-		compileEnhancements: true,
 		experiments: {},
 		match,
-		babelConfig: {testOptions: {}},
-		resolveTestsFrom: projectDir,
+		providers,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '10s' : undefined,
 		concurrency: 1,
 		updateSnapshots: false,
 		snapshotDir: false,
-		color: true
+		chalkOptions: {level: 1}
 	};
 	let pattern = '*.js';
 
 	if (type === 'typescript') {
-		options.extensions.all.push('ts');
-		options.extensions.enhancementsOnly.push('ts');
-		options.compileEnhancements = false;
+		options.extensions.push('ts');
 		options.require = ['ts-node/register'];
 		pattern = '*.ts';
 	}
 
-	options.globs = normalizeGlobs(undefined, undefined, undefined, options.extensions.all);
+	options.globs = normalizeGlobs({extensions: options.extensions, providers: []});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
@@ -123,18 +124,18 @@ const run = (type, reporter, match = []) => {
 		unique: true
 	}).sort();
 	if (type !== 'watch') {
-		return api.run(files).then(() => {
+		return api.run({files}).then(() => {
 			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}).then(() => {
+	return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: true, previousFailures: 2, runVector: 2});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run(files, {clearLogOnNextRun: false, previousFailures: 0, runVector: 3});
+		return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
 	}).then(() => {
 		reporter.endRun();
 	});
@@ -149,4 +150,4 @@ exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', repor
 exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
 exports.watch = reporter => run('watch', reporter);
 exports.typescript = reporter => run('typescript', reporter);
-exports.edgeCases = reporter => run('edge-cases', reporter);
+exports.edgeCases = reporter => run('edgeCases', reporter);

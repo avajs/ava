@@ -28,7 +28,7 @@ test('loads config from a particular directory', t => {
 	t.end();
 });
 
-test('throws a warning if both configs are present', t => {
+test('throws an error if both configs are present', t => {
 	changeDir('package-yes-file-yes');
 	t.throws(loadConfig, /Conflicting configuration in ava.config.js and package.json/);
 	t.end();
@@ -44,6 +44,12 @@ test('explicit configFile option overrides package.json config', t => {
 test('throws if configFile option is not in the same directory as the package.json file', t => {
 	changeDir('package-yes-explicit-yes');
 	t.throws(() => loadConfig({configFile: 'nested/explicit.js'}), /Config files must be located next to the package.json file/);
+	t.end();
+});
+
+test('throws if configFile option has an unsupported extension', t => {
+	changeDir('explicit-bad-extension');
+	t.throws(() => loadConfig({configFile: 'explicit.txt'}), /Config files must have .js, .cjs or .mjs extensions/);
 	t.end();
 });
 
@@ -72,10 +78,9 @@ test('loads config from factory function', t => {
 	t.end();
 });
 
-test('supports require() inside config file', t => {
+test('does not support require() inside config.js files', t => {
 	changeDir('require');
-	const conf = loadConfig();
-	t.is(conf.files, 'config-file-cjs-test-value');
+	t.throws(loadConfig, /require\(\) is not available in ava\.config\.js\. Use a \.cjs file instead/);
 	t.end();
 });
 
@@ -120,7 +125,7 @@ test('rethrows wrapped module errors', t => {
 	}
 });
 
-test('throws an error if a config file has no default export', t => {
+test('throws an error if a .js config file has no default export', t => {
 	changeDir('no-default-export');
 	t.throws(loadConfig, /ava.config.js must have a default export, using ES module syntax/);
 	t.end();
@@ -143,3 +148,28 @@ test('throws an error if a config file enables an unsupported experiment', t => 
 	t.throws(loadConfig, /nonSemVerExperiments.unsupported from ava.config.js is not a supported experiment/);
 	t.end();
 });
+
+test('loads .cjs config', t => {
+	changeDir('cjs');
+	const conf = loadConfig();
+	t.ok(conf.files.startsWith(__dirname));
+	t.end();
+});
+
+test('throws an error if both .js and .cjs configs are present', t => {
+	changeDir('file-yes-cjs-yes');
+	t.throws(loadConfig, /Conflicting configuration in ava.config.js and ava.config.cjs/);
+	t.end();
+});
+
+test('refuses to load .mjs config', t => {
+	changeDir('mjs');
+	t.throws(loadConfig, /AVA cannot yet load ava.config.mjs files/);
+	t.end();
+});
+
+test('throws an error if .js, .cjs and .mjs configs are present', t => {
+	changeDir('file-yes-cjs-yes');
+	t.throws(loadConfig, /Conflicting configuration in ava.config.js and ava.config.cjs & ava.config.mjs/);
+	t.end();
+}, {todo: true});

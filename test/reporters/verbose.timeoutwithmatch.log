@@ -5,7 +5,7 @@
   [31m[39m
   [31m✖ Timed out while running tests[39m
 
-  2 tests were pending in ~/test/fixture/report/timeoutwithmatch/a.js
+  2 tests were pending in a.js
 
   ◌ slow needle
   ◌ slow three needle

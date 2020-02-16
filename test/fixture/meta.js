@@ -1,4 +1,4 @@
-import {default as test, meta} from '../..';
+const {default: test, meta} = require('../..');
 
 test('meta.file', t => {
 	t.is(meta.file, __filename);

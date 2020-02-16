@@ -4,11 +4,10 @@ require('../lib/worker/options').set({});
 
 const fs = require('fs');
 const path = require('path');
-const makeDir = require('make-dir');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
 const tempWrite = require('temp-write');
-const uniqueTempDir = require('unique-temp-dir');
+const tempy = require('tempy');
 const {test} = require('tap');
 const avaAssert = require('../lib/assert');
 const beautifyStack = require('../lib/beautify-stack');
@@ -21,11 +20,11 @@ sourceMapSupport.install({environment: 'node'});
 
 const makeTempDir = () => {
 	if (process.platform !== 'win32') {
-		return uniqueTempDir({create: true});
+		return tempy.directory();
 	}
 
 	const dir = path.join(__dirname, '.tmpdir', `serialize-error.${process.pid}`);
-	makeDir.sync(dir);
+	fs.mkdirSync(dir, {recursive: true});
 	return dir;
 };
 
@@ -101,8 +100,8 @@ test('determines whether source file is within the project', t => {
 	try {
 		require(file)();
 		t.fail('Should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, file);
 		t.is(serializedError.source.isWithinProject, false);
 	}
@@ -119,8 +118,8 @@ test('determines whether source file, if within the project, is a dependency', t
 	try {
 		fixture.require().run();
 		t.fail('Fixture should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, fixture.sourceFile);
 		t.is(serializedError.source.isWithinProject, true);
 		t.is(serializedError.source.isDependency, true);

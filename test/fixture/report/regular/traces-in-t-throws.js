@@ -1,4 +1,4 @@
-import test from '../../../..';
+const test = require('../../../..');
 
 function throwError() {
 	throw new Error('uh-oh');
@@ -9,7 +9,7 @@ function returnRejectedPromise() {
 }
 
 test('throws', t => {
-	t.throws(() => throwError(), TypeError);
+	t.throws(() => throwError(), {instanceOf: TypeError});
 });
 
 test('notThrows', t => {
@@ -21,9 +21,9 @@ test('notThrowsAsync', t => {
 });
 
 test('throwsAsync', t => {
-	t.throwsAsync(() => throwError(), TypeError);
+	t.throwsAsync(() => throwError(), {instanceOf: TypeError});
 });
 
 test('throwsAsync different error', t => {
-	return t.throwsAsync(returnRejectedPromise, TypeError);
+	return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});
 });
