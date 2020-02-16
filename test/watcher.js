@@ -2,8 +2,8 @@
 const path = require('path');
 const EventEmitter = require('events');
 const {PassThrough} = require('stream');
+const fakeTimers = require('@sinonjs/fake-timers');
 const defaultIgnore = require('ignore-by-default').directories();
-const lolex = require('lolex');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const {test} = require('tap');
@@ -112,7 +112,7 @@ group('chokidar', (beforeEach, test, group) => {
 			clock.uninstall();
 		}
 
-		clock = lolex.install({
+		clock = fakeTimers.install({
 			toFake: [
 				'setImmediate',
 				'setTimeout',
