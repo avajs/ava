@@ -6,7 +6,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 - [Require extension hooks](https://github.com/jackmellis/require-extension-hooks):
 	- `npm i --save-dev require-extension-hooks require-extension-hooks-vue require-extension-hooks-babel@beta`
-	
+
 - [jsdom-global](https://github.com/rstacruz/jsdom-global/blob/master/README.md)
 	- `npm i --save-dev jsdom jsdom-global`
 
