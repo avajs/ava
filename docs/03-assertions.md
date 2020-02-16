@@ -302,3 +302,51 @@ Assert that `contents` does not match `regex`.
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
+
+### `.try(title?, implementation | macro | macro[], ...args?)`
+
+`.try()` allows you to *try* assertions without causing the test to fail.
+
+*This assertion is experimental. [Enable the `tryAssertion` experiment](./06-configuration.md#experiments) to use it.*
+
+The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implemetation or macro function.
+
+`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail.
+
+You can check whether the attempt passed using the `passed` property. Any assertion errors are available through the `errors` property. The attempt title is available through the `title` property.
+
+Logs from `t.log()` are available through the `logs` property. You can choose to retain these logs as part of your test by passing `{retainLogs: true}` to the `commit()` and `discard()` methods.
+
+The implementation function receives its own [execution context](./02-execution-context.md), just like a test function. You must be careful to only perform assertions using the attempt's execution context. At least one assertion must pass for your attempt to pass.
+
+You may run multiple attempts concurrently, within a single test. However you can't use snapshots when you do so.
+
+Example:
+
+```js
+const twoRandomIntegers = () => {
+	const rnd = Math.round(Math.random() * 100);
+	const x = rnd % 10;
+	const y = Math.floor(rnd / 10);
+	return [x, y];
+};
+
+test('flaky macro', async t => {
+	const firstTry = await t.try((tt, a, b) => {
+		tt.is(a, b);
+	}, ...randomIntegers());
+
+	if (firstTry.passed) {
+		firstTry.commit();
+		return;
+	}
+
+	firstTry.discard();
+	t.log(firstTry.errors);
+
+	const secondTry = await t.try((tt, a, b) => {
+		tt.is(a, b);
+	}, ...randomIntegers());
+	secondTry.commit();
+});
+```
