@@ -96,7 +96,7 @@
 		"picomatch": "^2.2.1",
 		"pkg-conf": "^3.1.0",
 		"plur": "^3.1.1",
-		"pretty-ms": "^5.1.0",
+		"pretty-ms": "^6.0.0",
 		"read-pkg": "^5.2.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
@@ -106,7 +106,7 @@
 		"supertap": "^1.0.0",
 		"temp-dir": "^2.0.0",
 		"trim-off-newlines": "^1.0.1",
-		"update-notifier": "^4.0.0",
+		"update-notifier": "^4.1.0",
 		"write-file-atomic": "^3.0.1",
 		"yargs": "^15.1.0"
 	},
