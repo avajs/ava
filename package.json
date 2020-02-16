@@ -112,7 +112,6 @@
 	},
 	"devDependencies": {
 		"@ava/babel": "^1.0.1",
-		"@types/node": "^10.17.13",
 		"ansi-escapes": "^4.3.0",
 		"delay": "^4.3.0",
 		"esm": "^3.2.25",

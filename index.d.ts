@@ -1,5 +1,3 @@
-/// <reference types="node"/>
-
 export interface Subscribable {
 	subscribe(observer: {
 		error(err: any): void,
