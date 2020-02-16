@@ -213,17 +213,6 @@ export default {
 };
 ```
 
-You can opt in to the new `t.try()` assertion by specifying `tryAssertion`:
-
-`ava.config.js`:
-```js
-export default {
-	nonSemVerExperiments: {
-		tryAssertion: true
-	}
-};
-```
-
 ## Node arguments
 
 The `nodeArguments` configuration may be used to specify additional arguments for launching worker processes. These are combined with `--node-arguments` passed on the CLI and any arguments passed to the `node` binary when starting AVA.

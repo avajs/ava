@@ -65,3 +65,4 @@ function withExperiments(experiments = {}) {
 
 exports.ava = withExperiments();
 exports.withExperiments = withExperiments;
+exports.newAva = () => withExperiments();
