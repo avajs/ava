@@ -247,14 +247,9 @@ export interface SnapshotAssertion {
 export interface ThrowsAssertion {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 */
-	<ThrownError extends Error>(fn: () => any, expectations?: null, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations: ThrowsExpectation, message?: string): ThrownError;
+	<ThrownError extends Error>(fn: () => any, expectations?: ThrowsExpectation | null, message?: string): ThrownError;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
