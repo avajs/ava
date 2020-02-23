@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const {test} = require('tap');
 const execa = require('execa');
-const figures = require('figures');
 const tempy = require('tempy');
 const {execCli} = require('../helper/cli');
 
@@ -13,7 +12,7 @@ test('formats errors from ava.config.js', t => {
 
 		const lines = stderr.split('\n');
 		t.is(lines[0], '');
-		t.is(lines[1], '  ' + figures.cross + ' Error loading ava.config.js');
+		t.match(lines[1], /Error loading ava\.config\.js:/);
 		t.is(lines[2], '');
 		t.match(lines[3], /ava\.config\.js/);
 		t.match(lines[4], /foo/);
