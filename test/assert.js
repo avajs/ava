@@ -937,10 +937,15 @@ test('.throws()', gather(t => {
 		}, null);
 	});
 
-	// Regression test for https://github.com/avajs/ava/issues/1676
-	fails(t, () => {
+	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
+		}, undefined);
+	});
+
+	passes(t, async () => {
+		await assertions.throwsAsync(() => {
+			return Promise.reject(new Error('foo'));
 		}, undefined);
 	});
 
@@ -1085,7 +1090,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, true);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /true/}]
 	});
 
@@ -1093,7 +1098,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, 'foo');
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /foo/}]
 	});
 
@@ -1101,7 +1106,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, /baz/);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /baz/}]
 	});
 
@@ -1109,7 +1114,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, class Bar {});
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
@@ -1117,7 +1122,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, {});
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
@@ -1125,7 +1130,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		assertions.throws(() => {}, []);
 	}, {
 		assertion: 'throws',
-		message: 'The second argument to `t.throws()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /\[\]/}]
 	});
 
@@ -1177,7 +1182,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, true);
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /true/}]
 	});
 
@@ -1185,7 +1190,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, 'foo');
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /foo/}]
 	});
 
@@ -1193,7 +1198,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, /baz/);
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /baz/}]
 	});
 
@@ -1201,7 +1206,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, class Bar {});
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
@@ -1209,7 +1214,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, {});
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /\{\}/}]
 	});
 
@@ -1217,7 +1222,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertions.throwsAsync(() => {}, []);
 	}, {
 		assertion: 'throwsAsync',
-		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `null`',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /\[\]/}]
 	});
 
