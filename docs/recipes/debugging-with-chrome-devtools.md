@@ -22,10 +22,10 @@ Run with the `--break` option to ensure the DevTools hit a breakpoint right befo
 npx ava debug --break test.js
 ```
 
-You can also customize the port. It defaults to `9229`:
+By default the inspector listens on `127.0.0.1:9229`. You can customize the host and the port:
 
 ```console
-npx ava debug --port 9230 test.js
+npx ava debug --host 0.0.0.0 --port 9230 test.js
 ```
 
-You'll have to add a connection for this port in the *Connection* tab. AVA only binds to `localhost`.
+You'll have to add a connection for this port in the *Connection* tab.
