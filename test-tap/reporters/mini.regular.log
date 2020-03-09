@@ -272,8 +272,13 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
+<<<<<<< HEAD:test-tap/reporters/mini.regular.log
   [90mtest.js:32:9[39m
   [90mtest.js:35:11[39m
+=======
+  test.js:35:9
+  test.js:38:11
+>>>>>>> Show node internal stack trace:test/reporters/mini.regular.log
 
 
 
@@ -301,8 +306,13 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
+<<<<<<< HEAD:test-tap/reporters/mini.regular.log
   [90mtest.js:40:9[39m
   [90mtest.js:43:14[39m
+=======
+  test.js:43:9
+  test.js:46:14
+>>>>>>> Show node internal stack trace:test/reporters/mini.regular.log
 
 
 
@@ -333,9 +343,9 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:12:17[39m
-  [90mtraces-in-t-throws.js:12:4[39m
+  traces-in-t-throws.js:4:8
+  traces-in-t-throws.js:12:17
+  traces-in-t-throws.js:12:4
 
 
 
@@ -353,9 +363,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:16:20[39m
-  [90mtraces-in-t-throws.js:16:4[39m
+  traces-in-t-throws.js:4:8
+  traces-in-t-throws.js:16:20
+  traces-in-t-throws.js:16:4
 
 
 
@@ -373,9 +383,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:20:25[39m
-  [90mtraces-in-t-throws.js:20:4[39m
+  traces-in-t-throws.js:4:8
+  traces-in-t-throws.js:20:25
+  traces-in-t-throws.js:20:4
 
 
 
@@ -393,9 +403,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90mtraces-in-t-throws.js:4:8[39m
-  [90mtraces-in-t-throws.js:24:22[39m
-  [90mtraces-in-t-throws.js:24:4[39m
+  traces-in-t-throws.js:4:8
+  traces-in-t-throws.js:24:22
+  traces-in-t-throws.js:24:4
 
 
 
@@ -417,8 +427,8 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90mtraces-in-t-throws.js:8:24[39m
-  [90mtraces-in-t-throws.js:28:11[39m
+  traces-in-t-throws.js:8:24
+  traces-in-t-throws.js:28:11
 
 
 
@@ -443,6 +453,10 @@
    [90m6:[39m   });                                 
 
   Error: Can’t catch me
+
+  uncaught-exception.js:5:9
+  [90minternal/timers.js:549:17[39m
+  [90minternal/timers.js:492:7[39m
 
 
 

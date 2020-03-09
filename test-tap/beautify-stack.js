@@ -2,6 +2,7 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
+const path = require('path');
 const proxyquire = require('proxyquire').noPreserveCache();
 const {test} = require('tap');
 const Runner = require('../lib/runner');
@@ -71,6 +72,23 @@ test('beautify stack - removes uninteresting lines', async t => {
 		t.match(stack, /barFunc/);
 		// The runSingle line is introduced by Runner. It's internal so it should
 		// be stripped.
+		t.match(error.stack, /runSingle/);
+		t.notMatch(stack, /runSingle/);
+		t.end();
+	}
+});
+
+test('beautify stack - don`t remove node internals', async t => {
+	try {
+		const runner = new Runner();
+		await runner.runSingle({
+			run() {
+				path.resolve({root: '..'});
+			}
+		});
+	} catch (error) {
+		const stack = beautifyStack(error.stack);
+		t.match(stack, /path.js/);
 		t.match(error.stack, /runSingle/);
 		t.notMatch(stack, /runSingle/);
 		t.end();

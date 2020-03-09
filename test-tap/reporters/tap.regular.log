@@ -249,8 +249,16 @@ ok 23 - uncaught-exception [90m[2m›[22m[39m passes
 not ok 24 - Error: Can’t catch me
   ---
     name: Error
+<<<<<<< HEAD:test-tap/reporters/tap.regular.log
     message: Can’t catch me
     at: 'uncaught-exception.js:5:9'
+=======
+    message: Can't catch me
+    at: |-
+      uncaught-exception.js:5:9
+      internal/timers.js:549:17
+      internal/timers.js:492:7
+>>>>>>> Show node internal stack trace:test/reporters/tap.regular.log
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1
