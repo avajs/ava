@@ -46,13 +46,13 @@ Your `package.json` will then look like this (exact version notwithstanding):
 
 ```json
 {
-	"name": "awesome-package",
-	"scripts": {
-		"test": "ava"
-	},
-	"devDependencies": {
-		"ava": "^1.0.0"
-	}
+    "name": "awesome-package",
+    "scripts": {
+	"test": "ava"
+    },
+    "devDependencies": {
+	"ava": "^1.0.0"
+    }
 }
 ```
 
@@ -78,12 +78,12 @@ Create a file named `test.js` in the project root directory:
 const test = require('ava');
 
 test('foo', t => {
-	t.pass();
+    t.pass();
 });
 
 test('bar', async t => {
-	const bar = Promise.resolve('bar');
-	t.is(await bar, 'bar');
+    const bar = Promise.resolve('bar');
+    t.is(await bar, 'bar');
 });
 ```
 
