@@ -32,8 +32,6 @@ jobs:
       - run: npm ci --no-audit
       - run: npm test
       - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
   lockfile_churn:
     name: Test package-lock for unexpected modifications
