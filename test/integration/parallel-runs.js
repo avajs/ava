@@ -8,7 +8,7 @@ test('correctly distributes the test files', t => {
 		execCli([], {
 			dirname: 'fixture/parallel-runs',
 			env: {
-				CI: '1',
+				AVA_FORCE_CI: 'ci',
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3'
 			}

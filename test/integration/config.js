@@ -50,5 +50,5 @@ test('use current working directory if `package.json` is not found', () => {
 
 	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test', t => { t.pass(); });`);
 
-	return execa(process.execPath, [cliPath], {cwd, env: {CI: '1'}});
+	return execa(process.execPath, [cliPath], {cwd, env: {AVA_FORCE_CI: 'ci'}});
 });

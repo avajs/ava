@@ -6,12 +6,6 @@ const {test} = require('tap');
 const tempy = require('tempy');
 const {execCli} = require('../helper/cli');
 
-const overrideCIChecks = {
-	CI: '',
-	TRAVIS: '',
-	CONTINUOUS_INTEGRATION: ''
-};
-
 for (const obj of [
 	{type: 'colocated', rel: '', dir: ''},
 	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
@@ -30,7 +24,7 @@ for (const obj of [
 
 		const dirname = path.join('fixture/snapshots', obj.rel);
 		// Test should pass, and a snapshot gets written
-		execCli(['--update-snapshots', '--verbose'], {dirname, env: overrideCIChecks}, error => {
+		execCli(['--update-snapshots', '--verbose'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 			t.ifError(error);
 			t.true(fs.existsSync(snapPath));
 
@@ -56,7 +50,7 @@ test('one', t => {
 })`;
 	fs.writeFileSync(path.join(cwd, 'test.js'), initial);
 
-	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, env: overrideCIChecks, reject: false});
+	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, env: {AVA_FORCE_CI: 'not-ci'}, reject: false});
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
@@ -167,7 +161,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
-	execCli(['--verbose'], {dirname: relativeFixtureDir, env: overrideCIChecks}, (error, stdout) => {
+	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
@@ -208,7 +202,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
-	execCli(['--verbose'], {dirname: relativeFixtureDir, env: overrideCIChecks}, (error, stdout) => {
+	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.ifError(error);
 		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
 		t.match(stdout, /6 tests passed/);
@@ -237,7 +231,7 @@ test('snapshots are indentical on different platforms', t => {
 	[reportPath, snapPath].forEach(fp => removeFile(fp));
 
 	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: overrideCIChecks}, error => {
+	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ifError(error);
 		t.true(fs.existsSync(reportPath));
 		t.true(fs.existsSync(snapPath));
