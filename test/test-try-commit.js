@@ -547,12 +547,13 @@ test('try-commit fails when it exceeds its own timeout', async t => {
 test('try-commit refreshes the timeout on commit/discard', async t => {
 	const ava = newAva();
 	const result1 = await ava.cb(a => {
-		a.timeout(100);
+		// Note: Allow for long enough timeouts that the promise tasks execute in time.
+		a.timeout(2e3);
 		a.plan(3);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 50);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 100);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 150);
-		setTimeout(() => a.end(), 200);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 1e3);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 2e3);
+		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 3e3);
+		setTimeout(() => a.end(), 4e3);
 	}).run();
 
 	t.is(result1.passed, true);
