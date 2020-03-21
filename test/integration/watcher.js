@@ -9,7 +9,7 @@ const END_MESSAGE = 'Type `r` and press enter to rerun tests\nType `u` and press
 test('watcher reruns test files upon change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -35,7 +35,7 @@ test('watcher reruns test files upon change', t => {
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-dependencies', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -59,7 +59,7 @@ test('watcher reruns test files when source dependencies change', t => {
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -85,7 +85,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 test('watcher does not rerun test files when ignored files change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/ignored-files', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/ignored-files', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -112,7 +112,7 @@ test('watcher does not rerun test files when ignored files change', t => {
 test('watcher reruns test files when snapshot dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {CI: ''}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.ifError(err);
 		t.end();
@@ -140,7 +140,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 test('`"tap": true` config is ignored when --watch is given', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', '--verbose', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf', env: {CI: ''}}, () => {
+	const child = execCli(['--watch', '--verbose', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf', env: {AVA_FORCE_CI: 'not-ci'}}, () => {
 		t.ok(killed);
 		t.end();
 	});
@@ -160,7 +160,7 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 });
 
 test('bails when --tap reporter is used while --watch is given', t => {
-	execCli(['--tap', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: ''}}, (err, stdout, stderr) => {
+	execCli(['--tap', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (err, stdout, stderr) => {
 		t.is(err.code, 1);
 		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 		t.end();
@@ -168,7 +168,7 @@ test('bails when --tap reporter is used while --watch is given', t => {
 });
 
 test('bails when CI is used while --watch is given', t => {
-	execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher', env: {CI: true}}, (err, stdout, stderr) => {
+	execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (err, stdout, stderr) => {
 		t.is(err.code, 1);
 		t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
 		t.end();

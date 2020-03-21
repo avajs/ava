@@ -28,7 +28,7 @@ function execCli(args, opts, cb) {
 		// Inserting a shim here allows us to fake a TTY.
 		child = childProcess.spawn(process.execPath, ['--require', ttySimulator, cliPath].concat(args), {
 			cwd: dirname,
-			env: {CI: '1', ...env}, // Force CI to ensure the correct reporter is selected
+			env: {AVA_FORCE_CI: 'ci', ...env}, // Force CI to ensure the correct reporter is selected
 			// env,
 			stdio: [null, 'pipe', 'pipe']
 		});
