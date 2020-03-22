@@ -126,8 +126,44 @@ test('anything can be skipped', t => {
 	});
 });
 
+test('hook `afterEachFailedTest` can be skipped', t => {
+	const arr = [];
+	function pusher(title) {
+		return a => {
+			arr.push(title);
+			a.pass();
+		};
+	}
+
+	function error(title) {
+		return () => {
+			arr.push(title);
+			throw new Error('something went wrong');
+		};
+	}
+
+	return promiseEnd(new Runner(), runner => {
+		runner.chain.afterEachFailedTest(pusher('afterEachFailedTest'));
+		runner.chain.afterEachFailedTest.skip(pusher('afterEachFailedTest'));
+
+		runner.chain('concurrent', error('concurrent'));
+		runner.chain.skip('concurrent.skip', error('concurrent.skip'));
+
+		runner.chain.serial('serial', error('serial'));
+		runner.chain.serial.skip('serial.skip', error('serial.skip'));
+	}).then(() => {
+		// Note that afterEachFailedTest run twice because there are two actual tests - "serial" >
+		t.strictDeepEqual(arr, [
+			'serial',
+			'afterEachFailedTest',
+			'concurrent',
+			'afterEachFailedTest'
+		]);
+	});
+});
+
 test('test types and titles', t => {
-	t.plan(10);
+	t.plan(12);
 
 	const fail = a => a.fail();
 	const pass = a => a.pass();
@@ -183,6 +219,13 @@ test('test types and titles', t => {
 		}, [
 			{type: 'test', title: 'test'},
 			{type: 'afterEach', title: 'afterEach.always hook for test'}
+		]),
+		check(chain => {
+			chain('test', fail);
+			chain.afterEachFailedTest(fail);
+		}, [
+			{type: 'test', title: 'test'},
+			{type: 'afterEach', title: 'afterEachFailedTest hook for test'}
 		])
 	]);
 });

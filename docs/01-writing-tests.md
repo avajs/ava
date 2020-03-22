@@ -165,6 +165,8 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` registers a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
+`test.afterEachFailedTest()` registers a hook, which is run after each failed test. If a test is executed successfully, this hook is skipped.
+
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
 Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
@@ -206,6 +208,10 @@ test.afterEach(t => {
 
 test.afterEach.always(t => {
 	// This runs after each test and other test hooks, even if they failed
+});
+
+test.afterEachFailedTest(t => {
+	// This runs after each failed test. Is skipped after a successful test.
 });
 
 test('title', t => {

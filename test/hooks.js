@@ -371,6 +371,60 @@ test('afterEach.always run even if beforeEach failed', t => {
 	});
 });
 
+test('afterEachFailedTest only run if concurrent test failed', t => {
+	t.plan(2);
+
+	const arr = [];
+	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed') {
+				t.pass();
+			}
+		});
+
+		runner.chain.afterEachFailedTest(() => {
+			arr.push('a');
+		});
+
+		runner.chain('fail', () => {
+			arr.push('b');
+			throw new Error('something went wrong');
+		});
+		runner.chain('pass', a => {
+			a.pass();
+		});
+	}).then(() => {
+		t.strictDeepEqual(arr, ['b', 'a']);
+	});
+});
+
+test('afterEachFailedTest only run if serial test failed', t => {
+	t.plan(2);
+
+	const arr = [];
+	return promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'test-failed') {
+				t.pass();
+			}
+		});
+
+		runner.chain.afterEachFailedTest(() => {
+			arr.push('a');
+		});
+
+		runner.chain.serial('fail', () => {
+			arr.push('b');
+			throw new Error('something went wrong');
+		});
+		runner.chain.serial('pass', a => {
+			a.pass();
+		});
+	}).then(() => {
+		t.strictDeepEqual(arr, ['b', 'a']);
+	});
+});
+
 test('ensure hooks run only around tests', t => {
 	t.plan(1);
 
