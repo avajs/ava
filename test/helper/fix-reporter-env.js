@@ -22,6 +22,7 @@ module.exports = () => {
 
 	fixColors();
 	require('../../lib/chalk').set({level: 3});
+	require('../../lib/concordance-options').configure();
 
 	return {
 		restoreClock() {

@@ -1,5 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
+require('../lib/concordance-options').configure();
 require('../lib/worker/options').set({});
 
 const proxyquire = require('proxyquire').noPreserveCache();

@@ -11,6 +11,7 @@ const {normalizeGlobs} = require('../lib/globs');
 const {setImmediate} = require('../lib/now-and-timers');
 
 require('../lib/chalk').set({});
+require('../lib/concordance-options').configure();
 
 // Helper to make using beforeEach less arduous
 function makeGroup(test) {

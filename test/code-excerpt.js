@@ -1,5 +1,6 @@
 'use strict';
 require('../lib/chalk').set({level: 1});
+require('../lib/concordance-options').configure();
 
 const fs = require('fs');
 const tempWrite = require('temp-write');

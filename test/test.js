@@ -1,5 +1,6 @@
 'use strict';
 require('../lib/chalk').set({level: 0});
+require('../lib/concordance-options').configure();
 require('../lib/worker/options').set({});
 
 const path = require('path');
