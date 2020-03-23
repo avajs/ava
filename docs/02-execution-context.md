@@ -37,3 +37,7 @@ Log values contextually alongside the test result instead of immediately printin
 ## `t.timeout(ms)`
 
 Set a timeout for the test, in milliseconds. The test will fail if this timeout is exceeded. The timeout is reset each time an assertion is made.
+
+## `t.passed`
+
+Boolean read-only value indicating, if the test has passed. Is visible in the hook `test.afterEach.always`.
