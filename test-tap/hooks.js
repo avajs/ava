@@ -371,6 +371,29 @@ test('afterEach.always run even if beforeEach failed', t => {
 	});
 });
 
+test('afterEach: property `passed` of execution-context is false when test failed and true when test passed', t => {
+	t.plan(1);
+
+	const passed = [];
+	let i;
+	return promiseEnd(new Runner(), runner => {
+		runner.chain.afterEach(a => {
+			passed[i] = a.passed;
+		});
+
+		runner.chain('failure', () => {
+			i = 0;
+			throw new Error('something went wrong');
+		});
+		runner.chain('pass', a => {
+			i = 1;
+			a.pass();
+		});
+	}).then(() => {
+		t.strictDeepEqual(passed, [undefined, true]);
+	});
+});
+
 test('afterEach.always: property `passed` of execution-context is false when test failed and true when test passed', t => {
 	t.plan(1);
 
