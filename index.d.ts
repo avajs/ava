@@ -308,6 +308,9 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 	/** Title of the test or hook. */
 	readonly title: string;
 
+	/** Whether the test has passed. Only accurate in afterEach hooks. */
+	readonly passed: boolean;
+
 	log: LogFn;
 	plan: PlanFn;
 	timeout: TimeoutFn;
