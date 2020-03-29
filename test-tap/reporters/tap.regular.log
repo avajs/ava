@@ -56,10 +56,6 @@ not ok 4 - output-in-hook [90m[2m›[22m[39m failing test
 # slow › slow
 ok 5 - slow [90m[2m›[22m[39m slow
 ---tty-stream-chunk-separator
-stdout
----tty-stream-chunk-separator
-stderr
----tty-stream-chunk-separator
 # test › skip
 ok 6 - test [90m[2m›[22m[39m skip # SKIP
 ---tty-stream-chunk-separator
@@ -75,7 +71,7 @@ not ok 9 - test [90m[2m›[22m[39m fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 'test.js:12:22'
+    at: 'test.js:9:22'
   ...
 ---tty-stream-chunk-separator
 # test › known failure
@@ -98,7 +94,7 @@ not ok 12 - test [90m[2m›[22m[39m logs
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: 'test.js:21:4'
+    at: 'test.js:18:4'
   ...
 ---tty-stream-chunk-separator
 # test › formatted
@@ -110,7 +106,7 @@ not ok 13 - test [90m[2m›[22m[39m formatted
       'Difference:': |-
         - 'foo'
         + 'bar'
-    at: 'test.js:25:4'
+    at: 'test.js:22:4'
   ...
 ---tty-stream-chunk-separator
 # test › power-assert
@@ -121,7 +117,7 @@ not ok 14 - test [90m[2m›[22m[39m power-assert
     operator: '!!'
     values:
       'Value is not truthy:': ''''''
-    at: 'test.js:30:4'
+    at: 'test.js:27:4'
   ...
 ---tty-stream-chunk-separator
 # test › bad throws
@@ -136,8 +132,8 @@ not ok 15 - test [90m[2m›[22m[39m bad throws
           message: 'err',
         }
     at: |-
-      test.js:35:9
-      test.js:38:11
+      test.js:32:9
+      test.js:35:11
   ...
 ---tty-stream-chunk-separator
 # test › bad notThrows
@@ -152,8 +148,8 @@ not ok 16 - test [90m[2m›[22m[39m bad notThrows
           message: 'err',
         }
     at: |-
-      test.js:43:9
-      test.js:46:14
+      test.js:40:9
+      test.js:43:14
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error

@@ -1413,7 +1413,7 @@ test('.notThrowsAsync() fails if passed a bad value', t => {
 
 test('.snapshot()', t => {
 	// Set to `true` to update the snapshot, then run:
-	// "$(npm bin)"/tap --no-cov -R spec test/assert.js
+	// "$(npm bin)"/tap -R spec test/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;

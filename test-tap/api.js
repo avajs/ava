@@ -385,7 +385,7 @@ test('enhanced assertion formatting necessary whitespace and empty strings', t =
 
 	t.plan(15);
 	const api = apiCreator({
-		files: ['test/fixture/enhanced-assertion-formatting.js'],
+		files: ['test-tap/fixture/enhanced-assertion-formatting.js'],
 		babelConfig: true
 	});
 	const errors = [];
@@ -481,14 +481,14 @@ test('stack traces for exceptions are corrected using a source map, taking an in
 test('absolute paths', t => {
 	const api = apiCreator();
 
-	return api.run({files: [path.resolve('test/fixture/es2015.js')]})
+	return api.run({files: [path.resolve('test-tap/fixture/es2015.js')]})
 		.then(runStatus => {
 			t.is(runStatus.stats.passedTests, 1);
 		});
 });
 
 test('symlink to directory containing test files', t => {
-	const api = apiCreator({files: ['test/fixture/symlink/*.js']});
+	const api = apiCreator({files: ['test-tap/fixture/symlink/*.js']});
 
 	return api.run()
 		.then(runStatus => {
@@ -595,21 +595,21 @@ test('emits dependencies for test files', t => {
 	t.plan(8);
 
 	const api = apiCreator({
-		files: ['test/fixture/with-dependencies/*test*.js'],
-		require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
+		files: ['test-tap/fixture/with-dependencies/*test*.js'],
+		require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.js')]
 	});
 
 	const testFiles = [
-		path.resolve('test/fixture/with-dependencies/no-tests.js'),
-		path.resolve('test/fixture/with-dependencies/test.js'),
-		path.resolve('test/fixture/with-dependencies/test-failure.js'),
-		path.resolve('test/fixture/with-dependencies/test-uncaught-exception.js')
+		path.resolve('test-tap/fixture/with-dependencies/no-tests.js'),
+		path.resolve('test-tap/fixture/with-dependencies/test.js'),
+		path.resolve('test-tap/fixture/with-dependencies/test-failure.js'),
+		path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.js')
 	];
 
 	const sourceFiles = [
-		path.resolve('test/fixture/with-dependencies/dep-1.js'),
-		path.resolve('test/fixture/with-dependencies/dep-2.js'),
-		path.resolve('test/fixture/with-dependencies/dep-3.custom')
+		path.resolve('test-tap/fixture/with-dependencies/dep-1.js'),
+		path.resolve('test-tap/fixture/with-dependencies/dep-2.js'),
+		path.resolve('test-tap/fixture/with-dependencies/dep-3.custom')
 	];
 
 	api.on('run', plan => {

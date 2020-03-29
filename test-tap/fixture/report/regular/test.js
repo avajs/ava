@@ -1,8 +1,5 @@
 const test = require('../../../..');
 
-console.log('stdout');
-console.error('stderr');
-
 test('passes', t => t.pass());
 
 test.todo('todo');
