@@ -48,7 +48,7 @@ test('use current working directory if `package.json` is not found', () => {
 	const cliPath = require.resolve('../../cli.js');
 	const avaPath = require.resolve('../../');
 
-	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test', t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test', t => { t.pass(); });`); // eslint-disable-line unicorn/string-content
 
 	return execa(process.execPath, [cliPath], {cwd, env: {AVA_FORCE_CI: 'ci'}});
 });

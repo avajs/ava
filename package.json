@@ -132,7 +132,7 @@
 		"ts-node": "^8.6.2",
 		"tsd": "^0.11.0",
 		"typescript": "^3.7.5",
-		"xo": "^0.26.1",
+		"xo": "^0.28.1",
 		"zen-observable": "^0.8.15"
 	},
 	"xo": {
@@ -141,13 +141,30 @@
 			"test-tap/fixture/ava-paths/target/test.js",
 			"test-tap/fixture/{source-map-initial,syntax-error}.js",
 			"test-tap/fixture/snapshots/test-sourcemaps/build/**",
-			"test-tap/fixture/power-assert.js",
-			"**/*.ts"
+			"test-tap/fixture/power-assert.js"
 		],
 		"rules": {
-			"no-use-extend-native/no-use-extend-native": "off"
+			"no-use-extend-native/no-use-extend-native": "off",
+			"@typescript-eslint/no-var-requires": "off"
 		},
 		"overrides": [
+			{
+				"files": "*.d.ts",
+				"rules": {
+					"@typescript-eslint/member-ordering": "off",
+					"@typescript-eslint/prefer-function-type": "off",
+					"@typescript-eslint/unified-signatures": "off"
+				}
+			},
+			{
+				"files": "test-d/*.ts",
+				"rules": {
+					"@typescript-eslint/explicit-function-return-type": "off",
+					"@typescript-eslint/no-empty-function": "off",
+					"@typescript-eslint/no-unused-vars": "off",
+					"no-unused-vars": "off"
+				}
+			},
 			{
 				"files": "test-tap/**/*.js",
 				"rules": {

@@ -8,7 +8,7 @@ test('errors if top-level files is an empty array', t => {
 		t.ok(err);
 
 		let expectedOutput = '\n  ';
-		expectedOutput += figures.cross + ' The \'files\' configuration must be an array containing glob patterns.';
+		expectedOutput += figures.cross + ' The ’files’ configuration must be an array containing glob patterns.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);
@@ -21,7 +21,7 @@ test('errors if top-level ignoredByWatcher is an empty array', t => {
 		t.ok(err);
 
 		let expectedOutput = '\n  ';
-		expectedOutput += figures.cross + ' The \'ignoredByWatcher\' configuration must be an array containing glob patterns.';
+		expectedOutput += figures.cross + ' The ’ignoredByWatcher’ configuration must be an array containing glob patterns.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);

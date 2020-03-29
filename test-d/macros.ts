@@ -42,35 +42,33 @@ import test, {ExecutionContext, Macro} from '..';
 	const pass: Macro<[]> = (t, ...args) => {
 		expectType<[]>(args);
 	};
+
 	pass.title = (providedTitle, ...args) => {
 		expectType<string | undefined>(providedTitle);
 		expectType<[]>(args);
 		return '';
 	};
-	test(pass)
+
+	test(pass);
 }
 
 // Inline
-{
-	test('has length 3', (t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
+test('has length 3', (t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
 
-	test((t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
-}
+test((t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
 
 // Completely infer parameters
-{
-	test('has length 3', (t, input, expected) => {
-		expectType<string>(input);
-		expectType<number>(expected);
-	}, 'foo', 3);
+test('has length 3', (t, input, expected) => {
+	expectType<string>(input);
+	expectType<number>(expected);
+}, 'foo', 3);
 
-	test((t, input, expected) => {
-		expectType<string>(input);
-		expectType<number>(expected);
-	}, 'foo', 3);
+test((t, input, expected) => {
+	expectType<string>(input);
+	expectType<number>(expected);
+}, 'foo', 3);
 
-	test.skip((t, input, expected) => {
-		expectType<string>(input);
-		expectType<number>(expected);
-	}, 'foo', 3);
-}
+test.skip((t, input, expected) => {
+	expectType<string>(input);
+	expectType<number>(expected);
+}, 'foo', 3);

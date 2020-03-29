@@ -155,7 +155,7 @@ test('end can be used as callback with a non-error as its error argument', t => 
 		t.is(result.error.name, 'AssertionError');
 		t.is(result.error.values.length, 1);
 		t.is(result.error.values[0].label, 'Callback called with an error:');
-		t.match(result.error.values[0].formatted, /.*\{.*\n.*foo: 'bar'/);
+		t.match(result.error.values[0].formatted, /.*{.*\n.*foo: 'bar'/);
 	});
 });
 
@@ -344,16 +344,16 @@ test('fails with thrown falsy value', t => {
 });
 
 test('fails with thrown non-error object', t => {
-	const obj = {foo: 'bar'};
+	const object = {foo: 'bar'};
 	return ava(() => {
-		throw obj;
+		throw object;
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.message, 'Error thrown in test');
 		t.is(result.error.name, 'AssertionError');
 		t.is(result.error.values.length, 1);
 		t.is(result.error.values[0].label, 'Error thrown in test:');
-		t.match(result.error.values[0].formatted, /.*\{.*\n.*foo: 'bar'/);
+		t.match(result.error.values[0].formatted, /.*{.*\n.*foo: 'bar'/);
 	});
 });
 
@@ -749,10 +749,10 @@ test('timeout is refreshed on assert', t => {
 test('.log() is bound', t => {
 	return ava(a => {
 		const {log} = a;
-		[1, 2, 3].forEach(val => {
-			log('value: ' + val);
+		[1, 2, 3].forEach(value => {
+			log('value: ' + value);
 		});
-		['value foo', 'value bar'].forEach(val => log(val));
+		['value foo', 'value bar'].forEach(value => log(value));
 	}).run().then(result => {
 		t.deepEqual(result.logs, [
 			'value: 1',

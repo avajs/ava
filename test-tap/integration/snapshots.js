@@ -6,14 +6,14 @@ const {test} = require('tap');
 const tempy = require('tempy');
 const {execCli} = require('../helper/cli');
 
-for (const obj of [
+for (const object of [
 	{type: 'colocated', rel: '', dir: ''},
 	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
 	{type: 'test', rel: 'test-dir', dir: 'test/snapshots'},
 	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'}
 ]) {
-	test(`snapshots work (${obj.type})`, t => {
-		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', obj.rel, obj.dir, 'test.js.snap');
+	test(`snapshots work (${object.type})`, t => {
+		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', object.rel, object.dir, 'test.js.snap');
 		try {
 			fs.unlinkSync(snapPath);
 		} catch (error) {
@@ -22,7 +22,7 @@ for (const obj of [
 			}
 		}
 
-		const dirname = path.join('fixture/snapshots', obj.rel);
+		const dirname = path.join('fixture/snapshots', object.rel);
 		// Test should pass, and a snapshot gets written
 		execCli(['--update-snapshots', '--verbose'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 			t.ifError(error);
@@ -44,6 +44,7 @@ test('appends to existing snapshots', t => {
 	const cwd = tempy.directory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
+	// eslint-disable-next-line unicorn/string-content
 	const initial = `const test = require(${JSON.stringify(avaPath)})
 test('one', t => {
 	t.snapshot({one: true})
@@ -54,6 +55,7 @@ test('one', t => {
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
+		// eslint-disable-next-line unicorn/string-content
 		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: true})
@@ -62,6 +64,7 @@ test('two', t => {
 	}).then(result => {
 		t.match(result.stdout, /2 tests passed/);
 
+		// eslint-disable-next-line unicorn/string-content
 		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: false})
@@ -121,7 +124,7 @@ test('legacy snapshot files are reported to the console', t => {
 
 	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
-		t.match(stdout, /The snapshot file was created with AVA 0\.19\. It's not supported by this AVA version\./);
+		t.match(stdout, /The snapshot file was created with AVA 0\.19\. It’s not supported by this AVA version\./);
 		t.match(stdout, /File path:/);
 		t.match(stdout, snapPath);
 		t.match(stdout, /Please run AVA again with the .*--update-snapshots.* flag to upgrade\./);

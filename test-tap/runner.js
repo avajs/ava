@@ -14,7 +14,7 @@ const promiseEnd = (runner, next) => {
 	}).then(() => runner);
 };
 
-test('nested tests and hooks aren\'t allowed', t => {
+test('nested tests and hooks aren’t allowed', t => {
 	t.plan(1);
 
 	return promiseEnd(new Runner(), runner => {
@@ -63,32 +63,32 @@ test('runner emits "stateChange" events', t => {
 });
 
 test('run serial tests before concurrent ones', t => {
-	const arr = [];
+	const array = [];
 	return promiseEnd(new Runner(), runner => {
 		runner.chain('test', a => {
-			arr.push('c');
+			array.push('c');
 			a.end();
 		});
 
 		runner.chain.serial('serial', a => {
-			arr.push('a');
+			array.push('a');
 			a.end();
 		});
 
 		runner.chain.serial('serial 2', a => {
-			arr.push('b');
+			array.push('b');
 			a.end();
 		});
 	}).then(() => {
-		t.strictDeepEqual(arr, ['a', 'b', 'c']);
+		t.strictDeepEqual(array, ['a', 'b', 'c']);
 	});
 });
 
 test('anything can be skipped', t => {
-	const arr = [];
+	const array = [];
 	function pusher(title) {
 		return a => {
-			arr.push(title);
+			array.push(title);
 			a.pass();
 		};
 	}
@@ -113,7 +113,7 @@ test('anything can be skipped', t => {
 		runner.chain.serial.skip('serial.skip', pusher('serial.skip'));
 	}).then(() => {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
-		t.strictDeepEqual(arr, [
+		t.strictDeepEqual(array, [
 			'before',
 			'beforeEach',
 			'serial',
@@ -190,7 +190,7 @@ test('test types and titles', t => {
 test('skip test', t => {
 	t.plan(3);
 
-	const arr = [];
+	const array = [];
 	return promiseEnd(new Runner(), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test' && evt.skip) {
@@ -203,15 +203,15 @@ test('skip test', t => {
 		});
 
 		runner.chain('test', a => {
-			arr.push('a');
+			array.push('a');
 			a.pass();
 		});
 
 		runner.chain.skip('skip', () => {
-			arr.push('b');
+			array.push('b');
 		});
 	}).then(() => {
-		t.strictDeepEqual(arr, ['a']);
+		t.strictDeepEqual(array, ['a']);
 	});
 });
 
@@ -250,7 +250,7 @@ test('tests must have an implementation', t => {
 test('todo test', t => {
 	t.plan(3);
 
-	const arr = [];
+	const array = [];
 	return promiseEnd(new Runner(), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test' && evt.todo) {
@@ -263,13 +263,13 @@ test('todo test', t => {
 		});
 
 		runner.chain('test', a => {
-			arr.push('a');
+			array.push('a');
 			a.pass();
 		});
 
 		runner.chain.todo('todo');
 	}).then(() => {
-		t.strictDeepEqual(arr, ['a']);
+		t.strictDeepEqual(array, ['a']);
 	});
 });
 
@@ -308,7 +308,7 @@ test('todo test titles must be unique', t => {
 test('only test', t => {
 	t.plan(2);
 
-	const arr = [];
+	const array = [];
 	return promiseEnd(new Runner(), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test') {
@@ -317,16 +317,16 @@ test('only test', t => {
 		});
 
 		runner.chain('test', a => {
-			arr.push('a');
+			array.push('a');
 			a.pass();
 		});
 
 		runner.chain.only('only', a => {
-			arr.push('b');
+			array.push('b');
 			a.pass();
 		});
 	}).then(() => {
-		t.strictDeepEqual(arr, ['b']);
+		t.strictDeepEqual(array, ['b']);
 	});
 });
 
@@ -347,11 +347,11 @@ test('options.runOnlyExclusive means only exclusive tests are run', t => {
 test('options.serial forces all tests to be serial', t => {
 	t.plan(1);
 
-	const arr = [];
+	const array = [];
 	return promiseEnd(new Runner({serial: true}), runner => {
 		runner.chain.cb('cb', a => {
 			setTimeout(() => {
-				arr.push(1);
+				array.push(1);
 				a.end();
 			}, 200);
 			a.pass();
@@ -359,7 +359,7 @@ test('options.serial forces all tests to be serial', t => {
 
 		runner.chain.cb('cb 2', a => {
 			setTimeout(() => {
-				arr.push(2);
+				array.push(2);
 				a.end();
 			}, 100);
 			a.pass();
@@ -367,7 +367,7 @@ test('options.serial forces all tests to be serial', t => {
 
 		runner.chain('test', a => {
 			a.pass();
-			t.strictDeepEqual(arr, [1, 2]);
+			t.strictDeepEqual(array, [1, 2]);
 		});
 	});
 });

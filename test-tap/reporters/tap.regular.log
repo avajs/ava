@@ -245,11 +245,11 @@ not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
 # uncaught-exception › passes
 ok 23 - uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-# Error: Can't catch me
-not ok 24 - Error: Can't catch me
+# Error: Can’t catch me
+not ok 24 - Error: Can’t catch me
   ---
     name: Error
-    message: Can't catch me
+    message: Can’t catch me
     at: 'uncaught-exception.js:5:9'
   ...
 ---tty-stream-chunk-separator
@@ -262,11 +262,11 @@ ok 26 - unhandled-rejection [90m[2m›[22m[39m passes
 # unhandled-rejection › unhandled non-error rejection
 ok 27 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
 ---tty-stream-chunk-separator
-# Error: Can't catch me
-not ok 28 - Error: Can't catch me
+# Error: Can’t catch me
+not ok 28 - Error: Can’t catch me
   ---
     name: Error
-    message: Can't catch me
+    message: Can’t catch me
     at: 'unhandled-rejection.js:4:17'
   ...
 ---tty-stream-chunk-separator

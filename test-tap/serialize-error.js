@@ -18,7 +18,7 @@ const serialize = error => serializeError('Test', true, error);
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
 
-const makeTempDir = () => {
+const makeTemporaryDir = () => {
 	if (process.platform !== 'win32') {
 		return tempy.directory();
 	}
@@ -77,16 +77,16 @@ test('source file is an absolute path, after source map correction, even if alre
 	const fixture = sourceMapFixtures.mapFile('throws');
 	const map = JSON.parse(fs.readFileSync(fixture.file + '.map'));
 
-	const tmp = makeTempDir();
-	const sourceRoot = path.join(tmp, 'src');
+	const temporary = makeTemporaryDir();
+	const sourceRoot = path.join(temporary, 'src');
 	const expectedSourceFile = path.join(sourceRoot, map.file);
 
-	const tmpFile = path.join(tmp, path.basename(fixture.file));
-	fs.writeFileSync(tmpFile, fs.readFileSync(fixture.file));
-	fs.writeFileSync(tmpFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
+	const temporaryFile = path.join(temporary, path.basename(fixture.file));
+	fs.writeFileSync(temporaryFile, fs.readFileSync(fixture.file));
+	fs.writeFileSync(temporaryFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
 
 	try {
-		require(tmpFile).run();
+		require(temporaryFile).run();
 		t.fail('Fixture should have thrown');
 	} catch (error) {
 		const serializedError = serialize(error);
@@ -197,7 +197,7 @@ test('skips esm enhancement lines when finding the summary', t => {
 	t.end();
 });
 
-test('works around esm\'s insertion of file:// urls', t => {
+test('works around esm’s insertion of file:// urls', t => {
 	const fixture = sourceMapFixtures.mapFile('throws');
 	try {
 		fixture.require().run();
