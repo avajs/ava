@@ -8,6 +8,20 @@ test('passes node arguments to workers', t => {
 		(err, stdout, stderr) => t.ifError(err, null, {stdout, stderr}));
 });
 
+test('passes node arguments pass by ava env var to workers', t => {
+	t.plan(1);
+	execCli(['node-arguments.js'], {
+		env: {AVA_NODE_ARGUMENTS: '--throw-deprecation --zero-fill-buffers'}
+	}, (err, stdout, stderr) => t.ifError(err, null, {stdout, stderr}));
+});
+
+test('passes node arguments pass via env and cli to workers', t => {
+	t.plan(1);
+	execCli(['--node-arguments=--throw-deprecation', 'node-arguments.js'], {
+		env: {AVA_NODE_ARGUMENTS: '--zero-fill-buffers'}
+	}, (err, stdout, stderr) => t.ifError(err, null, {stdout, stderr}));
+});
+
 test('reads node arguments from config', t => {
 	t.plan(1);
 	execCli(['test.js'], {

@@ -32,6 +32,35 @@ test('watcher reruns test files upon change', t => {
 	});
 });
 
+test('watcher reruns test files upon change activated via env variables', t => {
+	let killed = false;
+
+	const child = execCli(
+		['test.js'],
+		{dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci', AVA_WATCH: 'true', AVA_VERBOSE: 'true'}},
+		err => {
+			t.ok(killed);
+			t.ifError(err);
+			t.end();
+		});
+
+	let buffer = '';
+	let passedFirst = false;
+	child.stdout.on('data', str => {
+		buffer += str;
+		if (buffer.includes('1 test passed')) {
+			if (!passedFirst) {
+				touch.sync(path.join(__dirname, '../fixture/watcher/test.js'));
+				buffer = '';
+				passedFirst = true;
+			} else if (!killed) {
+				child.kill();
+				killed = true;
+			}
+		}
+	});
+});
+
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 

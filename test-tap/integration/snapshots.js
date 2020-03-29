@@ -37,6 +37,30 @@ for (const obj of [
 	});
 }
 
+test('snapshots work (colocated) configured by env variables', t => {
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', '', '', 'test.js.snap');
+	try {
+		fs.unlinkSync(snapPath);
+	} catch (error) {
+		if (error.code !== 'ENOENT') {
+			throw error;
+		}
+	}
+
+	const dirname = path.join('fixture/snapshots', '');
+	// Test should pass, and a snapshot gets written
+	execCli([], {dirname, env: {AVA_FORCE_CI: 'not-ci', AVA_VERBOSE: 'true', AVA_UPDATE_SNAPHSOTS: 'true'}}, error => {
+		t.ifError(error);
+		t.true(fs.existsSync(snapPath));
+
+		// Test should pass, and the snapshot gets used
+		execCli([], {dirname}, error => {
+			t.ifError(error);
+			t.end();
+		});
+	});
+});
+
 test('appends to existing snapshots', t => {
 	const cliPath = require.resolve('../../cli.js');
 	const avaPath = require.resolve('../../');

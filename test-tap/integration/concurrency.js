@@ -40,3 +40,10 @@ test('works when --concurrency is provided with a value', t => {
 		t.end();
 	});
 });
+
+test('works when AVA_CONCURRENCY is provided with a value', t => {
+	execCli(['test.js'], {dirname: 'fixture/concurrency', env: {AVA_CONCURRENCY: '1'}}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});

@@ -41,9 +41,25 @@ test('--match works', t => {
 	});
 });
 
+test('--match works from env variable', t => {
+	execCli(['matcher-skip.js'], {env: {AVA_MATCH: 'tests are fun'}}, err => {
+		t.ifError(err);
+		t.end();
+	});
+});
+
 for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
 		execCli([tapFlag, 'test.js'], {dirname: 'fixture/watcher'}, err => {
+			t.ok(!err);
+			t.end();
+		});
+	});
+}
+
+for (const tapEnv of ['AVA_TAP', 'AVA_T']) {
+	test(`${tapEnv}=true should produce TAP output`, t => {
+		execCli(['test.js'], {dirname: 'fixture/watcher', env: {[tapEnv]: 'true'}}, err => {
 			t.ok(!err);
 			t.end();
 		});
