@@ -1,7 +1,7 @@
 const test = require('../../../..');
 
 const passes = t => {
-	Promise.reject(new Error('Can\'t catch me'));
+	Promise.reject(new Error('Can’t catch me'));
 	t.pass();
 };
 

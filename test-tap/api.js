@@ -304,7 +304,7 @@ test('run from package.json folder by default', t => {
 		});
 });
 
-test('control worker\'s process.cwd() with projectDir option', t => {
+test('control worker’s process.cwd() with projectDir option', t => {
 	const fullPath = path.join(__dirname, 'fixture/process-cwd-pkgdir.js');
 	const api = apiCreator({projectDir: path.dirname(fullPath)});
 
@@ -532,7 +532,7 @@ test('Node.js-style --require CLI argument module not found', t => {
 	t.throws(() => {
 		/* eslint no-new: 0 */
 		apiCreator({require: ['foo-bar']});
-	}, /^Could not resolve required module 'foo-bar'$/);
+	}, /^Could not resolve required module ’foo-bar’$/);
 	t.end();
 });
 

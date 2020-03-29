@@ -7,7 +7,7 @@ function foo() {
 }
 
 function bar() {
-	throw new Error('Can\'t catch me!');
+	throw new Error('Can’t catch me!');
 }
 
 // eslint-disable-next-line spaced-comment

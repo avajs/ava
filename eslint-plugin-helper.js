@@ -49,7 +49,7 @@ function load(projectDir, overrides) {
 	let helperPatterns = [];
 	if (overrides && overrides.helpers !== undefined) {
 		if (!Array.isArray(overrides.helpers) || overrides.helpers.length === 0) {
-			throw new Error('The \'helpers\' override must be an array containing glob patterns.');
+			throw new Error('The ’helpers’ override must be an array containing glob patterns.');
 		}
 
 		helperPatterns = normalizePatterns(overrides.helpers);

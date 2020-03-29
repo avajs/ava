@@ -2,10 +2,10 @@ import {expectError, expectType} from 'tsd';
 import anyTest, {Macro, TestInterface} from '..';
 
 interface Context {
-	foo: string
+	foo: string;
 }
 
-const test = anyTest as TestInterface<Context>;
+const test = anyTest as TestInterface<Context>; // eslint-disable-line @typescript-eslint/no-unnecessary-type-assertion
 
 const macro: Macro<[number], Context> = (t, expected) => {
 	expectType<string>(t.context.foo);

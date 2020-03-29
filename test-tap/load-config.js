@@ -133,7 +133,7 @@ test('throws an error if a .js config file has no default export', t => {
 
 test('throws an error if a config file contains `ava` property', t => {
 	changeDir('contains-ava-property');
-	t.throws(loadConfig, /Encountered 'ava' property in ava.config.js; avoid wrapping the configuration/);
+	t.throws(loadConfig, /Encountered ’ava’ property in ava.config.js; avoid wrapping the configuration/);
 	t.end();
 });
 

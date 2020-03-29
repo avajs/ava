@@ -438,11 +438,11 @@
 
   [90muncaught-exception.js:5[39m
 
-   [90m4:[39m   setTimeout(() => {                   
-  [41m 5:     throw new Error('Can/'t catch me');[49m
-   [90m6:[39m   });                                  
+   [90m4:[39m   setTimeout(() => {                  
+  [41m 5:     throw new Error('Can’t catch me');[49m
+   [90m6:[39m   });                                 
 
-  Error: Can't catch me
+  Error: Can’t catch me
 
 
 
@@ -450,11 +450,11 @@
 
   [90munhandled-rejection.js:4[39m
 
-   [90m3:[39m const passes = t => {                          
-  [41m 4:   Promise.reject(new Error('Can/'t catch me'));[49m
-   [90m5:[39m   t.pass();                                    
+   [90m3:[39m const passes = t => {                         
+  [41m 4:   Promise.reject(new Error('Can’t catch me'));[49m
+   [90m5:[39m   t.pass();                                   
 
-  Error: Can't catch me
+  Error: Can’t catch me
 
 
 

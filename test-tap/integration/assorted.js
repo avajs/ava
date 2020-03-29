@@ -53,7 +53,7 @@ for (const tapFlag of ['--tap', '-t']) {
 test('works when no files are found', t => {
 	execCli([], {dirname: 'fixture/globs/no-files'}, (err, stdout) => {
 		t.is(err.code, 1);
-		t.match(stdout, 'Couldn\'t find any files to test');
+		t.match(stdout, 'Couldn’t find any files to test');
 		t.end();
 	});
 });
@@ -128,7 +128,7 @@ test('sets NODE_ENV to test when it is not set', t => {
 	});
 });
 
-test('doesn\'t set NODE_ENV when it is set', t => {
+test('doesn’t set NODE_ENV when it is set', t => {
 	execCli('node-env-foo.js', {env: {NODE_ENV: 'foo'}}, (err, stdout) => {
 		t.ifError(err);
 		t.match(stdout, /1 test passed/);

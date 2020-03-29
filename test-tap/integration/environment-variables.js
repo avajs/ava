@@ -26,7 +26,7 @@ test('errors if environment variables are not string values', t => {
 		t.ok(err);
 
 		let expectedOutput = '\n  ';
-		expectedOutput += figures.cross + ' The \'environmentVariables\' configuration must be an object containing string values.';
+		expectedOutput += figures.cross + ' The ’environmentVariables’ configuration must be an object containing string values.';
 		expectedOutput += '\n';
 
 		t.is(stderr, expectedOutput);

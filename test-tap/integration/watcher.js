@@ -17,8 +17,8 @@ test('watcher reruns test files upon change', t => {
 
 	let buffer = '';
 	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
+	child.stdout.on('data', string => {
+		buffer += string;
 		if (buffer.includes('1 test passed')) {
 			if (!passedFirst) {
 				touch.sync(path.join(__dirname, '../fixture/watcher/test.js'));
@@ -43,8 +43,8 @@ test('watcher reruns test files when source dependencies change', t => {
 
 	let buffer = '';
 	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
+	child.stdout.on('data', string => {
+		buffer += string;
 		if (buffer.includes('2 tests passed') && !passedFirst) {
 			touch.sync(path.join(__dirname, '../fixture/watcher/with-dependencies/source.js'));
 			buffer = '';
@@ -67,8 +67,8 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 
 	let buffer = '';
 	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
+	child.stdout.on('data', string => {
+		buffer += string;
 		if (buffer.includes('2 tests passed') && !passedFirst) {
 			buffer = '';
 			passedFirst = true;
@@ -93,8 +93,8 @@ test('watcher does not rerun test files when ignored files change', t => {
 
 	let buffer = '';
 	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
+	child.stdout.on('data', string => {
+		buffer += string;
 		if (buffer.includes('1 test passed') && !passedFirst) {
 			touch.sync(path.join(__dirname, '../fixture/watcher/ignored-files/ignored.js'));
 			buffer = '';
@@ -120,8 +120,8 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 
 	let buffer = '';
 	let passedFirst = false;
-	child.stdout.on('data', str => {
-		buffer += str;
+	child.stdout.on('data', string => {
+		buffer += string;
 		if (buffer.includes('2 tests passed')) {
 			buffer = '';
 			if (passedFirst) {

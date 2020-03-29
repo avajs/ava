@@ -757,7 +757,7 @@ test('.notDeepEqual()', t => {
 		expected,
 		message: '',
 		raw: {actual, expected},
-		values: [{label: 'Value is deeply equal:', formatted: /.*\{.*\n.*a: 'a'/}]
+		values: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}]
 	});
 
 	failsWith(t, () => {
@@ -852,10 +852,10 @@ test('.throws()', gather(t => {
 
 	// Fails because the thrown value is not an error
 	fails(t, () => {
-		const obj = {};
+		const object = {};
 		assertions.throws(() => {
-			throw obj;
-		}, {is: obj});
+			throw object;
+		}, {is: object});
 	});
 
 	// Fails because the thrown value is not the right one
@@ -1123,7 +1123,7 @@ test('.throws() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throws',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	failsWith(t, () => {
@@ -1131,7 +1131,7 @@ test('.throws() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throws',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\[\]/}]
+		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
 	failsWith(t, () => {
@@ -1215,7 +1215,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	failsWith(t, () => {
@@ -1223,7 +1223,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\[\]/}]
+		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
 	failsWith(t, () => {
@@ -1479,7 +1479,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
 			});
 		}
 	}
@@ -1490,7 +1490,7 @@ test('.snapshot()', t => {
 	}, {
 		assertion: 'snapshot',
 		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
 	});
 
 	{
@@ -1503,7 +1503,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'my message',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
 			});
 		}
 	}
@@ -1834,7 +1834,7 @@ test('.regex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	t.end();
@@ -1901,7 +1901,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	t.end();

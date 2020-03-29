@@ -1,11 +1,11 @@
 export interface Subscribable {
 	subscribe(observer: {
-		error(err: any): void,
-		complete(): void,
-	}): void
+		error(err: any): void;
+		complete(): void;
+	}): void;
 }
 
-export type Constructor = (new (...args: Array<any>) => any);
+export type Constructor = (new (...args: any[]) => any);
 
 /** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation = {
@@ -29,8 +29,8 @@ export type CommitDiscardOptions = {
 	/**
 	 * Whether the logs should be included in those of the parent test.
 	 */
-	retainLogs?: boolean
-}
+	retainLogs?: boolean;
+};
 
 /** Options that can be passed to the `t.snapshot()` assertion. */
 export type SnapshotOptions = {
@@ -316,10 +316,10 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 
 export interface LogFn {
 	/** Log one or more values. */
-	(...values: Array<any>): void;
+	(...values: any[]): void;
 
 	/** Skip logging. */
-	skip(...values: Array<any>): void;
+	skip(...values: any[]): void;
 }
 
 export interface PlanFn {
@@ -354,7 +354,7 @@ export interface TryFn<Context = unknown> {
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
-	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 
 	/**
 	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
@@ -366,7 +366,7 @@ export interface TryFn<Context = unknown> {
 	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	* the test will fail. A macro may be provided.
 	*/
-	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 }
 
 export interface AssertionError extends Error {}
@@ -427,32 +427,32 @@ export type Macro<Args extends any[], Context = unknown> = UntitledMacro<Args, C
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
 	 */
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
-}
+};
 
 export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
+export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>];
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
+export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult;
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type CbMacro<Args extends any[], Context = unknown> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
-}
+};
 
 export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
+export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...Array<EitherCbMacro<Args, Context>>];
 
 export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title. */
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;

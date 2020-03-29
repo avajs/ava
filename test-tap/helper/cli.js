@@ -6,17 +6,17 @@ const getStream = require('get-stream');
 const cliPath = path.join(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, 'simulate-tty.js');
 
-function execCli(args, opts, cb) {
+function execCli(args, options, cb) {
 	let dirname;
 	let env;
 
-	if (typeof opts === 'function') {
-		cb = opts;
+	if (typeof options === 'function') {
+		cb = options;
 		dirname = path.resolve(__dirname, '..', 'fixture');
 		env = {};
 	} else {
-		dirname = path.resolve(__dirname, '..', opts.dirname ? opts.dirname : 'fixture');
-		env = opts.env || {};
+		dirname = path.resolve(__dirname, '..', options.dirname ? options.dirname : 'fixture');
+		env = options.env || {};
 	}
 
 	let child;

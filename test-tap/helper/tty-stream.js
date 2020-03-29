@@ -20,12 +20,12 @@ class TTYStream extends stream.Writable {
 			this.spinnerActivity = [];
 		}
 
-		const str = this.sanitizers.reduce((str, sanitizer) => sanitizer(str), chunk.toString('utf8'));
+		const string = this.sanitizers.reduce((string_, sanitizer) => sanitizer(string_), chunk.toString('utf8'));
 		// Ignore the chunk if it was scrubbed completely. Still count 0-length
 		// chunks.
-		if (str !== '' || chunk.length === 0) {
+		if (string !== '' || chunk.length === 0) {
 			this.chunks.push(
-				Buffer.from(str, 'utf8'),
+				Buffer.from(string, 'utf8'),
 				TTYStream.SEPARATOR
 			);
 		}
@@ -39,8 +39,8 @@ class TTYStream extends stream.Writable {
 			this.spinnerActivity = [];
 		}
 
-		for (const obj of chunks) {
-			this.chunks.push(Buffer.from(this.sanitizers.reduce((str, sanitizer) => sanitizer(str), obj.chunk.toString('utf8')), 'utf8'));
+		for (const object of chunks) {
+			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8'));
 		}
 
 		this.chunks.push(TTYStream.SEPARATOR);
