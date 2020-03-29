@@ -40,10 +40,6 @@
 ---tty-stream-chunk-separator
   [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
 ---tty-stream-chunk-separator
-stdout
----tty-stream-chunk-separator
-stderr
----tty-stream-chunk-separator
   [33m- test [90m[2m›[22m[39m[33m skip[39m
 ---tty-stream-chunk-separator
   [34m- test [90m[2m›[22m[39m[34m todo[39m
@@ -141,11 +137,11 @@ stderr
 
   [1mtest [90m[2m›[22m[1m[39m fails[22m
 
-  [90mtest.js:12[39m
+  [90mtest.js:9[39m
 
-   [90m11:[39m                              
-  [41m 12: test('fails', t => t.fail());[49m
-   [90m13:[39m                              
+   [90m8:[39m                              
+  [41m 9: test('fails', t => t.fail());[49m
+   [90m10:[39m                              
 
   Test failed via `t.fail()`
 
@@ -162,11 +158,11 @@ stderr
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 
-  [90mtest.js:21[39m
+  [90mtest.js:18[39m
 
-   [90m20:[39m   t.log('world');
-  [41m 21:   t.fail();      [49m
-   [90m22:[39m });              
+   [90m17:[39m   t.log('world');
+  [41m 18:   t.fail();      [49m
+   [90m19:[39m });              
 
   Test failed via `t.fail()`
 
@@ -174,11 +170,11 @@ stderr
 
   [1mtest [90m[2m›[22m[1m[39m formatted[22m
 
-  [90mtest.js:25[39m
+  [90mtest.js:22[39m
 
-   [90m24:[39m test('formatted', t => {    
-  [41m 25:   t.deepEqual('foo', 'bar');[49m
-   [90m26:[39m });                         
+   [90m21:[39m test('formatted', t => {    
+  [41m 22:   t.deepEqual('foo', 'bar');[49m
+   [90m23:[39m });                         
 
   Difference:
 
@@ -189,11 +185,11 @@ stderr
 
   [1mtest [90m[2m›[22m[1m[39m power-assert[22m
 
-  [90mtest.js:30[39m
+  [90mtest.js:27[39m
 
-   [90m29:[39m   const foo = '';
-  [41m 30:   t.assert(foo); [49m
-   [90m31:[39m });              
+   [90m26:[39m   const foo = '';
+  [41m 27:   t.assert(foo); [49m
+   [90m28:[39m });              
 
   Value is not truthy:
 
@@ -206,11 +202,11 @@ stderr
 
   [1mtest [90m[2m›[22m[1m[39m bad throws[22m
 
-  [90mtest.js:38[39m
+  [90mtest.js:35[39m
 
-   [90m37:[39m                  
-  [41m 38:   t.throws(fn());[49m
-   [90m39:[39m });              
+   [90m34:[39m                  
+  [41m 35:   t.throws(fn());[49m
+   [90m36:[39m });              
 
   Improper usage of `t.throws()` detected
 
@@ -228,18 +224,18 @@ stderr
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  [90mtest.js:35:9[39m
-  [90mtest.js:38:11[39m
+  [90mtest.js:32:9[39m
+  [90mtest.js:35:11[39m
 
 
 
   [1mtest [90m[2m›[22m[1m[39m bad notThrows[22m
 
-  [90mtest.js:46[39m
+  [90mtest.js:43[39m
 
-   [90m45:[39m                     
-  [41m 46:   t.notThrows(fn());[49m
-   [90m47:[39m });                 
+   [90m42:[39m                     
+  [41m 43:   t.notThrows(fn());[49m
+   [90m44:[39m });                 
 
   Improper usage of `t.notThrows()` detected
 
@@ -257,8 +253,8 @@ stderr
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  [90mtest.js:43:9[39m
-  [90mtest.js:46:14[39m
+  [90mtest.js:40:9[39m
+  [90mtest.js:43:14[39m
 
 
 
