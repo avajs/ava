@@ -16,7 +16,8 @@
 		"lib",
 		"*.js",
 		"!*.config.js",
-		"index.d.ts"
+		"index.d.ts",
+		"experimental.d.ts"
 	],
 	"keywords": [
 		"🦄",
