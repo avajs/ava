@@ -5,7 +5,6 @@ export {
 	CommitDiscardOptions,
 	Constructor,
 	DeepEqualAssertion,
-	ExecutionContext,
 	FailAssertion,
 	FalseAssertion,
 	FalsyAssertion,
@@ -30,11 +29,85 @@ export {
 	TimeoutFn,
 	TrueAssertion,
 	TruthyAssertion,
-	TryFn,
 	TryResult
 } from '.';
 
-import {ExecutionContext, ImplementationResult, MetaInterface} from '.';
+import {
+	Assertions,
+	ImplementationResult,
+	MetaInterface,
+	LogFn,
+	PlanFn,
+	TimeoutFn,
+	TryResult
+} from '.';
+
+export interface ExecutionContext<Context = unknown> extends Assertions {
+	/** Test context, shared with hooks. */
+	context: Context;
+
+	/** Title of the test or hook. */
+	readonly title: string;
+
+	/** Whether the test has passed. Only accurate in afterEach hooks. */
+	readonly passed: boolean;
+
+	log: LogFn;
+	plan: PlanFn;
+	timeout: TimeoutFn;
+	try: TryFn<Context>;
+}
+
+export interface TryFn<Context = unknown> {
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. The title may help distinguish attempts from one another.
+	 */
+	(title: string, implementation: Implementation<Context>): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. The title may help distinguish attempts from one another.
+	 */
+	<Args extends any[]> (title: string, implementation: ImplementationWithArgs<Args, Context>, ...args: Args): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
+	 * one another.
+	 */
+	(title: string, macro: Macro<[], Context>): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
+	<Args extends any[]> (title: string, macro: Macro<Args, Context>, ...args: Args): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail.
+	 */
+	(implementation: Implementation<Context>): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail.
+	 */
+	<Args extends any[]> (implementation: ImplementationWithArgs<Args, Context>, ...args: Args): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
+	(macro: Macro<[], Context>): Promise<TryResult>;
+
+	/**
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
+	<Args extends any[]> (macro: Macro<Args, Context>, ...args: Args): Promise<TryResult>;
+}
 
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type ImplementationWithArgs<Args extends any[], Context = unknown> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
