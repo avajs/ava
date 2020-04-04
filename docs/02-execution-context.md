@@ -22,6 +22,10 @@ The test title.
 
 Contains shared state from hooks.
 
+## `t.passed`
+
+Whether a test has passed. This value is only accurate in the `test.afterEach()` and `test.afterEach.always()` hooks.
+
 ## `t.plan(count)`
 
 Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
