@@ -181,6 +181,9 @@
 
   Test failed via `t.fail()`
 
+  test-tap/fixture/report/regular/output-in-hook.js:34:4
+  async Promise.all (index 1)
+
 
 
   [1mtest [90m[2m›[22m[1m[39m fails[22m
@@ -193,12 +196,18 @@
 
   Test failed via `t.fail()`
 
+  test-tap/fixture/report/regular/test.js:9:22
+  async Promise.all (index 1)
+
 
 
   [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
 
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
+
+  new Promise (<anonymous>)
+  async Promise.all (index 3)
 
 
 
@@ -214,6 +223,9 @@
 
   Test failed via `t.fail()`
 
+  test-tap/fixture/report/regular/test.js:18:4
+  async Promise.all (index 4)
+
 
 
   [1mtest [90m[2m›[22m[1m[39m formatted[22m
@@ -228,6 +240,9 @@
 
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
+
+  test-tap/fixture/report/regular/test.js:22:4
+  async Promise.all (index 5)
 
 
 
@@ -245,6 +260,9 @@
 
   foo
   [90m=>[39m [34m'[39m[34m[39m[34m'[39m
+
+  test-tap/fixture/report/regular/test.js:27:4
+  async Promise.all (index 6)
 
 
 
@@ -272,13 +290,9 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-<<<<<<< HEAD:test-tap/reporters/mini.regular.log
-  [90mtest.js:32:9[39m
-  [90mtest.js:35:11[39m
-=======
-  test.js:35:9
-  test.js:38:11
->>>>>>> Show node internal stack trace:test/reporters/mini.regular.log
+  test-tap/fixture/report/regular/test.js:32:9
+  test-tap/fixture/report/regular/test.js:35:11
+  async Promise.all (index 7)
 
 
 
@@ -306,13 +320,9 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-<<<<<<< HEAD:test-tap/reporters/mini.regular.log
-  [90mtest.js:40:9[39m
-  [90mtest.js:43:14[39m
-=======
-  test.js:43:9
-  test.js:46:14
->>>>>>> Show node internal stack trace:test/reporters/mini.regular.log
+  test-tap/fixture/report/regular/test.js:40:9
+  test-tap/fixture/report/regular/test.js:43:14
+  async Promise.all (index 8)
 
 
 
@@ -322,6 +332,8 @@
   Error thrown in test:
 
   [33mnull[39m
+
+  async Promise.all (index 9)
 
 
 
@@ -343,9 +355,10 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  traces-in-t-throws.js:4:8
-  traces-in-t-throws.js:12:17
-  traces-in-t-throws.js:12:4
+  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
+  test-tap/fixture/report/regular/traces-in-t-throws.js:12:17
+  test-tap/fixture/report/regular/traces-in-t-throws.js:12:4
+  async Promise.all (index 0)
 
 
 
@@ -363,9 +376,10 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  traces-in-t-throws.js:4:8
-  traces-in-t-throws.js:16:20
-  traces-in-t-throws.js:16:4
+  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
+  test-tap/fixture/report/regular/traces-in-t-throws.js:16:20
+  test-tap/fixture/report/regular/traces-in-t-throws.js:16:4
+  async Promise.all (index 1)
 
 
 
@@ -383,9 +397,10 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  traces-in-t-throws.js:4:8
-  traces-in-t-throws.js:20:25
-  traces-in-t-throws.js:20:4
+  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
+  test-tap/fixture/report/regular/traces-in-t-throws.js:20:25
+  test-tap/fixture/report/regular/traces-in-t-throws.js:20:4
+  async Promise.all (index 2)
 
 
 
@@ -403,9 +418,10 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  traces-in-t-throws.js:4:8
-  traces-in-t-throws.js:24:22
-  traces-in-t-throws.js:24:4
+  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
+  test-tap/fixture/report/regular/traces-in-t-throws.js:24:22
+  test-tap/fixture/report/regular/traces-in-t-throws.js:24:4
+  async Promise.all (index 3)
 
 
 
@@ -427,8 +443,9 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  traces-in-t-throws.js:8:24
-  traces-in-t-throws.js:28:11
+  test-tap/fixture/report/regular/traces-in-t-throws.js:8:24
+  test-tap/fixture/report/regular/traces-in-t-throws.js:28:11
+  async Promise.all (index 4)
 
 
 
@@ -442,6 +459,8 @@
 
   TypeError: test.serial.test is not a function
 
+  test-tap/fixture/report/regular/bad-test-chain.js:3:13
+
 
 
   [1mUncaught exception in uncaught-exception.js[22m
@@ -454,7 +473,7 @@
 
   Error: Can’t catch me
 
-  uncaught-exception.js:5:9
+  test-tap/fixture/report/regular/uncaught-exception.js:5:9
   [90minternal/timers.js:549:17[39m
   [90minternal/timers.js:492:7[39m
 
@@ -469,6 +488,9 @@
    [90m5:[39m   t.pass();                                   
 
   Error: Can’t catch me
+
+  test-tap/fixture/report/regular/unhandled-rejection.js:4:17
+  async Promise.all (index 0)
 
 
 

@@ -2,46 +2,33 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const fs = require('fs');
 const path = require('path');
 const sourceMapFixtures = require('source-map-fixtures');
 const sourceMapSupport = require('source-map-support');
-const tempWrite = require('temp-write');
-const tempy = require('tempy');
 const {test} = require('tap');
 const avaAssert = require('../lib/assert');
-const beautifyStack = require('../lib/beautify-stack');
 const serializeError = require('../lib/serialize-error');
 
-const serialize = error => serializeError('Test', true, error);
+const serialize = error => serializeError('Test', true, error, path.resolve('test-tap/serialize-error.js'));
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
 
-const makeTemporaryDir = () => {
-	if (process.platform !== 'win32') {
-		return tempy.directory();
-	}
-
-	const dir = path.join(__dirname, '.tmpdir', `serialize-error.${process.pid}`);
-	fs.mkdirSync(dir, {recursive: true});
-	return dir;
-};
-
 test('serialize standard props', t => {
 	const error = new Error('Hello');
-	const serializedError = serialize(error);
+	const serializedError = serialize(error, true);
 
-	t.is(Object.keys(serializedError).length, 8);
+	t.is(Object.keys(serializedError).length, 9);
 	t.is(serializedError.avaAssertionError, false);
 	t.is(serializedError.nonErrorObject, false);
 	t.deepEqual(serializedError.object, {});
 	t.is(serializedError.name, 'Error');
-	t.is(serializedError.stack, beautifyStack(error.stack));
+	t.is(serializedError.stack, error.stack);
 	t.is(serializedError.message, 'Hello');
 	t.is(serializedError.summary, 'Error: Hello');
-	t.is(typeof serializedError.source.isDependency, 'boolean');
-	t.is(typeof serializedError.source.isWithinProject, 'boolean');
+	t.is(serializedError.shouldBeautifyStack, true);
+	t.is(serializedError.source.isWithinProject, true);
+	t.is(serializedError.source.isDependency, false);
 	t.is(typeof serializedError.source.file, 'string');
 	t.is(typeof serializedError.source.line, 'number');
 	t.end();
@@ -68,68 +55,9 @@ test('source file is an absolute path, after source map correction', t => {
 		t.fail('Fixture should have thrown');
 	} catch (error) {
 		const serializedError = serialize(error);
-		t.is(serializedError.source.file, fixture.sourceFile);
+		t.is(serializedError.source.file, __filename);
 		t.end();
 	}
-});
-
-test('source file is an absolute path, after source map correction, even if already absolute', t => {
-	const fixture = sourceMapFixtures.mapFile('throws');
-	const map = JSON.parse(fs.readFileSync(fixture.file + '.map'));
-
-	const temporary = makeTemporaryDir();
-	const sourceRoot = path.join(temporary, 'src');
-	const expectedSourceFile = path.join(sourceRoot, map.file);
-
-	const temporaryFile = path.join(temporary, path.basename(fixture.file));
-	fs.writeFileSync(temporaryFile, fs.readFileSync(fixture.file));
-	fs.writeFileSync(temporaryFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
-
-	try {
-		require(temporaryFile).run();
-		t.fail('Fixture should have thrown');
-	} catch (error) {
-		const serializedError = serialize(error);
-		t.is(serializedError.source.file, expectedSourceFile);
-		t.end();
-	}
-});
-
-test('determines whether source file is within the project', t => {
-	const file = tempWrite.sync('module.exports = () => { throw new Error("hello") }');
-	try {
-		require(file)();
-		t.fail('Should have thrown');
-	} catch (error_) {
-		const serializedError = serialize(error_);
-		t.is(serializedError.source.file, file);
-		t.is(serializedError.source.isWithinProject, false);
-	}
-
-	const error = new Error('Hello');
-	const serializedError = serialize(error);
-	t.is(serializedError.source.file, __filename);
-	t.is(serializedError.source.isWithinProject, true);
-	t.end();
-});
-
-test('determines whether source file, if within the project, is a dependency', t => {
-	const fixture = sourceMapFixtures.mapFile('throws');
-	try {
-		fixture.require().run();
-		t.fail('Fixture should have thrown');
-	} catch (error_) {
-		const serializedError = serialize(error_);
-		t.is(serializedError.source.file, fixture.sourceFile);
-		t.is(serializedError.source.isWithinProject, true);
-		t.is(serializedError.source.isDependency, true);
-	}
-
-	const error = new Error('Hello');
-	const serializedError = serialize(error);
-	t.is(serializedError.source.file, __filename);
-	t.is(serializedError.source.isDependency, false);
-	t.end();
 });
 
 test('sets avaAssertionError to true if indeed an assertion error', t => {

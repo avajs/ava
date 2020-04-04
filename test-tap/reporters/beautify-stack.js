@@ -1,13 +1,13 @@
 'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options').set({});
+require('../../lib/chalk').set();
+require('../../lib/worker/options').set({});
 
 const path = require('path');
 const proxyquire = require('proxyquire').noPreserveCache();
 const {test} = require('tap');
-const Runner = require('../lib/runner');
+const Runner = require('../../lib/runner');
 
-const beautifyStack = proxyquire('../lib/beautify-stack', {
+const beautifyStack = proxyquire('../../lib/reporters/beautify-stack', {
 	debug() {
 		return {
 			enabled: false
@@ -24,7 +24,7 @@ function barFunc() {
 }
 
 test('does not strip ava internals and dependencies from stack trace with debug enabled', t => {
-	const beautify = proxyquire('../lib/beautify-stack', {
+	const beautify = proxyquire('../../lib/reporters/beautify-stack', {
 		debug() {
 			return {
 				enabled: true
@@ -68,6 +68,7 @@ test('beautify stack - removes uninteresting lines', async t => {
 		});
 	} catch (error) {
 		const stack = beautifyStack(error.stack);
+		t.notMatch(stack, /Error\n/);
 		t.match(stack, /fooFunc/);
 		t.match(stack, /barFunc/);
 		// The runSingle line is introduced by Runner. It's internal so it should
@@ -78,7 +79,7 @@ test('beautify stack - removes uninteresting lines', async t => {
 	}
 });
 
-test('beautify stack - don`t remove node internals', async t => {
+test('beautify stack - don’t remove node internals', async t => {
 	try {
 		const runner = new Runner();
 		await runner.runSingle({
