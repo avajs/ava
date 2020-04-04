@@ -346,29 +346,29 @@ export interface TimeoutFn {
 
 export interface TryFn<Context = unknown> {
 	/**
-	 * Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
 	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
 	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	* the test will fail. A macro may be provided.
-	*/
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
 	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	* the test will fail. A macro may be provided.
-	*/
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
 	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 }
 
