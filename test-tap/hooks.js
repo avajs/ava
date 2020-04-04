@@ -417,6 +417,25 @@ test('afterEach.always: property `passed` of execution-context is false when tes
 	});
 });
 
+test('afterEach.always: property `passed` of execution-context is false when before hook failed', t => {
+	t.plan(1);
+
+	let passed;
+	return promiseEnd(new Runner(), runner => {
+		runner.chain.before(() => {
+			throw new Error('something went wrong');
+		});
+		runner.chain.afterEach.always(a => {
+			passed = a.passed;
+		});
+		runner.chain('pass', a => {
+			a.pass();
+		});
+	}).then(() => {
+		t.false(passed);
+	});
+});
+
 test('ensure hooks run only around tests', t => {
 	t.plan(1);
 
