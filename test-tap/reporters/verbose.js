@@ -35,7 +35,6 @@ test('verbose reporter - failFast run', run('failFast'));
 test('verbose reporter - second failFast run', run('failFast2'));
 test('verbose reporter - only run', run('only'));
 test('verbose reporter - watch mode run', run('watch'));
-test('verbose reporter - typescript', run('typescript', [report.sanitizers.lineEndings]));
 test('verbose reporter - edge cases', run('edgeCases'));
 
 test('verbose reporter - timeout', t => {
