@@ -343,8 +343,24 @@ export interface TodoDeclaration {
 	(title: string): void;
 }
 
+export interface ForkableSerialInterface<Context = unknown> extends SerialInterface<Context> {
+	/** Create a new serial() function with its own hooks. */
+	fork(): ForkableSerialInterface<Context>;
+}
+
+export interface ForkableTestInterface<Context = unknown> extends TestInterface<Context> {
+	/** Create a new test() function with its own hooks. */
+	fork(): ForkableTestInterface<Context>;
+
+	/** Declare tests and hooks that are run serially. */
+	serial: ForkableSerialInterface<Context>;
+}
+
 /** Call to declare a test, or chain to declare hooks or test modifiers */
-declare const test: TestInterface;
+declare const test: TestInterface & {
+	/** Create a new test() function with its own hooks. */
+	make(): ForkableTestInterface;
+};
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 export default test;
