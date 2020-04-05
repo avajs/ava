@@ -7,20 +7,20 @@ const Test = require('../lib/test');
 
 function ava(fn) {
 	return new Test({
+		annotations: {type: 'test', callback: false},
 		contextRef: null,
 		failWithoutAssertions: true,
 		fn,
-		metadata: {type: 'test', callback: false},
 		title: '[anonymous]'
 	});
 }
 
 ava.cb = function (fn) {
 	return new Test({
+		annotations: {type: 'test', callback: true},
 		contextRef: null,
 		failWithoutAssertions: true,
 		fn,
-		metadata: {type: 'test', callback: true},
 		title: '[anonymous]'
 	});
 };

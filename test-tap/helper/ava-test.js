@@ -14,48 +14,48 @@ function withExperiments(experiments = {}) {
 
 	function ava(fn, contextRef, title = 'test') {
 		return new Test({
+			annotations: {type: 'test', callback: false},
 			contextRef: contextRef || new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: false},
 			title
 		});
 	}
 
 	ava.failing = (fn, contextRef) => {
 		return new Test({
+			annotations: {type: 'test', callback: false, failing: true},
 			contextRef: contextRef || new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: false, failing: true},
 			title: 'test.failing'
 		});
 	};
 
 	ava.cb = (fn, contextRef) => {
 		return new Test({
+			annotations: {type: 'test', callback: true},
 			contextRef: contextRef || new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: true},
 			title: 'test.cb'
 		});
 	};
 
 	ava.cb.failing = (fn, contextRef) => {
 		return new Test({
+			annotations: {type: 'test', callback: true, failing: true},
 			contextRef: contextRef || new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: true, failing: true},
 			title: 'test.cb.failing'
 		});
 	};

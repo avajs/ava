@@ -10,10 +10,10 @@ const ContextRef = require('../lib/context-ref');
 
 function setup(title, manager, fn) {
 	return new Test({
+		annotations: {type: 'test', callback: false},
 		experiments: {},
 		fn,
 		failWithoutAssertions: true,
-		metadata: {type: 'test', callback: false},
 		contextRef: new ContextRef(),
 		registerUniqueTitle: () => true,
 		title,

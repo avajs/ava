@@ -162,11 +162,11 @@ test('end can be used as callback with a non-error as its error argument', t => 
 test('title returns the test title', t => {
 	t.plan(1);
 	return new Test({
+		annotations: {type: 'test', callback: false},
 		fn(a) {
 			t.is(a.title, 'foo');
 			a.pass();
 		},
-		metadata: {type: 'test', callback: false},
 		title: 'foo'
 	}).run();
 });
@@ -535,6 +535,7 @@ test('no crash when adding assertions after the test has ended', t => {
 
 test('contextRef', t => {
 	new Test({
+		annotations: {type: 'test'},
 		contextRef: {
 			get() {
 				return {foo: 'bar'};
@@ -546,7 +547,6 @@ test('contextRef', t => {
 			t.strictDeepEqual(a.context, {foo: 'bar'});
 			t.end();
 		},
-		metadata: {type: 'test'},
 		onResult() {},
 		title: 'foo'
 	}).run();
@@ -678,9 +678,9 @@ test('snapshot assertion can be skipped', t => {
 	});
 
 	return new Test({
+		annotations: {},
 		compareTestSnapshot: options => manager.compare(options),
 		updateSnapshots: false,
-		metadata: {},
 		title: 'passes',
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
@@ -694,8 +694,8 @@ test('snapshot assertion can be skipped', t => {
 
 test('snapshot assertion cannot be skipped when updating snapshots', t => {
 	return new Test({
+		annotations: {},
 		updateSnapshots: true,
-		metadata: {},
 		title: 'passes',
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
