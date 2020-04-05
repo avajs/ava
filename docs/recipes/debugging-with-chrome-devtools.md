@@ -2,8 +2,6 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-chrome-devtools.md)
 
-**This recipe describes the new `inspect` command in the upcoming AVA 3 release. See the [AVA 2](https://github.com/avajs/ava/blob/v2.4.0/docs/recipes/debugging-with-chrome-devtools.md) documentation instead.**
-
 You can debug your tests using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools).
 
 Open Chrome, then navigate to <chrome://inspect/>. Click the *Open dedicated DevTools for Node* link within the *Devices* section.
@@ -24,10 +22,10 @@ Run with the `--break` option to ensure the DevTools hit a breakpoint right befo
 npx ava debug --break test.js
 ```
 
-You can also customize the port. It defaults to `9229`:
+By default the inspector listens on `127.0.0.1:9229`. You can customize the host and the port:
 
 ```console
-npx ava debug --port 9230 test.js
+npx ava debug --host 0.0.0.0 --port 9230 test.js
 ```
 
-You'll have to add a connection for this port in the *Connection* tab. AVA only binds to `localhost`.
+You'll have to add a connection for this port in the *Connection* tab.

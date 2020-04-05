@@ -1,11 +1,11 @@
-/// <reference types="node"/>
-
-export interface ObservableLike {
-	subscribe(observer: (value: unknown) => void): void;
-	[Symbol.observable](): ObservableLike;
+export interface Subscribable {
+	subscribe(observer: {
+		error(err: any): void;
+		complete(): void;
+	}): void;
 }
 
-export type Constructor = (new (...args: Array<any>) => any);
+export type Constructor = (new (...args: any[]) => any);
 
 /** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation = {
@@ -29,8 +29,8 @@ export type CommitDiscardOptions = {
 	/**
 	 * Whether the logs should be included in those of the parent test.
 	 */
-	retainLogs?: boolean
-}
+	retainLogs?: boolean;
+};
 
 /** Options that can be passed to the `t.snapshot()` assertion. */
 export type SnapshotOptions = {
@@ -247,32 +247,9 @@ export interface SnapshotAssertion {
 export interface ThrowsAssertion {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 */
-	<ThrownError extends Error>(fn: () => any, expectations?: null, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(fn: () => any, constructor: Constructor, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(fn: () => any, regex: RegExp, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
-	 * The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(fn: () => any, errorMessage: string, message?: string): ThrownError;
-
-	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations: ThrowsExpectation, message?: string): ThrownError;
+	<ThrownError extends Error>(fn: () => any, expectations?: ThrowsExpectation | null, message?: string): ThrownError;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
@@ -287,24 +264,6 @@ export interface ThrowsAsyncAssertion {
 
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
-	 * value. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. You must await the result. The error must satisfy all expectations.
 	 */
 	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations: ThrowsExpectation, message?: string): Promise<ThrownError>;
@@ -314,24 +273,6 @@ export interface ThrowsAsyncAssertion {
 	 * rejection reason. You must await the result.
 	 */
 	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: null, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must be an instance of the given constructor.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, constructor: Constructor, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must have a message that matches the regular expression.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, regex: RegExp, message?: string): Promise<ThrownError>;
-
-	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
-	 * rejection reason. You must await the result. The error must have a message equal to `errorMessage`.
-	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, errorMessage: string, message?: string): Promise<ThrownError>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
@@ -367,6 +308,9 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 	/** Title of the test or hook. */
 	readonly title: string;
 
+	/** Whether the test has passed. Only accurate in afterEach hooks. */
+	readonly passed: boolean;
+
 	log: LogFn;
 	plan: PlanFn;
 	timeout: TimeoutFn;
@@ -375,10 +319,10 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 
 export interface LogFn {
 	/** Log one or more values. */
-	(...values: Array<any>): void;
+	(...values: any[]): void;
 
 	/** Skip logging. */
-	skip(...values: Array<any>): void;
+	skip(...values: any[]): void;
 }
 
 export interface PlanFn {
@@ -402,30 +346,30 @@ export interface TimeoutFn {
 
 export interface TryFn<Context = unknown> {
 	/**
-	 * Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
 	<Args extends any[]>(title: string, fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
 	 * one another.
 	 */
-	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	* the test will fail. A macro may be provided.
-	*/
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
 	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
-	* Requires opt-in. Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	* the test will fail. A macro may be provided.
-	*/
-	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]], ...args: Args): Promise<TryResult[]>;
+	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+	 * the test will fail. A macro may be provided.
+	 */
+	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 }
 
 export interface AssertionError extends Error {}
@@ -472,7 +416,7 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | ObservableLike | void;
+export type ImplementationResult = PromiseLike<void> | Subscribable | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
@@ -486,32 +430,32 @@ export type Macro<Args extends any[], Context = unknown> = UntitledMacro<Args, C
 	 * the title provided when the test or hook was declared. Also receives the remaining test arguments.
 	 */
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
-}
+};
 
 export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...EitherMacro<Args, Context>[]];
+export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>];
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult
+export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult;
 
 /** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
 export type CbMacro<Args extends any[], Context = unknown> = UntitledCbMacro<Args, Context> & {
 	title?: (providedTitle: string | undefined, ...args: Args) => string;
-}
+};
 
 export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
 
 /** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...EitherCbMacro<Args, Context>[]];
+export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...Array<EitherCbMacro<Args, Context>>];
 
 export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void
+	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
 	/** Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title. */
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;

@@ -1,8 +1,8 @@
 'use strict';
-const babelManager = require('./lib/babel-manager');
 const normalizeExtensions = require('./lib/extensions');
 const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 const loadConfig = require('./lib/load-config');
+const providerManager = require('./lib/provider-manager');
 
 const configCache = new Map();
 const helperCache = new Map();
@@ -14,27 +14,42 @@ function load(projectDir, overrides) {
 	}
 
 	let conf;
-	let babelProvider;
+	let providers;
 	if (configCache.has(projectDir)) {
-		({conf, babelProvider} = configCache.get(projectDir));
+		({conf, providers} = configCache.get(projectDir));
 	} else {
 		conf = loadConfig({resolveFrom: projectDir});
 
+		providers = [];
 		if (Reflect.has(conf, 'babel')) {
-			babelProvider = babelManager({projectDir}).main({config: conf.babel});
+			const {level, main} = providerManager.babel(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.babel}),
+				type: 'babel'
+			});
 		}
 
-		configCache.set(projectDir, {conf, babelProvider});
+		if (Reflect.has(conf, 'typescript')) {
+			const {level, main} = providerManager.typescript(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.typescript}),
+				type: 'typescript'
+			});
+		}
+
+		configCache.set(projectDir, {conf, providers});
 	}
 
 	const extensions = overrides && overrides.extensions ?
 		normalizeExtensions(overrides.extensions) :
-		normalizeExtensions(conf.extensions, babelProvider);
+		normalizeExtensions(conf.extensions, providers);
 
 	let helperPatterns = [];
 	if (overrides && overrides.helpers !== undefined) {
 		if (!Array.isArray(overrides.helpers) || overrides.helpers.length === 0) {
-			throw new Error('The \'helpers\' override must be an array containing glob patterns.');
+			throw new Error('The ’helpers’ override must be an array containing glob patterns.');
 		}
 
 		helperPatterns = normalizePatterns(overrides.helpers);
@@ -44,7 +59,8 @@ function load(projectDir, overrides) {
 		cwd: projectDir,
 		...normalizeGlobs({
 			extensions,
-			files: overrides && overrides.files ? overrides.files : conf.files
+			files: overrides && overrides.files ? overrides.files : conf.files,
+			providers
 		})
 	};
 

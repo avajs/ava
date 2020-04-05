@@ -7,7 +7,7 @@ Testing can be a drag. AVA helps you get it done. AVA is a test runner for Node.
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
-Read our [contributing guide](contributing.md) if you're looking to contribute (issues / PRs / etc).
+Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to contribute (issues / PRs / etc).
 
 ![](media/mini-reporter.gif)
 
@@ -156,12 +156,12 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
 - [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
-- [JSPM and SystemJS](docs/recipes/jspm-systemjs.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with VSCode](docs/recipes/debugging-with-vscode.md)
 - [Debugging tests with WebStorm](docs/recipes/debugging-with-webstorm.md)
 - [Isolated MongoDB integration tests](docs/recipes/isolated-mongodb-integration-tests.md)
 - [Testing web apps using Puppeteer](docs/recipes/puppeteer.md)
+- [Testing web apps using Selenium WebDriverJS](docs/recipes/testing-with-selenium-webdriverjs.md)
 
 ## FAQ
 
@@ -227,7 +227,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 	<br>
 	<br>
 	<br>
-	<a href="https://ava.li">
+	<a href="https://avajs.dev">
 		<img src="media/logo.svg" width="200" alt="AVA">
 	</a>
 	<br>

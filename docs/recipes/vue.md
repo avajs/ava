@@ -7,8 +7,8 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 - [Require extension hooks](https://github.com/jackmellis/require-extension-hooks):
 	- `npm i --save-dev require-extension-hooks require-extension-hooks-vue require-extension-hooks-babel@beta`
 
-- [browser-env](browser-testing.md)
-	- `npm i --save-dev browser-env`
+- [jsdom-global](https://github.com/rstacruz/jsdom-global/blob/master/README.md)
+	- `npm i --save-dev jsdom jsdom-global`
 
 - Optional: [babel-plugin-webpack-alias-7](https://github.com/shortminds/babel-plugin-webpack-alias-7) if you want to use [webpack aliases](https://webpack.js.org/configuration/resolve/#resolve-alias) or use them in your source files
 	- `npm i --save-dev babel-plugin-webpack-alias-7`
@@ -32,8 +32,13 @@ The first step is setting up a helper to configure the environment to transpile 
 ```js
 // ./test/_setup.js
 
+// Set up JSDom.
+require('jsdom-global')()
+
+// Fix the Date object, see <https://github.com/vuejs/vue-test-utils/issues/936#issuecomment-415386167>.
+window.Date = Date
+
 // Setup browser environment
-require('browser-env')();
 const hooks = require('require-extension-hooks');
 const Vue = require('vue');
 
