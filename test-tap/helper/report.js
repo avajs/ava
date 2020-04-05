@@ -94,20 +94,13 @@ const run = (type, reporter, match = []) => {
 		snapshotDir: false,
 		chalkOptions: {level: 1}
 	};
-	let pattern = '*.js';
-
-	if (type === 'typescript') {
-		options.extensions.push('ts');
-		options.require = ['ts-node/register'];
-		pattern = '*.ts';
-	}
 
 	options.globs = normalizeGlobs({extensions: options.extensions, providers: []});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync(pattern, {
+	const files = globby.sync('*.js', {
 		absolute: true,
 		brace: true,
 		case: false,
@@ -149,5 +142,4 @@ exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
 exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
 exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
 exports.watch = reporter => run('watch', reporter);
-exports.typescript = reporter => run('typescript', reporter);
 exports.edgeCases = reporter => run('edgeCases', reporter);
