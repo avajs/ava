@@ -5,6 +5,7 @@ const escapeStringRegExp = require('escape-string-regexp');
 const {test} = require('tap');
 const {
 	splitPatternAndLineNumbers,
+	getApplicableLineNumbers,
 	getLineNumberRangeForTestInFile,
 	isTestSelectedByLineNumbers
 } = require('../lib/line-numbers');
@@ -82,6 +83,21 @@ test('reversed order range -> throws', t => {
 	t.throws(() => splitPatternAndLineNumbers('test.js:3-1'), {
 		message: 'Invalid line number range: `3-1`. `start` must be less than `end`.'
 	});
+	t.end();
+});
+
+test('ignore non-matching patterns', t => {
+	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [2]}, {pattern: 'foo.js', lineNumbers: [3]}], [2]));
+	t.end();
+});
+
+test('deduplicate line numbers', t => {
+	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [2, 3, 4]}, {pattern: 'test.js', lineNumbers: [3, 4, 5]}], [2, 3, 4, 5]));
+	t.end();
+});
+
+test('sort line numbers', t => {
+	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [1, 3, 5]}, {pattern: 'test.js', lineNumbers: [2, 4, 6]}], [1, 2, 3, 4, 5, 6]));
 	t.end();
 });
 
