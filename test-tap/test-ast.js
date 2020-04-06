@@ -8,13 +8,13 @@ const parseTestSourceInFile = require('../lib/test-ast');
 
 const printAsOneLine = ast => AST.print(ast).code.replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
-const testFilePath = path.join(__dirname, 'fixture/test-ast.js');
+const testFilePath = path.join(__dirname, 'fixture', 'test-ast.js');
 // Escaping needed for Windows
 const escapedTestFilePath = escapeStringRegExp(testFilePath);
 
 test('test matches start line number', t => {
-	const unicornTestSource = 'test(’unicorn’, t => { t.pass(); })';
-	const rainbowTestSource = 'test(’rainbow’, t => { t.pass(); })';
+	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
+	const rainbowTestSource = 'test(\'rainbow\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
 	t.is(
 		printAsOneLine(parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, testFilePath)),
 		unicornTestSource
@@ -27,8 +27,8 @@ test('test matches start line number', t => {
 });
 
 test('two tests on same start line number', t => {
-	const catTestSource = 'test(’cat’, t => t.pass())';
-	const dogTestSource = 'test(’dog’, t => { t.pass(); })';
+	const catTestSource = 'test(\'cat\', t => t.pass())'; // eslint-disable-line unicorn/string-content
+	const dogTestSource = 'test(\'dog\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
 	t.is(
 		AST.print(parseTestSourceInFile({startLineNumber: 12, title: 'cat'}, testFilePath)).code,
 		catTestSource
@@ -54,23 +54,8 @@ test('mismatching title -> throws', t => {
 	t.end();
 });
 
-test('empty start line number -> throws', t => {
-	t.throws(() => parseTestSourceInFile({title: 'unicorn'}), /Start line number required\./);
-	t.end();
-});
-
-test('empty title -> throws', t => {
-	t.throws(() => parseTestSourceInFile({startLineNumber: 3}), /Test title required\./);
-	t.end();
-});
-
-test('empty file path -> throws', t => {
-	t.throws(() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}), /File path required\./);
-	t.end();
-});
-
 test('non-existing file -> throws', t => {
-	const nonExistingFilePath = path.join(__dirname, 'fixture/nonexistent');
+	const nonExistingFilePath = path.join(__dirname, 'fixture', 'nonexistent');
 	t.throws(
 		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, nonExistingFilePath),
 		new RegExp(`File ${escapeStringRegExp(nonExistingFilePath)} not found.`)
