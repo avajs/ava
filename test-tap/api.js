@@ -30,12 +30,12 @@ function apiCreator(options = {}) {
 	return instance;
 }
 
-test('test.meta.file', t => {
-	const api = apiCreator();
+test('test.meta', t => {
+	const api = apiCreator({snapshotDir: 'snapshot-fixture'});
 
-	return api.run({files: [path.join(__dirname, 'fixture/meta.js')]})
+	return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
 		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 2);
+			t.is(runStatus.stats.passedTests, 3);
 		});
 });
 
