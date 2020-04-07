@@ -274,7 +274,7 @@ Helper files can determine the filename of the test being run by reading `test.m
 ```js
 const test = require('ava');
 
-console.log('Test currently being run: ', test.meta.file);
+console.log('Test file currently being run: ', test.meta.file);
 ```
 
 ## Reusing test logic through macros
