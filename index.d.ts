@@ -760,6 +760,8 @@ export interface TodoDeclaration {
 export interface MetaInterface {
 	/** Path to the test file being executed. */
 	file: string;
+	/** Path to the snapshot directory. */
+	snapshotDirectory: string;
 }
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
