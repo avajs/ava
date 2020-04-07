@@ -278,7 +278,7 @@ Available properties:
 ```js
 const test = require('ava');
 
-console.log('Test file currently being run: ', test.meta.file);
+console.log('Test file currently being run:', test.meta.file);
 ```
 
 ## Reusing test logic through macros
