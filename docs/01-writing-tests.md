@@ -269,7 +269,7 @@ test('context is unicorn', t => {
 
 ## Retrieving test metadata
 
-Helper files can determine the filename of the test being run by reading `test.meta.file`.  This eliminates the need to pass `__filename` from the test to helpers.
+Helper files can determine the filename of the test being run by reading `test.meta.file`. This eliminates the need to pass `__filename` from the test to helpers.
 
 ```js
 const test = require('ava');
