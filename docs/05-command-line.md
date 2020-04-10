@@ -163,29 +163,21 @@ This feature is only available from the command line.
 
 To only run a particular test in a file, append the line number of the test to the path or pattern passed to AVA.
 
-Running
-
-```console
-npx ava test.js:3
-```
-
-for the following tests would result in:
+Given the following test file:
 
 `test.js`
 
 ```js
-1: // Run
-2: test('unicorn', t => {
-3:   t.pass();
-4: });
-5:
-6: // Not run
-7: test('rainbow', t => {
-8:  t.fail();
-9: });
+1: test('unicorn', t => {
+2:   t.pass();
+3: });
+4:
+5: test('rainbow', t => {
+6:  t.fail();
+7: });
 ```
 
-Any line number between `2` and `4` would select the `unicorn` test above.
+Running `npx ava test.js:2` for would run the `unicorn` test. In fact you could use any line number between `1` and `3`.
 
 ### Running multiple tests
 
@@ -217,7 +209,7 @@ Different files:
 npx ava test.js:3 test2.js:4,7-9
 ```
 
-When running a file with and without line numbers, line numbers takes precedence.
+When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
