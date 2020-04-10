@@ -269,10 +269,11 @@ test('context is unicorn', t => {
 
 ## Retrieving test metadata
 
-Access metadata of the test being run by reading `test.meta`.
+Access data about the currently loaded test file run by reading `test.meta`.
 
 Available properties:
-* `file`: file path to the test being run
+
+* `file`: path to the test file
 * `snapshotDirectory`: directory where snapshots are stored
 
 ```js

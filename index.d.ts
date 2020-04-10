@@ -760,7 +760,8 @@ export interface TodoDeclaration {
 export interface MetaInterface {
 	/** Path to the test file being executed. */
 	file: string;
-	/** Path to the snapshot directory. */
+
+	/** Directory where snapshots are stored. */
 	snapshotDirectory: string;
 }
 

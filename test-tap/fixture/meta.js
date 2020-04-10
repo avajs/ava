@@ -9,6 +9,6 @@ test('meta.file', t => {
 });
 
 test('meta.snapshotDirectory', t => {
-	t.regex(meta.snapshotDirectory, /.*snapshot-fixture.*/);
+	t.regex(meta.snapshotDirectory, /snapshot-fixture/);
 });
 
