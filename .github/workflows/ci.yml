@@ -33,6 +33,26 @@ jobs:
       - run: npm test
       - uses: codecov/codecov-action@v1
 
+  typescript:
+    name: TypeScript compatibility
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ts-version: [~3.7.5, ~3.8]
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ^12
+      - run: npm ci --no-audit
+      - run: npm i typescript@${TS_VERSION}
+        env:
+          TS_VERSION: ${{ matrix.ts-version }}
+      - run: npm ls typescript
+      - run: npx tsd
+
   lockfile_churn:
     name: Test package-lock for unexpected modifications
     runs-on: ubuntu-latest
