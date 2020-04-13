@@ -55,8 +55,8 @@ test('no test selected by line number', t => {
 	execCli([
 		'line-numbers.js:6'
 	], (error, stdout) => {
-		t.ok(error);
-		t.match(stdout, /No tests selected by line numbers/);
+		t.ifError(error);
+		t.match(stdout, /No tests selected by line numbers in line-numbers\.js/);
 		t.end();
 	});
 });
