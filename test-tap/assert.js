@@ -259,11 +259,11 @@ test('.is()', t => {
 	});
 
 	passes(t, () => {
-		assertions.is(NaN, NaN);
+		assertions.is(Number.NaN, Number.NaN);
 	});
 
 	passes(t, () => {
-		assertions.is(0 / 0, NaN);
+		assertions.is(0 / 0, Number.NaN);
 	});
 
 	passes(t, () => {
@@ -322,11 +322,11 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		assertions.is(0, NaN);
+		assertions.is(0, Number.NaN);
 	});
 
 	fails(t, () => {
-		assertions.is('foo', NaN);
+		assertions.is('foo', Number.NaN);
 	});
 
 	failsWith(t, () => {
@@ -421,11 +421,11 @@ test('.not()', t => {
 	});
 
 	fails(t, () => {
-		assertions.not(NaN, NaN);
+		assertions.not(Number.NaN, Number.NaN);
 	});
 
 	fails(t, () => {
-		assertions.not(0 / 0, NaN);
+		assertions.not(0 / 0, Number.NaN);
 	});
 
 	failsWith(t, () => {
@@ -1479,7 +1479,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 			});
 		}
 	}
@@ -1490,7 +1490,7 @@ test('.snapshot()', t => {
 	}, {
 		assertion: 'snapshot',
 		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
+		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 	});
 
 	{
@@ -1503,7 +1503,7 @@ test('.snapshot()', t => {
 			}, {
 				assertion: 'snapshot',
 				message: 'my message',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}] // eslint-disable-line unicorn/string-content
+				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
 			});
 		}
 	}

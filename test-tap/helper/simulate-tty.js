@@ -34,7 +34,7 @@ const simulateTTY = (stream, colorDepth, hasColors) => {
 // typical testing conditions and tricks AVA into using its fake TTY logic.
 if (process.env.AVA_SIMULATE_TTY) {
 	const colorDepth = process.env.AVA_TTY_COLOR_DEPTH ?
-		parseInt(process.env.AVA_TTY_COLOR_DEPTH, 10) :
+		Number.parseInt(process.env.AVA_TTY_COLOR_DEPTH, 10) :
 		undefined;
 	const hasColors = process.env.AVA_TTY_HAS_COLORS !== undefined;
 
