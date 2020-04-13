@@ -44,7 +44,6 @@ test('appends to existing snapshots', t => {
 	const cwd = tempy.directory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
-	// eslint-disable-next-line unicorn/string-content
 	const initial = `const test = require(${JSON.stringify(avaPath)})
 test('one', t => {
 	t.snapshot({one: true})
@@ -55,7 +54,6 @@ test('one', t => {
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
-		// eslint-disable-next-line unicorn/string-content
 		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: true})
@@ -64,7 +62,6 @@ test('two', t => {
 	}).then(result => {
 		t.match(result.stdout, /2 tests passed/);
 
-		// eslint-disable-next-line unicorn/string-content
 		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: false})

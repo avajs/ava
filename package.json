@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "3.6.0",
+	"version": "3.7.0",
 	"description": "Testing can be a drag. AVA helps you get it done.",
 	"license": "MIT",
 	"repository": "avajs/ava",
@@ -133,8 +133,8 @@
 		"tempy": "^0.5.0",
 		"touch": "^3.1.0",
 		"tsd": "^0.11.0",
-		"typescript": "^3.7.5",
-		"xo": "^0.28.3",
+		"typescript": "^3.8.3",
+		"xo": "^0.29.1",
 		"zen-observable": "^0.8.15"
 	},
 	"xo": {
@@ -154,16 +154,21 @@
 				"files": "*.d.ts",
 				"rules": {
 					"@typescript-eslint/member-ordering": "off",
+					"@typescript-eslint/prefer-readonly-parameter-types": "off",
 					"@typescript-eslint/prefer-function-type": "off",
 					"@typescript-eslint/unified-signatures": "off"
 				}
 			},
 			{
-				"files": "test-d/*.ts",
+				"files": "test-{d,tap}/**/*.ts",
 				"rules": {
 					"@typescript-eslint/explicit-function-return-type": "off",
 					"@typescript-eslint/no-empty-function": "off",
+					"@typescript-eslint/no-unsafe-call": "off",
+					"@typescript-eslint/no-unsafe-member-access": "off",
+					"@typescript-eslint/no-unsafe-return": "off",
 					"@typescript-eslint/no-unused-vars": "off",
+					"@typescript-eslint/prefer-readonly-parameter-types": "off",
 					"no-unused-vars": "off"
 				}
 			},

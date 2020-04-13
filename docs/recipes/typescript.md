@@ -6,7 +6,7 @@ AVA comes bundled with a TypeScript definition file. This allows developers to l
 
 Out of the box AVA does not load TypeScript test files, however. Rudimentary support is available via the [`@ava/typescript`] package. You can also use AVA with [`ts-node`]. Read on for details.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition has been tested with version 3.7.5.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 3.7.5.
 
 ## Enabling AVA's TypeScript support
 

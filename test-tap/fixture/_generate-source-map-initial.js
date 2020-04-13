@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const babel = require('@babel/core');
 
-/* eslint-disable unicorn/string-content */
 const transformed = babel.transform(`
 import {mapFile} from 'source-map-fixtures';
 import test from '../../';
@@ -24,7 +23,6 @@ const run = () => fixture.run();
 	sourceMaps: true,
 	presets: ['@ava/stage-4']
 });
-/* eslint-enable unicorn/string-content */
 
 fs.writeFileSync(
 	path.join(__dirname, 'source-map-initial.js'),
