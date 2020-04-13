@@ -66,26 +66,6 @@ test('handle whitespace', t => {
 	t.end();
 });
 
-test('non-positive numbers -> throws', t => {
-	t.throws(() => splitPatternAndLineNumbers('test.js:0'), {
-		message: 'Invalid line number: `0`. Line numbers must be positive.'
-	});
-	t.throws(() => splitPatternAndLineNumbers('test.js:-2'), {
-		message: 'Invalid line number: `-2`. Line numbers must be positive.'
-	});
-	t.throws(() => splitPatternAndLineNumbers('test.js:-2--1'), {
-		message: 'Invalid line number range: `-2--1`. Line numbers must be positive.'
-	});
-	t.end();
-});
-
-test('reversed order range -> throws', t => {
-	t.throws(() => splitPatternAndLineNumbers('test.js:3-1'), {
-		message: 'Invalid line number range: `3-1`. `start` must be less than `end`.'
-	});
-	t.end();
-});
-
 test('ignore non-matching patterns', t => {
 	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [2]}, {pattern: 'foo.js', lineNumbers: [3]}], [2]));
 	t.end();
