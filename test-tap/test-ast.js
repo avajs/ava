@@ -13,8 +13,8 @@ const testFilePath = path.join(__dirname, 'fixture', 'test-ast.js');
 const escapedTestFilePath = escapeStringRegExp(testFilePath);
 
 test('test matches start line number', t => {
-	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
-	const rainbowTestSource = 'test(\'rainbow\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
+	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })';
+	const rainbowTestSource = 'test(\'rainbow\', t => { t.pass(); })';
 	t.is(
 		printAsOneLine(parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, testFilePath)),
 		unicornTestSource
@@ -27,8 +27,8 @@ test('test matches start line number', t => {
 });
 
 test('two tests on same start line number', t => {
-	const catTestSource = 'test(\'cat\', t => t.pass())'; // eslint-disable-line unicorn/string-content
-	const dogTestSource = 'test(\'dog\', t => { t.pass(); })'; // eslint-disable-line unicorn/string-content
+	const catTestSource = 'test(\'cat\', t => t.pass())';
+	const dogTestSource = 'test(\'dog\', t => { t.pass(); })';
 	t.is(
 		AST.print(parseTestSourceInFile({startLineNumber: 12, title: 'cat'}, testFilePath)).code,
 		catTestSource
