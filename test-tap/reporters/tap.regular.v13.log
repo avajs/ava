@@ -284,8 +284,8 @@ not ok 24 - Error: Can’t catch me
     message: Can’t catch me
     at: |-
       test-tap/fixture/report/regular/uncaught-exception.js:5:9
-      internal/timers.js:537:17
-      internal/timers.js:481:7
+      internal/timers.js:549:17
+      internal/timers.js:492:7
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1
