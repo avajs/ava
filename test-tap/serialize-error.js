@@ -9,7 +9,7 @@ const {test} = require('tap');
 const avaAssert = require('../lib/assert');
 const serializeError = require('../lib/serialize-error');
 
-const serialize = error => serializeError('Test', true, error, path.resolve('test-tap/serialize-error.js'));
+const serialize = error => serializeError('Test', true, error, path.resolve('test-tap', 'serialize-error.js'));
 
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
