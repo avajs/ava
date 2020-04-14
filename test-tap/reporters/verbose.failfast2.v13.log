@@ -1,0 +1,25 @@
+
+---tty-stream-chunk-separator
+  [31m✖[39m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+---tty-stream-chunk-separator
+
+  [31m1 test failed[39m
+
+  [1ma [90m[2m›[22m[1m[39m fails[22m
+
+  [90ma.js:3[39m
+
+   [90m2:[39m                               
+  [41m 3: test('fails', t => t.fail()); [49m
+   [90m4:[39m test('passes', t => t.pass());
+
+  Test failed via `t.fail()`
+
+  test-tap/fixture/report/failfast2/a.js:3:22
+  async Promise.all (index 1)
+
+
+
+  [35m`--fail-fast` is on. At least 1 test was skipped, as well as 1 test file.[39m
+
+---tty-stream-chunk-separator

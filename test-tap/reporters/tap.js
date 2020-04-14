@@ -10,7 +10,7 @@ const TapReporter = require('../../lib/reporters/tap');
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
-	const logFile = path.join(__dirname, `tap.${type.toLowerCase()}.log`);
+	const logFile = path.join(__dirname, `tap.${type.toLowerCase()}.${process.version.split('.')[0]}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,

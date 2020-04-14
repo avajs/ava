@@ -9,7 +9,7 @@ const VerboseReporter = require('../../lib/reporters/verbose');
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
-	const logFile = path.join(__dirname, `verbose.${type.toLowerCase()}.log`);
+	const logFile = path.join(__dirname, `verbose.${type.toLowerCase()}.${process.version.split('.')[0]}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,
