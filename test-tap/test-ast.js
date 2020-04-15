@@ -16,40 +16,33 @@ test('test matches start line number', t => {
 	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })';
 	const rainbowTestSource = 'test(\'rainbow\', t => { t.pass(); })';
 	t.is(
-		printAsOneLine(parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, testFilePath)),
+		printAsOneLine(parseTestSourceInFile({startLineNumber: 3}, testFilePath)),
 		unicornTestSource
 	);
 	t.is(
-		printAsOneLine(parseTestSourceInFile({startLineNumber: 7, title: 'rainbow'}, testFilePath)),
+		printAsOneLine(parseTestSourceInFile({startLineNumber: 7}, testFilePath)),
 		rainbowTestSource
 	);
 	t.end();
 });
 
-test('two tests on same start line number', t => {
+test('two tests starting on same line number', t => {
 	const catTestSource = 'test(\'cat\', t => t.pass())';
 	const dogTestSource = 'test(\'dog\', t => { t.pass(); })';
 	t.is(
-		AST.print(parseTestSourceInFile({startLineNumber: 12, title: 'cat'}, testFilePath)).code,
+		AST.print(parseTestSourceInFile({startLineNumber: 12, startColumnNumber: 1}, testFilePath)).code,
 		catTestSource
 	);
 	t.is(
-		printAsOneLine(parseTestSourceInFile({startLineNumber: 12, title: 'dog'}, testFilePath)),
+		printAsOneLine(parseTestSourceInFile({startLineNumber: 12, startColumnNumber: 29}, testFilePath)),
 		dogTestSource
 	);
 	t.end();
 });
 
 test('no test matches start line number -> throws', t => {
-	t.throws(() => parseTestSourceInFile({startLineNumber: 6, title: 'unicorn'}, testFilePath),
-		new RegExp(`No test starting at line number 6 in ${escapedTestFilePath}.`)
-	);
-	t.end();
-});
-
-test('mismatching title -> throws', t => {
-	t.throws(() => parseTestSourceInFile({startLineNumber: 3, title: 'rainbow'}, testFilePath),
-		new RegExp(`No test \`rainbow\` starting at line number 3 in ${escapedTestFilePath}.`)
+	t.throws(() => parseTestSourceInFile({startLineNumber: 6}, testFilePath),
+		new RegExp(`No test at 6:1 in ${escapedTestFilePath}.`)
 	);
 	t.end();
 });
@@ -57,7 +50,7 @@ test('mismatching title -> throws', t => {
 test('non-existing file -> throws', t => {
 	const nonExistingFilePath = path.join(__dirname, 'fixture', 'nonexistent');
 	t.throws(
-		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, nonExistingFilePath),
+		() => parseTestSourceInFile({startLineNumber: 3}, nonExistingFilePath),
 		new RegExp(`File ${escapeStringRegExp(nonExistingFilePath)} not found.`)
 	);
 	t.end();
@@ -66,7 +59,7 @@ test('non-existing file -> throws', t => {
 test('directory -> throws', t => {
 	const directoryFilePath = path.join(__dirname, 'fixture');
 	t.throws(
-		() => parseTestSourceInFile({startLineNumber: 3, title: 'unicorn'}, directoryFilePath),
+		() => parseTestSourceInFile({startLineNumber: 3}, directoryFilePath),
 		new RegExp(`${escapeStringRegExp(directoryFilePath)} is not a file.`)
 	);
 	t.end();

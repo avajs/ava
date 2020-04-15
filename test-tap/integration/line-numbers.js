@@ -17,7 +17,7 @@ test('select test by line number', t => {
 
 test('select serial test by line number', t => {
 	execCli([
-		'line-numbers.js:12'
+		'line-numbers.js:11'
 	], (error, stdout) => {
 		t.ifError(error);
 		t.match(stdout, /cat/);

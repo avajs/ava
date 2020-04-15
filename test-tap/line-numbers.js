@@ -82,8 +82,8 @@ test('sort line numbers', t => {
 });
 
 test('line number range for test never being declared -> throws', t => {
-	t.throws(() => getLineNumberRangeForTestInFile('unicorn', testFilePath),
-		new RegExp(`Failed to resolve line number range for test \`unicorn\` in ${escapedTestFilePath}.`)
+	t.throws(() => getLineNumberRangeForTestInFile(testFilePath),
+		new RegExp(`Failed to resolve line number range for test in ${escapedTestFilePath}.`)
 	);
 	t.end();
 });
