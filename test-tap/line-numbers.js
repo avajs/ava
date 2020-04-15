@@ -6,8 +6,8 @@ const {test} = require('tap');
 const {
 	splitPatternAndLineNumbers,
 	getApplicableLineNumbers,
-	getLineNumberRangeForTestInFile,
-	isTestSelectedByLineNumbers
+	resolveTestPosition,
+	isSelectedByLineNumbers
 } = require('../lib/line-numbers');
 
 const testFilePath = path.join(__dirname, 'fixture', 'line-numbers.js');
@@ -81,19 +81,19 @@ test('sort line numbers', t => {
 	t.end();
 });
 
-test('line number range for test never being declared -> throws', t => {
-	t.throws(() => getLineNumberRangeForTestInFile(testFilePath),
-		new RegExp(`Failed to resolve line number range for test in ${escapedTestFilePath}.`)
+test('try to get position for undeclared test -> throws', t => {
+	t.throws(() => resolveTestPosition(testFilePath),
+		new RegExp(`Failed to resolve test position in ${escapedTestFilePath}.`)
 	);
 	t.end();
 });
 
 test('test is selected by line numbers', t => {
-	t.true(isTestSelectedByLineNumbers({startLineNumber: 3, endLineNumber: 5}, [4]));
+	t.true(isSelectedByLineNumbers({startLineNumber: 3, endLineNumber: 5}, [4]));
 	t.end();
 });
 
 test('test is not selected by line numbers', t => {
-	t.false(isTestSelectedByLineNumbers({startLineNumber: 7, endLineNumber: 9}, [6]));
+	t.false(isSelectedByLineNumbers({startLineNumber: 7, endLineNumber: 9}, [6]));
 	t.end();
 });

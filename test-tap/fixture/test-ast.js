@@ -4,12 +4,6 @@ test('unicorn', t => {
 	t.pass();
 });
 
-test('rainbow', t => {
+test.serial('rainbow', t => {
 	t.pass();
 });
-
-/* eslint-disable max-statements-per-line */
-test('cat', t => t.pass()); test('dog', t => {
-	t.pass();
-});
-/* eslint-enable max-statements-per-line */

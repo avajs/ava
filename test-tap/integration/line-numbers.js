@@ -51,6 +51,31 @@ test('select tests by line number range', t => {
 	});
 });
 
+test('select two tests declared on same line', t => {
+	execCli([
+		'line-numbers.js:18'
+	], (error, stdout) => {
+		t.ifError(error);
+		t.match(stdout, /sun/);
+		t.match(stdout, /moon/);
+		t.match(stdout, /2 tests passed/);
+		t.notMatch(stdout, /todo/);
+		t.end();
+	});
+});
+
+test('select only one of two tests declared on same line', t => {
+	execCli([
+		'line-numbers.js:19'
+	], (error, stdout) => {
+		t.ifError(error);
+		t.match(stdout, /moon/);
+		t.match(stdout, /1 test passed/);
+		t.notMatch(stdout, /todo/);
+		t.end();
+	});
+});
+
 test('no test selected by line number', t => {
 	execCli([
 		'line-numbers.js:6'

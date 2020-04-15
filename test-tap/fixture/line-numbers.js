@@ -13,3 +13,9 @@ test.serial('cat', t => {
 });
 
 test.todo('dog');
+
+/* eslint-disable max-statements-per-line */
+test('sun', t => t.pass()); test('moon', t => {
+	t.pass();
+});
+/* eslint-enable max-statements-per-line */
