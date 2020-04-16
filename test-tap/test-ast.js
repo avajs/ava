@@ -13,10 +13,8 @@ test('two tests', t => {
 	const unicornTestSource = 'test(\'unicorn\', t => { t.pass(); })';
 	const rainbowTestSource = 'test.serial(\'rainbow\', t => { t.pass(); })';
 	const sources = parseTestSources(testFilePath).map(printAsOneLine);
-	for (const source of [unicornTestSource, rainbowTestSource]) {
-		t.ok(sources.includes(source));
-	}
-
+	t.ok(sources.includes(unicornTestSource));
+	t.ok(sources.includes(rainbowTestSource));
 	t.end();
 });
 
