@@ -316,7 +316,6 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 	timeout: TimeoutFn;
 	try: TryFn<Context>;
 	teardown: TeardownFn;
-
 }
 
 export interface LogFn {
