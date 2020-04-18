@@ -843,7 +843,7 @@ test('only having assertion in teardown fails test', t => {
 		a.teardown(() => {
 			teardown();
 			a.pass();
-		})
+		});
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.message, 'Test finished without running any assertions');
