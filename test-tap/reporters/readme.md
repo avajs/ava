@@ -1,8 +1,13 @@
-# Upgrade reporter test
-There are separate log-files for every supported 
-major node version.
-To upgrade to a new major node version, install 
-the new node version with [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md),
-and run `npm run test`.
-This command creates a new set of log-files, that
-you should add to the git repository.
+# Rebuilding reporter log files
+
+`*.log` files contain reporter output. There are separate files for every supported Node.js version.
+
+To update a specific set of files you can run:
+
+```console
+UPDATE_REPORTER_LOG=1 npx tap -j3 test-tap/reporters/{mini,verbose,tap}.js
+```
+
+You'll need to run this for each supported (major) Node.js version. Use your favorite Node.js version manager, such as [nvm](https://github.com/nvm-sh/nvm/) or [nodenv](https://github.com/nodenv/nodenv).
+
+Make sure to commit any new files, and of course changed ones.
