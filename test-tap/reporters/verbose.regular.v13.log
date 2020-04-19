@@ -10,7 +10,7 @@
 
   TypeError: test.serial.test is not a function
 
-  test-tap/fixture/report/regular/bad-test-chain.js:3:13
+  [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.js:3:13)[39m
 
 ---tty-stream-chunk-separator
   [31m✖ bad-test-chain.js exited with a non-zero exit code: 1[39m
@@ -91,9 +91,9 @@
 
   Error: Can’t catch me
 
-  test-tap/fixture/report/regular/uncaught-exception.js:5:9
-  [90minternal/timers.js:549:17[39m
-  [90minternal/timers.js:492:7[39m
+  [90m› Timeout._onTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
+  [90m[2m› listOnTimeout (internal/timers.js:549:17)[22m[39m
+  [90m[2m› processTimers (internal/timers.js:492:7)[22m[39m
 
 ---tty-stream-chunk-separator
   [31m✖ uncaught-exception.js exited with a non-zero exit code: 1[39m
@@ -113,8 +113,7 @@
 
   Error: Can’t catch me
 
-  test-tap/fixture/report/regular/unhandled-rejection.js:4:17
-  async Promise.all (index 0)
+  [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
 
 ---tty-stream-chunk-separator
   [1mUnhandled rejection in unhandled-rejection.js[22m
@@ -142,8 +141,7 @@
 
   Test failed via `t.fail()`
 
-  test-tap/fixture/report/regular/output-in-hook.js:34:4
-  async Promise.all (index 1)
+  [90m› test-tap/fixture/report/regular/output-in-hook.js:34:4[39m
 
 
 
@@ -157,8 +155,7 @@
 
   Test failed via `t.fail()`
 
-  test-tap/fixture/report/regular/test.js:9:22
-  async Promise.all (index 1)
+  [90m› test-tap/fixture/report/regular/test.js:9:22[39m
 
 
 
@@ -167,8 +164,7 @@
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
-  new Promise (<anonymous>)
-  async Promise.all (index 3)
+  [90m› [39m
 
 
 
@@ -184,8 +180,7 @@
 
   Test failed via `t.fail()`
 
-  test-tap/fixture/report/regular/test.js:18:4
-  async Promise.all (index 4)
+  [90m› test-tap/fixture/report/regular/test.js:18:4[39m
 
 
 
@@ -202,8 +197,7 @@
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
-  test-tap/fixture/report/regular/test.js:22:4
-  async Promise.all (index 5)
+  [90m› test-tap/fixture/report/regular/test.js:22:4[39m
 
 
 
@@ -222,8 +216,7 @@
   foo
   [90m=>[39m [34m'[39m[34m[39m[34m'[39m
 
-  test-tap/fixture/report/regular/test.js:27:4
-  async Promise.all (index 6)
+  [90m› test-tap/fixture/report/regular/test.js:27:4[39m
 
 
 
@@ -251,9 +244,8 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  test-tap/fixture/report/regular/test.js:32:9
-  test-tap/fixture/report/regular/test.js:35:11
-  async Promise.all (index 7)
+  [90m› fn (test-tap/fixture/report/regular/test.js:32:9)[39m
+  [90m› test-tap/fixture/report/regular/test.js:35:11[39m
 
 
 
@@ -281,9 +273,8 @@
 
     [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
 
-  test-tap/fixture/report/regular/test.js:40:9
-  test-tap/fixture/report/regular/test.js:43:14
-  async Promise.all (index 8)
+  [90m› fn (test-tap/fixture/report/regular/test.js:40:9)[39m
+  [90m› test-tap/fixture/report/regular/test.js:43:14[39m
 
 
 
@@ -294,7 +285,7 @@
 
   [33mnull[39m
 
-  async Promise.all (index 9)
+  [90m› [39m
 
 
 
@@ -316,10 +307,9 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
-  test-tap/fixture/report/regular/traces-in-t-throws.js:12:17
-  test-tap/fixture/report/regular/traces-in-t-throws.js:12:4
-  async Promise.all (index 0)
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:12:4[39m
 
 
 
@@ -337,10 +327,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
-  test-tap/fixture/report/regular/traces-in-t-throws.js:16:20
-  test-tap/fixture/report/regular/traces-in-t-throws.js:16:4
-  async Promise.all (index 1)
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:16:20[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:16:4[39m
 
 
 
@@ -358,10 +347,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
-  test-tap/fixture/report/regular/traces-in-t-throws.js:20:25
-  test-tap/fixture/report/regular/traces-in-t-throws.js:20:4
-  async Promise.all (index 2)
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:20:25[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:20:4[39m
 
 
 
@@ -379,10 +367,9 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  test-tap/fixture/report/regular/traces-in-t-throws.js:4:8
-  test-tap/fixture/report/regular/traces-in-t-throws.js:24:22
-  test-tap/fixture/report/regular/traces-in-t-throws.js:24:4
-  async Promise.all (index 3)
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.js:24:22)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:24:4[39m
 
 
 
@@ -404,8 +391,7 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  test-tap/fixture/report/regular/traces-in-t-throws.js:8:24
-  test-tap/fixture/report/regular/traces-in-t-throws.js:28:11
-  async Promise.all (index 4)
+  [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:28:11[39m
 
 ---tty-stream-chunk-separator

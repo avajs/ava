@@ -24,7 +24,7 @@ not ok 5 - Error: throws
   ---
     name: Error
     message: throws
-    at: 'test-tap/fixture/report/edgecases/throws.js:1:7'
+    at: 'Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)'
   ...
 ---tty-stream-chunk-separator
 # throws.js exited with a non-zero exit code: 1

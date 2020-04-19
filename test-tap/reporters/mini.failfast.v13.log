@@ -20,8 +20,7 @@
 
   Test failed via `t.fail()`
 
-  test-tap/fixture/report/failfast/a.js:3:22
-  async Promise.all (index 1)
+  [90m› test-tap/fixture/report/failfast/a.js:3:22[39m
 
 
 

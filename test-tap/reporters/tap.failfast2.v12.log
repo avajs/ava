@@ -6,9 +6,7 @@ not ok 1 - a [90m[2m›[22m[39m fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      test-tap/fixture/report/failfast2/a.js:3:22
-      async Promise.all (index 1)
+    at: 'test-tap/fixture/report/failfast2/a.js:3:22'
   ...
 ---tty-stream-chunk-separator
 # 1 test remaining in a.js

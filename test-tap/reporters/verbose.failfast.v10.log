@@ -15,8 +15,8 @@
 
   Test failed via `t.fail()`
 
-  test-tap/fixture/report/failfast/a.js:3:22
-  [90minternal/process/next_tick.js:68:7[39m
+  [90m› t (test-tap/fixture/report/failfast/a.js:3:22)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 

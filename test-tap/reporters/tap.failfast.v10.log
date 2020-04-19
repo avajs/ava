@@ -7,8 +7,8 @@ not ok 1 - a [90m[2m›[22m[39m fails
     message: Test failed via `t.fail()`
     assertion: fail
     at: |-
-      test-tap/fixture/report/failfast/a.js:3:22
-      internal/process/next_tick.js:68:7
+      t (test-tap/fixture/report/failfast/a.js:3:22)
+      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 
