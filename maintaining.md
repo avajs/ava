@@ -46,5 +46,5 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 * If [necessary](docs/support-statement.md), update the `engines` field in `package.json`.
 	* Remove unsupported (or soon to be) Node.js versions.
 	* When doing a major version bump, make sure to require the latest releases of each supported Node.js version.
-* Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [SemVer](http://semver.org).
+* Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [SemVer](https://semver.org).
 * Write a [release note](https://github.com/avajs/ava/releases/new) following the style of previous release notes.

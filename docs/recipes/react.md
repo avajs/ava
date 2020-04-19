@@ -78,7 +78,7 @@ Enzyme also has a `mount` and `render` helper to test in an actual browser envir
 
 To see an example of AVA working together with Enzyme set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 
-This is a basic example on how to integrate Enzyme with AVA. For more information about using Enzyme for unit testing React component, have a look at [Enzyme's documentation](http://airbnb.io/enzyme/).
+This is a basic example on how to integrate Enzyme with AVA. For more information about using Enzyme for unit testing React component, have a look at [Enzyme's documentation](https://enzymejs.github.io/enzyme/).
 
 ## Using JSX helpers
 
