@@ -813,7 +813,7 @@ test('teardown with cb', t => {
 	});
 });
 
-test('teardown throws error', t => {
+test('teardown errors fail the test', t => {
 	const teardown = sinon.stub().throws('TeardownError');
 	return ava(a => {
 		a.teardown(teardown);
@@ -825,7 +825,7 @@ test('teardown throws error', t => {
 	});
 });
 
-test('teardown throws error with previous error', t => {
+test('teardown errors are hidden behind assertion errors', t => {
 	const teardown = sinon.stub().throws('TeardownError');
 	return ava(a => {
 		a.teardown(teardown);

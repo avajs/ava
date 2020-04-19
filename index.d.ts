@@ -346,8 +346,8 @@ export interface TimeoutFn {
 }
 
 export interface TeardownFn {
-	/** Declare a hook that is run after the test, regardless if it passed or failed. */
-	(hook: () => PromiseLike<any> | void): void;
+	/** Declare a function to be run after the test has ended. */
+	(fn: () => void): void;
 }
 
 export interface TryFn<Context = unknown> {
