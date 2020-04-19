@@ -837,8 +837,8 @@ test('teardown errors are hidden behind assertion errors', t => {
 	});
 });
 
-test(`teardowns errors don't stop next teardown from running`, t => {
-	const teardownA = sinon.stub().throws("TeardownError");
+test('teardowns errors do not stop next teardown from running', t => {
+	const teardownA = sinon.stub().throws('TeardownError');
 	const teardownB = sinon.spy();
 	return ava(a => {
 		a.teardown(teardownA);
