@@ -19,3 +19,9 @@ test('sun', t => t.pass()); test('moon', t => {
 	t.pass();
 });
 /* eslint-enable max-statements-per-line */
+
+(() => {
+	test('nested call', t => {
+		t.pass();
+	});
+})();

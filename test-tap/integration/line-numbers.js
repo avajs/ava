@@ -85,3 +85,24 @@ test('no test selected by line number', t => {
 		t.end();
 	});
 });
+
+test('parent call is not selected', t => {
+	execCli([
+		'line-numbers.js:23'
+	], (error, stdout) => {
+		t.ifError(error);
+		t.match(stdout, /No tests selected by line numbers in line-numbers\.js/);
+		t.end();
+	});
+});
+
+test('nested call is selected', t => {
+	execCli([
+		'line-numbers.js:24'
+	], (error, stdout) => {
+		t.ifError(error);
+		t.match(stdout, /nested/);
+		t.match(stdout, /1 test passed/);
+		t.end();
+	});
+});
