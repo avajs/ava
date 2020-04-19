@@ -2,21 +2,15 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const path = require('path');
-const sourceMapFixtures = require('source-map-fixtures');
-const sourceMapSupport = require('source-map-support');
 const {test} = require('tap');
 const avaAssert = require('../lib/assert');
 const serializeError = require('../lib/serialize-error');
 
-const serialize = error => serializeError('Test', true, error, path.resolve('test-tap', 'serialize-error.js'));
-
-// Needed to test stack traces from source map fixtures.
-sourceMapSupport.install({environment: 'node'});
+const serialize = error => serializeError('Test', true, error, __filename);
 
 test('serialize standard props', t => {
 	const error = new Error('Hello');
-	const serializedError = serialize(error, true);
+	const serializedError = serialize(error);
 
 	t.is(Object.keys(serializedError).length, 9);
 	t.is(serializedError.avaAssertionError, false);
@@ -46,18 +40,6 @@ test('source file is an absolute path', t => {
 
 	t.is(serializedError.source.file, __filename);
 	t.end();
-});
-
-test('source file is an absolute path, after source map correction', t => {
-	const fixture = sourceMapFixtures.mapFile('throws');
-	try {
-		fixture.require().run();
-		t.fail('Fixture should have thrown');
-	} catch (error) {
-		const serializedError = serialize(error);
-		t.is(serializedError.source.file, __filename);
-		t.end();
-	}
 });
 
 test('sets avaAssertionError to true if indeed an assertion error', t => {
@@ -123,20 +105,4 @@ test('skips esm enhancement lines when finding the summary', t => {
 	const serializedError = serialize(error);
 	t.is(serializedError.summary, 'First line\nSecond line');
 	t.end();
-});
-
-test('works around esm’s insertion of file:// urls', t => {
-	const fixture = sourceMapFixtures.mapFile('throws');
-	try {
-		fixture.require().run();
-		t.fail('Fixture should have thrown');
-	} catch (error) {
-		const expected = serialize(error);
-		Object.defineProperty(error, 'stack', {
-			value: error.stack.split('\n').map(line => line.replace('(/', '(file:///')).join('\n')
-		});
-		const serializedError = serialize(error);
-		t.is(serializedError.source.file, expected.source.file);
-		t.end();
-	}
 });
