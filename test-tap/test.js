@@ -837,6 +837,22 @@ test('teardown errors are hidden behind assertion errors', t => {
 	});
 });
 
+test(`teardowns errors don't stop next teardown from running`, t => {
+	const teardownA = sinon.stub().throws("TeardownError");
+	const teardownB = sinon.spy();
+	return ava(a => {
+		a.teardown(teardownA);
+		a.teardown(teardownB);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.is(result.error.name, 'TeardownError');
+		t.ok(teardownA.calledOnce);
+		t.ok(teardownB.calledOnce);
+		t.ok(teardownA.calledBefore(teardownB));
+	});
+});
+
 test('only having assertion in teardown fails test', t => {
 	const teardown = sinon.spy();
 	return ava(a => {
