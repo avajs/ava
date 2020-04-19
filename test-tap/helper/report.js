@@ -62,8 +62,6 @@ exports.sanitizers = {
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
 	slow: string => string.replace(/(?<slow>slow.+?)\(\d+m?s\)/g, '$<slow> (000ms)'),
-	timeout: string => replaceString(string, 'Timeout._onTimeout', 'Timeout.setTimeout'),
-	traces: string => string.replace(/(\[...)?[^\s'[]+\s\((.+\.js:\d+:\d+)\)/g, '$1$2'),
 	version: string => replaceString(string, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
