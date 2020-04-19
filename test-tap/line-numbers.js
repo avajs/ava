@@ -67,18 +67,25 @@ test('handle whitespace', t => {
 });
 
 test('ignore non-matching patterns', t => {
-	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [2]}, {pattern: 'foo.js', lineNumbers: [3]}], [2]));
+	t.strictDeepEqual(
+		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [2]}, {pattern: 'foo.js', lineNumbers: [3]}]),
+		[2]
+	);
 	t.end();
 });
 
 test('deduplicate line numbers', t => {
-	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [2, 3, 4]}, {pattern: 'test.js', lineNumbers: [3, 4, 5]}], [2, 3, 4, 5]));
+	t.strictDeepEqual(
+		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [2, 3, 4]}, {pattern: 'test.js', lineNumbers: [3, 4, 5]}]),
+		[2, 3, 4, 5]
+	);
 	t.end();
 });
 
 test('sort line numbers', t => {
-	t.true(getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumber: [1, 3, 5]}, {pattern: 'test.js', lineNumbers: [2, 4, 6]}], [1, 2, 3, 4, 5, 6]));
-	t.end();
+	t.strictDeepEqual(
+		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [1, 3, 5]}, {pattern: 'test.js', lineNumbers: [2, 4, 6]}]),
+		[1, 2, 3, 4, 5, 6]
 });
 
 test('try to get position for undeclared test -> throws', t => {
