@@ -30,12 +30,12 @@ function apiCreator(options = {}) {
 	return instance;
 }
 
-test('test.meta.file', t => {
-	const api = apiCreator();
+test('test.meta', t => {
+	const api = apiCreator({snapshotDir: 'snapshot-fixture'});
 
-	return api.run({files: [path.join(__dirname, 'fixture/meta.js')]})
+	return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
 		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 2);
+			t.is(runStatus.stats.passedTests, 3);
 		});
 });
 
@@ -599,12 +599,12 @@ test('emits dependencies for test files', t => {
 		require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.js')]
 	});
 
-	const testFiles = [
+	const testFiles = new Set([
 		path.resolve('test-tap/fixture/with-dependencies/no-tests.js'),
 		path.resolve('test-tap/fixture/with-dependencies/test.js'),
 		path.resolve('test-tap/fixture/with-dependencies/test-failure.js'),
 		path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.js')
-	];
+	]);
 
 	const sourceFiles = [
 		path.resolve('test-tap/fixture/with-dependencies/dep-1.js'),
@@ -615,7 +615,7 @@ test('emits dependencies for test files', t => {
 	api.on('run', plan => {
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'dependencies') {
-				t.true(testFiles.includes(evt.testFile));
+				t.true(testFiles.has(evt.testFile));
 				t.strictDeepEqual(evt.dependencies.slice(-3), sourceFiles);
 			}
 		});
