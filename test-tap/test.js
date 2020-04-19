@@ -853,20 +853,6 @@ test('teardowns errors do not stop next teardown from running', t => {
 	});
 });
 
-test('only having assertion in teardown fails test', t => {
-	const teardown = sinon.spy();
-	return ava(a => {
-		a.teardown(() => {
-			teardown();
-			a.pass();
-		});
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Test finished without running any assertions');
-		t.ok(teardown.calledOnce);
-	});
-});
-
 test('.log() is bound', t => {
 	return ava(a => {
 		const {log} = a;
