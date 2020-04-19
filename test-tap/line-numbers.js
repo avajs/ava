@@ -1,18 +1,10 @@
 'use strict';
 
-const path = require('path');
-const escapeStringRegExp = require('escape-string-regexp');
 const {test} = require('tap');
 const {
 	splitPatternAndLineNumbers,
-	getApplicableLineNumbers,
-	resolveTestPosition,
-	isSelectedByLineNumbers
+	getApplicableLineNumbers
 } = require('../lib/line-numbers');
-
-const testFilePath = path.join(__dirname, 'fixture', 'line-numbers.js');
-// Escaping needed for Windows
-const escapedTestFilePath = escapeStringRegExp(testFilePath);
 
 test('no line numbers', t => {
 	t.strictDeepEqual(splitPatternAndLineNumbers('test.js'), {pattern: 'test.js', lineNumbers: null});
@@ -86,21 +78,6 @@ test('sort line numbers', t => {
 	t.strictDeepEqual(
 		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [1, 3, 5]}, {pattern: 'test.js', lineNumbers: [2, 4, 6]}]),
 		[1, 2, 3, 4, 5, 6]
-});
-
-test('try to get position for undeclared test -> throws', t => {
-	t.throws(() => resolveTestPosition(testFilePath),
-		new RegExp(`Failed to resolve test position in ${escapedTestFilePath}.`)
 	);
-	t.end();
-});
-
-test('test is selected by line numbers', t => {
-	t.true(isSelectedByLineNumbers({startLineNumber: 3, endLineNumber: 5}, [4]));
-	t.end();
-});
-
-test('test is not selected by line numbers', t => {
-	t.false(isSelectedByLineNumbers({startLineNumber: 7, endLineNumber: 9}, [6]));
 	t.end();
 });
