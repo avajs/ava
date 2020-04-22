@@ -817,7 +817,7 @@ test('teardown without function callback fails', t => {
 	return ava(a => {
 		return a.throwsAsync(async () => {
 			a.teardown(false);
-		}, {message: '`t.teardown()` expects a function'});
+		}, {message: 'Expected a function'});
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
