@@ -813,6 +813,16 @@ test('teardown with cb', t => {
 	});
 });
 
+test('teardown without function callback fails', t => {
+	return ava(a => {
+		return a.throwsAsync(async () => {
+			a.teardown(false);
+		}, {message: '`t.teardown()` expects a function'});
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
+
 test('teardown errors fail the test', t => {
 	const teardown = sinon.stub().throws('TeardownError');
 	return ava(a => {
