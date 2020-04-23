@@ -8,7 +8,9 @@ not ok 2 - TypeError: test is not a function
   ---
     name: TypeError
     message: test is not a function
-    at: 'import-and-use-test-member.js:3:1'
+    at: >-
+      Object.<anonymous>
+      (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)
   ...
 ---tty-stream-chunk-separator
 # import-and-use-test-member.js exited with a non-zero exit code: 1
@@ -22,7 +24,7 @@ not ok 5 - Error: throws
   ---
     name: Error
     message: throws
-    at: 'throws.js:1:7'
+    at: 'Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)'
   ...
 ---tty-stream-chunk-separator
 # throws.js exited with a non-zero exit code: 1

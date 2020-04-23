@@ -25,6 +25,8 @@
 
   TypeError: test is not a function
 
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)[39m
+
 
 
   [1mUncaught exception in throws.js[22m
@@ -35,5 +37,7 @@
    [90m2:[39m                           
 
   Error: throws
+
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)[39m
 
 ---tty-stream-chunk-separator

@@ -15,6 +15,8 @@
 
   Test failed via `t.fail()`
 
+  [90m› test-tap/fixture/report/failfast/a.js:3:22[39m
+
 
 
   [35m`--fail-fast` is on. 1 test file was skipped.[39m

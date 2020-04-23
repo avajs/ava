@@ -1,0 +1,408 @@
+
+---tty-stream-chunk-separator
+  [1mUncaught exception in bad-test-chain.js[22m
+
+  [90mbad-test-chain.js:3[39m
+
+   [90m2:[39m                                           
+  [41m 3: test.serial.test('passes', t => t.pass());[49m
+   [90m4:[39m                                           
+
+  TypeError: test.serial.test is not a function
+
+  [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.js:3:13)[39m
+
+---tty-stream-chunk-separator
+  [31m✖ bad-test-chain.js exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m before hook
+    [35mℹ[39m [90mbefore[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    [35mℹ[39m [90mafterEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m cleanup
+    [35mℹ[39m [90mafterAlways[39m
+---tty-stream-chunk-separator
+  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
+---tty-stream-chunk-separator
+  [33m- test [90m[2m›[22m[39m[33m skip[39m
+---tty-stream-chunk-separator
+  [34m- test [90m[2m›[22m[39m[34m todo[39m
+---tty-stream-chunk-separator
+  [32m✔[39m test [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+---tty-stream-chunk-separator
+  [31m✔[39m [31mtest [90m[2m›[22m[39m[31m known failure[39m
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
+    [35mℹ[39m [90mhello[39m
+    [35mℹ[39m [90mworld[39m
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m formatted 
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m power-assert 
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m bad throws [31mImproper usage of `t.throws()` detected[39m
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m bad notThrows [31mImproper usage of `t.notThrows()` detected[39m
+---tty-stream-chunk-separator
+  [31m✖[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
+---tty-stream-chunk-separator
+  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
+---tty-stream-chunk-separator
+  [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in uncaught-exception.js[22m
+
+  [90muncaught-exception.js:5[39m
+
+   [90m4:[39m   setTimeout(() => {                  
+  [41m 5:     throw new Error('Can’t catch me');[49m
+   [90m6:[39m   });                                 
+
+  Error: Can’t catch me
+
+  [90m› Timeout.setTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
+
+---tty-stream-chunk-separator
+  [31m✖ uncaught-exception.js exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+---tty-stream-chunk-separator
+
+  [1mUnhandled rejection in unhandled-rejection.js[22m
+
+  [90munhandled-rejection.js:4[39m
+
+   [90m3:[39m const passes = t => {                         
+  [41m 4:   Promise.reject(new Error('Can’t catch me'));[49m
+   [90m5:[39m   t.pass();                                   
+
+  Error: Can’t catch me
+
+  [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+---tty-stream-chunk-separator
+  [1mUnhandled rejection in unhandled-rejection.js[22m
+
+  [33mnull[39m
+
+---tty-stream-chunk-separator
+
+  [31m14 tests failed[39m
+  [31m1 known failure[39m
+  [33m1 test skipped[39m
+  [34m1 test todo[39m
+  [31m2 unhandled rejections[39m
+  [31m2 uncaught exceptions[39m
+
+  [31mtest [90m[2m›[22m[39m[31m known failure[39m
+
+  [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
+
+  [90moutput-in-hook.js:34[39m
+
+   [90m33:[39m test('failing test', t => {
+  [41m 34:   t.fail();                [49m
+   [90m35:[39m });                        
+
+  Test failed via `t.fail()`
+
+  [90m› t (test-tap/fixture/report/regular/output-in-hook.js:34:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m fails[22m
+
+  [90mtest.js:9[39m
+
+   [90m8:[39m                              
+  [41m 9: test('fails', t => t.fail());[49m
+   [90m10:[39m                              
+
+  Test failed via `t.fail()`
+
+  [90m› t (test-tap/fixture/report/regular/test.js:9:22)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
+
+
+  Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
+
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m logs[22m
+    [35mℹ[39m [90mhello[39m
+    [35mℹ[39m [90mworld[39m
+
+  [90mtest.js:18[39m
+
+   [90m17:[39m   t.log('world');
+  [41m 18:   t.fail();      [49m
+   [90m19:[39m });              
+
+  Test failed via `t.fail()`
+
+  [90m› t (test-tap/fixture/report/regular/test.js:18:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m formatted[22m
+
+  [90mtest.js:22[39m
+
+   [90m21:[39m test('formatted', t => {    
+  [41m 22:   t.deepEqual('foo', 'bar');[49m
+   [90m23:[39m });                         
+
+  Difference:
+
+  [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
+  [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
+
+  [90m› t (test-tap/fixture/report/regular/test.js:22:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m power-assert[22m
+
+  [90mtest.js:27[39m
+
+   [90m26:[39m   const foo = '';
+  [41m 27:   t.assert(foo); [49m
+   [90m28:[39m });              
+
+  Value is not truthy:
+
+  [34m'[39m[34m[39m[34m'[39m
+
+  foo
+  [90m=>[39m [34m'[39m[34m[39m[34m'[39m
+
+  [90m› t (test-tap/fixture/report/regular/test.js:27:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m bad throws[22m
+
+  [90mtest.js:35[39m
+
+   [90m34:[39m                  
+  [41m 35:   t.throws(fn());[49m
+   [90m36:[39m });              
+
+  Improper usage of `t.throws()` detected
+
+  The following error was thrown, possibly before `t.throws()` could be called:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Try wrapping the first argument to `t.throws()` in a function:
+
+    [36mt.throws(() => { [39m[90m/* your code here */[39m[36m })[39m
+
+  Visit the following URL for more details:
+
+    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
+
+  [90m› fn (test-tap/fixture/report/regular/test.js:32:9)[39m
+  [90m› t (test-tap/fixture/report/regular/test.js:35:11)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m bad notThrows[22m
+
+  [90mtest.js:43[39m
+
+   [90m42:[39m                     
+  [41m 43:   t.notThrows(fn());[49m
+   [90m44:[39m });                 
+
+  Improper usage of `t.notThrows()` detected
+
+  The following error was thrown, possibly before `t.notThrows()` could be called:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Try wrapping the first argument to `t.notThrows()` in a function:
+
+    [36mt.notThrows(() => { [39m[90m/* your code here */[39m[36m })[39m
+
+  Visit the following URL for more details:
+
+    [34m[4mhttps://github.com/avajs/ava/blob/v1.0.0-beta.5.1/docs/03-assertions.md#throwsfn-expected-message[24m[39m
+
+  [90m› fn (test-tap/fixture/report/regular/test.js:40:9)[39m
+  [90m› t (test-tap/fixture/report/regular/test.js:43:14)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
+
+
+  Error thrown in test:
+
+  [33mnull[39m
+
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
+
+  [90mtraces-in-t-throws.js:12[39m
+
+   [90m11:[39m test('throws', t => {                                   
+  [41m 12:   t.throws(() => throwError(), {instanceOf: TypeError});[49m
+   [90m13:[39m });                                                     
+
+  Function threw unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throws (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
+  [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:12:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
+
+  [90mtraces-in-t-throws.js:16[39m
+
+   [90m15:[39m test('notThrows', t => {          
+  [41m 16:   t.notThrows(() => throwError());[49m
+   [90m17:[39m });                               
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.notThrows (test-tap/fixture/report/regular/traces-in-t-throws.js:16:20)[39m
+  [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:16:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
+
+  [90mtraces-in-t-throws.js:20[39m
+
+   [90m19:[39m test('notThrowsAsync', t => {          
+  [41m 20:   t.notThrowsAsync(() => throwError());[49m
+   [90m21:[39m });                                    
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.notThrowsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:20:25)[39m
+  [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:20:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
+
+  [90mtraces-in-t-throws.js:24[39m
+
+   [90m23:[39m test('throwsAsync', t => {                                   
+  [41m 24:   t.throwsAsync(() => throwError(), {instanceOf: TypeError});[49m
+   [90m25:[39m });                                                          
+
+  Function threw synchronously. Use `t.throws()` instead:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throwsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:24:22)[39m
+  [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:24:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
+
+  [90mtraces-in-t-throws.js:28[39m
+
+   [90m27:[39m test('throwsAsync different error', t => {                             
+  [41m 28:   return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[49m
+   [90m29:[39m });                                                                    
+
+  Returned promise rejected with unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
+  [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:28:11)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+---tty-stream-chunk-separator
