@@ -67,7 +67,7 @@ exports.sanitizers = {
 
 exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-const run = (type, reporter, match = []) => {
+const run = (type, reporter, {match = [], filter} = {}) => {
 	const projectDir = exports.projectDir(type);
 
 	const providers = [{
@@ -115,18 +115,18 @@ const run = (type, reporter, match = []) => {
 		unique: true
 	}).sort();
 	if (type !== 'watch') {
-		return api.run({files}).then(() => {
+		return api.run({files, filter}).then(() => {
 			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
+	return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
 		reporter.endRun();
-		return api.run({files, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
+		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
+		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
 	}).then(() => {
 		reporter.endRun();
 	});
@@ -138,6 +138,11 @@ exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
 exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
-exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
+exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, {match: ['*needle*']});
 exports.watch = reporter => run('watch', reporter);
-exports.edgeCases = reporter => run('edgeCases', reporter);
+exports.edgeCases = reporter => run('edgeCases', reporter, {
+	filter: [
+		{pattern: '**/*'},
+		{pattern: '**/test.js', lineNumbers: [2]}
+	]
+});

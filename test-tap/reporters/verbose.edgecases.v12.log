@@ -20,6 +20,8 @@
 ---tty-stream-chunk-separator
   [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
 ---tty-stream-chunk-separator
+  [31m✖ Line numbers for test.js did not match any tests[39m
+---tty-stream-chunk-separator
 
   [1mUncaught exception in throws.js[22m
 
