@@ -24,7 +24,7 @@
     output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test[90m[2m (105ms)[22m[39m
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
   [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
@@ -39,8 +39,6 @@
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m cleanup
     [35mℹ[39m [90mafterAlways[39m
----tty-stream-chunk-separator
-  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
 ---tty-stream-chunk-separator
   [33m- test [90m[2m›[22m[39m[33m skip[39m
 ---tty-stream-chunk-separator

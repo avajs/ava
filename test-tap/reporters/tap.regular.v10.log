@@ -55,20 +55,17 @@ not ok 4 - output-in-hook [90m[2m›[22m[39m failing test
 ---tty-stream-chunk-separator
   # afterAlways
 ---tty-stream-chunk-separator
-# slow › slow
-ok 5 - slow [90m[2m›[22m[39m slow
----tty-stream-chunk-separator
 # test › skip
-ok 6 - test [90m[2m›[22m[39m skip # SKIP
+ok 5 - test [90m[2m›[22m[39m skip # SKIP
 ---tty-stream-chunk-separator
 # test › todo
-not ok 7 - test [90m[2m›[22m[39m todo # TODO
+not ok 6 - test [90m[2m›[22m[39m todo # TODO
 ---tty-stream-chunk-separator
 # test › passes
-ok 8 - test [90m[2m›[22m[39m passes
+ok 7 - test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 # test › fails
-not ok 9 - test [90m[2m›[22m[39m fails
+not ok 8 - test [90m[2m›[22m[39m fails
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
@@ -79,10 +76,10 @@ not ok 9 - test [90m[2m›[22m[39m fails
   ...
 ---tty-stream-chunk-separator
 # test › known failure
-ok 10 - test [90m[2m›[22m[39m known failure
+ok 9 - test [90m[2m›[22m[39m known failure
 ---tty-stream-chunk-separator
 # test › no longer failing
-not ok 11 - test [90m[2m›[22m[39m no longer failing
+not ok 10 - test [90m[2m›[22m[39m no longer failing
   ---
     name: Error
     message: >-
@@ -92,7 +89,7 @@ not ok 11 - test [90m[2m›[22m[39m no longer failing
   ...
 ---tty-stream-chunk-separator
 # test › logs
-not ok 12 - test [90m[2m›[22m[39m logs
+not ok 11 - test [90m[2m›[22m[39m logs
   * hello
   * world
   ---
@@ -105,7 +102,7 @@ not ok 12 - test [90m[2m›[22m[39m logs
   ...
 ---tty-stream-chunk-separator
 # test › formatted
-not ok 13 - test [90m[2m›[22m[39m formatted
+not ok 12 - test [90m[2m›[22m[39m formatted
   ---
     name: AssertionError
     assertion: deepEqual
@@ -119,7 +116,7 @@ not ok 13 - test [90m[2m›[22m[39m formatted
   ...
 ---tty-stream-chunk-separator
 # test › power-assert
-not ok 14 - test [90m[2m›[22m[39m power-assert
+not ok 13 - test [90m[2m›[22m[39m power-assert
   ---
     name: AssertionError
     assertion: assert
@@ -132,7 +129,7 @@ not ok 14 - test [90m[2m›[22m[39m power-assert
   ...
 ---tty-stream-chunk-separator
 # test › bad throws
-not ok 15 - test [90m[2m›[22m[39m bad throws
+not ok 14 - test [90m[2m›[22m[39m bad throws
   ---
     name: AssertionError
     message: Improper usage of `t.throws()` detected
@@ -149,7 +146,7 @@ not ok 15 - test [90m[2m›[22m[39m bad throws
   ...
 ---tty-stream-chunk-separator
 # test › bad notThrows
-not ok 16 - test [90m[2m›[22m[39m bad notThrows
+not ok 15 - test [90m[2m›[22m[39m bad notThrows
   ---
     name: AssertionError
     message: Improper usage of `t.notThrows()` detected
@@ -166,7 +163,7 @@ not ok 16 - test [90m[2m›[22m[39m bad notThrows
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error
-not ok 17 - test [90m[2m›[22m[39m implementation throws non-error
+not ok 16 - test [90m[2m›[22m[39m implementation throws non-error
   ---
     name: AssertionError
     message: Error thrown in test
@@ -176,7 +173,7 @@ not ok 17 - test [90m[2m›[22m[39m implementation throws non-error
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throws
-not ok 18 - traces-in-t-throws [90m[2m›[22m[39m throws
+not ok 17 - traces-in-t-throws [90m[2m›[22m[39m throws
   ---
     name: AssertionError
     assertion: throws
@@ -194,7 +191,7 @@ not ok 18 - traces-in-t-throws [90m[2m›[22m[39m throws
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrows
-not ok 19 - traces-in-t-throws [90m[2m›[22m[39m notThrows
+not ok 18 - traces-in-t-throws [90m[2m›[22m[39m notThrows
   ---
     name: AssertionError
     assertion: notThrows
@@ -211,7 +208,7 @@ not ok 19 - traces-in-t-throws [90m[2m›[22m[39m notThrows
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrowsAsync
-not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
+not ok 19 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
   ---
     name: AssertionError
     assertion: notThrowsAsync
@@ -228,7 +225,7 @@ not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync
-not ok 21 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
+not ok 20 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -245,7 +242,7 @@ not ok 21 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync different error
-not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
+not ok 21 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -265,10 +262,10 @@ not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception › passes
-ok 23 - uncaught-exception [90m[2m›[22m[39m passes
+ok 22 - uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 # Error: Can’t catch me
-not ok 24 - Error: Can’t catch me
+not ok 23 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
@@ -276,16 +273,16 @@ not ok 24 - Error: Can’t catch me
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1
-not ok 25 - uncaught-exception.js exited with a non-zero exit code: 1
+not ok 24 - uncaught-exception.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 # unhandled-rejection › passes
-ok 26 - unhandled-rejection [90m[2m›[22m[39m passes
+ok 25 - unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 # unhandled-rejection › unhandled non-error rejection
-ok 27 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+ok 26 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
 ---tty-stream-chunk-separator
 # Error: Can’t catch me
-not ok 28 - Error: Can’t catch me
+not ok 27 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
@@ -295,16 +292,16 @@ not ok 28 - Error: Can’t catch me
   ...
 ---tty-stream-chunk-separator
 # unhandled-rejection
-not ok 29 - unhandled-rejection
+not ok 28 - unhandled-rejection
   ---
     message: Non-error object
     formatted: 'null'
   ...
 ---tty-stream-chunk-separator
 
-1..23
-# tests 22
-# pass 7
+1..22
+# tests 21
+# pass 6
 # skip 1
 # fail 21
 
