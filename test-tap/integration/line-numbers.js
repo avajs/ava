@@ -80,7 +80,7 @@ test('no test selected by line number', t => {
 	execCli([
 		'line-numbers.js:6'
 	], (error, stdout) => {
-		t.ifError(error);
+		t.ok(error);
 		t.match(stdout, /No tests selected by line numbers in line-numbers\.js/);
 		t.end();
 	});
@@ -90,7 +90,7 @@ test('parent call is not selected', t => {
 	execCli([
 		'line-numbers.js:23'
 	], (error, stdout) => {
-		t.ifError(error);
+		t.ok(error);
 		t.match(stdout, /No tests selected by line numbers in line-numbers\.js/);
 		t.end();
 	});
