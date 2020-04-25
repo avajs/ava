@@ -1,5 +1,9 @@
 
 ---tty-stream-chunk-separator
+  [35m⚠ Could not parse ast-syntax-error.js for line number selection[39m
+---tty-stream-chunk-separator
+  [31m✖ Line numbers for ast-syntax-error.js did not match any tests[39m
+---tty-stream-chunk-separator
   [31m✖ No tests found in ava-import-no-test-declaration.js[39m
 ---tty-stream-chunk-separator
 

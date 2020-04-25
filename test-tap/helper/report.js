@@ -72,7 +72,14 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 
 	const providers = [{
 		type: 'babel',
-		main: providerManager.babel(projectDir).main({config: true})
+		level: 'ava-3',
+		main: providerManager.babel(projectDir).main({
+			config: {
+				testOptions: {
+					plugins: ['@babel/plugin-proposal-do-expressions']
+				}
+			}
+		})
 	}];
 
 	const options = {
@@ -93,7 +100,7 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 		chalkOptions: {level: 1}
 	};
 
-	options.globs = normalizeGlobs({extensions: options.extensions, providers: []});
+	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
@@ -143,6 +150,7 @@ exports.watch = reporter => run('watch', reporter);
 exports.edgeCases = reporter => run('edgeCases', reporter, {
 	filter: [
 		{pattern: '**/*'},
-		{pattern: '**/test.js', lineNumbers: [2]}
+		{pattern: '**/test.js', lineNumbers: [2]},
+		{pattern: '**/ast-syntax-error.js', lineNumbers: [7]}
 	]
 });
