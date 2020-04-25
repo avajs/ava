@@ -24,7 +24,7 @@
     output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test[90m[2m (105ms)[22m[39m
 ---tty-stream-chunk-separator
   [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
@@ -164,8 +164,6 @@
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
-  [90m› [39m
-
 
 
   [1mtest [90m[2m›[22m[1m[39m logs[22m
@@ -284,8 +282,6 @@
   Error thrown in test:
 
   [33mnull[39m
-
-  [90m› [39m
 
 
 

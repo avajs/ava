@@ -204,8 +204,6 @@
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
-  [90m› [39m
-
 
 
   [1mtest [90m[2m›[22m[1m[39m logs[22m
@@ -324,8 +322,6 @@
   Error thrown in test:
 
   [33mnull[39m
-
-  [90m› [39m
 
 
 
