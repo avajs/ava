@@ -15,11 +15,11 @@ const MiniReporter = require('../../lib/reporters/mini');
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
-	const logFile = path.join(__dirname, `mini.${type.toLowerCase()}.log`);
+	const logFile = path.join(__dirname, `mini.${type.toLowerCase()}.${process.version.split('.')[0]}.log`);
 
 	const tty = new TTYStream({
 		columns: 200,
-		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.traces, report.sanitizers.version]
+		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.version]
 	});
 	const reporter = new MiniReporter({
 		projectDir: report.projectDir(type),
