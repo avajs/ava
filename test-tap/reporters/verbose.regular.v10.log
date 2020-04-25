@@ -40,8 +40,6 @@
     output-in-hook [90m[2m›[22m[39m cleanup
     [35mℹ[39m [90mafterAlways[39m
 ---tty-stream-chunk-separator
-  [32m✔[39m slow [90m[2m›[22m[39m slow[90m[2m  (000ms)[22m[39m
----tty-stream-chunk-separator
   [33m- test [90m[2m›[22m[39m[33m skip[39m
 ---tty-stream-chunk-separator
   [34m- test [90m[2m›[22m[39m[34m todo[39m
