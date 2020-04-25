@@ -56,6 +56,8 @@
 	],
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
+		"acorn": "^7.1.1",
+		"acorn-walk": "^7.1.1",
 		"ansi-styles": "^4.2.1",
 		"arrgv": "^1.0.2",
 		"arrify": "^2.0.1",
@@ -97,7 +99,6 @@
 		"plur": "^4.0.0",
 		"pretty-ms": "^6.0.1",
 		"read-pkg": "^5.2.0",
-		"recast": "^0.19.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
 		"source-map-support": "^0.5.16",
