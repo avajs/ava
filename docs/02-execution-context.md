@@ -38,6 +38,14 @@ Log values contextually alongside the test result instead of immediately printin
 
 Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
 
+## `t.teardown(fn)`
+
+Registers the `fn` function to be run after the test has finished. You can register multiple functions and they'll run in order. You can use asynchronous functions: only one will run at a time.
+
+You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
+
+You cannot use `t.teardown()` in hooks either.
+
 ## `t.timeout(ms)`
 
 Set a timeout for the test, in milliseconds. The test will fail if this timeout is exceeded. The timeout is reset each time an assertion is made.
