@@ -350,7 +350,7 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
-  [90m› t.throws (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
+  [90m› t.throws._avaThrowsHelperEnd (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:12:4)[39m
   [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
@@ -371,7 +371,7 @@
   [90m}[39m
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
-  [90m› t.notThrows (test-tap/fixture/report/regular/traces-in-t-throws.js:16:20)[39m
+  [90m› t.notThrows._avaThrowsHelperEnd (test-tap/fixture/report/regular/traces-in-t-throws.js:16:20)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:16:4)[39m
   [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 

@@ -67,12 +67,19 @@ exports.sanitizers = {
 
 exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-const run = (type, reporter, match = []) => {
+const run = (type, reporter, {match = [], filter} = {}) => {
 	const projectDir = exports.projectDir(type);
 
 	const providers = [{
 		type: 'babel',
-		main: providerManager.babel(projectDir).main({config: true})
+		level: 'ava-3',
+		main: providerManager.babel(projectDir).main({
+			config: {
+				testOptions: {
+					plugins: ['@babel/plugin-proposal-do-expressions']
+				}
+			}
+		})
 	}];
 
 	const options = {
@@ -93,7 +100,7 @@ const run = (type, reporter, match = []) => {
 		chalkOptions: {level: 1}
 	};
 
-	options.globs = normalizeGlobs({extensions: options.extensions, providers: []});
+	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
 
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
@@ -115,18 +122,18 @@ const run = (type, reporter, match = []) => {
 		unique: true
 	}).sort();
 	if (type !== 'watch') {
-		return api.run({files}).then(() => {
+		return api.run({files, filter}).then(() => {
 			reporter.endRun();
 		});
 	}
 
 	// Mimick watch mode
-	return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
+	return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
 		reporter.endRun();
-		return api.run({files, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
+		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run({files, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
+		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
 	}).then(() => {
 		reporter.endRun();
 	});
@@ -138,6 +145,12 @@ exports.failFast2 = reporter => run('failFast2', reporter);
 exports.only = reporter => run('only', reporter);
 exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
 exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
-exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, ['*needle*']);
+exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, {match: ['*needle*']});
 exports.watch = reporter => run('watch', reporter);
-exports.edgeCases = reporter => run('edgeCases', reporter);
+exports.edgeCases = reporter => run('edgeCases', reporter, {
+	filter: [
+		{pattern: '**/*'},
+		{pattern: '**/test.js', lineNumbers: [2]},
+		{pattern: '**/ast-syntax-error.js', lineNumbers: [7]}
+	]
+});

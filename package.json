@@ -56,9 +56,12 @@
 	],
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
+		"acorn": "^7.1.1",
+		"acorn-walk": "^7.1.1",
 		"ansi-styles": "^4.2.1",
 		"arrgv": "^1.0.2",
 		"arrify": "^2.0.1",
+		"callsites": "^3.1.0",
 		"chalk": "^4.0.0",
 		"chokidar": "^3.3.1",
 		"chunkd": "^2.0.1",
@@ -110,6 +113,7 @@
 	},
 	"devDependencies": {
 		"@ava/babel": "^1.0.1",
+		"@babel/plugin-proposal-do-expressions": "^7.8.3",
 		"@sinonjs/fake-timers": "^6.0.1",
 		"ansi-escapes": "^4.3.1",
 		"delay": "^4.3.0",
@@ -139,7 +143,8 @@
 			"test-tap/fixture/ava-paths/target/test.js",
 			"test-tap/fixture/{source-map-initial,syntax-error}.js",
 			"test-tap/fixture/snapshots/test-sourcemaps/build/**",
-			"test-tap/fixture/power-assert.js"
+			"test-tap/fixture/power-assert.js",
+			"test-tap/fixture/report/edgecases/ast-syntax-error.js"
 		],
 		"rules": {
 			"no-use-extend-native/no-use-extend-native": "off",

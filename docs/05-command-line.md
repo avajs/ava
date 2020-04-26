@@ -15,7 +15,8 @@ Commands:
 
 Positionals:
   pattern  Glob patterns to select what test files to run. Leave empty if you
-           want AVA to run all test files instead                       [string]
+           want AVA to run all test files instead. Add a colon and specify line
+           numbers of specific tests to run                             [string]
 
 Options:
   --version               Show version number                          [boolean]
@@ -42,6 +43,7 @@ Options:
 Examples:
   ava
   ava test.js
+  ava test.js:4,7-9
 ```
 
 *Note that the CLI will use your local install of AVA when available, even when run globally.*
@@ -148,6 +150,66 @@ test(function foo(t) {
 	t.fail();
 });
 ```
+
+## Running tests at specific line numbers
+
+AVA lets you run tests exclusively by referring to their line numbers. Target a single line, a range of lines or both. You can select any line number of a test.
+
+The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
+
+This feature is only available from the command line. It won't work if you use tools like `ts-node/register` or `@babel/register`, and it does not currently work with `@ava/babel` and `@ava/typescript`.
+
+### Running a single test
+
+To only run a particular test in a file, append the line number of the test to the path or pattern passed to AVA.
+
+Given the following test file:
+
+`test.js`
+
+```js
+1: test('unicorn', t => {
+2:   t.pass();
+3: });
+4:
+5: test('rainbow', t => {
+6:  t.fail();
+7: });
+```
+
+Running `npx ava test.js:2` for would run the `unicorn` test. In fact you could use any line number between `1` and `3`.
+
+### Running multiple tests
+
+To run multiple tests, either target them one by one or select a range of line numbers. As line numbers are given per file, you can run multiple files with different line numbers for each file. If the same file is provided multiple times, line numbers are merged and only run once.
+
+### Examples
+
+Single line numbers:
+
+```console
+npx ava test.js:2,9
+```
+
+Range:
+
+```console
+npx ava test.js:4-7
+```
+
+Mix of single line number and range:
+
+```console
+npx ava test.js:4,9-12
+```
+
+Different files:
+
+```console
+npx ava test.js:3 test2.js:4,7-9
+```
+
+When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
