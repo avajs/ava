@@ -21,7 +21,6 @@ const createApi = options => {
 							...options,
 							env: {
 								...options.env,
-								AVA_VERBOSE_DURATION_THRESHOLD: String(60 * 1000),
 								NODE_NO_WARNINGS: '1'
 							}
 						});
