@@ -23,8 +23,8 @@ const assertions = new class extends assert.Assertions {
 			pending: promise => {
 				promise.then(() => {
 					lastPassed = true;
-				}, err => {
-					lastFailure = err;
+				}, error => {
+					lastFailure = error;
 				});
 			},
 			fail: error => {

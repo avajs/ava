@@ -17,6 +17,7 @@ const run = (type, sanitizers = []) => t => {
 	});
 	const reporter = new VerboseReporter({
 		projectDir: report.projectDir(type),
+		durationThreshold: 60000,
 		reportStream: tty,
 		stdStream: tty,
 		watching: type === 'watch'
