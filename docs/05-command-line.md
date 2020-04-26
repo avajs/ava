@@ -157,7 +157,7 @@ AVA lets you run tests exclusively by referring to their line numbers. Target a 
 
 The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
 
-This feature is only available from the command line.
+This feature is only available from the command line. It won't work if you use tools like `ts-node/register` or `@babel/register`, and it does not currently work with `@ava/babel` and `@ava/typescript`.
 
 ### Running a single test
 
