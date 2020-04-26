@@ -863,6 +863,17 @@ test('teardowns errors do not stop next teardown from running', t => {
 	});
 });
 
+test('teardowns cannot be registered by teardowns', async t => {
+	const result = await ava(a => {
+		a.teardown(() => {
+			a.teardown(() => {});
+		});
+		a.pass();
+	}).run();
+	t.is(result.passed, false);
+	t.match(result.error.message, /cannot be used during teardown/);
+});
+
 test('.log() is bound', t => {
 	return ava(a => {
 		const {log} = a;
