@@ -1,0 +1,12 @@
+{
+	"all": true,
+	"exclude": [
+		"{coverage,media,test-d,test-tap}/**",
+		"*.config.js",
+		"index.d.ts"
+	],
+	"reporter": [
+		"html",
+		"lcov"
+	]
+}
