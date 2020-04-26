@@ -313,6 +313,7 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 
 	log: LogFn;
 	plan: PlanFn;
+	teardown: TeardownFn;
 	timeout: TimeoutFn;
 	try: TryFn<Context>;
 }
@@ -342,6 +343,11 @@ export interface TimeoutFn {
 	 * The timeout is reset each time an assertion is made.
 	 */
 	(ms: number): void;
+}
+
+export interface TeardownFn {
+	/** Declare a function to be run after the test has ended. */
+	(fn: () => void): void;
 }
 
 export interface TryFn<Context = unknown> {

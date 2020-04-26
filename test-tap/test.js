@@ -5,6 +5,7 @@ require('../lib/worker/options').set({});
 const path = require('path');
 const React = require('react');
 const {test} = require('tap');
+const sinon = require('sinon');
 const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
@@ -746,6 +747,133 @@ test('timeout is refreshed on assert', t => {
 	});
 });
 
+test('teardown passing test', t => {
+	const teardown = sinon.spy();
+	return ava(a => {
+		a.teardown(teardown);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(teardown.calledOnce);
+	});
+});
+
+test('teardown failing test', t => {
+	const teardown = sinon.spy();
+	return ava(a => {
+		a.teardown(teardown);
+		a.fail();
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.ok(teardown.calledOnce);
+	});
+});
+
+test('teardown awaits promise', t => {
+	let tornDown = false;
+	const teardownPromise = delay(200).then(() => {
+		tornDown = true;
+	});
+	return ava(a => {
+		a.teardown(() => teardownPromise);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(tornDown);
+	});
+});
+
+test('teardowns run sequentially in order', t => {
+	const teardownA = sinon.stub().resolves(delay(200));
+	let resolveB;
+	const teardownB = sinon.stub().returns(new Promise(resolve => {
+		resolveB = resolve;
+	}));
+	return ava(a => {
+		a.teardown(() => teardownA().then(resolveB));
+		a.teardown(teardownB);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(teardownA.calledBefore(teardownB));
+	});
+});
+
+test('teardown with cb', t => {
+	const teardown = sinon.spy();
+	return ava.cb(a => {
+		a.teardown(teardown);
+		setTimeout(() => {
+			a.pass();
+			a.end();
+		});
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(teardown.calledOnce);
+	});
+});
+
+test('teardown without function callback fails', t => {
+	return ava(a => {
+		return a.throwsAsync(async () => {
+			a.teardown(false);
+		}, {message: 'Expected a function'});
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
+
+test('teardown errors fail the test', t => {
+	const teardown = sinon.stub().throws('TeardownError');
+	return ava(a => {
+		a.teardown(teardown);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.is(result.error.name, 'TeardownError');
+		t.ok(teardown.calledOnce);
+	});
+});
+
+test('teardown errors are hidden behind assertion errors', t => {
+	const teardown = sinon.stub().throws('TeardownError');
+	return ava(a => {
+		a.teardown(teardown);
+		a.fail();
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.is(result.error.name, 'AssertionError');
+		t.ok(teardown.calledOnce);
+	});
+});
+
+test('teardowns errors do not stop next teardown from running', t => {
+	const teardownA = sinon.stub().throws('TeardownError');
+	const teardownB = sinon.spy();
+	return ava(a => {
+		a.teardown(teardownA);
+		a.teardown(teardownB);
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, false);
+		t.is(result.error.name, 'TeardownError');
+		t.ok(teardownA.calledOnce);
+		t.ok(teardownB.calledOnce);
+		t.ok(teardownA.calledBefore(teardownB));
+	});
+});
+
+test('teardowns cannot be registered by teardowns', async t => {
+	const result = await ava(a => {
+		a.teardown(() => {
+			a.teardown(() => {});
+		});
+		a.pass();
+	}).run();
+	t.is(result.passed, false);
+	t.match(result.error.message, /cannot be used during teardown/);
+});
+
 test('.log() is bound', t => {
 	return ava(a => {
 		const {log} = a;
@@ -794,5 +922,17 @@ test('.end() is bound', t => {
 		end();
 	}).run().then(result => {
 		t.true(result.passed);
+	});
+});
+
+test('.teardown() is bound', t => {
+	const teardownCallback = sinon.spy();
+	return ava(a => {
+		const {teardown} = a;
+		teardown(teardownCallback);
+		a.pass();
+	}).run().then(result => {
+		t.true(result.passed);
+		t.ok(teardownCallback.calledOnce);
 	});
 });

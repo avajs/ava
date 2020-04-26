@@ -167,6 +167,8 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
+*You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test.
+
 Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
 
 `.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are *not* run before other hooks:

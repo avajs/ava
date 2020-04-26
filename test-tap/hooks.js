@@ -546,3 +546,23 @@ test('shared context of any type', t => {
 		});
 	});
 });
+
+test('teardowns cannot be used in hooks', async t => {
+	let hookFailure = null;
+	await promiseEnd(new Runner(), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'hook-failed') {
+				hookFailure = evt;
+			}
+		});
+
+		runner.chain.beforeEach(a => {
+			a.teardown(() => {});
+		});
+
+		runner.chain('test', a => a.pass());
+	});
+
+	t.ok(hookFailure);
+	t.match(hookFailure.err.message, /not allowed in hooks/);
+});
