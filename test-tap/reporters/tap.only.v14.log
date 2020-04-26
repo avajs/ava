@@ -1,0 +1,15 @@
+TAP version 13
+---tty-stream-chunk-separator
+# a › only
+ok 1 - a [90m[2m›[22m[39m only
+---tty-stream-chunk-separator
+# b › passes
+ok 2 - b [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+
+1..2
+# tests 2
+# pass 2
+# fail 0
+
+---tty-stream-chunk-separator

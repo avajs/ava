@@ -1,0 +1,10 @@
+
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m only
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+
+  [32m2 tests passed[39m
+
+---tty-stream-chunk-separator

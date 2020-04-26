@@ -7,7 +7,7 @@
 	"homepage": "https://avajs.dev",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0"
+		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0 <14 || >=14.0.0"
 	},
 	"scripts": {
 		"test": "xo && tsd && nyc tap"
@@ -64,7 +64,6 @@
 		"chunkd": "^2.0.1",
 		"ci-info": "^2.0.0",
 		"ci-parallel-vars": "^1.0.0",
-		"clean-stack": "^2.2.0",
 		"clean-yaml-object": "^0.1.0",
 		"cli-cursor": "^3.1.0",
 		"cli-truncate": "^2.1.0",
