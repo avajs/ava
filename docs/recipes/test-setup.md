@@ -64,7 +64,7 @@ test('second scenario', t => {
 });
 ```
 
-You can use [`t.teardown()`](../02-execution-context##tteardownfn) to register a teardown function which will run after the test has finished (regardless of whether it's passed or failed).
+You can use [`t.teardown()`](../02-execution-context.md#tteardownfn) to register a teardown function which will run after the test has finished (regardless of whether it's passed or failed).
 
 ## A practical example
 
