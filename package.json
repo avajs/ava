@@ -10,7 +10,7 @@
 		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0 <14 || >=14.0.0"
 	},
 	"scripts": {
-		"test": "xo && tsd && c8 tap"
+		"test": "xo && tsd && c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report"
 	},
 	"files": [
 		"lib",
@@ -113,6 +113,7 @@
 	},
 	"devDependencies": {
 		"@ava/babel": "^1.0.1",
+		"@ava/test": "github:avajs/test",
 		"@babel/plugin-proposal-do-expressions": "^7.8.3",
 		"@sinonjs/fake-timers": "^6.0.1",
 		"ansi-escapes": "^4.3.1",

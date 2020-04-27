@@ -8,6 +8,7 @@
 
 * `npm test`: Lint the code and run the entire test suite with coverage.
 * `npx tap test-tap/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
+* `npx test-ava test/{file}.js`: Run self-hosted tests.
 
 ## CI
 
