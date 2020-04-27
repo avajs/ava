@@ -1,2 +1,5 @@
-node_modules
-coverage
+/coverage
+/media/**/node_modules/
+/node_modules/
+/test-tap/**/node_modules/
+/test/**/fixtures/**/node_modules/*/
