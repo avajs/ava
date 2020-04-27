@@ -32,6 +32,8 @@ jobs:
       - run: npm ci --no-audit
       - run: npm test
       - uses: codecov/codecov-action@v1
+        with:
+          name: ${{ matrix.os }}/${{ matrix.node-version }}
 
   typescript:
     name: TypeScript compatibility
