@@ -33,6 +33,7 @@ jobs:
       - run: npm test
       - uses: codecov/codecov-action@v1
         with:
+          file: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
 
   typescript:
