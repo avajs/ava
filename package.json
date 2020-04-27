@@ -88,7 +88,7 @@
 		"is-plain-object": "^3.0.0",
 		"is-promise": "^3.0.0",
 		"lodash": "^4.17.15",
-		"matcher": "^2.1.0",
+		"matcher": "^3.0.0",
 		"md5-hex": "^3.0.1",
 		"mem": "^6.1.0",
 		"ms": "^2.1.2",
