@@ -2,12 +2,12 @@ name: Install and test AVA
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
     paths-ignore:
-    - '*.md'
-    - 'docs/**'
-    - 'media/**'
+      - "*.md"
+      - "docs/**"
+      - "media/**"
 jobs:
   nodejs:
     name: Node.js
@@ -32,6 +32,9 @@ jobs:
       - run: npm ci --no-audit
       - run: npm test
       - uses: codecov/codecov-action@v1
+        with:
+          file: coverage/lcov.info
+          name: ${{ matrix.os }}/${{ matrix.node-version }}
 
   typescript:
     name: TypeScript compatibility
