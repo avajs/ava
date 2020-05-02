@@ -3,26 +3,31 @@
 ---tty-stream-chunk-separator
 * ---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* output-in-hook [90m[2m›[22m[39m passing test
+* nested-objects [90m[2m›[22m[39m format with max depth 4
 
-  [32m1 passed[39m---tty-stream-chunk-separator
+  [31m1 test failed[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
-* output-in-hook [90m[2m›[22m[39m failing test
+* output-in-hook [90m[2m›[22m[39m passing test
 
   [32m1 passed[39m
   [31m1 test failed[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
+* output-in-hook [90m[2m›[22m[39m failing test
+
+  [32m1 passed[39m
+  [31m2 tests failed[39m---tty-stream-chunk-separator
+[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 * test [90m[2m›[22m[39m passes
 
   [32m2 passed[39m
-  [31m1 test failed[39m
+  [31m2 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 * test [90m[2m›[22m[39m fails
 
   [32m2 passed[39m
-  [31m2 tests failed[39m
+  [31m3 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -30,7 +35,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m2 tests failed[39m
+  [31m3 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -38,7 +43,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m3 tests failed[39m
+  [31m4 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -46,7 +51,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m4 tests failed[39m
+  [31m5 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -54,7 +59,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m5 tests failed[39m
+  [31m6 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -62,7 +67,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m6 tests failed[39m
+  [31m7 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -70,7 +75,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m7 tests failed[39m
+  [31m8 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -78,7 +83,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m8 tests failed[39m
+  [31m9 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -86,7 +91,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m9 tests failed[39m
+  [31m10 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -94,7 +99,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m10 tests failed[39m
+  [31m11 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -102,7 +107,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m11 tests failed[39m
+  [31m12 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -110,7 +115,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m12 tests failed[39m
+  [31m13 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -118,7 +123,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m13 tests failed[39m
+  [31m14 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -126,7 +131,7 @@
 
   [32m2 passed[39m
   [31m1 known failure[39m
-  [31m14 tests failed[39m
+  [31m15 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -134,7 +139,7 @@
 
   [32m3 passed[39m
   [31m1 known failure[39m
-  [31m14 tests failed[39m
+  [31m15 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -142,7 +147,7 @@
 
   [32m4 passed[39m
   [31m1 known failure[39m
-  [31m14 tests failed[39m
+  [31m15 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
@@ -150,14 +155,14 @@
 
   [32m5 passed[39m
   [31m1 known failure[39m
-  [31m14 tests failed[39m
+  [31m15 tests failed[39m
   [33m1 skipped[39m
   [34m1 todo[39m---tty-stream-chunk-separator
 [2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 [?25h
   [31m✖ No tests found in bad-test-chain.js[39m
 
-  [31m14 tests failed[39m
+  [31m15 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m
@@ -165,6 +170,36 @@
   [31m2 uncaught exceptions[39m
 
   [31mtest [90m[2m›[22m[39m[31m known failure[39m
+
+  [1mnested-objects [90m[2m›[22m[1m[39m format with max depth 4[22m
+
+  [90mnested-objects.js:28[39m
+
+   [90m27:[39m   };                    
+  [41m 28:   t.deepEqual(exp, act);[49m
+   [90m29:[39m });                     
+
+  Difference:
+
+    [90m{[39m
+      a: [90m{[39m
+        b: [90m{[39m
+          foo: [34m'[39m[34mbar[39m[34m'[39m[90m,[39m
+        [90m}[39m[90m,[39m
+      [90m}[39m[90m,[39m
+  [32m+[39m   c: [90m{[39m
+  [32m+[39m     d: [90m{[39m
+  [32m+[39m       e: [90m{[39m
+  [32m+[39m         foo: [34m'[39m[34mbar[39m[34m'[39m[90m,[39m
+  [32m+[39m       [90m}[39m[90m,[39m
+  [32m+[39m     [90m}[39m[90m,[39m
+  [32m+[39m   [90m}[39m[90m,[39m
+    [90m}[39m
+
+  [90m› t (test-tap/fixture/report/regular/nested-objects.js:28:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
 
   [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
 
