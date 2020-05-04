@@ -173,9 +173,13 @@ Tape and tap are pretty good. AVA is highly inspired by their syntax. They too e
 
 In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
-### How is the name written and pronounced?
+### How is the name written?
 
-AVA, not Ava or ava. Pronounced [`/ˈeɪvə/`](media/pronunciation.m4a?raw=true): Ay (f**a**ce, m**a**de) V (**v**ie, ha**v**e) A (comm**a**, **a**go)
+AVA, not Ava or ava.
+
+### How is the name pronounced?
+
+[`/ˈeɪvə/`](media/pronunciation.m4a?raw=true): Ay (f**a**ce, m**a**de) V (**v**ie, ha**v**e) A (comm**a**, **a**go)
 
 ### What is the header background?
 
