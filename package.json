@@ -1,13 +1,13 @@
 {
 	"name": "ava",
 	"version": "3.8.1",
-	"description": "Testing can be a drag. AVA helps you get it done.",
+	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0 <14 || >=14.0.0"
+		"node": ">=10.18.0 <11 || >=12.14.0 <12.16.0 || >=12.16.0 <13 || >=13.5.0 <14 || >=14.0.0"
 	},
 	"scripts": {
 		"test": "xo && tsd && c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report"
@@ -86,7 +86,7 @@
 		"indent-string": "^4.0.0",
 		"is-error": "^2.2.2",
 		"is-plain-object": "^3.0.0",
-		"is-promise": "^3.0.0",
+		"is-promise": "^4.0.0",
 		"lodash": "^4.17.15",
 		"matcher": "^3.0.0",
 		"md5-hex": "^3.0.1",
@@ -97,12 +97,12 @@
 		"picomatch": "^2.2.2",
 		"pkg-conf": "^3.1.0",
 		"plur": "^4.0.0",
-		"pretty-ms": "^6.0.1",
+		"pretty-ms": "^7.0.0",
 		"read-pkg": "^5.2.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
 		"source-map-support": "^0.5.19",
-		"stack-utils": "^2.0.1",
+		"stack-utils": "^2.0.2",
 		"strip-ansi": "^6.0.0",
 		"supertap": "^1.0.0",
 		"temp-dir": "^2.0.0",
@@ -117,7 +117,7 @@
 		"@babel/plugin-proposal-do-expressions": "^7.8.3",
 		"@sinonjs/fake-timers": "^6.0.1",
 		"ansi-escapes": "^4.3.1",
-		"c8": "^7.1.0",
+		"c8": "^7.1.2",
 		"delay": "^4.3.0",
 		"esm": "^3.2.25",
 		"execa": "^4.0.0",
