@@ -1,7 +1,7 @@
 {
 	"name": "ava",
 	"version": "3.8.1",
-	"description": "Testing can be a drag. AVA helps you get it done.",
+	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
