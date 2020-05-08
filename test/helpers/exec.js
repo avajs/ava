@@ -19,6 +19,12 @@ exports.fixture = async (...args) => {
 		serialization
 	});
 
+	// Besides buffering stderr, if this environment variable is set, also pipe
+	// to stderr. This can be useful when debugging the tests.
+	if (process.env.DEBUG_TEST_AVA) {
+		running.stderr.pipe(process.stderr);
+	}
+
 	const errors = new WeakMap();
 	const stats = {
 		failed: [],
