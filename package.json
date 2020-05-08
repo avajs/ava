@@ -7,7 +7,7 @@
 	"homepage": "https://avajs.dev",
 	"bin": "cli.js",
 	"engines": {
-		"node": ">=10.18.0 <11 || >=12.14.0 <13 || >=13.5.0 <14 || >=14.0.0"
+		"node": ">=10.18.0 <11 || >=12.14.0 <12.16.0 || >=12.16.0 <13 || >=13.5.0 <14 || >=14.0.0"
 	},
 	"scripts": {
 		"test": "xo && tsd && c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report"
