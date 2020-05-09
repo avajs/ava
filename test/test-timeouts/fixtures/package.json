@@ -3,8 +3,5 @@
     "files": [
       "*.js"
     ]
-  },
-  "dependencies": {
-    "ava": "file:../../.."
   }
 }
