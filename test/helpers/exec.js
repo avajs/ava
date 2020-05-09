@@ -29,6 +29,7 @@ exports.fixture = async (...args) => {
 	const stats = {
 		failed: [],
 		skipped: [],
+		uncaughtExceptions: [],
 		unsavedSnapshots: [],
 		passed: [],
 		getError(statObject) {
@@ -36,15 +37,15 @@ exports.fixture = async (...args) => {
 		}
 	};
 
-	running.on('message', message => {
+	running.on('message', statusEvent => {
 		if (serialization === 'json') {
-			message = v8.deserialize(Uint8Array.from(message));
+			statusEvent = v8.deserialize(Uint8Array.from(statusEvent));
 		}
 
-		switch (message.type) {
+		switch (statusEvent.type) {
 			case 'selected-test': {
-				if (message.skip) {
-					const {title, testFile} = message;
+				if (statusEvent.skip) {
+					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
 				}
 
@@ -52,22 +53,28 @@ exports.fixture = async (...args) => {
 			}
 
 			case 'snapshot-error': {
-				const {testFile} = message;
+				const {testFile} = statusEvent;
 				stats.unsavedSnapshots.push({file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-passed': {
-				const {title, testFile} = message;
+				const {title, testFile} = statusEvent;
 				stats.passed.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-failed': {
-				const {title, testFile} = message;
+				const {title, testFile} = statusEvent;
 				const statObject = {title, file: normalizePath(cwd, testFile)};
-				errors.set(statObject, message.err);
+				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
+				break;
+			}
+
+			case 'uncaught-exception': {
+				const {message, name, stack} = statusEvent.err;
+				stats.uncaughtExceptions.push({message, name, stack});
 				break;
 			}
 
