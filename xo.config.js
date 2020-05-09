@@ -16,7 +16,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: '*.d.ts',
+			files: 'index.d.ts',
 			rules: {
 				'@typescript-eslint/member-ordering': 'off',
 				'@typescript-eslint/method-signature-style': 'off',
@@ -47,7 +47,8 @@ module.exports = {
 		{
 			files: ['test-tap/fixture/**', 'test/**/fixtures/**'],
 			rules: {
-				'import/no-extraneous-dependencies': 'off'
+				'import/no-extraneous-dependencies': 'off',
+				'import/no-unresolved': 'off'
 			}
 		}
 	],
