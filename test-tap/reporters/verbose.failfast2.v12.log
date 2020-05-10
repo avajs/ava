@@ -3,8 +3,6 @@
   [31m✖[39m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
 
-  [31m1 test failed[39m
-
   [1ma [90m[2m›[22m[1m[39m fails[22m
 
   [90ma.js:3[39m
@@ -20,5 +18,7 @@
 
 
   [35m`--fail-fast` is on. At least 1 test was skipped, as well as 1 test file.[39m
+
+  [31m1 test failed[39m
 
 ---tty-stream-chunk-separator

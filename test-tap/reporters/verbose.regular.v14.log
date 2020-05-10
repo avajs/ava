@@ -122,15 +122,6 @@
 
 ---tty-stream-chunk-separator
 
-  [31m15 tests failed[39m
-  [31m1 known failure[39m
-  [33m1 test skipped[39m
-  [34m1 test todo[39m
-  [31m2 unhandled rejections[39m
-  [31m2 uncaught exceptions[39m
-
-  [31mtest [90m[2m›[22m[39m[31m known failure[39m
-
   [1mnested-objects [90m[2m›[22m[1m[39m format with max depth 4[22m
 
   [90mnested-objects.js:28[39m
@@ -418,5 +409,14 @@
 
   [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:28:11[39m
+
+  [31m15 tests failed[39m
+  [31m1 known failure[39m
+  [33m1 test skipped[39m
+  [34m1 test todo[39m
+  [31m2 unhandled rejections[39m
+  [31m2 uncaught exceptions[39m
+
+  [31mtest [90m[2m›[22m[39m[31m known failure[39m
 
 ---tty-stream-chunk-separator
