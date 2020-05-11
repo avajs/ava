@@ -1,63 +1,29 @@
 
 ---tty-stream-chunk-separator
-  [31m✖ Couldn’t find any files to test[39m
-
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✖ Internal error[39m
-  [31mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90m    at Object.fs.mkdirSync (fs.js:840:3)[39m
-  [90m    at Api._createCacheDir (~/lib/api.js:267:6)[39m
-  [90m    at Api.run (~/lib/api.js:116:20)[39m
-  [90m    at run (~/test-tap/helper/report.js:130:13)[39m
-  [90m    at Object.exports.watch.reporter [as watch] (~/test-tap/helper/report.js:148:29)[39m
-  [90m    at Test.t (~/test-tap/reporters/verbose.js:25:21)[39m
-  [90m    at TapWrap.runInAsyncScope (async_hooks.js:189:21)[39m
-  [90m    at Test.cb.args (~/node_modules/tap/lib/test.js:145:40)[39m
-  [90m    at ret (~/node_modules/tap/lib/test.js:383:21)[39m
-  [90m    at Test.main (~/node_modules/tap/lib/test.js:390:7)[39m
 
+  [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
 
 ---tty-stream-chunk-separator
 [90m[2m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[22m[39m
 ---tty-stream-chunk-separator
 
 ---tty-stream-chunk-separator
-  [31m✖ Couldn’t find any files to test[39m
-
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✖ Internal error[39m
-  [31mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90m    at Object.fs.mkdirSync (fs.js:840:3)[39m
-  [90m    at Api._createCacheDir (~/lib/api.js:267:6)[39m
-  [90m    at Api.run (~/lib/api.js:116:20)[39m
-  [90m    at api.run.then (~/test-tap/helper/report.js:132:14)[39m
-  [90m    at process._tickCallback (internal/process/next_tick.js:178:7)[39m
-  [90m    at Function.Module.runMain (internal/modules/cjs/loader.js:721:11)[39m
-  [90m    at startup (internal/bootstrap/node.js:228:19)[39m
-  [90m    at bootstrapNodeJSCore (internal/bootstrap/node.js:575:3)[39m
 
+  [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
+  [31m2 previous failures in test files that were not rerun[39m
 
 ---tty-stream-chunk-separator
 [90m[2m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[22m[39m
 ---tty-stream-chunk-separator
 
 ---tty-stream-chunk-separator
-  [31m✖ Couldn’t find any files to test[39m
-
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✖ Internal error[39m
-  [31mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90mError: EEXIST: file already exists, mkdir '~/test-tap/fixture/report/watch/node_modules/.cache/ava'[39m
-  [90m    at Object.fs.mkdirSync (fs.js:840:3)[39m
-  [90m    at Api._createCacheDir (~/lib/api.js:267:6)[39m
-  [90m    at Api.run (~/lib/api.js:116:20)[39m
-  [90m    at api.run.then.then (~/test-tap/helper/report.js:135:14)[39m
-  [90m    at process._tickCallback (internal/process/next_tick.js:178:7)[39m
-  [90m    at Function.Module.runMain (internal/modules/cjs/loader.js:721:11)[39m
-  [90m    at startup (internal/bootstrap/node.js:228:19)[39m
-  [90m    at bootstrapNodeJSCore (internal/bootstrap/node.js:575:3)[39m
 
+  [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
 
 ---tty-stream-chunk-separator
