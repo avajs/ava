@@ -13,8 +13,7 @@
 [2K[1G---tty-stream-chunk-separator
 * [31m✖ Line numbers for test.js did not match any tests[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-[?25h
-  [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
+[?25h  [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
   [31m✖ No tests found in ava-import-no-test-declaration.js[39m
   [31m✖ No tests found in import-and-use-test-member.js[39m
   [31m✖ No tests found in throws.js[39m
@@ -22,7 +21,7 @@
   [31m✖ Line numbers for ast-syntax-error.js did not match any tests[39m
   [31m✖ Line numbers for test.js did not match any tests[39m
 
-  [31m2 uncaught exceptions[39m
+  [90m─[39m
 
   [1mUncaught exception in import-and-use-test-member.js[22m
 
@@ -49,4 +48,7 @@
 
   [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)[39m
 
+  [90m─[39m
+
+  [31m2 uncaught exceptions[39m
 ---tty-stream-chunk-separator

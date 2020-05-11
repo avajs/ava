@@ -13,7 +13,7 @@
   ◌ slow two
 
 ---tty-stream-chunk-separator
+  [90m─[39m
 
   [32m2 tests passed[39m
-
 ---tty-stream-chunk-separator
