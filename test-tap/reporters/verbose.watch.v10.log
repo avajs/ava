@@ -2,6 +2,7 @@
 ---tty-stream-chunk-separator
   [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
+  [90m─[39m
 
   [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
 
@@ -12,6 +13,7 @@
 ---tty-stream-chunk-separator
   [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
+  [90m─[39m
 
   [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
   [31m2 previous failures in test files that were not rerun[39m
@@ -23,6 +25,7 @@
 ---tty-stream-chunk-separator
   [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
+  [90m─[39m
 
   [32m1 test passed[39m [90m[2m[17:19:12][22m[39m
 
