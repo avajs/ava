@@ -237,6 +237,67 @@ test('handle falsy testing of objects', t => {
 	});
 });
 
+test('handle testing likeness of array values', t => {
+	const instance = ava(a => {
+		a.like({
+			array: ['foo', 'bar'],
+			extraArray: ['irrelevant'],
+			deep: {
+				array: ['foo', 'bar'],
+				extraArray: ['irrelevant']
+			}
+		}, {
+			array: ['foo', 'bar'],
+			deep: {
+				array: ['foo', 'bar']
+			}
+		});
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.assertCount, 1);
+	});
+});
+
+test('handle testing likeness of objects', t => {
+	const instance = ava(a => {
+		a.like({
+			foo: 'foo',
+			extra: 'irrelevant',
+			deep: {
+				bar: 'bar',
+				extra: 'irrelevant'
+			}
+		}, {
+			foo: 'foo',
+			deep: {
+				bar: 'bar'
+			}
+		});
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.assertCount, 1);
+	});
+});
+
+test('handle falsy testing of objects', t => {
+	const instance = ava(a => {
+		a.notDeepEqual({
+			foo: 'foo',
+			bar: 'bar'
+		}, {
+			foo: 'foo',
+			bar: 'bar',
+			cat: 'cake'
+		});
+	});
+	return instance.run().then(result => {
+		t.is(result.passed, true);
+		t.is(instance.assertCount, 1);
+	});
+});
+
 test('planned async assertion', t => {
 	const instance = ava.cb(a => {
 		a.plan(1);
@@ -360,13 +421,14 @@ test('fails with thrown non-error object', t => {
 
 test('skipped assertions count towards the plan', t => {
 	const instance = ava(a => {
-		a.plan(15);
+		a.plan(16);
 		a.pass.skip();
 		a.fail.skip();
 		a.is.skip(1, 1);
 		a.not.skip(1, 2);
 		a.deepEqual.skip({foo: 'bar'}, {foo: 'bar'});
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
+		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
@@ -381,20 +443,21 @@ test('skipped assertions count towards the plan', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 15);
-		t.is(instance.assertCount, 15);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
 	});
 });
 
 test('assertion.skip() is bound', t => {
 	const instance = ava(a => {
-		a.plan(15);
+		a.plan(16);
 		(a.pass.skip)();
 		(a.fail.skip)();
 		(a.is.skip)(1, 1);
 		(a.not.skip)(1, 2);
 		(a.deepEqual.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
+		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
@@ -409,8 +472,8 @@ test('assertion.skip() is bound', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 15);
-		t.is(instance.assertCount, 15);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
 	});
 });
 
@@ -647,12 +710,13 @@ test('log from tests', t => {
 test('assertions are bound', t => {
 	// This does not test .fail() and .snapshot(). It'll suffice.
 	return ava(a => {
-		(a.plan)(13);
+		(a.plan)(14);
 		(a.pass)();
 		(a.is)(1, 1);
 		(a.not)(1, 2);
 		(a.deepEqual)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
+		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});

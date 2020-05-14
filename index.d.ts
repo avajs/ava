@@ -45,6 +45,9 @@ export interface Assertions {
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
 
+	/** Assert that `actual` is [like](https://github.com/avajs/ava/blob/master/docs/03-assertions.md#likevalue-likePattern-message) `expected`. */
+	like: LikeAssertion;
+
 	/** Fail the test. */
 	fail: FailAssertion;
 
@@ -120,6 +123,14 @@ export interface AssertAssertion {
 export interface DeepEqualAssertion {
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(actual: any, expected: any, message?: string): void;
+}
+
+export interface LikeAssertion {
+	/** Assert that `actual` is [like](https://github.com/avajs/ava/blob/master/docs/03-assertions.md#likevalue-likePattern-message) `expected`. */
+	<ValueType = any>(actual: ValueType, likePattern: ValueType, message?: string): void;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;

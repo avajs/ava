@@ -203,6 +203,10 @@ Assert that `value` is not the same as `expected`. This is based on [`Object.is(
 
 Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
+### `.like(value, likePattern, message?)`
+
+Assert that `value` is like `likePattern`. Comparison is the same as in `.deepEqual()` except only paths present in the `likePattern` object are compared. All paths not in `likePattern` are ignored and can hold any value. Use this if you want to test for some keys and ignore the others.
+
 ### `.notDeepEqual(value, expected, message?)`
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
