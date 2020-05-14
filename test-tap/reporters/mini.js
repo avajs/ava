@@ -10,7 +10,7 @@ const path = require('path');
 const {test} = require('tap');
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
-const MiniReporter = require('../../lib/reporters/mini');
+const BaseReporter = require('../../lib/reporters/base-reporter');
 
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
@@ -21,7 +21,7 @@ const run = (type, sanitizers = []) => t => {
 		columns: 200,
 		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.version]
 	});
-	const reporter = new MiniReporter({
+	const reporter = new BaseReporter({
 		projectDir: report.projectDir(type),
 		spinner: {
 			interval: 60 * 60 * 1000, // No need to update the spinner
@@ -30,8 +30,10 @@ const run = (type, sanitizers = []) => t => {
 		},
 		reportStream: tty,
 		stdStream: tty,
-		watching: type === 'watch'
+		watching: type === 'watch',
+		mode: 'mini'
 	});
+
 	return report[type](reporter)
 		.then(() => {
 			tty.end();
