@@ -17,7 +17,7 @@ const app = require('../app');
 
 test.before(async t => {
 	t.context.server = http.createServer(app);
-	t.context.baseUrl = await listen(t.context.server);
+	t.context.prefixUrl = await listen(t.context.server);
 });
 
 test.after.always(t => {
@@ -25,7 +25,7 @@ test.after.always(t => {
 });
 
 test.serial('get /user', async t => {
-	const res = await got('/user', { baseUrl: t.context.baseUrl, json: true });
+	const res = await got('user', { prefixUrl: t.context.prefixUrl, json: true });
 	t.is(res.body.email, 'ava@rocks.com');
 });
 ```
