@@ -966,6 +966,14 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
+		assertions.like({a: 'a'}, {});
+	}, {
+		assertion: 'like',
+		message: '`t.like()` pattern must not be an empty object',
+		values: [{label: 'Called with:', formatted: '{}'}]
+	});
+
+	failsWith(t, () => {
 		assertions.like('foo', 'bar');
 	}, {
 		assertion: 'like',
