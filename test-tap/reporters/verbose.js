@@ -4,7 +4,7 @@ const {test} = require('tap');
 const {restoreClock} = require('../helper/fix-reporter-env')();
 const TTYStream = require('../helper/tty-stream');
 const report = require('../helper/report');
-const BaseReporter = require('../../lib/reporters/base-reporter');
+const Reporter = require('../../lib/reporters/default');
 
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
@@ -15,13 +15,13 @@ const run = (type, sanitizers = []) => t => {
 		columns: 200,
 		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.version]
 	});
-	const reporter = new BaseReporter({
+	const reporter = new Reporter({
 		projectDir: report.projectDir(type),
 		durationThreshold: 60000,
 		reportStream: tty,
 		stdStream: tty,
 		watching: type === 'watch',
-		mode: 'verbose'
+		isVerbose: true
 	});
 
 	return report[type](reporter)
