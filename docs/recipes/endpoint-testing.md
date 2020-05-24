@@ -17,7 +17,7 @@ const app = require('../app');
 
 test.before(async t => {
 	t.context.server = http.createServer(app);
-	t.context.baseUrl = await listen(t.context.server);
+	t.context.prefixUrl = await listen(t.context.server);
 });
 
 test.after.always(t => {
@@ -25,8 +25,8 @@ test.after.always(t => {
 });
 
 test.serial('get /user', async t => {
-	const res = await got('/user', { baseUrl: t.context.baseUrl, json: true });
-	t.is(res.body.email, 'ava@rocks.com');
+	const {email} = await got('user', {prefixUrl: t.context.prefixUrl}).json();
+	t.is(email, 'ava@rocks.com');
 });
 ```
 
@@ -34,4 +34,3 @@ Other libraries you may find useful:
 
 - [`supertest`](https://github.com/visionmedia/supertest)
 - [`get-port`](https://github.com/sindresorhus/get-port)
-
