@@ -215,6 +215,18 @@ test('skip test', t => {
 	});
 });
 
+test('throws error when tests are skipped and snapshots should be updated', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner({updateSnapshots: true}), runner => {
+		t.throws(() => {
+			runner.chain.skip('skipped', a => {
+				a.pass();
+			});
+		}, new TypeError('Tests can not be skipped when snapshots should be updated.'));
+	});
+});
+
 test('tests must have a non-empty title)', t => {
 	t.plan(1);
 
@@ -327,6 +339,18 @@ test('only test', t => {
 		});
 	}).then(() => {
 		t.strictDeepEqual(array, ['b']);
+	});
+});
+
+test('throws error when only tests exists and snapshots should be updated', t => {
+	t.plan(1);
+
+	return promiseEnd(new Runner({updateSnapshots: true}), runner => {
+		t.throws(() => {
+			runner.chain.only('execute it only', a => {
+				a.pass();
+			});
+		}, new TypeError('`only` tests are not allowed when snapshots should be updated.'));
 	});
 });
 
