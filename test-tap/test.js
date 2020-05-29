@@ -806,7 +806,7 @@ test('teardowns run in reverse order when the `reverseTeardowns` experimental fe
 	}));
 	const teardownB = sinon.stub().resolves(delay(200));
 
-	return withExperiments({ reverseTeardowns: true })(a => {
+	return withExperiments({reverseTeardowns: true})(a => {
 		a.teardown(teardownA);
 		a.teardown(() => teardownB().then(resolveA));
 		a.pass();
