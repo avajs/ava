@@ -10,7 +10,7 @@ const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
 const HelloMessage = require('./fixture/hello-message');
-const {ava} = require('./helper/ava-test');
+const {ava, withExperiments} = require('./helper/ava-test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -796,6 +796,23 @@ test('teardowns run sequentially in order', t => {
 	}).run().then(result => {
 		t.is(result.passed, true);
 		t.ok(teardownA.calledBefore(teardownB));
+	});
+});
+
+test('teardowns run in reverse order when the `reverseTeardowns` experimental feature is enabled', t => {
+	let resolveA;
+	const teardownA = sinon.stub().returns(new Promise(resolve => {
+		resolveA = resolve;
+	}));
+	const teardownB = sinon.stub().resolves(delay(200));
+
+	return withExperiments({ reverseTeardowns: true })(a => {
+		a.teardown(teardownA);
+		a.teardown(() => teardownB().then(resolveA));
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(teardownB.calledBefore(teardownA));
 	});
 });
 
