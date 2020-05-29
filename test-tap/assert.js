@@ -783,6 +783,96 @@ test('.notDeepEqual()', t => {
 	t.end();
 });
 
+test('.matches()', t => {
+	passes(t, () => {
+		assertions.matches({a: 'a'}, {a: 'a'});
+	});
+
+	passes(t, () => {
+		assertions.matches({a: 'a', b: 'b'}, {a: 'a'});
+	});
+
+	passes(t, () => {
+		assertions.matches(['a', 'b'], ['a', 'b']);
+	});
+
+	fails(t, () => {
+		assertions.matches({a: 'a'}, {a: 'b'});
+	});
+
+	fails(t, () => {
+		assertions.matches(['a', 'b'], ['a', 'a']);
+	});
+
+	fails(t, () => {
+		assertions.matches([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+	});
+
+	passes(t, () => {
+		const circular = ['a', 'b'];
+		circular.push(circular);
+		assertions.matches([circular], [circular]);
+	});
+
+	fails(t, () => {
+		const circular = ['a', 'b'];
+		circular.push(circular);
+		assertions.matches([circular, 'c'], [circular, 'd']);
+	});
+
+	passes(t, () => {
+		const circular = {a: 'a', b: 'b'};
+		circular.c = circular;
+		assertions.matches({...circular}, {...circular});
+	});
+
+	fails(t, () => {
+		const circular = {a: 'a', b: 'b'};
+		circular.c = circular;
+		assertions.matches({...circular, d: 'd'}, {...circular, e: 'e'});
+	});
+
+	failsWith(t, () => {
+		assertions.matches('foo', 'bar');
+	}, {
+		assertion: 'matches',
+		message: '',
+		raw: {actual: 'foo', expected: 'bar'},
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}]
+	});
+
+	failsWith(t, () => {
+		assertions.matches('foo', 42);
+	}, {
+		assertion: 'matches',
+		message: '',
+		raw: {actual: 'foo', expected: 42},
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
+	});
+
+	failsWith(t, () => {
+		assertions.matches('foo', 42, 'my message');
+	}, {
+		assertion: 'matches',
+		message: 'my message',
+		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
+	});
+
+	failsWith(t, () => {
+		assertions.matches({}, {}, null);
+	}, {
+		assertion: 'matches',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
+	t.end();
+});
+
 test('.throws()', gather(t => {
 	// Fails because function doesn't throw.
 	failsWith(t, () => {
