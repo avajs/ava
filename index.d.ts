@@ -44,7 +44,7 @@ export interface Assertions {
 
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
-	
+
 	/** Assert that `actual` matches all deep properties of `expected`, but does not need to be deeply equal. */
 	matches: MatchesAssertion;
 
