@@ -44,6 +44,9 @@ export interface Assertions {
 
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
+	
+	/** Assert that `actual` matches all deep properties of `expected`, but does not need to be deeply equal. */
+	matches: MatchesAssertion;
 
 	/** Fail the test. */
 	fail: FailAssertion;
@@ -119,6 +122,14 @@ export interface AssertAssertion {
 
 export interface DeepEqualAssertion {
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
+	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(actual: any, expected: any, message?: string): void;
+}
+
+export interface MatchesAssertion {
+	/** Assert that `actual` contains all deep properties of `expected`, but does not need to be deep equal. */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
 
 	/** Skip this assertion. */
