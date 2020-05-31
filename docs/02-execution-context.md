@@ -46,6 +46,14 @@ You cannot perform assertions using the `t` object or register additional functi
 
 You cannot use `t.teardown()` in hooks either.
 
+If you would prefer that the teardown functions run in the reverse order that they were registered, you can add the following to your AVA configuration:
+
+```json
+nonSemVerExperiments: {
+	reverseTeardowns: true
+}
+```
+
 ## `t.timeout(ms)`
 
 Set a timeout for the test, in milliseconds. The test will fail if this timeout is exceeded. The timeout is reset each time an assertion is made.
