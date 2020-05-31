@@ -49,8 +49,12 @@ You cannot use `t.teardown()` in hooks either.
 If you would prefer that the teardown functions run in the reverse order that they were registered, you can add the following to your AVA configuration:
 
 ```json
-nonSemVerExperiments: {
-	reverseTeardowns: true
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"reverseTeardowns": true
+		}
+	}
 }
 ```
 
