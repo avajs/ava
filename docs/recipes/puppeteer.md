@@ -15,7 +15,7 @@ The first step is setting up a helper to configure the environment:
 ```js
 const puppeteer = require('puppeteer');
 
-export default async function withPage(t, run) {
+module.exports = async (t, run) => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 	try {
