@@ -20,8 +20,8 @@ const run = (type, sanitizers = []) => t => {
 		durationThreshold: 60000,
 		reportStream: tty,
 		stdStream: tty,
-		watching: type === 'watch',
-		isVerbose: true
+		verbose: true,
+		watching: type === 'watch'
 	});
 
 	return report[type](reporter)
