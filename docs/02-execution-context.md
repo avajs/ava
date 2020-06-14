@@ -40,13 +40,15 @@ Plan how many assertion there are in the test. The test will fail if the actual 
 
 ## `t.teardown(fn)`
 
-Registers the `fn` function to be run after the test has finished. You can register multiple functions and they'll run in order. You can use asynchronous functions: only one will run at a time.
+Registers the `fn` function to be run after the test has finished. You can register multiple functions and they'll run in order<sup>†</sup>. You can use asynchronous functions: only one will run at a time.
 
 You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
 
 You cannot use `t.teardown()` in hooks either.
 
-If you would prefer that the teardown functions run in the reverse order that they were registered, you can add the following to your AVA configuration:
+<sup>†</sup> In the next major release we'll change this so teardown functions run in reverse order. The last registered function will be called first. You can opt in to this behavior now by enabling the `reverseTeardowns` experiment.
+
+**`package.json`**:
 
 ```json
 {
@@ -54,6 +56,16 @@ If you would prefer that the teardown functions run in the reverse order that th
 		"nonSemVerExperiments": {
 			"reverseTeardowns": true
 		}
+	}
+}
+```
+
+**`ava.config.js`**:
+
+```js
+export default {
+	nonSemVerExperiments: {
+		reverseTeardowns: true
 	}
 }
 ```
