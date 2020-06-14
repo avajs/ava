@@ -130,7 +130,7 @@ export interface DeepEqualAssertion {
 
 export interface LikeAssertion {
 	/** Assert that `value` is like `selector`. */
-	(value: any, selector: object, message?: string): void;
+	(value: any, selector: Record<string, unknown>, message?: string): void;
 
 	/** Skip this assertion. */
 	skip(value: any, selector: any, message?: string): void;
@@ -433,7 +433,7 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | Subscribable | void;
+export type ImplementationResult = PromiseLike<void> | Subscribable | void; // eslint-disable-line @typescript-eslint/no-invalid-void-type
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
