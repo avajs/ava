@@ -207,6 +207,55 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
+### `.like(value, selector, message?)`
+
+Assert that `value` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
+
+Instead AVA derives a *comparable* object from `value`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
+
+Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `value`.
+
+This is an experimental assertion for the time being. You need to enable it:
+
+**`package.json`**:
+
+```json
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"likeAssertion": true
+		}
+	}
+}
+```
+
+**`ava.config.js`**:
+
+```js
+export default {
+	nonSemVerExperiments: {
+		likeAssertion: true
+	}
+}
+```
+
+In the following example, the `map` property of `value` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
+
+```js
+t.like({
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+		qux: 'quux'
+	}
+}, {
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+	}
+})
+```
+
 ### `.throws(fn, expectation?, message?)`
 
 Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.

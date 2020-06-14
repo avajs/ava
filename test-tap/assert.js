@@ -31,6 +31,9 @@ const assertions = new class extends assert.Assertions {
 				lastFailure = error;
 			},
 			skip: () => {},
+			experiments: {
+				likeAssertion: true
+			},
 			...overwrites
 		});
 	}
@@ -778,6 +781,210 @@ test('.notDeepEqual()', t => {
 			label: 'Called with:',
 			formatted: /null/
 		}]
+	});
+
+	t.end();
+});
+
+test('.like()', t => {
+	fails(t, () => {
+		assertions.like({a: false}, {a: 0});
+	});
+
+	passes(t, () => {
+		assertions.like({
+			a: 'a',
+			b: 'b'
+		}, {
+			b: 'b',
+			a: 'a'
+		});
+	});
+
+	passes(t, () => {
+		const {like} = assertions;
+		like({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+	});
+
+	passes(t, () => {
+		assertions.like({
+			a: 'a',
+			b: 'b',
+			c: {
+				d: 'd',
+				x: 'x'
+			},
+			x: 'x'
+		}, {
+			c: {
+				d: 'd'
+			},
+			b: 'b',
+			a: 'a'
+		});
+	});
+
+	fails(t, () => {
+		assertions.like([1, 2, 3], [1, 2, 3, 4]);
+	});
+
+	fails(t, () => {
+		assertions.like({
+			a: [1, 2, 3]
+		}, {
+			a: [1, 2, 3, 4]
+		});
+	});
+
+	passes(t, () => {
+		assertions.like({
+			a: [1, 2, 3],
+			x: 'x'
+		}, {
+			a: [1, 2, 3]
+		});
+	});
+
+	passes(t, () => {
+		const actual = {
+			a: 'a',
+			extra: 'irrelevant'
+		};
+		actual.circular = actual;
+
+		const likePattern = {
+			a: 'a'
+		};
+
+		assertions.like(actual, likePattern);
+	});
+
+	fails(t, () => {
+		const fnA = a => a;
+		const fnB = a => a;
+		assertions.like(fnA, fnB);
+	});
+
+	fails(t, () => {
+		const fnA = a => a;
+		const fnB = a => a;
+		assertions.like({
+			fn: fnA
+		}, {
+			fn: fnB
+		});
+	});
+
+	fails(t, () => {
+		function Foo(a) {
+			this.a = a;
+		}
+
+		function Bar(a) {
+			this.a = a;
+		}
+
+		const x = new Foo(1);
+		const y = new Bar(1);
+
+		assertions.like(x, y);
+	});
+
+	passes(t, () => {
+		assertions.like({a: 'a'}, {a: 'a'});
+	});
+
+	passes(t, () => {
+		assertions.like({a: 'a', b: 'b'}, {a: 'a'});
+	});
+
+	passes(t, () => {
+		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
+	});
+
+	passes(t, () => {
+		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'b']});
+	});
+
+	fails(t, () => {
+		assertions.like({a: 'a'}, {a: 'b'});
+	});
+
+	fails(t, () => {
+		assertions.like({a: 'a', b: 'b'}, {a: 'b'});
+	});
+
+	fails(t, () => {
+		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'a']});
+	});
+
+	fails(t, () => {
+		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'a']});
+	});
+
+	fails(t, () => {
+		assertions.like([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+	});
+
+	fails(t, () => {
+		const circular = ['a', 'b'];
+		circular.push(circular);
+		assertions.like([circular, 'c'], [circular, 'd']);
+	});
+
+	fails(t, () => {
+		const circular = ['a', 'b'];
+		circular.push(circular);
+		assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
+	});
+
+	failsWith(t, () => {
+		assertions.like({a: 'a'}, {});
+	}, {
+		assertion: 'like',
+		message: '`t.like()` selector must be a non-empty object',
+		values: [{label: 'Called with:', formatted: '{}'}]
+	});
+
+	failsWith(t, () => {
+		assertions.like('foo', 'bar');
+	}, {
+		assertion: 'like',
+		message: '`t.like()` selector must be a non-empty object',
+		values: [{label: 'Called with:', formatted: '\'bar\''}]
+	});
+
+	failsWith(t, () => {
+		const likePattern = {
+			a: 'a'
+		};
+		likePattern.circular = likePattern;
+
+		assertions.like({}, likePattern);
+	}, {
+		assertion: 'like',
+		message: '`t.like()` selector must not contain circular references',
+		values: [{label: 'Called with:', formatted: '{\n  a: \'a\',\n  circular: [Circular],\n}'}]
+	});
+
+	failsWith(t, () => {
+		assertions.like({}, {}, null);
+	}, {
+		assertion: 'like',
+		improperUsage: true,
+		message: 'The assertion message must be a string',
+		values: [{
+			label: 'Called with:',
+			formatted: /null/
+		}]
+	});
+
+	failsWith(t, () => {
+		assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'});
+	}, {
+		assertion: 'like',
+		message: '',
+		values: [{label: 'Difference:', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}]
 	});
 
 	t.end();
