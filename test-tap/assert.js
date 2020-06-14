@@ -842,22 +842,19 @@ test('.like()', t => {
 		});
 	});
 
-	// Passes(t, () => {
-	// 	const actual = {
-	// 		a: 'a',
-	// 		extra: 'irrelevant'
-	// 	};
+	passes(t, () => {
+		const actual = {
+			a: 'a',
+			extra: 'irrelevant'
+		};
+		actual.circular = actual;
 
-	// 	actual.circular = actual;
+		const likePattern = {
+			a: 'a'
+		};
 
-	// 	const likePattern = {
-	// 		a: 'a'
-	// 	};
-
-	// 	likePattern.circular = likePattern;
-
-	// 	assertions.like(actual, likePattern);
-	// });
+		assertions.like(actual, likePattern);
+	});
 
 	fails(t, () => {
 		const fnA = a => a;
@@ -874,29 +871,6 @@ test('.like()', t => {
 			fn: fnB
 		});
 	});
-
-	// Passes(t, () => {
-	// 	const x1 = {z: 4};
-	// 	const y1 = {x: x1};
-	// 	x1.y = y1;
-
-	// 	const x2 = {z: 4};
-	// 	const y2 = {x: x2};
-	// 	x2.y = y2;
-
-	// 	assertions.like(x1, x2);
-	// });
-
-	// passes(t, () => {
-	// 	function Foo(a) {
-	// 		this.a = a;
-	// 	}
-
-	// 	const x = new Foo(1);
-	// 	const y = new Foo(1);
-
-	// 	assertions.like(x, y);
-	// });
 
 	fails(t, () => {
 		function Foo(a) {
@@ -920,10 +894,6 @@ test('.like()', t => {
 	passes(t, () => {
 		assertions.like({a: 'a', b: 'b'}, {a: 'a'});
 	});
-
-	// Passes(t, () => {
-	// 	assertions.like(['a', 'b'], ['a', 'b']);
-	// });
 
 	passes(t, () => {
 		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
@@ -973,29 +943,26 @@ test('.like()', t => {
 		values: [{label: 'Called with:', formatted: '{}'}]
 	});
 
-	// FailsWith(t, () => {
-	// 	assertions.like('foo', 'bar');
-	// }, {
-	// 	assertion: 'like',
-	// 	message: '',
-	// 	values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}]
-	// });
+	failsWith(t, () => {
+		assertions.like('foo', 'bar');
+	}, {
+		assertion: 'like',
+		message: '`t.like()` selector must be a non-empty object',
+		values: [{label: 'Called with:', formatted: '\'bar\''}]
+	});
 
-	// failsWith(t, () => {
-	// 	assertions.like('foo', 42);
-	// }, {
-	// 	assertion: 'like',
-	// 	message: '',
-	// 	values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
-	// });
+	failsWith(t, () => {
+		const likePattern = {
+			a: 'a'
+		};
+		likePattern.circular = likePattern;
 
-	// failsWith(t, () => {
-	// 	assertions.like('foo', 42, 'my message');
-	// }, {
-	// 	assertion: 'like',
-	// 	message: 'my message',
-	// 	values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}]
-	// });
+		assertions.like({}, likePattern);
+	}, {
+		assertion: 'like',
+		message: '`t.like()` selector must not contain circular references',
+		values: [{label: 'Called with:', formatted: '{\n  a: \'a\',\n  circular: [Circular],\n}'}]
+	});
 
 	failsWith(t, () => {
 		assertions.like({}, {}, null);
