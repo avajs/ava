@@ -2,7 +2,10 @@
   "ava": {
     "files": [
       "*.js"
-    ]
+    ],
+    "nonSemVerExperiments": {
+      "likeAssertion": true
+    }
   },
   "dependencies": {
     "ava": "file:../../.."

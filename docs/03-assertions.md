@@ -215,6 +215,30 @@ Instead AVA derives a *comparable* object from `value`, based on the deeply-nest
 
 Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `value`.
 
+This is an experimental assertion for the time being. You need to enable it:
+
+**`package.json`**:
+
+```json
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"likeAssertion": true
+		}
+	}
+}
+```
+
+**`ava.config.js`**:
+
+```js
+export default {
+	nonSemVerExperiments: {
+		likeAssertion: true
+	}
+}
+```
+
 In the following example, the `map` property of `value` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
 
 ```js

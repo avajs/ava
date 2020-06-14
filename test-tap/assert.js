@@ -31,6 +31,9 @@ const assertions = new class extends assert.Assertions {
 				lastFailure = error;
 			},
 			skip: () => {},
+			experiments: {
+				likeAssertion: true
+			},
 			...overwrites
 		});
 	}

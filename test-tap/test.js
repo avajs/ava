@@ -648,7 +648,7 @@ test('log from tests', t => {
 
 test('assertions are bound', t => {
 	// This does not test .fail() and .snapshot(). It'll suffice.
-	return ava(a => {
+	return withExperiments({likeAssertion: true})(a => {
 		(a.plan)(14);
 		(a.pass)();
 		(a.is)(1, 1);
