@@ -237,67 +237,6 @@ test('handle falsy testing of objects', t => {
 	});
 });
 
-test('handle testing likeness of array values', t => {
-	const instance = ava(a => {
-		a.like({
-			array: ['foo', 'bar'],
-			extraArray: ['irrelevant'],
-			deep: {
-				array: ['foo', 'bar'],
-				extraArray: ['irrelevant']
-			}
-		}, {
-			array: ['foo', 'bar'],
-			deep: {
-				array: ['foo', 'bar']
-			}
-		});
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
-	});
-});
-
-test('handle testing likeness of objects', t => {
-	const instance = ava(a => {
-		a.like({
-			foo: 'foo',
-			extra: 'irrelevant',
-			deep: {
-				bar: 'bar',
-				extra: 'irrelevant'
-			}
-		}, {
-			foo: 'foo',
-			deep: {
-				bar: 'bar'
-			}
-		});
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
-	});
-});
-
-test('handle falsy testing of objects', t => {
-	const instance = ava(a => {
-		a.notDeepEqual({
-			foo: 'foo',
-			bar: 'bar'
-		}, {
-			foo: 'foo',
-			bar: 'bar',
-			cat: 'cake'
-		});
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
-	});
-});
-
 test('planned async assertion', t => {
 	const instance = ava.cb(a => {
 		a.plan(1);
