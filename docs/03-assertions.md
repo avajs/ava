@@ -203,13 +203,34 @@ Assert that `value` is not the same as `expected`. This is based on [`Object.is(
 
 Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
-### `.like(value, likePattern, message?)`
-
-Assert that `value` is like `likePattern`. Comparison is the same as in `.deepEqual()` except only paths present in the `likePattern` object are compared. All paths not in `likePattern` are ignored and can hold any value. Use this if you want to test for some keys and ignore the others.
-
 ### `.notDeepEqual(value, expected, message?)`
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
+
+### `.like(value, selector, message?)`
+
+Assert that `value` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
+
+Instead AVA derives a *comparable* object from `value`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
+
+Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `value`.
+
+In the following example, the `map` property of `value` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
+
+```js
+t.like({
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+		qux: 'quux'
+	}
+}, {
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+	}
+})
+```
 
 ### `.throws(fn, expectation?, message?)`
 
