@@ -37,7 +37,7 @@ exports.assert = (t, logFile, buffer) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
-	} catch (_) {}
+	} catch {}
 
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
 		fs.writeFileSync(logFile, buffer);
@@ -52,7 +52,7 @@ exports.assert = (t, logFile, buffer) => {
 		// Log the entire actual and expected values, so they can be diffed
 		// manually. TAP's diff output is really confusing in this situation.
 		console.dir({actual, expected});
-		t.fail('Output did not match expectation');
+		t.fail(`Output did not match expectation: ${logFile}`);
 	}
 };
 
@@ -88,7 +88,7 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
 		cacheEnabled: true,
-		experiments: {},
+		experiments: {likeAssertion: true},
 		match,
 		providers,
 		projectDir,

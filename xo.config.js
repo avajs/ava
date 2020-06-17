@@ -8,6 +8,7 @@ module.exports = {
 		'test-tap/fixture/report/edgecases/ast-syntax-error.js'
 	],
 	rules: {
+		'import/no-anonymous-default-export': 'off',
 		'import/no-unresolved': ['error', {commonjs: true}],
 		'no-use-extend-native/no-use-extend-native': 'off',
 		'@typescript-eslint/no-var-requires': 'off'

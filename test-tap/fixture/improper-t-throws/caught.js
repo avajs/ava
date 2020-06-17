@@ -3,7 +3,7 @@ const test = require('../../..');
 test('test', t => {
 	try {
 		t.throws(throwSync());
-	} catch (_) {}
+	} catch {}
 });
 
 function throwSync() {
