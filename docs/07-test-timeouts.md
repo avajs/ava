@@ -22,3 +22,12 @@ test('foo', t => {
 	// Write your assertions here
 });
 ```
+
+When timeouts are set of individual test, you can also provide an optional message.
+
+```js
+test('foo', t => {
+	t.timeout(100, 'test exceeds the expected time'); // 100 milliseconds
+	// Write your assertions here
+});
+```
