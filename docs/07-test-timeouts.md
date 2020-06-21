@@ -23,7 +23,7 @@ test('foo', t => {
 });
 ```
 
-When timeouts are set of individual test, you can also provide an optional message.
+When timeouts are set for individual tests, you can also provide an optional message.
 
 ```js
 test('foo', t => {
