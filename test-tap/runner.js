@@ -2,10 +2,8 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
-const path = require('path');
 const {test} = require('tap');
 const Runner = require('../lib/runner');
-const snapshotManager = require('../lib/snapshot-manager');
 
 const noop = () => {};
 
@@ -329,110 +327,6 @@ test('only test', t => {
 		});
 	}).then(() => {
 		t.strictDeepEqual(array, ['b']);
-	});
-});
-
-test('snapshots not updated when only test', async t => {
-	t.pass(2);
-
-	const baseDir = path.join(__dirname, 'fixture', 'snapshots');
-	const options = {
-		file: path.join(baseDir, 'test_only.js'),
-		projectDir: baseDir,
-		snapshotDir: baseDir
-	};
-	await promiseEnd(new Runner({
-		...options,
-		updateSnapshots: true,
-		recordNewSnapshots: true
-	}), runner => {
-		runner.chain('object', a => {
-			a.snapshot({foo: 'bar'});
-		});
-		runner.chain('primitive', a => {
-			a.snapshot('f');
-		});
-		runner.chain.after(() => {
-			runner.compareTestSnapshot({belongsTo: 'object'});
-			runner.saveSnapshotState();
-		});
-	});
-
-	return promiseEnd(new Runner({
-		...options,
-		updateSnapshots: true
-	}), runner => {
-		runner.chain.only('object', a => {
-			a.snapshot({g: 'bar'});
-		});
-		runner.chain('primitive', a => {
-			a.snapshot('f');
-		});
-		try {
-			runner.saveSnapshotState();
-		} catch (error) {
-			t.is(error.name, 'SnapshotError');
-		}
-	}).then(() => {
-		const snapshot = snapshotManager.load({
-			file: options.file,
-			fixedLocation: options.snapshotDir,
-			projectDir: options.projectDir
-		});
-		const comparison = snapshot.compare({belongsTo: 'object', index: 0, expected: {foo: 'bar'}});
-		t.is(true, comparison.pass);
-	});
-});
-
-test('snapshots not updated when tests skipped', async t => {
-	t.pass(2);
-
-	const baseDir = path.join(__dirname, 'fixture', 'snapshots');
-	const options = {
-		file: path.join(baseDir, 'test_only.js'),
-		projectDir: baseDir,
-		snapshotDir: baseDir
-	};
-	await promiseEnd(new Runner({
-		...options,
-		updateSnapshots: true,
-		recordNewSnapshots: true
-	}), runner => {
-		runner.chain('object', a => {
-			a.snapshot({foo: 'bar'});
-		});
-		runner.chain('primitive', a => {
-			a.snapshot('f');
-		});
-		runner.chain.after(() => {
-			runner.compareTestSnapshot({belongsTo: 'object'});
-			runner.saveSnapshotState();
-		});
-	});
-
-	return promiseEnd(new Runner({
-		...options,
-		updateSnapshots: true
-	}), runner => {
-		runner.chain('object', a => {
-			a.snapshot({g: 'bar'});
-		});
-		runner.chain.skip('primitive', a => {
-			a.snapshot('f');
-		});
-		try {
-			runner.saveSnapshotState();
-		} catch (error) {
-			t.is(error.name, 'SnapshotError');
-		}
-	}).then(() => {
-		const snapshot = snapshotManager.load({
-			file: options.file,
-			fixedLocation: options.snapshotDir,
-			projectDir: options.projectDir
-		});
-		const comparison = snapshot.compare({belongsTo: 'object', index: 0, expected: {foo: 'bar'}});
-		t.is(true, comparison.pass);
 	});
 });
 

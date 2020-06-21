@@ -18,6 +18,9 @@ exports.fixture = async (...args) => {
 	});
 
 	const stats = {
+		failed: [],
+		skipped: [],
+		unsavedSnapshots: [],
 		passed: []
 	};
 
@@ -27,9 +30,30 @@ exports.fixture = async (...args) => {
 		}
 
 		switch (message.type) {
+			case 'selected-test': {
+				if (message.skip) {
+					const {title, testFile} = message;
+					stats.skipped.push({title, file: path.posix.relative(cwd, testFile)});
+				}
+
+				break;
+			}
+
+			case 'snapshot-error': {
+				const {testFile} = message;
+				stats.unsavedSnapshots.push({file: path.posix.relative(cwd, testFile)});
+				break;
+			}
+
 			case 'test-passed': {
 				const {title, testFile} = message;
 				stats.passed.push({title, file: path.posix.relative(cwd, testFile)});
+				break;
+			}
+
+			case 'test-failed': {
+				const {title, testFile} = message;
+				stats.failed.push({title, file: path.posix.relative(cwd, testFile)});
 				break;
 			}
 
