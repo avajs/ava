@@ -760,6 +760,16 @@ test('timeout with custom message', t => {
 	});
 });
 
+test('timeout with invalid custom message fails', t => {
+	return ava(a => {
+		return a.throws(() => (
+			a.timeout(10, {})
+		), {message: 'Expected a string'});
+	}).run().then(result => {
+		t.is(result.passed, true);
+	});
+});
+
 test('teardown passing test', t => {
 	const teardown = sinon.spy();
 	return ava(a => {
