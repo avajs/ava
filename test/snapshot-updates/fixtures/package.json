@@ -1,0 +1,10 @@
+{
+  "ava": {
+    "files": [
+      "*.js"
+    ]
+  },
+  "dependencies": {
+    "ava": "file:../../.."
+  }
+}
