@@ -7,6 +7,8 @@ const execa = require('execa');
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
+const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
+
 exports.fixture = async (...args) => {
 	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
 	const running = execa.node(cliPath, args, {
@@ -33,7 +35,7 @@ exports.fixture = async (...args) => {
 			case 'selected-test': {
 				if (message.skip) {
 					const {title, testFile} = message;
-					stats.skipped.push({title, file: path.relative(cwd, testFile)});
+					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
 				}
 
 				break;
@@ -41,19 +43,19 @@ exports.fixture = async (...args) => {
 
 			case 'snapshot-error': {
 				const {testFile} = message;
-				stats.unsavedSnapshots.push({file: path.relative(cwd, testFile)});
+				stats.unsavedSnapshots.push({file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-passed': {
 				const {title, testFile} = message;
-				stats.passed.push({title, file: path.relative(cwd, testFile)});
+				stats.passed.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-failed': {
 				const {title, testFile} = message;
-				stats.failed.push({title, file: path.relative(cwd, testFile)});
+				stats.failed.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
