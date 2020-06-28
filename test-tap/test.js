@@ -750,26 +750,6 @@ test('timeout is refreshed on assert', t => {
 	});
 });
 
-test('timeout with custom message', t => {
-	return ava(a => {
-		a.timeout(10, 'time budget exceeded');
-		return delay(200);
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.match(result.error.message, /time budget exceeded/);
-	});
-});
-
-test('timeout with invalid custom message fails', t => {
-	return ava(a => {
-		return a.throws(() => (
-			a.timeout(10, {})
-		), {message: 'Expected a string'});
-	}).run().then(result => {
-		t.is(result.passed, true);
-	});
-});
-
 test('teardown passing test', t => {
 	const teardown = sinon.spy();
 	return ava(a => {

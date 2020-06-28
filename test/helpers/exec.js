@@ -19,11 +19,15 @@ exports.fixture = async (...args) => {
 		serialization
 	});
 
+	const errors = new WeakMap();
 	const stats = {
 		failed: [],
 		skipped: [],
 		unsavedSnapshots: [],
-		passed: []
+		passed: [],
+		getError(statObject) {
+			return errors.get(statObject);
+		}
 	};
 
 	running.on('message', message => {
@@ -55,7 +59,9 @@ exports.fixture = async (...args) => {
 
 			case 'test-failed': {
 				const {title, testFile} = message;
-				stats.failed.push({title, file: normalizePath(cwd, testFile)});
+				const statObject = {title, file: normalizePath(cwd, testFile)};
+				errors.set(statObject, message.err);
+				stats.failed.push(statObject);
 				break;
 			}
 
