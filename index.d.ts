@@ -352,7 +352,6 @@ export interface TimeoutFn {
 	/**
 	 * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
 	 * The timeout is reset each time an assertion is made.
-	 * Optional message useful to provide actionable, test specific feedback
 	 */
 	(ms: number, message?: string): void;
 }
