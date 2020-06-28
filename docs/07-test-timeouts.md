@@ -14,9 +14,9 @@ npx ava --timeout=2m # 2 minutes
 npx ava --timeout=100 # 100 milliseconds
 ```
 
-### `.timeout(ms, message?)`
+### `t.timeout(ms, message?)`
 
-Timeouts can also be set individiually for each test. A test will fail if the test is not completed after `ms`. These timeouts are reset each time an assertion is made.
+Timeouts can also be set individually for each test These timeouts are reset each time an assertion is made. The test fails if it takes more than `ms` for an assertion to be made or the test to complete.
 
 ```js
 test('foo', t => {
@@ -25,11 +25,11 @@ test('foo', t => {
 });
 ```
 
-An optional message string can also be provided to provide actionable, test specific feedback.
+An optional message string can be provided. This can be useful if your test depends on some other setup that may not have been completed:
 
 ```js
 test('foo', t => {
-	t.timeout(100, 'Test timed out. Review the ./foo implementation and ensure the retries/timeout configurations are set'); // 100 milliseconds
+	t.timeout(100, 'make sure database has started'); // 100 milliseconds
 	// Write your assertions here
 });
 ```
