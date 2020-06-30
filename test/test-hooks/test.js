@@ -7,7 +7,7 @@ test('snapshots cannot be used in hooks', async t => {
 	t.snapshot(result.stats.failedHooks, 'files where snapshots failed in hooks');
 });
 
-test('snapshots cannot be used in `t.try()`', async t => {
+test('`t.try()` cannot be used in hooks', async t => {
 	const result = await t.throwsAsync(exec.fixture('invalid-t-try-in-hooks.js'));
 
 	t.regex(result.stdout, /before hook/);
