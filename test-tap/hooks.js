@@ -4,7 +4,6 @@ require('../lib/worker/options').set({});
 
 const {test} = require('tap');
 const Runner = require('../lib/runner');
-const {newAva} = require('./helper/ava-test');
 
 const promiseEnd = (runner, next) => {
 	return new Promise(resolve => {
@@ -566,38 +565,4 @@ test('teardowns cannot be used in hooks', async t => {
 
 	t.ok(hookFailure);
 	t.match(hookFailure.err.message, /not allowed in hooks/);
-});
-
-test('snapshots cannot be used in hooks', async t => {
-	let hookFailure = null;
-	await promiseEnd(new Runner(), runner => {
-		runner.on('stateChange', evt => {
-			if (evt.type === 'hook-failed') {
-				hookFailure = evt;
-			}
-		});
-
-		runner.chain.before(a => {
-			a.snapshot({});
-		});
-
-		runner.chain('test', a => a.pass());
-	});
-
-	t.ok(hookFailure);
-	t.match(hookFailure.err.message, /not allowed in hooks/);
-});
-
-test('`t.try()` must not be called from hooks', async t => {
-	const ava = newAva();
-	const instance = ava.hook(async t => {
-		await t.try(tt => tt.pass());
-
-		t.pass();
-	});
-
-	const result = await instance.run();
-
-	t.notOk(result.passed);
-	t.match(result.error.savedError.message, /not allowed in hooks/);
 });

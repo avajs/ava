@@ -23,7 +23,8 @@ exports.fixture = async (...args) => {
 		failed: [],
 		skipped: [],
 		unsavedSnapshots: [],
-		passed: []
+		passed: [],
+		failedHooks: []
 	};
 
 	running.on('message', message => {
@@ -56,6 +57,12 @@ exports.fixture = async (...args) => {
 			case 'test-failed': {
 				const {title, testFile} = message;
 				stats.failed.push({title, file: normalizePath(cwd, testFile)});
+				break;
+			}
+
+			case 'hook-failed': {
+				const {title, testFile} = message;
+				stats.failedHooks.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
