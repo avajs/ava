@@ -57,7 +57,7 @@
 	"dependencies": {
 		"@concordance/react": "^2.0.0",
 		"acorn": "^7.3.1",
-		"acorn-walk": "^7.1.1",
+		"acorn-walk": "^7.2.0",
 		"ansi-styles": "^4.2.1",
 		"arrgv": "^1.0.2",
 		"arrify": "^2.0.1",
@@ -66,11 +66,11 @@
 		"chokidar": "^3.4.0",
 		"chunkd": "^2.0.1",
 		"ci-info": "^2.0.0",
-		"ci-parallel-vars": "^1.0.0",
+		"ci-parallel-vars": "^1.0.1",
 		"clean-yaml-object": "^0.1.0",
 		"cli-cursor": "^3.1.0",
 		"cli-truncate": "^2.1.0",
-		"code-excerpt": "^2.1.1",
+		"code-excerpt": "^3.0.0",
 		"common-path-prefix": "^3.0.0",
 		"concordance": "^5.0.0",
 		"convert-source-map": "^1.7.0",
@@ -85,7 +85,7 @@
 		"import-local": "^3.0.2",
 		"indent-string": "^4.0.0",
 		"is-error": "^2.2.2",
-		"is-plain-object": "^3.0.0",
+		"is-plain-object": "^3.0.1",
 		"is-promise": "^4.0.0",
 		"lodash": "^4.17.15",
 		"matcher": "^3.0.0",
@@ -109,12 +109,12 @@
 		"trim-off-newlines": "^1.0.1",
 		"update-notifier": "^4.1.0",
 		"write-file-atomic": "^3.0.3",
-		"yargs": "^15.3.1"
+		"yargs": "^15.4.0"
 	},
 	"devDependencies": {
 		"@ava/babel": "^1.0.1",
 		"@ava/test": "github:avajs/test",
-		"@babel/plugin-proposal-do-expressions": "^7.10.1",
+		"@babel/plugin-proposal-do-expressions": "^7.10.4",
 		"@sinonjs/fake-timers": "^6.0.1",
 		"ansi-escapes": "^4.3.1",
 		"c8": "^7.2.0",
@@ -133,9 +133,9 @@
 		"temp-write": "^4.0.0",
 		"tempy": "^0.5.0",
 		"touch": "^3.1.0",
-		"tsd": "^0.11.0",
-		"typescript": "^3.9.5",
-		"xo": "^0.32.0",
+		"tsd": "^0.13.1",
+		"typescript": "^3.9.6",
+		"xo": "^0.32.1",
 		"zen-observable": "^0.8.15"
 	}
 }
