@@ -9,6 +9,22 @@ const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
 
+const compareStatObjects = (a, b) => {
+	if (a.file < b.file) {
+		return -1;
+	}
+
+	if (a.file > b.file) {
+		return 1;
+	}
+
+	if (a.title < b.title) {
+		return -1;
+	}
+
+	return 1;
+};
+
 exports.fixture = async (...args) => {
 	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
 	const running = execa.node(cliPath, args, {
@@ -19,26 +35,33 @@ exports.fixture = async (...args) => {
 		serialization
 	});
 
+	// Besides buffering stderr, if this environment variable is set, also pipe
+	// to stderr. This can be useful when debugging the tests.
+	if (process.env.DEBUG_TEST_AVA) {
+		running.stderr.pipe(process.stderr);
+	}
+
 	const errors = new WeakMap();
 	const stats = {
 		failed: [],
-		skipped: [],
-		unsavedSnapshots: [],
 		passed: [],
+		skipped: [],
+		uncaughtExceptions: [],
+		unsavedSnapshots: [],
 		getError(statObject) {
 			return errors.get(statObject);
 		}
 	};
 
-	running.on('message', message => {
+	running.on('message', statusEvent => {
 		if (serialization === 'json') {
-			message = v8.deserialize(Uint8Array.from(message));
+			statusEvent = v8.deserialize(Uint8Array.from(statusEvent));
 		}
 
-		switch (message.type) {
+		switch (statusEvent.type) {
 			case 'selected-test': {
-				if (message.skip) {
-					const {title, testFile} = message;
+				if (statusEvent.skip) {
+					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
 				}
 
@@ -46,22 +69,28 @@ exports.fixture = async (...args) => {
 			}
 
 			case 'snapshot-error': {
-				const {testFile} = message;
+				const {testFile} = statusEvent;
 				stats.unsavedSnapshots.push({file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-passed': {
-				const {title, testFile} = message;
+				const {title, testFile} = statusEvent;
 				stats.passed.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
 			case 'test-failed': {
-				const {title, testFile} = message;
+				const {title, testFile} = statusEvent;
 				const statObject = {title, file: normalizePath(cwd, testFile)};
-				errors.set(statObject, message.err);
+				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
+				break;
+			}
+
+			case 'uncaught-exception': {
+				const {message, name, stack} = statusEvent.err;
+				stats.uncaughtExceptions.push({message, name, stack});
 				break;
 			}
 
@@ -78,20 +107,9 @@ exports.fixture = async (...args) => {
 	} catch (error) {
 		throw Object.assign(error, {stats});
 	} finally {
-		stats.passed.sort((a, b) => {
-			if (a.file < b.file) {
-				return -1;
-			}
-
-			if (a.file > b.file) {
-				return 1;
-			}
-
-			if (a.title < b.title) {
-				return -1;
-			}
-
-			return 1;
-		});
+		stats.failed.sort(compareStatObjects);
+		stats.passed.sort(compareStatObjects);
+		stats.skipped.sort(compareStatObjects);
+		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };
