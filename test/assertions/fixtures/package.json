@@ -6,8 +6,5 @@
     "nonSemVerExperiments": {
       "likeAssertion": true
     }
-  },
-  "dependencies": {
-    "ava": "file:../../.."
   }
 }

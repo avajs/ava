@@ -2,12 +2,9 @@
   "ava": {
     "files": [
       "*.js"
-		],
-		"nonSemVerExperiments": {
-			"disableSnapshotsInHooks": true
-		}
-  },
-  "dependencies": {
-    "ava": "file:../../.."
-	}
+    ],
+    "nonSemVerExperiments": {
+      "disableSnapshotsInHooks": true
+    }
+  }
 }
