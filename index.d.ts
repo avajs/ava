@@ -130,7 +130,7 @@ export interface DeepEqualAssertion {
 
 export interface LikeAssertion {
 	/** Assert that `value` is like `selector`. */
-	(value: any, selector: Record<string, unknown>, message?: string): void;
+	(value: any, selector: Record<string, any>, message?: string): void;
 
 	/** Skip this assertion. */
 	skip(value: any, selector: any, message?: string): void;

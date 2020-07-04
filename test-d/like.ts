@@ -13,5 +13,13 @@ test('like', t => {
 			baz: 'thud'
 		}
 	});
-});
 
+	type Foo = {
+		foo?: 'foo';
+		bar?: 'bar';
+	};
+
+	const foo: Foo = {bar: 'bar'};
+	const {foo: _, ...expected} = foo;
+	t.like({bar: 'bar'}, expected);
+});
