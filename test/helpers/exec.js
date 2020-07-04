@@ -44,6 +44,7 @@ exports.fixture = async (...args) => {
 	const errors = new WeakMap();
 	const stats = {
 		failed: [],
+		failedHooks: [],
 		passed: [],
 		skipped: [],
 		uncaughtExceptions: [],
@@ -59,6 +60,14 @@ exports.fixture = async (...args) => {
 		}
 
 		switch (statusEvent.type) {
+			case 'hook-failed': {
+				const {title, testFile} = statusEvent;
+				const statObject = {title, file: normalizePath(cwd, testFile)};
+				errors.set(statObject, statusEvent.err);
+				stats.failedHooks.push(statObject);
+				break;
+			}
+
 			case 'selected-test': {
 				if (statusEvent.skip) {
 					const {title, testFile} = statusEvent;
@@ -108,6 +117,7 @@ exports.fixture = async (...args) => {
 		throw Object.assign(error, {stats});
 	} finally {
 		stats.failed.sort(compareStatObjects);
+		stats.failedHooks.sort(compareStatObjects);
 		stats.passed.sort(compareStatObjects);
 		stats.skipped.sort(compareStatObjects);
 		stats.unsavedSnapshots.sort(compareStatObjects);
