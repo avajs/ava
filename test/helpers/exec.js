@@ -9,6 +9,22 @@ const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
 
+const compareStatObjects = (a, b) => {
+	if (a.file < b.file) {
+		return -1;
+	}
+
+	if (a.file > b.file) {
+		return 1;
+	}
+
+	if (a.title < b.title) {
+		return -1;
+	}
+
+	return 1;
+};
+
 exports.fixture = async (...args) => {
 	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
 	const running = execa.node(cliPath, args, {
@@ -28,10 +44,10 @@ exports.fixture = async (...args) => {
 	const errors = new WeakMap();
 	const stats = {
 		failed: [],
+		passed: [],
 		skipped: [],
 		uncaughtExceptions: [],
 		unsavedSnapshots: [],
-		passed: [],
 		getError(statObject) {
 			return errors.get(statObject);
 		}
@@ -91,20 +107,9 @@ exports.fixture = async (...args) => {
 	} catch (error) {
 		throw Object.assign(error, {stats});
 	} finally {
-		stats.passed.sort((a, b) => {
-			if (a.file < b.file) {
-				return -1;
-			}
-
-			if (a.file > b.file) {
-				return 1;
-			}
-
-			if (a.title < b.title) {
-				return -1;
-			}
-
-			return 1;
-		});
+		stats.failed.sort(compareStatObjects);
+		stats.passed.sort(compareStatObjects);
+		stats.skipped.sort(compareStatObjects);
+		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };
