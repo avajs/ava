@@ -60,19 +60,6 @@ function withExperiments(experiments = {}) {
 		});
 	};
 
-	ava.hook = (fn, contextRef) => {
-		return new Test({
-			contextRef: contextRef || new ContextRef(),
-			experiments,
-			failWithoutAssertions: true,
-			fn,
-			registerUniqueTitle,
-			metadata: {type: 'before', callback: false},
-			isHook: true,
-			title: 'before hook'
-		});
-	};
-
 	return ava;
 }
 
