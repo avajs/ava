@@ -37,6 +37,12 @@ exports.fixture = async (...args) => {
 		}
 
 		switch (message.type) {
+			case 'hook-failed': {
+				const {title, testFile} = message;
+				stats.failedHooks.push({title, file: normalizePath(cwd, testFile)});
+				break;
+			}
+
 			case 'selected-test': {
 				if (message.skip) {
 					const {title, testFile} = message;
@@ -63,12 +69,6 @@ exports.fixture = async (...args) => {
 				const statObject = {title, file: normalizePath(cwd, testFile)};
 				errors.set(statObject, message.err);
 				stats.failed.push(statObject);
-				break;
-			}
-
-			case 'hook-failed': {
-				const {title, testFile} = message;
-				stats.failedHooks.push({title, file: normalizePath(cwd, testFile)});
 				break;
 			}
 
