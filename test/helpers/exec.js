@@ -3,6 +3,7 @@ const v8 = require('v8');
 
 const test = require('@ava/test');
 const execa = require('execa');
+const defaultsDeep = require('lodash/defaultsDeep');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
@@ -25,15 +26,15 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
-exports.fixture = async (...args) => {
+exports.fixture = async (args, options = {}) => {
 	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
-	const running = execa.node(cliPath, args, {
+	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
 		},
 		cwd,
 		serialization
-	});
+	}, options));
 
 	// Besides buffering stderr, if this environment variable is set, also pipe
 	// to stderr. This can be useful when debugging the tests.
