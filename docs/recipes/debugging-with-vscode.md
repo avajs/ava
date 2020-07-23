@@ -19,11 +19,8 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
     "name": "Debug AVA test file",
     "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
     "runtimeArgs": [
-      "debug",
-      "--break",
       "${file}"
     ],
-    "port": 9229,
     "outputCapture": "std",
     "skipFiles": [
       "<node_internals>/**/*.js"
@@ -36,6 +33,13 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
 Open the file(s) you want to debug. You can set breakpoints or use the `debugger` keyword.
 
 Now, *with a test file open*, from the *Debug* menu run the *Debug AVA test file* configuration.
+
+## Debugging with the Debug Terminal
+
+You can use VS Code's "JavaScript Debug Terminal" to automatically debug Ava run on the command line.
+
+1. From the Command Pallete (F1, or Cmd/Ctrl+Shift+P), run `Debug: Create JavaScript Debug Terminal`
+1. Run `ava` in the terminal, or `npm run test`
 
 ## Debugging precompiled tests
 
@@ -51,11 +55,8 @@ Assuming the names of your test files are unique you could try the following con
   "name": "Debug AVA test file",
   "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
   "runtimeArgs": [
-    "debug",
-    "--break",
     "build/**/${fileBasenameNoExtension}.*"
   ],
-  "port": 9229,
   "outputCapture": "std",
   "skipFiles": [
     "<node_internals>/**/*.js"
@@ -74,12 +75,9 @@ By default AVA runs tests concurrently. This may complicate debugging. Add a con
   "name": "Debug AVA test file",
   "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
   "runtimeArgs": [
-    "debug",
-    "--break",
     "--serial",
     "${file}"
   ],
-  "port": 9229,
   "outputCapture": "std",
   "skipFiles": [
     "<node_internals>/**/*.js"
