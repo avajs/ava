@@ -34,12 +34,12 @@ Open the file(s) you want to debug. You can set breakpoints or use the `debugger
 
 Now, *with a test file open*, from the *Debug* menu run the *Debug AVA test file* configuration.
 
-## Debugging with the Debug Terminal
+## Debugging with the debug terminal
 
-You can use VS Code's "JavaScript Debug Terminal" to automatically debug Ava run on the command line.
+You can use VS Code's “JavaScript Debug Terminal” to automatically debug AVA run on the command-line.
 
-1. From the Command Pallete (F1, or Cmd/Ctrl+Shift+P), run `Debug: Create JavaScript Debug Terminal`
-1. Run `ava` in the terminal, or `npm run test`
+1. From the Command Palette (F1 or Cmd/Ctrl+Shift+P), run `Debug: Create JavaScript Debug Terminal`
+2. Run `ava` in the terminal or `npm run test`
 
 ## Debugging precompiled tests
 
