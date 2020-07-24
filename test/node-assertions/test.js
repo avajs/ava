@@ -15,7 +15,7 @@ test('node assertion failures are reported to the console when running in a term
 	const error = result.stats.getError(result.stats.failed[0]);
 
 	t.snapshot(error.message, 'error message');
-	t.snapshot(error.values, 'formatted values');
+	t.true(error.values.every(value => value.formatted.includes('AssertionError')));
 });
 
 test('node assertion failures are reported to the console when not running in a terminal', async t => {
@@ -23,5 +23,5 @@ test('node assertion failures are reported to the console when not running in a 
 	const error = result.stats.getError(result.stats.failed[0]);
 
 	t.snapshot(error.message, 'error message');
-	t.snapshot(error.values, 'formatted values');
+	t.true(error.values.every(value => value.formatted.includes('AssertionError')));
 });
