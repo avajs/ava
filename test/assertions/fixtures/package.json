@@ -2,9 +2,6 @@
   "ava": {
     "files": [
       "*.js"
-    ],
-    "nonSemVerExperiments": {
-      "likeAssertion": true
-    }
+    ]
   }
 }
