@@ -107,7 +107,7 @@
 		"make-dir": "^3.0.0",
 		"matcher": "^2.0.0",
 		"md5-hex": "^3.0.1",
-		"meow": "^7.0.1",
+		"meow": "^5.0.0",
 		"micromatch": "^4.0.2",
 		"ms": "^2.1.2",
 		"observable-to-promise": "^1.0.0",
