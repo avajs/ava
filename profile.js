@@ -89,7 +89,7 @@ if (conf.compileEnhancements) {
 const precompiled = {};
 precompiled[file] = _regexpFullExtensions.test(file) ? precompileFull(file) : precompileEnhancementsOnly(file);
 
-const opts = {
+const options = {
 	file,
 	projectDir,
 	failFast: cli.flags.failFast,
@@ -119,7 +119,7 @@ runStatus.observeWorker({
 			if (data && data.ava) {
 				const evt = data.ava;
 				if (evt.type === 'ready-for-options') {
-					process.emit('message', {ava: {type: 'options', options: opts}});
+					process.emit('message', {ava: {type: 'options', options}});
 				} else if (evt.type === 'ping') {
 					if (console.profileEnd) {
 						console.profileEnd();

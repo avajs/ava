@@ -94,8 +94,8 @@ test('test returned rejected promise', () => {
 });
 
 test('array of strings formatted', t => {
-	const arr = ['foo'];
-	t.true(arr);
+	const array = ['foo'];
+	t.true(array);
 });
 test('array of strings diff', t => {
 	t.deepEqual(['foo'], ['bar']);
@@ -183,10 +183,10 @@ if (formatGlobals) {
 }
 
 test('object formatted', t => {
-	const obj = {
+	const object = {
 		foo: 'bar'
 	};
-	t.true(obj);
+	t.true(object);
 });
 test('object diff', t => {
 	t.deepEqual({
@@ -197,19 +197,19 @@ test('object diff', t => {
 });
 test('object formatted, custom class', t => {
 	class Foo {}
-	const obj = new Foo();
-	t.true(obj);
+	const object = new Foo();
+	t.true(object);
 });
 test('object formatted, no constructor', t => {
 	class Foo {}
-	const obj = new Foo();
-	Object.defineProperty(obj, 'constructor', {});
-	t.true(obj);
+	const object = new Foo();
+	Object.defineProperty(object, 'constructor', {});
+	t.true(object);
 });
 test('object formatted, non-Object string tag that does not match constructor', t => {
 	class Foo extends Array {}
-	const obj = new Foo();
-	t.true(obj);
+	const object = new Foo();
+	t.true(object);
 });
 
 test('promise formatted', t => {
@@ -272,7 +272,7 @@ test('primitives', t => {
 		42,
 		Infinity,
 		-Infinity,
-		NaN,
+		Number.NaN,
 		'foo',
 		'foo\nbar',
 		Symbol.iterator,
@@ -284,9 +284,9 @@ test('primitives', t => {
 });
 
 test('circular references', t => {
-	const obj = {};
-	obj.circular = obj;
-	t.true(obj);
+	const object = {};
+	object.circular = object;
+	t.true(object);
 });
 
 test('react element, formatted', t => {

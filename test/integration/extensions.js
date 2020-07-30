@@ -16,7 +16,7 @@ test('errors if top-level extensions include "js" without babel=false', t => {
 	});
 });
 
-for (const [where, which, msg = '\'js\', \'jsx\''] of [
+for (const [where, which, message = '\'js\', \'jsx\''] of [
 	['top-level', 'top-level-duplicates'],
 	['babel', 'babel-duplicates'],
 	['top-level and babel', 'shared-duplicates', '\'jsx\'']
@@ -26,7 +26,7 @@ for (const [where, which, msg = '\'js\', \'jsx\''] of [
 			t.ok(err);
 
 			let expectedOutput = '\n';
-			expectedOutput += figures.cross + ` Unexpected duplicate extensions in options: ${msg}.`;
+			expectedOutput += figures.cross + ` Unexpected duplicate extensions in options: ${message}.`;
 			expectedOutput += '\n';
 
 			t.is(stderr, expectedOutput);

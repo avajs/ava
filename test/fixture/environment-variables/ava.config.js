@@ -1,5 +1,5 @@
 const config = require('.');
-
-export default {
+const avaConfig = {
 	environmentVariables: {[config.name]: config.value}
 };
+export default avaConfig;

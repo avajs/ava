@@ -36,7 +36,7 @@ exports.assert = (t, logFile, buffer) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
-	} catch (_) {}
+	} catch (_) {} // eslint-disable-line unicorn/prefer-optional-catch-binding
 
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
 		fs.writeFileSync(logFile, buffer);
@@ -56,13 +56,13 @@ exports.assert = (t, logFile, buffer) => {
 };
 
 exports.sanitizers = {
-	cwd: str => replaceString(str, process.cwd(), '~'),
-	experimentalWarning: str => str.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
-	lineEndings: str => replaceString(str, '\r\n', '\n'),
-	posix: str => replaceString(str, '\\', '/'),
-	slow: str => str.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
-	timeout: str => replaceString(str, 'Timeout._onTimeout', 'Timeout.setTimeout'),
-	version: str => replaceString(str, `v${pkg.version}`, 'v1.0.0-beta.5.1')
+	cwd: string => replaceString(string, process.cwd(), '~'),
+	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
+	lineEndings: string => replaceString(string, '\r\n', '\n'),
+	posix: string => replaceString(string, '\\', '/'),
+	slow: string => string.replace(/(slow.+?)\(\d+m?s\)/g, '$1 (000ms)'),
+	timeout: string => replaceString(string, 'Timeout._onTimeout', 'Timeout.setTimeout'),
+	version: string => replaceString(string, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 
 const run = (type, reporter, match = []) => {

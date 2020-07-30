@@ -1,5 +1,6 @@
-export default {
+const unsupportedExperiments = {
 	nonSemVerExperiments: {
 		unsupported: true
 	}
 };
+export default unsupportedExperiments;

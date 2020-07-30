@@ -28,7 +28,7 @@ test('timeout', t => {
 // });
 
 test('Should throw error if passed file does not exist', t => {
-	execCli('no-such-file.js', (err, e, stdout) => {
+	execCli('no-such-file.js', (err, _, stdout) => {
 		t.ok(err);
 		t.match(stdout, /no-such-file\.js does not exist\./);
 		t.end();
@@ -36,7 +36,7 @@ test('Should throw error if passed file does not exist', t => {
 });
 
 test('Should throw error if passed file is a directory', t => {
-	execCli('ava-paths', (err, e, stdout) => {
+	execCli('ava-paths', (err, _, stdout) => {
 		t.ok(err);
 		t.match(stdout, /ava-paths is not a test file\./);
 		t.end();

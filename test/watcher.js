@@ -51,8 +51,8 @@ group('chokidar', (beforeEach, test, group) => {
 	let files;
 	let defaultApiOptions;
 
-	function proxyWatcher(opts) {
-		return proxyquire.noCallThru().load('../lib/watcher', opts ||
+	function proxyWatcher(options) {
+		return proxyquire.noCallThru().load('../lib/watcher', options ||
 			{
 				chokidar,
 				debug(name) {

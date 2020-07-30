@@ -1,4 +1,4 @@
-export default {
+const avaConfig = {
 	babel: {
 		extensions: ['bar']
 	},
@@ -6,3 +6,4 @@ export default {
 	helpers: ['build/helpers/*'],
 	sources: ['src/**/*']
 };
+export default avaConfig;

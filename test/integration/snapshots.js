@@ -12,14 +12,14 @@ const overrideCIChecks = {
 	CONTINUOUS_INTEGRATION: ''
 };
 
-for (const obj of [
+for (const object of [
 	{type: 'colocated', rel: '', dir: ''},
 	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
 	{type: 'test', rel: 'test-dir', dir: 'test/snapshots'},
 	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'}
 ]) {
-	test(`snapshots work (${obj.type})`, t => {
-		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', obj.rel, obj.dir, 'test.js.snap');
+	test(`snapshots work (${object.type})`, t => {
+		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', object.rel, object.dir, 'test.js.snap');
 		try {
 			fs.unlinkSync(snapPath);
 		} catch (error) {
@@ -28,7 +28,7 @@ for (const obj of [
 			}
 		}
 
-		const dirname = path.join('fixture/snapshots', obj.rel);
+		const dirname = path.join('fixture/snapshots', object.rel);
 		// Test should pass, and a snapshot gets written
 		execCli(['--update-snapshots', '--verbose'], {dirname, env: overrideCIChecks}, error => {
 			t.ifError(error);
@@ -151,7 +151,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 				path.join(snapPath, 'test.ts.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []);
+		.reduce((a, b) => a.concat(b), []); // eslint-disable-line unicorn/no-reduce
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
@@ -192,7 +192,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 				path.join(snapPath, 'test.js.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []);
+		.reduce((a, b) => a.concat(b), []); // eslint-disable-line unicorn/no-reduce
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);

@@ -1,3 +1,4 @@
-export default {
+const noObjectExperiments = {
 	nonSemVerExperiments: []
 };
+export default noObjectExperiments;

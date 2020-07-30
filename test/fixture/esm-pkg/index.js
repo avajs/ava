@@ -1,1 +1,2 @@
-export default 'foo';
+const esmPkg = 'foo';
+export default esmPkg;

@@ -5,7 +5,7 @@ test('foo', t => {
 	// is a Node.js 10 feature
 	try {
 		throw new Error('test');
-	} catch {
+	} catch (_) { // eslint-disable-line unicorn/prefer-optional-catch-binding
 		t.pass();
 	}
 });

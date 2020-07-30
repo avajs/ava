@@ -23,8 +23,8 @@ const assertions = new class extends assert.Assertions {
 			pending: promise => {
 				promise.then(() => {
 					lastPassed = true;
-				}, err => {
-					lastFailure = err;
+				}, error => {
+					lastFailure = error;
 				});
 			},
 			fail: error => {
@@ -259,11 +259,11 @@ test('.is()', t => {
 	});
 
 	passes(t, () => {
-		assertions.is(NaN, NaN);
+		assertions.is(Number.NaN, Number.NaN);
 	});
 
 	passes(t, () => {
-		assertions.is(0 / 0, NaN);
+		assertions.is(0 / 0, Number.NaN);
 	});
 
 	passes(t, () => {
@@ -322,11 +322,11 @@ test('.is()', t => {
 	});
 
 	fails(t, () => {
-		assertions.is(0, NaN);
+		assertions.is(0, Number.NaN);
 	});
 
 	fails(t, () => {
-		assertions.is('foo', NaN);
+		assertions.is('foo', Number.NaN);
 	});
 
 	failsWith(t, () => {
@@ -421,11 +421,11 @@ test('.not()', t => {
 	});
 
 	fails(t, () => {
-		assertions.not(NaN, NaN);
+		assertions.not(Number.NaN, Number.NaN);
 	});
 
 	fails(t, () => {
-		assertions.not(0 / 0, NaN);
+		assertions.not(0 / 0, Number.NaN);
 	});
 
 	failsWith(t, () => {
@@ -757,7 +757,7 @@ test('.notDeepEqual()', t => {
 		expected,
 		message: '',
 		raw: {actual, expected},
-		values: [{label: 'Value is deeply equal:', formatted: /.*\{.*\n.*a: 'a'/}]
+		values: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}]
 	});
 
 	failsWith(t, () => {
@@ -890,10 +890,10 @@ test('.throws()', gather(t => {
 
 	// Fails because the thrown value is not an error
 	fails(t, () => {
-		const obj = {};
+		const object = {};
 		assertions.throws(() => {
-			throw obj;
-		}, {is: obj});
+			throw object;
+		}, {is: object});
 	});
 
 	// Fails because the thrown value is not the right one
@@ -1145,7 +1145,7 @@ test('.throws() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throws',
 		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	failsWith(t, () => {
@@ -1153,7 +1153,7 @@ test('.throws() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throws',
 		message: 'The second argument to `t.throws()` must be a function, string, regular expression, expectation object or `null`',
-		values: [{label: 'Called with:', formatted: /\[\]/}]
+		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
 	failsWith(t, () => {
@@ -1213,7 +1213,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` must be a function, string, regular expression, expectation object or `null`',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	failsWith(t, () => {
@@ -1221,7 +1221,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	}, {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` must be a function, string, regular expression, expectation object or `null`',
-		values: [{label: 'Called with:', formatted: /\[\]/}]
+		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
 	failsWith(t, () => {
@@ -1832,7 +1832,7 @@ test('.regex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	t.end();
@@ -1899,7 +1899,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /\{\}/}]
+		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
 	t.end();

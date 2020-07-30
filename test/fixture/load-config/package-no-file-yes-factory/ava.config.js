@@ -1,5 +1,7 @@
-export default ({projectDir}) => {
+const packageNoFileYesFactory = ({projectDir}) => {
 	return {
 		files: projectDir
 	};
 };
+
+export default packageNoFileYesFactory;

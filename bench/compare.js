@@ -14,7 +14,7 @@ let files = fs.readdirSync(path.join(__dirname, '.results'))
 	.sort((fileA, fileB) => fileB['.time'] - fileA['.time']);
 
 function average(data) {
-	const sum = data.reduce((sum, value) => sum + value, 0);
+	const sum = data.reduce((sum, value) => sum + value, 0); // eslint-disable-line unicorn/no-reduce
 	const avg = sum / data.length;
 	return avg;
 }
@@ -40,9 +40,9 @@ function prepStats(times) {
 		.sort((timeA, timeB) => timeA - timeB);
 
 	// Remove fastest and slowest
-	times = times.slice(1, times.length - 1);
+	times = times.slice(1, -1);
 
-	const sum = times.reduce((a, b) => a + b, 0);
+	const sum = times.reduce((a, b) => a + b, 0); // eslint-disable-line unicorn/no-reduce
 
 	return {
 		mean: Math.round((sum / times.length) * 1000) / 1000,
@@ -75,11 +75,11 @@ table.push(
 			hAlign: 'center'
 		};
 	})),
-	stats.reduce(arr => arr.concat(fileNames), ['args'])
+	stats.reduce(array => array.concat(fileNames), ['args']) // eslint-disable-line unicorn/no-reduce
 );
 
 for (const key of Object.keys(results)) {
-	table.push(stats.reduce((arr, stat) => {
+	table.push(stats.reduce((array, stat) => { // eslint-disable-line unicorn/no-reduce
 		let min = Infinity;
 		let max = -Infinity;
 
@@ -96,7 +96,7 @@ for (const key of Object.keys(results)) {
 			return '';
 		});
 
-		return arr.concat(statGroup.map(stat => {
+		return array.concat(statGroup.map(stat => {
 			if (stat === min) {
 				return chalk.green(stat);
 			}

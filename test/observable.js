@@ -4,7 +4,7 @@ require('../lib/worker/options').set({});
 
 const {test} = require('tap');
 const Test = require('../lib/test');
-const Observable = require('zen-observable'); // eslint-disable-line import/order
+const Observable = require('zen-observable');
 
 function ava(fn) {
 	return new Test({

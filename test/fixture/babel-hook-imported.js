@@ -1,1 +1,2 @@
-export default () => {};
+const babelHookImported = () => {};
+export default babelHookImported;

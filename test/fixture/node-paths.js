@@ -1,5 +1,5 @@
-import foo from 'nested/foo'; // eslint-disable-line import/no-unresolved
-import bar from 'the-path/bar'; // eslint-disable-line import/no-unresolved
+import foo from 'nested/foo';
+import bar from 'the-path/bar';
 import test from '../..';
 
 test('relative require', t => {

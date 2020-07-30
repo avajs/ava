@@ -673,12 +673,12 @@ test('emits dependencies for test files', t => {
 		require: [path.resolve('test/fixture/with-dependencies/require-custom.js')]
 	});
 
-	const testFiles = [
+	const testFiles = new Set([
 		path.resolve('test/fixture/with-dependencies/no-tests.js'),
 		path.resolve('test/fixture/with-dependencies/test.js'),
 		path.resolve('test/fixture/with-dependencies/test-failure.js'),
 		path.resolve('test/fixture/with-dependencies/test-uncaught-exception.js')
-	];
+	]);
 
 	const sourceFiles = [
 		path.resolve('test/fixture/with-dependencies/dep-1.js'),
@@ -689,7 +689,7 @@ test('emits dependencies for test files', t => {
 	api.on('run', plan => {
 		plan.status.on('stateChange', evt => {
 			if (evt.type === 'dependencies') {
-				t.true(testFiles.includes(evt.testFile));
+				t.true(testFiles.has(evt.testFile));
 				t.strictDeepEqual(evt.dependencies.slice(-3), sourceFiles);
 			}
 		});

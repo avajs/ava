@@ -1,4 +1,4 @@
-import {default as test, meta} from '../..';
+import test, {meta} from '../..';
 
 test('meta.file', t => {
 	t.is(meta.file, __filename);

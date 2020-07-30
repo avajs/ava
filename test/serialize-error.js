@@ -19,7 +19,7 @@ const serialize = error => serializeError('Test', true, error);
 // Needed to test stack traces from source map fixtures.
 sourceMapSupport.install({environment: 'node'});
 
-const makeTempDir = () => {
+const makeTemporaryDir = () => {
 	if (process.platform !== 'win32') {
 		return uniqueTempDir({create: true});
 	}
@@ -78,16 +78,16 @@ test('source file is an absolute path, after source map correction, even if alre
 	const fixture = sourceMapFixtures.mapFile('throws');
 	const map = JSON.parse(fs.readFileSync(fixture.file + '.map'));
 
-	const tmp = makeTempDir();
-	const sourceRoot = path.join(tmp, 'src');
+	const temporary = makeTemporaryDir();
+	const sourceRoot = path.join(temporary, 'src');
 	const expectedSourceFile = path.join(sourceRoot, map.file);
 
-	const tmpFile = path.join(tmp, path.basename(fixture.file));
-	fs.writeFileSync(tmpFile, fs.readFileSync(fixture.file));
-	fs.writeFileSync(tmpFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
+	const temporaryFile = path.join(temporary, path.basename(fixture.file));
+	fs.writeFileSync(temporaryFile, fs.readFileSync(fixture.file));
+	fs.writeFileSync(temporaryFile + '.map', JSON.stringify(Object.assign(map, {sourceRoot}), null, 2));
 
 	try {
-		require(tmpFile).run();
+		require(temporaryFile).run();
 		t.fail('Fixture should have thrown');
 	} catch (error) {
 		const serializedError = serialize(error);
@@ -101,8 +101,8 @@ test('determines whether source file is within the project', t => {
 	try {
 		require(file)();
 		t.fail('Should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, file);
 		t.is(serializedError.source.isWithinProject, false);
 	}
@@ -119,8 +119,8 @@ test('determines whether source file, if within the project, is a dependency', t
 	try {
 		fixture.require().run();
 		t.fail('Fixture should have thrown');
-	} catch (error2) {
-		const serializedError = serialize(error2);
+	} catch (error_) {
+		const serializedError = serialize(error_);
 		t.is(serializedError.source.file, fixture.sourceFile);
 		t.is(serializedError.source.isWithinProject, true);
 		t.is(serializedError.source.isDependency, true);

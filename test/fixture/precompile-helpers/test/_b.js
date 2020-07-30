@@ -1,1 +1,2 @@
-export default async function () {}
+const testB = async function () {};
+export default testB;
