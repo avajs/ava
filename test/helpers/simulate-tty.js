@@ -27,6 +27,10 @@ const simulateTTY = (stream, colorDepth, hasColors) => {
 	if (hasColors) {
 		stream.hasColors = makeHasColors(colorDepth);
 	}
+
+	stream.clearLine = tty.WriteStream.prototype.clearLine;
+	stream.cursorTo = tty.WriteStream.prototype.cursorTo;
+	stream.moveCursor = tty.WriteStream.prototype.moveCursor;
 };
 
 // The execCli helper spawns tests in a child process. This means that stdout is

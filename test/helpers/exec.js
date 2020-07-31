@@ -6,6 +6,8 @@ const execa = require('execa');
 const defaultsDeep = require('lodash/defaultsDeep');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
+const ttySimulator = path.join(__dirname, './simulate-tty.js');
+
 const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
@@ -33,7 +35,8 @@ exports.fixture = async (args, options = {}) => {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
 		},
 		cwd,
-		serialization
+		serialization,
+		nodeOptions: ['--require', ttySimulator]
 	}, options));
 
 	// Besides buffering stderr, if this environment variable is set, also pipe
