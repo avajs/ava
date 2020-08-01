@@ -14,7 +14,6 @@ test('node assertion failures are reported to the console when running in a term
 	const result = await t.throwsAsync(exec.fixture(['assert-failure.js'], options));
 	const error = result.stats.getError(result.stats.failed[0]);
 
-	t.snapshot(error.message, 'error message');
 	t.true(error.values.every(value => value.formatted.includes('AssertionError')));
 });
 
@@ -22,6 +21,5 @@ test('node assertion failures are reported to the console when not running in a 
 	const result = await t.throwsAsync(exec.fixture(['assert-failure.js']));
 	const error = result.stats.getError(result.stats.failed[0]);
 
-	t.snapshot(error.message, 'error message');
 	t.true(error.values.every(value => value.formatted.includes('AssertionError')));
 });
