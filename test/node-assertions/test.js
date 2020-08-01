@@ -1,10 +1,11 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
 
-// The AssertionError constructor in Node 10 depends on the TTY interface
 test('node assertion failures are reported to the console when running in a terminal', async t => {
 	const options = {
 		env: {
+			// The AssertionError constructor in Node.js 10 depends on the TTY interface, so opt-in
+			// to it being simulated.
 			AVA_SIMULATE_TTY: true,
 			AVA_TTY_COLOR_DEPTH: 8,
 			AVA_TTY_HAS_COLORS: typeof process.stderr.hasColors === 'function'
