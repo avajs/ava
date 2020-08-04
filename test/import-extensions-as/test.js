@@ -34,8 +34,12 @@ const propertiesToSnapshot = [
 ];
 
 test('load js, cjs, and mjs extensions when set to true', async t => {
-	const result = await exec.fixture(['--config', 'ava-std.config.js']);
-	t.snapshot(pickProperties(propertiesToSnapshot, result), 'standard node extensions');
+	if (process.versions.node < '12.0.0') {
+		t.pass();
+	} else {
+		const result = await exec.fixture(['--config', 'ava-std.config.js']);
+		t.snapshot(pickProperties(propertiesToSnapshot, result), 'standard node extensions');
+	}
 });
 
 test('cannot configure how js, cjs, and mjs extensions should be loaded', async t => {
