@@ -59,3 +59,8 @@ test('load custom extension as commonjs', async t => {
 	const result = await exec.fixture(['--config', 'ava-ts.config.js']);
 	t.snapshot(pickProperties(propertiesToSnapshot, result), 'ts extension');
 });
+
+test('cannot load custom extension when not set to "commonjs" or "module"', async t => {
+	const result = await t.throwsAsync(exec.fixture(['--config', 'ava-ts-err.config.js']));
+	t.snapshot(pickProperties(propertiesToSnapshot, result), 'ts not set as ("commonjs" | "module")');
+});
