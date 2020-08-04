@@ -5,7 +5,7 @@ const assertHasColorsArguments = count => {
 	tty.WriteStream.prototype.hasColors(count);
 };
 
-const makeHasColors = colorDepth => (count = 16, env = undefined) => {
+const makeHasColors = colorDepth => (count = 16, env) => { // eslint-disable-line default-param-last
 	// `count` is optional too, so make sure it's not an env object.
 	if (env === undefined && typeof count === 'object' && count !== null) {
 		count = 16;
@@ -15,7 +15,7 @@ const makeHasColors = colorDepth => (count = 16, env = undefined) => {
 	return count <= 2 ** colorDepth;
 };
 
-const simulateTTY = (stream, colorDepth, hasColors) => {
+const simulateTTY = (stream, colorDepth) => {
 	stream.isTTY = true;
 	stream.columns = 80;
 	stream.rows = 24;
@@ -24,9 +24,10 @@ const simulateTTY = (stream, colorDepth, hasColors) => {
 		stream.getColorDepth = () => colorDepth;
 	}
 
-	if (hasColors) {
-		stream.hasColors = makeHasColors(colorDepth);
-	}
+	stream.hasColors = makeHasColors(colorDepth);
+	stream.clearLine = tty.WriteStream.prototype.clearLine;
+	stream.cursorTo = tty.WriteStream.prototype.cursorTo;
+	stream.moveCursor = tty.WriteStream.prototype.moveCursor;
 };
 
 // The execCli helper spawns tests in a child process. This means that stdout is
@@ -36,8 +37,7 @@ if (process.env.AVA_SIMULATE_TTY) {
 	const colorDepth = process.env.AVA_TTY_COLOR_DEPTH ?
 		Number.parseInt(process.env.AVA_TTY_COLOR_DEPTH, 10) :
 		undefined;
-	const hasColors = process.env.AVA_TTY_HAS_COLORS !== undefined;
 
-	simulateTTY(process.stderr, colorDepth, hasColors);
-	simulateTTY(process.stdout, colorDepth, hasColors);
+	simulateTTY(process.stderr, colorDepth);
+	simulateTTY(process.stdout, colorDepth);
 }
