@@ -211,9 +211,9 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Team
 
-[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) | [![Vadim Demedes](https://github.com/vadimdemedes.png?size=100)](https://github.com/vadimdemedes)
----|---|---
-[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](https://sindresorhus.com) | [Vadim Demedes](https://github.com/vadimdemedes)
+[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus)
+---|---
+[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](https://sindresorhus.com)
 
 ###### Former
 
@@ -221,6 +221,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [James Talmage](https://github.com/jamestalmage)
 - [Juan Soto](https://github.com/sotojuan)
 - [Jeroen Engels](https://github.com/jfmengels)
+- [Vadim Demedes](https://github.com/vadimdemedes)
 
 
 <div align="center">
