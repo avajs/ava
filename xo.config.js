@@ -44,7 +44,7 @@ module.exports = {
 			}
 		},
 		{
-			files: ['test-tap/fixture/**/*.js', 'test/**/fixtures/**/*.{ts,js,cjs,mjs}'],
+			files: ['test-tap/fixture/**', 'test/**/fixtures/**'],
 			rules: {
 				'import/no-extraneous-dependencies': 'off'
 			}
