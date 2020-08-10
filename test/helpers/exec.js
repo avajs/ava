@@ -28,8 +28,10 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
+exports.cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+
 exports.fixture = async (args, options = {}) => {
-	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
+	const cwd = options.cwd || exports.cwd();
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
@@ -51,6 +53,7 @@ exports.fixture = async (args, options = {}) => {
 		failedHooks: [],
 		passed: [],
 		skipped: [],
+		todo: [],
 		uncaughtExceptions: [],
 		unsavedSnapshots: [],
 		getError(statObject) {
@@ -76,6 +79,11 @@ exports.fixture = async (args, options = {}) => {
 				if (statusEvent.skip) {
 					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
+				}
+
+				if (statusEvent.todo) {
+					const {title, testFile} = statusEvent;
+					stats.todo.push({title, file: normalizePath(cwd, testFile)});
 				}
 
 				break;
@@ -124,6 +132,7 @@ exports.fixture = async (args, options = {}) => {
 		stats.failedHooks.sort(compareStatObjects);
 		stats.passed.sort(compareStatObjects);
 		stats.skipped.sort(compareStatObjects);
+		stats.todo.sort(compareStatObjects);
 		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };
