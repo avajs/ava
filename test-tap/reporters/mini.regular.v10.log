@@ -515,13 +515,13 @@
 
   [90muncaught-exception.js:5[39m
 
-   [90m4:[39m   setTimeout(() => {                  
+   [90m4:[39m   setImmediate(() => {                
   [41m 5:     throw new Error('Can’t catch me');[49m
    [90m6:[39m   });                                 
 
   Error: Can’t catch me
 
-  [90m› Timeout.setTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
+  [90m› Immediate.setImmediate (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
 
 
 
