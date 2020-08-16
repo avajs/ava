@@ -296,10 +296,11 @@ not ok 25 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
-    at: |-
-      Timeout._onTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)
-      listOnTimeout (internal/timers.js:549:17)
-      processTimers (internal/timers.js:492:7)
+    at: >-
+      Immediate.<anonymous>
+      (test-tap/fixture/report/regular/uncaught-exception.js:5:9)
+
+      processImmediate (internal/timers.js:456:21)
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1
