@@ -323,7 +323,9 @@ not ok 25 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
-    at: 'Timeout.setTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)'
+    at: >-
+      Immediate.setImmediate
+      (test-tap/fixture/report/regular/uncaught-exception.js:5:9)
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1

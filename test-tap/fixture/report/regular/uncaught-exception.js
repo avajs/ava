@@ -1,7 +1,7 @@
 const test = require('../../../..');
 
 test('passes', t => {
-	setTimeout(() => {
+	setImmediate(() => {
 		throw new Error('Can’t catch me');
 	});
 	t.pass();
