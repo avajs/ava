@@ -213,6 +213,25 @@ export default {
 };
 ```
 
+You can opt in to the new `extensions` option defined as an `object` by specifying `configurableModuleFormat`. This mode allows you to specify how different extensions should be loaded.
+
+Standard extensions (`js`, `cjs`, and `mjs`) can **only** be enabled using `true`, other extensions can be configured either as `"commonjs"` or `"module"`.
+
+`ava.config.js`:
+```js
+export default {
+	nonSemVerExperiments: {
+		configurableModuleFormat: true
+	},
+	extensions: {
+		js: true,
+		ts: 'commonjs'
+	}
+};
+```
+
+_Note: Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders)._
+
 ## Node arguments
 
 The `nodeArguments` configuration may be used to specify additional arguments for launching worker processes. These are combined with `--node-arguments` passed on the CLI and any arguments passed to the `node` binary when starting AVA.
