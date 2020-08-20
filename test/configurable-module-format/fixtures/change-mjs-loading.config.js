@@ -3,6 +3,6 @@ export default {
 		mjs: 'commonjs'
 	},
 	nonSemVerExperiments: {
-		configurableFileLoading: true
+		configurableModuleFormat: true
 	}
 };

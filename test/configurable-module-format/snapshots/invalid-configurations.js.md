@@ -1,4 +1,4 @@
-# Snapshot report for `test/configurable-file-loading/invalid-configurations.js`
+# Snapshot report for `test/configurable-module-format/invalid-configurations.js`
 
 The actual snapshot is saved in `invalid-configurations.js.snap`.
 

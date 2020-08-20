@@ -4,6 +4,6 @@ export default {
 		ts: 'commonjs'
 	},
 	nonSemVerExperiments: {
-		configurableFileLoading: true
+		configurableModuleFormat: true
 	}
 };

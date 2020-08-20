@@ -1,9 +1,8 @@
 export default {
 	extensions: {
-		js: true,
-		ts: 'cjs'
+		cjs: 'module'
 	},
 	nonSemVerExperiments: {
-		configurableFileLoading: true
+		configurableModuleFormat: true
 	}
 };

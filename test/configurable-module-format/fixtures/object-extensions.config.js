@@ -5,6 +5,6 @@ export default {
 		mjs: true
 	},
 	nonSemVerExperiments: {
-		configurableFileLoading: true
+		configurableModuleFormat: true
 	}
 };
