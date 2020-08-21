@@ -12,26 +12,26 @@ const snapshotManager = require('../lib/snapshot-manager');
 const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
-let lastPassed = false;
 
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
-			pass: () => {
-				lastPassed = true;
-			},
+			pass: () => true,
 			pending: promise => {
-				promise.then(() => {
-					lastPassed = true;
-				}, error => {
+				return promise.then(() =>
+					true
+				, error => {
 					lastFailure = error;
 				});
 			},
 			fail: error => {
 				lastFailure = error;
+				return false;
 			},
 			skip: () => {},
-			experiments: {},
+			experiments: {
+				likeAssertion: true
+			},
 			...overwrites
 		});
 	}
@@ -144,10 +144,8 @@ function eventuallyFails(t, fn) {
 */
 
 function passes(t, fn) {
-	lastPassed = false;
 	lastFailure = null;
-	fn();
-	if (lastPassed) {
+	if (fn()) {
 		t.pass();
 	} else {
 		t.ifError(lastFailure, 'Expected assertion to pass');
@@ -156,10 +154,9 @@ function passes(t, fn) {
 
 function eventuallyPasses(t, fn) {
 	return add(() => {
-		lastPassed = false;
 		lastFailure = null;
-		return fn().then(() => {
-			if (lastPassed) {
+		return fn().then(passed => {
+			if (passed) {
 				t.pass();
 			} else {
 				t.ifError(lastFailure, 'Expected assertion to pass');
@@ -170,12 +167,12 @@ function eventuallyPasses(t, fn) {
 
 test('.pass()', t => {
 	passes(t, () => {
-		assertions.pass();
+		return assertions.pass();
 	});
 
 	passes(t, () => {
 		const {pass} = assertions;
-		pass();
+		return pass();
 	});
 
 	t.end();
@@ -183,14 +180,14 @@ test('.pass()', t => {
 
 test('.fail()', t => {
 	failsWith(t, () => {
-		assertions.fail();
+		return assertions.fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		assertions.fail('my message');
+		return assertions.fail('my message');
 	}, {
 		assertion: 'fail',
 		message: 'my message'
@@ -198,14 +195,14 @@ test('.fail()', t => {
 
 	failsWith(t, () => {
 		const {fail} = assertions;
-		fail();
+		return fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		assertions.fail(null);
+		return assertions.fail(null);
 	}, {
 		assertion: 'fail',
 		improperUsage: true,
@@ -221,73 +218,73 @@ test('.fail()', t => {
 
 test('.is()', t => {
 	passes(t, () => {
-		assertions.is('foo', 'foo');
+		return assertions.is('foo', 'foo');
 	});
 
 	passes(t, () => {
 		const {is} = assertions;
-		is('foo', 'foo');
+		return  is('foo', 'foo');
 	});
 
 	passes(t, () => {
-		assertions.is('', '');
+		return assertions.is('', '');
 	});
 
 	passes(t, () => {
-		assertions.is(true, true);
+		return assertions.is(true, true);
 	});
 
 	passes(t, () => {
-		assertions.is(false, false);
+		return assertions.is(false, false);
 	});
 
 	passes(t, () => {
-		assertions.is(null, null);
+		return assertions.is(null, null);
 	});
 
 	passes(t, () => {
-		assertions.is(undefined, undefined);
+		return assertions.is(undefined, undefined);
 	});
 
 	passes(t, () => {
-		assertions.is(1, 1);
+		return assertions.is(1, 1);
 	});
 
 	passes(t, () => {
-		assertions.is(0, 0);
+		return assertions.is(0, 0);
 	});
 
 	passes(t, () => {
-		assertions.is(-0, -0);
+		return assertions.is(-0, -0);
 	});
 
 	passes(t, () => {
-		assertions.is(Number.NaN, Number.NaN);
+		return assertions.is(Number.NaN, Number.NaN);
 	});
 
 	passes(t, () => {
-		assertions.is(0 / 0, Number.NaN);
+		return assertions.is(0 / 0, Number.NaN);
 	});
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
-		assertions.is(someRef, someRef);
+		return assertions.is(someRef, someRef);
 	});
 
 	fails(t, () => {
-		assertions.is(0, -0);
+		return assertions.is(0, -0);
 	});
 
 	fails(t, () => {
-		assertions.is(0, false);
+		return assertions.is(0, false);
 	});
 
 	fails(t, () => {
-		assertions.is('', false);
+		return assertions.is('', false);
 	});
 
 	fails(t, () => {
-		assertions.is('0', 0);
+		return assertions.is('0', 0);
 	});
 
 	fails(t, () => {
@@ -2186,3 +2183,4 @@ test('.assert()', t => {
 
 	t.end();
 });
+
