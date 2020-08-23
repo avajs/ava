@@ -52,7 +52,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list
+- `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
@@ -209,6 +209,27 @@ From time to time, AVA will implement experimental features. These may change or
 export default {
 	nonSemVerExperiments: {
 		feature: true
+	}
+};
+```
+
+### Configuring module formats
+
+Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders). To use this you'll also have to configure AVA to `import()` your test file.
+
+This is still an experimental feature. You can opt in to it by enabling the `configurableModuleFormat` experiment. Afterwards, you'll be able to specify per-extension module formats using an object form.
+
+As with the array form, you need to explicitly list `js`, `cjs`, and `mjs` extensions. These **must** be set using the `true` value; other extensions are configurable using either `'commonjs'` or `'module'`:
+
+`ava.config.js`:
+```js
+export default {
+	nonSemVerExperiments: {
+		configurableModuleFormat: true
+	},
+	extensions: {
+		js: true,
+		ts: 'module'
 	}
 };
 ```
