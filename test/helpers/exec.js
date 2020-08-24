@@ -8,7 +8,7 @@ const defaultsDeep = require('lodash/defaultsDeep');
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
-const serialization = process.versions.node >= '12.17.0' ? 'advanced' : 'json';
+const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
 
