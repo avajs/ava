@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-webstorm.md)
 
-**This recipe is outdated.**
+**This recipe is outdated.** - In newer intellij versions, do not add the parameter `--inspect-brk`. Details: (https://intellij-support.jetbrains.com/hc/en-us/community/posts/360006855199-2019-3-Debugger-fails-doesn-t-attach-with-node-inspect-brk-main-js-)
 
 ---
 
