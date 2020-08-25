@@ -13,7 +13,7 @@ You can use VS Code's “JavaScript Debug Terminal” to automatically debug AVA
 
 ## Creating a launch configuration
 
-Alternatively you can create a lanch configuration, which makes it easier to debug individual test files.
+Alternatively you can create a launch configuration, which makes it easier to debug individual test files.
 
 1. Open a workspace for your project.
 1. In the sidebar click the *Debug* handle.
