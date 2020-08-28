@@ -6,9 +6,11 @@ for (const [where, which, message = '’js’, ’jsx’'] of [
 	['top-level and babel', 'shared-duplicates', '’jsx’']
 ]) {
 	test(`errors if ${where} extensions include duplicates`, async t => {
-		return t.throwsAsync(exec.fixture([], {
+		const options = {
 			cwd: exec.cwd(which)
-		}), {
+		};
+
+		await t.throwsAsync(exec.fixture([], options), {
 			message: new RegExp(`Unexpected duplicate extensions in options: ${message}`, 'gi')
 		});
 	});

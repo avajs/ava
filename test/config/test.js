@@ -5,9 +5,11 @@ const test = require('@ava/test');
 const exec = require('../helpers/exec');
 
 test('formats errors from ava.config.js', async t => {
-	const result = await t.throwsAsync(exec.fixture(['test.js'], {
+	const options = {
 		cwd: exec.cwd('config-errors')
-	}));
+	};
+
+	const result = await t.throwsAsync(exec.fixture(['test.js'], options));
 
 	const lines = result.stderr.split('\n');
 
@@ -19,9 +21,11 @@ test('formats errors from ava.config.js', async t => {
 });
 
 test('pkg-conf(resolve-dir): works as expected when run from the package.json directory', async t => {
-	const result = await exec.fixture([], {
+	const options = {
 		cwd: exec.cwd('resolve-pkg-dir')
-	});
+	};
+
+	const result = await exec.fixture([], options);
 
 	t.regex(result.stdout, /dir-a-base-1/);
 	t.regex(result.stdout, /dir-a-base-2/);
@@ -30,9 +34,11 @@ test('pkg-conf(resolve-dir): works as expected when run from the package.json di
 });
 
 test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none are specified on cli', async t => {
-	const result = await exec.fixture(['--verbose'], {
+	const options = {
 		cwd: exec.cwd('resolve-pkg-dir/dir-a-wrapper')
-	});
+	};
+
+	const result = await exec.fixture(['--verbose'], options);
 
 	t.regex(result.stdout, /dir-a-base-1/);
 	t.regex(result.stdout, /dir-a-base-2/);
@@ -47,9 +53,11 @@ test('use current working directory if `package.json` is not found', async t => 
 
 	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test name', t => { t.pass(); });`);
 
-	const result = await exec.fixture([], {
+	const options = {
 		cwd
-	});
+	};
+
+	const result = await exec.fixture([], options);
 
 	t.regex(result.stdout, /test name/);
 });
