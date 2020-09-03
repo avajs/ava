@@ -30,15 +30,15 @@ Let's first see how to use AVA with one of the most popular React testing librar
 
 If you intend to only use [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering), you don't need any extra setup.
 
-### Install enzyme
+### Install Enzyme
 
-First install [Enzyme required packages](https://github.com/enzymejs/enzyme#installation):
+First install [Enzyme and its required adapter](https://github.com/enzymejs/enzyme#installation):
 
 ```console
 $ npm install --save-dev enzyme enzyme-adapter-react-16
 ```
 
-### Setup enzyme
+### Set up Enzyme
 
 Create a helper file, prefixed with an underscore. This ensures AVA does not treat it as a test.
 
@@ -48,10 +48,12 @@ Create a helper file, prefixed with an underscore. This ensures AVA does not tre
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({
+	adapter: new Adapter()
+});
 ```
 
-### Configure tests to use enzyme
+### Configure tests to use Enzyme
 
 Configure AVA to `require` the helper before every test file.
 
@@ -77,7 +79,7 @@ Then you can use Enzyme straight away:
 const test = require('ava');
 const React = require('react');
 const PropTypes = require('prop-types');
-const { shallow } = require('enzyme');
+const {shallow} = require('enzyme');
 
 const Foo = ({children}) =>
 	<div className="Foo">
