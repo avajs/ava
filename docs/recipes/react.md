@@ -26,21 +26,59 @@ You can find more information in [`@ava/babel`](https://github.com/avajs/babel).
 
 ## Using [Enzyme](https://github.com/airbnb/enzyme)
 
-Let's first see how to use AVA with one of the most popular React testing libraries: [Enzyme](https://github.com/airbnb/enzyme).
+Let's first see how to use AVA with one of the most popular React testing libraries: [Enzyme](https://github.com/enzymejs/enzyme).
 
 If you intend to only use [shallow component rendering](https://facebook.github.io/react/docs/test-utils.html#shallow-rendering), you don't need any extra setup.
 
-First install [Enzyme required packages](https://github.com/airbnb/enzyme/#installation):
+### Install Enzyme
+
+First install [Enzyme and its required adapter](https://github.com/enzymejs/enzyme#installation):
 
 ```console
-$ npm install --save-dev enzyme react-addons-test-utils react-dom
+$ npm install --save-dev enzyme enzyme-adapter-react-16
 ```
 
+### Set up Enzyme
+
+Create a helper file, prefixed with an underscore. This ensures AVA does not treat it as a test.
+
+`test/_setup-enzyme-adapter.js`:
+
+```js
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
+
+Enzyme.configure({
+	adapter: new Adapter()
+});
+```
+
+### Configure tests to use Enzyme
+
+Configure AVA to `require` the helper before every test file.
+
+**`package.json`:**
+
+```json
+{
+	"ava": {
+		"require": [
+			"./test/_setup-enzyme-adapter.js"
+		]
+	}
+}
+```
+
+### Enjoy
+
 Then you can use Enzyme straight away:
+
+`test.js`:
 
 ```js
 const test = require('ava');
 const React = require('react');
+const PropTypes = require('prop-types');
 const {shallow} = require('enzyme');
 
 const Foo = ({children}) =>
@@ -51,7 +89,7 @@ const Foo = ({children}) =>
 	</div>;
 
 Foo.propTypes = {
-	children: React.PropTypes.any
+	children: PropTypes.any
 };
 
 test('has a .Foo class name', t => {
@@ -93,6 +131,7 @@ Usage example:
 ```js
 const test = require('ava');
 const React = require('react');
+const PropTypes = require('prop-types');
 const {renderJSX, JSX} = require('jsx-test-helpers');
 
 const Foo = ({children}) =>
@@ -103,7 +142,7 @@ const Foo = ({children}) =>
 	</div>;
 
 Foo.propTypes = {
-	children: React.PropTypes.any
+	children: PropTypes.any
 };
 
 test('renders correct markup', t => {
