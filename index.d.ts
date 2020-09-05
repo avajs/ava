@@ -165,7 +165,7 @@ export interface IsAssertion {
 	 * Assert that `actual` is [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
 	 */
-	<ValueType = any, ValueType_ extends ValueType>(actual: ValueType, expected: ValueType_, message?: string): void; // See #2575
+	<ValueType = any, ValueType_ extends ValueType = ValueType>(actual: ValueType, expected: ValueType_, message?: string): void; // See #2575
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
