@@ -8,7 +8,7 @@ test('passed node arguments to workers', async t => {
 
 	const result = await exec.fixture(['--node-arguments="--throw-deprecation --zero-fill-buffers"', 'node-arguments.js'], options);
 
-	t.is(result.stats.passed.length, 1);
+	t.snapshot(result.stats.passed, 'tests pass');
 });
 
 test('detects incomplete --node-arguments', async t => {
@@ -16,9 +16,9 @@ test('detects incomplete --node-arguments', async t => {
 		cwd: exec.cwd('node-arguments')
 	};
 
-	await t.throwsAsync(exec.fixture(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], options), {
-		message: /Could not parse `--node-arguments` value. Make sure all strings are closed and backslashes are used correctly./
-	});
+	const result = await t.throwsAsync(exec.fixture(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], options));
+
+	t.snapshot(exec.cleanOutput(result.stderr), 'fails with message');
 });
 
 test('reads node arguments from config', async t => {
@@ -28,5 +28,5 @@ test('reads node arguments from config', async t => {
 
 	const result = await exec.fixture(['node-arguments-from-config.js'], options);
 
-	t.is(result.stats.passed.length, 1);
+	t.snapshot(result.stats.passed, 'tests pass');
 });

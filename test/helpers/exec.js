@@ -29,6 +29,7 @@ const compareStatObjects = (a, b) => {
 };
 
 exports.cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+exports.cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+$/, '').trim();
 
 exports.fixture = async (args, options = {}) => {
 	const cwd = options.cwd || exports.cwd();

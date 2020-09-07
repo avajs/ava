@@ -8,7 +8,7 @@ test('sets default environment variables from the config', async t => {
 
 	const results = await exec.fixture(['environment-variables.js'], options);
 
-	t.is(results.stats.passed.length, 1);
+	t.snapshot(results.stats.passed, 'tests pass');
 });
 
 test('overrides environment variables provided through the CLI', async t => {
@@ -21,7 +21,7 @@ test('overrides environment variables provided through the CLI', async t => {
 
 	const results = await exec.fixture(['environment-variables.js'], options);
 
-	t.is(results.stats.passed.length, 1);
+	t.snapshot(results.stats.passed, 'tests pass');
 });
 
 test('errors if environment variables are not string values', async t => {
@@ -29,7 +29,7 @@ test('errors if environment variables are not string values', async t => {
 		cwd: exec.cwd('invalid-environment-variables')
 	};
 
-	await t.throwsAsync(exec.fixture(['environment-variables.js'], options), {
-		message: /The ’environmentVariables’ configuration must be an object containing string values./
-	});
+	const result = await t.throwsAsync(exec.fixture(['environment-variables.js'], options));
+
+	t.snapshot(exec.cleanOutput(result.stderr), 'fails with message');
 });

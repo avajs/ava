@@ -6,9 +6,9 @@ test('errors if top-level files is an empty array', async t => {
 		cwd: exec.cwd('files')
 	};
 
-	await t.throwsAsync(exec.fixture([], options), {
-		message: /The ’files’ configuration must be an array containing glob patterns./
-	});
+	const result = await t.throwsAsync(exec.fixture([], options));
+
+	t.snapshot(exec.cleanOutput(result.stderr), 'fails with message');
 });
 
 test('errors if top-level ignoredByWatcher is an empty array', async t => {
@@ -16,7 +16,7 @@ test('errors if top-level ignoredByWatcher is an empty array', async t => {
 		cwd: exec.cwd('ignored-by-watcher')
 	};
 
-	await t.throwsAsync(exec.fixture([], options), {
-		message: /The ’ignoredByWatcher’ configuration must be an array containing glob patterns./
-	});
+	const result = await t.throwsAsync(exec.fixture([], options));
+
+	t.snapshot(exec.cleanOutput(result.stderr), 'fails with message');
 });

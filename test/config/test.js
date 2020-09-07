@@ -27,10 +27,7 @@ test('pkg-conf(resolve-dir): works as expected when run from the package.json di
 
 	const result = await exec.fixture([], options);
 
-	t.regex(result.stdout, /dir-a-base-1/);
-	t.regex(result.stdout, /dir-a-base-2/);
-	t.notRegex(result.stdout, /dir-a-wrapper/);
-	t.notRegex(result.stdout, /dir-a-wrapper/);
+	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
 
 test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none are specified on cli', async t => {
@@ -40,10 +37,7 @@ test('pkg-conf(resolve-dir): resolves tests from the package.json dir if none ar
 
 	const result = await exec.fixture(['--verbose'], options);
 
-	t.regex(result.stdout, /dir-a-base-1/);
-	t.regex(result.stdout, /dir-a-base-2/);
-	t.notRegex(result.stdout, /dir-a-wrapper/);
-	t.notRegex(result.stdout, /dir-a-wrapper/);
+	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
 
 test('use current working directory if `package.json` is not found', async t => {
@@ -59,5 +53,5 @@ test('use current working directory if `package.json` is not found', async t => 
 
 	const result = await exec.fixture([], options);
 
-	t.regex(result.stdout, /test name/);
+	t.snapshot(result.stats.passed, 'resolves test files without configuration');
 });

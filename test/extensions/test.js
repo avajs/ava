@@ -10,8 +10,8 @@ for (const [where, which, message = '’js’, ’jsx’'] of [
 			cwd: exec.cwd(which)
 		};
 
-		await t.throwsAsync(exec.fixture([], options), {
-			message: new RegExp(`Unexpected duplicate extensions in options: ${message}`, 'gi')
-		});
+		const result = await t.throwsAsync(exec.fixture([], options));
+
+		t.snapshot(exec.cleanOutput(result.stderr), 'fails with message');
 	});
 }
