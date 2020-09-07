@@ -4,13 +4,15 @@ const v8 = require('v8');
 const test = require('@ava/test');
 const execa = require('execa');
 const defaultsDeep = require('lodash/defaultsDeep');
+const replaceString = require('replace-string');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
 const serialization = process.versions.node >= '12.17.0' ? 'advanced' : 'json';
 
-const normalizePath = (root, file) => path.posix.normalize(path.posix.relative(root, file));
+const normalizePosixPath = (string) => replaceString(string, '\\', '/')
+const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
 
 const compareStatObjects = (a, b) => {
 	if (a.file < b.file) {
