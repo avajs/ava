@@ -122,7 +122,7 @@ export interface AssertAssertion {
 
 export interface DeepEqualAssertion {
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	<ValueType = any, ValueType_ extends ValueType = ValueType>(actual: ValueType, expected: ValueType_, message?: string): void; // See #2575
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -176,7 +176,7 @@ export interface NotAssertion {
 	 * Assert that `actual` is not [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	<ValueType = any, ValueType_ extends ValueType = ValueType>(actual: ValueType, expected: ValueType_, message?: string): void; // See #2575
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -184,7 +184,7 @@ export interface NotAssertion {
 
 export interface NotDeepEqualAssertion {
 	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	<ValueType = any, ValueType_ extends ValueType = ValueType>(actual: ValueType, expected: ValueType_, message?: string): void; // See #2575
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
