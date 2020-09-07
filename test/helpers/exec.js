@@ -11,7 +11,7 @@ const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
 const serialization = process.versions.node >= '12.17.0' ? 'advanced' : 'json';
 
-const normalizePosixPath = (string) => replaceString(string, '\\', '/')
+const normalizePosixPath = string => replaceString(string, '\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
 
 const compareStatObjects = (a, b) => {
