@@ -61,6 +61,7 @@ exports.sanitizers = {
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
+	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
 	version: string => replaceString(string, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 

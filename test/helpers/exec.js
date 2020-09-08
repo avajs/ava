@@ -9,7 +9,7 @@ const replaceString = require('replace-string');
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
-const serialization = process.versions.node >= '12.17.0' ? 'advanced' : 'json';
+const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePosixPath = string => replaceString(string, '\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
