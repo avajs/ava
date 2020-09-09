@@ -24,7 +24,7 @@ Contains shared state from hooks.
 
 ## `t.passed`
 
-Whether a test has passed. This value is only accurate in the `test.afterEach()` and `test.afterEach.always()` hooks.
+When used in `test.afterEach()` or `test.afterEach.always()` hooks this tells you whether the test has passed. When used in a test itself (including teardown functions) this remains `true` until an assertion fails, the test has ended with an error, or a teardown function caused an error. This value has no meaning in other hooks.
 
 ## `t.end()`
 
@@ -36,7 +36,7 @@ Log values contextually alongside the test result instead of immediately printin
 
 ## `t.plan(count)`
 
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
+Plan how many assertions there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
 
 ## `t.teardown(fn)`
 
