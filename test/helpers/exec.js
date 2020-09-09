@@ -4,13 +4,15 @@ const v8 = require('v8');
 const test = require('@ava/test');
 const execa = require('execa');
 const defaultsDeep = require('lodash/defaultsDeep');
+const replaceString = require('replace-string');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
 const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
-const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
+const normalizePosixPath = string => replaceString(string, '\\', '/');
+const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
 
 const compareStatObjects = (a, b) => {
 	if (a.file < b.file) {
@@ -28,8 +30,11 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
+exports.cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+exports.cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
+
 exports.fixture = async (args, options = {}) => {
-	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
+	const cwd = options.cwd || exports.cwd();
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
@@ -51,6 +56,7 @@ exports.fixture = async (args, options = {}) => {
 		failedHooks: [],
 		passed: [],
 		skipped: [],
+		todo: [],
 		uncaughtExceptions: [],
 		unsavedSnapshots: [],
 		getError(statObject) {
@@ -76,6 +82,11 @@ exports.fixture = async (args, options = {}) => {
 				if (statusEvent.skip) {
 					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
+				}
+
+				if (statusEvent.todo) {
+					const {title, testFile} = statusEvent;
+					stats.todo.push({title, file: normalizePath(cwd, testFile)});
 				}
 
 				break;
@@ -124,6 +135,7 @@ exports.fixture = async (args, options = {}) => {
 		stats.failedHooks.sort(compareStatObjects);
 		stats.passed.sort(compareStatObjects);
 		stats.skipped.sort(compareStatObjects);
+		stats.todo.sort(compareStatObjects);
 		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };
