@@ -956,3 +956,33 @@ test('.teardown() is bound', t => {
 		t.ok(teardownCallback.calledOnce);
 	});
 });
+
+test('t.passed value is true when teardown callback is executed for passing test', t => {
+	new Test({
+		fn(a) {
+			a.teardown(() => {
+				t.is(a.passed, true);
+				t.end();
+			});
+			a.pass();
+		},
+		metadata: {type: 'test'},
+		onResult() {},
+		title: 'foo'
+	}).run();
+});
+
+test('t.passed value is false when teardown callback is executed for failing test', t => {
+	new Test({
+		fn(a) {
+			a.teardown(() => {
+				t.is(a.passed, false);
+				t.end();
+			});
+			a.fail();
+		},
+		metadata: {type: 'test'},
+		onResult() {},
+		title: 'foo'
+	}).run();
+});
