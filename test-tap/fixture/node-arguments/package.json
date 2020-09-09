@@ -1,8 +1,0 @@
-{
-	"ava": {
-		"nodeArguments": [
-			"--require",
-			"./setup.js"
-		]
-	}
-}

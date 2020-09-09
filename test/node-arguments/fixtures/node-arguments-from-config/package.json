@@ -1,0 +1,11 @@
+{
+	"ava": {
+		"files": [
+			"*.js"
+		],
+		"nodeArguments": [
+			"--require",
+			"./setup.js"
+		]
+	}
+}
