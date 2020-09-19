@@ -12,26 +12,26 @@ const snapshotManager = require('../lib/snapshot-manager');
 const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
+let lastPassed = false;
 
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
-			pass: () => true,
+			pass: () => {
+				lastPassed = true;
+			},
 			pending: promise => {
-				return promise.then(() =>
-					true
-				, error => {
+				promise.then(() => {
+					lastPassed = true;
+				}, error => {
 					lastFailure = error;
 				});
 			},
 			fail: error => {
 				lastFailure = error;
-				return false;
 			},
-			skip: () => {},
-			experiments: {
-				likeAssertion: true
-			},
+			skip: () => { },
+			experiments: {},
 			...overwrites
 		});
 	}
@@ -144,8 +144,10 @@ function eventuallyFails(t, fn) {
 */
 
 function passes(t, fn) {
+	lastPassed = false;
 	lastFailure = null;
-	if (fn()) {
+	fn();
+	if (lastPassed) {
 		t.pass();
 	} else {
 		t.ifError(lastFailure, 'Expected assertion to pass');
@@ -154,9 +156,10 @@ function passes(t, fn) {
 
 function eventuallyPasses(t, fn) {
 	return add(() => {
+		lastPassed = false;
 		lastFailure = null;
-		return fn().then(passed => {
-			if (passed) {
+		return fn().then(() => {
+			if (lastPassed) {
 				t.pass();
 			} else {
 				t.ifError(lastFailure, 'Expected assertion to pass');
@@ -167,27 +170,30 @@ function eventuallyPasses(t, fn) {
 
 test('.pass()', t => {
 	passes(t, () => {
-		return assertions.pass();
+		const result = assertions.pass();
+		assertions.true(result);
 	});
 
 	passes(t, () => {
 		const {pass} = assertions;
-		return pass();
+		const result = pass();
+		assertions.true(result);
 	});
 
 	t.end();
 });
 
 test('.fail()', t => {
+	const results = [];
 	failsWith(t, () => {
-		return assertions.fail();
+		results.push(assertions.fail());
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		return assertions.fail('my message');
+		results.push(assertions.fail('my message'));
 	}, {
 		assertion: 'fail',
 		message: 'my message'
@@ -195,14 +201,14 @@ test('.fail()', t => {
 
 	failsWith(t, () => {
 		const {fail} = assertions;
-		return fail();
+		results.push(fail());
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		return assertions.fail(null);
+		assertions.fail(null);
 	}, {
 		assertion: 'fail',
 		improperUsage: true,
@@ -212,125 +218,156 @@ test('.fail()', t => {
 			formatted: /null/
 		}]
 	});
+	for (const result of results) {
+		t.is(result, false);
+	}
 
 	t.end();
 });
 
 test('.is()', t => {
 	passes(t, () => {
-		return assertions.is('foo', 'foo');
+		const result = assertions.is('foo', 'foo');
+		assertions.true(result);
 	});
 
 	passes(t, () => {
 		const {is} = assertions;
-		return  is('foo', 'foo');
+		const result = is('foo', 'foo');
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is('', '');
+		const result = assertions.is('', '');
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(true, true);
+		const result = assertions.is(true, true);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(false, false);
+		const result = assertions.is(false, false);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(null, null);
+		const result = assertions.is(null, null);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(undefined, undefined);
+		const result = assertions.is(undefined, undefined);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(1, 1);
+		const result = assertions.is(1, 1);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(0, 0);
+		const result = assertions.is(0, 0);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(-0, -0);
+		const result = assertions.is(-0, -0);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(Number.NaN, Number.NaN);
+		const result = assertions.is(Number.NaN, Number.NaN);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
-		return assertions.is(0 / 0, Number.NaN);
+		const result = assertions.is(0 / 0, Number.NaN);
+		assertions.true(result);
 	});
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
-		return assertions.is(someRef, someRef);
+		const result = assertions.is(someRef, someRef);
+		assertions.true(result);
 	});
 
 	fails(t, () => {
-		return assertions.is(0, -0);
+		const result = assertions.is(0, -0);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		return assertions.is(0, false);
+		const result = assertions.is(0, false);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		return assertions.is('', false);
+		const result = assertions.is('', false);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		return assertions.is('0', 0);
+		const result = assertions.is('0', 0);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		assertions.is('17', 17);
+		const result = assertions.is('17', 17);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		assertions.is([1, 2], '1,2');
-	});
-
-	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), 'foo');
-	});
-
-	fails(t, () => {
-		assertions.is(null, undefined);
-	});
-
-	fails(t, () => {
-		assertions.is(null, false);
-	});
-
-	fails(t, () => {
-		assertions.is(undefined, false);
+		const result = assertions.is([1, 2], '1,2');
+		assertions.false(result);
 	});
 
 	fails(t, () => {
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), new String('foo'));
+		const result = assertions.is(new String('foo'), 'foo');
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		assertions.is(0, null);
+		const result = assertions.is(null, undefined);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		assertions.is(0, Number.NaN);
+		const result = assertions.is(null, false);
+		assertions.false(result);
 	});
 
 	fails(t, () => {
-		assertions.is('foo', Number.NaN);
+		const result = assertions.is(undefined, false);
+		assertions.false(result);
 	});
 
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
+		const result = assertions.is(new String('foo'), new String('foo'));
+		assertions.false(result);
+	});
+
+	fails(t, () => {
+		const result = assertions.is(0, null);
+		assertions.false(result);
+	});
+
+	fails(t, () => {
+		const result = assertions.is(0, Number.NaN);
+		assertions.false(result);
+	});
+
+	fails(t, () => {
+		const result = assertions.is('foo', Number.NaN);
+		assertions.false(result);
+	});
+
+	const failureResults = [];
 	failsWith(t, () => {
-		assertions.is({foo: 'bar'}, {foo: 'bar'});
+		failureResults.push(assertions.is({foo: 'bar'}, {foo: 'bar'}));
 	}, {
 		assertion: 'is',
 		message: '',
@@ -343,7 +380,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 'bar');
+		failureResults.push(assertions.is('foo', 'bar'));
 	}, {
 		assertion: 'is',
 		message: '',
@@ -354,7 +391,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 42);
+		failureResults.push(assertions.is('foo', 42));
 	}, {
 		actual: 'foo',
 		assertion: 'is',
@@ -366,7 +403,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 42, 'my message');
+		failureResults.push(assertions.is('foo', 42, 'my message'));
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -376,7 +413,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(0, -0, 'my message');
+		failureResults.push(assertions.is(0, -0, 'my message'));
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -386,7 +423,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(-0, 0, 'my message');
+		failureResults.push(assertions.is(-0, 0, 'my message'));
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -396,7 +433,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(0, 0, null);
+		failureResults.push(assertions.is(0, 0, null));
 	}, {
 		assertion: 'is',
 		improperUsage: true,
@@ -406,30 +443,36 @@ test('.is()', t => {
 			formatted: /null/
 		}]
 	});
+	for (const result of failureResults) {
+		t.false(result);
+	}
 
 	t.end();
 });
 
 test('.not()', t => {
 	passes(t, () => {
-		assertions.not('foo', 'bar');
+		const result = assertions.not('foo', 'bar');
+		assertions.true(result);
 	});
 
 	passes(t, () => {
 		const {not} = assertions;
-		not('foo', 'bar');
+		const result = not('foo', 'bar');
+		assertions.true(result);
+	});
+
+	const failureResults = [];
+	fails(t, () => {
+		failureResults.push(assertions.not(Number.NaN, Number.NaN));
 	});
 
 	fails(t, () => {
-		assertions.not(Number.NaN, Number.NaN);
-	});
-
-	fails(t, () => {
-		assertions.not(0 / 0, Number.NaN);
+		failureResults.push(assertions.not(0 / 0, Number.NaN));
 	});
 
 	failsWith(t, () => {
-		assertions.not('foo', 'foo');
+		failureResults.push(assertions.not('foo', 'foo'));
 	}, {
 		assertion: 'not',
 		message: '',
@@ -438,7 +481,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.not('foo', 'foo', 'my message');
+		failureResults.push(assertions.not('foo', 'foo', 'my message'));
 	}, {
 		assertion: 'not',
 		message: 'my message',
@@ -446,7 +489,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.not(0, 1, null);
+		failureResults.push(assertions.not(0, 1, null));
 	}, {
 		assertion: 'not',
 		improperUsage: true,
@@ -456,6 +499,9 @@ test('.not()', t => {
 			formatted: /null/
 		}]
 	});
+	for (const result of failureResults) {
+		t.false(result);
+	}
 
 	t.end();
 });
