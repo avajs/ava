@@ -17,6 +17,8 @@
 ---tty-stream-chunk-separator
   [31m✖[39m nested-objects [90m[2m›[22m[39m format with max depth 4 
 ---tty-stream-chunk-separator
+  [31m✖[39m nested-objects [90m[2m›[22m[39m format like with max depth 4 
+---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m before hook
     [35mℹ[39m [90mbefore[39m
 ---tty-stream-chunk-separator
@@ -85,13 +87,13 @@
 
   [90muncaught-exception.js:5[39m
 
-   [90m4:[39m   setTimeout(() => {                  
+   [90m4:[39m   setImmediate(() => {                
   [41m 5:     throw new Error('Can’t catch me');[49m
    [90m6:[39m   });                                 
 
   Error: Can’t catch me
 
-  [90m› Timeout.setTimeout (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
+  [90m› Immediate.setImmediate (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
 
 ---tty-stream-chunk-separator
   [31m✖ uncaught-exception.js exited with a non-zero exit code: 1[39m
@@ -148,6 +150,30 @@
     [90m}[39m
 
   [90m› t (test-tap/fixture/report/regular/nested-objects.js:28:4)[39m
+  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
+
+
+
+  [1mnested-objects [90m[2m›[22m[1m[39m format like with max depth 4[22m
+
+  [90mnested-objects.js:54[39m
+
+   [90m53:[39m   };                      
+  [41m 54:   t.like(actual, pattern);[49m
+   [90m55:[39m });                       
+
+  Difference:
+
+    [90m{[39m
+      a: [90m{[39m
+        b: [90m{[39m
+  [31m-[39m       foo: [34m'[39m[31mbar[39m[34m'[39m[90m,[39m
+  [32m+[39m       foo: [34m'[39m[32mqux[39m[34m'[39m[90m,[39m
+        [90m}[39m[90m,[39m
+      [90m}[39m[90m,[39m
+    [90m}[39m
+
+  [90m› t (test-tap/fixture/report/regular/nested-objects.js:54:4)[39m
   [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
@@ -428,7 +454,7 @@
 
   [90m─[39m
 
-  [31m15 tests failed[39m
+  [31m16 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m

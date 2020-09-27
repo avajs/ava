@@ -37,7 +37,7 @@ exports.assert = (t, logFile, buffer) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
-	} catch (_) {}
+	} catch {}
 
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
 		fs.writeFileSync(logFile, buffer);
@@ -52,7 +52,7 @@ exports.assert = (t, logFile, buffer) => {
 		// Log the entire actual and expected values, so they can be diffed
 		// manually. TAP's diff output is really confusing in this situation.
 		console.dir({actual, expected});
-		t.fail('Output did not match expectation');
+		t.fail(`Output did not match expectation: ${logFile}`);
 	}
 };
 
@@ -61,6 +61,7 @@ exports.sanitizers = {
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
+	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
 	version: string => replaceString(string, `v${pkg.version}`, 'v1.0.0-beta.5.1')
 };
 

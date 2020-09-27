@@ -207,6 +207,31 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
+### `.like(value, selector, message?)`
+
+Assert that `value` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
+
+Instead AVA derives a *comparable* object from `value`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
+
+Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `value`.
+
+In the following example, the `map` property of `value` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
+
+```js
+t.like({
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+		qux: 'quux'
+	}
+}, {
+	map: new Map([['foo', 'bar']]),
+	nested: {
+		baz: 'thud',
+	}
+})
+```
+
 ### `.throws(fn, expectation?, message?)`
 
 Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
@@ -219,7 +244,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. The 
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
 
 Example:
 
@@ -251,7 +276,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
 
 Example:
 

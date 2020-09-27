@@ -24,7 +24,7 @@ Contains shared state from hooks.
 
 ## `t.passed`
 
-Whether a test has passed. This value is only accurate in the `test.afterEach()` and `test.afterEach.always()` hooks.
+When used in `test.afterEach()` or `test.afterEach.always()` hooks this tells you whether the test has passed. When used in a test itself (including teardown functions) this remains `true` until an assertion fails, the test has ended with an error, or a teardown function caused an error. This value has no meaning in other hooks.
 
 ## `t.end()`
 
@@ -36,15 +36,39 @@ Log values contextually alongside the test result instead of immediately printin
 
 ## `t.plan(count)`
 
-Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
+Plan how many assertions there are in the test. The test will fail if the actual assertion count doesn't match the number of planned assertions. See [assertion planning](./03-assertions.md#assertion-planning).
 
 ## `t.teardown(fn)`
 
-Registers the `fn` function to be run after the test has finished. You can register multiple functions and they'll run in order. You can use asynchronous functions: only one will run at a time.
+Registers the `fn` function to be run after the test has finished. You can register multiple functions and they'll run in order<sup>†</sup>. You can use asynchronous functions: only one will run at a time.
 
 You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
 
 You cannot use `t.teardown()` in hooks either.
+
+<sup>†</sup> In the next major release we'll change this so teardown functions run in reverse order. The last registered function will be called first. You can opt in to this behavior now by enabling the `reverseTeardowns` experiment.
+
+**`package.json`**:
+
+```json
+{
+	"ava": {
+		"nonSemVerExperiments": {
+			"reverseTeardowns": true
+		}
+	}
+}
+```
+
+**`ava.config.js`**:
+
+```js
+export default {
+	nonSemVerExperiments: {
+		reverseTeardowns: true
+	}
+}
+```
 
 ## `t.timeout(ms)`
 

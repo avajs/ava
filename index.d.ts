@@ -45,6 +45,9 @@ export interface Assertions {
 	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
 	deepEqual: DeepEqualAssertion;
 
+	/** Assert that `actual` is like `expected`. */
+	like: LikeAssertion;
+
 	/** Fail the test. */
 	fail: FailAssertion;
 
@@ -123,6 +126,14 @@ export interface DeepEqualAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
+}
+
+export interface LikeAssertion {
+	/** Assert that `value` is like `selector`. */
+	(value: any, selector: Record<string, any>, message?: string): void;
+
+	/** Skip this assertion. */
+	skip(value: any, selector: any, message?: string): void;
 }
 
 export interface FailAssertion {
@@ -342,7 +353,7 @@ export interface TimeoutFn {
 	 * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
 	 * The timeout is reset each time an assertion is made.
 	 */
-	(ms: number): void;
+	(ms: number, message?: string): void;
 }
 
 export interface TeardownFn {

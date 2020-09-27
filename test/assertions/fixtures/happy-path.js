@@ -11,6 +11,22 @@ test(passes, 'is', 1, 1);
 test(passes, 'not', 1, 2);
 test(passes, 'deepEqual', {foo: 'bar'}, {foo: 'bar'});
 test(passes, 'notDeepEqual', {foo: 'bar'}, {foo: 'baz'});
+test(passes, 'like', {
+	foo: 'bar',
+	deep: {
+		buz: 'qux',
+		extra: 'irrelevant'
+	},
+	extra: 'irrelevant',
+	deepExtra: {
+		extra: 'irrelevant'
+	}
+}, {
+	foo: 'bar',
+	deep: {
+		buz: 'qux'
+	}
+});
 test(passes, 'throws', () => {
 	throw new Error('error');
 });

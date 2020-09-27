@@ -65,8 +65,8 @@ export default function sum(a, b) {
 
 ```js
 // test.js
-const test = require('ava');
-const sum = require('./sum');
+import test from 'ava';
+import sum from './sum';
 
 test('2 + 2 = 4', t => {
 	t.is(sum(2, 2), 4);

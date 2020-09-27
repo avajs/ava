@@ -1,6 +1,7 @@
 module.exports = {
 	ignores: [
 		'media/**',
+		'test/config/fixtures/config-errors/test.js',
 		'test-tap/fixture/ava-paths/target/test.js',
 		'test-tap/fixture/{source-map-initial,syntax-error}.js',
 		'test-tap/fixture/snapshots/test-sourcemaps/build/**',
@@ -8,13 +9,14 @@ module.exports = {
 		'test-tap/fixture/report/edgecases/ast-syntax-error.js'
 	],
 	rules: {
+		'import/no-anonymous-default-export': 'off',
 		'import/no-unresolved': ['error', {commonjs: true}],
 		'no-use-extend-native/no-use-extend-native': 'off',
 		'@typescript-eslint/no-var-requires': 'off'
 	},
 	overrides: [
 		{
-			files: '*.d.ts',
+			files: 'index.d.ts',
 			rules: {
 				'@typescript-eslint/member-ordering': 'off',
 				'@typescript-eslint/method-signature-style': 'off',
@@ -43,9 +45,10 @@ module.exports = {
 			}
 		},
 		{
-			files: 'test-tap/fixture/**/*.js',
+			files: ['test-tap/fixture/**', 'test/**/fixtures/**'],
 			rules: {
-				'import/no-extraneous-dependencies': 'off'
+				'import/no-extraneous-dependencies': 'off',
+				'import/no-unresolved': 'off'
 			}
 		}
 	],

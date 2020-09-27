@@ -10,7 +10,7 @@ const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
 const HelloMessage = require('./fixture/hello-message');
-const {ava} = require('./helper/ava-test');
+const {ava, withExperiments} = require('./helper/ava-test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -360,13 +360,14 @@ test('fails with thrown non-error object', t => {
 
 test('skipped assertions count towards the plan', t => {
 	const instance = ava(a => {
-		a.plan(15);
+		a.plan(16);
 		a.pass.skip();
 		a.fail.skip();
 		a.is.skip(1, 1);
 		a.not.skip(1, 2);
 		a.deepEqual.skip({foo: 'bar'}, {foo: 'bar'});
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
+		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
@@ -381,20 +382,21 @@ test('skipped assertions count towards the plan', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 15);
-		t.is(instance.assertCount, 15);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
 	});
 });
 
 test('assertion.skip() is bound', t => {
 	const instance = ava(a => {
-		a.plan(15);
+		a.plan(16);
 		(a.pass.skip)();
 		(a.fail.skip)();
 		(a.is.skip)(1, 1);
 		(a.not.skip)(1, 2);
 		(a.deepEqual.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
+		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
@@ -409,8 +411,8 @@ test('assertion.skip() is bound', t => {
 	});
 	return instance.run().then(result => {
 		t.is(result.passed, true);
-		t.is(instance.planCount, 15);
-		t.is(instance.assertCount, 15);
+		t.is(instance.planCount, 16);
+		t.is(instance.assertCount, 16);
 	});
 });
 
@@ -647,12 +649,13 @@ test('log from tests', t => {
 test('assertions are bound', t => {
 	// This does not test .fail() and .snapshot(). It'll suffice.
 	return ava(a => {
-		(a.plan)(13);
+		(a.plan)(14);
 		(a.pass)();
 		(a.is)(1, 1);
 		(a.not)(1, 2);
 		(a.deepEqual)({foo: 'bar'}, {foo: 'bar'});
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
+		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
 			throw new Error(); // eslint-disable-line unicorn/error-message
 		});
@@ -799,6 +802,23 @@ test('teardowns run sequentially in order', t => {
 	});
 });
 
+test('teardowns run in reverse order when the `reverseTeardowns` experimental feature is enabled', t => {
+	let resolveA;
+	const teardownA = sinon.stub().returns(new Promise(resolve => {
+		resolveA = resolve;
+	}));
+	const teardownB = sinon.stub().resolves(delay(200));
+
+	return withExperiments({reverseTeardowns: true})(a => {
+		a.teardown(teardownA);
+		a.teardown(() => teardownB().then(resolveA));
+		a.pass();
+	}).run().then(result => {
+		t.is(result.passed, true);
+		t.ok(teardownB.calledBefore(teardownA));
+	});
+});
+
 test('teardown with cb', t => {
 	const teardown = sinon.spy();
 	return ava.cb(a => {
@@ -935,4 +955,34 @@ test('.teardown() is bound', t => {
 		t.true(result.passed);
 		t.ok(teardownCallback.calledOnce);
 	});
+});
+
+test('t.passed value is true when teardown callback is executed for passing test', t => {
+	new Test({
+		fn(a) {
+			a.teardown(() => {
+				t.is(a.passed, true);
+				t.end();
+			});
+			a.pass();
+		},
+		metadata: {type: 'test'},
+		onResult() {},
+		title: 'foo'
+	}).run();
+});
+
+test('t.passed value is false when teardown callback is executed for failing test', t => {
+	new Test({
+		fn(a) {
+			a.teardown(() => {
+				t.is(a.passed, false);
+				t.end();
+			});
+			a.fail();
+		},
+		metadata: {type: 'test'},
+		onResult() {},
+		title: 'foo'
+	}).run();
 });

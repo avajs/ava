@@ -796,7 +796,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.before(() => {
 			t.is(activeCount, 0);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 20)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 20);
+			}).then(() => {
 				activeCount--;
 			});
 		});
@@ -804,7 +806,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.before(() => {
 			t.is(activeCount, 1);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 10);
+			}).then(() => {
 				activeCount--;
 			});
 		});
@@ -812,7 +816,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.serial.before(() => {
 			t.is(activeCount, 0);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 10);
+			}).then(() => {
 				activeCount--;
 			});
 		});
@@ -820,7 +826,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.before(() => {
 			t.is(activeCount, 0);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 20)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 20);
+			}).then(() => {
 				activeCount--;
 			});
 		});
@@ -828,7 +836,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.before(() => {
 			t.is(activeCount, 1);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 10);
+			}).then(() => {
 				activeCount--;
 			});
 		});
@@ -836,7 +846,9 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain.serial.before(() => {
 			t.is(activeCount, 0);
 			activeCount++;
-			return new Promise(resolve => setTimeout(resolve, 10)).then(() => {
+			return new Promise(resolve => {
+				setTimeout(resolve, 10);
+			}).then(() => {
 				activeCount--;
 			});
 		});
