@@ -39,40 +39,68 @@ export type SnapshotOptions = {
 };
 
 export interface Assertions {
-	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
+	/**
+	 * Assert that `actual` is
+	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
+	 * returning Boolean indicating whether the assertion passes. Comes with
+	 * power-assert.
+	 */
 	assert: AssertAssertion;
 
-	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
+	/**
+	 * Assert that `actual` is [deeply
+	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 */
 	deepEqual: DeepEqualAssertion;
 
-	/** Assert that `actual` is like `expected`. */
+	/**
+	 * Assert that `value` is like `selector`, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
 	like: LikeAssertion;
 
-	/** Fail the test. */
+	/** Fail the test, always returning `false`. */
 	fail: FailAssertion;
 
-	/** Assert that `actual` is strictly false. */
+	/**
+	 * Assert that `actual` is strictly false, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
 	false: FalseAssertion;
 
-	/** Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy). */
+	/**
+	 * Assert that `actual` is
+	 * [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning
+	 * Boolean whether the assertion passes.
+	 */
 	falsy: FalsyAssertion;
 
 	/**
 	 * Assert that `actual` is [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+	 * as `expected`, returning Boolean indicating whether the assertion passes.
 	 */
 	is: IsAssertion;
 
 	/**
 	 * Assert that `actual` is not [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+	 * as `expected`, returning Boolean indicating whether the assertion passes.
 	 */
 	not: NotAssertion;
 
-	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
+	/**
+	 * Assert that `actual` is not [deeply
+	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 */
 	notDeepEqual: NotDeepEqualAssertion;
 
-	/** Assert that `string` does not match the regular expression. */
+	/**
+	 * Assert that `string` does not match the regular expression, returning
+	 * Boolean indicating whether the assertion passes.
+	 */
 	notRegex: NotRegexAssertion;
 
 	/** Assert that the function does not throw. */
@@ -81,10 +109,13 @@ export interface Assertions {
 	/** Assert that the async function does not throw, or that the promise does not reject. Must be awaited. */
 	notThrowsAsync: NotThrowsAsyncAssertion;
 
-	/** Count a passing assertion. */
+	/** Count a passing assertion, always returning `true`. */
 	pass: PassAssertion;
 
-	/** Assert that `string` matches the regular expression. */
+	/**
+	 * Assert that `string` matches the regular expression, returning Boolean
+	 * indicating whether the assertion passes.
+	 */
 	regex: RegexAssertion;
 
 	/**
@@ -105,56 +136,82 @@ export interface Assertions {
 	 */
 	throwsAsync: ThrowsAsyncAssertion;
 
-	/** Assert that `actual` is strictly true. */
+	/**
+	 * Assert that `actual` is strictly true, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
 	true: TrueAssertion;
 
-	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
+	/**
+	 * Assert that `actual` is
+	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
+	 * returning Boolean indicating whether the assertion passes.
+	 */
 	truthy: TruthyAssertion;
 }
 
 export interface AssertAssertion {
-	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). Comes with power-assert. */
-	(actual: any, message?: string): void;
+	/**
+	 * Assert that `actual` is
+	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
+	 * returning Boolean indicating whether the assertion passes. Comes with
+	 * power-assert.
+	 */
+	(actual: any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
 }
 
 export interface DeepEqualAssertion {
-	/** Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	/**
+	 * Assert that `actual` is [deeply
+	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 */
+	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
 }
 
 export interface LikeAssertion {
-	/** Assert that `value` is like `selector`. */
-	(value: any, selector: Record<string, any>, message?: string): void;
+	/**
+	 * Assert that `value` is like `selector`, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
+	(value: any, selector: Record<string, any>, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(value: any, selector: any, message?: string): void;
 }
 
 export interface FailAssertion {
-	/** Fail the test. */
-	(message?: string): void;
+	/** Fail the test, always returning `false`. */
+	(message?: string): false;
 
 	/** Skip this assertion. */
 	skip(message?: string): void;
 }
 
 export interface FalseAssertion {
-	/** Assert that `actual` is strictly false. */
-	(actual: any, message?: string): void;
+	/**
+	 * Assert that `actual` is strictly false, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
+	(actual: any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
 }
 
 export interface FalsyAssertion {
-	/** Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy). */
-	(actual: any, message?: string): void;
+	/**
+	 * Assert that `actual` is
+	 * [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning
+	 * Boolean whether the assertion passes.
+	 */
+	(actual: any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -163,9 +220,10 @@ export interface FalsyAssertion {
 export interface IsAssertion {
 	/**
 	 * Assert that `actual` is [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+	 * as `expected`, returning Boolean indicating whether the assertion passes.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -174,25 +232,33 @@ export interface IsAssertion {
 export interface NotAssertion {
 	/**
 	 * Assert that `actual` is not [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+	 * as `expected`, returning Boolean indicating whether the assertion passes.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
 }
 
 export interface NotDeepEqualAssertion {
-	/** Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to `expected`. */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): void;
+	/**
+	 * Assert that `actual` is not [deeply
+	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 */
+	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
 }
 
 export interface NotRegexAssertion {
-	/** Assert that `string` does not match the regular expression. */
-	(string: string, regex: RegExp, message?: string): void;
+	/**
+	 * Assert that `string` does not match the regular expression, returning
+	 * Boolean indicating whether the assertion passes.
+	 */
+	(string: string, regex: RegExp, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(string: string, regex: RegExp, message?: string): void;
@@ -218,16 +284,19 @@ export interface NotThrowsAsyncAssertion {
 }
 
 export interface PassAssertion {
-	/** Count a passing assertion. */
-	(message?: string): void;
+	/** Count a passing assertion, always returning `true`. */
+	(message?: string): true;
 
 	/** Skip this assertion. */
 	skip(message?: string): void;
 }
 
 export interface RegexAssertion {
-	/** Assert that `string` matches the regular expression. */
-	(string: string, regex: RegExp, message?: string): void;
+	/**
+	 * Assert that `string` matches the regular expression, returning Boolean
+	 * indicating whether the assertion passes.
+	 */
+	(string: string, regex: RegExp, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(string: string, regex: RegExp, message?: string): void;
@@ -296,16 +365,23 @@ export interface ThrowsAsyncAssertion {
 }
 
 export interface TrueAssertion {
-	/** Assert that `actual` is strictly true. */
-	(actual: any, message?: string): void;
+	/**
+	 * Assert that `actual` is strictly true, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
+	(actual: any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
 }
 
 export interface TruthyAssertion {
-	/** Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy). */
-	(actual: any, message?: string): void;
+	/**
+	 * Assert that `actual` is
+	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
+	 * returning Boolean indicating whether the assertion passes.
+	 */
+	(actual: any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -433,7 +509,7 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | Subscribable | void;
+export type ImplementationResult = PromiseLike<void> | Subscribable | boolean | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 

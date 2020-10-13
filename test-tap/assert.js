@@ -1826,7 +1826,7 @@ test('.snapshot()', t => {
 
 test('.truthy()', t => {
 	failsWith(t, () => {
-		assertions.truthy(0);
+		return assertions.truthy(0);
 	}, {
 		assertion: 'truthy',
 		message: '',
@@ -1835,7 +1835,7 @@ test('.truthy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.truthy(false, 'my message');
+		return assertions.truthy(false, 'my message');
 	}, {
 		assertion: 'truthy',
 		message: 'my message',
@@ -1857,7 +1857,7 @@ test('.truthy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.truthy(true, null);
+		return assertions.truthy(true, null);
 	}, {
 		assertion: 'truthy',
 		improperUsage: true,
@@ -1873,7 +1873,7 @@ test('.truthy()', t => {
 
 test('.falsy()', t => {
 	failsWith(t, () => {
-		assertions.falsy(1);
+		return assertions.falsy(1);
 	}, {
 		assertion: 'falsy',
 		message: '',
@@ -1882,7 +1882,7 @@ test('.falsy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.falsy(true, 'my message');
+		return assertions.falsy(true, 'my message');
 	}, {
 		assertion: 'falsy',
 		message: 'my message',
@@ -1904,7 +1904,7 @@ test('.falsy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.falsy(false, null);
+		return assertions.falsy(false, null);
 	}, {
 		assertion: 'falsy',
 		improperUsage: true,
@@ -1920,7 +1920,7 @@ test('.falsy()', t => {
 
 test('.true()', t => {
 	failsWith(t, () => {
-		assertions.true(1);
+		return assertions.true(1);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1928,7 +1928,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(0);
+		return assertions.true(0);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1936,7 +1936,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(false);
+		return assertions.true(false);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1944,7 +1944,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true('foo', 'my message');
+		return assertions.true('foo', 'my message');
 	}, {
 		assertion: 'true',
 		message: 'my message',
@@ -1961,7 +1961,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(true, null);
+		return assertions.true(true, null);
 	}, {
 		assertion: 'true',
 		improperUsage: true,
@@ -1977,7 +1977,7 @@ test('.true()', t => {
 
 test('.false()', t => {
 	failsWith(t, () => {
-		assertions.false(0);
+		return assertions.false(0);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -1985,7 +1985,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(1);
+		return assertions.false(1);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -1993,7 +1993,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(true);
+		return assertions.false(true);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -2001,7 +2001,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false('foo', 'my message');
+		return assertions.false('foo', 'my message');
 	}, {
 		assertion: 'false',
 		message: 'my message',
@@ -2018,7 +2018,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(false, null);
+		return assertions.false(false, null);
 	}, {
 		assertion: 'false',
 		improperUsage: true,
@@ -2043,7 +2043,7 @@ test('.regex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/);
+		return assertions.regex('foo', /^abc$/);
 	}, {
 		assertion: 'regex',
 		message: '',
@@ -2054,7 +2054,7 @@ test('.regex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/, 'my message');
+		return assertions.regex('foo', /^abc$/, 'my message');
 	}, {
 		assertion: 'regex',
 		message: 'my message',
@@ -2065,7 +2065,7 @@ test('.regex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/, null);
+		return assertions.regex('foo', /^abc$/, null);
 	}, {
 		assertion: 'regex',
 		improperUsage: true,
@@ -2081,7 +2081,7 @@ test('.regex()', t => {
 
 test('.regex() fails if passed a bad value', t => {
 	failsWith(t, () => {
-		assertions.regex(42, /foo/);
+		return assertions.regex(42, /foo/);
 	}, {
 		assertion: 'regex',
 		improperUsage: true,
@@ -2090,7 +2090,7 @@ test('.regex() fails if passed a bad value', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('42', {});
+		return assertions.regex('42', {});
 	}, {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
@@ -2111,7 +2111,7 @@ test('.notRegex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/);
+		return assertions.notRegex('abc', /abc/);
 	}, {
 		assertion: 'notRegex',
 		message: '',
@@ -2122,7 +2122,7 @@ test('.notRegex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/, 'my message');
+		return assertions.notRegex('abc', /abc/, 'my message');
 	}, {
 		assertion: 'notRegex',
 		message: 'my message',
@@ -2133,7 +2133,7 @@ test('.notRegex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/, null);
+		return assertions.notRegex('abc', /abc/, null);
 	}, {
 		assertion: 'notRegex',
 		improperUsage: true,
@@ -2149,7 +2149,7 @@ test('.notRegex()', t => {
 
 test('.notRegex() fails if passed a bad value', t => {
 	failsWith(t, () => {
-		assertions.notRegex(42, /foo/);
+		return assertions.notRegex(42, /foo/);
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a string',
@@ -2157,7 +2157,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('42', {});
+		return assertions.notRegex('42', {});
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
@@ -2169,7 +2169,7 @@ test('.notRegex() fails if passed a bad value', t => {
 
 test('.assert()', t => {
 	failsWith(t, () => {
-		assertions.assert(0);
+		return assertions.assert(0);
 	}, {
 		assertion: 'assert',
 		message: '',
@@ -2178,7 +2178,7 @@ test('.assert()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.assert(false, 'my message');
+		return assertions.assert(false, 'my message');
 	}, {
 		assertion: 'assert',
 		message: 'my message',
@@ -2200,7 +2200,7 @@ test('.assert()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.assert(null, null);
+		return assertions.assert(null, null);
 	}, {
 		assertion: 'assert',
 		improperUsage: true,
