@@ -11,24 +11,27 @@ const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
 const HelloMessage = require('./fixture/hello-message');
 
-let lastFailure = null;
 let lastPassed = false;
+let lastFailure = null;
 
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
 			pass: () => {
 				lastPassed = true;
+				return true;
 			},
 			pending: promise => {
 				promise.then(() => {
-					lastPassed = true;
+					return true;
 				}, error => {
 					lastFailure = error;
+					return false;
 				});
 			},
 			fail: error => {
 				lastFailure = error;
+				return false;
 			},
 			skip: () => {},
 			experiments: {},
@@ -39,9 +42,23 @@ const AssertionsBase = class extends assert.Assertions {
 
 const assertions = new AssertionsBase();
 
-function assertFailure(t, subset) {
+function assertFailure(
+	t,
+	subset,
+	{actualAssertionReturnValue, expectedAssertionReturnValue} = {}
+) {
 	if (!lastFailure) {
 		t.fail('Expected assertion to fail');
+		return;
+	}
+
+	// If given a particular assertion return value to test against, do so.
+	if (actualAssertionReturnValue !== undefined && expectedAssertionReturnValue !== undefined) {
+		t.is(
+			actualAssertionReturnValue,
+			expectedAssertionReturnValue,
+			'Expected the failing assertion to return a particular value'
+		);
 		return;
 	}
 
@@ -103,13 +120,42 @@ function add(fn) {
 	return gatheringPromise;
 }
 
+function fails(t, fn) {
+	lastFailure = null;
+	const result = fn();
+	if (lastFailure && result === false) {
+		t.pass();
+	} else {
+		t.fail('Expected assertion fail and return false');
+	}
+}
+
+function failsReturningArbitraryAssertionReturnValue(t, fn) {
+	lastFailure = null;
+	fn();
+	if (lastFailure) {
+		t.pass();
+	} else {
+		t.fail('Expected assertion fail');
+	}
+}
+
 function failsWith(t, fn, subset) {
+	lastFailure = null;
+	const actualAssertionReturnValue = fn();
+	assertFailure(t, subset, {
+		actualAssertionReturnValue,
+		expectedAssertionReturnValue: false
+	});
+}
+
+function failsWithReturningArbitraryAssertionReturnValue(t, fn, subset) {
 	lastFailure = null;
 	fn();
 	assertFailure(t, subset);
 }
 
-function eventuallyFailsWith(t, fn, subset) {
+function eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
 		return fn().then(() => {
@@ -118,34 +164,22 @@ function eventuallyFailsWith(t, fn, subset) {
 	});
 }
 
-function fails(t, fn) {
-	lastFailure = null;
-	fn();
-	if (lastFailure) {
-		t.pass();
-	} else {
-		t.fail('Expected assertion to fail');
-	}
-}
-
-/* Might be useful
-function eventuallyFails(t, fn) {
-	return add(() => {
-		lastFailure = null;
-		return fn().then(() => {
-			if (lastFailure) {
-				t.pass();
-			} else {
-				t.fail('Expected assertion to fail');
-			}
-		});
-	});
-}
-*/
-
 function passes(t, fn) {
 	lastPassed = false;
 	lastFailure = null;
+
+	const result = fn();
+	if (lastPassed && result === true) {
+		t.pass();
+	} else {
+		t.ifError(lastFailure, 'Expected assertion to pass and return true');
+	}
+}
+
+function passesReturningArbitraryAssertionReturnValue(t, fn) {
+	lastPassed = false;
+	lastFailure = null;
+
 	fn();
 	if (lastPassed) {
 		t.pass();
@@ -154,28 +188,28 @@ function passes(t, fn) {
 	}
 }
 
-function eventuallyPasses(t, fn) {
-	return add(() => {
+function eventuallyPassesReturningArbitraryAssertionReturnValue(t, fn) {
+	return add(async () => {
 		lastPassed = false;
 		lastFailure = null;
-		return fn().then(() => {
-			if (lastPassed) {
-				t.pass();
-			} else {
-				t.ifError(lastFailure, 'Expected assertion to pass');
-			}
-		});
+
+		await fn();
+		if (lastPassed) {
+			t.pass();
+		} else {
+			t.ifError(lastFailure, 'Expected assertion to pass');
+		}
 	});
 }
 
 test('.pass()', t => {
 	passes(t, () => {
-		assertions.pass();
+		return assertions.pass();
 	});
 
 	passes(t, () => {
 		const {pass} = assertions;
-		pass();
+		return pass();
 	});
 
 	t.end();
@@ -183,29 +217,28 @@ test('.pass()', t => {
 
 test('.fail()', t => {
 	failsWith(t, () => {
-		assertions.fail();
+		return assertions.fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		assertions.fail('my message');
+		return assertions.fail('my message');
 	}, {
 		assertion: 'fail',
 		message: 'my message'
 	});
 
 	failsWith(t, () => {
-		const {fail} = assertions;
-		fail();
+		return assertions.fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		assertions.fail(null);
+		return assertions.fail(null);
 	}, {
 		assertion: 'fail',
 		improperUsage: true,
@@ -221,119 +254,118 @@ test('.fail()', t => {
 
 test('.is()', t => {
 	passes(t, () => {
-		assertions.is('foo', 'foo');
+		return assertions.is('foo', 'foo');
 	});
 
 	passes(t, () => {
-		const {is} = assertions;
-		is('foo', 'foo');
+		return assertions.is('foo', 'foo');
 	});
 
 	passes(t, () => {
-		assertions.is('', '');
+		return assertions.is('', '');
 	});
 
 	passes(t, () => {
-		assertions.is(true, true);
+		return assertions.is(true, true);
 	});
 
 	passes(t, () => {
-		assertions.is(false, false);
+		return assertions.is(false, false);
 	});
 
 	passes(t, () => {
-		assertions.is(null, null);
+		return assertions.is(null, null);
 	});
 
 	passes(t, () => {
-		assertions.is(undefined, undefined);
+		return assertions.is(undefined, undefined);
 	});
 
 	passes(t, () => {
-		assertions.is(1, 1);
+		return assertions.is(1, 1);
 	});
 
 	passes(t, () => {
-		assertions.is(0, 0);
+		return assertions.is(0, 0);
 	});
 
 	passes(t, () => {
-		assertions.is(-0, -0);
+		return assertions.is(-0, -0);
 	});
 
 	passes(t, () => {
-		assertions.is(Number.NaN, Number.NaN);
+		return assertions.is(Number.NaN, Number.NaN);
 	});
 
 	passes(t, () => {
-		assertions.is(0 / 0, Number.NaN);
+		return assertions.is(0 / 0, Number.NaN);
 	});
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
-		assertions.is(someRef, someRef);
+		return assertions.is(someRef, someRef);
 	});
 
 	fails(t, () => {
-		assertions.is(0, -0);
+		return assertions.is(0, -0);
 	});
 
 	fails(t, () => {
-		assertions.is(0, false);
+		return assertions.is(0, false);
 	});
 
 	fails(t, () => {
-		assertions.is('', false);
+		return assertions.is('', false);
 	});
 
 	fails(t, () => {
-		assertions.is('0', 0);
+		return assertions.is('0', 0);
 	});
 
 	fails(t, () => {
-		assertions.is('17', 17);
+		return assertions.is('17', 17);
 	});
 
 	fails(t, () => {
-		assertions.is([1, 2], '1,2');
-	});
-
-	fails(t, () => {
-		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), 'foo');
-	});
-
-	fails(t, () => {
-		assertions.is(null, undefined);
-	});
-
-	fails(t, () => {
-		assertions.is(null, false);
-	});
-
-	fails(t, () => {
-		assertions.is(undefined, false);
+		return assertions.is([1, 2], '1,2');
 	});
 
 	fails(t, () => {
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), new String('foo'));
+		return assertions.is(new String('foo'), 'foo');
 	});
 
 	fails(t, () => {
-		assertions.is(0, null);
+		return assertions.is(null, undefined);
 	});
 
 	fails(t, () => {
-		assertions.is(0, Number.NaN);
+		return assertions.is(null, false);
 	});
 
 	fails(t, () => {
-		assertions.is('foo', Number.NaN);
+		return assertions.is(undefined, false);
+	});
+
+	fails(t, () => {
+		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
+		return assertions.is(new String('foo'), new String('foo'));
+	});
+
+	fails(t, () => {
+		return assertions.is(0, null);
+	});
+
+	fails(t, () => {
+		return assertions.is(0, Number.NaN);
+	});
+
+	fails(t, () => {
+		return assertions.is('foo', Number.NaN);
 	});
 
 	failsWith(t, () => {
-		assertions.is({foo: 'bar'}, {foo: 'bar'});
+		return assertions.is({foo: 'bar'}, {foo: 'bar'});
 	}, {
 		assertion: 'is',
 		message: '',
@@ -346,7 +378,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 'bar');
+		return assertions.is('foo', 'bar');
 	}, {
 		assertion: 'is',
 		message: '',
@@ -357,7 +389,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 42);
+		return assertions.is('foo', 42);
 	}, {
 		actual: 'foo',
 		assertion: 'is',
@@ -369,7 +401,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is('foo', 42, 'my message');
+		return assertions.is('foo', 42, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -379,7 +411,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(0, -0, 'my message');
+		return assertions.is(0, -0, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -389,7 +421,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(-0, 0, 'my message');
+		return assertions.is(-0, 0, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -399,7 +431,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.is(0, 0, null);
+		return assertions.is(0, 0, null);
 	}, {
 		assertion: 'is',
 		improperUsage: true,
@@ -415,24 +447,23 @@ test('.is()', t => {
 
 test('.not()', t => {
 	passes(t, () => {
-		assertions.not('foo', 'bar');
+		return assertions.not('foo', 'bar');
 	});
 
 	passes(t, () => {
-		const {not} = assertions;
-		not('foo', 'bar');
+		return assertions.not('foo', 'bar');
 	});
 
 	fails(t, () => {
-		assertions.not(Number.NaN, Number.NaN);
+		return assertions.not(Number.NaN, Number.NaN);
 	});
 
 	fails(t, () => {
-		assertions.not(0 / 0, Number.NaN);
+		return assertions.not(0 / 0, Number.NaN);
 	});
 
 	failsWith(t, () => {
-		assertions.not('foo', 'foo');
+		return assertions.not('foo', 'foo');
 	}, {
 		assertion: 'not',
 		message: '',
@@ -441,7 +472,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.not('foo', 'foo', 'my message');
+		return assertions.not('foo', 'foo', 'my message');
 	}, {
 		assertion: 'not',
 		message: 'my message',
@@ -449,7 +480,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.not(0, 1, null);
+		return assertions.not(0, 1, null);
 	}, {
 		assertion: 'not',
 		improperUsage: true,
@@ -468,11 +499,11 @@ test('.deepEqual()', t => {
 	// used to test deep object equality
 
 	fails(t, () => {
-		assertions.deepEqual({a: false}, {a: 0});
+		return assertions.deepEqual({a: false}, {a: 0});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b'
 		}, {
@@ -482,12 +513,11 @@ test('.deepEqual()', t => {
 	});
 
 	passes(t, () => {
-		const {deepEqual} = assertions;
-		deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+		return assertions.deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -503,17 +533,17 @@ test('.deepEqual()', t => {
 	});
 
 	fails(t, () => {
-		assertions.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+		return assertions.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual([1, 2, 3], [1, 2, 3]);
+		return assertions.deepEqual([1, 2, 3], [1, 2, 3]);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.deepEqual(fnA, fnB);
+		return assertions.deepEqual(fnA, fnB);
 	});
 
 	passes(t, () => {
@@ -525,7 +555,7 @@ test('.deepEqual()', t => {
 		const y2 = {x: x2};
 		x2.y = y2;
 
-		assertions.deepEqual(x1, x2);
+		return assertions.deepEqual(x1, x2);
 	});
 
 	passes(t, () => {
@@ -536,7 +566,7 @@ test('.deepEqual()', t => {
 		const x = new Foo(1);
 		const y = new Foo(1);
 
-		assertions.deepEqual(x, y);
+		return assertions.deepEqual(x, y);
 	});
 
 	fails(t, () => {
@@ -551,11 +581,11 @@ test('.deepEqual()', t => {
 		const x = new Foo(1);
 		const y = new Bar(1);
 
-		assertions.deepEqual(x, y);
+		return assertions.deepEqual(x, y);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -571,73 +601,91 @@ test('.deepEqual()', t => {
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({}, []);
+		return assertions.deepEqual({}, []);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+		return assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({a: 1}, {a: 1, b: undefined});
+		return assertions.deepEqual({a: 1}, {a: 1, b: undefined});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), null);
+		return assertions.deepEqual(new Date('1972-08-01'), null);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), undefined);
+		return assertions.deepEqual(new Date('1972-08-01'), undefined);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
+		return assertions.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
+		return assertions.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(() => {}, () => {});
+		return assertions.deepEqual(() => {}, () => {});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(undefined, undefined);
-		assertions.deepEqual({x: undefined}, {x: undefined});
-		assertions.deepEqual({x: [undefined]}, {x: [undefined]});
+		return assertions.deepEqual(undefined, undefined);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(null, null);
-		assertions.deepEqual({x: null}, {x: null});
-		assertions.deepEqual({x: [null]}, {x: [null]});
+		return assertions.deepEqual({x: undefined}, {x: undefined});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(0, 0);
-		assertions.deepEqual(1, 1);
-		assertions.deepEqual(3.14, 3.14);
-	});
-
-	fails(t, () => {
-		assertions.deepEqual(0, 1);
-	});
-
-	fails(t, () => {
-		assertions.deepEqual(1, -1);
-	});
-
-	fails(t, () => {
-		assertions.deepEqual(3.14, 2.72);
-	});
-
-	fails(t, () => {
-		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+		return assertions.deepEqual({x: [undefined]}, {x: [undefined]});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(null, null);
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual({x: null}, {x: null});
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual({x: [null]}, {x: [null]});
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual(0, 0);
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual(1, 1);
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual(3.14, 3.14);
+	});
+
+	fails(t, () => {
+		return assertions.deepEqual(0, 1);
+	});
+
+	fails(t, () => {
+		return assertions.deepEqual(1, -1);
+	});
+
+	fails(t, () => {
+		return assertions.deepEqual(3.14, 2.72);
+	});
+
+	fails(t, () => {
+		return assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+	});
+
+	passes(t, () => {
+		return assertions.deepEqual(
 			[
 				{foo: {z: 100, y: 200, x: 300}},
 				'bar',
@@ -654,14 +702,14 @@ test('.deepEqual()', t => {
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(
 			{x: {a: 1, b: 2}, y: {c: 3, d: 4}},
 			{y: {d: 4, c: 3}, x: {b: 2, a: 1}}
 		);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(
 			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
 			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
 		);
@@ -670,33 +718,33 @@ test('.deepEqual()', t => {
 	// Regression test end here
 
 	passes(t, () => {
-		assertions.deepEqual({a: 'a'}, {a: 'a'});
+		return assertions.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(['a', 'b'], ['a', 'b']);
+		return assertions.deepEqual(['a', 'b'], ['a', 'b']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({a: 'a'}, {a: 'b'});
+		return assertions.deepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(['a', 'b'], ['a', 'a']);
+		return assertions.deepEqual(['a', 'b'], ['a', 'a']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+		return assertions.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.deepEqual([circular, 'c'], [circular, 'd']);
+		return assertions.deepEqual([circular, 'c'], [circular, 'd']);
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 'bar');
+		return assertions.deepEqual('foo', 'bar');
 	}, {
 		assertion: 'deepEqual',
 		message: '',
@@ -705,7 +753,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 42);
+		return assertions.deepEqual('foo', 42);
 	}, {
 		assertion: 'deepEqual',
 		message: '',
@@ -714,7 +762,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 42, 'my message');
+		return assertions.deepEqual('foo', 42, 'my message');
 	}, {
 		assertion: 'deepEqual',
 		message: 'my message',
@@ -722,7 +770,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual({}, {}, null);
+		return assertions.deepEqual({}, {}, null);
 	}, {
 		assertion: 'deepEqual',
 		improperUsage: true,
@@ -738,22 +786,21 @@ test('.deepEqual()', t => {
 
 test('.notDeepEqual()', t => {
 	passes(t, () => {
-		assertions.notDeepEqual({a: 'a'}, {a: 'b'});
+		return assertions.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	passes(t, () => {
-		const {notDeepEqual} = assertions;
-		notDeepEqual({a: 'a'}, {a: 'b'});
+		return assertions.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	passes(t, () => {
-		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
+		return assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
 	const actual = {a: 'a'};
 	const expected = {a: 'a'};
 	failsWith(t, () => {
-		assertions.notDeepEqual(actual, expected);
+		return assertions.notDeepEqual(actual, expected);
 	}, {
 		actual,
 		assertion: 'notDeepEqual',
@@ -764,7 +811,7 @@ test('.notDeepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message');
+		return assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message');
 	}, {
 		assertion: 'notDeepEqual',
 		message: 'my message',
@@ -772,7 +819,7 @@ test('.notDeepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notDeepEqual({}, [], null);
+		return assertions.notDeepEqual({}, [], null);
 	}, {
 		assertion: 'notDeepEqual',
 		improperUsage: true,
@@ -788,11 +835,11 @@ test('.notDeepEqual()', t => {
 
 test('.like()', t => {
 	fails(t, () => {
-		assertions.like({a: false}, {a: 0});
+		return assertions.like({a: false}, {a: 0});
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: 'a',
 			b: 'b'
 		}, {
@@ -802,12 +849,11 @@ test('.like()', t => {
 	});
 
 	passes(t, () => {
-		const {like} = assertions;
-		like({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+		return assertions.like({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -825,11 +871,11 @@ test('.like()', t => {
 	});
 
 	fails(t, () => {
-		assertions.like([1, 2, 3], [1, 2, 3, 4]);
+		return assertions.like([1, 2, 3], [1, 2, 3, 4]);
 	});
 
 	fails(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: [1, 2, 3]
 		}, {
 			a: [1, 2, 3, 4]
@@ -837,7 +883,7 @@ test('.like()', t => {
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: [1, 2, 3],
 			x: 'x'
 		}, {
@@ -856,19 +902,19 @@ test('.like()', t => {
 			a: 'a'
 		};
 
-		assertions.like(actual, likePattern);
+		return assertions.like(actual, likePattern);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.like(fnA, fnB);
+		return assertions.like(fnA, fnB);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.like({
+		return assertions.like({
 			fn: fnA
 		}, {
 			fn: fnB
@@ -887,59 +933,59 @@ test('.like()', t => {
 		const x = new Foo(1);
 		const y = new Bar(1);
 
-		assertions.like(x, y);
+		return assertions.like(x, y);
 	});
 
 	passes(t, () => {
-		assertions.like({a: 'a'}, {a: 'a'});
+		return assertions.like({a: 'a'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({a: 'a', b: 'b'}, {a: 'a'});
+		return assertions.like({a: 'a', b: 'b'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
+		return assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
 	});
 
 	passes(t, () => {
-		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'b']});
+		return assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'b']});
 	});
 
 	fails(t, () => {
-		assertions.like({a: 'a'}, {a: 'b'});
+		return assertions.like({a: 'a'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.like({a: 'a', b: 'b'}, {a: 'b'});
+		return assertions.like({a: 'a', b: 'b'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'a']});
+		return assertions.like({ab: ['a', 'b']}, {ab: ['a', 'a']});
 	});
 
 	fails(t, () => {
-		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'a']});
+		return assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'a']});
 	});
 
 	fails(t, () => {
-		assertions.like([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+		return assertions.like([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.like([circular, 'c'], [circular, 'd']);
+		return assertions.like([circular, 'c'], [circular, 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
+		return assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
 	});
 
 	failsWith(t, () => {
-		assertions.like({a: 'a'}, {});
+		return assertions.like({a: 'a'}, {});
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
@@ -947,7 +993,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like('foo', 'bar');
+		return assertions.like('foo', 'bar');
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
@@ -960,7 +1006,7 @@ test('.like()', t => {
 		};
 		likePattern.circular = likePattern;
 
-		assertions.like({}, likePattern);
+		return assertions.like({}, likePattern);
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must not contain circular references',
@@ -968,7 +1014,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like({}, {}, null);
+		return assertions.like({}, {}, null);
 	}, {
 		assertion: 'like',
 		improperUsage: true,
@@ -980,7 +1026,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'});
+		return assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'});
 	}, {
 		assertion: 'like',
 		message: '',
@@ -992,7 +1038,7 @@ test('.like()', t => {
 
 test('.throws()', gather(t => {
 	// Fails because function doesn't throw.
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {});
 	}, {
 		assertion: 'throws',
@@ -1000,7 +1046,7 @@ test('.throws()', gather(t => {
 		values: [{label: 'Function returned:', formatted: /undefined/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		const {throws} = assertions;
 		throws(() => {});
 	}, {
@@ -1011,7 +1057,7 @@ test('.throws()', gather(t => {
 
 	// Fails because function doesn't throw. Asserts that 'my message' is used
 	// as the assertion message (*not* compared against the error).
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, null, 'my message');
 	}, {
 		assertion: 'throws',
@@ -1020,7 +1066,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the function returned a promise.
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => Promise.resolve());
 	}, {
 		assertion: 'throws',
@@ -1029,7 +1075,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because thrown exception is not an error
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = 'foo';
 			throw err;
@@ -1043,14 +1089,14 @@ test('.throws()', gather(t => {
 	});
 
 	// Passes because an error is thrown.
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		});
 	});
 
 	// Passes because the correct error is thrown.
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		const err = new Error('foo');
 		assertions.throws(() => {
 			throw err;
@@ -1058,7 +1104,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the thrown value is not an error
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		const object = {};
 		assertions.throws(() => {
 			throw object;
@@ -1066,7 +1112,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the thrown value is not the right one
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		const err = new Error('foo');
 		assertions.throws(() => {
 			throw err;
@@ -1074,14 +1120,14 @@ test('.throws()', gather(t => {
 	});
 
 	// Passes because the correct error is thrown.
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new TypeError(); // eslint-disable-line unicorn/error-message
 		}, {name: 'TypeError'});
 	});
 
 	// Fails because the thrown value is not an error
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = {name: 'Bob'};
 			throw err;
@@ -1089,14 +1135,14 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the thrown value is not the right one
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, {name: 'TypeError'});
 	});
 
 	// Passes because the correct error is thrown.
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = new TypeError();
 			err.code = 'ERR_TEST';
@@ -1105,7 +1151,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Passes because the correct error is thrown.
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = new TypeError();
 			err.code = 42;
@@ -1114,7 +1160,7 @@ test('.throws()', gather(t => {
 	});
 
 	// Fails because the thrown value is not the right one
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = new TypeError();
 			err.code = 'ERR_NOPE';
@@ -1122,7 +1168,7 @@ test('.throws()', gather(t => {
 		}, {code: 'ERR_TEST'});
 	});
 
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			const err = new TypeError();
 			err.code = 1;
@@ -1131,32 +1177,32 @@ test('.throws()', gather(t => {
 	});
 
 	// Regression test for https://github.com/avajs/ava/issues/1676
-	fails(t, () => {
+	failsReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, false);
 	});
 
 	// Regression test for https://github.com/avajs/ava/issues/1676
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, null);
 	});
 
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, undefined);
 	});
 
-	passes(t, async () => {
+	passesReturningArbitraryAssertionReturnValue(t, async () => {
 		await assertions.throwsAsync(() => {
 			return Promise.reject(new Error('foo'));
 		}, undefined);
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, null, null);
 	}, {
 		assertion: 'throws',
@@ -1182,13 +1228,13 @@ test('.throws() returns the thrown error', t => {
 
 test('.throwsAsync()', gather(t => {
 	// Fails because the promise is resolved, not rejected.
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
 		assertion: 'throwsAsync',
 		message: '',
 		values: [{label: 'Promise resolved with:', formatted: /'foo'/}]
 	});
 
-	eventuallyFailsWith(t, () => {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => {
 		const {throwsAsync} = assertions;
 		return throwsAsync(Promise.resolve('foo'));
 	}, {
@@ -1198,27 +1244,27 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the promise is resolved with an Error
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(new Error())), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(Promise.resolve(new Error())), {
 		assertion: 'throwsAsync',
 		message: '',
 		values: [{label: 'Promise resolved with:', formatted: /Error/}]
 	});
 
 	// Fails because the function returned a promise that resolved, not rejected.
-	eventuallyFailsWith(t, () => assertions.throwsAsync(() => Promise.resolve('foo')), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(() => Promise.resolve('foo')), {
 		assertion: 'throwsAsync',
 		message: '',
 		values: [{label: 'Returned promise resolved with:', formatted: /'foo'/}]
 	});
 
 	// Passes because the promise was rejected with an error.
-	eventuallyPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(Promise.reject(new Error())));
 
 	// Passes because the function returned a promise rejected with an error.
-	eventuallyPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
+	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
 
 	// Fails because the function throws synchronously
-	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(() => {
 		throw new Error('sync');
 	}, null, 'message'), {
 		assertion: 'throwsAsync',
@@ -1229,7 +1275,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {}, null, 'message'), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(() => {}, null, 'message'), {
 		assertion: 'throwsAsync',
 		message: 'message',
 		values: [
@@ -1237,7 +1283,7 @@ test('.throwsAsync()', gather(t => {
 		]
 	});
 
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), null, null), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.throwsAsync(Promise.resolve(), null, null), {
 		assertion: 'throwsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',
@@ -1269,7 +1315,7 @@ test('.throwsAsync() returns the rejection reason of a promise returned by the f
 });
 
 test('.throws() fails if passed a bad value', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws('not a function');
 	}, {
 		assertion: 'throws',
@@ -1281,7 +1327,7 @@ test('.throws() fails if passed a bad value', t => {
 });
 
 test('.throwsAsync() fails if passed a bad value', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync('not a function');
 	}, {
 		assertion: 'throwsAsync',
@@ -1293,7 +1339,7 @@ test('.throwsAsync() fails if passed a bad value', t => {
 });
 
 test('.throws() fails if passed a bad expectation', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, true);
 	}, {
 		assertion: 'throws',
@@ -1301,7 +1347,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /true/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, 'foo');
 	}, {
 		assertion: 'throws',
@@ -1309,7 +1355,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /foo/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, /baz/);
 	}, {
 		assertion: 'throws',
@@ -1317,7 +1363,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /baz/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, class Bar {});
 	}, {
 		assertion: 'throws',
@@ -1325,7 +1371,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {});
 	}, {
 		assertion: 'throws',
@@ -1333,7 +1379,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, []);
 	}, {
 		assertion: 'throws',
@@ -1341,7 +1387,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {code: {}});
 	}, {
 		assertion: 'throws',
@@ -1349,7 +1395,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /code: {}/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {instanceOf: null});
 	}, {
 		assertion: 'throws',
@@ -1357,7 +1403,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /instanceOf: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {message: null});
 	}, {
 		assertion: 'throws',
@@ -1365,7 +1411,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /message: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {name: null});
 	}, {
 		assertion: 'throws',
@@ -1373,7 +1419,7 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /name: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throws(() => {}, {is: {}, message: '', name: '', of() {}, foo: null});
 	}, {
 		assertion: 'throws',
@@ -1385,7 +1431,7 @@ test('.throws() fails if passed a bad expectation', t => {
 });
 
 test('.throwsAsync() fails if passed a bad expectation', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, true);
 	}, {
 		assertion: 'throwsAsync',
@@ -1393,7 +1439,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /true/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, 'foo');
 	}, {
 		assertion: 'throwsAsync',
@@ -1401,7 +1447,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /foo/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, /baz/);
 	}, {
 		assertion: 'throwsAsync',
@@ -1409,7 +1455,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /baz/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, class Bar {});
 	}, {
 		assertion: 'throwsAsync',
@@ -1417,7 +1463,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /Bar/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {});
 	}, {
 		assertion: 'throwsAsync',
@@ -1425,7 +1471,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /{}/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, []);
 	}, {
 		assertion: 'throwsAsync',
@@ -1433,7 +1479,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /\[]/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {code: {}});
 	}, {
 		assertion: 'throwsAsync',
@@ -1441,7 +1487,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /code: {}/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {instanceOf: null});
 	}, {
 		assertion: 'throwsAsync',
@@ -1449,7 +1495,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /instanceOf: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {message: null});
 	}, {
 		assertion: 'throwsAsync',
@@ -1457,7 +1503,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /message: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {name: null});
 	}, {
 		assertion: 'throwsAsync',
@@ -1465,7 +1511,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /name: null/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.throwsAsync(() => {}, {is: {}, message: '', name: '', of() {}, foo: null});
 	}, {
 		assertion: 'throwsAsync',
@@ -1479,7 +1525,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 test('.throws() fails if passed null expectation with disableNullExpectations', t => {
 	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		asserter.throws(() => {}, null);
 	}, {
 		assertion: 'throws',
@@ -1493,7 +1539,7 @@ test('.throws() fails if passed null expectation with disableNullExpectations', 
 test('.throwsAsync() fails if passed null expectation with disableNullExpectations', t => {
 	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		asserter.throwsAsync(() => {}, null);
 	}, {
 		assertion: 'throwsAsync',
@@ -1506,17 +1552,17 @@ test('.throwsAsync() fails if passed null expectation with disableNullExpectatio
 
 test('.notThrows()', gather(t => {
 	// Passes because the function doesn't throw
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrows(() => {});
 	});
 
-	passes(t, () => {
+	passesReturningArbitraryAssertionReturnValue(t, () => {
 		const {notThrows} = assertions;
 		notThrows(() => {});
 	});
 
 	// Fails because the function throws.
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrows(() => {
 			throw new Error('foo');
 		});
@@ -1528,7 +1574,7 @@ test('.notThrows()', gather(t => {
 
 	// Fails because the function throws. Asserts that message is used for the
 	// assertion, not to validate the thrown error.
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrows(() => {
 			throw new Error('foo');
 		}, 'my message');
@@ -1538,7 +1584,7 @@ test('.notThrows()', gather(t => {
 		values: [{label: 'Function threw:', formatted: /foo/}]
 	});
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrows(() => {}, null);
 	}, {
 		assertion: 'notThrows',
@@ -1553,32 +1599,32 @@ test('.notThrows()', gather(t => {
 
 test('.notThrowsAsync()', gather(t => {
 	// Passes because the promise is resolved
-	eventuallyPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
+	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.resolve()));
 
-	eventuallyPasses(t, () => {
+	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => {
 		const {notThrowsAsync} = assertions;
 		return notThrowsAsync(Promise.resolve());
 	});
 
 	// Fails because the promise is rejected
-	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Promise rejected with:', formatted: /Error/}]
 	});
 
 	// Passes because the function returned a resolved promise
-	eventuallyPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
+	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
 
 	// Fails because the function returned a rejected promise
-	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Returned promise rejected with:', formatted: /Error/}]
 	});
 
 	// Fails because the function throws synchronously
-	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => {
 		throw new Error('sync');
 	}, 'message'), {
 		assertion: 'notThrowsAsync',
@@ -1589,7 +1635,7 @@ test('.notThrowsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
 		assertion: 'notThrowsAsync',
 		message: 'message',
 		values: [
@@ -1597,7 +1643,7 @@ test('.notThrowsAsync()', gather(t => {
 		]
 	});
 
-	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
+	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
 		assertion: 'notThrowsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',
@@ -1623,7 +1669,7 @@ test('.notThrowsAsync() returns undefined for a fulfilled promise returned by th
 });
 
 test('.notThrows() fails if passed a bad value', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrows('not a function');
 	}, {
 		assertion: 'notThrows',
@@ -1635,7 +1681,7 @@ test('.notThrows() fails if passed a bad value', t => {
 });
 
 test('.notThrowsAsync() fails if passed a bad value', t => {
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		assertions.notThrowsAsync('not a function');
 	}, {
 		assertion: 'notThrowsAsync',
@@ -1682,24 +1728,24 @@ test('.snapshot()', t => {
 	{
 		const assertions = setup('passes');
 
-		passes(t, () => {
+		passesReturningArbitraryAssertionReturnValue(t, () => {
 			assertions.snapshot({foo: 'bar'});
 		});
 
-		passes(t, () => {
+		passesReturningArbitraryAssertionReturnValue(t, () => {
 			const {snapshot} = assertions;
 			snapshot({foo: 'bar'});
 		});
 
-		passes(t, () => {
+		passesReturningArbitraryAssertionReturnValue(t, () => {
 			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
 		});
 
-		passes(t, () => {
+		passesReturningArbitraryAssertionReturnValue(t, () => {
 			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		});
 
-		passes(t, () => {
+		passesReturningArbitraryAssertionReturnValue(t, () => {
 			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		});
 	}
@@ -1709,7 +1755,7 @@ test('.snapshot()', t => {
 		if (updating) {
 			assertions.snapshot({foo: 'bar'});
 		} else {
-			failsWith(t, () => {
+			failsWithReturningArbitraryAssertionReturnValue(t, () => {
 				assertions.snapshot({foo: 'not bar'});
 			}, {
 				assertion: 'snapshot',
@@ -1719,7 +1765,7 @@ test('.snapshot()', t => {
 		}
 	}
 
-	failsWith(t, () => {
+	failsWithReturningArbitraryAssertionReturnValue(t, () => {
 		const assertions = setup('fails (fixed id)');
 		assertions.snapshot({foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
 	}, {
@@ -1733,7 +1779,7 @@ test('.snapshot()', t => {
 		if (updating) {
 			assertions.snapshot({foo: 'bar'}, 'my message');
 		} else {
-			failsWith(t, () => {
+			failsWithReturningArbitraryAssertionReturnValue(t, () => {
 				assertions.snapshot({foo: 'not bar'}, 'my message');
 			}, {
 				assertion: 'snapshot',
@@ -1748,7 +1794,7 @@ test('.snapshot()', t => {
 		if (updating) {
 			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
-			passes(t, () => {
+			passesReturningArbitraryAssertionReturnValue(t, () => {
 				assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
 			});
 		}
@@ -1759,7 +1805,7 @@ test('.snapshot()', t => {
 		if (updating) {
 			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
-			failsWith(t, () => {
+			failsWithReturningArbitraryAssertionReturnValue(t, () => {
 				assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
 			}, {
 				assertion: 'snapshot',
@@ -1774,7 +1820,7 @@ test('.snapshot()', t => {
 		if (updating) {
 			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		} else {
-			failsWith(t, () => {
+			failsWithReturningArbitraryAssertionReturnValue(t, () => {
 				assertions.snapshot(React.createElement(HelloMessage, {name: 'Vadim'}));
 			}, {
 				assertion: 'snapshot',
@@ -1786,7 +1832,7 @@ test('.snapshot()', t => {
 
 	{
 		const assertions = setup('bad message');
-		failsWith(t, () => {
+		failsWithReturningArbitraryAssertionReturnValue(t, () => {
 			assertions.snapshot(null, null, null);
 		}, {
 			assertion: 'snapshot',
@@ -1805,7 +1851,7 @@ test('.snapshot()', t => {
 
 test('.truthy()', t => {
 	failsWith(t, () => {
-		assertions.truthy(0);
+		return assertions.truthy(0);
 	}, {
 		assertion: 'truthy',
 		message: '',
@@ -1814,7 +1860,7 @@ test('.truthy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.truthy(false, 'my message');
+		return assertions.truthy(false, 'my message');
 	}, {
 		assertion: 'truthy',
 		message: 'my message',
@@ -1823,18 +1869,23 @@ test('.truthy()', t => {
 	});
 
 	passes(t, () => {
-		assertions.truthy(1);
-		assertions.truthy(true);
+		return assertions.truthy(1);
 	});
 
 	passes(t, () => {
-		const {truthy} = assertions;
-		truthy(1);
-		truthy(true);
+		return assertions.truthy(true);
+	});
+
+	passes(t, () => {
+		return assertions.truthy(1);
+	});
+
+	passes(t, () => {
+		return assertions.truthy(true);
 	});
 
 	failsWith(t, () => {
-		assertions.truthy(true, null);
+		return assertions.truthy(true, null);
 	}, {
 		assertion: 'truthy',
 		improperUsage: true,
@@ -1850,7 +1901,7 @@ test('.truthy()', t => {
 
 test('.falsy()', t => {
 	failsWith(t, () => {
-		assertions.falsy(1);
+		return assertions.falsy(1);
 	}, {
 		assertion: 'falsy',
 		message: '',
@@ -1859,7 +1910,7 @@ test('.falsy()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.falsy(true, 'my message');
+		return assertions.falsy(true, 'my message');
 	}, {
 		assertion: 'falsy',
 		message: 'my message',
@@ -1868,18 +1919,23 @@ test('.falsy()', t => {
 	});
 
 	passes(t, () => {
-		assertions.falsy(0);
-		assertions.falsy(false);
+		return assertions.falsy(0);
 	});
 
 	passes(t, () => {
-		const {falsy} = assertions;
-		falsy(0);
-		falsy(false);
+		return assertions.falsy(false);
+	});
+
+	passes(t, () => {
+		return assertions.falsy(0);
+	});
+
+	passes(t, () => {
+		return assertions.falsy(false);
 	});
 
 	failsWith(t, () => {
-		assertions.falsy(false, null);
+		return assertions.falsy(false, null);
 	}, {
 		assertion: 'falsy',
 		improperUsage: true,
@@ -1895,7 +1951,7 @@ test('.falsy()', t => {
 
 test('.true()', t => {
 	failsWith(t, () => {
-		assertions.true(1);
+		return assertions.true(1);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1903,7 +1959,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(0);
+		return assertions.true(0);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1911,7 +1967,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(false);
+		return assertions.true(false);
 	}, {
 		assertion: 'true',
 		message: '',
@@ -1919,7 +1975,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true('foo', 'my message');
+		return assertions.true('foo', 'my message');
 	}, {
 		assertion: 'true',
 		message: 'my message',
@@ -1927,7 +1983,7 @@ test('.true()', t => {
 	});
 
 	passes(t, () => {
-		assertions.true(true);
+		return assertions.true(true);
 	});
 
 	passes(t, () => {
@@ -1936,7 +1992,7 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.true(true, null);
+		return assertions.true(true, null);
 	}, {
 		assertion: 'true',
 		improperUsage: true,
@@ -1952,7 +2008,7 @@ test('.true()', t => {
 
 test('.false()', t => {
 	failsWith(t, () => {
-		assertions.false(0);
+		return assertions.false(0);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -1960,7 +2016,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(1);
+		return assertions.false(1);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -1968,7 +2024,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(true);
+		return assertions.false(true);
 	}, {
 		assertion: 'false',
 		message: '',
@@ -1976,7 +2032,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false('foo', 'my message');
+		return assertions.false('foo', 'my message');
 	}, {
 		assertion: 'false',
 		message: 'my message',
@@ -1984,7 +2040,7 @@ test('.false()', t => {
 	});
 
 	passes(t, () => {
-		assertions.false(false);
+		return assertions.false(false);
 	});
 
 	passes(t, () => {
@@ -1993,7 +2049,7 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.false(false, null);
+		return assertions.false(false, null);
 	}, {
 		assertion: 'false',
 		improperUsage: true,
@@ -2009,16 +2065,15 @@ test('.false()', t => {
 
 test('.regex()', t => {
 	passes(t, () => {
-		assertions.regex('abc', /^abc$/);
+		return assertions.regex('abc', /^abc$/);
 	});
 
 	passes(t, () => {
-		const {regex} = assertions;
-		regex('abc', /^abc$/);
+		return assertions.regex('abc', /^abc$/);
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/);
+		return assertions.regex('foo', /^abc$/);
 	}, {
 		assertion: 'regex',
 		message: '',
@@ -2029,7 +2084,7 @@ test('.regex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/, 'my message');
+		return assertions.regex('foo', /^abc$/, 'my message');
 	}, {
 		assertion: 'regex',
 		message: 'my message',
@@ -2040,7 +2095,7 @@ test('.regex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('foo', /^abc$/, null);
+		return assertions.regex('foo', /^abc$/, null);
 	}, {
 		assertion: 'regex',
 		improperUsage: true,
@@ -2056,7 +2111,7 @@ test('.regex()', t => {
 
 test('.regex() fails if passed a bad value', t => {
 	failsWith(t, () => {
-		assertions.regex(42, /foo/);
+		return assertions.regex(42, /foo/);
 	}, {
 		assertion: 'regex',
 		improperUsage: true,
@@ -2065,7 +2120,7 @@ test('.regex() fails if passed a bad value', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.regex('42', {});
+		return assertions.regex('42', {});
 	}, {
 		assertion: 'regex',
 		message: '`t.regex()` must be called with a regular expression',
@@ -2077,16 +2132,15 @@ test('.regex() fails if passed a bad value', t => {
 
 test('.notRegex()', t => {
 	passes(t, () => {
-		assertions.notRegex('abc', /def/);
+		return assertions.notRegex('abc', /def/);
 	});
 
 	passes(t, () => {
-		const {notRegex} = assertions;
-		notRegex('abc', /def/);
+		return assertions.notRegex('abc', /def/);
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/);
+		return assertions.notRegex('abc', /abc/);
 	}, {
 		assertion: 'notRegex',
 		message: '',
@@ -2097,7 +2151,7 @@ test('.notRegex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/, 'my message');
+		return assertions.notRegex('abc', /abc/, 'my message');
 	}, {
 		assertion: 'notRegex',
 		message: 'my message',
@@ -2108,7 +2162,7 @@ test('.notRegex()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('abc', /abc/, null);
+		return assertions.notRegex('abc', /abc/, null);
 	}, {
 		assertion: 'notRegex',
 		improperUsage: true,
@@ -2124,7 +2178,7 @@ test('.notRegex()', t => {
 
 test('.notRegex() fails if passed a bad value', t => {
 	failsWith(t, () => {
-		assertions.notRegex(42, /foo/);
+		return assertions.notRegex(42, /foo/);
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a string',
@@ -2132,7 +2186,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notRegex('42', {});
+		return assertions.notRegex('42', {});
 	}, {
 		assertion: 'notRegex',
 		message: '`t.notRegex()` must be called with a regular expression',
@@ -2144,7 +2198,7 @@ test('.notRegex() fails if passed a bad value', t => {
 
 test('.assert()', t => {
 	failsWith(t, () => {
-		assertions.assert(0);
+		return assertions.assert(0);
 	}, {
 		assertion: 'assert',
 		message: '',
@@ -2153,7 +2207,7 @@ test('.assert()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.assert(false, 'my message');
+		return assertions.assert(false, 'my message');
 	}, {
 		assertion: 'assert',
 		message: 'my message',
@@ -2162,18 +2216,23 @@ test('.assert()', t => {
 	});
 
 	passes(t, () => {
-		assertions.assert(1);
-		assertions.assert(true);
+		return assertions.assert(1);
 	});
 
 	passes(t, () => {
-		const {assert} = assertions;
-		assert(1);
-		assert(true);
+		return assertions.assert(true);
+	});
+
+	passes(t, () => {
+		return assertions.assert(1);
+	});
+
+	passes(t, () => {
+		return assertions.assert(true);
 	});
 
 	failsWith(t, () => {
-		assertions.assert(null, null);
+		return assertions.assert(null, null);
 	}, {
 		assertion: 'assert',
 		improperUsage: true,
