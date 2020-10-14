@@ -155,6 +155,18 @@ function failsWithReturningArbitraryAssertionReturnValue(t, fn, subset) {
 	assertFailure(t, subset);
 }
 
+function eventuallyFailsWith(t, fn, subset) {
+	return add(() => {
+		lastFailure = null;
+		return fn().then(actualAssertionReturnValue => {
+			assertFailure(t, subset, {
+				actualAssertionReturnValue,
+				expectedAssertionReturnValue: false
+			});
+		});
+	});
+}
+
 function eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
@@ -186,6 +198,20 @@ function passesReturningArbitraryAssertionReturnValue(t, fn) {
 	} else {
 		t.ifError(lastFailure, 'Expected assertion to pass');
 	}
+}
+
+function eventuallyPasses(t, fn) {
+	return add(async () => {
+		lastPassed = false;
+		lastFailure = null;
+
+		const result = await fn();
+		if (lastPassed && result === true) {
+			t.pass();
+		} else {
+			t.ifError(lastFailure, 'Expected assertion to pass and return true');
+		}
+	});
 }
 
 function eventuallyPassesReturningArbitraryAssertionReturnValue(t, fn) {
@@ -1552,18 +1578,17 @@ test('.throwsAsync() fails if passed null expectation with disableNullExpectatio
 
 test('.notThrows()', gather(t => {
 	// Passes because the function doesn't throw
-	passesReturningArbitraryAssertionReturnValue(t, () => {
-		assertions.notThrows(() => {});
+	passes(t, () => {
+		return assertions.notThrows(() => {});
 	});
 
-	passesReturningArbitraryAssertionReturnValue(t, () => {
-		const {notThrows} = assertions;
-		notThrows(() => {});
+	passes(t, () => {
+		return assertions.notThrows(() => {});
 	});
 
 	// Fails because the function throws.
-	failsWithReturningArbitraryAssertionReturnValue(t, () => {
-		assertions.notThrows(() => {
+	failsWith(t, () => {
+		return assertions.notThrows(() => {
 			throw new Error('foo');
 		});
 	}, {
@@ -1574,8 +1599,8 @@ test('.notThrows()', gather(t => {
 
 	// Fails because the function throws. Asserts that message is used for the
 	// assertion, not to validate the thrown error.
-	failsWithReturningArbitraryAssertionReturnValue(t, () => {
-		assertions.notThrows(() => {
+	failsWith(t, () => {
+		return assertions.notThrows(() => {
 			throw new Error('foo');
 		}, 'my message');
 	}, {
@@ -1584,8 +1609,8 @@ test('.notThrows()', gather(t => {
 		values: [{label: 'Function threw:', formatted: /foo/}]
 	});
 
-	failsWithReturningArbitraryAssertionReturnValue(t, () => {
-		assertions.notThrows(() => {}, null);
+	failsWith(t, () => {
+		return assertions.notThrows(() => {}, null);
 	}, {
 		assertion: 'notThrows',
 		improperUsage: true,
@@ -1599,32 +1624,27 @@ test('.notThrows()', gather(t => {
 
 test('.notThrowsAsync()', gather(t => {
 	// Passes because the promise is resolved
-	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.resolve()));
-
-	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => {
-		const {notThrowsAsync} = assertions;
-		return notThrowsAsync(Promise.resolve());
-	});
+	eventuallyPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
 
 	// Fails because the promise is rejected
-	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Promise rejected with:', formatted: /Error/}]
 	});
 
 	// Passes because the function returned a resolved promise
-	eventuallyPassesReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
+	eventuallyPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
 
 	// Fails because the function returned a rejected promise
-	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Returned promise rejected with:', formatted: /Error/}]
 	});
 
 	// Fails because the function throws synchronously
-	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => {
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => {
 		throw new Error('sync');
 	}, 'message'), {
 		assertion: 'notThrowsAsync',
@@ -1635,7 +1655,7 @@ test('.notThrowsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
 		assertion: 'notThrowsAsync',
 		message: 'message',
 		values: [
@@ -1643,7 +1663,7 @@ test('.notThrowsAsync()', gather(t => {
 		]
 	});
 
-	eventuallyFailsWithReturningArbitraryAssertionReturnValue(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
+	eventuallyFailsWith(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
 		assertion: 'notThrowsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',
@@ -1654,17 +1674,17 @@ test('.notThrowsAsync()', gather(t => {
 	});
 }));
 
-test('.notThrowsAsync() returns undefined for a fulfilled promise', t => {
+test('.notThrowsAsync() returns true for a fulfilled promise', t => {
 	return assertions.notThrowsAsync(Promise.resolve(Symbol(''))).then(actual => {
-		t.is(actual, undefined);
+		t.is(actual, true);
 	});
 });
 
-test('.notThrowsAsync() returns undefined for a fulfilled promise returned by the function', t => {
+test('.notThrowsAsync() returns true for a fulfilled promise returned by the function', t => {
 	return assertions.notThrowsAsync(() => {
 		return Promise.resolve(Symbol(''));
 	}).then(actual => {
-		t.is(actual, undefined);
+		t.is(actual, true);
 	});
 });
 

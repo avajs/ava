@@ -103,10 +103,17 @@ export interface Assertions {
 	 */
 	notRegex: NotRegexAssertion;
 
-	/** Assert that the function does not throw. */
+	/**
+	 * Assert that the function does not throw, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
 	notThrows: NotThrowsAssertion;
 
-	/** Assert that the async function does not throw, or that the promise does not reject. Must be awaited. */
+	/**
+	 * Assert that the async function does not throw, or that the promise does
+	 * not reject, returning Boolean indicating whether the assertion passes. Must
+	 * be awaited.
+	 */
 	notThrowsAsync: NotThrowsAsyncAssertion;
 
 	/** Count a passing assertion, always returning `true`. */
@@ -265,19 +272,28 @@ export interface NotRegexAssertion {
 }
 
 export interface NotThrowsAssertion {
-	/** Assert that the function does not throw. */
-	(fn: () => any, message?: string): void;
+	/**
+	 * Assert that the function does not throw, returning Boolean indicating
+	 * whether the assertion passes.
+	 */
+	(fn: () => any, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, message?: string): void;
 }
 
 export interface NotThrowsAsyncAssertion {
-	/** Assert that the async function does not throw. You must await the result. */
-	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
+	/**
+	 * Assert that the async function does not throw, returning Boolean
+	 * indicating whether the assertion passes. You must await the result.
+	 */
+	(fn: () => PromiseLike<any>, message?: string): Promise<boolean>;
 
-	/** Assert that the promise does not reject. You must await the result. */
-	(promise: PromiseLike<any>, message?: string): Promise<void>;
+	/**
+	 * Assert that the promise does not reject, returning Boolean indicating
+	 * whether the assertion passes. You must await the result.
+	 */
+	(promise: PromiseLike<any>, message?: string): Promise<boolean>;
 
 	/** Skip this assertion. */
 	skip(nonThrower: any, message?: string): void;
