@@ -30,7 +30,7 @@ const AssertionsBase = class extends assert.Assertions {
 			fail: error => {
 				lastFailure = error;
 			},
-			skip: () => { },
+			skip: () => {},
 			experiments: {},
 			...overwrites
 		});
@@ -73,6 +73,10 @@ function assertFailure(t, subset) {
 	} else {
 		t.same(lastFailure.values, []);
 	}
+
+	if ('returnValue' in subset) {
+		t.false(subset.returnValue);
+	}
 }
 
 let gathering = false;
@@ -105,7 +109,11 @@ function add(fn) {
 
 function failsWith(t, fn, subset) {
 	lastFailure = null;
-	fn();
+	const returnValue = fn();
+	if (returnValue !== undefined) {
+		subset.returnValue = returnValue;
+	}
+
 	assertFailure(t, subset);
 }
 
@@ -120,8 +128,7 @@ function eventuallyFailsWith(t, fn, subset) {
 
 function fails(t, fn) {
 	lastFailure = null;
-	fn();
-	if (lastFailure) {
+	if (!fn() && lastFailure) {
 		t.pass();
 	} else {
 		t.fail('Expected assertion to fail');
@@ -146,8 +153,7 @@ function eventuallyFails(t, fn) {
 function passes(t, fn) {
 	lastPassed = false;
 	lastFailure = null;
-	fn();
-	if (lastPassed) {
+	if (fn() && lastPassed) {
 		t.pass();
 	} else {
 		t.ifError(lastFailure, 'Expected assertion to pass');
@@ -170,30 +176,27 @@ function eventuallyPasses(t, fn) {
 
 test('.pass()', t => {
 	passes(t, () => {
-		const result = assertions.pass();
-		assertions.true(result);
+		return assertions.pass();
 	});
 
 	passes(t, () => {
 		const {pass} = assertions;
-		const result = pass();
-		assertions.true(result);
+		return pass();
 	});
 
 	t.end();
 });
 
 test('.fail()', t => {
-	const results = [];
 	failsWith(t, () => {
-		results.push(assertions.fail());
+		return assertions.fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		results.push(assertions.fail('my message'));
+		return assertions.fail('my message');
 	}, {
 		assertion: 'fail',
 		message: 'my message'
@@ -201,14 +204,14 @@ test('.fail()', t => {
 
 	failsWith(t, () => {
 		const {fail} = assertions;
-		results.push(fail());
+		return fail();
 	}, {
 		assertion: 'fail',
 		message: 'Test failed via `t.fail()`'
 	});
 
 	failsWith(t, () => {
-		assertions.fail(null);
+		return assertions.fail(null);
 	}, {
 		assertion: 'fail',
 		improperUsage: true,
@@ -218,156 +221,125 @@ test('.fail()', t => {
 			formatted: /null/
 		}]
 	});
-	for (const result of results) {
-		t.is(result, false);
-	}
 
 	t.end();
 });
 
 test('.is()', t => {
 	passes(t, () => {
-		const result = assertions.is('foo', 'foo');
-		assertions.true(result);
+		return assertions.is('foo', 'foo');
 	});
 
 	passes(t, () => {
 		const {is} = assertions;
-		const result = is('foo', 'foo');
-		assertions.true(result);
+		return is('foo', 'foo');
 	});
 
 	passes(t, () => {
-		const result = assertions.is('', '');
-		assertions.true(result);
+		return assertions.is('', '');
 	});
 
 	passes(t, () => {
-		const result = assertions.is(true, true);
-		assertions.true(result);
+		return assertions.is(true, true);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(false, false);
-		assertions.true(result);
+		return assertions.is(false, false);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(null, null);
-		assertions.true(result);
+		return assertions.is(null, null);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(undefined, undefined);
-		assertions.true(result);
+		return assertions.is(undefined, undefined);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(1, 1);
-		assertions.true(result);
+		return assertions.is(1, 1);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(0, 0);
-		assertions.true(result);
+		return assertions.is(0, 0);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(-0, -0);
-		assertions.true(result);
+		return assertions.is(-0, -0);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(Number.NaN, Number.NaN);
-		assertions.true(result);
+		return assertions.is(Number.NaN, Number.NaN);
 	});
 
 	passes(t, () => {
-		const result = assertions.is(0 / 0, Number.NaN);
-		assertions.true(result);
+		return assertions.is(0 / 0, Number.NaN);
 	});
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
-		const result = assertions.is(someRef, someRef);
-		assertions.true(result);
+		return assertions.is(someRef, someRef);
 	});
 
 	fails(t, () => {
-		const result = assertions.is(0, -0);
-		assertions.false(result);
+		return assertions.is(0, -0);
 	});
 
 	fails(t, () => {
-		const result = assertions.is(0, false);
-		assertions.false(result);
+		return assertions.is(0, false);
 	});
 
 	fails(t, () => {
-		const result = assertions.is('', false);
-		assertions.false(result);
+		return assertions.is('', false);
 	});
 
 	fails(t, () => {
-		const result = assertions.is('0', 0);
-		assertions.false(result);
+		return assertions.is('0', 0);
 	});
 
 	fails(t, () => {
-		const result = assertions.is('17', 17);
-		assertions.false(result);
+		return assertions.is('17', 17);
 	});
 
 	fails(t, () => {
-		const result = assertions.is([1, 2], '1,2');
-		assertions.false(result);
+		return assertions.is([1, 2], '1,2');
 	});
 
 	fails(t, () => {
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		const result = assertions.is(new String('foo'), 'foo');
-		assertions.false(result);
+		return assertions.is(new String('foo'), 'foo');
 	});
 
 	fails(t, () => {
-		const result = assertions.is(null, undefined);
-		assertions.false(result);
+		return assertions.is(null, undefined);
 	});
 
 	fails(t, () => {
-		const result = assertions.is(null, false);
-		assertions.false(result);
+		return assertions.is(null, false);
 	});
 
 	fails(t, () => {
-		const result = assertions.is(undefined, false);
-		assertions.false(result);
+		return assertions.is(undefined, false);
 	});
 
 	fails(t, () => {
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		const result = assertions.is(new String('foo'), new String('foo'));
-		assertions.false(result);
+		return assertions.is(new String('foo'), new String('foo'));
 	});
 
 	fails(t, () => {
-		const result = assertions.is(0, null);
-		assertions.false(result);
+		return assertions.is(0, null);
 	});
 
 	fails(t, () => {
-		const result = assertions.is(0, Number.NaN);
-		assertions.false(result);
+		return assertions.is(0, Number.NaN);
 	});
 
 	fails(t, () => {
-		const result = assertions.is('foo', Number.NaN);
-		assertions.false(result);
+		return assertions.is('foo', Number.NaN);
 	});
 
-	const failureResults = [];
 	failsWith(t, () => {
-		failureResults.push(assertions.is({foo: 'bar'}, {foo: 'bar'}));
+		return assertions.is({foo: 'bar'}, {foo: 'bar'});
 	}, {
 		assertion: 'is',
 		message: '',
@@ -380,7 +352,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is('foo', 'bar'));
+		return assertions.is('foo', 'bar');
 	}, {
 		assertion: 'is',
 		message: '',
@@ -391,7 +363,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is('foo', 42));
+		return assertions.is('foo', 42);
 	}, {
 		actual: 'foo',
 		assertion: 'is',
@@ -403,7 +375,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is('foo', 42, 'my message'));
+		return assertions.is('foo', 42, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -413,7 +385,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is(0, -0, 'my message'));
+		return assertions.is(0, -0, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -423,7 +395,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is(-0, 0, 'my message'));
+		return assertions.is(-0, 0, 'my message');
 	}, {
 		assertion: 'is',
 		message: 'my message',
@@ -433,7 +405,7 @@ test('.is()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.is(0, 0, null));
+		return assertions.is(0, 0, null);
 	}, {
 		assertion: 'is',
 		improperUsage: true,
@@ -443,36 +415,30 @@ test('.is()', t => {
 			formatted: /null/
 		}]
 	});
-	for (const result of failureResults) {
-		t.false(result);
-	}
 
 	t.end();
 });
 
 test('.not()', t => {
 	passes(t, () => {
-		const result = assertions.not('foo', 'bar');
-		assertions.true(result);
+		return assertions.not('foo', 'bar');
 	});
 
 	passes(t, () => {
 		const {not} = assertions;
-		const result = not('foo', 'bar');
-		assertions.true(result);
-	});
-
-	const failureResults = [];
-	fails(t, () => {
-		failureResults.push(assertions.not(Number.NaN, Number.NaN));
+		return not('foo', 'bar');
 	});
 
 	fails(t, () => {
-		failureResults.push(assertions.not(0 / 0, Number.NaN));
+		return assertions.not(Number.NaN, Number.NaN);
+	});
+
+	fails(t, () => {
+		return assertions.not(0 / 0, Number.NaN);
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.not('foo', 'foo'));
+		return assertions.not('foo', 'foo');
 	}, {
 		assertion: 'not',
 		message: '',
@@ -481,7 +447,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.not('foo', 'foo', 'my message'));
+		return assertions.not('foo', 'foo', 'my message');
 	}, {
 		assertion: 'not',
 		message: 'my message',
@@ -489,7 +455,7 @@ test('.not()', t => {
 	});
 
 	failsWith(t, () => {
-		failureResults.push(assertions.not(0, 1, null));
+		return assertions.not(0, 1, null);
 	}, {
 		assertion: 'not',
 		improperUsage: true,
@@ -499,9 +465,6 @@ test('.not()', t => {
 			formatted: /null/
 		}]
 	});
-	for (const result of failureResults) {
-		t.false(result);
-	}
 
 	t.end();
 });
@@ -1651,17 +1614,17 @@ test('.notThrowsAsync()', gather(t => {
 	});
 }));
 
-test('.notThrowsAsync() returns undefined for a fulfilled promise', t => {
+test('.notThrowsAsync() returns true for a fulfilled promise', t => {
 	return assertions.notThrowsAsync(Promise.resolve(Symbol(''))).then(actual => {
-		t.is(actual, undefined);
+		t.is(actual, true);
 	});
 });
 
-test('.notThrowsAsync() returns undefined for a fulfilled promise returned by the function', t => {
+test('.notThrowsAsync() returns true for a fulfilled promise returned by the function', t => {
 	return assertions.notThrowsAsync(() => {
 		return Promise.resolve(Symbol(''));
 	}).then(actual => {
-		t.is(actual, undefined);
+		t.is(actual, true);
 	});
 });
 
