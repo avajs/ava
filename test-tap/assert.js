@@ -153,7 +153,7 @@ function eventuallyFails(t, fn) {
 function passes(t, fn) {
 	lastPassed = false;
 	lastFailure = null;
-	if (fn() && lastPassed) {
+	if (fn() === true && lastPassed) {
 		t.pass();
 	} else {
 		t.ifError(lastFailure, 'Expected assertion to pass');
@@ -2192,4 +2192,3 @@ test('.assert()', t => {
 
 	t.end();
 });
-
