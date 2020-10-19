@@ -156,6 +156,7 @@ function passes(t, fn) {
 	if (fn() === true && lastPassed) {
 		t.pass();
 	} else {
+		lastFailure = new Error('Assertion failed');
 		t.ifError(lastFailure, 'Expected assertion to pass');
 	}
 }
@@ -474,11 +475,11 @@ test('.deepEqual()', t => {
 	// used to test deep object equality
 
 	fails(t, () => {
-		assertions.deepEqual({a: false}, {a: 0});
+		return assertions.deepEqual({a: false}, {a: 0});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b'
 		}, {
@@ -489,11 +490,11 @@ test('.deepEqual()', t => {
 
 	passes(t, () => {
 		const {deepEqual} = assertions;
-		deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+		return deepEqual({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -509,17 +510,17 @@ test('.deepEqual()', t => {
 	});
 
 	fails(t, () => {
-		assertions.deepEqual([1, 2, 3], [1, 2, 3, 4]);
+		return assertions.deepEqual([1, 2, 3], [1, 2, 3, 4]);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual([1, 2, 3], [1, 2, 3]);
+		return assertions.deepEqual([1, 2, 3], [1, 2, 3]);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.deepEqual(fnA, fnB);
+		return assertions.deepEqual(fnA, fnB);
 	});
 
 	passes(t, () => {
@@ -531,7 +532,7 @@ test('.deepEqual()', t => {
 		const y2 = {x: x2};
 		x2.y = y2;
 
-		assertions.deepEqual(x1, x2);
+		return assertions.deepEqual(x1, x2);
 	});
 
 	passes(t, () => {
@@ -542,7 +543,7 @@ test('.deepEqual()', t => {
 		const x = new Foo(1);
 		const y = new Foo(1);
 
-		assertions.deepEqual(x, y);
+		return assertions.deepEqual(x, y);
 	});
 
 	fails(t, () => {
@@ -557,11 +558,11 @@ test('.deepEqual()', t => {
 		const x = new Foo(1);
 		const y = new Bar(1);
 
-		assertions.deepEqual(x, y);
+		return assertions.deepEqual(x, y);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({
+		return assertions.deepEqual({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -577,73 +578,76 @@ test('.deepEqual()', t => {
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({}, []);
+		return assertions.deepEqual({}, []);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+		return assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({a: 1}, {a: 1, b: undefined});
+		return assertions.deepEqual({a: 1}, {a: 1, b: undefined});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), null);
+		return assertions.deepEqual(new Date('1972-08-01'), null);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), undefined);
+		return assertions.deepEqual(new Date('1972-08-01'), undefined);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
+		return assertions.deepEqual(new Date('1972-08-01'), new Date('1972-08-01'));
 	});
 
 	passes(t, () => {
-		assertions.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
+		return assertions.deepEqual({x: new Date('1972-08-01')}, {x: new Date('1972-08-01')});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(() => {}, () => {});
+		return assertions.deepEqual(() => {}, () => {});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(undefined, undefined);
-		assertions.deepEqual({x: undefined}, {x: undefined});
-		assertions.deepEqual({x: [undefined]}, {x: [undefined]});
+		const result1 = assertions.deepEqual(undefined, undefined);
+		const result2 = assertions.deepEqual({x: undefined}, {x: undefined});
+		const result3 = assertions.deepEqual({x: [undefined]}, {x: [undefined]});
+		return result1 && result2 && result3;
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(null, null);
-		assertions.deepEqual({x: null}, {x: null});
-		assertions.deepEqual({x: [null]}, {x: [null]});
+		const result1 = assertions.deepEqual(null, null);
+		const result2 = assertions.deepEqual({x: null}, {x: null});
+		const result3 = assertions.deepEqual({x: [null]}, {x: [null]});
+		return result1 && result2 && result3;
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(0, 0);
-		assertions.deepEqual(1, 1);
-		assertions.deepEqual(3.14, 3.14);
+		const result1 = assertions.deepEqual(0, 0);
+		const result2 = assertions.deepEqual(1, 1);
+		const result3 = assertions.deepEqual(3.14, 3.14);
+		return result1 && result2 && result3;
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(0, 1);
+		return assertions.deepEqual(0, 1);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(1, -1);
+		return assertions.deepEqual(1, -1);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(3.14, 2.72);
+		return assertions.deepEqual(3.14, 2.72);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
+		return assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(
 			[
 				{foo: {z: 100, y: 200, x: 300}},
 				'bar',
@@ -660,14 +664,14 @@ test('.deepEqual()', t => {
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(
 			{x: {a: 1, b: 2}, y: {c: 3, d: 4}},
 			{y: {d: 4, c: 3}, x: {b: 2, a: 1}}
 		);
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(
+		return assertions.deepEqual(
 			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
 			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
 		);
@@ -676,33 +680,33 @@ test('.deepEqual()', t => {
 	// Regression test end here
 
 	passes(t, () => {
-		assertions.deepEqual({a: 'a'}, {a: 'a'});
+		return assertions.deepEqual({a: 'a'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.deepEqual(['a', 'b'], ['a', 'b']);
+		return assertions.deepEqual(['a', 'b'], ['a', 'b']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual({a: 'a'}, {a: 'b'});
+		return assertions.deepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.deepEqual(['a', 'b'], ['a', 'a']);
+		return assertions.deepEqual(['a', 'b'], ['a', 'a']);
 	});
 
 	fails(t, () => {
-		assertions.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+		return assertions.deepEqual([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.deepEqual([circular, 'c'], [circular, 'd']);
+		return assertions.deepEqual([circular, 'c'], [circular, 'd']);
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 'bar');
+		return assertions.deepEqual('foo', 'bar');
 	}, {
 		assertion: 'deepEqual',
 		message: '',
@@ -711,7 +715,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 42);
+		return assertions.deepEqual('foo', 42);
 	}, {
 		assertion: 'deepEqual',
 		message: '',
@@ -720,7 +724,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual('foo', 42, 'my message');
+		return assertions.deepEqual('foo', 42, 'my message');
 	}, {
 		assertion: 'deepEqual',
 		message: 'my message',
@@ -728,7 +732,7 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.deepEqual({}, {}, null);
+		return assertions.deepEqual({}, {}, null);
 	}, {
 		assertion: 'deepEqual',
 		improperUsage: true,
@@ -744,22 +748,22 @@ test('.deepEqual()', t => {
 
 test('.notDeepEqual()', t => {
 	passes(t, () => {
-		assertions.notDeepEqual({a: 'a'}, {a: 'b'});
+		return assertions.notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	passes(t, () => {
 		const {notDeepEqual} = assertions;
-		notDeepEqual({a: 'a'}, {a: 'b'});
+		return notDeepEqual({a: 'a'}, {a: 'b'});
 	});
 
 	passes(t, () => {
-		assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
+		return assertions.notDeepEqual(['a', 'b'], ['c', 'd']);
 	});
 
 	const actual = {a: 'a'};
 	const expected = {a: 'a'};
 	failsWith(t, () => {
-		assertions.notDeepEqual(actual, expected);
+		return assertions.notDeepEqual(actual, expected);
 	}, {
 		actual,
 		assertion: 'notDeepEqual',
@@ -770,7 +774,7 @@ test('.notDeepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message');
+		return assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message');
 	}, {
 		assertion: 'notDeepEqual',
 		message: 'my message',
@@ -778,7 +782,7 @@ test('.notDeepEqual()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.notDeepEqual({}, [], null);
+		return assertions.notDeepEqual({}, [], null);
 	}, {
 		assertion: 'notDeepEqual',
 		improperUsage: true,
@@ -794,11 +798,11 @@ test('.notDeepEqual()', t => {
 
 test('.like()', t => {
 	fails(t, () => {
-		assertions.like({a: false}, {a: 0});
+		return assertions.like({a: false}, {a: 0});
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: 'a',
 			b: 'b'
 		}, {
@@ -809,11 +813,11 @@ test('.like()', t => {
 
 	passes(t, () => {
 		const {like} = assertions;
-		like({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
+		return like({a: 'a', b: 'b'}, {b: 'b', a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: 'a',
 			b: 'b',
 			c: {
@@ -831,11 +835,11 @@ test('.like()', t => {
 	});
 
 	fails(t, () => {
-		assertions.like([1, 2, 3], [1, 2, 3, 4]);
+		return assertions.like([1, 2, 3], [1, 2, 3, 4]);
 	});
 
 	fails(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: [1, 2, 3]
 		}, {
 			a: [1, 2, 3, 4]
@@ -843,7 +847,7 @@ test('.like()', t => {
 	});
 
 	passes(t, () => {
-		assertions.like({
+		return assertions.like({
 			a: [1, 2, 3],
 			x: 'x'
 		}, {
@@ -862,19 +866,19 @@ test('.like()', t => {
 			a: 'a'
 		};
 
-		assertions.like(actual, likePattern);
+		return assertions.like(actual, likePattern);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.like(fnA, fnB);
+		return assertions.like(fnA, fnB);
 	});
 
 	fails(t, () => {
 		const fnA = a => a;
 		const fnB = a => a;
-		assertions.like({
+		return assertions.like({
 			fn: fnA
 		}, {
 			fn: fnB
@@ -893,59 +897,59 @@ test('.like()', t => {
 		const x = new Foo(1);
 		const y = new Bar(1);
 
-		assertions.like(x, y);
+		return assertions.like(x, y);
 	});
 
 	passes(t, () => {
-		assertions.like({a: 'a'}, {a: 'a'});
+		return assertions.like({a: 'a'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({a: 'a', b: 'b'}, {a: 'a'});
+		return assertions.like({a: 'a', b: 'b'}, {a: 'a'});
 	});
 
 	passes(t, () => {
-		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
+		return assertions.like({ab: ['a', 'b']}, {ab: ['a', 'b']});
 	});
 
 	passes(t, () => {
-		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'b']});
+		return assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'b']});
 	});
 
 	fails(t, () => {
-		assertions.like({a: 'a'}, {a: 'b'});
+		return assertions.like({a: 'a'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.like({a: 'a', b: 'b'}, {a: 'b'});
+		return assertions.like({a: 'a', b: 'b'}, {a: 'b'});
 	});
 
 	fails(t, () => {
-		assertions.like({ab: ['a', 'b']}, {ab: ['a', 'a']});
+		return assertions.like({ab: ['a', 'b']}, {ab: ['a', 'a']});
 	});
 
 	fails(t, () => {
-		assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'a']});
+		return assertions.like({ab: ['a', 'b'], c: 'c'}, {ab: ['a', 'a']});
 	});
 
 	fails(t, () => {
-		assertions.like([['a', 'b'], 'c'], [['a', 'b'], 'd']);
+		return assertions.like([['a', 'b'], 'c'], [['a', 'b'], 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.like([circular, 'c'], [circular, 'd']);
+		return assertions.like([circular, 'c'], [circular, 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
 		circular.push(circular);
-		assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
+		return assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
 	});
 
 	failsWith(t, () => {
-		assertions.like({a: 'a'}, {});
+		return assertions.like({a: 'a'}, {});
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
@@ -953,7 +957,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like('foo', 'bar');
+		return assertions.like('foo', 'bar');
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
@@ -966,7 +970,7 @@ test('.like()', t => {
 		};
 		likePattern.circular = likePattern;
 
-		assertions.like({}, likePattern);
+		return assertions.like({}, likePattern);
 	}, {
 		assertion: 'like',
 		message: '`t.like()` selector must not contain circular references',
@@ -974,7 +978,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like({}, {}, null);
+		return assertions.like({}, {}, null);
 	}, {
 		assertion: 'like',
 		improperUsage: true,
@@ -986,7 +990,7 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => {
-		assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'});
+		return assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'});
 	}, {
 		assertion: 'like',
 		message: '',
@@ -1053,6 +1057,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		});
+		return true;
 	});
 
 	// Passes because the correct error is thrown.
@@ -1061,6 +1066,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw err;
 		}, {is: err});
+		return true;
 	});
 
 	// Fails because the thrown value is not an error
@@ -1069,6 +1075,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw object;
 		}, {is: object});
+		return false;
 	});
 
 	// Fails because the thrown value is not the right one
@@ -1077,6 +1084,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw err;
 		}, {is: {}});
+		return false;
 	});
 
 	// Passes because the correct error is thrown.
@@ -1084,6 +1092,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new TypeError(); // eslint-disable-line unicorn/error-message
 		}, {name: 'TypeError'});
+		return true;
 	});
 
 	// Fails because the thrown value is not an error
@@ -1092,6 +1101,7 @@ test('.throws()', gather(t => {
 			const err = {name: 'Bob'};
 			throw err;
 		}, {name: 'Bob'});
+		return false;
 	});
 
 	// Fails because the thrown value is not the right one
@@ -1099,6 +1109,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, {name: 'TypeError'});
+		return false;
 	});
 
 	// Passes because the correct error is thrown.
@@ -1108,6 +1119,7 @@ test('.throws()', gather(t => {
 			err.code = 'ERR_TEST';
 			throw err;
 		}, {code: 'ERR_TEST'});
+		return true;
 	});
 
 	// Passes because the correct error is thrown.
@@ -1117,6 +1129,7 @@ test('.throws()', gather(t => {
 			err.code = 42;
 			throw err;
 		}, {code: 42});
+		return true;
 	});
 
 	// Fails because the thrown value is not the right one
@@ -1126,6 +1139,7 @@ test('.throws()', gather(t => {
 			err.code = 'ERR_NOPE';
 			throw err;
 		}, {code: 'ERR_TEST'});
+		return false;
 	});
 
 	fails(t, () => {
@@ -1134,6 +1148,7 @@ test('.throws()', gather(t => {
 			err.code = 1;
 			throw err;
 		}, {code: 42});
+		return false;
 	});
 
 	// Regression test for https://github.com/avajs/ava/issues/1676
@@ -1141,6 +1156,7 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, false);
+		return false;
 	});
 
 	// Regression test for https://github.com/avajs/ava/issues/1676
@@ -1148,22 +1164,19 @@ test('.throws()', gather(t => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, null);
+		return true;
 	});
 
 	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
 		}, undefined);
-	});
-
-	passes(t, async () => {
-		await assertions.throwsAsync(() => {
-			return Promise.reject(new Error('foo'));
-		}, undefined);
+		return true;
 	});
 
 	failsWith(t, () => {
 		assertions.throws(() => {}, null, null);
+		return false;
 	}, {
 		assertion: 'throws',
 		improperUsage: true,
@@ -1252,6 +1265,8 @@ test('.throwsAsync()', gather(t => {
 			formatted: /null/
 		}]
 	});
+
+	eventuallyPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error('foo'))));
 }));
 
 test('.throwsAsync() returns the rejection reason of promise', t => {
@@ -1513,12 +1528,12 @@ test('.throwsAsync() fails if passed null expectation with disableNullExpectatio
 test('.notThrows()', gather(t => {
 	// Passes because the function doesn't throw
 	passes(t, () => {
-		assertions.notThrows(() => {});
+		return assertions.notThrows(() => {});
 	});
 
 	passes(t, () => {
 		const {notThrows} = assertions;
-		notThrows(() => {});
+		return notThrows(() => {});
 	});
 
 	// Fails because the function throws.
@@ -1689,24 +1704,24 @@ test('.snapshot()', t => {
 		const assertions = setup('passes');
 
 		passes(t, () => {
-			assertions.snapshot({foo: 'bar'});
+			return assertions.snapshot({foo: 'bar'});
 		});
 
 		passes(t, () => {
 			const {snapshot} = assertions;
-			snapshot({foo: 'bar'});
+			return snapshot({foo: 'bar'});
 		});
 
 		passes(t, () => {
-			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
+			return assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
 		});
 
 		passes(t, () => {
-			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+			return assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
 		});
 
 		passes(t, () => {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
+			return assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		});
 	}
 
@@ -1755,7 +1770,7 @@ test('.snapshot()', t => {
 			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		} else {
 			passes(t, () => {
-				assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
+				return assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
 			});
 		}
 	}
@@ -1829,14 +1844,16 @@ test('.truthy()', t => {
 	});
 
 	passes(t, () => {
-		assertions.truthy(1);
-		assertions.truthy(true);
+		const result1 = assertions.truthy(1);
+		const result2 = assertions.truthy(true);
+		return result1 && result2;
 	});
 
 	passes(t, () => {
 		const {truthy} = assertions;
-		truthy(1);
-		truthy(true);
+		const result1 = truthy(1);
+		const result2 = truthy(true);
+		return result1 && result2;
 	});
 
 	failsWith(t, () => {
@@ -1874,14 +1891,16 @@ test('.falsy()', t => {
 	});
 
 	passes(t, () => {
-		assertions.falsy(0);
-		assertions.falsy(false);
+		const result1 = assertions.falsy(0);
+		const result2 = assertions.falsy(false);
+		return result1 && result2;
 	});
 
 	passes(t, () => {
 		const {falsy} = assertions;
-		falsy(0);
-		falsy(false);
+		const result1 = falsy(0);
+		const result2 = falsy(false);
+		return result1 && result2;
 	});
 
 	failsWith(t, () => {
@@ -1933,12 +1952,12 @@ test('.true()', t => {
 	});
 
 	passes(t, () => {
-		assertions.true(true);
+		return assertions.true(true);
 	});
 
 	passes(t, () => {
 		const {true: trueFn} = assertions;
-		trueFn(true);
+		return trueFn(true);
 	});
 
 	failsWith(t, () => {
@@ -1990,12 +2009,12 @@ test('.false()', t => {
 	});
 
 	passes(t, () => {
-		assertions.false(false);
+		return assertions.false(false);
 	});
 
 	passes(t, () => {
 		const {false: falseFn} = assertions;
-		falseFn(false);
+		return falseFn(false);
 	});
 
 	failsWith(t, () => {
@@ -2015,12 +2034,12 @@ test('.false()', t => {
 
 test('.regex()', t => {
 	passes(t, () => {
-		assertions.regex('abc', /^abc$/);
+		return assertions.regex('abc', /^abc$/);
 	});
 
 	passes(t, () => {
 		const {regex} = assertions;
-		regex('abc', /^abc$/);
+		return regex('abc', /^abc$/);
 	});
 
 	failsWith(t, () => {
@@ -2083,12 +2102,12 @@ test('.regex() fails if passed a bad value', t => {
 
 test('.notRegex()', t => {
 	passes(t, () => {
-		assertions.notRegex('abc', /def/);
+		return assertions.notRegex('abc', /def/);
 	});
 
 	passes(t, () => {
 		const {notRegex} = assertions;
-		notRegex('abc', /def/);
+		return notRegex('abc', /def/);
 	});
 
 	failsWith(t, () => {
@@ -2168,14 +2187,16 @@ test('.assert()', t => {
 	});
 
 	passes(t, () => {
-		assertions.assert(1);
-		assertions.assert(true);
+		const result1 = assertions.assert(1);
+		const result2 = assertions.assert(true);
+		return result1 && result2;
 	});
 
 	passes(t, () => {
 		const {assert} = assertions;
-		assert(1);
-		assert(true);
+		const result1 = assert(1);
+		const result2 = assert(true);
+		return result1 && result2;
 	});
 
 	failsWith(t, () => {
