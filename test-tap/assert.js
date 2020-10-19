@@ -128,7 +128,7 @@ function eventuallyFailsWith(t, fn, subset) {
 
 function fails(t, fn) {
 	lastFailure = null;
-	if (!fn() && lastFailure) {
+	if (fn() === false && lastFailure) {
 		t.pass();
 	} else {
 		t.fail('Expected assertion to fail');
