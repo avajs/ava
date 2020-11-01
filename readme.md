@@ -143,6 +143,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 
 ### Recipes
 
+- [Shared workers](docs/recipes/shared-workers.md)
 - [Test setup](docs/recipes/test-setup.md)
 - [Code coverage](docs/recipes/code-coverage.md)
 - [Watch mode](docs/recipes/watch-mode.md)
