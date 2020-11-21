@@ -11,7 +11,7 @@ test('snapshot files are independent of test resolution order', async t => {
 	await exec.fixture(['test.js', '-u'], options);
 
 	// Read the resulting file
-	const snapshotPath = path.join(__dirname, 'fixtures', 'intertest-order', 'test.js.snap');
+	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const snapshot = fs.readFileSync(snapshotPath);
 
 	// Run in reversed order, updating snapshots.

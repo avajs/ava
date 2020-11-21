@@ -1,4 +1,4 @@
-const test = require('@ava/test');
+const test = require('ava');
 
 const reverse = process.env.INTERTEST_ORDER_REVERSE;
 
