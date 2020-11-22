@@ -38,7 +38,14 @@ test('snapshot reports are sorted in declaration order', async t => {
 
 	const report = fs.readFileSync(path.join(options.cwd, 'test.js.md'), {encoding: 'utf8'});
 
-	const ids = [...report.matchAll(/'index: ([-\d]+)'/g)].map(match => Number(match[1]));
+	function * matchAll(string, regexp) {
+		let match;
+		while ((match = regexp.exec(string)) !== null) {
+			yield match;
+		}
+	}
+
+	const ids = [...matchAll(report, /'index: ([-\d]+)'/g)].map(match => Number(match[1]));
 	const sortedIds = [...ids].sort((a, b) => a - b);
 
 	t.deepEqual(ids, sortedIds);
