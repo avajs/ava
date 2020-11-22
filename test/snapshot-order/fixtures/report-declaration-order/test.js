@@ -2,6 +2,14 @@ const test = require('ava');
 
 const id = i => `index: ${i}`;
 
+test.before(t => {
+	t.snapshot(id(-2), 'in a before hook');
+});
+
+test.afterEach(t => {
+	t.snapshot(id(-1), 'in an after hook');
+});
+
 test('B - declare some snapshots', t => {
 	t.snapshot(id(0));
 	t.snapshot(id(1), 'has a message');
