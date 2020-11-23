@@ -45,7 +45,7 @@ test('snapshot reports are sorted in declaration order', async t => {
 		}
 	}
 
-	const ids = [...matchAll(report, /'index: ([-\d]+)'/g)].map(match => Number(match[1]));
+	const ids = [...matchAll(report, /'index: ([-.\d]+)'/g)].map(match => Number(match[1]));
 	const sortedIds = [...ids].sort((a, b) => a - b);
 
 	t.deepEqual(ids, sortedIds);
