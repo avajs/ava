@@ -22,7 +22,7 @@ test('B - declare some snapshots', t => {
 	t.snapshot(id(0));
 	t.snapshot(id(1), 'has a message');
 	t.snapshot(id(2), 'also has a message');
-	t.snapshot(id(3), {id: 'has an id'});
+	t.snapshot(id(3), {id: 'has an ID'});
 });
 
 test('A - declare some more snapshots', t => {
@@ -45,7 +45,7 @@ test('E - discard some snapshots in a try()', async t => {
 	t.snapshot(id(10), 'outer again');
 });
 
-test('D - more snapshots with ids', t => {
+test('D - more snapshots with IDs', t => {
 	t.snapshot(id(11), {id: 'the first in test D'});
 	t.snapshot(id(12));
 	// These have to be reported in reverse declaration order, because they can't
