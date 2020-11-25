@@ -8,14 +8,14 @@ test('snapshot files are independent of test resolution order', async t => {
 		cwd: exec.cwd('intertest-order')
 	};
 	// Run, updating snapshots.
-	await exec.fixture(['test.js', '-u'], options);
+	await exec.fixture(['test.js', '--update-snapshots'], options);
 
 	// Read the resulting file
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const snapshot = fs.readFileSync(snapshotPath);
 
 	// Run in reversed order, updating snapshots.
-	await exec.fixture(['test.js', '-u'], {
+	await exec.fixture(['test.js', '--update-snapshots'], {
 		env: {
 			INTERTEST_ORDER_REVERSE: 'true'
 		},
@@ -34,7 +34,7 @@ test('snapshot reports are sorted in declaration order', async t => {
 		cwd: exec.cwd('report-declaration-order')
 	};
 
-	await exec.fixture(['-u'], options);
+	await exec.fixture(['--update-snapshots'], options);
 
 	const report = fs.readFileSync(path.join(options.cwd, 'test.js.md'), {encoding: 'utf8'});
 

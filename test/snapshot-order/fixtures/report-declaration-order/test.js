@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const id = i => `index: ${i}`;
+const id = index => `index: ${index}`;
 
 test.before(t => {
 	t.snapshot(id(-2), 'in a before hook');
