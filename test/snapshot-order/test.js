@@ -5,7 +5,10 @@ const path = require('path');
 
 test('snapshot files are independent of test resolution order', async t => {
 	const options = {
-		cwd: exec.cwd('intertest-order')
+		cwd: exec.cwd('intertest-order'),
+		env: {
+			AVA_FORCE_CI: 'not-ci'
+		}
 	};
 	// Run, updating snapshots.
 	await exec.fixture(['test.js', '--update-snapshots'], options);
@@ -16,10 +19,11 @@ test('snapshot files are independent of test resolution order', async t => {
 
 	// Run in reversed order, updating snapshots.
 	await exec.fixture(['test.js', '--update-snapshots'], {
+		...options,
 		env: {
-			INTERTEST_ORDER_REVERSE: 'true'
-		},
-		...options
+			INTERTEST_ORDER_REVERSE: 'true',
+			...options.env
+		}
 	});
 
 	// Read the resulting file
@@ -31,7 +35,10 @@ test('snapshot files are independent of test resolution order', async t => {
 
 test('snapshot reports are sorted in declaration order', async t => {
 	const options = {
-		cwd: exec.cwd('report-declaration-order')
+		cwd: exec.cwd('report-declaration-order'),
+		env: {
+			AVA_FORCE_CI: 'not-ci'
+		}
 	};
 
 	await exec.fixture(['--update-snapshots'], options);
