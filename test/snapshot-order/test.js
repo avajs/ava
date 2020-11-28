@@ -31,6 +31,11 @@ test('snapshot files are independent of test resolution order', async t => {
 
 	// Compare snapshots
 	t.deepEqual(snapshot, snapshotReversed);
+
+	// Clean up snapshots - since they're always recreated and their exact content
+	// is not tested, they shouldn't be version controlled
+	fs.unlinkSync(snapshotPath);
+	fs.unlinkSync(path.join(options.cwd, 'test.js.md'));
 });
 
 function getSnapshotIds(report) {
@@ -56,10 +61,17 @@ test('snapshot reports are sorted in declaration order', async t => {
 
 	await exec.fixture(['--update-snapshots'], options);
 
-	const report = fs.readFileSync(path.join(options.cwd, 'test.js.md'), {encoding: 'utf8'});
+	const reportPath = path.join(options.cwd, 'test.js.md');
+
+	const report = fs.readFileSync(reportPath, {encoding: 'utf8'});
 	const ids = getSnapshotIds(report);
 
 	t.deepEqual(ids, [...ids].sort((a, b) => a - b));
+
+	// Clean up snapshots - since they're always recreated and their exact content
+	// is not tested, they shouldn't be version controlled
+	fs.unlinkSync(path.join(options.cwd, 'test.js.snap'));
+	fs.unlinkSync(reportPath);
 });
 
 const unsortedSnapshotPath = path.join(__dirname, 'fixtures', 'backwards-compatibility', 'unsorted', 'test.js.snap');
