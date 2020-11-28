@@ -10,11 +10,19 @@ test('snapshot files are independent of test resolution order', async t => {
 			AVA_FORCE_CI: 'not-ci'
 		}
 	};
+
+	const snapshotPath = path.join(options.cwd, 'test.js.snap');
+
+	// Schedule snapshot cleanup
+	t.teardown(() => {
+		fs.unlinkSync(snapshotPath);
+		fs.unlinkSync(path.join(options.cwd, 'test.js.md'));
+	});
+
 	// Run, updating snapshots.
 	await exec.fixture(['test.js', '--update-snapshots'], options);
 
 	// Read the resulting file
-	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const snapshot = fs.readFileSync(snapshotPath);
 
 	// Run in reversed order, updating snapshots.
@@ -31,11 +39,6 @@ test('snapshot files are independent of test resolution order', async t => {
 
 	// Compare snapshots
 	t.deepEqual(snapshot, snapshotReversed);
-
-	// Clean up snapshots - since they're always recreated and their exact content
-	// is not tested, they shouldn't be version controlled
-	fs.unlinkSync(snapshotPath);
-	fs.unlinkSync(path.join(options.cwd, 'test.js.md'));
 });
 
 function getSnapshotIds(report) {
@@ -59,6 +62,12 @@ test('snapshot reports are sorted in declaration order', async t => {
 		}
 	};
 
+	// Scehdule snapshot cleanup
+	t.teardown(() => {
+		fs.unlinkSync(path.join(options.cwd, 'test.js.snap'));
+		fs.unlinkSync(reportPath);
+	});
+
 	await exec.fixture(['--update-snapshots'], options);
 
 	const reportPath = path.join(options.cwd, 'test.js.md');
@@ -67,11 +76,6 @@ test('snapshot reports are sorted in declaration order', async t => {
 	const ids = getSnapshotIds(report);
 
 	t.deepEqual(ids, [...ids].sort((a, b) => a - b));
-
-	// Clean up snapshots - since they're always recreated and their exact content
-	// is not tested, they shouldn't be version controlled
-	fs.unlinkSync(path.join(options.cwd, 'test.js.snap'));
-	fs.unlinkSync(reportPath);
 });
 
 const unsortedSnapshotPath = path.join(__dirname, 'fixtures', 'backwards-compatibility', 'unsorted', 'test.js.snap');
@@ -87,6 +91,12 @@ test('unsorted snapshots are unchanged when checking', async t => {
 			AVA_FORCE_CI: 'not-ci'
 		}
 	};
+
+	// Schedule snapshot cleanup
+	t.teardown(() => {
+		fs.unlinkSync(snapshotPath);
+		fs.unlinkSync(reportPath);
+	});
 
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const reportPath = path.join(options.cwd, 'test.js.md');
@@ -104,10 +114,6 @@ test('unsorted snapshots are unchanged when checking', async t => {
 
 	t.deepEqual(snapshot, unsortedSnapshot);
 	t.deepEqual(report, unsortedReport);
-
-	// Clean up the snapshot, report
-	fs.unlinkSync(snapshotPath);
-	fs.unlinkSync(reportPath);
 });
 
 test('unsorted snapshots are changed when appending', async t => {
@@ -120,6 +126,12 @@ test('unsorted snapshots are changed when appending', async t => {
 
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const reportPath = path.join(options.cwd, 'test.js.md');
+
+	// Schedule snapshot cleanup
+	t.teardown(() => {
+		fs.unlinkSync(snapshotPath);
+		fs.unlinkSync(reportPath);
+	});
 
 	// Install a known-unsorted snapshot, report
 	fs.copyFileSync(unsortedSnapshotPath, snapshotPath);
@@ -140,10 +152,6 @@ test('unsorted snapshots are changed when appending', async t => {
 	const ids = getSnapshotIds(textReport);
 
 	t.deepEqual(ids, [2, 1, 3, 4]);
-
-	// Clean up the snapshot, report
-	fs.unlinkSync(snapshotPath);
-	fs.unlinkSync(reportPath);
 });
 
 test('unsorted snapshots are changed when updating', async t => {
@@ -153,6 +161,12 @@ test('unsorted snapshots are changed when updating', async t => {
 			AVA_FORCE_CI: 'not-ci'
 		}
 	};
+
+	// Schedule snapshot cleanup
+	t.teardown(() => {
+		fs.unlinkSync(snapshotPath);
+		fs.unlinkSync(reportPath);
+	});
 
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');
 	const reportPath = path.join(options.cwd, 'test.js.md');
@@ -176,8 +190,4 @@ test('unsorted snapshots are changed when updating', async t => {
 	const ids = getSnapshotIds(textReport);
 
 	t.deepEqual(ids, [1, 2]);
-
-	// Clean up the snapshot, report
-	fs.unlinkSync(snapshotPath);
-	fs.unlinkSync(reportPath);
 });
