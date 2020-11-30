@@ -18,7 +18,6 @@
   Test failed via `t.fail()`
 
   [90m› test-tap/fixture/report/failfast2/a.js:3:22[39m
-  [90m› processTicksAndRejections (node:internal/process/task_queues:93:5)[39m
 
   [90m─[39m
 

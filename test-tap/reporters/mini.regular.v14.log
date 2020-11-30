@@ -504,7 +504,6 @@
   Error: Can’t catch me
 
   [90m› Immediate.<anonymous> (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
-  [90m[2m› processImmediate (internal/timers.js)[22m[39m
 
 
 

@@ -32,9 +32,7 @@ not ok 3 - nested-objects [90m[2m›[22m[39m format with max depth 4
         +     },
         +   },
           }
-    at: |-
-      t (test-tap/fixture/report/regular/nested-objects.js:28:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/nested-objects.js:28:4)'
   ...
 ---tty-stream-chunk-separator
 # nested-objects › format like with max depth 4
@@ -52,9 +50,7 @@ not ok 4 - nested-objects [90m[2m›[22m[39m format like with max depth 4
               },
             },
           }
-    at: |-
-      t (test-tap/fixture/report/regular/nested-objects.js:54:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/nested-objects.js:54:4)'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
@@ -80,9 +76,7 @@ not ok 6 - output-in-hook [90m[2m›[22m[39m failing test
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      t (test-tap/fixture/report/regular/output-in-hook.js:34:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/output-in-hook.js:34:4)'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test
@@ -116,9 +110,7 @@ not ok 10 - test [90m[2m›[22m[39m fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      t (test-tap/fixture/report/regular/test.js:9:22)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/test.js:9:22)'
   ...
 ---tty-stream-chunk-separator
 # test › known failure
@@ -131,7 +123,7 @@ not ok 12 - test [90m[2m›[22m[39m no longer failing
     message: >-
       Test was expected to fail, but succeeded, you should stop marking the test as
       failing
-    at: 'process._tickCallback (internal/process/next_tick.js:68:7)'
+    at: ''
   ...
 ---tty-stream-chunk-separator
 # test › logs
@@ -142,9 +134,7 @@ not ok 13 - test [90m[2m›[22m[39m logs
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      t (test-tap/fixture/report/regular/test.js:18:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/test.js:18:4)'
   ...
 ---tty-stream-chunk-separator
 # test › formatted
@@ -156,9 +146,7 @@ not ok 14 - test [90m[2m›[22m[39m formatted
       'Difference:': |-
         - 'foo'
         + 'bar'
-    at: |-
-      t (test-tap/fixture/report/regular/test.js:22:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/test.js:22:4)'
   ...
 ---tty-stream-chunk-separator
 # test › power-assert
@@ -169,9 +157,7 @@ not ok 15 - test [90m[2m›[22m[39m power-assert
     operator: '!!'
     values:
       'Value is not truthy:': ''''''
-    at: |-
-      t (test-tap/fixture/report/regular/test.js:27:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 't (test-tap/fixture/report/regular/test.js:27:4)'
   ...
 ---tty-stream-chunk-separator
 # test › bad throws
@@ -188,7 +174,6 @@ not ok 16 - test [90m[2m›[22m[39m bad throws
     at: |-
       fn (test-tap/fixture/report/regular/test.js:32:9)
       t (test-tap/fixture/report/regular/test.js:35:11)
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # test › bad notThrows
@@ -205,7 +190,6 @@ not ok 17 - test [90m[2m›[22m[39m bad notThrows
     at: |-
       fn (test-tap/fixture/report/regular/test.js:40:9)
       t (test-tap/fixture/report/regular/test.js:43:14)
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # test › implementation throws non-error
@@ -215,7 +199,7 @@ not ok 18 - test [90m[2m›[22m[39m implementation throws non-error
     message: Error thrown in test
     values:
       'Error thrown in test:': 'null'
-    at: 'process._tickCallback (internal/process/next_tick.js:68:7)'
+    at: ''
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throws
@@ -236,8 +220,6 @@ not ok 19 - traces-in-t-throws [90m[2m›[22m[39m throws
       (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)
 
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:12:4)
-
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrows
@@ -257,8 +239,6 @@ not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrows
       (test-tap/fixture/report/regular/traces-in-t-throws.js:16:20)
 
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:16:4)
-
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › notThrowsAsync
@@ -275,7 +255,6 @@ not ok 21 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
       throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)
       t.notThrowsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:20:25)
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:20:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync
@@ -292,7 +271,6 @@ not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
       throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)
       t.throwsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:24:22)
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:24:4)
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # traces-in-t-throws › throwsAsync different error
@@ -311,8 +289,6 @@ not ok 23 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
       (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)
 
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:28:11)
-
-      process._tickCallback (internal/process/next_tick.js:68:7)
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception › passes
@@ -342,9 +318,7 @@ not ok 29 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
-    at: |-
-      passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)
-      process._tickCallback (internal/process/next_tick.js:68:7)
+    at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
 # unhandled-rejection

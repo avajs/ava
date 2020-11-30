@@ -114,7 +114,6 @@
   Error: Can’t catch me
 
   [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 ---tty-stream-chunk-separator
   [1mUnhandled rejection in unhandled-rejection.js[22m
@@ -150,7 +149,6 @@
     [90m}[39m
 
   [90m› t (test-tap/fixture/report/regular/nested-objects.js:28:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -174,7 +172,6 @@
     [90m}[39m
 
   [90m› t (test-tap/fixture/report/regular/nested-objects.js:54:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -189,7 +186,6 @@
   Test failed via `t.fail()`
 
   [90m› t (test-tap/fixture/report/regular/output-in-hook.js:34:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -204,15 +200,12 @@
   Test failed via `t.fail()`
 
   [90m› t (test-tap/fixture/report/regular/test.js:9:22)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
   [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
 
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
-
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -230,7 +223,6 @@
   Test failed via `t.fail()`
 
   [90m› t (test-tap/fixture/report/regular/test.js:18:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -248,7 +240,6 @@
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
   [90m› t (test-tap/fixture/report/regular/test.js:22:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -268,7 +259,6 @@
   [90m=>[39m [34m'[39m[34m[39m[34m'[39m
 
   [90m› t (test-tap/fixture/report/regular/test.js:27:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -298,7 +288,6 @@
 
   [90m› fn (test-tap/fixture/report/regular/test.js:32:9)[39m
   [90m› t (test-tap/fixture/report/regular/test.js:35:11)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -328,7 +317,6 @@
 
   [90m› fn (test-tap/fixture/report/regular/test.js:40:9)[39m
   [90m› t (test-tap/fixture/report/regular/test.js:43:14)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -337,8 +325,6 @@
   Error thrown in test:
 
   [33mnull[39m
-
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -363,7 +349,6 @@
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throws._avaThrowsHelperEnd (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:12:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -384,7 +369,6 @@
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.notThrows._avaThrowsHelperEnd (test-tap/fixture/report/regular/traces-in-t-throws.js:16:20)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:16:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -405,7 +389,6 @@
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.notThrowsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:20:25)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:20:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -426,7 +409,6 @@
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throwsAsync (test-tap/fixture/report/regular/traces-in-t-throws.js:24:22)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:24:4)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
 
 
@@ -450,7 +432,6 @@
 
   [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
   [90m› t (test-tap/fixture/report/regular/traces-in-t-throws.js:28:11)[39m
-  [90m[2m› process._tickCallback (internal/process/next_tick.js:68:7)[22m[39m
 
   [90m─[39m
 
