@@ -21,7 +21,7 @@ test('deterministic and sorted over a large, random test case', async t => {
 	// Assert snapshot is unchanged
 	const snapshot = fs.readFileSync(snapshotPath);
 
-	t.snapshot(snapshot);
+	t.snapshot(snapshot, 'resulting snapshot in binary encoding');
 
 	// Assert report is sorted
 	const report = fs.readFileSync(reportPath);
