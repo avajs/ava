@@ -1,12 +1,10 @@
 export namespace SharedWorker {
 	export type ProtocolIdentifier = 'experimental';
 
-	/* eslint-disable @typescript-eslint/method-signature-style */
 	export type FactoryOptions = {
 		negotiateProtocol <Data = unknown>(supported: readonly ['experimental']): Experimental.Protocol<Data>;
 		// Add overloads for additional protocols.
 	};
-	/* eslint-enable @typescript-eslint/method-signature-style */
 
 	export type Factory = (options: FactoryOptions) => void;
 

@@ -3,7 +3,7 @@ require('../lib/chalk').set({level: 1});
 
 const fs = require('fs');
 const tempWrite = require('temp-write');
-const {Instance: ChalkInstance} = require('chalk');
+const {Instance: ChalkInstance} = require('chalk'); // eslint-disable-line unicorn/import-style
 const {test} = require('tap');
 const codeExcerpt = require('../lib/code-excerpt');
 

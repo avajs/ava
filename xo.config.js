@@ -26,6 +26,14 @@ module.exports = {
 			}
 		},
 		{
+			files: ['lib/plugin-support/shared-worker-loader.js', 'lib/plugin-support/shared-workers.js'],
+			// TODO [engine:node@>=12]: Enable when targeting Node.js 12.
+			rules: {
+				'import/no-unresolved': 'off',
+				'node/no-unsupported-features/node-builtins': 'off'
+			}
+		},
+		{
 			files: 'test-{d,tap}/**/*.ts',
 			rules: {
 				'@typescript-eslint/explicit-function-return-type': 'off',
