@@ -12,15 +12,15 @@ not ok 2 - TypeError: test is not a function
       Object.<anonymous>
       (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)
 
-      Module._compile (node:internal/modules/cjs/loader:1083:30)
+      Module._compile (node:internal/modules/cjs/loader:1102:14)
 
-      Module.load (node:internal/modules/cjs/loader:948:32)
+      Module.load (node:internal/modules/cjs/loader:967:32)
 
-      Function.Module._load (node:internal/modules/cjs/loader:789:14)
+      Function.Module._load (node:internal/modules/cjs/loader:807:14)
 
-      Module.require (node:internal/modules/cjs/loader:972:19)
+      Module.require (node:internal/modules/cjs/loader:991:19)
 
-      require (node:internal/modules/cjs/helpers:88:18)
+      require (node:internal/modules/cjs/helpers:92:18)
   ...
 ---tty-stream-chunk-separator
 # import-and-use-test-member.js exited with a non-zero exit code: 1
@@ -36,11 +36,11 @@ not ok 5 - Error: throws
     message: throws
     at: |-
       Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)
-      Module._compile (node:internal/modules/cjs/loader:1083:30)
-      Module.load (node:internal/modules/cjs/loader:948:32)
-      Function.Module._load (node:internal/modules/cjs/loader:789:14)
-      Module.require (node:internal/modules/cjs/loader:972:19)
-      require (node:internal/modules/cjs/helpers:88:18)
+      Module._compile (node:internal/modules/cjs/loader:1102:14)
+      Module.load (node:internal/modules/cjs/loader:967:32)
+      Function.Module._load (node:internal/modules/cjs/loader:807:14)
+      Module.require (node:internal/modules/cjs/loader:991:19)
+      require (node:internal/modules/cjs/helpers:92:18)
   ...
 ---tty-stream-chunk-separator
 # throws.js exited with a non-zero exit code: 1

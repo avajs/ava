@@ -7,11 +7,11 @@ not ok 1 - TypeError: test.serial.test is not a function
     message: test.serial.test is not a function
     at: |-
       Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.js:3:13)
-      Module._compile (node:internal/modules/cjs/loader:1083:30)
-      Module.load (node:internal/modules/cjs/loader:948:32)
-      Function.Module._load (node:internal/modules/cjs/loader:789:14)
-      Module.require (node:internal/modules/cjs/loader:972:19)
-      require (node:internal/modules/cjs/helpers:88:18)
+      Module._compile (node:internal/modules/cjs/loader:1102:14)
+      Module.load (node:internal/modules/cjs/loader:967:32)
+      Function.Module._load (node:internal/modules/cjs/loader:807:14)
+      Module.require (node:internal/modules/cjs/loader:991:19)
+      require (node:internal/modules/cjs/helpers:92:18)
   ...
 ---tty-stream-chunk-separator
 # bad-test-chain.js exited with a non-zero exit code: 1
@@ -329,7 +329,7 @@ not ok 25 - Error: Can’t catch me
       Immediate.<anonymous>
       (test-tap/fixture/report/regular/uncaught-exception.js:5:9)
 
-      processImmediate (node:internal/timers:462:21)
+      processImmediate (node:internal/timers:463:21)
   ...
 ---tty-stream-chunk-separator
 # uncaught-exception.js exited with a non-zero exit code: 1

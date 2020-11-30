@@ -18,11 +18,11 @@
   TypeError: test is not a function
 
   [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)[39m
-  [90m› Module._compile (node:internal/modules/cjs/loader:1083:30)[39m
-  [90m› Module.load (node:internal/modules/cjs/loader:948:32)[39m
-  [90m› Function.Module._load (node:internal/modules/cjs/loader:789:14)[39m
-  [90m› Module.require (node:internal/modules/cjs/loader:972:19)[39m
-  [90m› require (node:internal/modules/cjs/helpers:88:18)[39m
+  [90m› Module._compile (node:internal/modules/cjs/loader:1102:14)[39m
+  [90m› Module.load (node:internal/modules/cjs/loader:967:32)[39m
+  [90m› Function.Module._load (node:internal/modules/cjs/loader:807:14)[39m
+  [90m› Module.require (node:internal/modules/cjs/loader:991:19)[39m
+  [90m› require (node:internal/modules/cjs/helpers:92:18)[39m
 
 ---tty-stream-chunk-separator
   [31m✖ import-and-use-test-member.js exited with a non-zero exit code: 1[39m
@@ -42,11 +42,11 @@
   Error: throws
 
   [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)[39m
-  [90m› Module._compile (node:internal/modules/cjs/loader:1083:30)[39m
-  [90m› Module.load (node:internal/modules/cjs/loader:948:32)[39m
-  [90m› Function.Module._load (node:internal/modules/cjs/loader:789:14)[39m
-  [90m› Module.require (node:internal/modules/cjs/loader:972:19)[39m
-  [90m› require (node:internal/modules/cjs/helpers:88:18)[39m
+  [90m› Module._compile (node:internal/modules/cjs/loader:1102:14)[39m
+  [90m› Module.load (node:internal/modules/cjs/loader:967:32)[39m
+  [90m› Function.Module._load (node:internal/modules/cjs/loader:807:14)[39m
+  [90m› Module.require (node:internal/modules/cjs/loader:991:19)[39m
+  [90m› require (node:internal/modules/cjs/helpers:92:18)[39m
 
 ---tty-stream-chunk-separator
   [31m✖ throws.js exited with a non-zero exit code: 1[39m
