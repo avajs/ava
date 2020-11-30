@@ -28,8 +28,8 @@ test('unsorted snapshots are unchanged when checking', async t => {
 	const reportPath = path.join(options.cwd, 'test.js.md');
 
 	// Install a known-unsorted snapshot, report
-	fs.copyFileSync(unsortedSnapshotPath, snapshotPath);
-	fs.copyFileSync(unsortedReportPath, reportPath);
+	fs.writeFileSync(snapshotPath, unsortedSnapshot);
+	fs.writeFileSync(reportPath, unsortedReport);
 
 	// Run test
 	await exec.fixture([], options);
