@@ -1,0 +1,10 @@
+{
+  "ava": {
+    "files": [
+      "*"
+    ],
+    "nonSemVerExperiments": {
+      "sharedWorkers": true
+    }
+  }
+}

@@ -143,6 +143,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 
 ### Recipes
 
+- [Shared workers](docs/recipes/shared-workers.md)
 - [Test setup](docs/recipes/test-setup.md)
 - [Code coverage](docs/recipes/code-coverage.md)
 - [Watch mode](docs/recipes/watch-mode.md)
@@ -205,7 +206,6 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 - [AVA stickers, t-shirts, etc](https://www.redbubble.com/people/sindresorhus/works/30330590-ava-logo)
 - [Awesome list](https://github.com/avajs/awesome-ava)
-- [AVA Casts](http://avacasts.com)
 - [Do you like AVA? Donate here!](https://opencollective.com/ava)
 - [More…](https://github.com/avajs/awesome-ava)
 

@@ -15,14 +15,12 @@ test('cannot update snapshots when file contains exclusive tests', async t => {
 	t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 });
 
-const stripLeadingFigures = string => string.replace(/^\W+/, '');
-
 test('cannot update snapshots when matching test titles', async t => {
 	const result = await t.throwsAsync(exec.fixture(['contains-skip.js', '-u', '-m=snapshot']));
-	t.snapshot(stripLeadingFigures(result.stderr.trim()));
+	t.snapshot(exec.cleanOutput(result.stderr));
 });
 
 test('cannot update snapshots when selecting tests by line number', async t => {
 	const result = await t.throwsAsync(exec.fixture(['contains-skip.js:4', '-u']));
-	t.snapshot(stripLeadingFigures(result.stderr.trim()));
+	t.snapshot(exec.cleanOutput(result.stderr));
 });

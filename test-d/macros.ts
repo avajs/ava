@@ -39,13 +39,13 @@ import test, {ExecutionContext, Macro} from '..';
 
 // No arguments
 {
-	const pass: Macro<[]> = (t, ...args) => {
-		expectType<[]>(args);
+	const pass: Macro<[]> = (t, ...args) => { // eslint-disable-line @typescript-eslint/ban-types
+		expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
 	};
 
 	pass.title = (providedTitle, ...args) => {
 		expectType<string | undefined>(providedTitle);
-		expectType<[]>(args);
+		expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
 		return '';
 	};
 

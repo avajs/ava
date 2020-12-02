@@ -4,13 +4,15 @@ const v8 = require('v8');
 const test = require('@ava/test');
 const execa = require('execa');
 const defaultsDeep = require('lodash/defaultsDeep');
+const replaceString = require('replace-string');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
 
 const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
-const normalizePath = (root, file) => path.posix.normalize(path.relative(root, file));
+const normalizePosixPath = string => replaceString(string, '\\', '/');
+const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
 
 const compareStatObjects = (a, b) => {
 	if (a.file < b.file) {
@@ -28,8 +30,21 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
+exports.cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+exports.cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
+
+const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
+
+const forwardErrorOutput = async from => {
+	for await (const message of from) {
+		if (NO_FORWARD_PREFIX.compare(message, 0, 4) !== 0) {
+			process.stderr.write(message);
+		}
+	}
+};
+
 exports.fixture = async (args, options = {}) => {
-	const cwd = path.join(path.dirname(test.meta.file), 'fixtures');
+	const cwd = options.cwd || exports.cwd();
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
@@ -42,19 +57,26 @@ exports.fixture = async (args, options = {}) => {
 	// Besides buffering stderr, if this environment variable is set, also pipe
 	// to stderr. This can be useful when debugging the tests.
 	if (process.env.DEBUG_TEST_AVA) {
-		running.stderr.pipe(process.stderr);
+		// Running.stderr.pipe(process.stderr);
+		forwardErrorOutput(running.stderr);
 	}
 
 	const errors = new WeakMap();
+	const logs = new WeakMap();
 	const stats = {
 		failed: [],
 		failedHooks: [],
 		passed: [],
+		sharedWorkerErrors: [],
 		skipped: [],
+		todo: [],
 		uncaughtExceptions: [],
 		unsavedSnapshots: [],
 		getError(statObject) {
 			return errors.get(statObject);
+		},
+		getLogs(statObject) {
+			return logs.get(statObject);
 		}
 	};
 
@@ -78,6 +100,17 @@ exports.fixture = async (args, options = {}) => {
 					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
 				}
 
+				if (statusEvent.todo) {
+					const {title, testFile} = statusEvent;
+					stats.todo.push({title, file: normalizePath(cwd, testFile)});
+				}
+
+				break;
+			}
+
+			case 'shared-worker-error': {
+				const {message, name, stack} = statusEvent.err;
+				stats.sharedWorkerErrors.push({message, name, stack});
 				break;
 			}
 
@@ -89,7 +122,9 @@ exports.fixture = async (args, options = {}) => {
 
 			case 'test-passed': {
 				const {title, testFile} = statusEvent;
-				stats.passed.push({title, file: normalizePath(cwd, testFile)});
+				const statObject = {title, file: normalizePath(cwd, testFile)};
+				stats.passed.push(statObject);
+				logs.set(statObject, statusEvent.logs);
 				break;
 			}
 
@@ -124,6 +159,7 @@ exports.fixture = async (args, options = {}) => {
 		stats.failedHooks.sort(compareStatObjects);
 		stats.passed.sort(compareStatObjects);
 		stats.skipped.sort(compareStatObjects);
+		stats.todo.sort(compareStatObjects);
 		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };

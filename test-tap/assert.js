@@ -14,7 +14,7 @@ const HelloMessage = require('./fixture/hello-message');
 let lastFailure = null;
 let lastPassed = false;
 
-const assertions = new class extends assert.Assertions {
+const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
 			pass: () => {
@@ -35,7 +35,9 @@ const assertions = new class extends assert.Assertions {
 			...overwrites
 		});
 	}
-}();
+};
+
+const assertions = new AssertionsBase();
 
 function assertFailure(t, subset) {
 	if (!lastFailure) {
@@ -1469,6 +1471,34 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` contains unexpected properties',
 		values: [{label: 'Called with:', formatted: /foo: null/}]
+	});
+
+	t.end();
+});
+
+test('.throws() fails if passed null expectation with disableNullExpectations', t => {
+	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+
+	failsWith(t, () => {
+		asserter.throws(() => {}, null);
+	}, {
+		assertion: 'throws',
+		message: 'The second argument to `t.throws()` must be an expectation object or `undefined`',
+		values: [{label: 'Called with:', formatted: /null/}]
+	});
+
+	t.end();
+});
+
+test('.throwsAsync() fails if passed null expectation with disableNullExpectations', t => {
+	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+
+	failsWith(t, () => {
+		asserter.throwsAsync(() => {}, null);
+	}, {
+		assertion: 'throwsAsync',
+		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `undefined`',
+		values: [{label: 'Called with:', formatted: /null/}]
 	});
 
 	t.end();

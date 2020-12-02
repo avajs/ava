@@ -4,15 +4,34 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-Out of the box AVA does not load TypeScript test files, however. Rudimentary support is available via the [`@ava/typescript`] package. You can also use AVA with [`ts-node`]. Read on for details.
-
 This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 3.7.5.
 
-## Enabling AVA's TypeScript support
+## Enabling AVA's support for TypeScript test files
 
-Currently, AVA's TypeScript support is designed to work for projects that precompile TypeScript. Please see [`@ava/typescript`] for setup instructions.
+Out of the box AVA does not load TypeScript test files. You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions.
 
-Read on until the end to learn how to use [`ts-node`] with AVA.
+### Using `ts-node`
+
+You can use [`ts-node`] to do live testing without transpiling to js files.  This can be especially helpful when you're using a bundler.
+
+`npm i --save-dev typescript ts-node`
+
+`package.json`:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	}
+}
+```
+
+It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
 ## Writing tests
 
@@ -152,27 +171,6 @@ test('throwsAsync', async t => {
 ```
 
 Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
-
-## On the fly compilation using `ts-node`
-
-If [`@ava/typescript`] doesn't do the trick you can use [`ts-node`]. Make sure it's installed and then configure AVA to recognize TypeScript files and register [`ts-node`]:
-
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	}
-}
-```
-
-It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
 ### Using module path mapping
 

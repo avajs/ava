@@ -244,7 +244,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. The 
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
 
 Example:
 
@@ -276,7 +276,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `null`.
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
 
 Example:
 
