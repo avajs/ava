@@ -106,7 +106,7 @@
 		"source-map-support": "^0.5.19",
 		"stack-utils": "^2.0.3",
 		"strip-ansi": "^6.0.0",
-		"supertap": "^1.0.0",
+		"supertap": "git+https://github.com/tymfear/supertap.git#master",
 		"temp-dir": "^2.0.0",
 		"trim-off-newlines": "^1.0.1",
 		"update-notifier": "^5.0.1",

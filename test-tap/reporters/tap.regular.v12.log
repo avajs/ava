@@ -128,8 +128,8 @@ not ok 12 - test [90m[2m›[22m[39m no longer failing
 ---tty-stream-chunk-separator
 # test › logs
 not ok 13 - test [90m[2m›[22m[39m logs
-  * hello
-  * world
+#   hello
+#   world
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
