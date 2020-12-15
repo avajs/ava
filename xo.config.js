@@ -12,8 +12,7 @@ module.exports = {
 		'import/no-anonymous-default-export': 'off',
 		'import/no-unresolved': ['error', {commonjs: true}],
 		'no-use-extend-native/no-use-extend-native': 'off',
-		'@typescript-eslint/no-var-requires': 'off',
-		'ava/no-statement-after-end': 'off'
+		'@typescript-eslint/no-var-requires': 'off'
 	},
 	overrides: [
 		{
