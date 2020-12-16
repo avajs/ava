@@ -6,22 +6,22 @@ if (process.env.TEMPLATE) {
 	test('some snapshots', t => {
 		t.snapshot('foo');
 		t.snapshot('bar');
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another snapshot', t => {
 		t.snapshot('baz');
-		t.assert(true);
+		t.pass();
 	});
 } else {
 	test.only('some snapshots', t => {
 		// t.snapshot('foo');
 		// t.snapshot('bar');
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another snapshot', t => {
 		// t.snapshot('baz');
-		t.assert(true);
+		t.pass();
 	});
 }

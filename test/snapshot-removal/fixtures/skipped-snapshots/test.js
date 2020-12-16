@@ -6,12 +6,12 @@ if (process.env.TEMPLATE) {
 	test('some snapshots', t => {
 		t.snapshot('foo');
 		t.snapshot('bar');
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another snapshot', t => {
 		t.snapshot('baz');
-		t.assert(true);
+		t.pass();
 	});
 } else {
 	const test = require('ava');
@@ -19,11 +19,11 @@ if (process.env.TEMPLATE) {
 	test('some snapshots', t => {
 		t.snapshot.skip('foo');
 		// t.snapshot('bar');
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another snapshot', t => {
 		// t.snapshot('baz');
-		t.assert(true);
+		t.pass();
 	});
 }

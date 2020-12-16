@@ -10,7 +10,7 @@ if (process.env.TEMPLATE) {
 
 		attempt.commit();
 
-		t.assert(true);
+		t.pass();
 	});
 } else {
 	const test = require('ava');
@@ -22,6 +22,6 @@ if (process.env.TEMPLATE) {
 
 		attempt.discard();
 
-		t.assert(true);
+		t.pass();
 	});
 }
