@@ -7,9 +7,11 @@ async function testSnapshotPruning(t, {
 	ci = 'not-ci',
 	cli,
 	remove,
-	error = false,
 	snapshotPath = 'test.js.snap',
-	reportPath = 'test.js.md'
+	reportPath = 'test.js.md',
+	checkRun = async (t, run) => {
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+	}
 }) {
 	snapshotPath = path.join(cwd, snapshotPath);
 	reportPath = path.join(cwd, reportPath);
@@ -37,16 +39,14 @@ async function testSnapshotPruning(t, {
 	await t.notThrowsAsync(fs.access(reportPath), 'Template didn\'t create a report - there\'s a bug in the test');
 
 	// Execute fixture as run
-	const runResult = exec.fixture(cli, {
+	const run = exec.fixture(cli, {
 		cwd,
 		env: {
 			AVA_FORCE_CI: ci
 		}
 	});
 
-	await (error ?
-		t.throwsAsync(runResult, error === true ? undefined : error, 'Expected fixture to throw.') :
-		t.notThrowsAsync(runResult, 'Expected fixture not to throw.'));
+	await checkRun(t, run);
 
 	if (remove) {
 		// Assert files don't exist

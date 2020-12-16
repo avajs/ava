@@ -6,8 +6,11 @@ test.serial('snapshots remain if snapshot assertions are skipped (-u)', testSnap
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
-	error: {
-		message: /.*Snapshot assertions cannot be skipped when updating snapshots.*/
+	checkRun: async (t, run) => {
+		const result = await t.throwsAsync(run, {
+			message: /Snapshot assertions cannot be skipped when updating snapshots/
+		}, 'Expected fixture to throw');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 

@@ -18,8 +18,9 @@ test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
 	remove: false,
-	error: {
-		message: /.*Snapshots cannot be updated when matching specific tests.*/
+	checkRun: async (t, run) => {
+		const result = await t.throwsAsync(run, undefined, 'Expected fixture to throw');
+		t.snapshot(exec.cleanOutput(result.stderr), 'stderr');
 	}
 });
 
@@ -27,7 +28,8 @@ test.serial('snapshots remain if tests selected by line numbers', testSnapshotPr
 	cwd: exec.cwd('removal'),
 	cli: ['test.js:3-12', '--update-snapshots'],
 	remove: false,
-	error: {
-		message: /.*Snapshots cannot be updated when selecting specific tests by their line number.*/
+	checkRun: async (t, run) => {
+		const result = await t.throwsAsync(run, undefined, 'Expected fixture to throw');
+		t.snapshot(exec.cleanOutput(result.stderr), 'stderr');
 	}
 });
