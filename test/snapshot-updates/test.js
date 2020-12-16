@@ -26,7 +26,7 @@ test('cannot update snapshots when selecting tests by line number', async t => {
 });
 
 test('cannot update snapshots when skipping snapshot assertions', async t => {
-	const result = await t.throwsAsync(exec.fixture(['contains-skip-assertion.js', '-u']));
+	const result = await t.throwsAsync(exec.fixture(['contains-skip-assertion.js', '-u'], {env: {AVA_FORCE_CI: 'not-ci'}}));
 	t.snapshot(result.stats.failed, 'failed tests');
 	t.snapshot(result.stats.passed, 'passed tests');
 	t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
