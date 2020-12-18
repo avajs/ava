@@ -1,5 +1,3 @@
-/* eslint-disable ava/no-skip-test, capitalized-comments, ava/no-identical-title */
-
 const test = require(process.env.AVA_PATH || 'ava');
 
 if (process.env.TEMPLATE) {
@@ -15,13 +13,10 @@ if (process.env.TEMPLATE) {
 	});
 } else {
 	test.skip('some snapshots', t => {
-		t.snapshot('foo');
-		t.snapshot('bar');
 		t.pass();
 	});
 
 	test('another snapshot', t => {
-		// t.snapshot('baz');
 		t.pass();
 	});
 }

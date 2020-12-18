@@ -1,5 +1,3 @@
-/* eslint-disable ava/no-identical-title */
-
 const test = require(process.env.AVA_PATH || 'ava');
 
 if (process.env.TEMPLATE) {
