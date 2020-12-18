@@ -123,6 +123,7 @@
 		"delay": "^4.4.0",
 		"esm": "^3.2.25",
 		"execa": "^4.1.0",
+		"fs-extra": "^9.0.1",
 		"get-stream": "^6.0.0",
 		"it-first": "^1.0.4",
 		"proxyquire": "^2.1.3",

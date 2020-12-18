@@ -1,10 +1,32 @@
 const fs = require('fs').promises;
 const exec = require('../../helpers/exec');
 const path = require('path');
+const tempy = require('tempy');
+const fse = require('fs-extra');
+
+function withTemporaryFixture(macro) {
+	const avaPath = path.resolve(path.join(__dirname, '..', '..', '..'));
+
+	return async (t, {cwd, env, ...options}) => {
+		await tempy.directory.task(async temporary => {
+			await fse.copy(cwd, temporary);
+			await macro(t, {
+				cwd: temporary,
+				env: {
+					AVA_PATH: avaPath,
+					...env
+				},
+				...options
+			});
+		});
+	};
+}
+
+module.exports.testSnapshotPruningSafe = withTemporaryFixture(testSnapshotPruning);
 
 async function testSnapshotPruning(t, {
 	cwd,
-	ci = 'not-ci',
+	env,
 	cli,
 	remove,
 	snapshotPath = 'test.js.snap',
@@ -27,6 +49,7 @@ async function testSnapshotPruning(t, {
 	const templateResult = exec.fixture(['--update-snapshots'], {
 		cwd,
 		env: {
+			...env,
 			AVA_FORCE_CI: 'not-ci',
 			TEMPLATE: 'true'
 		}
@@ -42,7 +65,8 @@ async function testSnapshotPruning(t, {
 	const run = exec.fixture(cli, {
 		cwd,
 		env: {
-			AVA_FORCE_CI: ci
+			AVA_FORCE_CI: 'not-ci',
+			...env
 		}
 	});
 

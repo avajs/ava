@@ -1,20 +1,20 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruning} = require('./helpers/macros');
+const {testSnapshotPruningSafe} = require('./helpers/macros');
 
-test.serial('snapshots are removed when tests stop using them', testSnapshotPruning, {
+test('snapshots are removed when tests stop using them', testSnapshotPruningSafe, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots'],
 	remove: true
 });
 
-test.serial('snapshots remain if not updating', testSnapshotPruning, {
+test('snapshots remain if not updating', testSnapshotPruningSafe, {
 	cwd: exec.cwd('removal'),
 	cli: [],
 	remove: false
 });
 
-test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
+test('snapshots remain if tests run with --match', testSnapshotPruningSafe, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
 	remove: false,
@@ -24,7 +24,7 @@ test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
 	}
 });
 
-test.serial('snapshots remain if tests selected by line numbers', testSnapshotPruning, {
+test('snapshots remain if tests selected by line numbers', testSnapshotPruningSafe, {
 	cwd: exec.cwd('removal'),
 	cli: ['test.js:3-12', '--update-snapshots'],
 	remove: false,

@@ -1,8 +1,8 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruning} = require('./helpers/macros');
+const {testSnapshotPruningSafe} = require('./helpers/macros');
 
-test.serial('snapshots remain if snapshot assertions are skipped (-u)', testSnapshotPruning, {
+test('snapshots remain if snapshot assertions are skipped (-u)', testSnapshotPruningSafe, {
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
@@ -14,7 +14,7 @@ test.serial('snapshots remain if snapshot assertions are skipped (-u)', testSnap
 	}
 });
 
-test.serial('snapshots remain if snapshot assertions are skipped (!-u)', testSnapshotPruning, {
+test('snapshots remain if snapshot assertions are skipped (!-u)', testSnapshotPruningSafe, {
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: [],
 	remove: false

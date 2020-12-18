@@ -1,8 +1,8 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruning} = require('./helpers/macros');
+const {testSnapshotPruningSafe} = require('./helpers/macros');
 
-test.serial('snapshots remain if using test.only', testSnapshotPruning, {
+test('snapshots remain if using test.only', testSnapshotPruningSafe, {
 	cwd: exec.cwd('only-test'),
 	cli: ['--update-snapshots'],
 	remove: false,

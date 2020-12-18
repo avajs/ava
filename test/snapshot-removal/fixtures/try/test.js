@@ -1,8 +1,8 @@
 /* eslint-disable ava/no-identical-title */
 
-if (process.env.TEMPLATE) {
-	const test = require('ava');
+const test = require(process.env.AVA_PATH || 'ava');
 
+if (process.env.TEMPLATE) {
 	test('snapshots in try', async t => {
 		const attempt = await t.try(tt => {
 			tt.snapshot('in try');
@@ -13,8 +13,6 @@ if (process.env.TEMPLATE) {
 		t.pass();
 	});
 } else {
-	const test = require('ava');
-
 	test('snapshots in try', async t => {
 		const attempt = await t.try(tt => {
 			tt.snapshot('in try');

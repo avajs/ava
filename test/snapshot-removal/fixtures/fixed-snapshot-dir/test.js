@@ -1,7 +1,8 @@
 /* eslint-disable capitalized-comments, ava/no-identical-title */
 
+const test = require(process.env.AVA_PATH || 'ava');
+
 if (process.env.TEMPLATE) {
-	const test = require('ava');
 
 	test('some snapshots', t => {
 		t.snapshot('foo');
@@ -14,8 +15,6 @@ if (process.env.TEMPLATE) {
 		t.pass();
 	});
 } else {
-	const test = require('ava');
-
 	test('some snapshots', t => {
 		// t.snapshot('foo');
 		// t.snapshot('bar');

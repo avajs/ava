@@ -1,9 +1,9 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruning} = require('./helpers/macros');
+const {testSnapshotPruningSafe} = require('./helpers/macros');
 const path = require('path');
 
-test.serial('snapshots remain if skipped in a discarded try()', testSnapshotPruning, {
+test('snapshots remain if skipped in a discarded try()', testSnapshotPruningSafe, {
 	cwd: exec.cwd(path.parse(__filename).name),
 	cli: ['--update-snapshots'],
 	remove: false,
