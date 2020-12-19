@@ -1,15 +1,17 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruningSafe} = require('./helpers/macros');
+const {testSnapshotPruning, withTemporaryFixture} = require('./helpers/macros');
 const path = require('path');
 
-test('snapshots are removed when tests stop using them', testSnapshotPruningSafe, {
+const macro = withTemporaryFixture(testSnapshotPruning);
+
+test('snapshots are removed when tests stop using them', macro, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots'],
 	remove: true
 });
 
-test('snapshots are removed from a snapshot directory', testSnapshotPruningSafe, {
+test('snapshots are removed from a snapshot directory', macro, {
 	cwd: exec.cwd('snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
@@ -17,7 +19,7 @@ test('snapshots are removed from a snapshot directory', testSnapshotPruningSafe,
 	reportPath: path.join('test', 'snapshots', 'test.js.md')
 });
 
-test('snapshots are removed from a custom snapshotDir', testSnapshotPruningSafe, {
+test('snapshots are removed from a custom snapshotDir', macro, {
 	cwd: exec.cwd('fixed-snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
@@ -38,13 +40,13 @@ test('removing non-existent snapshots doesn\'t throw', async t => {
 	await t.notThrowsAsync(run);
 });
 
-test('snapshots remain if not updating', testSnapshotPruningSafe, {
+test('snapshots remain if not updating', macro, {
 	cwd: exec.cwd('removal'),
 	cli: [],
 	remove: false
 });
 
-test('snapshots remain if tests run with --match', testSnapshotPruningSafe, {
+test('snapshots remain if tests run with --match', macro, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
 	remove: false,
@@ -54,7 +56,7 @@ test('snapshots remain if tests run with --match', testSnapshotPruningSafe, {
 	}
 });
 
-test('snapshots remain if tests selected by line numbers', testSnapshotPruningSafe, {
+test('snapshots remain if tests selected by line numbers', macro, {
 	cwd: exec.cwd('removal'),
 	cli: ['test.js:3-12', '--update-snapshots'],
 	remove: false,
@@ -64,7 +66,7 @@ test('snapshots remain if tests selected by line numbers', testSnapshotPruningSa
 	}
 });
 
-test('snapshots remain if using test.only', testSnapshotPruningSafe, {
+test('snapshots remain if using test.only', macro, {
 	cwd: exec.cwd('only-test'),
 	cli: ['--update-snapshots'],
 	remove: false,
@@ -75,7 +77,7 @@ test('snapshots remain if using test.only', testSnapshotPruningSafe, {
 	}
 });
 
-test('snapshots remain if tests are skipped', testSnapshotPruningSafe, {
+test('snapshots remain if tests are skipped', macro, {
 	cwd: exec.cwd('skipped-tests'),
 	cli: ['--update-snapshots'],
 	remove: false,
@@ -86,7 +88,7 @@ test('snapshots remain if tests are skipped', testSnapshotPruningSafe, {
 	}
 });
 
-test('snapshots remain if snapshot assertions are skipped (-u)', testSnapshotPruningSafe, {
+test('snapshots remain if snapshot assertions are skipped (-u)', macro, {
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
@@ -98,19 +100,19 @@ test('snapshots remain if snapshot assertions are skipped (-u)', testSnapshotPru
 	}
 });
 
-test('snapshots remain if snapshot assertions are skipped (!-u)', testSnapshotPruningSafe, {
+test('snapshots remain if snapshot assertions are skipped (!-u)', macro, {
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: [],
 	remove: false
 });
 
-test('snapshots remain if used in a discarded try()', testSnapshotPruningSafe, {
+test('snapshots remain if used in a discarded try()', macro, {
 	cwd: exec.cwd('try'),
 	cli: ['--update-snapshots'],
 	remove: false
 });
 
-test('snapshots remain if skipped in a discarded try()', testSnapshotPruningSafe, {
+test('snapshots remain if skipped in a discarded try()', macro, {
 	cwd: exec.cwd('skipped-snapshots-in-try'),
 	cli: ['--update-snapshots'],
 	remove: false,

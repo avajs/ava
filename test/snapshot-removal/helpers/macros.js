@@ -22,7 +22,7 @@ function withTemporaryFixture(macro) {
 	};
 }
 
-module.exports.testSnapshotPruningSafe = withTemporaryFixture(testSnapshotPruning);
+module.exports.withTemporaryFixture = withTemporaryFixture;
 
 async function testSnapshotPruning(t, {
 	cwd,
