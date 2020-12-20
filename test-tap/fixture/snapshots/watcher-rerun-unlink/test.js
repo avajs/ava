@@ -1,14 +1,10 @@
-/* eslint-disable capitalized-comments */
-
 const test = require('../../../..');
 
 if (process.env.TEMPLATE) {
 	test('test title', t => {
 		t.snapshot({foo: 'bar'});
-
 		t.snapshot({answer: 42});
-
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another test', t => {
@@ -16,16 +12,10 @@ if (process.env.TEMPLATE) {
 	});
 } else {
 	test('test title', t => {
-		// t.snapshot({foo: 'bar'});
-
-		// t.snapshot({answer: 42});
-
-		t.assert(true);
+		t.pass();
 	});
 
 	test('another test', t => {
-		// t.snapshot(new Map());
-
-		t.assert(true);
+		t.pass();
 	});
 }
