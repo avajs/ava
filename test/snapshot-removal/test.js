@@ -103,7 +103,7 @@ test('snapshots remain if tests are skipped', macro, {
 	}
 });
 
-test('snapshots remain if snapshot assertions are skipped (-u)', macro, {
+test('snapshots remain if snapshot assertions are skipped', macro, {
 	cwd: exec.cwd('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
@@ -113,12 +113,6 @@ test('snapshots remain if snapshot assertions are skipped (-u)', macro, {
 		}, 'Expected fixture to throw');
 		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
-});
-
-test('snapshots remain if snapshot assertions are skipped (!-u)', macro, {
-	cwd: exec.cwd('skipped-snapshots'),
-	cli: [],
-	remove: false
 });
 
 test('snapshots remain if used in a discarded try()', macro, {
