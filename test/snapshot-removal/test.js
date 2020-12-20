@@ -46,6 +46,21 @@ test('snapshots remain if not updating', macro, {
 	remove: false
 });
 
+test('snapshots remain if they are still used', macro, {
+	cwd: exec.cwd('removal'),
+	cli: ['--update-snapshots'],
+	remove: false,
+	env: {
+		TEMPLATE: 'true'
+	},
+	async checkRun(t, run) {
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
+		t.snapshot(result.stats.passed, 'passed tests');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
+	}
+});
+
 test('snapshots remain if tests run with --match', macro, {
 	cwd: exec.cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
