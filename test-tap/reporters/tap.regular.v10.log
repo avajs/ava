@@ -1,6 +1,5 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# TypeError: test.serial.test is not a function
 not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
@@ -8,11 +7,9 @@ not ok 1 - TypeError: test.serial.test is not a function
     at: 'Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.js:3:13)'
   ...
 ---tty-stream-chunk-separator
-# bad-test-chain.js exited with a non-zero exit code: 1
 not ok 2 - bad-test-chain.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-# nested-objects › format with max depth 4
-not ok 3 - nested-objects [90m[2m›[22m[39m format with max depth 4
+not ok 3 - nested-objects › format with max depth 4
   ---
     name: AssertionError
     assertion: deepEqual
@@ -35,8 +32,7 @@ not ok 3 - nested-objects [90m[2m›[22m[39m format with max depth 4
     at: 't (test-tap/fixture/report/regular/nested-objects.js:28:4)'
   ...
 ---tty-stream-chunk-separator
-# nested-objects › format like with max depth 4
-not ok 4 - nested-objects [90m[2m›[22m[39m format like with max depth 4
+not ok 4 - nested-objects › format like with max depth 4
   ---
     name: AssertionError
     assertion: like
@@ -57,21 +53,19 @@ not ok 4 - nested-objects [90m[2m›[22m[39m format like with max depth 4
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
 ---tty-stream-chunk-separator
-  # before
+#   before
 ---tty-stream-chunk-separator
 # output-in-hook › beforeEach hook for passing test
 ---tty-stream-chunk-separator
-  # beforeEach
+#   beforeEach
 ---tty-stream-chunk-separator
 # output-in-hook › beforeEach hook for failing test
 ---tty-stream-chunk-separator
-  # beforeEach
+#   beforeEach
 ---tty-stream-chunk-separator
-# output-in-hook › passing test
-ok 5 - output-in-hook [90m[2m›[22m[39m passing test
+ok 5 - output-in-hook › passing test
 ---tty-stream-chunk-separator
-# output-in-hook › failing test
-not ok 6 - output-in-hook [90m[2m›[22m[39m failing test
+not ok 6 - output-in-hook › failing test
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
@@ -81,31 +75,27 @@ not ok 6 - output-in-hook [90m[2m›[22m[39m failing test
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test
 ---tty-stream-chunk-separator
-  # afterEach
+#   afterEach
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach.always hook for failing test
 ---tty-stream-chunk-separator
-  # afterEachAlways
+#   afterEachAlways
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach.always hook for passing test
 ---tty-stream-chunk-separator
-  # afterEachAlways
+#   afterEachAlways
 ---tty-stream-chunk-separator
 # output-in-hook › cleanup
 ---tty-stream-chunk-separator
-  # afterAlways
+#   afterAlways
 ---tty-stream-chunk-separator
-# test › skip
-ok 7 - test [90m[2m›[22m[39m skip # SKIP
+ok 7 - test › skip # SKIP
 ---tty-stream-chunk-separator
-# test › todo
-not ok 8 - test [90m[2m›[22m[39m todo # TODO
+not ok 8 - test › todo # TODO
 ---tty-stream-chunk-separator
-# test › passes
-ok 9 - test [90m[2m›[22m[39m passes
+ok 9 - test › passes
 ---tty-stream-chunk-separator
-# test › fails
-not ok 10 - test [90m[2m›[22m[39m fails
+not ok 10 - test › fails
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
@@ -113,11 +103,9 @@ not ok 10 - test [90m[2m›[22m[39m fails
     at: 't (test-tap/fixture/report/regular/test.js:9:22)'
   ...
 ---tty-stream-chunk-separator
-# test › known failure
-ok 11 - test [90m[2m›[22m[39m known failure
+ok 11 - test › known failure
 ---tty-stream-chunk-separator
-# test › no longer failing
-not ok 12 - test [90m[2m›[22m[39m no longer failing
+not ok 12 - test › no longer failing
   ---
     name: Error
     message: >-
@@ -126,8 +114,7 @@ not ok 12 - test [90m[2m›[22m[39m no longer failing
     at: ''
   ...
 ---tty-stream-chunk-separator
-# test › logs
-not ok 13 - test [90m[2m›[22m[39m logs
+not ok 13 - test › logs
 #   hello
 #   world
   ---
@@ -137,8 +124,7 @@ not ok 13 - test [90m[2m›[22m[39m logs
     at: 't (test-tap/fixture/report/regular/test.js:18:4)'
   ...
 ---tty-stream-chunk-separator
-# test › formatted
-not ok 14 - test [90m[2m›[22m[39m formatted
+not ok 14 - test › formatted
   ---
     name: AssertionError
     assertion: deepEqual
@@ -149,8 +135,7 @@ not ok 14 - test [90m[2m›[22m[39m formatted
     at: 't (test-tap/fixture/report/regular/test.js:22:4)'
   ...
 ---tty-stream-chunk-separator
-# test › power-assert
-not ok 15 - test [90m[2m›[22m[39m power-assert
+not ok 15 - test › power-assert
   ---
     name: AssertionError
     assertion: assert
@@ -160,8 +145,7 @@ not ok 15 - test [90m[2m›[22m[39m power-assert
     at: 't (test-tap/fixture/report/regular/test.js:27:4)'
   ...
 ---tty-stream-chunk-separator
-# test › bad throws
-not ok 16 - test [90m[2m›[22m[39m bad throws
+not ok 16 - test › bad throws
   ---
     name: AssertionError
     message: Improper usage of `t.throws()` detected
@@ -176,8 +160,7 @@ not ok 16 - test [90m[2m›[22m[39m bad throws
       t (test-tap/fixture/report/regular/test.js:35:11)
   ...
 ---tty-stream-chunk-separator
-# test › bad notThrows
-not ok 17 - test [90m[2m›[22m[39m bad notThrows
+not ok 17 - test › bad notThrows
   ---
     name: AssertionError
     message: Improper usage of `t.notThrows()` detected
@@ -192,8 +175,7 @@ not ok 17 - test [90m[2m›[22m[39m bad notThrows
       t (test-tap/fixture/report/regular/test.js:43:14)
   ...
 ---tty-stream-chunk-separator
-# test › implementation throws non-error
-not ok 18 - test [90m[2m›[22m[39m implementation throws non-error
+not ok 18 - test › implementation throws non-error
   ---
     name: AssertionError
     message: Error thrown in test
@@ -202,8 +184,7 @@ not ok 18 - test [90m[2m›[22m[39m implementation throws non-error
     at: ''
   ...
 ---tty-stream-chunk-separator
-# traces-in-t-throws › throws
-not ok 19 - traces-in-t-throws [90m[2m›[22m[39m throws
+not ok 19 - traces-in-t-throws › throws
   ---
     name: AssertionError
     assertion: throws
@@ -222,8 +203,7 @@ not ok 19 - traces-in-t-throws [90m[2m›[22m[39m throws
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:12:4)
   ...
 ---tty-stream-chunk-separator
-# traces-in-t-throws › notThrows
-not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrows
+not ok 20 - traces-in-t-throws › notThrows
   ---
     name: AssertionError
     assertion: notThrows
@@ -241,8 +221,7 @@ not ok 20 - traces-in-t-throws [90m[2m›[22m[39m notThrows
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:16:4)
   ...
 ---tty-stream-chunk-separator
-# traces-in-t-throws › notThrowsAsync
-not ok 21 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
+not ok 21 - traces-in-t-throws › notThrowsAsync
   ---
     name: AssertionError
     assertion: notThrowsAsync
@@ -257,8 +236,7 @@ not ok 21 - traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:20:4)
   ...
 ---tty-stream-chunk-separator
-# traces-in-t-throws › throwsAsync
-not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
+not ok 22 - traces-in-t-throws › throwsAsync
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -273,8 +251,7 @@ not ok 22 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:24:4)
   ...
 ---tty-stream-chunk-separator
-# traces-in-t-throws › throwsAsync different error
-not ok 23 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
+not ok 23 - traces-in-t-throws › throwsAsync different error
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -291,10 +268,8 @@ not ok 23 - traces-in-t-throws [90m[2m›[22m[39m throwsAsync different erro
       t (test-tap/fixture/report/regular/traces-in-t-throws.js:28:11)
   ...
 ---tty-stream-chunk-separator
-# uncaught-exception › passes
-ok 24 - uncaught-exception [90m[2m›[22m[39m passes
+ok 24 - uncaught-exception › passes
 ---tty-stream-chunk-separator
-# Error: Can’t catch me
 not ok 25 - Error: Can’t catch me
   ---
     name: Error
@@ -304,16 +279,12 @@ not ok 25 - Error: Can’t catch me
       (test-tap/fixture/report/regular/uncaught-exception.js:5:9)
   ...
 ---tty-stream-chunk-separator
-# uncaught-exception.js exited with a non-zero exit code: 1
 not ok 26 - uncaught-exception.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-# unhandled-rejection › passes
-ok 27 - unhandled-rejection [90m[2m›[22m[39m passes
+ok 27 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
-# unhandled-rejection › unhandled non-error rejection
-ok 28 - unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+ok 28 - unhandled-rejection › unhandled non-error rejection
 ---tty-stream-chunk-separator
-# Error: Can’t catch me
 not ok 29 - Error: Can’t catch me
   ---
     name: Error
@@ -321,7 +292,6 @@ not ok 29 - Error: Can’t catch me
     at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
-# unhandled-rejection
 not ok 30 - unhandled-rejection
   ---
     message: Non-error object
