@@ -1,7 +1,6 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# a › fails
-not ok 1 - a [90m[2m›[22m[39m fails
+not ok 1 - a › fails
   ---
     name: AssertionError
     message: Test failed via `t.fail()`
