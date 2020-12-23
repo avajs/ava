@@ -1,10 +1,137 @@
 'use strict';
-const normalizeExtensions = require('./lib/extensions');
-const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
-const loadConfig = require('./lib/load-config');
-const providerManager = require('./lib/provider-manager');
+let isMainThread = true;
+let supportsWorkers = false;
+try {
+	({isMainThread} = require('worker_threads'));
+	supportsWorkers = true;
+} catch {}
 
-const configCache = new Map();
+const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
+
+let resolveGlobs;
+
+if (!supportsWorkers || !isMainThread) {
+	const normalizeExtensions = require('./lib/extensions');
+	const loadConfig = require('./lib/load-config');
+	const providerManager = require('./lib/provider-manager');
+
+	const configCache = new Map();
+
+	resolveGlobs = (projectDir, overrideExtensions, overrideFiles) => {
+		let conf;
+		let providers;
+		if (configCache.has(projectDir)) {
+			({conf, providers} = configCache.get(projectDir));
+		} else {
+			conf = loadConfig({resolveFrom: projectDir});
+
+			providers = [];
+			if (Reflect.has(conf, 'babel')) {
+				const {level, main} = providerManager.babel(projectDir);
+				providers.push({
+					level,
+					main: main({config: conf.babel}),
+					type: 'babel'
+				});
+			}
+
+			if (Reflect.has(conf, 'typescript')) {
+				const {level, main} = providerManager.typescript(projectDir);
+				providers.push({
+					level,
+					main: main({config: conf.typescript}),
+					type: 'typescript'
+				});
+			}
+
+			configCache.set(projectDir, {conf, providers});
+		}
+
+		const extensions = overrideExtensions ?
+			normalizeExtensions(overrideExtensions) :
+			normalizeExtensions(conf.extensions, providers);
+
+		return {
+			cwd: projectDir,
+			...normalizeGlobs({
+				extensions,
+				files: overrideFiles ? overrideFiles : conf.files,
+				providers
+			})
+		};
+	};
+}
+
+if (supportsWorkers) {
+	const v8 = require('v8');
+
+	const MAX_DATA_LENGTH_EXCLUSIVE = 100 * 1024; // Allocate 100 KiB to exchange globs.
+
+	if (isMainThread) {
+		const {Worker} = require('worker_threads');
+		let data;
+		let sync;
+		let worker;
+
+		resolveGlobs = (projectDir, overrideExtensions, overrideFiles) => {
+			if (worker === undefined) {
+				const dataBuffer = new SharedArrayBuffer(MAX_DATA_LENGTH_EXCLUSIVE);
+				data = new Uint8Array(dataBuffer);
+
+				const syncBuffer = new SharedArrayBuffer(4);
+				sync = new Int32Array(syncBuffer);
+
+				worker = new Worker(__filename, {
+					workerData: {
+						dataBuffer,
+						syncBuffer,
+						firstMessage: {projectDir, overrideExtensions, overrideFiles}
+					}
+				});
+				worker.unref();
+			} else {
+				worker.postMessage({projectDir, overrideExtensions, overrideFiles});
+			}
+
+			Atomics.wait(sync, 0, 0);
+
+			const byteLength = Atomics.exchange(sync, 0, 0);
+			if (byteLength === MAX_DATA_LENGTH_EXCLUSIVE) {
+				throw new Error('Globs are over 100 KiB and cannot be resolved');
+			}
+
+			const globsOrError = v8.deserialize(data.slice(0, byteLength));
+			if (globsOrError instanceof Error) {
+				throw globsOrError;
+			}
+
+			return globsOrError;
+		};
+	} else {
+		const {parentPort, workerData} = require('worker_threads');
+		const data = new Uint8Array(workerData.dataBuffer);
+		const sync = new Int32Array(workerData.syncBuffer);
+
+		const handleMessage = ({projectDir, overrideExtensions, overrideFiles}) => {
+			let encoded;
+			try {
+				const globs = resolveGlobs(projectDir, overrideExtensions, overrideFiles);
+				encoded = v8.serialize(globs);
+			} catch (error) {
+				encoded = v8.serialize(error);
+			}
+
+			const byteLength = encoded.length < MAX_DATA_LENGTH_EXCLUSIVE ? encoded.copy(data) : MAX_DATA_LENGTH_EXCLUSIVE;
+			Atomics.store(sync, 0, byteLength);
+			Atomics.notify(sync, 0);
+		};
+
+		parentPort.on('message', handleMessage);
+		handleMessage(workerData.firstMessage);
+		delete workerData.firstMessage;
+	}
+}
+
 const helperCache = new Map();
 
 function load(projectDir, overrides) {
@@ -12,39 +139,6 @@ function load(projectDir, overrides) {
 	if (helperCache.has(cacheKey)) {
 		return helperCache.get(cacheKey);
 	}
-
-	let conf;
-	let providers;
-	if (configCache.has(projectDir)) {
-		({conf, providers} = configCache.get(projectDir));
-	} else {
-		conf = loadConfig({resolveFrom: projectDir});
-
-		providers = [];
-		if (Reflect.has(conf, 'babel')) {
-			const {level, main} = providerManager.babel(projectDir);
-			providers.push({
-				level,
-				main: main({config: conf.babel}),
-				type: 'babel'
-			});
-		}
-
-		if (Reflect.has(conf, 'typescript')) {
-			const {level, main} = providerManager.typescript(projectDir);
-			providers.push({
-				level,
-				main: main({config: conf.typescript}),
-				type: 'typescript'
-			});
-		}
-
-		configCache.set(projectDir, {conf, providers});
-	}
-
-	const extensions = overrides && overrides.extensions ?
-		normalizeExtensions(overrides.extensions) :
-		normalizeExtensions(conf.extensions, providers);
 
 	let helperPatterns = [];
 	if (overrides && overrides.helpers !== undefined) {
@@ -55,14 +149,7 @@ function load(projectDir, overrides) {
 		helperPatterns = normalizePatterns(overrides.helpers);
 	}
 
-	const globs = {
-		cwd: projectDir,
-		...normalizeGlobs({
-			extensions,
-			files: overrides && overrides.files ? overrides.files : conf.files,
-			providers
-		})
-	};
+	const globs = resolveGlobs(projectDir, overrides && overrides.extensions, overrides && overrides.files);
 
 	const classifyForESLint = file => {
 		const {isTest} = classify(file, globs);

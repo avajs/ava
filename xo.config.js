@@ -26,7 +26,11 @@ module.exports = {
 			}
 		},
 		{
-			files: ['lib/plugin-support/shared-worker-loader.js', 'lib/plugin-support/shared-workers.js'],
+			files: [
+				'eslint-plugin-helper.js',
+				'lib/plugin-support/shared-worker-loader.js',
+				'lib/plugin-support/shared-workers.js'
+			],
 			// TODO [engine:node@>=12]: Enable when targeting Node.js 12.
 			rules: {
 				'import/no-unresolved': 'off',
