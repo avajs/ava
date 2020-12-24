@@ -10,7 +10,15 @@ test('unicorns are truthy', t => {
 });
 ```
 
-Assertions are bound to their test so you can assign them to a variable or pass them around:
+**Note**: Unlike other assertion libraries, AVA assertions do ***not***
+stop the test when they fail.
+
+When a test has multiple assertion failures,
+AVA only displays the *first* failure.
+There's currently no way to see all failures from a test
+([see issue #261](https://github.com/avajs/ava/issues/261)).
+
+Assertions are bound to their test, so you can assign them to a variable or pass them around:
 
 ```js
 test('unicorns are truthy', t => {
@@ -19,13 +27,13 @@ test('unicorns are truthy', t => {
 });
 ```
 
-If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
+
 
 ## Assertion planning
 
 Assertion plans ensure tests only pass when a specific number of assertions have been executed. They'll help you catch cases where tests exit too early. They'll also cause tests to fail if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
 
-If you do not specify an assertion plan, your test will still fail if no assertions are executed. Set the `failWithoutAssertions` option to `false` in AVA's [`package.json` configuration](./06-configuration.md) to disable this behavior.
+If you do not specify an assertion plan, your test will still fail if no assertions are executed. Set the `failWithoutAssertions` option to `false` in AVA's [configuration](./06-configuration.md) to disable this behavior.
 
 Note that, unlike [`tap`](https://www.npmjs.com/package/tap) and [`tape`](https://www.npmjs.com/package/tape), AVA does *not* automatically end a test when the planned assertion count is reached.
 
@@ -147,11 +155,14 @@ a
 
 ## Custom assertions
 
-You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
+You can use any assertion library instead of (or in addition to)
+the built-in one, provided it throws exceptions when the assertion fails.
 
-This won't give you as nice an experience as you'd get with the [built-in assertions](#built-in-assertions) though, and you won't be able to use the [assertion planning](#assertion-planning) ([see #25](https://github.com/avajs/ava/issues/25)).
+This won't give you as nice an experience as you'd get with the [built-in assertions](#built-in-assertions) though, and you won't be able to use [assertion planning](#assertion-planning) ([see issue #25](https://github.com/avajs/ava/issues/25)).
 
-You'll have to configure AVA to not fail tests if no assertions are executed, because AVA can't tell if custom assertions pass. Set the `failWithoutAssertions` option to `false` in AVA's [`package.json` configuration](./06-configuration.md).
+You'll have to set `failWithoutAssertions` to `false` in AVA's [configuration](./06-configuration.md),
+since AVA can't tell when custom assertions pass.
+
 
 ```js
 const assert = require('assert');
@@ -163,53 +174,69 @@ test('custom assertion', t => {
 
 ## Built-in assertions
 
+**Note**: Unlike other assertion libraries, these assertions
+do ***not*** throw on failure.
+
 ### `.pass(message?)`
 
 Passing assertion.
 
 ### `.fail(message?)`
 
-Failing assertion.
+Failing assertion. Does not throw.
 
 ### `.assert(value, message?)`
 
-Asserts that `value` is truthy. This is [`power-assert`](#enhanced-assertion-messages) enabled.
+Asserts that `value` is truthy. Does not throw on failure.
+
+This is [`power-assert`](#enhanced-assertion-messages) enabled.
 
 ### `.truthy(value, message?)`
 
-Assert that `value` is truthy.
+Assert that `value` is truthy. Does not throw on failure.
 
 ### `.falsy(value, message?)`
 
-Assert that `value` is falsy.
+Assert that `value` is falsy. Does not throw on failure.
 
 ### `.true(value, message?)`
 
-Assert that `value` is `true`.
+Assert that `value` is `true`. Does not throw on failure.
 
 ### `.false(value, message?)`
 
-Assert that `value` is `false`.
+Assert that `value` is `false`. Does not throw on failure.
 
 ### `.is(value, expected, message?)`
 
-Assert that `value` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
+Assert that `value` is the same as `expected`. Does not throw on failure.
+
+This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.not(value, expected, message?)`
 
-Assert that `value` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
+Assert that `value` is not the same as `expected`. Does not throw on failure.
+
+This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.deepEqual(value, expected, message?)`
 
-Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
+Assert that `value` is deeply equal to `expected`. Does not throw on failure.
+
+See [Concordance](https://github.com/concordancejs/concordance) for the specifics of deep equality. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
 ### `.notDeepEqual(value, expected, message?)`
 
-Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
+Assert that `value` is not deeply equal to `expected`. Does not throw on failure.
+
+This is the inverse of `.deepEqual()`.
+
 
 ### `.like(value, selector, message?)`
 
-Assert that `value` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
+Assert that `value` is like `selector`. Does not throw on failure.
+
+This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
 
 Instead AVA derives a *comparable* object from `value`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
 
@@ -234,7 +261,9 @@ t.like({
 
 ### `.throws(fn, expectation?, message?)`
 
-Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
+Assert that an error is thrown. Does not itself throw on failure.
+
+`fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
 `expectation` can be an object with one or more of the following properties:
 
@@ -264,7 +293,9 @@ test('throws', t => {
 
 ### `.throwsAsync(thrower, expectation?, message?)`
 
-Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
+Assert that an error is thrown. Does not itself throw on failure.
+
+`thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
 The thrown value *must* be an error. It is returned so you can run more assertions against it.
 
@@ -299,11 +330,15 @@ test('rejects', async t => {
 
 ### `.notThrows(fn, message?)`
 
-Assert that no error is thrown. `fn` must be a function which shouldn't throw.
+Assert that no error is thrown. Does not throw on failure.
+
+`fn` must be a function which shouldn't throw.
 
 ### `.notThrowsAsync(nonThrower, message?)`
 
-Assert that no error is thrown. `nonThrower` can be an async function which shouldn't throw, or a promise that should resolve.
+Assert that no error is thrown. Does not throw on failure.
+
+`nonThrower` can be an async function which shouldn't throw, or a promise that should resolve.
 
 Like the `.throwsAsync()` assertion, you must wait for the assertion to complete:
 
@@ -315,16 +350,17 @@ test('resolves', async t => {
 
 ### `.regex(contents, regex, message?)`
 
-Assert that `contents` matches `regex`.
+Assert that `contents` matches `regex`. Does not throw on failure.
 
 ### `.notRegex(contents, regex, message?)`
 
-Assert that `contents` does not match `regex`.
+Assert that `contents` does not match `regex`. Does not throw on failure.
 
-### `.snapshot(expected, message?)`
 ### `.snapshot(expected, options?, message?)`
 
-Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
+Compares the `expected` value with a previously recorded snapshot. Does not throw on failure.
+
+Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
 
