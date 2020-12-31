@@ -41,9 +41,9 @@ We'd like to fix [`priority` issues](https://github.com/avajs/ava/labels/priorit
 
 Read on for tips on contributing code.
 
-### Hang out in our chat
+### Hang out and chat
 
-We have a [chat](https://spectrum.chat/ava). Jump in there and lurk, talk to us, and help others.
+We're using [GitHub Discussions](https://github.com/avajs/ava/discussions). Jump in there and lurk, talk to us, and help others.
 
 ## Contributing code
 

@@ -1,8 +1,5 @@
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
-[![Build Status](https://travis-ci.org/avajs/ava.svg?branch=master)](https://travis-ci.org/avajs/ava)  [![Coverage Status](https://codecov.io/gh/avajs/ava/branch/master/graph/badge.svg)](https://codecov.io/gh/avajs/ava/branch/master) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/ava)
-[![Mentioned in Awesome Node.js](https://awesome.re/mentioned-badge.svg)](https://github.com/sindresorhus/awesome-nodejs)
-
 AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that lets you develop with confidence 🚀
 
 Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
@@ -188,9 +185,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Support
 
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
-- [Spectrum](https://spectrum.chat/ava)
-- [Twitter](https://twitter.com/ava__js)
+- [GitHub Discussions](https://github.com/avajs/ava/discussions)
 
 ## Related
 
