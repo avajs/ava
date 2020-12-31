@@ -82,6 +82,52 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 	});
 });
 
+test('watcher does not rerun test files when they unlink snapshot files', t => {
+	// Run fixture as template to generate snapshots
+	execCli(
+		['--update-snapshots'],
+		{
+			dirname: 'fixture/snapshots/watcher-rerun-unlink',
+			env: {AVA_FORCE_CI: 'not-ci', TEMPLATE: 'true'}
+		},
+		err => {
+			t.ifError(err);
+
+			// Run fixture in watch mode; snapshots should be removed, and watcher should not rerun
+			let killed = false;
+
+			const child = execCli(
+				['--verbose', '--watch', '--update-snapshots', 'test.js'],
+				{
+					dirname: 'fixture/snapshots/watcher-rerun-unlink',
+					env: {AVA_FORCE_CI: 'not-ci'}
+				},
+				err => {
+					t.ok(killed);
+					t.ifError(err);
+					t.end();
+				}
+			);
+
+			let buffer = '';
+			let passedFirst = false;
+			child.stdout.on('data', string => {
+				buffer += string;
+				if (buffer.includes('2 tests passed') && !passedFirst) {
+					buffer = '';
+					passedFirst = true;
+					setTimeout(() => {
+						child.kill();
+						killed = true;
+					}, 500);
+				} else if (passedFirst && !killed) {
+					t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
+				}
+			});
+		}
+	);
+});
+
 test('watcher does not rerun test files when ignored files change', t => {
 	let killed = false;
 

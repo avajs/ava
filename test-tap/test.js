@@ -696,6 +696,36 @@ test('snapshot assertion can be skipped', t => {
 	});
 });
 
+// Snapshots reused from test/assert.js
+test('snapshot assertions call options.skipSnapshot when skipped', async t => {
+	const projectDir = path.join(__dirname, 'fixture');
+	const manager = snapshotManager.load({
+		file: path.join(projectDir, 'assert.js'),
+		projectDir,
+		fixedLocation: null,
+		updating: false
+	});
+
+	const skipSnapshot = sinon.spy();
+
+	const test = new Test({
+		compareTestSnapshot: options => manager.compare(options),
+		skipSnapshot,
+		updateSnapshots: false,
+		metadata: {},
+		title: 'passes',
+		fn(t) {
+			t.snapshot.skip({not: {a: 'match'}});
+			t.snapshot.skip({not: {b: 'match'}});
+			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+		}
+	});
+
+	await test.run();
+
+	t.true(skipSnapshot.calledTwice);
+});
+
 test('snapshot assertion cannot be skipped when updating snapshots', t => {
 	return new Test({
 		updateSnapshots: true,
