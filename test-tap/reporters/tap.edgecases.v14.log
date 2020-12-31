@@ -1,9 +1,7 @@
 TAP version 13
 ---tty-stream-chunk-separator
-# No tests found in ava-import-no-test-declaration.js
 not ok 1 - No tests found in ava-import-no-test-declaration.js
 ---tty-stream-chunk-separator
-# TypeError: test is not a function
 not ok 2 - TypeError: test is not a function
   ---
     name: TypeError
@@ -13,13 +11,10 @@ not ok 2 - TypeError: test is not a function
       (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)
   ...
 ---tty-stream-chunk-separator
-# import-and-use-test-member.js exited with a non-zero exit code: 1
 not ok 3 - import-and-use-test-member.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-# No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file
 not ok 4 - No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file
 ---tty-stream-chunk-separator
-# Error: throws
 not ok 5 - Error: throws
   ---
     name: Error
@@ -27,7 +22,6 @@ not ok 5 - Error: throws
     at: 'Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)'
   ...
 ---tty-stream-chunk-separator
-# throws.js exited with a non-zero exit code: 1
 not ok 6 - throws.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
