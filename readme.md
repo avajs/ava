@@ -185,9 +185,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Support
 
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/ava)
-- [Spectrum](https://spectrum.chat/ava)
-- [Twitter](https://twitter.com/ava__js)
+- [GitHub Discussions](https://github.com/avajs/ava/discussions)
 
 ## Related
 
