@@ -12,7 +12,7 @@ let resolveGlobs;
 
 if (!supportsWorkers || !isMainThread) {
 	const normalizeExtensions = require('./lib/extensions');
-	const loadConfig = require('./lib/load-config');
+	const {loadConfigSync} = require('./lib/load-config');
 	const providerManager = require('./lib/provider-manager');
 
 	const configCache = new Map();
@@ -23,7 +23,7 @@ if (!supportsWorkers || !isMainThread) {
 		if (configCache.has(projectDir)) {
 			({conf, providers} = configCache.get(projectDir));
 		} else {
-			conf = loadConfig({resolveFrom: projectDir});
+			conf = loadConfigSync({resolveFrom: projectDir});
 
 			providers = [];
 			if (Reflect.has(conf, 'babel')) {
