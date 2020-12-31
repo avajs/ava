@@ -2,6 +2,7 @@ module.exports = {
 	ignores: [
 		'media/**',
 		'test/config/fixtures/config-errors/test.js',
+		'test/config/fixtures/mjs-with-tests/**',
 		'test-tap/fixture/ava-paths/target/test.js',
 		'test-tap/fixture/{source-map-initial,syntax-error}.js',
 		'test-tap/fixture/snapshots/test-sourcemaps/build/**',

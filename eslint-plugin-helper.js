@@ -9,44 +9,39 @@ try {
 const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizeGlobs, normalizePatterns} = require('./lib/globs');
 
 let resolveGlobs;
+let resolveGlobsSync;
 
 if (!supportsWorkers || !isMainThread) {
 	const normalizeExtensions = require('./lib/extensions');
-	const {loadConfigSync} = require('./lib/load-config');
+	const {loadConfig, loadConfigSync} = require('./lib/load-config');
 	const providerManager = require('./lib/provider-manager');
 
 	const configCache = new Map();
 
-	resolveGlobs = (projectDir, overrideExtensions, overrideFiles) => {
-		let conf;
-		let providers;
-		if (configCache.has(projectDir)) {
-			({conf, providers} = configCache.get(projectDir));
-		} else {
-			conf = loadConfigSync({resolveFrom: projectDir});
-
-			providers = [];
-			if (Reflect.has(conf, 'babel')) {
-				const {level, main} = providerManager.babel(projectDir);
-				providers.push({
-					level,
-					main: main({config: conf.babel}),
-					type: 'babel'
-				});
-			}
-
-			if (Reflect.has(conf, 'typescript')) {
-				const {level, main} = providerManager.typescript(projectDir);
-				providers.push({
-					level,
-					main: main({config: conf.typescript}),
-					type: 'typescript'
-				});
-			}
-
-			configCache.set(projectDir, {conf, providers});
+	const collectProviders = ({conf, projectDir}) => {
+		const providers = [];
+		if (Reflect.has(conf, 'babel')) {
+			const {level, main} = providerManager.babel(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.babel}),
+				type: 'babel'
+			});
 		}
 
+		if (Reflect.has(conf, 'typescript')) {
+			const {level, main} = providerManager.typescript(projectDir);
+			providers.push({
+				level,
+				main: main({config: conf.typescript}),
+				type: 'typescript'
+			});
+		}
+
+		return providers;
+	};
+
+	const buildGlobs = ({conf, providers, projectDir, overrideExtensions, overrideFiles}) => {
 		const extensions = overrideExtensions ?
 			normalizeExtensions(overrideExtensions) :
 			normalizeExtensions(conf.extensions, providers);
@@ -59,6 +54,29 @@ if (!supportsWorkers || !isMainThread) {
 				providers
 			})
 		};
+	};
+
+	resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
+		if (!configCache.has(projectDir)) {
+			const conf = loadConfigSync({resolveFrom: projectDir});
+			const providers = collectProviders({conf, projectDir});
+			configCache.set(projectDir, {conf, providers});
+		}
+
+		const {conf, providers} = configCache.get(projectDir);
+		return buildGlobs({conf, providers, projectDir, overrideExtensions, overrideFiles});
+	};
+
+	resolveGlobs = async (projectDir, overrideExtensions, overrideFiles) => {
+		if (!configCache.has(projectDir)) {
+			configCache.set(projectDir, loadConfig({resolveFrom: projectDir}).then(conf => { // eslint-disable-line promise/prefer-await-to-then
+				const providers = collectProviders({conf, projectDir});
+				return {conf, providers};
+			}));
+		}
+
+		const {conf, providers} = await configCache.get(projectDir);
+		return buildGlobs({conf, providers, projectDir, overrideExtensions, overrideFiles});
 	};
 }
 
@@ -73,7 +91,7 @@ if (supportsWorkers) {
 		let sync;
 		let worker;
 
-		resolveGlobs = (projectDir, overrideExtensions, overrideFiles) => {
+		resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 			if (worker === undefined) {
 				const dataBuffer = new SharedArrayBuffer(MAX_DATA_LENGTH_EXCLUSIVE);
 				data = new Uint8Array(dataBuffer);
@@ -112,10 +130,10 @@ if (supportsWorkers) {
 		const data = new Uint8Array(workerData.dataBuffer);
 		const sync = new Int32Array(workerData.syncBuffer);
 
-		const handleMessage = ({projectDir, overrideExtensions, overrideFiles}) => {
+		const handleMessage = async ({projectDir, overrideExtensions, overrideFiles}) => {
 			let encoded;
 			try {
-				const globs = resolveGlobs(projectDir, overrideExtensions, overrideFiles);
+				const globs = await resolveGlobs(projectDir, overrideExtensions, overrideFiles);
 				encoded = v8.serialize(globs);
 			} catch (error) {
 				encoded = v8.serialize(error);
@@ -149,7 +167,7 @@ function load(projectDir, overrides) {
 		helperPatterns = normalizePatterns(overrides.helpers);
 	}
 
-	const globs = resolveGlobs(projectDir, overrides && overrides.extensions, overrides && overrides.files);
+	const globs = resolveGlobsSync(projectDir, overrides && overrides.extensions, overrides && overrides.files);
 
 	const classifyForESLint = file => {
 		const {isTest} = classify(file, globs);
