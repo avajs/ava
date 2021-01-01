@@ -67,7 +67,7 @@ jobs:
         with:
           node-version: ^12.14.0
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "6.13.4" ]]; then npm install --global npm@6.13.4; fi
+        run: if [[ "$(npm -v)" != "6.14.10" ]]; then npm install --global npm@6.14.10; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
