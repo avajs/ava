@@ -2,6 +2,7 @@ module.exports = {
 	ignores: [
 		'media/**',
 		'test/config/fixtures/config-errors/test.js',
+		'test/config/fixtures/mjs-with-tests/**',
 		'test-tap/fixture/ava-paths/target/test.js',
 		'test-tap/fixture/{source-map-initial,syntax-error}.js',
 		'test-tap/fixture/snapshots/test-sourcemaps/build/**',
@@ -26,7 +27,11 @@ module.exports = {
 			}
 		},
 		{
-			files: ['lib/plugin-support/shared-worker-loader.js', 'lib/plugin-support/shared-workers.js'],
+			files: [
+				'eslint-plugin-helper.js',
+				'lib/plugin-support/shared-worker-loader.js',
+				'lib/plugin-support/shared-workers.js'
+			],
 			// TODO [engine:node@>=12]: Enable when targeting Node.js 12.
 			rules: {
 				'import/no-unresolved': 'off',

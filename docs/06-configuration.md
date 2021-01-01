@@ -73,11 +73,13 @@ To use these files:
 2. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
 3. You must not both have an `ava.config.js` *and* an `ava.config.cjs` file
 
-AVA recognizes `ava.config.mjs` files but refuses to load them.
+AVA 3 recognizes `ava.config.mjs` files but refuses to load them. This is changing in AVA 4, [see below](#next-generation-configuration).
 
 ### `ava.config.js`
 
-For `ava.config.js` files you must use `export default`. You cannot use ["module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope). You cannot import dependencies.
+In AVA 3, for `ava.config.js` files you must use `export default`. You cannot use ["module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope). You cannot import dependencies.
+
+This is changing in AVA 4, [see below](#next-generation-configuration).
 
 The default export can either be a plain object or a factory function which returns a plain object:
 
@@ -111,7 +113,7 @@ export default ({projectDir}) => {
 };
 ```
 
-Note that the final configuration must not be a promise.
+Note that the final configuration must not be a promise. This is changing in AVA 4, [see below](#next-generation-configuration).
 
 ### `ava.config.cjs`
 
@@ -149,11 +151,13 @@ module.exports = ({projectDir}) => {
 };
 ```
 
-Note that the final configuration must not be a promise.
+Note that the final configuration must not be a promise. This is changing in AVA 4, [see below](#next-generation-configuration).
 
 ## Alternative configuration files
 
 The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file must have either a `.js` or `.cjs` extension and is processed like an `ava.config.js` or `ava.config.cjs` file would be.
+
+AVA 4 also supports `.mjs` extensions, [see below](#next-generation-configuration).
 
 When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js` or `ava.config.cjs` files. The configuration is not merged.
 
@@ -181,6 +185,25 @@ module.exports = {
 ```
 
 You can now run your unit tests through `npx ava` and the integration tests through `npx ava --config integration-tests.config.cjs`.
+
+## Next generation configuration
+
+AVA 4 will add full support for ESM configuration files as well as allowing you to have asynchronous factory functions. If you're using Node.js 12 or later you can opt-in to these features in AVA 3 by enabling the `nextGenConfig` experiment. Say in an `ava.config.mjs` file:
+
+```js
+export default {
+	nonSemVerExperiments: {
+		nextGenConfig: true
+	},
+	files: ['unit-tests/**/*]
+};
+```
+
+This also allows you to pass an `.mjs` file using the `--config` argument.
+
+With this experiment enabled, AVA will no longer have special treatment for `ava.config.js` files. Instead AVA follows Node.js' behavior, so if you've set [`"type": "module"`](https://nodejs.org/docs/latest/api/packages.html#packages_type) you must use ESM, and otherwise you must use CommonJS.
+
+You mustn't have an `ava.config.mjs` file next to an `ava.config.js` or `ava.config.cjs` file.
 
 ## Object printing depth
 
