@@ -1,7 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Questions? Ideas? Something to share?
+  - name: Discussions
     url: https://github.com/avajs/ava/discussions
+    about: Questions? Ideas? Something to share?
   - name: Babel
     url: https://github.com/avajs/babel/issues
     about: Report a bug with AVA's Babel integration
