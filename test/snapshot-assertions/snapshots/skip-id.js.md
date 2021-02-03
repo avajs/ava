@@ -1,4 +1,4 @@
-# Snapshot report for `test/snapshots/skip-id.js`
+# Snapshot report for `test/snapshot-assertions/skip-id.js`
 
 The actual snapshot is saved in `skip-id.js.snap`.
 

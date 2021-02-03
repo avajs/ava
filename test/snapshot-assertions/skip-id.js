@@ -5,12 +5,10 @@ const path = require('path');
 
 // Regression test for #2662
 test('skipping snapshots with ids works', async t => {
-	const result = await exec.fixture([]);
+	const cwd = exec.cwd('skip-id');
+	const result = await exec.fixture([], {cwd});
 	t.snapshot(result.stats.passed, 'passed tests');
 
-	const report = await fs.readFile(
-		path.join(__dirname, 'fixtures', 'test.js.md'),
-		{encoding: 'utf8'}
-	);
+	const report = await fs.readFile(path.join(cwd, 'test.js.md'), 'utf8');
 	t.snapshot(report, 'snapshot report');
 });
