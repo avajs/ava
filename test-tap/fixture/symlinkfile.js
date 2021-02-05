@@ -1,1 +1,1 @@
-./target-symlink.js
+target-symlink.js
