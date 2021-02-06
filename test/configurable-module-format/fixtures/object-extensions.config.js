@@ -3,8 +3,5 @@ export default {
 		js: true,
 		cjs: true,
 		mjs: true
-	},
-	nonSemVerExperiments: {
-		configurableModuleFormat: true
 	}
 };
