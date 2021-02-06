@@ -3,13 +3,11 @@ require('../lib/chalk').set({level: 0});
 require('../lib/worker/options').set({});
 
 const path = require('path');
-const React = require('react');
 const {test} = require('tap');
 const sinon = require('sinon');
 const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
-const HelloMessage = require('./fixture/hello-message');
 const {ava, withExperiments} = require('./helper/ava-test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
@@ -678,6 +676,7 @@ test('snapshot assertion can be skipped', t => {
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
+		recordNewSnapshots: true,
 		updating: false
 	});
 
@@ -689,7 +688,7 @@ test('snapshot assertion can be skipped', t => {
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
-			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+			t.snapshot({name: 'Sindre'});
 		}
 	}).run().then(result => {
 		t.true(result.passed);
@@ -717,7 +716,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
-			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+			t.snapshot({name: 'Sindre'});
 		}
 	});
 
