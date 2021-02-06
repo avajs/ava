@@ -4,12 +4,9 @@ require('../lib/worker/options').set({chalkOptions: {level: 0}});
 
 const path = require('path');
 const stripAnsi = require('strip-ansi');
-const React = require('react');
-const renderer = require('react-test-renderer');
 const {test} = require('tap');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
-const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
 let lastPassed = false;
@@ -657,13 +654,6 @@ test('.deepEqual()', t => {
 		assertions.deepEqual(
 			{x: {a: 1, b: 2}, y: {c: 3, d: 4}},
 			{y: {d: 4, c: 3}, x: {b: 2, a: 1}}
-		);
-	});
-
-	passes(t, () => {
-		assertions.deepEqual(
-			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
-			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
 		);
 	});
 
@@ -1648,7 +1638,7 @@ test('.notThrowsAsync() fails if passed a bad value', t => {
 
 test('.snapshot()', t => {
 	// Set to `true` to update the snapshot, then run:
-	// "$(npm bin)"/tap -R spec test/assert.js
+	// npx tap test-tap/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;
@@ -1658,6 +1648,7 @@ test('.snapshot()', t => {
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
+		recordNewSnapshots: updating,
 		updating
 	});
 	const setup = _title => {
@@ -1665,12 +1656,17 @@ test('.snapshot()', t => {
 			constructor(title) {
 				super({
 					compareWithSnapshot: assertionOptions => {
-						return manager.compare({
+						const {record, ...result} = manager.compare({
 							belongsTo: assertionOptions.id || this.title,
 							expected: assertionOptions.expected,
 							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
 							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
 						});
+						if (record) {
+							record();
+						}
+
+						return result;
 					}
 				});
 				this.title = title;
@@ -1693,14 +1689,6 @@ test('.snapshot()', t => {
 
 		passes(t, () => {
 			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		});
-
-		passes(t, () => {
-			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
-		});
-
-		passes(t, () => {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
 		});
 	}
 
@@ -1739,47 +1727,6 @@ test('.snapshot()', t => {
 				assertion: 'snapshot',
 				message: 'my message',
 				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-			});
-		}
-	}
-
-	{
-		const assertions = setup('rendered comparison');
-		if (updating) {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-		} else {
-			passes(t, () => {
-				assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
-			});
-		}
-	}
-
-	{
-		const assertions = setup('rendered comparison');
-		if (updating) {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-		} else {
-			failsWith(t, () => {
-				assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
-			}, {
-				assertion: 'snapshot',
-				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Vadim\n+     Sindre\n    </mark>\n  </div>'}]
-			});
-		}
-	}
-
-	{
-		const assertions = setup('element comparison');
-		if (updating) {
-			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
-		} else {
-			failsWith(t, () => {
-				assertions.snapshot(React.createElement(HelloMessage, {name: 'Vadim'}));
-			}, {
-				assertion: 'snapshot',
-				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Vadim"\n+   name="Sindre"\n  />'}]
 			});
 		}
 	}

@@ -201,7 +201,7 @@ Assert that `value` is not the same as `expected`. This is based on [`Object.is(
 
 ### `.deepEqual(value, expected, message?)`
 
-Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. Works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
+Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. In AVA 3 this works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
 
 ### `.notDeepEqual(value, expected, message?)`
 
