@@ -10,6 +10,7 @@ module.exports = {
 		'test-tap/fixture/report/edgecases/ast-syntax-error.js'
 	],
 	rules: {
+		'import/extensions': ['error', {js: 'never'}],
 		'import/no-anonymous-default-export': 'off',
 		'import/no-unresolved': ['error', {commonjs: true}],
 		'no-use-extend-native/no-use-extend-native': 'off',
@@ -27,18 +28,6 @@ module.exports = {
 			}
 		},
 		{
-			files: [
-				'eslint-plugin-helper.js',
-				'lib/plugin-support/shared-worker-loader.js',
-				'lib/plugin-support/shared-workers.js'
-			],
-			// TODO [engine:node@>=12]: Enable when targeting Node.js 12.
-			rules: {
-				'import/no-unresolved': 'off',
-				'node/no-unsupported-features/node-builtins': 'off'
-			}
-		},
-		{
 			files: 'test-{d,tap}/**/*.ts',
 			rules: {
 				'@typescript-eslint/explicit-function-return-type': 'off',
@@ -52,14 +41,19 @@ module.exports = {
 			}
 		},
 		{
+			// Little point modernizing these legacy test files.
 			files: 'test-tap/**/*.js',
 			rules: {
-				'promise/prefer-await-to-then': 'off'
+				'promise/prefer-await-to-then': 'off',
+				'unicorn/error-message': 'off',
+				'unicorn/no-array-reduce': 'off',
+				'unicorn/prevent-abbreviations': 'off'
 			}
 		},
 		{
 			files: ['test-tap/fixture/**', 'test/**/fixtures/**'],
 			rules: {
+				'ava/no-todo-test': 'off',
 				'import/no-extraneous-dependencies': 'off',
 				'import/no-unresolved': 'off'
 			}

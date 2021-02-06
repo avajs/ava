@@ -1076,7 +1076,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
-			throw new TypeError(); // eslint-disable-line unicorn/error-message
+			throw new TypeError();
 		}, {name: 'TypeError'});
 	});
 
