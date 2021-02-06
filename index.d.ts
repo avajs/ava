@@ -1,6 +1,6 @@
 export interface Subscribable {
 	subscribe(observer: {
-		error(err: any): void;
+		error(error: any): void;
 		complete(): void;
 	}): void;
 }
