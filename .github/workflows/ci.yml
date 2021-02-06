@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^10.18.0, ^12.14.0, ^14.0.0, ^15.0.0]
+        node-version: [^12.20, ^14.15, ^15]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12
+          node-version: ^12.20
       - run: npm ci --no-audit
       - run: npm i typescript@${TS_VERSION}
         env:
@@ -65,7 +65,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.14.0
+          node-version: ^12.20
       - name: Upgrade npm
         run: if [[ "$(npm -v)" != "6.14.10" ]]; then npm install --global npm@6.14.10; fi
       - run: npm ci --no-audit
@@ -88,7 +88,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.14.0
+          node-version: ^12.20
       - run: npm install --no-shrinkwrap --no-audit
       - run: npm run cover
 
@@ -101,6 +101,6 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^10.18.0
+          node-version: ^12.20
       - run: npm ci
       - run: npx xo

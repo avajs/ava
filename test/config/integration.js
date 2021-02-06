@@ -40,17 +40,15 @@ test('resolves tests from the package.json dir if none are specified on cli', as
 	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
 
-if (process.versions.node >= '12.17.0') {
-	test('resolves tests from an .mjs config file', async t => {
-		const options = {
-			cwd: exec.cwd('mjs-with-tests/dir-a-wrapper')
-		};
+test('resolves tests from an .mjs config file', async t => {
+	const options = {
+		cwd: exec.cwd('mjs-with-tests/dir-a-wrapper')
+	};
 
-		const result = await exec.fixture(['--verbose'], options);
+	const result = await exec.fixture(['--verbose'], options);
 
-		t.snapshot(result.stats.passed, 'resolves test files from configuration');
-	});
-}
+	t.snapshot(result.stats.passed, 'resolves test files from configuration');
+});
 
 test('use current working directory if `package.json` is not found', async t => {
 	const cwd = tempy.directory();

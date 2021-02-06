@@ -1,5 +1,4 @@
 const path = require('path');
-const v8 = require('v8');
 
 const test = require('@ava/test');
 const execa = require('execa');
@@ -8,8 +7,6 @@ const replaceString = require('replace-string');
 
 const cliPath = path.resolve(__dirname, '../../cli.js');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
-
-const serialization = process.versions.node >= '12.16.0' ? 'advanced' : 'json';
 
 const normalizePosixPath = string => replaceString(string, '\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
@@ -50,7 +47,7 @@ exports.fixture = async (args, options = {}) => {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
 		},
 		cwd,
-		serialization,
+		serialization: 'advanced',
 		nodeOptions: ['--require', ttySimulator]
 	}, options));
 
@@ -81,10 +78,6 @@ exports.fixture = async (args, options = {}) => {
 	};
 
 	running.on('message', statusEvent => {
-		if (serialization === 'json') {
-			statusEvent = v8.deserialize(Uint8Array.from(statusEvent));
-		}
-
 		switch (statusEvent.type) {
 			case 'hook-failed': {
 				const {title, testFile} = statusEvent;
