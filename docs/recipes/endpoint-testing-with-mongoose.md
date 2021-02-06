@@ -56,7 +56,7 @@ const mongod = new MongoMemoryServer()
 
 // Create connection to Mongoose before tests are run
 test.before(async () => {
-	const uri = await mongod.getConnectionString();
+	const uri = await mongod.getUri();
 	await mongoose.connect(uri, {useMongoClient: true});
 });
 ```
