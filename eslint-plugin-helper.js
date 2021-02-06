@@ -1,4 +1,5 @@
 'use strict';
+// TODO: Clean up.
 let isMainThread = true;
 let supportsWorkers = false;
 try {
