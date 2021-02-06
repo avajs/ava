@@ -145,7 +145,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 				path.join(snapPath, 'test.ts.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []); // eslint-disable-line unicorn/no-reduce
+		.reduce((a, b) => a.concat(b), []);
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
@@ -186,7 +186,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 				path.join(snapPath, 'test.js.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []); // eslint-disable-line unicorn/no-reduce
+		.reduce((a, b) => a.concat(b), []);
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);

@@ -20,7 +20,7 @@ class TTYStream extends stream.Writable {
 			this.spinnerActivity = [];
 		}
 
-		const string = this.sanitizers.reduce((string_, sanitizer) => sanitizer(string_), chunk.toString('utf8')); // eslint-disable-line unicorn/no-reduce
+		const string = this.sanitizers.reduce((string_, sanitizer) => sanitizer(string_), chunk.toString('utf8'));
 		// Ignore the chunk if it was scrubbed completely. Still count 0-length
 		// chunks.
 		if (string !== '' || chunk.length === 0) {
@@ -40,7 +40,7 @@ class TTYStream extends stream.Writable {
 		}
 
 		for (const object of chunks) {
-			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8')); // eslint-disable-line unicorn/no-reduce
+			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8'));
 		}
 
 		this.chunks.push(TTYStream.SEPARATOR);

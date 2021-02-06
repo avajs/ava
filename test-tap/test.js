@@ -369,7 +369,7 @@ test('skipped assertions count towards the plan', t => {
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
 		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		a.notThrows.skip(() => {});
 		a.snapshot.skip({});
@@ -398,7 +398,7 @@ test('assertion.skip() is bound', t => {
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
 		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		(a.notThrows.skip)(() => {});
 		(a.snapshot.skip)({});
@@ -657,7 +657,7 @@ test('assertions are bound', t => {
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
 		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		(a.notThrows)(() => {});
 		(a.truthy)(true);
