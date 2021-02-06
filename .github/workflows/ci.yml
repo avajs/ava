@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~3.7.5, ~3.8, ~3.9, ~4.0, ~4.1]
+        ts-version: [~4.1]
     steps:
       - uses: actions/checkout@v2
         with:
