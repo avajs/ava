@@ -12,12 +12,13 @@ test('formats errors from ava.config.js', async t => {
 	const result = await t.throwsAsync(exec.fixture(['test.js'], options));
 
 	const lines = result.stderr.split('\n');
+	while (lines.length > 1 && lines[0] !== '') { // Strip VS Code debugger prefixes.
+		lines.shift();
+	}
 
-	t.is(lines[0], '');
 	t.regex(lines[1], /Error loading ava\.config\.js:/);
 	t.is(lines[2], '');
-	t.regex(lines[3], /ava\.config\.js/);
-	t.regex(lines[4], /foo/);
+	t.regex(lines[3], /foo/);
 });
 
 test('works as expected when run from the package.json directory', async t => {
