@@ -5,26 +5,6 @@ const randomDelay = () => new Promise(resolve => {
 	setTimeout(resolve, Math.random() * 1000);
 });
 
-test.before(async t => {
-	await randomDelay();
-	t.snapshot(id(-2), 'in a before hook');
-});
-
-test.beforeEach(async t => {
-	await randomDelay();
-	t.snapshot(id(-1.5), 'in a beforeEach hook');
-});
-
-test.afterEach(async t => {
-	await randomDelay();
-	t.snapshot(id(-1), 'in an afterEach hook');
-});
-
-test.afterEach.always(async t => {
-	await randomDelay();
-	t.snapshot(id(-0.5), 'in an afterEachAlways hook');
-});
-
 test('B - declare some snapshots', async t => {
 	await randomDelay();
 	t.snapshot(id(0));
