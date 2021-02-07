@@ -8,7 +8,7 @@ const sinon = require('sinon');
 const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
-const {ava, withExperiments} = require('./helper/ava-test');
+const {ava} = require('./helper/ava-test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -815,30 +815,14 @@ test('teardown awaits promise', t => {
 	});
 });
 
-test('teardowns run sequentially in order', t => {
-	const teardownA = sinon.stub().resolves(delay(200));
-	let resolveB;
-	const teardownB = sinon.stub().returns(new Promise(resolve => {
-		resolveB = resolve;
-	}));
-	return ava(a => {
-		a.teardown(() => teardownA().then(resolveB));
-		a.teardown(teardownB);
-		a.pass();
-	}).run().then(result => {
-		t.is(result.passed, true);
-		t.ok(teardownA.calledBefore(teardownB));
-	});
-});
-
-test('teardowns run in reverse order when the `reverseTeardowns` experimental feature is enabled', t => {
+test('teardowns run in reverse order', t => {
 	let resolveA;
 	const teardownA = sinon.stub().returns(new Promise(resolve => {
 		resolveA = resolve;
 	}));
 	const teardownB = sinon.stub().resolves(delay(200));
 
-	return withExperiments({reverseTeardowns: true})(a => {
+	return ava(a => {
 		a.teardown(teardownA);
 		a.teardown(() => teardownB().then(resolveA));
 		a.pass();
@@ -896,9 +880,9 @@ test('teardown errors are hidden behind assertion errors', t => {
 	});
 });
 
-test('teardowns errors do not stop next teardown from running', t => {
-	const teardownA = sinon.stub().throws('TeardownError');
-	const teardownB = sinon.spy();
+test('teardown errors do not stop next teardown from running', t => {
+	const teardownA = sinon.spy();
+	const teardownB = sinon.stub().throws('TeardownError');
 	return ava(a => {
 		a.teardown(teardownA);
 		a.teardown(teardownB);
@@ -908,7 +892,7 @@ test('teardowns errors do not stop next teardown from running', t => {
 		t.is(result.error.name, 'TeardownError');
 		t.ok(teardownA.calledOnce);
 		t.ok(teardownB.calledOnce);
-		t.ok(teardownA.calledBefore(teardownB));
+		t.ok(teardownB.calledBefore(teardownA));
 	});
 });
 
