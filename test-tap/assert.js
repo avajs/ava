@@ -1002,7 +1002,7 @@ test('.throws()', gather(t => {
 	// Fails because function doesn't throw. Asserts that 'my message' is used
 	// as the assertion message (*not* compared against the error).
 	failsWith(t, () => {
-		assertions.throws(() => {}, null, 'my message');
+		assertions.throws(() => {}, undefined, 'my message');
 	}, {
 		assertion: 'throws',
 		message: 'my message',
@@ -1127,13 +1127,6 @@ test('.throws()', gather(t => {
 		}, false);
 	});
 
-	// Regression test for https://github.com/avajs/ava/issues/1676
-	passes(t, () => {
-		assertions.throws(() => {
-			throw new Error('foo');
-		}, null);
-	});
-
 	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
@@ -1147,7 +1140,7 @@ test('.throws()', gather(t => {
 	});
 
 	failsWith(t, () => {
-		assertions.throws(() => {}, null, null);
+		assertions.throws(() => {}, undefined, null);
 	}, {
 		assertion: 'throws',
 		improperUsage: true,
@@ -1210,7 +1203,7 @@ test('.throwsAsync()', gather(t => {
 	// Fails because the function throws synchronously
 	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {
 		throw new Error('sync');
-	}, null, 'message'), {
+	}, undefined, 'message'), {
 		assertion: 'throwsAsync',
 		message: 'message',
 		values: [
@@ -1219,7 +1212,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {}, null, 'message'), {
+	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {}, undefined, 'message'), {
 		assertion: 'throwsAsync',
 		message: 'message',
 		values: [
@@ -1227,7 +1220,7 @@ test('.throwsAsync()', gather(t => {
 		]
 	});
 
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), null, null), {
+	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), undefined, null), {
 		assertion: 'throwsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',
@@ -1466,8 +1459,8 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	t.end();
 });
 
-test('.throws() fails if passed null expectation with disableNullExpectations', t => {
-	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+test('.throws() fails if passed null expectation', t => {
+	const asserter = new AssertionsBase();
 
 	failsWith(t, () => {
 		asserter.throws(() => {}, null);
@@ -1480,8 +1473,8 @@ test('.throws() fails if passed null expectation with disableNullExpectations', 
 	t.end();
 });
 
-test('.throwsAsync() fails if passed null expectation with disableNullExpectations', t => {
-	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+test('.throwsAsync() fails if passed null', t => {
+	const asserter = new AssertionsBase();
 
 	failsWith(t, () => {
 		asserter.throwsAsync(() => {}, null);
