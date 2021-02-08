@@ -1714,7 +1714,7 @@ test('.snapshot()', t => {
 	{
 		const assertions = setup('bad message');
 		failsWith(t, () => {
-			assertions.snapshot(null, null, null);
+			assertions.snapshot(null, null);
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
