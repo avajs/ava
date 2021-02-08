@@ -1734,10 +1734,10 @@ test('.snapshot()', t => {
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
-			message: 'The assertion message must be a string',
+			message: 'Snapshot ids were removed in AVA 4',
 			values: [{
-				label: 'Called with:',
-				formatted: '{\n  id: \'an id\',\n}'
+				label: 'Called with id:',
+				formatted: '\'an id\''
 			}]
 		});
 	}
