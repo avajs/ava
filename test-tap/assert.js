@@ -1726,6 +1726,22 @@ test('.snapshot()', t => {
 		});
 	}
 
+	{
+		// See https://github.com/avajs/ava/issues/2669
+		const assertions = setup('id');
+		failsWith(t, () => {
+			assertions.snapshot({foo: 'bar'}, {id: 'an id'});
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'The assertion message must be a string',
+			values: [{
+				label: 'Called with:',
+				formatted: '{\n  id: \'an id\',\n}'
+			}]
+		});
+	}
+
 	manager.save();
 	t.end();
 });
