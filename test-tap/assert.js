@@ -1650,10 +1650,10 @@ test('.snapshot()', t => {
 				super({
 					compareWithSnapshot: assertionOptions => {
 						const {record, ...result} = manager.compare({
-							belongsTo: assertionOptions.id || this.title,
+							belongsTo: this.title,
 							expected: assertionOptions.expected,
-							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
-							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
+							index: this.snapshotInvocationCount++,
+							label: assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
 						});
 						if (record) {
 							record();
@@ -1679,10 +1679,6 @@ test('.snapshot()', t => {
 			const {snapshot} = assertions;
 			snapshot({foo: 'bar'});
 		});
-
-		passes(t, () => {
-			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		});
 	}
 
 	{
@@ -1699,15 +1695,6 @@ test('.snapshot()', t => {
 			});
 		}
 	}
-
-	failsWith(t, () => {
-		const assertions = setup('fails (fixed id)');
-		assertions.snapshot({foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
-	}, {
-		assertion: 'snapshot',
-		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-	});
 
 	{
 		const assertions = setup('fails');
