@@ -322,9 +322,8 @@ Assert that `contents` matches `regex`.
 Assert that `contents` does not match `regex`.
 
 ### `.snapshot(expected, message?)`
-### `.snapshot(expected, options?, message?)`
 
-Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
+Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles.
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
 
