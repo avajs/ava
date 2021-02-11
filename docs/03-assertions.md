@@ -325,6 +325,8 @@ Assert that `contents` does not match `regex`.
 
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles.
 
+AVA 3 supports an  `options` object that lets you select a specific snapshot, for instance `{id: 'my snapshot'}`. This is buggy and will be removed in AVA 4.
+
 Snapshot assertions cannot be skipped when snapshots are being updated.
 
 ### `.try(title?, implementation | macro | macro[], ...args?)`
