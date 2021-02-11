@@ -1734,7 +1734,7 @@ test('.snapshot()', t => {
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
-			message: 'Snapshot ids were removed in AVA 4',
+			message: 'AVA 4 no longer supports snapshot IDs',
 			values: [{
 				label: 'Called with id:',
 				formatted: '\'an id\''
