@@ -1724,6 +1724,18 @@ test('.snapshot()', t => {
 				formatted: /null/
 			}]
 		});
+
+		failsWith(t, () => {
+			assertions.snapshot(null, '');
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'The snapshot assertion message must be a nonempty string',
+			values: [{
+				label: 'Called with:',
+				formatted: '\'\''
+			}]
+		});
 	}
 
 	{
