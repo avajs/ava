@@ -108,9 +108,8 @@ test('snapshots remain if snapshot assertions are skipped', macro, {
 	cli: ['--update-snapshots'],
 	remove: false,
 	checkRun: async (t, run) => {
-		const result = await t.throwsAsync(run, {
-			message: /Snapshot assertions cannot be skipped when updating snapshots/
-		}, 'Expected fixture to throw');
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
 		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });

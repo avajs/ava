@@ -723,9 +723,12 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 	await test.run();
 
 	t.true(skipSnapshot.calledTwice);
+	for (const [index, call] of skipSnapshot.getCalls().entries()) {
+		t.like(call.firstArg, {belongsTo: 'passes', index});
+	}
 });
 
-test('snapshot assertion cannot be skipped when updating snapshots', t => {
+test('snapshot assertion can be skipped when updating snapshots', t => {
 	return new Test({
 		updateSnapshots: true,
 		metadata: {},
@@ -734,8 +737,7 @@ test('snapshot assertion cannot be skipped when updating snapshots', t => {
 			t.snapshot.skip({not: {a: 'match'}});
 		}
 	}).run().then(result => {
-		t.false(result.passed);
-		t.is(result.error.message, 'Snapshot assertions cannot be skipped when updating snapshots');
+		t.true(result.passed);
 	});
 });
 
