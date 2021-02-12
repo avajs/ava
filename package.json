@@ -139,5 +139,13 @@
 		"typescript": "^4.1.3",
 		"xo": "^0.37.1",
 		"zen-observable": "^0.8.15"
+	},
+	"peerDependencies": {
+		"@ava/typescript": "*"
+	},
+	"peerDependenciesMeta": {
+		"@ava/typescript": {
+			"optional": true
+		}
 	}
 }
