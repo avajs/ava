@@ -1730,7 +1730,7 @@ test('.snapshot()', t => {
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
-			message: 'The snapshot assertion message must be a nonempty string',
+			message: 'The snapshot assertion message must be a non-empty string',
 			values: [{
 				label: 'Called with:',
 				formatted: '\'\''
