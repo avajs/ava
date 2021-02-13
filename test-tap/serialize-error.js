@@ -96,13 +96,3 @@ test('creates multiline summaries for syntax errors', t => {
 	t.is(serializedError.summary, 'Hello\nThere\nSyntaxError here');
 	t.end();
 });
-
-test('skips esm enhancement lines when finding the summary', t => {
-	const error = new Error();
-	Object.defineProperty(error, 'stack', {
-		value: 'file://file.js:1\nFirst line\nSecond line'
-	});
-	const serializedError = serialize(error);
-	t.is(serializedError.summary, 'First line\nSecond line');
-	t.end();
-});
