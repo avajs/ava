@@ -1650,10 +1650,10 @@ test('.snapshot()', t => {
 				super({
 					compareWithSnapshot: assertionOptions => {
 						const {record, ...result} = manager.compare({
-							belongsTo: assertionOptions.id || this.title,
+							belongsTo: this.title,
 							expected: assertionOptions.expected,
-							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
-							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
+							index: this.snapshotInvocationCount++,
+							label: assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
 						});
 						if (record) {
 							record();
@@ -1679,10 +1679,6 @@ test('.snapshot()', t => {
 			const {snapshot} = assertions;
 			snapshot({foo: 'bar'});
 		});
-
-		passes(t, () => {
-			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		});
 	}
 
 	{
@@ -1699,15 +1695,6 @@ test('.snapshot()', t => {
 			});
 		}
 	}
-
-	failsWith(t, () => {
-		const assertions = setup('fails (fixed id)');
-		assertions.snapshot({foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
-	}, {
-		assertion: 'snapshot',
-		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-	});
 
 	{
 		const assertions = setup('fails');
@@ -1727,7 +1714,7 @@ test('.snapshot()', t => {
 	{
 		const assertions = setup('bad message');
 		failsWith(t, () => {
-			assertions.snapshot(null, null, null);
+			assertions.snapshot(null, null);
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
@@ -1735,6 +1722,34 @@ test('.snapshot()', t => {
 			values: [{
 				label: 'Called with:',
 				formatted: /null/
+			}]
+		});
+
+		failsWith(t, () => {
+			assertions.snapshot(null, '');
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'The snapshot assertion message must be a non-empty string',
+			values: [{
+				label: 'Called with:',
+				formatted: '\'\''
+			}]
+		});
+	}
+
+	{
+		// See https://github.com/avajs/ava/issues/2669
+		const assertions = setup('id');
+		failsWith(t, () => {
+			assertions.snapshot({foo: 'bar'}, {id: 'an id'});
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'AVA 4 no longer supports snapshot IDs',
+			values: [{
+				label: 'Called with id:',
+				formatted: '\'an id\''
 			}]
 		});
 	}
