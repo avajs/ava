@@ -141,9 +141,13 @@
 		"zen-observable": "^0.8.15"
 	},
 	"peerDependencies": {
+		"@ava/babel": "*",
 		"@ava/typescript": "*"
 	},
 	"peerDependenciesMeta": {
+		"@ava/babel": {
+			"optional": true
+		},
 		"@ava/typescript": {
 			"optional": true
 		}
