@@ -322,9 +322,10 @@ Assert that `contents` matches `regex`.
 Assert that `contents` does not match `regex`.
 
 ### `.snapshot(expected, message?)`
-### `.snapshot(expected, options?, message?)`
 
-Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles. Alternatively pass an `options` object to select a specific snapshot, for instance `{id: 'my snapshot'}`.
+Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles.
+
+AVA 3 supports an  `options` object that lets you select a specific snapshot, for instance `{id: 'my snapshot'}`. This is buggy and will be removed in AVA 4.
 
 Snapshot assertions cannot be skipped when snapshots are being updated.
 
