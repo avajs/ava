@@ -6,7 +6,9 @@ As of Node.js 12.17, [ECMAScript Modules](https://nodejs.org/docs/latest/api/esm
 
 ## Using the `esm` package
 
-If you want to use the ESM syntax, without relying on Node.js' implementation, your best bet is to use the [`esm`](https://github.com/standard-things/esm) package. Make sure to use the `.js` extension and *do not* set `"type": "module"` in `package.json`.
+If you're using Node.js 10 and AVA 3 and you want to use the ESM syntax, without relying on Node.js' implementation, your best bet is to use the [`esm`](https://github.com/standard-things/esm) package. Make sure to use the `.js` extension and *do not* set `"type": "module"` in `package.json`.
+
+*Note: The `esm` package is no longer supported in AVA 4.*
 
 Here's how you get it working with AVA.
 
