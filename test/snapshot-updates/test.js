@@ -14,6 +14,13 @@ async function withConfigurableFixture(t, implementation) {
 	});
 }
 
+async function readSnapshots(cwd) {
+	return {
+		snapshot: await fs.readFile(path.join(cwd, 'test.js.snap')),
+		report: await fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
+	};
+}
+
 test('First run generates a .snap and a .md', withConfigurableFixture, async (t, cwd) => {
 	const env = {
 		AVA_FORCE_CI: 'not-ci',
@@ -30,9 +37,55 @@ test('First run generates a .snap and a .md', withConfigurableFixture, async (t,
 	t.snapshot(await fs.readFile(path.join(cwd, 'test.js.md'), 'utf8'), 'snapshot report');
 });
 
-test.todo('Adding more snapshots to a test adds them to the .snap and .md');
-test.todo('Adding a test with snapshots adds them to the .snap and .md');
-test.todo('Changing a snapshot\'s label does not change the .snap or .md');
+test('Adding more snapshots to a test adds them to the .snap and .md', withConfigurableFixture, async (t, cwd) => {
+	const env = {
+		AVA_FORCE_CI: 'not-ci',
+		YARGS_PATH
+	};
+
+	await exec.fixture(['--', '--0.1.omit'], {cwd, env});
+	const before = await readSnapshots(cwd);
+
+	await exec.fixture([], {cwd, env});
+	const after = await readSnapshots(cwd);
+
+	t.notDeepEqual(after.snapshot, before.snapshot);
+	t.not(after.report, before.report);
+});
+
+test('Adding a test with snapshots adds them to the .snap and .md', withConfigurableFixture, async (t, cwd) => {
+	const env = {
+		AVA_FORCE_CI: 'not-ci',
+		YARGS_PATH
+	};
+
+	await exec.fixture(['--', '--0.omit'], {cwd, env});
+	const before = await readSnapshots(cwd);
+
+	await exec.fixture([], {cwd, env});
+	const after = await readSnapshots(cwd);
+
+	t.notDeepEqual(after.snapshot, before.snapshot);
+	t.not(after.report, before.report);
+	t.snapshot(after.report, 'snapshot report after prepending a test');
+});
+
+test('Changing a snapshot\'s label does not change the .snap or .md', withConfigurableFixture, async (t, cwd) => {
+	const env = {
+		AVA_FORCE_CI: 'not-ci',
+		YARGS_PATH
+	};
+
+	await exec.fixture([], {cwd, env});
+	const before = await readSnapshots(cwd);
+
+	await exec.fixture(['--', '--0.0.message="a new message"'], {cwd, env});
+	const after = await readSnapshots(cwd);
+
+	t.deepEqual(after.snapshot, before.snapshot);
+	t.is(after.report, before.report);
+});
+
 test.todo('With --update-snapshots, changing a snapshot\'s label updates the .snap and .md');
 test.todo('Changing a test\'s title adds a new block, puts the old block at the end');
 test.todo('Reordering tests does not change the .snap or .md');
