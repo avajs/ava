@@ -63,21 +63,49 @@ test('snapshots remain if they are still used', macro, {
 
 test('snapshots remain if tests run with --match', macro, {
 	cwd: exec.cwd('removal'),
-	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
+	cli: ['--update-snapshots', '--match=\'*another*\''],
 	remove: false,
 	checkRun: async (t, run) => {
-		const result = await t.throwsAsync(run, undefined, 'Expected fixture to throw');
-		t.snapshot(exec.cleanOutput(result.stderr), 'stderr');
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
+		t.snapshot(result.stats.passed, 'passed tests');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
+	}
+});
+
+test('snapshots removed if --match selects all tests', macro, {
+	cwd: exec.cwd('removal'),
+	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
+	remove: true,
+	checkRun: async (t, run) => {
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
+		t.snapshot(result.stats.passed, 'passed tests');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
 test('snapshots remain if tests selected by line numbers', macro, {
 	cwd: exec.cwd('removal'),
-	cli: ['test.js:3-12', '--update-snapshots'],
+	cli: ['test.js:10-17', '--update-snapshots'],
 	remove: false,
 	checkRun: async (t, run) => {
-		const result = await t.throwsAsync(run, undefined, 'Expected fixture to throw');
-		t.snapshot(exec.cleanOutput(result.stderr), 'stderr');
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
+		t.snapshot(result.stats.passed, 'passed tests');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
+	}
+});
+
+test('snapshots removed if line numbers select all tests', macro, {
+	cwd: exec.cwd('removal'),
+	cli: ['test.js:0-100', '--update-snapshots'],
+	remove: true,
+	checkRun: async (t, run) => {
+		await t.notThrowsAsync(run, 'Expected fixture not to throw');
+		const result = await run;
+		t.snapshot(result.stats.passed, 'passed tests');
+		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
