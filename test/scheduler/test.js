@@ -5,7 +5,7 @@ test('failing tests come first', async t => {
 	process.env.AVA_FORCE_CI = 'not-ci';
 	try {
 		await exec.fixture(['1pass.js', '2fail.js']);
-	} catch { }
+	} catch {}
 
 	try {
 		await exec.fixture(['--concurrency=1', '1pass.js', '2fail.js']);

@@ -8,8 +8,6 @@ const replaceString = require('replace-string');
 const pkg = require('../../package.json');
 const {normalizeGlobs} = require('../../lib/globs');
 const providerManager = require('../../lib/provider-manager');
-const isCi = require('../../lib/is-ci');
-const scheduler = require('../../lib/scheduler.js');
 
 let _Api = null;
 const createApi = options => {
@@ -33,15 +31,6 @@ const createApi = options => {
 	}
 
 	return new _Api(options);
-};
-
-const prepareScheduler = projectDir => {
-	if (isCi) {
-		return;
-	}
-
-	const path = scheduler.prepareTestResultsFile(projectDir);
-	scheduler.deleteFile(path);
 };
 
 exports.assert = (t, logFile, buffer) => {
@@ -113,7 +102,6 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 
 	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
 
-	prepareScheduler(projectDir);
 	const api = createApi(options);
 	api.on('run', plan => reporter.startRun(plan));
 
