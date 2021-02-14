@@ -7,10 +7,10 @@ const fs = require('fs').promises;
 const fse = require('fs-extra');
 const YARGS_PATH = require.resolve('yargs');
 
-async function withConfigurableFixture(t, implementation) {
+async function withConfigurableFixture(t, implementation, ...args) {
 	await tempy.directory.task(async temporaryDir => {
 		await fse.copy(exec.cwd('configurable'), temporaryDir);
-		await implementation(t, temporaryDir);
+		await implementation(t, temporaryDir, ...args);
 	});
 }
 
@@ -86,14 +86,141 @@ test('Changing a snapshot\'s label does not change the .snap or .md', withConfig
 	t.is(after.report, before.report);
 });
 
-test.todo('With --update-snapshots, changing a snapshot\'s label updates the .snap and .md');
-test.todo('Changing a test\'s title adds a new block, puts the old block at the end');
+async function beforeAndAfter(t, cwd, options, implementation) {
+	const env = {
+		AVA_FORCE_CI: 'not-ci',
+		YARGS_PATH
+	};
+
+	const before = {
+		result: await exec.fixture(options.before, {cwd, env}),
+		...await readSnapshots(cwd)
+	};
+
+	const after = {
+		result: await exec.fixture(options.after, {cwd, env}),
+		...await readSnapshots(cwd)
+	};
+
+	await implementation(t, {before, after});
+}
+
+test(
+	'With --update-snapshots, changing a snapshot\'s label updates the .snap and .md',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--update-snapshots', '--', '--0.0.message="a new message"']
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after changing a label');
+	}
+);
+
+test(
+	'Changing a test\'s title adds a new block, puts the old block at the end',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--', '--0.title="a new title"']
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after changing a title');
+	}
+);
+
 test.todo('Reordering tests does not change the .snap or .md');
 test.todo('With --update-snapshots, reordering tests reorders the .snap and .md');
-test.todo('Removing a snapshot assertion retains its data');
-test.todo('With --update-snapshots, removing a snapshot assertion removes its data');
-test.todo('Removing all snapshots from a test retains its data');
-test.todo('With --update-snapshots, removing all snapshots from a test removes the block');
-test.todo('Removing a test retains its data');
-test.todo('With --update-snapshots, removing a test removes its block');
-test.todo('Removing all snapshots from a file retains the .snap, .md');
+
+test(
+	'Removing a snapshot assertion retains its data',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--', '--0.1.omit']
+	},
+	async (t, {before, after}) => {
+		t.deepEqual(after.snapshot, before.snapshot);
+		t.is(after.report, before.report);
+	}
+);
+
+test(
+	'With --update-snapshots, removing a snapshot assertion removes its data',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--update-snapshots', '--', '--0.1.omit']
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after removing a snapshot');
+	}
+);
+
+test(
+	'Removing all snapshots from a test retains its data',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--', '--0.0.omit', '--0.1.omit']
+	},
+	async (t, {before, after}) => {
+		t.deepEqual(after.snapshot, before.snapshot);
+		t.is(after.report, before.report);
+	}
+);
+
+test(
+	'With --update-snapshots, removing all snapshots from a test removes the block',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--update-snapshots', '--', '--0.0.omit', '--0.1.omit']
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after removing all snapshots from \'foo\'');
+	}
+);
+
+test(
+	'Removing a test retains its data',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--', '--0.omit']
+	},
+	async (t, {before, after}) => {
+		t.deepEqual(after.snapshot, before.snapshot);
+		t.is(after.report, before.report);
+	}
+);
+
+test(
+	'With --update-snapshots, removing a test removes its block',
+	withConfigurableFixture,
+	beforeAndAfter,
+	{
+		before: [],
+		after: ['--update-snapshots', '--', '--0.omit']
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after removing test \'foo\'');
+	}
+);

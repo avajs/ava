@@ -13,6 +13,7 @@ const test = configure();
 test('foo', t => {
 	t.snapshot({foo: 'one'});
 	t.snapshot({foo: 'two'});
+	t.pass();
 });
 
 test('bar', t => {
@@ -23,10 +24,12 @@ test('baz', t => {
 	t.snapshot({baz: 'one'});
 	t.snapshot({baz: 'two'});
 	t.snapshot({baz: 'three'});
+	t.pass();
 });
 
 test('quux', t => {
 	t.snapshot({quux: 'one'});
+	t.pass();
 });
 
 function configure() {
