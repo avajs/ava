@@ -10,10 +10,16 @@ const {load} = require('../../lib/snapshot-manager');
 
 test('snapshot report can be regenerated from .snap file', async t => {
 	const cwd = exec.cwd();
+	const env = {
+		AVA_FORCE_CI: 'not-ci'
+	};
 	const reportPath = path.join(cwd, 'test.js.md');
 
+	t.teardown(() => fs.unlink(reportPath));
+	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
+
 	// Run fixture to generate report, snapshot
-	await exec.fixture(['--update-snapshots'], {cwd: exec.cwd()});
+	await exec.fixture(['--update-snapshots'], {cwd, env});
 
 	// Read report
 	const report = await fs.readFile(reportPath, 'utf8');
