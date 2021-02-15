@@ -1,4 +1,5 @@
 export default {
 	files: ['test/**', '!test/**/{fixtures,helpers}/**'],
-	ignoredByWatcher: ['{coverage,docs,media,test-d,test-tap}/**']
+	ignoredByWatcher: ['{coverage,docs,media,test-d,test-tap}/**'],
+	timeout: "30s"
 };
