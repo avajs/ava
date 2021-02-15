@@ -6,11 +6,44 @@ const tempy = require('tempy');
 const fs = require('fs').promises;
 const fse = require('fs-extra');
 
-async function withConfigurableFixture(t, implementation, ...args) {
+async function withTemporaryFixture(t, fixture, implementation, ...args) {
 	await tempy.directory.task(async temporaryDir => {
-		await fse.copy(exec.cwd('configurable'), temporaryDir);
+		await fse.copy(fixture, temporaryDir);
 		await implementation(t, temporaryDir, ...args);
 	});
+}
+
+function withConfigurableFixture(t, implementation, ...args) {
+	return withTemporaryFixture(t, exec.cwd('configurable'), implementation, ...args);
+}
+
+async function beforeAndAfter(t, cwd, options, implementation, ...args) {
+	const {
+		before: {
+			env: beforeEnv = {},
+			cli: beforeCli = []
+		} = {},
+		after: {
+			env: afterEnv = {},
+			cli: afterCli = []
+		} = {}
+	} = options;
+
+	const baseEnv = {
+		AVA_FORCE_CI: 'not-ci'
+	};
+
+	const before = {
+		result: await exec.fixture(beforeCli, {cwd, env: {...baseEnv, ...beforeEnv}}),
+		...await readSnapshots(cwd)
+	};
+
+	const after = {
+		result: await exec.fixture(afterCli, {cwd, env: {...baseEnv, ...afterEnv}}),
+		...await readSnapshots(cwd)
+	};
+
+	await implementation(t, {before, after}, ...args);
 }
 
 async function readSnapshots(cwd) {
@@ -81,31 +114,12 @@ test('Changing a snapshot\'s label does not change the .snap or .md', withConfig
 	t.is(after.report, before.report);
 });
 
-async function beforeAndAfter(t, cwd, options, implementation) {
-	const env = {
-		AVA_FORCE_CI: 'not-ci'
-	};
-
-	const before = {
-		result: await exec.fixture(options.before, {cwd, env}),
-		...await readSnapshots(cwd)
-	};
-
-	const after = {
-		result: await exec.fixture(options.after, {cwd, env}),
-		...await readSnapshots(cwd)
-	};
-
-	await implementation(t, {before, after});
-}
-
 test(
 	'With --update-snapshots, changing a snapshot\'s label updates the .snap and .md',
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--update-snapshots', '--', '--0.0.message="a new message"']
+		after: {cli: ['--update-snapshots', '--', '--0.0.message="a new message"']}
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);
@@ -119,8 +133,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--', '--0.title="a new title"']
+		after: {cli: ['--', '--0.title="a new title"']}
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);
@@ -129,16 +142,42 @@ test(
 	}
 );
 
-test.todo('Reordering tests does not change the .snap or .md');
-test.todo('With --update-snapshots, reordering tests reorders the .snap and .md');
+test(
+	'Reordering tests does not change the .snap or .md',
+	withTemporaryFixture,
+	exec.cwd('reorder'),
+	beforeAndAfter,
+	{
+		before: {env: {TEMPLATE: true}}
+	},
+	async (t, {before, after}) => {
+		t.deepEqual(after.snapshot, before.snapshot);
+		t.is(after.report, before.report);
+	}
+);
+
+test(
+	'With --update-snapshots, reordering tests reorders the .snap and .md',
+	withTemporaryFixture,
+	exec.cwd('reorder'),
+	beforeAndAfter,
+	{
+		before: {env: {TEMPLATE: true}},
+		after: {cli: ['--update-snapshots']}
+	},
+	async (t, {before, after}) => {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report after reordering tests');
+	}
+);
 
 test(
 	'Removing a snapshot assertion retains its data',
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--', '--0.1.omit']
+		after: {cli: ['--', '--0.1.omit']}
 	},
 	async (t, {before, after}) => {
 		t.deepEqual(after.snapshot, before.snapshot);
@@ -151,8 +190,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--update-snapshots', '--', '--0.1.omit']
+		after: {cli: ['--update-snapshots', '--', '--0.1.omit']}
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);
@@ -166,8 +204,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--', '--0.0.omit', '--0.1.omit']
+		after: {cli: ['--', '--0.0.omit', '--0.1.omit']}
 	},
 	async (t, {before, after}) => {
 		t.deepEqual(after.snapshot, before.snapshot);
@@ -180,8 +217,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--update-snapshots', '--', '--0.0.omit', '--0.1.omit']
+		after: {cli: ['--update-snapshots', '--', '--0.0.omit', '--0.1.omit']}
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);
@@ -195,8 +231,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--', '--0.omit']
+		after: {cli: ['--', '--0.omit']}
 	},
 	async (t, {before, after}) => {
 		t.deepEqual(after.snapshot, before.snapshot);
@@ -209,8 +244,7 @@ test(
 	withConfigurableFixture,
 	beforeAndAfter,
 	{
-		before: [],
-		after: ['--update-snapshots', '--', '--0.omit']
+		after: {cli: ['--update-snapshots', '--', '--0.omit']}
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);
