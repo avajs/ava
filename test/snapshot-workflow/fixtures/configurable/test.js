@@ -1,5 +1,5 @@
 const avaTest = require(process.env.AVA_PATH); // This fixture is copied to a temporary directory, so require AVA through its configured path.
-const yargs = require(process.env.YARGS_PATH); // Similarly, require yargs through a path configured by the test.
+const yargs = require(require.resolve('yargs', {paths: [process.env.AVA_PATH]})); // Require the yargs used by the configured AVA.
 const test = configure();
 
 // This is a configurable test fixture. Command-line arguments can modify the

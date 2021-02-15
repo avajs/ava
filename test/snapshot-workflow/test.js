@@ -5,7 +5,6 @@ const path = require('path');
 const tempy = require('tempy');
 const fs = require('fs').promises;
 const fse = require('fs-extra');
-const YARGS_PATH = require.resolve('yargs');
 
 async function withConfigurableFixture(t, implementation, ...args) {
 	await tempy.directory.task(async temporaryDir => {
@@ -23,8 +22,7 @@ async function readSnapshots(cwd) {
 
 test('First run generates a .snap and a .md', withConfigurableFixture, async (t, cwd) => {
 	const env = {
-		AVA_FORCE_CI: 'not-ci',
-		YARGS_PATH
+		AVA_FORCE_CI: 'not-ci'
 	};
 	const config = [
 		'--0.1.message="a message"',
@@ -39,8 +37,7 @@ test('First run generates a .snap and a .md', withConfigurableFixture, async (t,
 
 test('Adding more snapshots to a test adds them to the .snap and .md', withConfigurableFixture, async (t, cwd) => {
 	const env = {
-		AVA_FORCE_CI: 'not-ci',
-		YARGS_PATH
+		AVA_FORCE_CI: 'not-ci'
 	};
 
 	await exec.fixture(['--', '--0.1.omit'], {cwd, env});
@@ -55,8 +52,7 @@ test('Adding more snapshots to a test adds them to the .snap and .md', withConfi
 
 test('Adding a test with snapshots adds them to the .snap and .md', withConfigurableFixture, async (t, cwd) => {
 	const env = {
-		AVA_FORCE_CI: 'not-ci',
-		YARGS_PATH
+		AVA_FORCE_CI: 'not-ci'
 	};
 
 	await exec.fixture(['--', '--0.omit'], {cwd, env});
@@ -72,8 +68,7 @@ test('Adding a test with snapshots adds them to the .snap and .md', withConfigur
 
 test('Changing a snapshot\'s label does not change the .snap or .md', withConfigurableFixture, async (t, cwd) => {
 	const env = {
-		AVA_FORCE_CI: 'not-ci',
-		YARGS_PATH
+		AVA_FORCE_CI: 'not-ci'
 	};
 
 	await exec.fixture([], {cwd, env});
@@ -88,8 +83,7 @@ test('Changing a snapshot\'s label does not change the .snap or .md', withConfig
 
 async function beforeAndAfter(t, cwd, options, implementation) {
 	const env = {
-		AVA_FORCE_CI: 'not-ci',
-		YARGS_PATH
+		AVA_FORCE_CI: 'not-ci'
 	};
 
 	const before = {
