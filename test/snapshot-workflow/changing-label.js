@@ -6,11 +6,8 @@ test.serial(
 	'Changing a snapshot\'s label does not change the .snap or .md',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('changing-label')
-	},
-	async (t, {before, after}) => {
-		t.deepEqual(after.snapshot, before.snapshot);
-		t.is(after.report, before.report);
+		cwd: exec.cwd('changing-label'),
+		expectChanged: false
 	}
 );
 
@@ -19,7 +16,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('changing-label'),
-		after: {cli: ['--update-snapshots']}
+		after: {cli: ['--update-snapshots']},
+		expectChanged: true
 	},
 	async (t, {before, after}) => {
 		t.notDeepEqual(after.snapshot, before.snapshot);

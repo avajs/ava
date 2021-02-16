@@ -2,9 +2,10 @@ const exec = require('../../helpers/exec');
 const path = require('path');
 const fs = require('fs').promises;
 
-async function beforeAndAfter(t, options, implementation, ...args) {
+async function beforeAndAfter(t, options) {
 	const {
 		cwd,
+		expectChanged,
 		before: {
 			env: beforeEnv = {},
 			cli: beforeCli = []
@@ -32,7 +33,14 @@ async function beforeAndAfter(t, options, implementation, ...args) {
 		...await readSnapshots(cwd)
 	};
 
-	await implementation(t, {before, after}, ...args);
+	if (expectChanged) {
+		t.notDeepEqual(after.snapshot, before.snapshot);
+		t.not(after.report, before.report);
+		t.snapshot(after.report, 'snapshot report');
+	} else {
+		t.deepEqual(after.snapshot, before.snapshot);
+		t.is(after.report, before.report);
+	}
 }
 
 exports.beforeAndAfter = beforeAndAfter;

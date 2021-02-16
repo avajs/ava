@@ -25,12 +25,8 @@ test(
 	'Adding more snapshots to a test adds them to the .snap and .md',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('adding-snapshots')
-	},
-	async (t, {before, after}) => {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
-		t.snapshot(after.report, 'snapshot report after adding snapshots');
+		cwd: exec.cwd('adding-snapshots'),
+		expectChanged: true
 	}
 );
 
@@ -38,12 +34,8 @@ test(
 	'Adding a test with snapshots adds them to the .snap and .md',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('adding-test')
-	},
-	async (t, {before, after}) => {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
-		t.snapshot(after.report, 'snapshot report after adding a test');
+		cwd: exec.cwd('adding-test'),
+		expectChanged: true
 	}
 );
 
@@ -51,11 +43,7 @@ test(
 	'Changing a test\'s title adds a new block, puts the old block at the end',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('changing-title')
-	},
-	async (t, {before, after}) => {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
-		t.snapshot(after.report, 'snapshot report after changing a title');
+		cwd: exec.cwd('changing-title'),
+		expectChanged: true
 	}
 );

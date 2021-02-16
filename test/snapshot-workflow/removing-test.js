@@ -6,11 +6,8 @@ test.serial(
 	'Removing a test retains its data',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('removing-test')
-	},
-	async (t, {before, after}) => {
-		t.deepEqual(after.snapshot, before.snapshot);
-		t.is(after.report, before.report);
+		cwd: exec.cwd('removing-test'),
+		expectChanged: false
 	}
 );
 
@@ -19,11 +16,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('removing-test'),
-		after: {cli: ['--update-snapshots']}
-	},
-	async (t, {before, after}) => {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
-		t.snapshot(after.report, 'snapshot report after removing a test');
+		after: {cli: ['--update-snapshots']},
+		expectChanged: true
 	}
 );
