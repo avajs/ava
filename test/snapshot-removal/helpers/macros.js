@@ -8,8 +8,12 @@ function withTemporaryFixture(macro) {
 	const avaPath = path.resolve(path.join(__dirname, '..', '..', '..'));
 
 	return async (t, {cwd, env, ...options}) => {
+		const timer = `Timing: ${t.title}`;
+		console.time(timer);
 		await tempy.directory.task(async temporary => {
+			console.timeLog(timer);
 			await fse.copy(cwd, temporary);
+			console.timeLog(timer);
 			await macro(t, {
 				cwd: temporary,
 				env: {
@@ -18,7 +22,9 @@ function withTemporaryFixture(macro) {
 				},
 				...options
 			});
+			console.timeLog(timer);
 		});
+		console.timeEnd(timer);
 	};
 }
 
