@@ -47,3 +47,23 @@ test(
 		expectChanged: true
 	}
 );
+
+test(
+	'Adding skipped snapshots followed by unskipped snapshots throws RangeError',
+	async t => {
+		const cwd = exec.cwd('adding-skipped-snapshots');
+		const env = {
+			AVA_FORCE_CI: 'not-ci'
+		};
+
+		t.teardown(() => fs.unlink(path.join(cwd, 'test.js.md')));
+		t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
+
+		await exec.fixture([], {cwd, env: {...env, TEMPLATE: 'true'}});
+
+		const result = await t.throwsAsync(exec.fixture([], {cwd, env}));
+		t.regex(result.stdout, /Error thrown in test/);
+		t.regex(result.stdout, /RangeError/);
+		t.regex(result.stdout, /Cannot record snapshot 3 for "foo", exceeds expected index of 1/);
+	}
+)
