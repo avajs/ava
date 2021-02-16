@@ -4,8 +4,7 @@ test('foo', t => {
 	t.snapshot({foo: 'one'});
 
 	if (!process.env.TEMPLATE) {
-		t.snapshot.skip({foo: 'two'});
-		t.snapshot.skip({foo: 'three'});
-		t.snapshot({foo: 'four'});
+		t.snapshot.skip({foo: 'two'}); // eslint-disable-line ava/no-skip-assert
+		t.snapshot({foo: 'three'});
 	}
 });

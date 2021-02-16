@@ -64,6 +64,6 @@ test(
 		const result = await t.throwsAsync(exec.fixture([], {cwd, env}));
 		t.regex(result.stdout, /Error thrown in test/);
 		t.regex(result.stdout, /RangeError/);
-		t.regex(result.stdout, /Cannot record snapshot 3 for "foo", exceeds expected index of 1/);
+		t.regex(result.stdout, /Cannot record snapshot 2 for "foo", exceeds expected index of 1/);
 	}
-)
+);
