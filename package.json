@@ -64,6 +64,7 @@
 		"arrgv": "^1.0.2",
 		"arrify": "^2.0.1",
 		"callsites": "^3.1.0",
+		"cbor": "^7.0.1",
 		"chalk": "^4.1.0",
 		"chokidar": "^3.5.1",
 		"chunkd": "^2.0.1",
