@@ -34,12 +34,12 @@ async function beforeAndAfter(t, options) {
 	};
 
 	if (expectChanged) {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
+		t.not(after.report, before.report, 'expected .md to be changed');
+		t.notDeepEqual(after.snapshot, before.snapshot, 'expected .snap to be changed');
 		t.snapshot(after.report, 'snapshot report');
 	} else {
-		t.deepEqual(after.snapshot, before.snapshot);
-		t.is(after.report, before.report);
+		t.is(after.report, before.report, 'expected .md to be unchanged');
+		t.deepEqual(after.snapshot, before.snapshot, 'expected .snap to be unchanged');
 	}
 }
 
