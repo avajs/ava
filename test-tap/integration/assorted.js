@@ -164,30 +164,18 @@ test('selects .cjs test files', t => {
 	});
 });
 
-test('load .mjs test files (when node supports it)', t => {
+test('load .mjs test files', t => {
 	execCli('mjs.mjs', (err, stdout) => {
-		if (Number.parseFloat(process.version.slice(1)) >= 12.17) {
-			t.ifError(err);
-			t.match(stdout, /1 test passed/);
-			t.end();
-		} else {
-			t.ok(err);
-			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
-			t.end();
-		}
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
 	});
 });
 
-test('load .js test files as ESM modules (when node supports it)', t => {
+test('load .js test files as ESM modules', t => {
 	execCli('test.js', {dirname: 'fixture/pkg-type-module'}, (err, stdout) => {
-		if (Number.parseFloat(process.version.slice(1)) >= 12.17) {
-			t.ifError(err);
-			t.match(stdout, /1 test passed/);
-			t.end();
-		} else {
-			t.ok(err);
-			t.match(stdout, /ECMAScript Modules are not supported in this Node.js version./);
-			t.end();
-		}
+		t.ifError(err);
+		t.match(stdout, /1 test passed/);
+		t.end();
 	});
 });

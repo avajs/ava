@@ -4,5 +4,6 @@
 			"abc",
 			"!xyz"
 		]
-	}
+	},
+	"type": "module"
 }

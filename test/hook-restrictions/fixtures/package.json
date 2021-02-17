@@ -1,10 +1,7 @@
 {
-  "ava": {
-    "files": [
-      "*.js"
-    ],
-    "nonSemVerExperiments": {
-      "disableSnapshotsInHooks": true
-    }
-  }
+	"ava": {
+		"files": [
+			"*.js"
+		]
+	}
 }

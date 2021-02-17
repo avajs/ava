@@ -12,8 +12,8 @@ class CustomError extends Error {
 
 test('throws', t => {
 	expectType<Error>(t.throws(() => {}));
-	const err2: CustomError = t.throws(() => {});
-	expectType<CustomError>(err2);
+	const error2: CustomError = t.throws(() => {});
+	expectType<CustomError>(error2);
 	expectType<CustomError>(t.throws<CustomError>(() => {}));
 });
 

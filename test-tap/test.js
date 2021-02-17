@@ -3,14 +3,12 @@ require('../lib/chalk').set({level: 0});
 require('../lib/worker/options').set({});
 
 const path = require('path');
-const React = require('react');
 const {test} = require('tap');
 const sinon = require('sinon');
 const delay = require('delay');
 const snapshotManager = require('../lib/snapshot-manager');
 const Test = require('../lib/test');
-const HelloMessage = require('./fixture/hello-message');
-const {ava, withExperiments} = require('./helper/ava-test');
+const {ava} = require('./helper/ava-test');
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -369,7 +367,7 @@ test('skipped assertions count towards the plan', t => {
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
 		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		a.notThrows.skip(() => {});
 		a.snapshot.skip({});
@@ -398,7 +396,7 @@ test('assertion.skip() is bound', t => {
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
 		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		(a.notThrows.skip)(() => {});
 		(a.snapshot.skip)({});
@@ -657,7 +655,7 @@ test('assertions are bound', t => {
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
 		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
-			throw new Error(); // eslint-disable-line unicorn/error-message
+			throw new Error();
 		});
 		(a.notThrows)(() => {});
 		(a.truthy)(true);
@@ -678,6 +676,7 @@ test('snapshot assertion can be skipped', t => {
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
+		recordNewSnapshots: true,
 		updating: false
 	});
 
@@ -689,7 +688,7 @@ test('snapshot assertion can be skipped', t => {
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
-			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+			t.snapshot({name: 'Sindre'});
 		}
 	}).run().then(result => {
 		t.true(result.passed);
@@ -717,7 +716,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		fn(t) {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
-			t.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
+			t.snapshot({name: 'Sindre'});
 		}
 	});
 
@@ -816,30 +815,14 @@ test('teardown awaits promise', t => {
 	});
 });
 
-test('teardowns run sequentially in order', t => {
-	const teardownA = sinon.stub().resolves(delay(200));
-	let resolveB;
-	const teardownB = sinon.stub().returns(new Promise(resolve => {
-		resolveB = resolve;
-	}));
-	return ava(a => {
-		a.teardown(() => teardownA().then(resolveB));
-		a.teardown(teardownB);
-		a.pass();
-	}).run().then(result => {
-		t.is(result.passed, true);
-		t.ok(teardownA.calledBefore(teardownB));
-	});
-});
-
-test('teardowns run in reverse order when the `reverseTeardowns` experimental feature is enabled', t => {
+test('teardowns run in reverse order', t => {
 	let resolveA;
 	const teardownA = sinon.stub().returns(new Promise(resolve => {
 		resolveA = resolve;
 	}));
 	const teardownB = sinon.stub().resolves(delay(200));
 
-	return withExperiments({reverseTeardowns: true})(a => {
+	return ava(a => {
 		a.teardown(teardownA);
 		a.teardown(() => teardownB().then(resolveA));
 		a.pass();
@@ -897,9 +880,9 @@ test('teardown errors are hidden behind assertion errors', t => {
 	});
 });
 
-test('teardowns errors do not stop next teardown from running', t => {
-	const teardownA = sinon.stub().throws('TeardownError');
-	const teardownB = sinon.spy();
+test('teardown errors do not stop next teardown from running', t => {
+	const teardownA = sinon.spy();
+	const teardownB = sinon.stub().throws('TeardownError');
 	return ava(a => {
 		a.teardown(teardownA);
 		a.teardown(teardownB);
@@ -909,7 +892,7 @@ test('teardowns errors do not stop next teardown from running', t => {
 		t.is(result.error.name, 'TeardownError');
 		t.ok(teardownA.calledOnce);
 		t.ok(teardownB.calledOnce);
-		t.ok(teardownA.calledBefore(teardownB));
+		t.ok(teardownB.calledBefore(teardownA));
 	});
 });
 

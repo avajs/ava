@@ -112,7 +112,7 @@ test('renders children when passed in', t => {
 });
 ```
 
-Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/avajs/ava/blob/master/docs/recipes/browser-testing.md) on how to do so.
+Enzyme also has a `mount` and `render` helper to test in an actual browser environment. If you want to use these helpers, you will have to setup a browser environment. Check out the [browser testing recipe](https://github.com/avajs/ava/blob/main/docs/recipes/browser-testing.md) on how to do so.
 
 To see an example of AVA working together with Enzyme set up for browser testing, have a look at [this sample project](https://github.com/adriantoine/ava-enzyme-demo).
 

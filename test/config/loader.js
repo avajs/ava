@@ -90,10 +90,6 @@ test.serial('loads config from factory function', ok('package-no-file-yes-factor
 
 test.serial('does not support require() inside config.js files', notOk('require'));
 
-test.serial('throws an error if a config factory returns a promise', notOk('factory-no-promise-return'));
-
-test.serial('throws an error if a config exports a promise', notOk('no-promise-config'));
-
 test.serial('throws an error if a config factory does not return a plain object', notOk('factory-no-plain-return'));
 
 test.serial('throws an error if a config does not export a plain object', notOk('no-plain-config'));
@@ -119,5 +115,3 @@ test.serial('loads .cjs config', ok('cjs'), (t, conf) => {
 });
 
 test.serial('throws an error if both .js and .cjs configs are present', notOk('file-yes-cjs-yes'));
-
-test.serial('refuses to load .mjs config', notOk('mjs'));

@@ -5,32 +5,11 @@ const randomDelay = () => new Promise(resolve => {
 	setTimeout(resolve, Math.random() * 1000);
 });
 
-test.before(async t => {
-	await randomDelay();
-	t.snapshot(id(-2), 'in a before hook');
-});
-
-test.beforeEach(async t => {
-	await randomDelay();
-	t.snapshot(id(-1.5), 'in a beforeEach hook');
-});
-
-test.afterEach(async t => {
-	await randomDelay();
-	t.snapshot(id(-1), 'in an afterEach hook');
-});
-
-test.afterEach.always(async t => {
-	await randomDelay();
-	t.snapshot(id(-0.5), 'in an afterEachAlways hook');
-});
-
 test('B - declare some snapshots', async t => {
 	await randomDelay();
 	t.snapshot(id(0));
 	t.snapshot(id(1), 'has a message');
 	t.snapshot(id(2), 'also has a message');
-	t.snapshot(id(3), {id: 'has an ID'});
 });
 
 test('A - declare some more snapshots', async t => {
@@ -56,12 +35,8 @@ test('E - discard some snapshots in a try()', async t => {
 	t.snapshot(id(10), 'outer again');
 });
 
-test('D - more snapshots with IDs', async t => {
+test('D - more snapshots', async t => {
 	await randomDelay();
-	t.snapshot(id(11), {id: 'the first in test D'});
 	t.snapshot(id(12));
-	// These have to be reported in reverse declaration order, because they can't
-	// be reported under the same header
-	t.snapshot(id(14), {id: 'the second-to-last in test D'});
 	t.snapshot(id(13));
 });

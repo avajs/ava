@@ -1,6 +1,6 @@
 export interface Subscribable {
 	subscribe(observer: {
-		error(err: any): void;
+		error(error: any): void;
 		complete(): void;
 	}): void;
 }
@@ -30,12 +30,6 @@ export type CommitDiscardOptions = {
 	 * Whether the logs should be included in those of the parent test.
 	 */
 	retainLogs?: boolean;
-};
-
-/** Options that can be passed to the `t.snapshot()` assertion. */
-export type SnapshotOptions = {
-	/** If provided and not an empty string, used to select the snapshot to compare the `expected` value against. */
-	id?: string;
 };
 
 export interface Assertions {
@@ -241,18 +235,8 @@ export interface SnapshotAssertion {
 	 */
 	(expected: any, message?: string): void;
 
-	/**
-	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
-	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details) (selected
-	 * through `options.id` if provided), or if necessary record a new snapshot.
-	 */
-	(expected: any, options: SnapshotOptions, message?: string): void;
-
 	/** Skip this assertion. */
 	skip(expected: any, message?: string): void;
-
-	/** Skip this assertion. */
-	skip(expected: any, options: SnapshotOptions, message?: string): void;
 }
 
 export interface ThrowsAssertion {

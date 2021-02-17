@@ -1,13 +1,4 @@
-const skipTests = [];
-if (process.versions.node < '12.17.0') {
-	skipTests.push(
-		'!test/config/next-gen.js',
-		'!test/configurable-module-format/module.js',
-		'!test/shared-workers/!(requires-newish-node)/**'
-	);
-}
-
 export default {
-	files: ['test/**', '!test/**/{fixtures,helpers}/**', ...skipTests],
+	files: ['test/**', '!test/**/{fixtures,helpers}/**'],
 	ignoredByWatcher: ['{coverage,docs,media,test-d,test-tap}/**']
 };

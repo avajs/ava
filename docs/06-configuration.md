@@ -43,9 +43,10 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 ## Options
 
 - `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `cjs`, `mjs` & `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
-- `ignoredByWatcher`: an array of glob patterns to match files that, even if changed, are ignored by the watcher. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/master/docs/recipes/watch-mode.md)
+- `ignoredByWatcher`: an array of glob patterns to match files that, even if changed, are ignored by the watcher. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/main/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
+- `concurrency`: max number of test files running at the same time (default: CPU cores)
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
@@ -240,7 +241,9 @@ export default {
 
 Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders). To use this you'll also have to configure AVA to `import()` your test file.
 
-This is still an experimental feature. You can opt in to it by enabling the `configurableModuleFormat` experiment. Afterwards, you'll be able to specify per-extension module formats using an object form.
+This is an experimental feature in AVA 3. You can opt in to it by enabling the `configurableModuleFormat` experiment. Afterwards, you'll be able to specify per-extension module formats using an object form.
+
+This feature is available by default in AVA 4.
 
 As with the array form, you need to explicitly list `js`, `cjs`, and `mjs` extensions. These **must** be set using the `true` value; other extensions are configurable using either `'commonjs'` or `'module'`:
 

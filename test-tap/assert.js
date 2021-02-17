@@ -4,12 +4,9 @@ require('../lib/worker/options').set({chalkOptions: {level: 0}});
 
 const path = require('path');
 const stripAnsi = require('strip-ansi');
-const React = require('react');
-const renderer = require('react-test-renderer');
 const {test} = require('tap');
 const assert = require('../lib/assert');
 const snapshotManager = require('../lib/snapshot-manager');
-const HelloMessage = require('./fixture/hello-message');
 
 let lastFailure = null;
 let lastPassed = false;
@@ -660,13 +657,6 @@ test('.deepEqual()', t => {
 		);
 	});
 
-	passes(t, () => {
-		assertions.deepEqual(
-			renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON(),
-			React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre'))
-		);
-	});
-
 	// Regression test end here
 
 	passes(t, () => {
@@ -1012,7 +1002,7 @@ test('.throws()', gather(t => {
 	// Fails because function doesn't throw. Asserts that 'my message' is used
 	// as the assertion message (*not* compared against the error).
 	failsWith(t, () => {
-		assertions.throws(() => {}, null, 'my message');
+		assertions.throws(() => {}, undefined, 'my message');
 	}, {
 		assertion: 'throws',
 		message: 'my message',
@@ -1076,7 +1066,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		assertions.throws(() => {
-			throw new TypeError(); // eslint-disable-line unicorn/error-message
+			throw new TypeError();
 		}, {name: 'TypeError'});
 	});
 
@@ -1137,13 +1127,6 @@ test('.throws()', gather(t => {
 		}, false);
 	});
 
-	// Regression test for https://github.com/avajs/ava/issues/1676
-	passes(t, () => {
-		assertions.throws(() => {
-			throw new Error('foo');
-		}, null);
-	});
-
 	passes(t, () => {
 		assertions.throws(() => {
 			throw new Error('foo');
@@ -1157,7 +1140,7 @@ test('.throws()', gather(t => {
 	});
 
 	failsWith(t, () => {
-		assertions.throws(() => {}, null, null);
+		assertions.throws(() => {}, undefined, null);
 	}, {
 		assertion: 'throws',
 		improperUsage: true,
@@ -1220,7 +1203,7 @@ test('.throwsAsync()', gather(t => {
 	// Fails because the function throws synchronously
 	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {
 		throw new Error('sync');
-	}, null, 'message'), {
+	}, undefined, 'message'), {
 		assertion: 'throwsAsync',
 		message: 'message',
 		values: [
@@ -1229,7 +1212,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {}, null, 'message'), {
+	eventuallyFailsWith(t, () => assertions.throwsAsync(() => {}, undefined, 'message'), {
 		assertion: 'throwsAsync',
 		message: 'message',
 		values: [
@@ -1237,7 +1220,7 @@ test('.throwsAsync()', gather(t => {
 		]
 	});
 
-	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), null, null), {
+	eventuallyFailsWith(t, () => assertions.throwsAsync(Promise.resolve(), undefined, null), {
 		assertion: 'throwsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',
@@ -1476,8 +1459,8 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 	t.end();
 });
 
-test('.throws() fails if passed null expectation with disableNullExpectations', t => {
-	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+test('.throws() fails if passed null expectation', t => {
+	const asserter = new AssertionsBase();
 
 	failsWith(t, () => {
 		asserter.throws(() => {}, null);
@@ -1490,8 +1473,8 @@ test('.throws() fails if passed null expectation with disableNullExpectations', 
 	t.end();
 });
 
-test('.throwsAsync() fails if passed null expectation with disableNullExpectations', t => {
-	const asserter = new AssertionsBase({experiments: {disableNullExpectations: true}});
+test('.throwsAsync() fails if passed null', t => {
+	const asserter = new AssertionsBase();
 
 	failsWith(t, () => {
 		asserter.throwsAsync(() => {}, null);
@@ -1648,7 +1631,7 @@ test('.notThrowsAsync() fails if passed a bad value', t => {
 
 test('.snapshot()', t => {
 	// Set to `true` to update the snapshot, then run:
-	// "$(npm bin)"/tap -R spec test/assert.js
+	// npx tap test-tap/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;
@@ -1658,6 +1641,7 @@ test('.snapshot()', t => {
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
+		recordNewSnapshots: updating,
 		updating
 	});
 	const setup = _title => {
@@ -1665,12 +1649,17 @@ test('.snapshot()', t => {
 			constructor(title) {
 				super({
 					compareWithSnapshot: assertionOptions => {
-						return manager.compare({
-							belongsTo: assertionOptions.id || this.title,
+						const {record, ...result} = manager.compare({
+							belongsTo: this.title,
 							expected: assertionOptions.expected,
-							index: assertionOptions.id ? 0 : this.snapshotInvocationCount++,
-							label: assertionOptions.id ? '' : assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
+							index: this.snapshotInvocationCount++,
+							label: assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`
 						});
+						if (record) {
+							record();
+						}
+
+						return result;
 					}
 				});
 				this.title = title;
@@ -1690,18 +1679,6 @@ test('.snapshot()', t => {
 			const {snapshot} = assertions;
 			snapshot({foo: 'bar'});
 		});
-
-		passes(t, () => {
-			assertions.snapshot({foo: 'bar'}, {id: 'fixed id'}, 'message not included in snapshot report');
-		});
-
-		passes(t, () => {
-			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
-		});
-
-		passes(t, () => {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-		});
 	}
 
 	{
@@ -1719,15 +1696,6 @@ test('.snapshot()', t => {
 		}
 	}
 
-	failsWith(t, () => {
-		const assertions = setup('fails (fixed id)');
-		assertions.snapshot({foo: 'not bar'}, {id: 'fixed id'}, 'different message, also not included in snapshot report');
-	}, {
-		assertion: 'snapshot',
-		message: 'different message, also not included in snapshot report',
-		values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-	});
-
 	{
 		const assertions = setup('fails');
 		if (updating) {
@@ -1744,50 +1712,9 @@ test('.snapshot()', t => {
 	}
 
 	{
-		const assertions = setup('rendered comparison');
-		if (updating) {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-		} else {
-			passes(t, () => {
-				assertions.snapshot(React.createElement('div', null, 'Hello ', React.createElement('mark', null, 'Sindre')));
-			});
-		}
-	}
-
-	{
-		const assertions = setup('rendered comparison');
-		if (updating) {
-			assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Sindre'})).toJSON());
-		} else {
-			failsWith(t, () => {
-				assertions.snapshot(renderer.create(React.createElement(HelloMessage, {name: 'Vadim'})).toJSON());
-			}, {
-				assertion: 'snapshot',
-				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <div>\n    Hello \n    <mark>\n-     Vadim\n+     Sindre\n    </mark>\n  </div>'}]
-			});
-		}
-	}
-
-	{
-		const assertions = setup('element comparison');
-		if (updating) {
-			assertions.snapshot(React.createElement(HelloMessage, {name: 'Sindre'}));
-		} else {
-			failsWith(t, () => {
-				assertions.snapshot(React.createElement(HelloMessage, {name: 'Vadim'}));
-			}, {
-				assertion: 'snapshot',
-				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  <HelloMessage⍟\n-   name="Vadim"\n+   name="Sindre"\n  />'}]
-			});
-		}
-	}
-
-	{
 		const assertions = setup('bad message');
 		failsWith(t, () => {
-			assertions.snapshot(null, null, null);
+			assertions.snapshot(null, null);
 		}, {
 			assertion: 'snapshot',
 			improperUsage: true,
@@ -1795,6 +1722,34 @@ test('.snapshot()', t => {
 			values: [{
 				label: 'Called with:',
 				formatted: /null/
+			}]
+		});
+
+		failsWith(t, () => {
+			assertions.snapshot(null, '');
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'The snapshot assertion message must be a non-empty string',
+			values: [{
+				label: 'Called with:',
+				formatted: '\'\''
+			}]
+		});
+	}
+
+	{
+		// See https://github.com/avajs/ava/issues/2669
+		const assertions = setup('id');
+		failsWith(t, () => {
+			assertions.snapshot({foo: 'bar'}, {id: 'an id'});
+		}, {
+			assertion: 'snapshot',
+			improperUsage: true,
+			message: 'AVA 4 no longer supports snapshot IDs',
+			values: [{
+				label: 'Called with id:',
+				formatted: '\'an id\''
 			}]
 		});
 	}
