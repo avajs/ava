@@ -1,0 +1,23 @@
+const test = require('@ava/test');
+const exec = require('../helpers/exec');
+const {beforeAndAfter} = require('./helpers/macros');
+
+test(
+	't.snapshot.skip() in discarded t.try() doesn\'t copy over old value',
+	beforeAndAfter,
+	{
+		cwd: exec.cwd('discard-skip'),
+		after: {cli: ['--update-snapshots']},
+		expectChanged: true
+	}
+);
+
+test(
+	't.snapshot.skip() in committed t.try() does copy over old value',
+	beforeAndAfter,
+	{
+		cwd: exec.cwd('commit-skip'),
+		after: {cli: ['--update-snapshots']},
+		expectChanged: false
+	}
+);
