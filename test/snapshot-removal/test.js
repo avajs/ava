@@ -57,7 +57,6 @@ test('snapshots remain if they are still used', macro, {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -69,7 +68,6 @@ test('snapshots remain if tests run with --match', macro, {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -81,7 +79,6 @@ test('snapshots removed if --match selects all tests', macro, {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -93,7 +90,6 @@ test('snapshots remain if tests selected by line numbers', macro, {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -105,7 +101,6 @@ test('snapshots removed if line numbers select all tests', macro, {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -115,8 +110,6 @@ test('snapshots remain if using test.only', macro, {
 	remove: false,
 	checkRun: async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
-		const result = await run;
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -126,8 +119,6 @@ test('snapshots remain if tests are skipped', macro, {
 	remove: false,
 	checkRun: async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
-		const result = await run;
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -137,8 +128,6 @@ test('snapshots remain if snapshot assertions are skipped', macro, {
 	remove: false,
 	checkRun: async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
-		const result = await run;
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
 
@@ -154,7 +143,5 @@ test('snapshots remain if skipped in a discarded try()', macro, {
 	remove: false,
 	checkRun: async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
-		const result = await run;
-		t.snapshot(result.stats.unsavedSnapshots, 'files where snapshots could not be updated');
 	}
 });
