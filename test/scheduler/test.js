@@ -1,6 +1,10 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
 
+test.before(() => {
+	process.env.AVA_FORCE_CI = 'not-ci';
+});
+
 test('failing tests come first', async t => {
 	try {
 		await exec.fixture(['1pass.js', '2fail.js']);
