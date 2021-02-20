@@ -131,16 +131,20 @@ test('snapshots remain if snapshot assertions are skipped', macro, {
 	}
 });
 
-test('snapshots remain if used in a discarded try()', macro, {
+// This behavior is consistent with the expectation that discarded attempts
+// should have no effect.
+test('snapshots removed if used in a discarded try()', macro, {
 	cwd: exec.cwd('try'),
 	cli: ['--update-snapshots'],
-	remove: false
+	remove: true
 });
 
-test('snapshots remain if skipped in a discarded try()', macro, {
+// This behavior is consistent with the expectation that discarded attempts
+// should have no effect.
+test('snapshots removed if skipped in a discarded try()', macro, {
 	cwd: exec.cwd('skipped-snapshots-in-try'),
 	cli: ['--update-snapshots'],
-	remove: false,
+	remove: true,
 	checkRun: async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	}
