@@ -88,7 +88,7 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
 		require: [],
-		cacheEnabled: true,
+		cacheEnabled: false,
 		experiments: {},
 		match,
 		providers,
