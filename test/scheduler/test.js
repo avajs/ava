@@ -5,7 +5,7 @@ test.before(() => {
 	process.env.AVA_FORCE_CI = 'not-ci';
 });
 
-test('failing tests come first', async t => {
+test.serial('failing tests come first', async t => {
 	try {
 		await exec.fixture(['1pass.js', '2fail.js']);
 	} catch {}
@@ -17,7 +17,7 @@ test('failing tests come first', async t => {
 	}
 });
 
-test('scheduler disabled when cache empty', async t => {
+test.serial('scheduler disabled when cache empty', async t => {
 	await exec.fixture(['reset-cache']);
 	try {
 		await exec.fixture(['--concurrency=1', '1pass.js', '2fail.js']);
@@ -26,7 +26,7 @@ test('scheduler disabled when cache empty', async t => {
 	}
 });
 
-test('scheduler disabled when cache disabled', async t => {
+test.serial('scheduler disabled when cache disabled', async t => {
 	try {
 		await exec.fixture(['1pass.js', '2fail.js']);
 	} catch {}
