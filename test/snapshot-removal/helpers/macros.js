@@ -4,22 +4,11 @@ const path = require('path');
 const tempy = require('tempy');
 const fse = require('fs-extra');
 
-function withTemporaryFixture(macro) {
-	const avaPath = path.resolve(path.join(__dirname, '..', '..', '..'));
-
-	return async (t, {cwd, env, ...options}) => {
-		await tempy.directory.task(async temporary => {
-			await fse.copy(cwd, temporary);
-			await macro(t, {
-				cwd: temporary,
-				env: {
-					AVA_PATH: avaPath,
-					...env
-				},
-				...options
-			});
-		});
-	};
+async function withTemporaryFixture(t, cwd, implementation, ...args) {
+	await tempy.directory.task(async temporary => {
+		await fse.copy(cwd, temporary);
+		await implementation(t, temporary, ...args);
+	});
 }
 
 module.exports.withTemporaryFixture = withTemporaryFixture;
