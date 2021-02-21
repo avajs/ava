@@ -49,21 +49,19 @@ test(
 );
 
 test(
-	'Adding skipped snapshots followed by unskipped snapshots throws RangeError',
-	async t => {
-		const cwd = exec.cwd('adding-skipped-snapshots');
-		const env = {
-			AVA_FORCE_CI: 'not-ci'
-		};
+	'Adding skipped snapshots followed by unskipped snapshots records blanks',
+	beforeAndAfter,
+	{
+		cwd: exec.cwd('adding-skipped-snapshots'),
+		expectChanged: true
+	}
+);
 
-		t.teardown(() => fs.unlink(path.join(cwd, 'test.js.md')));
-		t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
-
-		await exec.fixture([], {cwd, env: {...env, TEMPLATE: 'true'}});
-
-		const result = await t.throwsAsync(exec.fixture([], {cwd, env}));
-		t.regex(result.stdout, /Error thrown in test/);
-		t.regex(result.stdout, /RangeError/);
-		t.regex(result.stdout, /Cannot record snapshot 2 for "foo", exceeds expected index of 1/);
+test(
+	'Filling in blanks doesn\'t require --update-snapshots',
+	beforeAndAfter,
+	{
+		cwd: exec.cwd('filling-in-blanks'),
+		expectChanged: true
 	}
 );

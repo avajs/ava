@@ -14,7 +14,7 @@ test('With invalid .snap file and --update-snapshots, skipped snaps are omitted'
 
 	await fs.writeFile(snapPath, Buffer.of(0x0A, 0x00, 0x00));
 
-	const result = await t.throwsAsync(exec.fixture(['--update-snapshots'], {cwd, env}));
+	const result = await exec.fixture(['--update-snapshots'], {cwd, env});
 	const report = await fs.readFile(reportPath, 'utf8');
 
 	t.snapshot(report, 'snapshot report');
