@@ -87,6 +87,17 @@ test('outdated snapshot version is reported to the console', t => {
 	});
 });
 
+test('outdated snapshot version can be updated', t => {
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
+	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
+
+	execCli(['test.js', '--update-snapshots'], {dirname: 'fixture/snapshots', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
+		t.ifError(error);
+		t.match(stdout, /2 tests passed/);
+		t.end();
+	});
+});
+
 test('newer snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
