@@ -27,29 +27,6 @@ async function testSnapshotPruning(t, {
 	snapshotPath = path.join(cwd, snapshotPath);
 	reportPath = path.join(cwd, reportPath);
 
-	t.teardown(async () => {
-		try {
-			await fs.unlink(snapshotPath);
-			await fs.unlink(reportPath);
-		} catch {}
-	});
-
-	// Execute fixture as template to generate snapshots
-	const templateResult = exec.fixture(['--update-snapshots'], {
-		cwd,
-		env: {
-			...env,
-			AVA_FORCE_CI: 'not-ci',
-			TEMPLATE: 'true'
-		}
-	});
-
-	await t.notThrowsAsync(templateResult, 'Template crashed - there\'s a bug in the test');
-
-	// Check that the snapshots were created
-	await t.notThrowsAsync(fs.access(snapshotPath), 'Template didn\'t create a snapshot - there\'s a bug in the test');
-	await t.notThrowsAsync(fs.access(reportPath), 'Template didn\'t create a report - there\'s a bug in the test');
-
 	// Execute fixture as run
 	const run = exec.fixture(cli, {
 		cwd,

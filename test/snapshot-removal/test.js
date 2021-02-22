@@ -4,7 +4,44 @@ const {testSnapshotPruning, withTemporaryFixture} = require('./helpers/macros');
 const fs = require('fs').promises;
 const path = require('path');
 
-const macro = (t, {cwd, ...options}) => withTemporaryFixture(t, cwd, (t, temporary) => testSnapshotPruning(t, {cwd: temporary, ...options}));
+// To update fixture snapshots, set to true and run:
+// npx test-ava test/snapshot-removal/**
+const updating = false;
+
+let macro = (t, {cwd, ...options}) =>
+	withTemporaryFixture(t, cwd, (t, temporary) =>
+		testSnapshotPruning(t, {cwd: temporary, ...options}));
+
+if (updating) {
+	macro = async (t, options) => {
+		const {
+			cwd,
+			env
+		} = options;
+		let {
+			snapshotPath = 'test.js.snap',
+			reportPath = 'test.js.md'
+		} = options;
+		snapshotPath = path.join(cwd, snapshotPath);
+		reportPath = path.join(cwd, reportPath);
+
+		// Execute fixture as template to generate snapshots
+		const templateResult = exec.fixture(['--update-snapshots'], {
+			cwd,
+			env: {
+				...env,
+				AVA_FORCE_CI: 'not-ci',
+				TEMPLATE: 'true'
+			}
+		});
+
+		await t.notThrowsAsync(templateResult, 'Template crashed - there\'s a bug in the test');
+
+		// Check that the snapshots were created
+		await t.notThrowsAsync(fs.access(snapshotPath), 'Template didn\'t create a snapshot - there\'s a bug in the test');
+		await t.notThrowsAsync(fs.access(reportPath), 'Template didn\'t create a report - there\'s a bug in the test');
+	};
+}
 
 test('snapshots are removed when tests stop using them', macro, {
 	cwd: exec.cwd('removal'),
