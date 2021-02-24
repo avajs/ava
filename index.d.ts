@@ -493,7 +493,7 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
-export type ImplementationResult = PromiseLike<void> | Subscribable | void;
+export type ImplementationResult = PromiseLike<void> | Subscribable | boolean | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
