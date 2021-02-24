@@ -27,6 +27,7 @@ Options:
   --help                  Show help                                    [boolean]
   --concurrency, -c       Max number of test files running at the same time
                           (default: CPU cores)                          [number]
+  --worker-threads        Use worker threads           [boolean] [default: true]
   --fail-fast             Stop after first test failure                [boolean]
   --match, -m             Only run tests with matching title (can be repeated)
                                                                         [string]

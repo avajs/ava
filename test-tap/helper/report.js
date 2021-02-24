@@ -1,5 +1,6 @@
 'use strict';
-const childProcess = require('child_process');
+const cp = require('child_process');
+const wt = require('worker_threads');
 const fs = require('fs');
 const path = require('path');
 const globby = require('globby');
@@ -9,15 +10,33 @@ const pkg = require('../../package.json');
 const {normalizeGlobs} = require('../../lib/globs');
 const providerManager = require('../../lib/provider-manager');
 
+const workerFile = path.join(__dirname, 'report-worker.js');
+
+class Worker extends wt.Worker {
+	constructor(filename, options) {
+		super(workerFile, {
+			...options,
+			env: {
+				...options.env,
+				NODE_NO_WARNINGS: '1'
+			}
+		});
+	}
+}
+
 let _Api = null;
 const createApi = options => {
 	if (!_Api) {
 		_Api = proxyquire('../../lib/api', {
 			'./fork': proxyquire('../../lib/fork', {
+				worker_threads: { // eslint-disable-line camelcase
+					...wt,
+					Worker
+				},
 				child_process: { // eslint-disable-line camelcase
-					...childProcess,
+					...cp,
 					fork(filename, argv, options) {
-						return childProcess.fork(path.join(__dirname, 'report-worker.js'), argv, {
+						return cp.fork(workerFile, argv, {
 							...options,
 							env: {
 								...options.env,
@@ -30,6 +49,7 @@ const createApi = options => {
 		});
 	}
 
+	options.workerThreads = false;
 	return new _Api(options);
 };
 
