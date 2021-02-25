@@ -70,7 +70,6 @@ function assertFailure(t, subset) {
 	} else {
 		t.same(lastFailure.values, []);
 	}
-
 }
 
 let gathering = false;
@@ -103,7 +102,7 @@ function add(fn) {
 
 function failsWith(t, fn, subset) {
 	lastFailure = null;
-    subset.returnValue = fn();
+	subset.returnValue = fn();
 	assertFailure(t, subset);
 }
 
@@ -596,19 +595,19 @@ test('.deepEqual()', t => {
 	});
 
 	passes(t, () => {
-        return assertions.deepEqual(undefined, undefined) && 
-            assertions.deepEqual({x: undefined}, {x: undefined}) && 
+		return assertions.deepEqual(undefined, undefined) &&
+            assertions.deepEqual({x: undefined}, {x: undefined}) &&
             assertions.deepEqual({x: [undefined]}, {x: [undefined]});
-    });
+	});
 
-    passes(t, () => {
-        return assertions.deepEqual(null, null) && 
-            assertions.deepEqual({x: null}, {x: null}) && 
+	passes(t, () => {
+		return assertions.deepEqual(null, null) &&
+            assertions.deepEqual({x: null}, {x: null}) &&
             assertions.deepEqual({x: [null]}, {x: [null]});
 	});
 
 	passes(t, () => {
-        return assertions.deepEqual(0, 0) && 
+		return assertions.deepEqual(0, 0) &&
             assertions.deepEqual(1, 1) &&
             assertions.deepEqual(3.14, 3.14);
 	});
@@ -1674,30 +1673,30 @@ test('.snapshot()', t => {
 		const assertions = setup('fails');
 		if (updating) {
 			return assertions.snapshot({foo: 'bar'});
-		} else {
-			failsWith(t, () => {
-				return assertions.snapshot({foo: 'not bar'});
-			}, {
-				assertion: 'snapshot',
-				message: 'Did not match snapshot',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-			});
 		}
+
+		failsWith(t, () => {
+			return assertions.snapshot({foo: 'not bar'});
+		}, {
+			assertion: 'snapshot',
+			message: 'Did not match snapshot',
+			values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+		});
 	}
 
 	{
 		const assertions = setup('fails');
 		if (updating) {
 			return assertions.snapshot({foo: 'bar'}, 'my message');
-		} else {
-			failsWith(t, () => {
-				return assertions.snapshot({foo: 'not bar'}, 'my message');
-			}, {
-				assertion: 'snapshot',
-				message: 'my message',
-				values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
-			});
 		}
+
+		failsWith(t, () => {
+			return assertions.snapshot({foo: 'not bar'}, 'my message');
+		}, {
+			assertion: 'snapshot',
+			message: 'my message',
+			values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}]
+		});
 	}
 
 	{
@@ -1767,7 +1766,7 @@ test('.truthy()', t => {
 	});
 
 	passes(t, () => {
-        return assertions.truthy(1) &&
+		return assertions.truthy(1) &&
             assertions.truthy(true);
 	});
 
@@ -1810,12 +1809,12 @@ test('.falsy()', t => {
 	});
 
 	passes(t, () => {
-        return assertions.falsy(0) &&
+		return assertions.falsy(0) &&
             assertions.falsy(false);
 	});
 
 	passes(t, () => {
-        return assertions.falsy(0) &&
+		return assertions.falsy(0) &&
             assertions.falsy(false);
 	});
 
@@ -1872,7 +1871,7 @@ test('.true()', t => {
 	});
 
 	passes(t, () => {
-        const {true: trueFn} = assertions
+		const {true: trueFn} = assertions;
 		return trueFn(true);
 	});
 
@@ -1929,7 +1928,7 @@ test('.false()', t => {
 	});
 
 	passes(t, () => {
-        const {false: falseFn} = assertions;
+		const {false: falseFn} = assertions;
 		return falseFn(false);
 	});
 
@@ -2101,7 +2100,7 @@ test('.assert()', t => {
 	});
 
 	passes(t, () => {
-        return assertions.assert(1) &&
+		return assertions.assert(1) &&
             assertions.assert(true);
 	});
 
