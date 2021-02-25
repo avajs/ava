@@ -102,7 +102,7 @@ function add(fn) {
 
 function failsWith(t, fn, subset) {
 	lastFailure = null;
-	subset.returnValue = fn();
+	fn();
 	assertFailure(t, subset);
 }
 
