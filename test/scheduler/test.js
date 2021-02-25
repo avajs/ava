@@ -1,10 +1,13 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
+const figures = require('figures');
+const chalk = require('chalk');
 const replaceString = require('replace-string');
 
-function replaceNewLines(st) {
-	const result = replaceString(st, '\r\n', '\n');
-	return replaceString(result, '\r', '\n');
+function replaceSymbols(st) {
+	let result = replaceString(st, '\r\n', '\n');
+	result = replaceString(result, '\r', '\n');
+	return replaceString(result, chalk.gray.dim(figures.pointerSmall), '>');
 }
 
 test.before(() => {
@@ -17,18 +20,18 @@ test.serial('failing tests come first', async t => {
 	} catch {}
 
 	try {
-		await exec.fixture(['--concurrency=1', '1pass.js', '2fail.js']);
+		await exec.fixture(['-t', '--concurrency=1', '1pass.js', '2fail.js']);
 	} catch (error) {
-		t.snapshot(replaceNewLines(error.stdout));
+		t.snapshot(replaceSymbols(error.stdout));
 	}
 });
 
 test.serial('scheduler disabled when cache empty', async t => {
 	await exec.fixture(['reset-cache']);
 	try {
-		await exec.fixture(['--concurrency=1', '1pass.js', '2fail.js']);
+		await exec.fixture(['-t', '--concurrency=1', '1pass.js', '2fail.js']);
 	} catch (error) {
-		t.snapshot(replaceNewLines(error.stdout));
+		t.snapshot(replaceSymbols(error.stdout));
 	}
 });
 
@@ -38,8 +41,8 @@ test.serial('scheduler disabled when cache disabled', async t => {
 	} catch {}
 
 	try {
-		await exec.fixture(['--concurrency=1', '--config', 'disabled-cache.cjs', '1pass.js', '2fail.js']);
+		await exec.fixture(['-t', '--concurrency=1', '--config', 'disabled-cache.cjs', '1pass.js', '2fail.js']);
 	} catch (error) {
-		t.snapshot(replaceNewLines(error.stdout));
+		t.snapshot(replaceSymbols(error.stdout));
 	}
 });
