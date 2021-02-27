@@ -18,10 +18,5 @@ test.serial(
 		cwd: exec.cwd('changing-label'),
 		after: {cli: ['--update-snapshots']},
 		expectChanged: true
-	},
-	async (t, {before, after}) => {
-		t.notDeepEqual(after.snapshot, before.snapshot);
-		t.not(after.report, before.report);
-		t.snapshot(after.report, 'snapshot report after changing a label');
 	}
 );
