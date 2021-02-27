@@ -7,7 +7,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('discard-skip'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: true
 	}
 );
@@ -17,7 +17,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('commit-skip'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: false
 	}
 );

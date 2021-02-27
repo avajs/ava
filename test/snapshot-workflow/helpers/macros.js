@@ -6,24 +6,20 @@ const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
 async function beforeAndAfter(t, {
 	cwd,
 	expectChanged,
-	before: {
-		env: beforeEnv = {},
-		cli: beforeCli = []
-	} = {},
-	after: {
-		env: afterEnv = {},
-		cli: afterCli = []
-	} = {}
+	env = {},
+	cli = []
 }) {
-	const baseEnv = {
-		AVA_FORCE_CI: 'not-ci'
-	};
-
 	const updating = process.argv.includes('--update-fixture-snapshots');
 
 	if (updating) {
 		// Run template
-		await exec.fixture(beforeCli, {cwd, env: {TEMPLATE: 'true', ...baseEnv, ...beforeEnv}});
+		await exec.fixture(['--update-snapshots'], {
+			cwd,
+			env: {
+				TEMPLATE: 'true',
+				AVA_FORCE_CI: 'not-ci'
+			}
+		});
 	}
 
 	const before = await readSnapshots(cwd);
@@ -31,7 +27,7 @@ async function beforeAndAfter(t, {
 	// Copy fixture to a temporary directory
 	await withTemporaryFixture(cwd, async cwd => {
 		// Run fixture
-		await exec.fixture(afterCli, {cwd, env: {...baseEnv, ...afterEnv}});
+		await exec.fixture(cli, {cwd, env: {AVA_FORCE_CI: 'not-ci', ...env}});
 
 		const after = await readSnapshots(cwd);
 

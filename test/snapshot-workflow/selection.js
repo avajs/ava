@@ -7,7 +7,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('skipping-snapshot'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: false
 	}
 );
@@ -17,7 +17,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('skipping-snapshot-update'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: true
 	}
 );
@@ -27,7 +27,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('skipping-test'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: false
 	}
 );
@@ -37,7 +37,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('skipping-test-update'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: true
 	}
 );
@@ -47,7 +47,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('select-test-update'),
-		after: {cli: ['--update-snapshots', '--match', 'foo']},
+		cli: ['--update-snapshots', '--match', 'foo'],
 		expectChanged: true
 	}
 );
@@ -57,7 +57,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('select-test-update'),
-		after: {cli: ['--update-snapshots', 'test.js:3-5']},
+		cli: ['--update-snapshots', 'test.js:3-5'],
 		expectChanged: true
 	}
 );

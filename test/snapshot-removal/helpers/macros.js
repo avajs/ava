@@ -21,7 +21,6 @@ async function testSnapshotPruning(t, {
 		const templateResult = exec.fixture(['--update-snapshots'], {
 			cwd,
 			env: {
-				...env,
 				AVA_FORCE_CI: 'not-ci',
 				TEMPLATE: 'true'
 			}

@@ -16,7 +16,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('removing-snapshots'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: true
 	}
 );

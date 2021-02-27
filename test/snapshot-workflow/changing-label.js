@@ -16,7 +16,7 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: exec.cwd('changing-label'),
-		after: {cli: ['--update-snapshots']},
+		cli: ['--update-snapshots'],
 		expectChanged: true
 	}
 );

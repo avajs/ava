@@ -6,8 +6,9 @@ const fs = require('fs').promises;
 const path = require('path');
 
 // To update the test fixture templates, run:
-//
 // npx test-ava test/snapshot-removal/** -- --update-fixture-snapshots
+
+// Serial execution is used here solely to reduce the burden on CI machines.
 
 test.serial('snapshots are removed when tests stop using them', testSnapshotPruning, {
 	cwd: exec.cwd('removal'),
