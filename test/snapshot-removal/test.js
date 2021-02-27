@@ -1,6 +1,7 @@
 const test = require('@ava/test');
 const exec = require('../helpers/exec');
-const {testSnapshotPruning, withTemporaryFixture} = require('./helpers/macros');
+const {testSnapshotPruning} = require('./helpers/macros');
+const {withTemporaryFixture} = require('../helpers/with-temporary-fixture');
 const fs = require('fs').promises;
 const path = require('path');
 

@@ -4,22 +4,24 @@ const exec = require('../helpers/exec');
 const path = require('path');
 const fs = require('fs').promises;
 const {beforeAndAfter} = require('./helpers/macros');
+const {withTemporaryFixture} = require('../helpers/with-temporary-fixture');
 
-test.serial('First run generates a .snap and a .md', async t => {
-	const cwd = exec.cwd('first-run');
-	const env = {
-		AVA_FORCE_CI: 'not-ci'
-	};
+test.serial('First run generates a .snap and a .md',
+	withTemporaryFixture(exec.cwd('first-run')),
+	async (t, cwd) => {
+		const env = {
+			AVA_FORCE_CI: 'not-ci'
+		};
 
-	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.md')));
-	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
+		await exec.fixture([], {cwd, env});
 
-	await exec.fixture([], {cwd, env});
-
-	await t.notThrowsAsync(fs.access(path.join(cwd, 'test.js.snap')));
-	const report = await fs.readFile(path.join(cwd, 'test.js.md'), 'utf8');
-	t.snapshot(report, 'snapshot report');
-});
+		const [, report] = await Promise.all([
+			t.notThrowsAsync(fs.access(path.join(cwd, 'test.js.snap'))),
+			fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
+		]);
+		t.snapshot(report, 'snapshot report');
+	}
+);
 
 test.serial(
 	'Adding more snapshots to a test adds them to the .snap and .md',
