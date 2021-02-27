@@ -31,9 +31,8 @@ test.serial('snapshots are removed from a custom snapshotDir', testSnapshotPruni
 	reportFile: path.join('fixedSnapshotDir', 'test.js.md')
 });
 
-test.serial('removing non-existent snapshots doesn\'t throw',
-	withTemporaryFixture(exec.cwd('no-snapshots')),
-	async (t, cwd) => {
+test.serial('removing non-existent snapshots doesn\'t throw', async t => {
+	await withTemporaryFixture(exec.cwd('no-snapshots'), async cwd => {
 		// Execute fixture; this should try to unlink the nonexistent snapshots, and
 		// should not throw
 		const run = exec.fixture(['--update-snapshots'], {
@@ -44,13 +43,11 @@ test.serial('removing non-existent snapshots doesn\'t throw',
 		});
 
 		await t.notThrowsAsync(run);
-	}
-);
+	});
+});
 
-test.serial(
-	'without --update-snapshots, invalid .snaps are retained',
-	withTemporaryFixture(exec.cwd('no-snapshots')),
-	async (t, cwd) => {
+test.serial('without --update-snapshots, invalid .snaps are retained', async t => {
+	await withTemporaryFixture(exec.cwd('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);
 		await fs.writeFile(snapPath, invalid);
@@ -59,13 +56,11 @@ test.serial(
 
 		await t.notThrowsAsync(fs.access(snapPath));
 		t.deepEqual(await fs.readFile(snapPath), invalid);
-	}
-);
+	});
+});
 
-test.serial(
-	'with --update-snapshots, invalid .snaps are removed',
-	withTemporaryFixture(exec.cwd('no-snapshots')),
-	async (t, cwd) => {
+test.serial('with --update-snapshots, invalid .snaps are removed', async t => {
+	await withTemporaryFixture(exec.cwd('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);
 		await fs.writeFile(snapPath, invalid);
@@ -73,8 +68,8 @@ test.serial(
 		await exec.fixture(['--update-snapshots'], {cwd});
 
 		await t.throwsAsync(fs.access(snapPath), {code: 'ENOENT'}, 'Expected snapshot to be removed');
-	}
-);
+	});
+});
 
 test.serial('snapshots remain if not updating', testSnapshotPruning, {
 	cwd: exec.cwd('removal'),

@@ -6,9 +6,8 @@ const fs = require('fs').promises;
 const {beforeAndAfter} = require('./helpers/macros');
 const {withTemporaryFixture} = require('../helpers/with-temporary-fixture');
 
-test.serial('First run generates a .snap and a .md',
-	withTemporaryFixture(exec.cwd('first-run')),
-	async (t, cwd) => {
+test.serial('First run generates a .snap and a .md', async t => {
+	await withTemporaryFixture(exec.cwd('first-run'), async cwd => {
 		const env = {
 			AVA_FORCE_CI: 'not-ci'
 		};
@@ -20,8 +19,8 @@ test.serial('First run generates a .snap and a .md',
 			fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
 		]);
 		t.snapshot(report, 'snapshot report');
-	}
-);
+	});
+});
 
 test.serial(
 	'Adding more snapshots to a test adds them to the .snap and .md',

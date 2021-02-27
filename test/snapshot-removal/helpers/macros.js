@@ -1,8 +1,7 @@
 const fs = require('fs').promises;
 const exec = require('../../helpers/exec');
 const path = require('path');
-const tempy = require('tempy');
-const fse = require('fs-extra');
+const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
 
 async function testSnapshotPruning(t, {
 	cwd,
@@ -40,10 +39,7 @@ async function testSnapshotPruning(t, {
 	}
 
 	// Make a temporary copy of the fixture
-	await tempy.directory.task(async temporary => {
-		await fse.copy(cwd, temporary);
-		cwd = temporary;
-
+	await withTemporaryFixture(cwd, async cwd => {
 		// Execute fixture as run
 		const run = exec.fixture(cli, {
 			cwd,

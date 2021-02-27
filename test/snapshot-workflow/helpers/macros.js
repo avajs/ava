@@ -1,8 +1,7 @@
 const exec = require('../../helpers/exec');
 const path = require('path');
 const fs = require('fs').promises;
-const tempy = require('tempy');
-const fse = require('fs-extra');
+const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
 
 async function beforeAndAfter(t, {
 	cwd,
@@ -30,10 +29,7 @@ async function beforeAndAfter(t, {
 	const before = await readSnapshots(cwd);
 
 	// Copy fixture to a temporary directory
-	await tempy.directory.task(async temporary => {
-		await fse.copy(cwd, temporary);
-		cwd = temporary;
-
+	await withTemporaryFixture(cwd, async cwd => {
 		// Run fixture
 		await exec.fixture(afterCli, {cwd, env: {...baseEnv, ...afterEnv}});
 
