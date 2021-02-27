@@ -1,46 +1,53 @@
 const exec = require('../../helpers/exec');
 const path = require('path');
 const fs = require('fs').promises;
+const tempy = require('tempy');
+const fse = require('fs-extra');
 
-async function beforeAndAfter(t, options) {
-	const {
-		cwd,
-		expectChanged,
-		before: {
-			env: beforeEnv = {},
-			cli: beforeCli = []
-		} = {},
-		after: {
-			env: afterEnv = {},
-			cli: afterCli = []
-		} = {}
-	} = options;
-
+async function beforeAndAfter(t, {
+	cwd,
+	expectChanged,
+	before: {
+		env: beforeEnv = {},
+		cli: beforeCli = []
+	} = {},
+	after: {
+		env: afterEnv = {},
+		cli: afterCli = []
+	} = {}
+}) {
 	const baseEnv = {
 		AVA_FORCE_CI: 'not-ci'
 	};
 
-	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.md')));
-	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
+	const updating = process.argv.includes('--update-fixture-snapshots');
 
-	const before = {
-		result: await exec.fixture(beforeCli, {cwd, env: {TEMPLATE: 'true', ...baseEnv, ...beforeEnv}}),
-		...await readSnapshots(cwd)
-	};
-
-	const after = {
-		result: await exec.fixture(afterCli, {cwd, env: {...baseEnv, ...afterEnv}}),
-		...await readSnapshots(cwd)
-	};
-
-	if (expectChanged) {
-		t.not(after.report, before.report, 'expected .md to be changed');
-		t.notDeepEqual(after.snapshot, before.snapshot, 'expected .snap to be changed');
-		t.snapshot(after.report, 'snapshot report');
-	} else {
-		t.is(after.report, before.report, 'expected .md to be unchanged');
-		t.deepEqual(after.snapshot, before.snapshot, 'expected .snap to be unchanged');
+	if (updating) {
+		// Run template
+		await exec.fixture(beforeCli, {cwd, env: {TEMPLATE: 'true', ...baseEnv, ...beforeEnv}});
 	}
+
+	const before = await readSnapshots(cwd);
+
+	// Copy fixture to a temporary directory
+	await tempy.directory.task(async temporary => {
+		await fse.copy(cwd, temporary);
+		cwd = temporary;
+
+		// Run fixture
+		await exec.fixture(afterCli, {cwd, env: {...baseEnv, ...afterEnv}});
+
+		const after = await readSnapshots(cwd);
+
+		if (expectChanged) {
+			t.not(after.report, before.report, 'expected .md to be changed');
+			t.notDeepEqual(after.snapshot, before.snapshot, 'expected .snap to be changed');
+			t.snapshot(after.report, 'snapshot report');
+		} else {
+			t.is(after.report, before.report, 'expected .md to be unchanged');
+			t.deepEqual(after.snapshot, before.snapshot, 'expected .snap to be unchanged');
+		}
+	});
 }
 
 exports.beforeAndAfter = beforeAndAfter;

@@ -1,4 +1,4 @@
-const test = require('ava');
+const test = require(process.env.AVA_PATH); // This fixture is copied to a temporary directory, so require AVA through its configured path.
 
 test('discard a skipped snapshot', async t => {
 	t.snapshot(1);
@@ -7,7 +7,7 @@ test('discard a skipped snapshot', async t => {
 		if (process.env.TEMPLATE) {
 			t.snapshot('before (first try)');
 		} else {
-			t.snapshot.skip('after (first try)'); // eslint-disable-line ava/no-skip-assert
+			t.snapshot.skip('after (first try)');
 		}
 	});
 
