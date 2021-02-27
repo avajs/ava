@@ -53,8 +53,9 @@ async function beforeAndAfter(t, {
 exports.beforeAndAfter = beforeAndAfter;
 
 async function readSnapshots(cwd) {
-	return {
-		snapshot: await fs.readFile(path.join(cwd, 'test.js.snap')),
-		report: await fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
-	};
+	const [snapshot, report] = await Promise.all([
+		fs.readFile(path.join(cwd, 'test.js.snap')),
+		fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
+	]);
+	return {snapshot, report};
 }
