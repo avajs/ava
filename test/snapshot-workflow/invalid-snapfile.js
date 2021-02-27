@@ -3,7 +3,7 @@ const exec = require('../helpers/exec');
 const fs = require('fs').promises;
 const path = require('path');
 
-test('With invalid .snap file and --update-snapshots, skipped snaps are omitted', async t => {
+test.serial('With invalid .snap file and --update-snapshots, skipped snaps are omitted', async t => {
 	const cwd = exec.cwd('invalid-snapfile');
 	const env = {AVA_FORCE_CI: 'not-ci'};
 	const snapPath = path.join(cwd, 'test.js.snap');

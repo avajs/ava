@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const {beforeAndAfter} = require('./helpers/macros');
 
-test('First run generates a .snap and a .md', async t => {
+test.serial('First run generates a .snap and a .md', async t => {
 	const cwd = exec.cwd('first-run');
 	const env = {
 		AVA_FORCE_CI: 'not-ci'
@@ -21,7 +21,7 @@ test('First run generates a .snap and a .md', async t => {
 	t.snapshot(report, 'snapshot report');
 });
 
-test(
+test.serial(
 	'Adding more snapshots to a test adds them to the .snap and .md',
 	beforeAndAfter,
 	{
@@ -30,7 +30,7 @@ test(
 	}
 );
 
-test(
+test.serial(
 	'Adding a test with snapshots adds them to the .snap and .md',
 	beforeAndAfter,
 	{
@@ -39,7 +39,7 @@ test(
 	}
 );
 
-test(
+test.serial(
 	'Changing a test\'s title adds a new block, puts the old block at the end',
 	beforeAndAfter,
 	{
@@ -48,7 +48,7 @@ test(
 	}
 );
 
-test(
+test.serial(
 	'Adding skipped snapshots followed by unskipped snapshots records blanks',
 	beforeAndAfter,
 	{
@@ -57,7 +57,7 @@ test(
 	}
 );
 
-test(
+test.serial(
 	'Filling in blanks doesn\'t require --update-snapshots',
 	beforeAndAfter,
 	{

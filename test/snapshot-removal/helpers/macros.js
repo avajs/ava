@@ -3,16 +3,6 @@ const exec = require('../../helpers/exec');
 const path = require('path');
 const tempy = require('tempy');
 const fse = require('fs-extra');
-const Semaphore = require('./semaphore');
-
-function concurrencyLimiter(maxConcurrency) {
-	const semaphore = new Semaphore(maxConcurrency);
-	return async (t, implementation, ...args) => {
-		await semaphore.task(() => implementation(t, ...args));
-	};
-}
-
-exports.concurrencyLimiter = concurrencyLimiter;
 
 async function withTemporaryFixture(t, cwd, implementation, ...args) {
 	await tempy.directory.task(async temporary => {

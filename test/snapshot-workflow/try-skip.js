@@ -2,7 +2,7 @@ const test = require('@ava/test');
 const exec = require('../helpers/exec');
 const {beforeAndAfter} = require('./helpers/macros');
 
-test(
+test.serial(
 	't.snapshot.skip() in discarded t.try() doesn\'t copy over old value',
 	beforeAndAfter,
 	{
@@ -12,7 +12,7 @@ test(
 	}
 );
 
-test(
+test.serial(
 	't.snapshot.skip() in committed t.try() does copy over old value',
 	beforeAndAfter,
 	{
