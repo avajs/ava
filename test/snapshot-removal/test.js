@@ -18,21 +18,20 @@ test.serial('snapshots are removed from a snapshot directory', testSnapshotPruni
 	cwd: exec.cwd('snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
-	snapshotPath: path.join('test', 'snapshots', 'test.js.snap'),
-	reportPath: path.join('test', 'snapshots', 'test.js.md')
+	snapshotFile: path.join('test', 'snapshots', 'test.js.snap'),
+	reportFile: path.join('test', 'snapshots', 'test.js.md')
 });
 
 test.serial('snapshots are removed from a custom snapshotDir', testSnapshotPruning, {
 	cwd: exec.cwd('fixed-snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
-	snapshotPath: path.join('fixedSnapshotDir', 'test.js.snap'),
-	reportPath: path.join('fixedSnapshotDir', 'test.js.md')
+	snapshotFile: path.join('fixedSnapshotDir', 'test.js.snap'),
+	reportFile: path.join('fixedSnapshotDir', 'test.js.md')
 });
 
 test.serial('removing non-existent snapshots doesn\'t throw',
-	withTemporaryFixture,
-	exec.cwd('no-snapshots'),
+	withTemporaryFixture(exec.cwd('no-snapshots')),
 	async (t, cwd) => {
 		// Execute fixture; this should try to unlink the nonexistent snapshots, and
 		// should not throw
@@ -49,8 +48,7 @@ test.serial('removing non-existent snapshots doesn\'t throw',
 
 test.serial(
 	'without --update-snapshots, invalid .snaps are retained',
-	withTemporaryFixture,
-	exec.cwd('no-snapshots'),
+	withTemporaryFixture(exec.cwd('no-snapshots')),
 	async (t, cwd) => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);
@@ -65,8 +63,7 @@ test.serial(
 
 test.serial(
 	'with --update-snapshots, invalid .snaps are removed',
-	withTemporaryFixture,
-	exec.cwd('no-snapshots'),
+	withTemporaryFixture(exec.cwd('no-snapshots')),
 	async (t, cwd) => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);

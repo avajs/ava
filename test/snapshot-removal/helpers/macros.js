@@ -4,12 +4,12 @@ const path = require('path');
 const tempy = require('tempy');
 const fse = require('fs-extra');
 
-async function withTemporaryFixture(t, cwd, implementation, ...args) {
+const withTemporaryFixture = cwd => async (t, implementation, ...args) => {
 	await tempy.directory.task(async temporary => {
 		await fse.copy(cwd, temporary);
 		await implementation(t, temporary, ...args);
 	});
-}
+};
 
 module.exports.withTemporaryFixture = withTemporaryFixture;
 
@@ -18,8 +18,8 @@ async function testSnapshotPruning(t, {
 	env,
 	cli,
 	remove,
-	snapshotPath = 'test.js.snap',
-	reportPath = 'test.js.md',
+	snapshotFile = 'test.js.snap',
+	reportFile = 'test.js.md',
 	checkRun = async (t, run) => {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	}
@@ -40,8 +40,12 @@ async function testSnapshotPruning(t, {
 		await t.notThrowsAsync(templateResult, 'Template crashed - there\'s a bug in the test');
 
 		// Check that the snapshots were created
-		await t.notThrowsAsync(fs.access(path.join(cwd, snapshotPath)), 'Template didn\'t create a snapshot - there\'s a bug in the test');
-		await t.notThrowsAsync(fs.access(path.join(cwd, reportPath)), 'Template didn\'t create a report - there\'s a bug in the test');
+		const snapshotPath = path.join(cwd, snapshotFile);
+		const reportPath = path.join(cwd, reportFile);
+		await Promise.all([
+			t.notThrowsAsync(fs.access(snapshotPath), 'Template didn\'t create a snapshot - there\'s a bug in the test'),
+			t.notThrowsAsync(fs.access(reportPath), 'Template didn\'t create a report - there\'s a bug in the test')
+		]);
 	}
 
 	// Make a temporary copy of the fixture
@@ -60,17 +64,21 @@ async function testSnapshotPruning(t, {
 
 		await checkRun(t, run);
 
-		snapshotPath = path.join(cwd, snapshotPath);
-		reportPath = path.join(cwd, reportPath);
+		const snapshotPath = path.join(cwd, snapshotFile);
+		const reportPath = path.join(cwd, reportFile);
 
-		if (remove) {
+		if (remove) { // eslint-disable-line unicorn/prefer-ternary
 			// Assert files don't exist
-			await t.throwsAsync(fs.access(snapshotPath), {code: 'ENOENT'}, 'Expected snapshot to be removed');
-			await t.throwsAsync(fs.access(reportPath), {code: 'ENOENT'}, 'Expected report to be remove');
+			await Promise.all([
+				t.throwsAsync(fs.access(snapshotPath), {code: 'ENOENT'}, 'Expected snapshot to be removed'),
+				t.throwsAsync(fs.access(reportPath), {code: 'ENOENT'}, 'Expected report to be remove')
+			]);
 		} else {
 			// Assert files exist
-			await t.notThrowsAsync(fs.access(snapshotPath), 'Expected snapshot not to be removed');
-			await t.notThrowsAsync(fs.access(reportPath), 'Expected report not to be removed');
+			await Promise.all([
+				t.notThrowsAsync(fs.access(snapshotPath), 'Expected snapshot not to be removed'),
+				t.notThrowsAsync(fs.access(reportPath), 'Expected report not to be removed')
+			]);
 		}
 	});
 }
