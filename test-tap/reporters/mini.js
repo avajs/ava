@@ -1,5 +1,6 @@
 'use strict';
 require('../helper/fix-reporter-env')();
+
 const path = require('path');
 const {test} = require('tap');
 const TTYStream = require('../helper/tty-stream');
