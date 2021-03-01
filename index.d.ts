@@ -473,6 +473,8 @@ export interface CbExecutionContext<Context = unknown> extends ExecutionContext<
 	end(error?: any): void;
 }
 
+// FIXME(novemberborn) Refactor implementations to be different types returning a promise,, subscribable, or void, not a
+// single type returning a union. A union with void as a return type doesn't make sense.
 export type ImplementationResult = PromiseLike<void> | Subscribable | boolean | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
 export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
