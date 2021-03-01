@@ -34,23 +34,19 @@ export type CommitDiscardOptions = {
 
 export interface Assertions {
 	/**
-	 * Assert that `actual` is
-	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
-	 * returning Boolean indicating whether the assertion passes. Comes with
-	 * power-assert.
+	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
+	 * indicating whether the assertion passed. Comes with power-assert.
 	 */
 	assert: AssertAssertion;
 
 	/**
-	 * Assert that `actual` is [deeply
-	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
-	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
 	deepEqual: DeepEqualAssertion;
 
 	/**
-	 * Assert that `value` is like `selector`, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `value` is like `selector`, returning a boolean indicating whether the assertion passed.
 	 */
 	like: LikeAssertion;
 
@@ -58,42 +54,39 @@ export interface Assertions {
 	fail: FailAssertion;
 
 	/**
-	 * Assert that `actual` is strictly false, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `actual` is strictly false, returning a boolean indicating whether the assertion passed.
 	 */
 	false: FalseAssertion;
 
 	/**
-	 * Assert that `actual` is
-	 * [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning
-	 * Boolean whether the assertion passes.
+	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
+	 * indicating whether the assertion passed.
 	 */
 	falsy: FalsyAssertion;
 
 	/**
 	 * Assert that `actual` is [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
-	 * as `expected`, returning Boolean indicating whether the assertion passes.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
+	 * returning a boolean indicating whether the assertion passed.
 	 */
 	is: IsAssertion;
 
 	/**
 	 * Assert that `actual` is not [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
-	 * as `expected`, returning Boolean indicating whether the assertion passes.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
+	 * returning a boolean indicating whether the assertion passed.
 	 */
 	not: NotAssertion;
 
 	/**
-	 * Assert that `actual` is not [deeply
-	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
-	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
 	notDeepEqual: NotDeepEqualAssertion;
 
 	/**
-	 * Assert that `string` does not match the regular expression, returning
-	 * Boolean indicating whether the assertion passes.
+	 * Assert that `string` does not match the regular expression, returning a boolean indicating whether the assertion
+	 * passed.
 	 */
 	notRegex: NotRegexAssertion;
 
@@ -107,8 +100,7 @@ export interface Assertions {
 	pass: PassAssertion;
 
 	/**
-	 * Assert that `string` matches the regular expression, returning Boolean
-	 * indicating whether the assertion passes.
+	 * Assert that `string` matches the regular expression, returning a boolean indicating whether the assertion passed.
 	 */
 	regex: RegexAssertion;
 
@@ -131,25 +123,21 @@ export interface Assertions {
 	throwsAsync: ThrowsAsyncAssertion;
 
 	/**
-	 * Assert that `actual` is strictly true, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `actual` is strictly true, returning a boolean indicating whether the assertion passed.
 	 */
 	true: TrueAssertion;
 
 	/**
-	 * Assert that `actual` is
-	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
-	 * returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
+	 * indicating whether the assertion passed.
 	 */
 	truthy: TruthyAssertion;
 }
 
 export interface AssertAssertion {
 	/**
-	 * Assert that `actual` is
-	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
-	 * returning Boolean indicating whether the assertion passes. Comes with
-	 * power-assert.
+	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
+	 * indicating whether the assertion passed. Comes with power-assert.
 	 */
 	(actual: any, message?: string): boolean;
 
@@ -159,9 +147,8 @@ export interface AssertAssertion {
 
 export interface DeepEqualAssertion {
 	/**
-	 * Assert that `actual` is [deeply
-	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
-	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
@@ -171,8 +158,7 @@ export interface DeepEqualAssertion {
 
 export interface LikeAssertion {
 	/**
-	 * Assert that `value` is like `selector`, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `value` is like `selector`, returning a boolean indicating whether the assertion passed.
 	 */
 	(value: any, selector: Record<string, any>, message?: string): boolean;
 
@@ -190,8 +176,7 @@ export interface FailAssertion {
 
 export interface FalseAssertion {
 	/**
-	 * Assert that `actual` is strictly false, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `actual` is strictly false, returning a boolean indicating whether the assertion passed.
 	 */
 	(actual: any, message?: string): boolean;
 
@@ -201,9 +186,8 @@ export interface FalseAssertion {
 
 export interface FalsyAssertion {
 	/**
-	 * Assert that `actual` is
-	 * [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning
-	 * Boolean whether the assertion passes.
+	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
+	 * indicating whether the assertion passed.
 	 */
 	(actual: any, message?: string): boolean;
 
@@ -214,8 +198,8 @@ export interface FalsyAssertion {
 export interface IsAssertion {
 	/**
 	 * Assert that `actual` is [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
-	 * as `expected`, returning Boolean indicating whether the assertion passes.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
+	 * returning a boolean indicating whether the assertion passed.
 	 */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
@@ -226,8 +210,8 @@ export interface IsAssertion {
 export interface NotAssertion {
 	/**
 	 * Assert that `actual` is not [the same
-	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
-	 * as `expected`, returning Boolean indicating whether the assertion passes.
+	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
+	 * returning a boolean indicating whether the assertion passed.
 	 */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
@@ -237,9 +221,8 @@ export interface NotAssertion {
 
 export interface NotDeepEqualAssertion {
 	/**
-	 * Assert that `actual` is not [deeply
-	 * equal](https://github.com/concordancejs/concordance#comparison-details) to
-	 * `expected`, returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
 	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
 
@@ -249,8 +232,8 @@ export interface NotDeepEqualAssertion {
 
 export interface NotRegexAssertion {
 	/**
-	 * Assert that `string` does not match the regular expression, returning
-	 * Boolean indicating whether the assertion passes.
+	 * Assert that `string` does not match the regular expression, returning a boolean indicating whether the assertion
+	 * passed.
 	 */
 	(string: string, regex: RegExp, message?: string): boolean;
 
@@ -287,8 +270,7 @@ export interface PassAssertion {
 
 export interface RegexAssertion {
 	/**
-	 * Assert that `string` matches the regular expression, returning Boolean
-	 * indicating whether the assertion passes.
+	 * Assert that `string` matches the regular expression, returning a boolean indicating whether the assertion passed.
 	 */
 	(string: string, regex: RegExp, message?: string): boolean;
 
@@ -350,8 +332,7 @@ export interface ThrowsAsyncAssertion {
 
 export interface TrueAssertion {
 	/**
-	 * Assert that `actual` is strictly true, returning Boolean indicating
-	 * whether the assertion passes.
+	 * Assert that `actual` is strictly true, returning a boolean indicating whether the assertion passed.
 	 */
 	(actual: any, message?: string): boolean;
 
@@ -361,9 +342,8 @@ export interface TrueAssertion {
 
 export interface TruthyAssertion {
 	/**
-	 * Assert that `actual` is
-	 * [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy),
-	 * returning Boolean indicating whether the assertion passes.
+	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
+	 * indicating whether the assertion passed.
 	 */
 	(actual: any, message?: string): boolean;
 
