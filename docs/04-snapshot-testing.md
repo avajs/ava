@@ -44,7 +44,7 @@ You can then check your code. If the change was intentional you can use the `--u
 $ ava --update-snapshots
 ```
 
-If you need to update snapshots for only a particular test, you can use `--update-snapshots` together with e.g. `--match` or `.only()` to select the test.
+In AVA 4, if you need to update snapshots for only a particular test, you can use `--update-snapshots` together with e.g. `--match` or `.only()` to select the test.
 
 You can specify a fixed location for storing the snapshot files in AVA's [`package.json` configuration](./06-configuration.md):
 
