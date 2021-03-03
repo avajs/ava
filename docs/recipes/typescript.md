@@ -8,13 +8,72 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Enabling AVA's support for TypeScript test files
 
+### With precompile step
+
 Out of the box AVA does not load TypeScript test files. You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions.
 
 ### Using `ts-node`
 
-You can use [`ts-node`] to do live testing without transpiling to js files.  This can be especially helpful when you're using a bundler.
+You can use [`ts-node`] to do live testing without transpiling to js files.  This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
 
 `npm i --save-dev typescript ts-node`
+
+Then, depending on wether or not your package is of type "module" or not, the required setup differs. See either:
+1. #[for packages with type "module"](#for-packages-with-type-module)
+2. #[for packages without type "module"](#for-packages-without-type-module)
+
+#### for packages with type "module"
+
+If your `package.json` has `"type": "module"`, then this is the ava configuration you need:
+
+`package.json`:
+
+```json
+{
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nonSemVerExperiments": {
+      "configurableModuleFormat": true
+    },
+    "nodeArguments": [
+      "--loader", "ts-node/esm"
+    ]
+  }
+}
+```
+
+You also need to have this in your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "node"
+    }
+}
+```
+
+And finally, even though you directly import code from your TypeScript files, you **must** import it from your `.ts` files with the `.js` extension instead!
+
+For example if your source file is `index.ts` looks like this:
+
+```ts
+export function myFunction() {}
+```
+
+Then in your ava test files you must import it **as if it has the `.js` extension** it like so:
+
+```ts
+import { myFunction } from './index.js'
+```
+
+The reason that you need to write `.js` to import `.ts` files in your ava test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
+
+#### for packages without type "module"
+
+If your `package.json` does not have `"type": "module"`, then this is the ava configuration you need:
 
 `package.json`:
 
