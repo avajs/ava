@@ -1,6 +1,6 @@
 'use strict';
-const cp = require('child_process');
-const wt = require('worker_threads');
+const childProcess = require('child_process');
+const workerThreads = require('worker_threads');
 const fs = require('fs');
 const path = require('path');
 const globby = require('globby');
@@ -12,7 +12,7 @@ const providerManager = require('../../lib/provider-manager');
 
 const workerFile = path.join(__dirname, 'report-worker.js');
 
-class Worker extends wt.Worker {
+class Worker extends workerThreads.Worker {
 	constructor(filename, options) {
 		super(workerFile, {
 			...options,
@@ -30,13 +30,13 @@ const createApi = options => {
 		_Api = proxyquire('../../lib/api', {
 			'./fork': proxyquire('../../lib/fork', {
 				worker_threads: { // eslint-disable-line camelcase
-					...wt,
+					...workerThreads,
 					Worker
 				},
 				child_process: { // eslint-disable-line camelcase
-					...cp,
+					...childProcess,
 					fork(filename, argv, options) {
-						return cp.fork(workerFile, argv, {
+						return childProcess.fork(workerFile, argv, {
 							...options,
 							env: {
 								...options.env,
