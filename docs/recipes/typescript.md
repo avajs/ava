@@ -14,33 +14,34 @@ Out of the box AVA does not load TypeScript test files. You can use our [`@ava/t
 
 ### Using `ts-node`
 
-You can use [`ts-node`] to do live testing without transpiling to js files.  This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
+You can use [`ts-node`] to do live testing without transpiling to js files. This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
 
-`npm i --save-dev typescript ts-node`
+`npm install --save-dev typescript ts-node`
 
-Then, depending on wether or not your package is of type "module" or not, the required setup differs. See either:
+Then, depending on whether or not your package is of type `module` or not, the required setup differs. See either:
 1. #[for packages with type "module"](#for-packages-with-type-module)
 2. #[for packages without type "module"](#for-packages-without-type-module)
 
-#### for packages with type "module"
+#### for packages with type `module`
 
-If your `package.json` has `"type": "module"`, then this is the ava configuration you need:
+If your `package.json` has `"type": "module"`, then this is the AVA configuration you need:
 
 `package.json`:
 
 ```json
 {
-  "ava": {
-    "extensions": {
-      "ts": "module"
-    },
-    "nonSemVerExperiments": {
-      "configurableModuleFormat": true
-    },
-    "nodeArguments": [
-      "--loader", "ts-node/esm"
-    ]
-  }
+	"ava": {
+		"extensions": {
+			"ts": "module"
+		},
+		"nonSemVerExperiments": {
+			"configurableModuleFormat": true
+		},
+		"nodeArguments": [
+			"--loader",
+			"ts-node/esm"
+		]
+	}
 }
 ```
 
@@ -48,10 +49,10 @@ You also need to have this in your `tsconfig.json`:
 
 ```json
 {
-    "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "node"
-    }
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "node"
+	}
 }
 ```
 
@@ -66,14 +67,14 @@ export function myFunction() {}
 Then in your ava test files you must import it **as if it has the `.js` extension** it like so:
 
 ```ts
-import { myFunction } from './index.js'
+import {myFunction} from './index.js';
 ```
 
-The reason that you need to write `.js` to import `.ts` files in your ava test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
+The reason that you need to write `.js` to import `.ts` files in your AVA test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
 
 #### for packages without type "module"
 
-If your `package.json` does not have `"type": "module"`, then this is the ava configuration you need:
+If your `package.json` does not have `"type": "module"`, then this is the AVA configuration you need:
 
 `package.json`:
 
@@ -90,7 +91,7 @@ If your `package.json` does not have `"type": "module"`, then this is the ava co
 }
 ```
 
-It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
 ## Writing tests
 
