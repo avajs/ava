@@ -1,7 +1,6 @@
 const test = require('ava');
 
-test('exec arguments includes --throw-deprecation and --zero-fill-buffers', t => {
-	t.plan(2);
+test('exec arguments includes --throw-deprecation', t => {
+	t.plan(1);
 	t.truthy(process.execArgv.includes('--throw-deprecation'));
-	t.truthy(process.execArgv.includes('--zero-fill-buffers'));
 });
