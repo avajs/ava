@@ -21,15 +21,7 @@ test('unicorns are truthy', t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-All assertions return a boolean indicating whether the assertion was successful, except for the following:
-```js
-.throws(fn, expectation?, message?)
-.throwsAsync(thrower, expectation?, message?)
-.notThrows(fn, message?)
-.notThrowsAsync(nonThrower, message?)
-```
-
-This allows for tests to be written to fail immediately when an assertion fails, if desired. 
+Assertions return a boolean indicating whether they passed. You can use this to return early from a test. Note that this does not apply to the "throws" assertions.
 
 ## Assertion planning
 
