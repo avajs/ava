@@ -14,13 +14,14 @@ Out of the box AVA does not load TypeScript test files. You can use our [`@ava/t
 
 ### Using `ts-node`
 
-You can use [`ts-node`] to do live testing without transpiling to js files. This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
+You can use [`ts-node`] to do live testing without transpiling. This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
 
 `npm install --save-dev typescript ts-node`
 
 Then, depending on whether or not your package is of type `module` or not, the required setup differs. See either:
-1. #[for packages with type "module"](#for-packages-with-type-module)
-2. #[for packages without type "module"](#for-packages-without-type-module)
+
+1. [for packages with type "module"](#for-packages-with-type-module)
+2. [for packages without type "module"](#for-packages-without-type-module)
 
 #### for packages with type `module`
 
@@ -64,7 +65,7 @@ For example if your source file is `index.ts` looks like this:
 export function myFunction() {}
 ```
 
-Then in your ava test files you must import it **as if it has the `.js` extension** it like so:
+Then in your AVA test files you must import it **as if it has the `.js` extension** it like so:
 
 ```ts
 import {myFunction} from './index.js';
