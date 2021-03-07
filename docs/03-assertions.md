@@ -21,7 +21,7 @@ test('unicorns are truthy', t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-Assertions return a boolean indicating whether they passed. You can use this to return early from a test. Note that this does not apply to the "throws" assertions.
+Assertions return a boolean indicating whether they passed. You can use this to return early from a test. Note that this does not apply to the "throws" and `snapshot()` assertions.
 
 ## Assertion planning
 
@@ -337,7 +337,7 @@ Compares the `expected` value with a previously recorded snapshot. Snapshots are
 
 AVA 3 supports an  `options` object that lets you select a specific snapshot, for instance `{id: 'my snapshot'}`. This is buggy and will be removed in AVA 4.
 
-Snapshot assertions cannot be skipped when snapshots are being updated. Returns a boolean indicating whether the assertion passed.
+Snapshot assertions cannot be skipped when snapshots are being updated.
 
 ### `.try(title?, implementation | macro | macro[], ...args?)`
 
