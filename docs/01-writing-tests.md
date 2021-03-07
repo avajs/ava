@@ -8,9 +8,11 @@ You must define all tests synchronously. They can't be defined inside `setTimeou
 
 AVA tries to run test files with their current working directory set to the directory that contains your `package.json` file.
 
-## Process isolation
+## Test isolation
 
-Each test file is run in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another. It's also great for performance on modern multi-core processors, allowing multiple test files to execute in parallel.
+AVA 3 runs each test file in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another.
+
+AVA 4 runs each test file in a new worker thread, though you can fall back to AVA 3's behavior of running in separate processes.
 
 AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
 

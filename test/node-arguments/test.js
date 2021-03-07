@@ -6,7 +6,8 @@ test('passed node arguments to workers', async t => {
 		cwd: exec.cwd('node-arguments')
 	};
 
-	const result = await exec.fixture(['--node-arguments="--throw-deprecation --zero-fill-buffers"', 'node-arguments.js'], options);
+	// Removed --fill-zero-buffer because not supported in worker_threads
+	const result = await exec.fixture(['--node-arguments="--throw-deprecation"', 'node-arguments.js'], options);
 
 	t.snapshot(result.stats.passed, 'tests pass');
 });

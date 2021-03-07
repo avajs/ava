@@ -21,6 +21,8 @@ test('unicorns are truthy', t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
+Assertions return a boolean indicating whether they passed. You can use this to return early from a test. Note that this does not apply to the "throws" and `snapshot()` assertions.
+
 ## Assertion planning
 
 Assertion plans ensure tests only pass when a specific number of assertions have been executed. They'll help you catch cases where tests exit too early. They'll also cause tests to fail if too many assertions are executed, which can be useful if you have assertions inside callbacks or loops.
@@ -165,39 +167,39 @@ test('custom assertion', t => {
 
 ### `.pass(message?)`
 
-Passing assertion.
+Passing assertion. Returns a boolean indicating whether the assertion passed.
 
 ### `.fail(message?)`
 
-Failing assertion.
+Failing assertion. Returns a boolean indicating whether the assertion passed.
 
 ### `.assert(value, message?)`
 
-Asserts that `value` is truthy. This is [`power-assert`](#enhanced-assertion-messages) enabled.
+Asserts that `value` is truthy. This is [`power-assert`](#enhanced-assertion-messages) enabled. Returns a boolean indicating whether the assertion passed.
 
 ### `.truthy(value, message?)`
 
-Assert that `value` is truthy.
+Assert that `value` is truthy. Returns a boolean indicating whether the assertion passed.
 
 ### `.falsy(value, message?)`
 
-Assert that `value` is falsy.
+Assert that `value` is falsy. Returns a boolean indicating whether the assertion passed.
 
 ### `.true(value, message?)`
 
-Assert that `value` is `true`.
+Assert that `value` is `true`. Returns a boolean indicating whether the assertion passed.
 
 ### `.false(value, message?)`
 
-Assert that `value` is `false`.
+Assert that `value` is `false`. Returns a boolean indicating whether the assertion passed.
 
 ### `.is(value, expected, message?)`
 
-Assert that `value` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
+Assert that `value` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
 
 ### `.not(value, expected, message?)`
 
-Assert that `value` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
+Assert that `value` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
 
 ### `.deepEqual(value, expected, message?)`
 
@@ -205,7 +207,7 @@ Assert that `value` is deeply equal to `expected`. See [Concordance](https://git
 
 ### `.notDeepEqual(value, expected, message?)`
 
-Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
+Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`. Returns a boolean indicating whether the assertion passed.
 
 ### `.like(value, selector, message?)`
 
@@ -231,6 +233,8 @@ t.like({
 	}
 })
 ```
+
+Finally, this returns a boolean indicating whether the assertion passed.
 
 ### `.throws(fn, expectation?, message?)`
 
@@ -261,6 +265,8 @@ test('throws', t => {
 	t.is(error.message, '🦄');
 });
 ```
+
+Does not return anything.
 
 ### `.throwsAsync(thrower, expectation?, message?)`
 
@@ -297,9 +303,11 @@ test('rejects', async t => {
 });
 ```
 
+Does not return anything.
+
 ### `.notThrows(fn, message?)`
 
-Assert that no error is thrown. `fn` must be a function which shouldn't throw.
+Assert that no error is thrown. `fn` must be a function which shouldn't throw. Does not return anything.
 
 ### `.notThrowsAsync(nonThrower, message?)`
 
@@ -313,13 +321,15 @@ test('resolves', async t => {
 });
 ```
 
+Does not return anything.
+
 ### `.regex(contents, regex, message?)`
 
-Assert that `contents` matches `regex`.
+Assert that `contents` matches `regex`. Returns a boolean indicating whether the assertion passed.
 
 ### `.notRegex(contents, regex, message?)`
 
-Assert that `contents` does not match `regex`.
+Assert that `contents` does not match `regex`. Returns a boolean indicating whether the assertion passed.
 
 ### `.snapshot(expected, message?)`
 
@@ -374,3 +384,5 @@ test('flaky macro', async t => {
 	secondTry.commit();
 });
 ```
+
+Returns a boolean indicating whether the assertion passed.

@@ -47,6 +47,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `concurrency`: max number of test files running at the same time (default: CPU cores)
+- `workerThreads`: use worker threads to run tests (requires AVA 4, enabled by default). If `false`, tests will run in child processes (how AVA 3 behaves)
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
