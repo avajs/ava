@@ -150,7 +150,7 @@ export interface DeepEqualAssertion {
 	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
 	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
+	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -160,7 +160,7 @@ export interface LikeAssertion {
 	/**
 	 * Assert that `value` is like `selector`, returning a boolean indicating whether the assertion passed.
 	 */
-	(value: any, selector: Record<string, any>, message?: string): boolean;
+	<Expected extends Record<string, any>>(value: any, selector: Expected, message?: string): value is Expected;
 
 	/** Skip this assertion. */
 	skip(value: any, selector: any, message?: string): void;
@@ -178,7 +178,7 @@ export interface FalseAssertion {
 	/**
 	 * Assert that `actual` is strictly false, returning a boolean indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	(actual: any, message?: string): actual is false;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -201,7 +201,7 @@ export interface IsAssertion {
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
 	 * returning a boolean indicating whether the assertion passed.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
+	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -213,7 +213,7 @@ export interface NotAssertion {
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
 	 * returning a boolean indicating whether the assertion passed.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -224,7 +224,7 @@ export interface NotDeepEqualAssertion {
 	 * Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
 	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
-	<ValueType = any>(actual: ValueType, expected: ValueType, message?: string): boolean;
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
@@ -334,7 +334,7 @@ export interface TrueAssertion {
 	/**
 	 * Assert that `actual` is strictly true, returning a boolean indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	(actual: any, message?: string): actual is true;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
