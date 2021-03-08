@@ -51,7 +51,7 @@ You also need to have this in your `tsconfig.json`:
 ```json
 {
 	"compilerOptions": {
-		"module": "ESNext",
+		"module": "ES2020",
 		"moduleResolution": "node"
 	}
 }
