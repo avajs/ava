@@ -39,8 +39,7 @@ If your `package.json` has `"type": "module"`, then this is the AVA configuratio
 			"configurableModuleFormat": true
 		},
 		"nodeArguments": [
-			"--loader",
-			"ts-node/esm"
+			"--loader=ts-node/esm"
 		]
 	}
 }
