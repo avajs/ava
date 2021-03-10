@@ -98,14 +98,7 @@ You can update failing snapshots by typing <kbd>u</kbd> on the console, followed
 Sometimes watch mode does something surprising like rerunning all tests when you thought only a single test would be run. To see its reasoning you can enable a debug mode. This will work best with the verbose reporter:
 
 ```console
-$ DEBUG=ava:watcher npm test -- --watch --verbose
-```
-
-On Windows use:
-
-```console
-$ set DEBUG=ava:watcher
-$ npm test -- --watch --verbose
+$ DEBUG=ava:watcher npx ava --watch
 ```
 
 ## Help us make watch mode better
