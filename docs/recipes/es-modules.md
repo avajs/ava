@@ -4,6 +4,8 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 
 As of Node.js 12.17, [ECMAScript Modules](https://nodejs.org/docs/latest/api/esm.html#esm_introduction) are natively supported in Node.js itself. AVA 3.3 supports ESM test files, however support is incomplete. The [ESM support project](https://github.com/orgs/avajs/projects/2) tracks our progress.
 
+If you use TypeScript with `ts-node` please [see our Typescript recipe for setup instructions](./typescript.md).
+
 ## Using the `esm` package
 
 If you're using Node.js 10 and AVA 3 and you want to use the ESM syntax, without relying on Node.js' implementation, your best bet is to use the [`esm`](https://github.com/standard-things/esm) package. Make sure to use the `.js` extension and *do not* set `"type": "module"` in `package.json`.
