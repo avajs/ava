@@ -23,7 +23,7 @@ Then, depending on whether or not your package is of type `module` or not, the r
 1. [for packages with type "module"](#for-packages-with-type-module)
 2. [for packages without type "module"](#for-packages-without-type-module)
 
-#### for packages with type `module`
+#### For packages with type `module`
 
 If your `package.json` has `"type": "module"`, then this is the AVA configuration you need:
 
@@ -72,7 +72,7 @@ import {myFunction} from './index.js';
 
 The reason that you need to write `.js` to import `.ts` files in your AVA test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
 
-#### for packages without type "module"
+#### For packages without type "module"
 
 If your `package.json` does not have `"type": "module"`, then this is the AVA configuration you need:
 
