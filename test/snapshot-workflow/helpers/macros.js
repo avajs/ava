@@ -1,7 +1,24 @@
 const exec = require('../../helpers/exec');
 const path = require('path');
 const fs = require('fs').promises;
+const concordance = require('concordance');
 const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
+
+function cleanStringDiff(before, after) {
+	const theme = {
+		string: {
+			multiline: {
+				start: '',
+				end: ''
+			}
+		}
+	};
+	let diff = concordance.diff(before, after, {theme});
+	// Remove all newline control characters, or they'll be duplicated in the
+	// snapshot report
+	diff = diff.replace(/␊/g, '');
+	return diff;
+}
 
 async function beforeAndAfter(t, {
 	cwd,
@@ -34,7 +51,7 @@ async function beforeAndAfter(t, {
 		if (expectChanged) {
 			t.not(after.report, before.report, 'expected .md to be changed');
 			t.notDeepEqual(after.snapshot, before.snapshot, 'expected .snap to be changed');
-			t.snapshot(after.report, 'snapshot report');
+			t.snapshot(cleanStringDiff(before.report, after.report), 'snapshot report diff');
 		} else {
 			t.is(after.report, before.report, 'expected .md to be unchanged');
 			t.deepEqual(after.snapshot, before.snapshot, 'expected .snap to be unchanged');
