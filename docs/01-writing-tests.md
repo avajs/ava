@@ -120,7 +120,7 @@ You can use the `.only` modifier with all tests. It cannot be used with hooks or
 
 *Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
-You cannot update snapshots when using `.only()`.
+In AVA 3, you cannot update snapshots when using `.only()`.
 
 ## Skipping tests
 
@@ -134,7 +134,9 @@ test.skip('will not be run', t => {
 
 You must specify the implementation function. You can use the `.skip` modifier with all tests and hooks, but not with `.todo()`. You can not apply further modifiers to `.skip`.
 
-You cannot update snapshots when using `.skip()`. If the test is likely to be failing for a while, use `.failing()` instead.
+If the test is likely to be failing for a while, use `.failing()` instead.
+
+In AVA 3, you cannot update snapshots when using `.skip()`.
 
 ## Test placeholders ("todo")
 

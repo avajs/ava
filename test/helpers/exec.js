@@ -68,7 +68,6 @@ exports.fixture = async (args, options = {}) => {
 		skipped: [],
 		todo: [],
 		uncaughtExceptions: [],
-		unsavedSnapshots: [],
 		getError(statObject) {
 			return errors.get(statObject);
 		},
@@ -104,12 +103,6 @@ exports.fixture = async (args, options = {}) => {
 			case 'shared-worker-error': {
 				const {message, name, stack} = statusEvent.err;
 				stats.sharedWorkerErrors.push({message, name, stack});
-				break;
-			}
-
-			case 'snapshot-error': {
-				const {testFile} = statusEvent;
-				stats.unsavedSnapshots.push({file: normalizePath(cwd, testFile)});
 				break;
 			}
 
@@ -153,6 +146,5 @@ exports.fixture = async (args, options = {}) => {
 		stats.passed.sort(compareStatObjects);
 		stats.skipped.sort(compareStatObjects);
 		stats.todo.sort(compareStatObjects);
-		stats.unsavedSnapshots.sort(compareStatObjects);
 	}
 };
