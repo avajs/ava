@@ -464,20 +464,10 @@ export interface TryResult {
 	discard(options?: CommitDiscardOptions): void;
 }
 
-/** The `t` value passed to implementations for tests & hooks declared with the `.cb` modifier. */
-export interface CbExecutionContext<Context = unknown> extends ExecutionContext<Context> {
-	/**
-	 * End the test. If `error` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) the test or hook
-	 * will fail.
-	 */
-	end(error?: any): void;
-}
-
 // FIXME(novemberborn) Refactor implementations to be different types returning a promise,, subscribable, or void, not a
 // single type returning a union. A union with void as a return type doesn't make sense.
 export type ImplementationResult = PromiseLike<void> | Subscribable | boolean | void;
 export type Implementation<Context = unknown> = (t: ExecutionContext<Context>) => ImplementationResult;
-export type CbImplementation<Context = unknown> = (t: CbExecutionContext<Context>) => ImplementationResult;
 
 /** A reusable test or hook implementation. */
 export type UntitledMacro<Args extends any[], Context = unknown> = (t: ExecutionContext<Context>, ...args: Args) => ImplementationResult;
@@ -495,19 +485,6 @@ export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | Un
 
 /** Alias for a single macro, or an array of macros. */
 export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>];
-
-/** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type UntitledCbMacro<Args extends any[], Context = unknown> = (t: CbExecutionContext<Context>, ...args: Args) => ImplementationResult;
-
-/** A reusable test or hook implementation, for tests & hooks declared with the `.cb` modifier. */
-export type CbMacro<Args extends any[], Context = unknown> = UntitledCbMacro<Args, Context> & {
-	title?: (providedTitle: string | undefined, ...args: Args) => string;
-};
-
-export type EitherCbMacro<Args extends any[], Context> = CbMacro<Args, Context> | UntitledCbMacro<Args, Context>;
-
-/** Alias for a single macro, or an array of macros, used for tests & hooks declared with the `.cb` modifier. */
-export type OneOrMoreCbMacros<Args extends any[], Context> = EitherCbMacro<Args, Context> | [EitherCbMacro<Args, Context>, ...Array<EitherCbMacro<Args, Context>>];
 
 export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. */
@@ -530,9 +507,6 @@ export interface TestInterface<Context = unknown> {
 
 	/** Declare a hook that is run before each test. */
 	beforeEach: BeforeInterface<Context>;
-
-	/** Declare a test that must call `t.end()` when it's done. */
-	cb: CbInterface<Context>;
 
 	/** Declare a test that is expected to fail. */
 	failing: FailingInterface<Context>;
@@ -562,9 +536,6 @@ export interface AfterInterface<Context = unknown> {
 	/** Declare a hook that is run once, after all tests are done. */
 	always: AlwaysInterface<Context>;
 
-	/** Declare a hook that must call `t.end()` when it's done. */
-	cb: HookCbInterface<Context>;
-
 	skip: HookSkipInterface<Context>;
 }
 
@@ -580,9 +551,6 @@ export interface AlwaysInterface<Context = unknown> {
 
 	/** Declare a hook that is run once, after all tests are done. */
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
-
-	/** Declare a hook that must call `t.end()` when it's done. */
-	cb: HookCbInterface<Context>;
 
 	skip: HookSkipInterface<Context>;
 }
@@ -600,83 +568,7 @@ export interface BeforeInterface<Context = unknown> {
 	/** Declare a hook that is run once, before all tests. */
 	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
 
-	/** Declare a hook that must call `t.end()` when it's done. */
-	cb: HookCbInterface<Context>;
-
 	skip: HookSkipInterface<Context>;
-}
-
-export interface CbInterface<Context = unknown> {
-	/** Declare a test that must call `t.end()` when it's done. */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/**
-	 * Declare a concurrent test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * Additional arguments are passed to the macro.
-	 */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/**
-	 * Declare a concurrent test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * The macro is responsible for generating a unique test title.
-	 */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/** Declare a test that is expected to fail. */
-	failing: CbFailingInterface<Context>;
-
-	only: CbOnlyInterface<Context>;
-	skip: CbSkipInterface<Context>;
-}
-
-export interface CbFailingInterface<Context = unknown> {
-	/** Declare a test that must call `t.end()` when it's done. The test is expected to fail. */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/**
-	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * Additional arguments are passed to the macro. The test is expected to fail.
-	 */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/**
-	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * The test is expected to fail.
-	 */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	only: CbOnlyInterface<Context>;
-	skip: CbSkipInterface<Context>;
-}
-
-export interface CbOnlyInterface<Context = unknown> {
-	/**
-	 * Declare a test that must call `t.end()` when it's done. Only this test and others declared with `.only()` are run.
-	 */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/**
-	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * Additional arguments are passed to the macro. Only this test and others declared with `.only()` are run.
-	 */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/**
-	 * Declare a test that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * Additional arguments are passed to the macro. Only this test and others declared with `.only()` are run.
-	 */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-}
-
-export interface CbSkipInterface<Context = unknown> {
-	/** Skip this test. */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/** Skip this test. */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/** Skip this test. */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
 export interface FailingInterface<Context = unknown> {
@@ -697,41 +589,6 @@ export interface FailingInterface<Context = unknown> {
 
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
-}
-
-export interface HookCbInterface<Context = unknown> {
-	/** Declare a hook that must call `t.end()` when it's done. */
-	(implementation: CbImplementation<Context>): void;
-
-	/** Declare a hook that must call `t.end()` when it's done. */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/**
-	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
-	 * Additional arguments are passed to the macro.
-	 */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/**
-	 * Declare a hook that uses one or more macros. The macros must call `t.end()` when they're done.
-	 */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	skip: HookCbSkipInterface<Context>;
-}
-
-export interface HookCbSkipInterface<Context = unknown> {
-	/** Skip this hook. */
-	(implementation: CbImplementation<Context>): void;
-
-	/** Skip this hook. */
-	(title: string, implementation: CbImplementation<Context>): void;
-
-	/** Skip this hook. */
-	<T extends any[]>(title: string, macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
-
-	/** Skip this hook. */
-	<T extends any[]>(macros: OneOrMoreCbMacros<T, Context>, ...rest: T): void;
 }
 
 export interface HookSkipInterface<Context = unknown> {
@@ -789,9 +646,6 @@ export interface SerialInterface<Context = unknown> {
 	/** Declare a serial hook that is run before each test. */
 	beforeEach: BeforeInterface<Context>;
 
-	/** Declare a serial test that must call `t.end()` when it's done. */
-	cb: CbInterface<Context>;
-
 	/** Declare a serial test that is expected to fail. */
 	failing: FailingInterface<Context>;
 
@@ -841,9 +695,6 @@ export const before: BeforeInterface;
 
 /** Call to declare a hook that is run before each test, or chain to declare modifiers. */
 export const beforeEach: BeforeInterface;
-
-/** Call to declare a test that must invoke `t.end()` when it's done, or chain to declare modifiers. */
-export const cb: CbInterface;
 
 /** Call to declare a test that is expected to fail, or chain to declare modifiers. */
 export const failing: FailingInterface;

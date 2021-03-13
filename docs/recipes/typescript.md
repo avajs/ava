@@ -136,7 +136,7 @@ test(macro, '2 * 3', 6);
 test('providedTitle', macro, '3 * 3', 9);
 ```
 
-You'll need a different type if you're expecting your macro to be used with a callback test:
+You'll need a different type if you're expecting your macro to be used with an AVA 3 callback test:
 
 ```ts
 import test, {CbMacro} from 'ava';
@@ -166,7 +166,7 @@ test.beforeEach(t => {
 	t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
 });
 
-test.serial.cb.failing('very long chains are properly typed', t => {
+test.serial.failing('very long chains are properly typed', t => {
 	t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type ''
 });
 

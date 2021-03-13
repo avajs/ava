@@ -93,25 +93,6 @@ As stated in the previous example, using the `t.throws()` assertion with `async`
 
 `t.plan()` provides value in the following cases.
 
-### Ensuring multiple callbacks are actually called
-
-```js
-test.cb('invokes callbacks', t => {
-	t.plan(2);
-
-	const callbackA = () => {
-		t.pass();
-		t.end();
-	};
-
-	const callbackB = () => t.pass();
-
-	bThenA(callbackA, callbackB);
-});
-```
-
-The above ensures `callbackB` is called first (and only once), followed by `callbackA`. Any other combination would not satisfy the plan.
-
 ### Tests with branching statements
 
 In most cases, it's a bad idea to use any complex branching inside your tests. A notable exception is for tests that are auto-generated (perhaps from a JSON document). Below `t.plan()` is used to ensure the correctness of the JSON input:

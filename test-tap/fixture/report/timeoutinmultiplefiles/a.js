@@ -1,12 +1,15 @@
+const delay = require('delay');
 const test = require('../../../..');
 
 test('a passes', t => t.pass());
 
-test.cb('a slow', t => {
-	setTimeout(t.end, 15000);
+test('a slow', async t => {
+	await delay(15000);
+	t.pass();
 });
-test.cb('a slow two', t => {
-	setTimeout(t.end, 15000);
+test('a slow two', async t => {
+	await delay(15000);
+	t.pass();
 });
 
 test('a passes two', t => t.pass());

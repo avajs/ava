@@ -41,15 +41,6 @@ test('resolves with 3', t => {
 		t.is(n, 3);
 	});
 });
-
-test.cb('invokes callback', t => {
-	t.plan(1);
-
-	someAsyncFunction(() => {
-		t.pass();
-		t.end();
-	});
-});
 ```
 
 These won't:

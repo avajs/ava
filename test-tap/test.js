@@ -100,12 +100,6 @@ test('fails if no assertions are run, unless so planned', t => {
 	});
 });
 
-test('fails if no assertions are run, unless an ended callback test', t => {
-	return ava.cb(a => a.end()).run().then(result => {
-		t.is(result.passed, true);
-	});
-});
-
 test('wrap non-assertion errors', t => {
 	const err = new Error();
 	return ava(() => {
@@ -120,44 +114,6 @@ test('wrap non-assertion errors', t => {
 	});
 });
 
-test('end can be used as callback without maintaining thisArg', t => {
-	return ava.cb(a => {
-		a.pass();
-		setTimeout(a.end);
-	}).run().then(result => {
-		t.is(result.passed, true);
-	});
-});
-
-test('end can be used as callback with error', t => {
-	const err = new Error('failed');
-	return ava.cb(a => {
-		a.end(err);
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Callback called with an error');
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Callback called with an error:');
-		t.match(result.error.values[0].formatted, /.*Error.*\n.*message: 'failed'/);
-	});
-});
-
-test('end can be used as callback with a non-error as its error argument', t => {
-	const nonError = {foo: 'bar'};
-	return ava.cb(a => {
-		a.end(nonError);
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.ok(result.error);
-		t.is(result.error.message, 'Callback called with an error');
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Callback called with an error:');
-		t.match(result.error.values[0].formatted, /.*{.*\n.*foo: 'bar'/);
-	});
-});
-
 test('title returns the test title', t => {
 	t.plan(1);
 	return new Test({
@@ -165,7 +121,7 @@ test('title returns the test title', t => {
 			t.is(a.title, 'foo');
 			a.pass();
 		},
-		metadata: {type: 'test', callback: false},
+		metadata: {type: 'test'},
 		title: 'foo'
 	}).run();
 });
@@ -235,34 +191,6 @@ test('handle falsy testing of objects', t => {
 	});
 });
 
-test('planned async assertion', t => {
-	const instance = ava.cb(a => {
-		a.plan(1);
-
-		setTimeout(() => {
-			a.pass();
-			a.end();
-		}, 100);
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
-	});
-});
-
-test('async assertion with `.end()`', t => {
-	const instance = ava.cb(a => {
-		setTimeout(() => {
-			a.pass();
-			a.end();
-		}, 100);
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
-	});
-});
-
 test('more assertions than planned should emit an assertion error', t => {
 	return ava(a => {
 		a.plan(1);
@@ -275,31 +203,11 @@ test('more assertions than planned should emit an assertion error', t => {
 });
 
 test('record test duration', t => {
-	return ava.cb(a => {
-		a.plan(1);
-
-		setTimeout(() => {
-			a.true(true);
-			a.end();
-		}, 1234);
+	return ava(async a => {
+		await delay(1234);
+		a.pass();
 	}).run().then(result => {
 		t.is(result.passed, true);
-		t.true(result.duration >= 1000);
-	});
-});
-
-test('wait for test to end', t => {
-	const instance = ava.cb(a => {
-		a.plan(1);
-		setTimeout(() => {
-			a.pass();
-			a.end();
-		}, 1234);
-	});
-	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 1);
-		t.is(instance.assertCount, 1);
 		t.true(result.duration >= 1000);
 	});
 });
@@ -433,28 +341,6 @@ test('throws and notThrows work with promises', t => {
 	});
 });
 
-test('end should not be called multiple times', t => {
-	return ava.cb(a => {
-		a.pass();
-		a.end();
-		a.end();
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, '`t.end()` called more than once');
-	});
-});
-
-test('cb test that throws sync', t => {
-	const err = new Error('foo');
-	return ava.cb(() => {
-		throw err;
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Error thrown in test');
-		t.is(result.error.name, 'AssertionError');
-	});
-});
-
 test('multiple resolving and rejecting promises passed to t.throws/t.notThrows', t => {
 	const instance = ava(a => {
 		a.plan(6);
@@ -478,17 +364,6 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 test('fails if test ends while there are pending assertions', t => {
 	return ava(a => {
 		a.throwsAsync(Promise.reject(new Error()));
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'Error');
-		t.match(result.error.message, /Test finished, but an assertion is still pending/);
-	});
-});
-
-test('fails if callback test ends while there are pending assertions', t => {
-	return ava.cb(a => {
-		a.throwsAsync(Promise.reject(new Error()));
-		a.end();
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.name, 'Error');
@@ -561,30 +436,12 @@ test('failing tests should fail', t => {
 	});
 });
 
-test('failing callback tests should end without error', t => {
-	const error = new Error('failed');
-	return ava.cb.failing(a => {
-		a.end(error);
-	}).run().then(result => {
-		t.is(result.passed, true);
-	});
-});
-
 test('failing tests must not pass', t => {
 	return ava.failing(a => {
 		a.pass();
 	}).run().then(result => {
 		t.is(result.passed, false);
 		t.is(result.error.message, failingTestHint);
-	});
-});
-
-test('failing callback tests must not pass', t => {
-	return ava.cb.failing(a => {
-		a.pass();
-		a.end();
-	}).run().then(result => {
-		t.is(result.passed, false);
 	});
 });
 
@@ -758,24 +615,16 @@ test('timeout with promise', t => {
 	});
 });
 
-test('timeout with cb', t => {
-	return ava.cb(a => {
-		a.timeout(10);
-		setTimeout(() => a.end(), 200);
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.match(result.error.message, /timeout/);
-	});
-});
-
 test('timeout is refreshed on assert', t => {
-	return ava.cb(a => {
+	return ava(async a => {
 		a.timeout(10);
 		a.plan(3);
-		setTimeout(() => a.pass(), 5);
-		setTimeout(() => a.pass(), 10);
-		setTimeout(() => a.pass(), 15);
-		setTimeout(() => a.end(), 20);
+		await Promise.all([
+			delay(5).then(() => a.pass()),
+			delay(10).then(() => a.pass()),
+			delay(15).then(() => a.pass()),
+			delay(20)
+		]);
 	}).run().then(result => {
 		t.is(result.passed, true);
 	});
@@ -831,20 +680,6 @@ test('teardowns run in reverse order', t => {
 	}).run().then(result => {
 		t.is(result.passed, true);
 		t.ok(teardownB.calledBefore(teardownA));
-	});
-});
-
-test('teardown with cb', t => {
-	const teardown = sinon.spy();
-	return ava.cb(a => {
-		a.teardown(teardown);
-		setTimeout(() => {
-			a.pass();
-			a.end();
-		});
-	}).run().then(result => {
-		t.is(result.passed, true);
-		t.ok(teardown.calledOnce);
 	});
 });
 
@@ -945,16 +780,6 @@ test('.timeout() is bound', t => {
 		const {timeout} = a;
 		timeout(10);
 		a.pass();
-	}).run().then(result => {
-		t.true(result.passed);
-	});
-});
-
-test('.end() is bound', t => {
-	return ava.cb(a => {
-		const {end} = a;
-		a.pass();
-		end();
 	}).run().then(result => {
 		t.true(result.passed);
 	});

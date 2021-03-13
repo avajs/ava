@@ -93,7 +93,9 @@ test('handles observables', t => {
 
 ## Callback support
 
-AVA supports using `t.end` as the final callback when using Node.js-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
+*👉 AVA 4 removes support for `test.cb()` and `t.end()`.*
+
+AVA 3 supports using `t.end` as the final callback when using Node.js-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
 
 ```js
 test.cb('data.txt can be read', t => {
@@ -223,7 +225,7 @@ test('title', t => {
 });
 ```
 
-Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, use an async function, or enable callback mode via `test.before.cb()`, `test.beforeEach.cb()` etc.
+Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, or use an async function.
 
 ```js
 test.before(async t => {
@@ -232,14 +234,6 @@ test.before(async t => {
 
 test.after(t => {
 	return new Promise(/* ... */);
-});
-
-test.beforeEach.cb(t => {
-	setTimeout(t.end);
-});
-
-test.afterEach.cb(t => {
-	setTimeout(t.end);
 });
 ```
 

@@ -39,22 +39,13 @@ test('fetches foo', async t => {
 });
 ```
 
-If you're using callbacks, use [`test.cb`](./01-writing-tests.md#callback-support):
+If you're using callbacks, promisify the callback function using something like [`util.promisify()`](https://nodejs.org/dist/latest/docs/api/util.html#util_util_promisify_original):
 
 ```js
-test.cb('fetches foo', t => {
-	fetch((err, data) => {
-		t.is(data, 'foo');
-		t.end();
-	});
-});
-```
+const {promisify} = require('util');
 
-Alternatively, promisify the callback function using something like [`pify`](https://github.com/sindresorhus/pify):
-
-```js
 test('fetches foo', async t => {
-	const data = await pify(fetch)();
+	const data = await promisify(fetch)();
 	t.is(data, 'foo');
 });
 ```
