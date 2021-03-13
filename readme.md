@@ -148,7 +148,6 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
-- [Flow](docs/recipes/flow.md)
 - [Configuring Babel](https://github.com/avajs/babel)
 - [Using ES modules](docs/recipes/es-modules.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
