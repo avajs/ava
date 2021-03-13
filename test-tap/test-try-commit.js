@@ -350,81 +350,6 @@ test('test expected to fail will pass with failing try-commit within the test', 
 	t.true(result.passed);
 });
 
-test('try-commit works with callback test', async t => {
-	const ava = newAva();
-	const result = await ava.cb(a => {
-		a
-			.try(b => b.pass())
-			.then(result => {
-				result.commit();
-				a.end();
-			});
-	}).run();
-
-	t.true(result.passed);
-});
-
-test('try-commit works with failing callback test', async t => {
-	const ava = newAva();
-	const result = await ava.cb.failing(a => {
-		a
-			.try(b => b.fail())
-			.then(result => {
-				t.false(result.passed);
-				t.ok(result.errors);
-				t.is(result.errors.length, 1);
-				const error = result.errors[0];
-				t.match(error.message, /Test failed via `t\.fail\(\)`/);
-				t.is(error.name, 'AssertionError');
-				result.commit();
-			})
-			.then(() => {
-				a.end();
-			});
-	}).run();
-
-	t.true(result.passed);
-});
-
-test('try-commit does not allow to use .end() in attempt when parent is callback test', async t => {
-	const ava = newAva();
-	const result = await ava.cb(a => {
-		a
-			.try(b => {
-				b.pass();
-				b.end();
-			})
-			.then(result => {
-				result.commit();
-				a.end();
-			});
-	}).run();
-
-	t.false(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Error thrown in test/);
-	t.is(result.error.name, 'AssertionError');
-	t.match(result.error.values[0].formatted, /t\.end.*not supported/);
-});
-
-test('try-commit does not allow to use .end() in attempt when parent is regular test', async t => {
-	const ava = newAva();
-	const result = await ava(async a => {
-		const result = await a.try(b => {
-			b.pass();
-			b.end();
-		});
-
-		result.commit();
-	}).run();
-
-	t.false(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Error thrown in test/);
-	t.is(result.error.name, 'AssertionError');
-	t.match(result.error.values[0].formatted, /t\.end.*not supported/);
-});
-
 test('try-commit accepts macros', async t => {
 	const macro = b => {
 		t.is(b.title, 'test ─ Title');
@@ -546,14 +471,16 @@ test('try-commit fails when it exceeds its own timeout', async t => {
 
 test('try-commit refreshes the timeout on commit/discard', async t => {
 	const ava = newAva();
-	const result1 = await ava.cb(a => {
+	const result1 = await ava(async a => {
 		// Note: Allow for long enough timeouts that the promise tasks execute in time.
 		a.timeout(2e3);
 		a.plan(3);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 1e3);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 2e3);
-		setTimeout(() => a.try(b => b.pass()).then(result => result.commit()), 3e3);
-		setTimeout(() => a.end(), 4e3);
+		await Promise.all([
+			delay(1e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
+			delay(2e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
+			delay(3e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
+			delay(4e3)
+		]);
 	}).run();
 
 	t.is(result1.passed, true);

@@ -2,6 +2,7 @@
 require('../lib/chalk').set();
 require('../lib/worker/options').set({});
 
+const delay = require('delay');
 const {test} = require('tap');
 const Runner = require('../lib/runner');
 
@@ -349,19 +350,15 @@ test('options.serial forces all tests to be serial', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({serial: true}), runner => {
-		runner.chain.cb('cb', a => {
-			setTimeout(() => {
-				array.push(1);
-				a.end();
-			}, 200);
+		runner.chain('async', async a => {
+			await delay(200);
+			array.push(1);
 			a.pass();
 		});
 
-		runner.chain.cb('cb 2', a => {
-			setTimeout(() => {
-				array.push(2);
-				a.end();
-			}, 100);
+		runner.chain('async 2', async a => {
+			await delay(100);
+			array.push(2);
 			a.pass();
 		});
 

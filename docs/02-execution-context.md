@@ -28,7 +28,7 @@ When used in `test.afterEach()` or `test.afterEach.always()` hooks this tells yo
 
 ## `t.end()`
 
-End the test. Only works with `test.cb()`.
+End the test. Only works with `test.cb()`. Removed in AVA 4.
 
 ## `t.log(...values)`
 

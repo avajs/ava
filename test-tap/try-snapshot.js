@@ -13,7 +13,7 @@ function setup(title, manager, fn) {
 		experiments: {},
 		fn,
 		failWithoutAssertions: true,
-		metadata: {type: 'test', callback: false},
+		metadata: {type: 'test'},
 		contextRef: new ContextRef(),
 		registerUniqueTitle: () => true,
 		title,

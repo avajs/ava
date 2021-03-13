@@ -1,11 +1,13 @@
+const delay = require('delay');
 const test = require('../../..');
 
-test.cb('test', t => {
+test('test', async t => {
 	Promise.resolve().then(() => {
 		t.throws(throwSync());
 	});
 
-	setTimeout(t.end, 20);
+	await delay(20);
+	t.pass();
 });
 
 function throwSync() {
