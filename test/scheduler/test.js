@@ -18,7 +18,7 @@ test.serial('failing tests come first', async t => {
 		await exec.fixture(['-t', '--concurrency=1', '1pass.js', '2fail.js']);
 	} catch (error) {
 		const timestamps = getTimestamps(error.stats);
-		t.true(timestamps.passed > timestamps.failed);
+		t.true(timestamps.failed < timestamps.passed);
 	}
 });
 
