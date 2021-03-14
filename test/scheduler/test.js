@@ -25,7 +25,7 @@ test.serial('failing tests come first', async t => {
 });
 
 test.serial('scheduler disabled when cache empty', async t => {
-	await exec.fixture(['reset-cache'], options);
+	await exec.fixture(['reset-cache'], options); // `ava reset-cache` resets the cache but does not run tests.
 	try {
 		await exec.fixture(['-t', '--concurrency=1', '1pass.js', '2fail.js'], options);
 	} catch (error) {
