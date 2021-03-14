@@ -1,5 +1,6 @@
 const test = require('ava');
 
 test('fail', t => {
-	t.fail(Date.now());
+	t.log(Date.now());
+	t.fail();
 });

@@ -8,7 +8,7 @@ const options = {
 };
 
 function getTimestamps(stats) {
-	return {passed: BigInt(stats.getLogs(stats.passed[0])), failed: BigInt(stats.getError(stats.failed[0]).values[0].formatted)};
+	return {passed: BigInt(stats.getLogs(stats.passed[0])), failed: BigInt(stats.getLogs(stats.failed[0]))};
 }
 
 test.serial('failing tests come first', async t => {

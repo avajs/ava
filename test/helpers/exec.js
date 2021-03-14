@@ -126,6 +126,7 @@ exports.fixture = async (args, options = {}) => {
 				const statObject = {title, file: normalizePath(cwd, testFile)};
 				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
+				logs.set(statObject, statusEvent.logs);
 				break;
 			}
 
