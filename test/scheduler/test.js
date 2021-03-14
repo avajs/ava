@@ -46,3 +46,16 @@ test.serial('scheduler disabled when cache disabled', async t => {
 		t.true(timestamps.passed < timestamps.failed);
 	}
 });
+
+test.serial('scheduler disabled in CI', async t => {
+	try {
+		await exec.fixture(['1pass.js', '2fail.js'], {env: {AVA_FORCE_CI: 'ci'}});
+	} catch {}
+
+	try {
+		await exec.fixture(['-t', '--concurrency=1', '--config', 'disabled-cache.cjs', '1pass.js', '2fail.js'], options);
+	} catch (error) {
+		const timestamps = getTimestamps(error.stats);
+		t.true(timestamps.passed < timestamps.failed);
+	}
+});
