@@ -234,7 +234,7 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	[
+	for (const variant of [
 		{
 			label: 'is added',
 			fire: add,
@@ -250,7 +250,7 @@ group('chokidar', (beforeEach, test, group) => {
 			fire: unlink,
 			event: 'unlink'
 		}
-	].forEach(variant => {
+	]) {
 		test(`logs a debug message when a file is ${variant.label}`, t => {
 			t.plan(2);
 			start();
@@ -259,9 +259,9 @@ group('chokidar', (beforeEach, test, group) => {
 			t.ok(debug.calledOnce);
 			t.strictDeepEqual(debug.firstCall.args, ['ava:watcher', 'Detected %s of %s', variant.event, 'file.js']);
 		});
-	});
+	}
 
-	[
+	for (const variant of [
 		{
 			label: 'is added',
 			fire: add
@@ -274,7 +274,7 @@ group('chokidar', (beforeEach, test, group) => {
 			label: 'is removed',
 			fire: unlink
 		}
-	].forEach(variant => {
+	]) {
 		test(`reruns initial tests when a source file ${variant.label}`, t => {
 			t.plan(4);
 
@@ -308,9 +308,9 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(reporter.endRun.calledTwice);
 			});
 		});
-	});
+	}
 
-	[
+	for (const variant of [
 		{
 			label: 'failures',
 			prop: 'failedTests'
@@ -323,7 +323,7 @@ group('chokidar', (beforeEach, test, group) => {
 			label: 'exceptions',
 			prop: 'uncaughtExceptions'
 		}
-	].forEach(variant => {
+	]) {
 		test(`does not clear log if the previous run had ${variant.label}`, t => {
 			t.plan(2);
 
@@ -350,7 +350,7 @@ group('chokidar', (beforeEach, test, group) => {
 				}}]);
 			});
 		});
-	});
+	}
 
 	test('debounces by 100ms', t => {
 		t.plan(1);
@@ -445,7 +445,7 @@ group('chokidar', (beforeEach, test, group) => {
 		});
 	});
 
-	[
+	for (const variant of [
 		{
 			label: 'is added',
 			fire: add
@@ -454,7 +454,7 @@ group('chokidar', (beforeEach, test, group) => {
 			label: 'changes',
 			fire: change
 		}
-	].forEach(variant => {
+	]) {
 		test(`(re)runs a test file when it ${variant.label}`, t => {
 			t.plan(4);
 
@@ -488,7 +488,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.ok(reporter.endRun.calledTwice);
 			});
 		});
-	});
+	}
 
 	test('(re)runs several test files when they are added or changed', t => {
 		t.plan(2);
@@ -936,7 +936,7 @@ group('chokidar', (beforeEach, test, group) => {
 			});
 		});
 
-		[
+		for (const variant of [
 			{
 				desc: 'does not track ignored dependencies',
 				ignoredByWatcher: ['dep-2.js']
@@ -945,7 +945,7 @@ group('chokidar', (beforeEach, test, group) => {
 				desc: 'exclusion patterns affect tracked source dependencies',
 				ignoredByWatcher: ['dep-2.js']
 			}
-		].forEach(variant => {
+		]) {
 			test(variant.desc, t => {
 				t.plan(2);
 				seed(variant.ignoredByWatcher);
@@ -965,7 +965,7 @@ group('chokidar', (beforeEach, test, group) => {
 					}}]);
 				});
 			});
-		});
+		}
 
 		test('uses default ignoredByWatcher patterns', t => {
 			t.plan(2);
@@ -1008,11 +1008,13 @@ group('chokidar', (beforeEach, test, group) => {
 			// Ensure `test/1.js` also depends on the excluded files
 			emitDependencies(
 				path.join('test', '1.js'),
-				excludedFiles.map(relPath => path.resolve(relPath)).concat('dep-1.js')
+				[...excludedFiles.map(relPath => path.resolve(relPath)), 'dep-1.js']
 			);
 
 			// Modify all excluded files
-			excludedFiles.forEach(x => change(x));
+			for (const x of excludedFiles) {
+				change(x);
+			}
 
 			return debounce(excludedFiles.length).then(() => {
 				t.ok(api.run.calledTwice);

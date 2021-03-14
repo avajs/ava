@@ -747,10 +747,13 @@ test('teardowns cannot be registered by teardowns', async t => {
 test('.log() is bound', t => {
 	return ava(a => {
 		const {log} = a;
-		[1, 2, 3].forEach(value => {
+		for (const value of [1, 2, 3]) {
 			log('value: ' + value);
-		});
-		['value foo', 'value bar'].forEach(value => log(value));
+		}
+
+		for (const value of ['value foo', 'value bar']) {
+			log(value);
+		}
 	}).run().then(result => {
 		t.deepEqual(result.logs, [
 			'value: 1',

@@ -53,7 +53,7 @@ async function testSnapshotPruning(t, {
 		const snapshotPath = path.join(cwd, snapshotFile);
 		const reportPath = path.join(cwd, reportFile);
 
-		if (remove) { // eslint-disable-line unicorn/prefer-ternary
+		if (remove) {
 			// Assert files don't exist
 			await Promise.all([
 				t.throwsAsync(fs.access(snapshotPath), {code: 'ENOENT'}, 'Expected snapshot to be removed'),
