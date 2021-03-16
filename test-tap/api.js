@@ -403,11 +403,11 @@ for (const opt of opts) {
 				t.is(errors.length, 3);
 				t.is(runStatus.stats.passedTests, 0);
 
-				errors.forEach((error, errorIndex) => {
-					error.statements.forEach((statement, statementIndex) => {
+				for (const [errorIndex, error] of errors.entries()) {
+					for (const [statementIndex, statement] of error.statements.entries()) {
 						t.match(statement[0], expected[errorIndex][statementIndex]);
-					});
-				});
+					}
+				}
 			});
 	});
 

@@ -156,7 +156,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 				path.join(snapPath, 'test.ts.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []);
+		.reduce((a, b) => [...a, ...b], []);
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
@@ -167,14 +167,20 @@ test('snapshots infer their location and name from sourcemaps', t => {
 		}
 	};
 
-	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
+	for (const x of snapFixtureFilePaths) {
+		removeExistingSnapFixtureFiles(x);
+	}
+
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
 	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.ifError(error);
-		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
+		for (const x of snapFixtureFilePaths) {
+			verifySnapFixtureFiles(x);
+		}
+
 		t.match(stdout, /6 tests passed/);
 		t.end();
 	});
@@ -197,7 +203,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 				path.join(snapPath, 'test.js.snap')
 			];
 		})
-		.reduce((a, b) => a.concat(b), []);
+		.reduce((a, b) => [...a, ...b], []);
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
@@ -208,14 +214,20 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		}
 	};
 
-	snapFixtureFilePaths.forEach(x => removeExistingSnapFixtureFiles(x));
+	for (const x of snapFixtureFilePaths) {
+		removeExistingSnapFixtureFiles(x);
+	}
+
 	const verifySnapFixtureFiles = relFilePath => {
 		t.true(fs.existsSync(relFilePath));
 	};
 
 	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.ifError(error);
-		snapFixtureFilePaths.forEach(x => verifySnapFixtureFiles(x));
+		for (const x of snapFixtureFilePaths) {
+			verifySnapFixtureFiles(x);
+		}
+
 		t.match(stdout, /6 tests passed/);
 		t.end();
 	});
@@ -239,7 +251,9 @@ test('snapshots are indentical on different platforms', t => {
 	};
 
 	// Clear current snapshots
-	[reportPath, snapPath].forEach(fp => removeFile(fp));
+	for (const fp of [reportPath, snapPath]) {
+		removeFile(fp);
+	}
 
 	// Test should pass, and a snapshot gets written
 	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
@@ -274,7 +288,9 @@ test('in CI, new snapshots are not recorded', t => {
 	};
 
 	// Clear current snapshots
-	[reportPath, snapPath].forEach(fp => removeFile(fp));
+	for (const fp of [reportPath, snapPath]) {
+		removeFile(fp);
+	}
 
 	// Test should fail, no snapshot gets written
 	execCli([], {dirname: fixtureDir}, (_, stdout) => {

@@ -23,7 +23,7 @@ function execCli(args, options, cb) {
 	let stderr;
 
 	const processPromise = new Promise(resolve => {
-		child = childProcess.spawn(process.execPath, [cliPath].concat(args), {
+		child = childProcess.spawn(process.execPath, [cliPath].concat(args), { // eslint-disable-line unicorn/prefer-spread
 			cwd: dirname,
 			env: {AVA_FORCE_CI: 'ci', ...env}, // Force CI to ensure the correct reporter is selected
 			// env,
