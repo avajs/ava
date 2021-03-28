@@ -66,24 +66,6 @@ test('should warn ava is required without the cli', t => {
 	});
 });
 
-test('workers ensure test files load the same version of ava', t => {
-	const target = path.join(__dirname, '..', 'fixture', 'ava-paths', 'target');
-
-	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
-	const targetInstall = path.join(target, 'node_modules/ava');
-	fs.mkdirSync(targetInstall, {recursive: true});
-	fs.writeFileSync(
-		path.join(targetInstall, 'index.js'),
-		fs.readFileSync(path.join(__dirname, '../../index.js'))
-	);
-
-	const testFile = path.join(target, 'test.js');
-	execCli([testFile], {dirname: path.join('fixture', 'ava-paths', 'cwd')}, err => {
-		t.ifError(err);
-		t.end();
-	});
-});
-
 test('tests without assertions do not fail if failWithoutAssertions option is set to false', t => {
 	execCli([], {dirname: 'fixture/pkg-conf/fail-without-assertions'}, err => {
 		t.ifError(err);
