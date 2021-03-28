@@ -87,7 +87,6 @@
 		"figures": "^3.2.0",
 		"globby": "^11.0.2",
 		"ignore-by-default": "^2.0.0",
-		"import-local": "^3.0.2",
 		"indent-string": "^4.0.0",
 		"is-error": "^2.2.2",
 		"is-plain-object": "^5.0.0",

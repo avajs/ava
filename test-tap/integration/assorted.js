@@ -66,19 +66,6 @@ test('should warn ava is required without the cli', t => {
 	});
 });
 
-test('prefers local version of ava', t => {
-	execCli('', {
-		dirname: 'fixture/local-bin',
-		env: {
-			DEBUG: 'ava'
-		}
-	}, (err, stdout, stderr) => {
-		t.ifError(err);
-		t.match(stderr, 'Using local install of AVA');
-		t.end();
-	});
-});
-
 test('workers ensure test files load the same version of ava', t => {
 	const target = path.join(__dirname, '..', 'fixture', 'ava-paths', 'target');
 
