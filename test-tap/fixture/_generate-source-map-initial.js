@@ -5,7 +5,7 @@ const babel = require('@babel/core');
 
 const transformed = babel.transform(`
 import {mapFile} from 'source-map-fixtures';
-import test from '../../';
+import test from '../../entrypoints/main.cjs';
 
 const fixture = mapFile('throws').require();
 

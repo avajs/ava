@@ -1,4 +1,4 @@
-const test = require('../..');
+const test = require('../../entrypoints/main.cjs');
 
 test.before(() => {
 	throw new Error('should not run');

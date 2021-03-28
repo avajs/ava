@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import test from '..';
+import test from '..'; // eslint-disable-line import/no-unresolved
 
 type Expected = {foo: 'bar'};
 const expected: Expected = {foo: 'bar'};

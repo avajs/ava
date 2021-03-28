@@ -1,4 +1,4 @@
-import test from '..';
+import test from '..'; // eslint-disable-line import/no-unresolved
 
 test('like', t => {
 	t.like({

@@ -2,7 +2,7 @@
 const path = require('path');
 const {test} = require('tap');
 
-const {load} = require('../eslint-plugin-helper');
+const {load} = require('../entrypoints/eslint-plugin-helper.cjs');
 
 const projectDir = path.join(__dirname, 'fixture/eslint-plugin-helper');
 const overrideDir = path.join(__dirname, 'fixture/eslint-plugin-helper/for-overriding');

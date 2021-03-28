@@ -1,5 +1,5 @@
 import {expectError} from 'tsd';
-import test from '..';
+import test from '..'; // eslint-disable-line import/no-unresolved
 
 test('snapshot', t => {
 	t.snapshot({foo: 'bar'});

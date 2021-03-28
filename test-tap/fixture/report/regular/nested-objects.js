@@ -1,4 +1,4 @@
-const test = require('../../../..');
+const test = require('../../../../entrypoints/main.cjs');
 const util = require('util'); // eslint-disable-line unicorn/import-style
 
 util.inspect.defaultOptions.depth = 4;

@@ -43,7 +43,7 @@ for (const opt of opts) {
 		});
 		return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 3);
+				t.is(runStatus.stats.passedTests, 2);
 			});
 	});
 

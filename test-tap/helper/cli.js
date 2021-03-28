@@ -3,7 +3,7 @@ const path = require('path');
 const childProcess = require('child_process');
 const getStream = require('get-stream');
 
-const cliPath = path.join(__dirname, '../../cli.js');
+const cliPath = path.join(__dirname, '../../entrypoints/cli.mjs');
 
 function execCli(args, options, cb) {
 	let dirname;

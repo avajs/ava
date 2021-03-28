@@ -1,5 +1,5 @@
 const delay = require('delay');
-const test = require('../..');
+const test = require('../../entrypoints/main.cjs');
 
 const tests = [];
 
