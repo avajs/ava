@@ -44,7 +44,8 @@ exports.fixture = async (args, options = {}) => {
 	const cwd = options.cwd || exports.cwd();
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
-			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you'
+			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you',
+			TEST_AVA_IMPORT_FROM: process.cwd()
 		},
 		cwd,
 		serialization: 'advanced',
