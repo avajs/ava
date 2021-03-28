@@ -54,9 +54,8 @@ test('resolves tests from an .mjs config file', async t => {
 test('use current working directory if `package.json` is not found', async t => {
 	const cwd = tempy.directory();
 	const testFilePath = path.join(cwd, 'test.js');
-	const avaPath = require.resolve('../../');
 
-	fs.writeFileSync(testFilePath, `const test = require(${JSON.stringify(avaPath)});\ntest('test name', t => { t.pass(); });`);
+	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_IMPORT_FROM);\ntest(\'test name\', t => { t.pass(); });');
 
 	const options = {
 		cwd

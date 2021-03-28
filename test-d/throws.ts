@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import test from '..';
+import test from '..'; // eslint-disable-line import/no-unresolved
 
 class CustomError extends Error {
 	foo: string;

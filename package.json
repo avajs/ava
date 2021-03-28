@@ -6,7 +6,18 @@
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
 	"bin": {
-		"ava": "cli.js"
+		"ava": "./entrypoints/cli.mjs"
+	},
+	"exports": {
+		".": {
+			"import": "./entrypoints/main.mjs",
+			"require": "./entrypoints/main.cjs"
+		},
+		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
+		"./plugin": {
+			"import": "./entrypoints/plugin.mjs",
+			"require": "./entrypoints/plugin.cjs"
+		}
 	},
 	"engines": {
 		"node": ">=12.20 <13 || >=14.15 <15 || >=15"
@@ -16,10 +27,8 @@
 		"test": "xo && tsd && npm run -s cover"
 	},
 	"files": [
+		"entrypoints",
 		"lib",
-		"*.js",
-		"!*.config.js",
-		"index.d.ts",
 		"*.d.ts"
 	],
 	"keywords": [

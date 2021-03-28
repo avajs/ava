@@ -1,5 +1,5 @@
 const fixture = require('source-map-fixtures').inline('throws').require();
-const test = require('../..');
+const test = require('../../entrypoints/main.cjs');
 
 const run = () => fixture.run();
 

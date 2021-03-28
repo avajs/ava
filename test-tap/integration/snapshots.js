@@ -38,8 +38,8 @@ for (const object of [
 }
 
 test('appends to existing snapshots', t => {
-	const cliPath = require.resolve('../../cli.js');
-	const avaPath = require.resolve('../../');
+	const cliPath = require.resolve('../../entrypoints/cli.mjs');
+	const avaPath = require.resolve('../../entrypoints/main.cjs');
 
 	const cwd = tempy.directory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');

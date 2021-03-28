@@ -1,4 +1,4 @@
-const test = require('../../../..');
+const test = require('../../../../entrypoints/main.cjs');
 
 if (process.env.TEMPLATE) {
 	test('test title', t => {

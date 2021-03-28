@@ -1,4 +1,4 @@
-const test = require('../..');
+const test = require('../../entrypoints/main.cjs');
 
 const foo = 'foo';
 

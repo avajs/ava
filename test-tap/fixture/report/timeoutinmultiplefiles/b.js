@@ -1,5 +1,5 @@
 const delay = require('delay');
-const test = require('../../../..');
+const test = require('../../../../entrypoints/main.cjs');
 
 test('b passes', t => t.pass());
 

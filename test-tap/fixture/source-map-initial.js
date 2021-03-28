@@ -2,7 +2,7 @@
 
 var _sourceMapFixtures = require('source-map-fixtures');
 
-var _ = require('../../');
+var _ = require('../../entrypoints/main.cjs');
 
 var _2 = _interopRequireDefault(_);
 

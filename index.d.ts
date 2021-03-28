@@ -683,33 +683,3 @@ declare const test: TestInterface;
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 export default test;
-
-/** Call to declare a hook that is run once, after all tests have passed, or chain to declare modifiers. */
-export const after: AfterInterface;
-
-/** Call to declare a hook that is run after each passing test, or chain to declare modifiers. */
-export const afterEach: AfterInterface;
-
-/** Call to declare a hook that is run once, before all tests, or chain to declare modifiers. */
-export const before: BeforeInterface;
-
-/** Call to declare a hook that is run before each test, or chain to declare modifiers. */
-export const beforeEach: BeforeInterface;
-
-/** Call to declare a test that is expected to fail, or chain to declare modifiers. */
-export const failing: FailingInterface;
-
-/** Call to declare a test that is run exclusively, along with other tests declared with `.only()`. */
-export const only: OnlyInterface;
-
-/** Call to declare a serial test, or chain to declare serial hooks or test modifiers. */
-export const serial: SerialInterface;
-
-/** Skip this test. */
-export const skip: SkipInterface;
-
-/** Declare a test that should be implemented later. */
-export const todo: TodoDeclaration;
-
-/** Meta data associated with the current process. */
-export const meta: MetaInterface;

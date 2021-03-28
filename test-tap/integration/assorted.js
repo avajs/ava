@@ -59,7 +59,7 @@ test('works when no files are found', t => {
 });
 
 test('should warn ava is required without the cli', t => {
-	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../index.js')], error => {
+	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../entrypoints/main.cjs')], error => {
 		t.ok(error);
 		t.match(error.message, /Test files must be run with the AVA CLI/);
 		t.end();

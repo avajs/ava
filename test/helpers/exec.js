@@ -5,8 +5,10 @@ const execa = require('execa');
 const defaultsDeep = require('lodash/defaultsDeep');
 const replaceString = require('replace-string');
 
-const cliPath = path.resolve(__dirname, '../../cli.js');
+const cliPath = path.resolve(__dirname, '../../entrypoints/cli.mjs');
 const ttySimulator = path.join(__dirname, './simulate-tty.js');
+
+const TEST_AVA_IMPORT_FROM = path.join(process.cwd(), 'entrypoints/main.cjs');
 
 const normalizePosixPath = string => replaceString(string, '\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
@@ -45,7 +47,7 @@ exports.fixture = async (args, options = {}) => {
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you',
-			TEST_AVA_IMPORT_FROM: process.cwd()
+			TEST_AVA_IMPORT_FROM
 		},
 		cwd,
 		serialization: 'advanced',
