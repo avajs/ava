@@ -1,4 +1,6 @@
 'use strict';
+const path = require('path');
+const url = require('url');
 const v8 = require('v8');
 const {Worker} = require('worker_threads');
 
@@ -18,7 +20,8 @@ const resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 		const syncBuffer = new SharedArrayBuffer(4);
 		sync = new Int32Array(syncBuffer);
 
-		worker = new Worker('./lib/eslint-plugin-helper-worker.js', {
+		const filename = path.join(__dirname, '../lib/eslint-plugin-helper-worker.js');
+		worker = new Worker(url.pathToFileURL(filename), {
 			workerData: {
 				dataBuffer,
 				syncBuffer,
