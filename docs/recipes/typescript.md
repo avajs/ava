@@ -4,17 +4,77 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.1.
+This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.2.
 
 ## Enabling AVA's support for TypeScript test files
+
+### With precompile step
 
 Out of the box AVA does not load TypeScript test files. You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions.
 
 ### Using `ts-node`
 
-You can use [`ts-node`] to do live testing without transpiling to js files.  This can be especially helpful when you're using a bundler.
+You can use [`ts-node`] to do live testing without transpiling. This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
 
-`npm i --save-dev typescript ts-node`
+`npm install --save-dev typescript ts-node`
+
+Then, depending on whether or not your package is of type `module` or not, the required setup differs. See either:
+
+1. [for packages with type "module"](#for-packages-with-type-module)
+2. [for packages without type "module"](#for-packages-without-type-module)
+
+#### For packages with type `module`
+
+If your `package.json` has `"type": "module"`, then this is the AVA configuration you need:
+
+`package.json`:
+
+```json
+{
+	"ava": {
+		"extensions": {
+			"ts": "module"
+		},
+		"nonSemVerExperiments": {
+			"configurableModuleFormat": true
+		},
+		"nodeArguments": [
+			"--loader=ts-node/esm"
+		]
+	}
+}
+```
+
+You also need to have this in your `tsconfig.json`:
+
+```json
+{
+	"compilerOptions": {
+		"module": "ES2020",
+		"moduleResolution": "node"
+	}
+}
+```
+
+And finally, even though you directly import code from your TypeScript files, you **must** import it from your `.ts` files with the `.js` extension instead!
+
+For example if your source file is `index.ts` looks like this:
+
+```ts
+export function myFunction() {}
+```
+
+Then in your AVA test files you must import it **as if it has the `.js` extension** it like so:
+
+```ts
+import {myFunction} from './index.js';
+```
+
+The reason that you need to write `.js` to import `.ts` files in your AVA test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
+
+#### For packages without type "module"
+
+If your `package.json` does not have `"type": "module"`, then this is the AVA configuration you need:
 
 `package.json`:
 
@@ -31,7 +91,7 @@ You can use [`ts-node`] to do live testing without transpiling to js files.  Thi
 }
 ```
 
-It's worth noting that with this configuration tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
 ## Writing tests
 
@@ -76,7 +136,7 @@ test(macro, '2 * 3', 6);
 test('providedTitle', macro, '3 * 3', 9);
 ```
 
-You'll need a different type if you're expecting your macro to be used with a callback test:
+You'll need a different type if you're expecting your macro to be used with an AVA 3 callback test:
 
 ```ts
 import test, {CbMacro} from 'ava';
@@ -106,7 +166,7 @@ test.beforeEach(t => {
 	t.context.foo = 123; // error:  Type '123' is not assignable to type 'string'
 });
 
-test.serial.cb.failing('very long chains are properly typed', t => {
+test.serial.failing('very long chains are properly typed', t => {
 	t.context.fooo = 'a value'; // error: Property 'fooo' does not exist on type ''
 });
 

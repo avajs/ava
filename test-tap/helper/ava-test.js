@@ -19,7 +19,7 @@ function withExperiments(experiments = {}) {
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: false},
+			metadata: {type: 'test'},
 			title
 		});
 	}
@@ -31,32 +31,8 @@ function withExperiments(experiments = {}) {
 			failWithoutAssertions: true,
 			fn,
 			registerUniqueTitle,
-			metadata: {type: 'test', callback: false, failing: true},
+			metadata: {type: 'test', failing: true},
 			title: 'test.failing'
-		});
-	};
-
-	ava.cb = (fn, contextRef) => {
-		return new Test({
-			contextRef: contextRef || new ContextRef(),
-			experiments,
-			failWithoutAssertions: true,
-			fn,
-			registerUniqueTitle,
-			metadata: {type: 'test', callback: true},
-			title: 'test.cb'
-		});
-	};
-
-	ava.cb.failing = (fn, contextRef) => {
-		return new Test({
-			contextRef: contextRef || new ContextRef(),
-			experiments,
-			failWithoutAssertions: true,
-			fn,
-			registerUniqueTitle,
-			metadata: {type: 'test', callback: true, failing: true},
-			title: 'test.cb.failing'
 		});
 	};
 

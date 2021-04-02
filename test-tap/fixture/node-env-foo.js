@@ -1,4 +1,4 @@
-const test = require('../..');
+const test = require('../../entrypoints/main.cjs');
 
 test('NODE_ENV is foo', t => {
 	t.plan(1);

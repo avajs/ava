@@ -1,5 +1,7 @@
-const test = require('../../../..');
+const delay = require('delay');
+const test = require('../../../../entrypoints/main.cjs');
 
-test.cb('slow pass', t => {
-	setTimeout(t.end, 1000);
+test('slow pass', async t => {
+	await delay(1000);
+	t.pass();
 });

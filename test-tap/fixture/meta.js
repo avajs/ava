@@ -1,14 +1,10 @@
-const {default: test, meta} = require('../..');
-
-test('meta is test.meta', t => {
-	t.is(meta, test.meta);
-});
+const test = require('../../entrypoints/main.cjs');
 
 test('meta.file', t => {
-	t.is(meta.file, __filename);
+	t.is(test.meta.file, __filename);
 });
 
 test('meta.snapshotDirectory', t => {
-	t.regex(meta.snapshotDirectory, /snapshot-fixture/);
+	t.regex(test.meta.snapshotDirectory, /snapshot-fixture/);
 });
 

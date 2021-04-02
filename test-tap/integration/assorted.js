@@ -59,40 +59,9 @@ test('works when no files are found', t => {
 });
 
 test('should warn ava is required without the cli', t => {
-	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../index.js')], error => {
+	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../entrypoints/main.cjs')], error => {
 		t.ok(error);
 		t.match(error.message, /Test files must be run with the AVA CLI/);
-		t.end();
-	});
-});
-
-test('prefers local version of ava', t => {
-	execCli('', {
-		dirname: 'fixture/local-bin',
-		env: {
-			DEBUG: 'ava'
-		}
-	}, (err, stdout, stderr) => {
-		t.ifError(err);
-		t.match(stderr, 'Using local install of AVA');
-		t.end();
-	});
-});
-
-test('workers ensure test files load the same version of ava', t => {
-	const target = path.join(__dirname, '..', 'fixture', 'ava-paths', 'target');
-
-	// Copy the index.js so the testFile imports it. It should then load the correct AVA install.
-	const targetInstall = path.join(target, 'node_modules/ava');
-	fs.mkdirSync(targetInstall, {recursive: true});
-	fs.writeFileSync(
-		path.join(targetInstall, 'index.js'),
-		fs.readFileSync(path.join(__dirname, '../../index.js'))
-	);
-
-	const testFile = path.join(target, 'test.js');
-	execCli([testFile], {dirname: path.join('fixture', 'ava-paths', 'cwd')}, err => {
-		t.ifError(err);
 		t.end();
 	});
 });

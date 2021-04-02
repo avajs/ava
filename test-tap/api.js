@@ -43,7 +43,7 @@ for (const opt of opts) {
 		});
 		return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 3);
+				t.is(runStatus.stats.passedTests, 2);
 			});
 	});
 
@@ -403,11 +403,11 @@ for (const opt of opts) {
 				t.is(errors.length, 3);
 				t.is(runStatus.stats.passedTests, 0);
 
-				errors.forEach((error, errorIndex) => {
-					error.statements.forEach((statement, statementIndex) => {
+				for (const [errorIndex, error] of errors.entries()) {
+					for (const [statementIndex, statement] of error.statements.entries()) {
 						t.match(statement[0], expected[errorIndex][statementIndex]);
-					});
-				});
+					}
+				}
 			});
 	});
 
@@ -542,7 +542,7 @@ for (const opt of opts) {
 		t.end();
 	});
 
-	test('caching is enabled by default - workerThreads: {opt.workerThreads}', t => {
+	test(`caching is enabled by default - workerThreads: ${opt.workerThreads}`, t => {
 		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
 		const api = apiCreator({
@@ -556,7 +556,12 @@ for (const opt of opts) {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
 				t.is(files.filter(x => x.endsWith('.js')).length, 1);
 				t.is(files.filter(x => x.endsWith('.map')).length, 1);
-				t.is(files.length, 2);
+				if (files.length === 3) {
+					// This file may be written locally, but not in CI.
+					t.is(files.filter(x => x.startsWith('failing-tests.json')).length, 1);
+				} else {
+					t.is(files.length, 2);
+				}
 			});
 	});
 

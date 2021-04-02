@@ -53,20 +53,20 @@ function assertFailure(t, subset) {
 
 	if (subset.statements) {
 		t.is(lastFailure.statements.length, subset.statements.length);
-		lastFailure.statements.forEach((s, i) => {
+		for (const [i, s] of lastFailure.statements.entries()) {
 			t.is(s[0], subset.statements[i][0]);
 			t.match(s[1], subset.statements[i][1]);
-		});
+		}
 	} else {
 		t.same(lastFailure.statements, []);
 	}
 
 	if (subset.values) {
 		t.is(lastFailure.values.length, subset.values.length);
-		lastFailure.values.forEach((s, i) => {
+		for (const [i, s] of lastFailure.values.entries()) {
 			t.is(s.label, subset.values[i].label);
 			t.match(stripAnsi(s.formatted), subset.values[i].formatted);
-		});
+		}
 	} else {
 		t.same(lastFailure.values, []);
 	}

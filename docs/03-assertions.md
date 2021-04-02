@@ -41,15 +41,6 @@ test('resolves with 3', t => {
 		t.is(n, 3);
 	});
 });
-
-test.cb('invokes callback', t => {
-	t.plan(1);
-
-	someAsyncFunction(() => {
-		t.pass();
-		t.end();
-	});
-});
 ```
 
 These won't:
@@ -337,7 +328,7 @@ Compares the `expected` value with a previously recorded snapshot. Snapshots are
 
 AVA 3 supports an  `options` object that lets you select a specific snapshot, for instance `{id: 'my snapshot'}`. This is buggy and will be removed in AVA 4.
 
-Snapshot assertions cannot be skipped when snapshots are being updated.
+In AVA 3, you cannot update snapshots while using `t.snapshot.skip()`.
 
 ### `.try(title?, implementation | macro | macro[], ...args?)`
 

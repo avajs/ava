@@ -10,20 +10,10 @@ function ava(fn) {
 		contextRef: null,
 		failWithoutAssertions: true,
 		fn,
-		metadata: {type: 'test', callback: false},
+		metadata: {type: 'test'},
 		title: '[anonymous]'
 	});
 }
-
-ava.cb = function (fn) {
-	return new Test({
-		contextRef: null,
-		failWithoutAssertions: true,
-		fn,
-		metadata: {type: 'test', callback: true},
-		title: '[anonymous]'
-	});
-};
 
 function pass() {
 	return new Promise(resolve => {
@@ -38,20 +28,6 @@ function fail() {
 		});
 	});
 }
-
-test('returning a promise from a legacy async fn is an error', t => {
-	return ava.cb(a => {
-		a.plan(1);
-
-		return Promise.resolve(true).then(() => {
-			a.pass();
-			a.end();
-		});
-	}).run().then(result => {
-		t.is(result.passed, false);
-		t.match(result.error.message, /Do not return promises/);
-	});
-});
 
 test('assertion plan is tested after returned promise resolves', t => {
 	const start = Date.now();

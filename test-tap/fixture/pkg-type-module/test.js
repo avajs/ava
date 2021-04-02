@@ -1,4 +1,4 @@
-import test from '../../../index.js'; // eslint-disable-line import/extensions
+import test from '../../../entrypoints/main.mjs';
 
 test('pass', t => {
 	t.pass();

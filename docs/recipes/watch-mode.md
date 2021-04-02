@@ -6,58 +6,13 @@ AVA comes with an intelligent watch mode. It watches for files to change and run
 
 ## Running tests with watch mode enabled
 
-You can enable watch mode using the `--watch` or `-w` flags. If you have installed AVA globally:
+You can enable watch mode using the `--watch` or `-w` flags:
 
 ```console
-$ ava --watch
+$ npx ava --watch
 ```
 
-If you've configured it in your `package.json` like this:
-
-```json
-{
-	"scripts": {
-		"test": "ava"
-	}
-}
-```
-
-You can run:
-
-```console
-$ npm test -- --watch
-```
-
-You could also set up a special script:
-
-```json
-{
-	"scripts": {
-		"test": "ava",
-		"watch:test": "ava --watch"
-	}
-}
-```
-
-And then use:
-
-```console
-$ npm run watch:test
-```
-
-Finally you could configure AVA to *always* run in watch mode by setting the `watch` key in the [`ava` section of your `package.json`, or `ava.config.*` file][config].
-
-**`package.json`:**
-
-```json
-{
-	"ava": {
-		"watch": true
-	}
-}
-```
-
-Please note that the TAP reporter is unavailable when using watch mode.
+Please note that integrated debugging and the TAP reporter are unavailable when using watch mode.
 
 ## Requirements
 
@@ -98,14 +53,7 @@ You can update failing snapshots by typing <kbd>u</kbd> on the console, followed
 Sometimes watch mode does something surprising like rerunning all tests when you thought only a single test would be run. To see its reasoning you can enable a debug mode. This will work best with the verbose reporter:
 
 ```console
-$ DEBUG=ava:watcher npm test -- --watch --verbose
-```
-
-On Windows use:
-
-```console
-$ set DEBUG=ava:watcher
-$ npm test -- --watch --verbose
+$ DEBUG=ava:watcher npx ava --watch
 ```
 
 ## Help us make watch mode better

@@ -13,7 +13,7 @@ function setup(title, manager, fn) {
 		experiments: {},
 		fn,
 		failWithoutAssertions: true,
-		metadata: {type: 'test', callback: false},
+		metadata: {type: 'test'},
 		contextRef: new ContextRef(),
 		registerUniqueTitle: () => true,
 		title,
@@ -23,7 +23,7 @@ function setup(title, manager, fn) {
 
 test(async t => {
 	// Set to `true` to update the snapshot, then run:
-	// "$(npm bin)"/tap -R spec test/try-snapshot.js
+	// npx tap -R spec test-tap/try-snapshot.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;

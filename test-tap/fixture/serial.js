@@ -1,19 +1,18 @@
-const test = require('../..');
+const delay = require('delay');
+const test = require('../../entrypoints/main.cjs');
 
 const tests = [];
 
-test.cb('first', t => {
-	setTimeout(() => {
-		tests.push('first');
-		t.end();
-	}, 300);
+test('first', async t => {
+	await delay(300);
+	tests.push('first');
+	t.pass();
 });
 
-test.cb('second', t => {
-	setTimeout(() => {
-		tests.push('second');
-		t.end();
-	}, 100);
+test('second', async t => {
+	await delay(100);
+	tests.push('second');
+	t.pass();
 });
 
 test('test', t => {

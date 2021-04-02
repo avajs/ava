@@ -32,16 +32,6 @@ test('improper use of t.throws from within a pending promise, even if caught and
 	});
 });
 
-test('improper use of t.throws from within an async callback will be reported to the console', t => {
-	execCli('async-callback.js', {dirname: 'fixture/improper-t-throws'}, (err, stdout) => {
-		t.ok(err);
-		t.match(stdout, /Improper usage of `t\.throws\(\)` detected/);
-		t.match(stdout, /should be detected/);
-		t.match(stdout, /Try wrapping the first argument/);
-		t.end();
-	});
-});
-
 test('improper use of t.throws, swallowed as an unhandled rejection, will be reported to the console', t => {
 	execCli('unhandled-rejection.js', {dirname: 'fixture/improper-t-throws'}, (err, stdout) => {
 		t.ok(err);
