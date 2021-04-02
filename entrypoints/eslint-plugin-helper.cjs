@@ -1,4 +1,6 @@
 'use strict';
+const path = require('path');
+const url = require('url');
 const v8 = require('v8');
 const {Worker} = require('worker_threads');
 
@@ -10,7 +12,7 @@ let data;
 let sync;
 let worker;
 
-const	resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
+const resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 	if (worker === undefined) {
 		const dataBuffer = new SharedArrayBuffer(MAX_DATA_LENGTH_EXCLUSIVE);
 		data = new Uint8Array(dataBuffer);
@@ -18,7 +20,8 @@ const	resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 		const syncBuffer = new SharedArrayBuffer(4);
 		sync = new Int32Array(syncBuffer);
 
-		worker = new Worker('./lib/eslint-plugin-helper-worker.js', {
+		const filename = path.join(__dirname, '../lib/eslint-plugin-helper-worker.js');
+		worker = new Worker(url.pathToFileURL(filename), {
 			workerData: {
 				dataBuffer,
 				syncBuffer,
@@ -30,7 +33,10 @@ const	resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 		worker.postMessage({projectDir, overrideExtensions, overrideFiles});
 	}
 
-	Atomics.wait(sync, 0, 0);
+	const synchronize = Atomics.wait(sync, 0, 0, 10000);
+	if (synchronize === 'timed-out') {
+		throw new Error('Timed out resolving AVA configuration');
+	}
 
 	const byteLength = Atomics.exchange(sync, 0, 0);
 	if (byteLength === MAX_DATA_LENGTH_EXCLUSIVE) {
