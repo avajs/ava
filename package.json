@@ -1,12 +1,12 @@
 {
 	"name": "ava",
-	"version": "4.0.0-alpha.1",
+	"version": "4.0.0-alpha.2",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
 	"bin": {
-		"ava": "./entrypoints/cli.mjs"
+		"ava": "entrypoints/cli.mjs"
 	},
 	"exports": {
 		".": {
