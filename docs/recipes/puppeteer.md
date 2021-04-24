@@ -20,6 +20,8 @@ module.exports = async (t, run) => {
 	const page = await browser.newPage();
 	try {
 		await run(t, page);
+	} catch (err) {
+		console.error(err)
 	} finally {
 		await page.close();
 		await browser.close();
