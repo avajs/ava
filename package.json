@@ -20,7 +20,7 @@
 		}
 	},
 	"engines": {
-		"node": ">=12.20 <13 || >=14.15 <15 || >=15"
+		"node": ">=12.20 <13 || >=14.15 <15"
 	},
 	"scripts": {
 		"cover": "c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report",
