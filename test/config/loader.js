@@ -88,7 +88,9 @@ test.serial('loads config from factory function', ok('package-no-file-yes-factor
 	t.assert(conf.files.startsWith(FIXTURE_ROOT));
 });
 
-test.serial('does not support require() inside config.js files', notOk('require'));
+test.serial('does not support require() inside config.js files', notOk('require'), (t, error) => {
+	t.true(error.message.startsWith('Error loading ava.config.js: require is not defined'));
+});
 
 test.serial('throws an error if a config factory does not return a plain object', notOk('factory-no-plain-return'));
 
