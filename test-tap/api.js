@@ -43,7 +43,7 @@ for (const opt of opts) {
 		});
 		return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 2);
+				t.equal(runStatus.stats.passedTests, 2);
 			});
 	});
 
@@ -74,7 +74,7 @@ for (const opt of opts) {
 		return api.run({files: [path.join(__dirname, 'fixture/fail-fast/single-file/test.js')]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
-				t.strictDeepEqual(tests, [{
+				t.strictSame(tests, [{
 					ok: true,
 					title: 'first pass'
 				}, {
@@ -84,8 +84,8 @@ for (const opt of opts) {
 					ok: true,
 					title: 'third pass'
 				}]);
-				t.is(runStatus.stats.passedTests, 2);
-				t.is(runStatus.stats.failedTests, 1);
+				t.equal(runStatus.stats.passedTests, 2);
+				t.equal(runStatus.stats.failedTests, 1);
 			});
 	});
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & serial`, t => {
@@ -121,7 +121,7 @@ for (const opt of opts) {
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
-				t.strictDeepEqual(tests, [{
+				t.strictSame(tests, [{
 					ok: true,
 					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 					title: 'first pass'
@@ -130,8 +130,8 @@ for (const opt of opts) {
 					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 					title: 'second fail'
 				}]);
-				t.is(runStatus.stats.passedTests, 1);
-				t.is(runStatus.stats.failedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.failedTests, 1);
 			});
 	});
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & interrupt`, async t => {
@@ -168,9 +168,9 @@ for (const opt of opts) {
 		t.ok(api.options.failFast);
 		t.ok(runStatus.stats.passedTests >= 2); // Results from passes-slow are not always received on Windows.
 		t.ok(runStatus.stats.passedTests <= 3);
-		t.is(runStatus.stats.failedTests, 1);
+		t.equal(runStatus.stats.failedTests, 1);
 
-		t.strictDeepEqual(tests.filter(({testFile}) => testFile === fails), [{
+		t.strictSame(tests.filter(({testFile}) => testFile === fails), [{
 			ok: true,
 			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 			title: 'first pass'
@@ -184,7 +184,7 @@ for (const opt of opts) {
 			title: 'third pass'
 		}]);
 		if (runStatus.stats.passedTests === 3) {
-			t.strictDeepEqual(tests.filter(({testFile}) => testFile === passesSlow), [{
+			t.strictSame(tests.filter(({testFile}) => testFile === passesSlow), [{
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
 				title: 'first pass'
@@ -225,11 +225,11 @@ for (const opt of opts) {
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
-				t.strictDeepEqual(tests, []);
-				t.is(workerFailures.length, 1);
-				t.is(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.js'));
-				t.is(runStatus.stats.passedTests, 0);
-				t.is(runStatus.stats.failedTests, 0);
+				t.strictSame(tests, []);
+				t.equal(workerFailures.length, 1);
+				t.equal(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.js'));
+				t.equal(runStatus.stats.passedTests, 0);
+				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 
@@ -268,11 +268,11 @@ for (const opt of opts) {
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
-				t.strictDeepEqual(tests, []);
-				t.is(timeouts.length, 1);
-				t.is(timeouts[0].period, 100);
-				t.is(runStatus.stats.passedTests, 0);
-				t.is(runStatus.stats.failedTests, 0);
+				t.strictSame(tests, []);
+				t.equal(timeouts.length, 1);
+				t.equal(timeouts[0].period, 100);
+				t.equal(runStatus.stats.passedTests, 0);
+				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - no errors`, t => {
@@ -287,8 +287,8 @@ for (const opt of opts) {
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
-				t.is(runStatus.stats.passedTests, 2);
-				t.is(runStatus.stats.failedTests, 0);
+				t.equal(runStatus.stats.passedTests, 2);
+				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 	test(`serial execution mode - workerThreads: ${opt.workerThreads}`, t => {
@@ -300,8 +300,8 @@ for (const opt of opts) {
 		return api.run({files: [path.join(__dirname, 'fixture/serial.js')]})
 			.then(runStatus => {
 				t.ok(api.options.serial);
-				t.is(runStatus.stats.passedTests, 3);
-				t.is(runStatus.stats.failedTests, 0);
+				t.equal(runStatus.stats.passedTests, 3);
+				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 	test(`run from package.json folder by default - workerThreads: ${opt.workerThreads}`, t => {
@@ -309,7 +309,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -333,7 +333,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -357,7 +357,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/source-map-file-browser-env.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -400,8 +400,8 @@ for (const opt of opts) {
 		});
 		return api.run({files: [path.join(__dirname, 'fixture/enhanced-assertion-formatting.js')]})
 			.then(runStatus => {
-				t.is(errors.length, 3);
-				t.is(runStatus.stats.passedTests, 0);
+				t.equal(errors.length, 3);
+				t.equal(runStatus.stats.passedTests, 0);
 
 				for (const [errorIndex, error] of errors.entries()) {
 					for (const [statementIndex, statement] of error.statements.entries()) {
@@ -431,7 +431,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -455,7 +455,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -479,7 +479,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -488,7 +488,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.resolve('test-tap/fixture/es2015.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -497,7 +497,7 @@ for (const opt of opts) {
 
 		return api.run()
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -506,7 +506,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/symlinkfile.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -516,7 +516,7 @@ for (const opt of opts) {
 		const api = apiCreator(opt);
 		return api.run({files: [path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.declaredTests, 0);
+				t.equal(runStatus.stats.declaredTests, 0);
 			});
 	});
 
@@ -530,7 +530,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/validate-installed-global.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.passedTests, 1);
+				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
@@ -554,13 +554,13 @@ for (const opt of opts) {
 		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-				t.is(files.filter(x => x.endsWith('.js')).length, 1);
-				t.is(files.filter(x => x.endsWith('.map')).length, 1);
+				t.equal(files.filter(x => x.endsWith('.js')).length, 1);
+				t.equal(files.filter(x => x.endsWith('.map')).length, 1);
 				if (files.length === 3) {
 					// This file may be written locally, but not in CI.
-					t.is(files.filter(x => x.startsWith('failing-tests.json')).length, 1);
+					t.equal(files.filter(x => x.startsWith('failing-tests.json')).length, 1);
 				} else {
-					t.is(files.length, 2);
+					t.equal(files.length, 2);
 				}
 			});
 	});
@@ -576,7 +576,7 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
 			.then(() => {
-				t.false(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
+				t.notOk(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
 			});
 	});
 
@@ -585,9 +585,9 @@ for (const opt of opts) {
 
 		return api.run({...opt, files: [path.join(__dirname, 'fixture/skip-only.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.selectedTests, 1);
-				t.is(runStatus.stats.skippedTests, 1);
-				t.is(runStatus.stats.failedTests, 0);
+				t.equal(runStatus.stats.selectedTests, 1);
+				t.equal(runStatus.stats.skippedTests, 1);
+				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 
@@ -596,11 +596,11 @@ for (const opt of opts) {
 
 		return api.run({files: [path.join(__dirname, 'fixture/hooks-skipped.js')]})
 			.then(runStatus => {
-				t.is(runStatus.stats.selectedTests, 1);
-				t.is(runStatus.stats.skippedTests, 1);
-				t.is(runStatus.stats.passedTests, 0);
-				t.is(runStatus.stats.failedTests, 0);
-				t.is(runStatus.stats.failedHooks, 0);
+				t.equal(runStatus.stats.selectedTests, 1);
+				t.equal(runStatus.stats.skippedTests, 1);
+				t.equal(runStatus.stats.passedTests, 0);
+				t.equal(runStatus.stats.failedTests, 0);
+				t.equal(runStatus.stats.failedHooks, 0);
 			});
 	});
 
@@ -629,8 +629,8 @@ for (const opt of opts) {
 		api.on('run', plan => {
 			plan.status.on('stateChange', evt => {
 				if (evt.type === 'dependencies') {
-					t.true(testFiles.has(evt.testFile));
-					t.strictDeepEqual(evt.dependencies.slice(-3), sourceFiles);
+					t.ok(testFiles.has(evt.testFile));
+					t.strictSame(evt.dependencies.slice(-3), sourceFiles);
 				}
 			});
 		});
@@ -648,10 +648,10 @@ for (const opt of opts) {
 			path.join(__dirname, 'fixture/test-count-2.js'),
 			path.join(__dirname, 'fixture/test-count-3.js')
 		]}).then(runStatus => {
-			t.is(runStatus.stats.passedTests, 4, 'pass count');
-			t.is(runStatus.stats.failedTests, 3, 'fail count');
-			t.is(runStatus.stats.skippedTests, 3, 'skip count');
-			t.is(runStatus.stats.todoTests, 3, 'todo count');
+			t.equal(runStatus.stats.passedTests, 4, 'pass count');
+			t.equal(runStatus.stats.failedTests, 3, 'fail count');
+			t.equal(runStatus.stats.skippedTests, 3, 'skip count');
+			t.equal(runStatus.stats.todoTests, 3, 'todo count');
 		});
 	});
 
@@ -667,7 +667,7 @@ for (const opt of opts) {
 			plan.status.on('stateChange', evt => {
 				if (evt.type === 'selected-test') {
 					t.match(evt.testFile, /match-no-match-2/);
-					t.is(evt.title, 'this test will match');
+					t.equal(evt.title, 'this test will match');
 				}
 			});
 		});
@@ -677,7 +677,7 @@ for (const opt of opts) {
 			path.join(__dirname, 'fixture/match-no-match-2.js'),
 			path.join(__dirname, 'fixture/test-count.js')
 		]}).then(runStatus => {
-			t.is(runStatus.stats.passedTests, 1);
+			t.equal(runStatus.stats.passedTests, 1);
 		});
 	});
 }
@@ -689,6 +689,6 @@ test('run from package.json folder by default', t => {
 
 	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
 		.then(runStatus => {
-			t.is(runStatus.stats.passedTests, 1);
+			t.equal(runStatus.stats.passedTests, 1);
 		});
 });

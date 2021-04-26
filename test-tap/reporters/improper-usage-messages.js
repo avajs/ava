@@ -17,6 +17,6 @@ test('results when nothing is applicable', t => {
 
 	const actualOutput = improperUsageMessages.forError(err);
 
-	t.is(actualOutput, null);
+	t.equal(actualOutput, null);
 	t.end();
 });

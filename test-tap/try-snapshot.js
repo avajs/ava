@@ -54,7 +54,7 @@ test(async t => {
 		});
 
 		const result = await ava.run();
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 
 	await t.test('try-commit snapshots concurrently', async t => {
@@ -75,10 +75,10 @@ test(async t => {
 		});
 
 		const result = await ava.run();
-		t.false(result.passed);
+		t.notOk(result.passed);
 		t.ok(result.error);
 		t.match(result.error.message, /not run concurrent snapshot assertions when using `t\.try\(\)`/);
-		t.is(result.error.name, 'Error');
+		t.equal(result.error.name, 'Error');
 	});
 
 	manager.save();

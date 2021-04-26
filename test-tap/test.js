@@ -16,7 +16,7 @@ test('run test', t => {
 	return ava(a => {
 		a.fail();
 	}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 	});
 });
 
@@ -27,8 +27,8 @@ test('multiple asserts', t => {
 		a.pass();
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 3);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 3);
 	});
 });
 
@@ -39,9 +39,9 @@ test('plan assertions', t => {
 		a.pass();
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 2);
-		t.is(instance.assertCount, 2);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 2);
+		t.equal(instance.assertCount, 2);
 	});
 });
 
@@ -52,9 +52,9 @@ test('plan assertion can be skipped', t => {
 		a.pass();
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, null);
-		t.is(instance.assertCount, 2);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, null);
+		t.equal(instance.assertCount, 2);
 	});
 });
 
@@ -65,9 +65,9 @@ test('plan assertion skip() is bound', t => {
 		a.pass();
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, null);
-		t.is(instance.assertCount, 2);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, null);
+		t.equal(instance.assertCount, 2);
 	});
 });
 
@@ -78,25 +78,25 @@ test('run more assertions than planned', t => {
 		a.pass();
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 		t.ok(result.error);
 		t.match(result.error.message, /Planned for 2 assertions, but got 3\./);
-		t.is(result.error.name, 'AssertionError');
+		t.equal(result.error.name, 'AssertionError');
 	});
 });
 
 test('fails if no assertions are run', t => {
 	return ava(() => {}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 		t.ok(result.error);
-		t.is(result.error.name, 'Error');
+		t.equal(result.error.name, 'Error');
 		t.match(result.error.message, /Test finished without running any assertions/);
 	});
 });
 
 test('fails if no assertions are run, unless so planned', t => {
 	return ava(a => a.plan(0)).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -105,11 +105,11 @@ test('wrap non-assertion errors', t => {
 	return ava(() => {
 		throw err;
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Error thrown in test');
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Error thrown in test:');
+		t.equal(result.passed, false);
+		t.equal(result.error.message, 'Error thrown in test');
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Error thrown in test:');
 		t.match(result.error.values[0].formatted, /Error/);
 	});
 });
@@ -118,7 +118,7 @@ test('title returns the test title', t => {
 	t.plan(1);
 	return new Test({
 		fn(a) {
-			t.is(a.title, 'foo');
+			t.equal(a.title, 'foo');
 			a.pass();
 		},
 		metadata: {type: 'test'},
@@ -132,9 +132,9 @@ test('handle non-assertion errors even when planned', t => {
 		a.plan(1);
 		throw err;
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.message, 'Error thrown in test');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.message, 'Error thrown in test');
 	});
 });
 
@@ -143,8 +143,8 @@ test('handle testing of arrays', t => {
 		a.deepEqual(['foo', 'bar'], ['foo', 'bar']);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 1);
 	});
 });
 
@@ -153,8 +153,8 @@ test('handle falsy testing of arrays', t => {
 		a.notDeepEqual(['foo', 'bar'], ['foo', 'bar', 'cat']);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 1);
 	});
 });
 
@@ -169,8 +169,8 @@ test('handle testing of objects', t => {
 		});
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 1);
 	});
 });
 
@@ -186,8 +186,8 @@ test('handle falsy testing of objects', t => {
 		});
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 1);
 	});
 });
 
@@ -197,8 +197,8 @@ test('more assertions than planned should emit an assertion error', t => {
 		a.pass();
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
 	});
 });
 
@@ -207,8 +207,8 @@ test('record test duration', t => {
 		await delay(1234);
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, true);
-		t.true(result.duration >= 1000);
+		t.equal(result.passed, true);
+		t.ok(result.duration >= 1000);
 	});
 });
 
@@ -218,10 +218,10 @@ test('fails with the first assertError', t => {
 		a.is(1, 2);
 		a.is(3, 4);
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Difference:');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Difference:');
 		t.match(result.error.values[0].formatted, /- 1\n\+ 2/);
 	});
 });
@@ -232,7 +232,7 @@ test('failing pending assertion causes test to fail, not promise rejection', t =
 			throw new Error('Should be ignored');
 		});
 	}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 		t.notMatch(result.error.message, /Rejected promise returned by test/);
 	});
 });
@@ -241,11 +241,11 @@ test('fails with thrown falsy value', t => {
 	return ava(() => {
 		throw 0; // eslint-disable-line no-throw-literal
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Error thrown in test');
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Error thrown in test:');
+		t.equal(result.passed, false);
+		t.equal(result.error.message, 'Error thrown in test');
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Error thrown in test:');
 		t.match(result.error.values[0].formatted, /0/);
 	});
 });
@@ -255,11 +255,11 @@ test('fails with thrown non-error object', t => {
 	return ava(() => {
 		throw object;
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, 'Error thrown in test');
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Error thrown in test:');
+		t.equal(result.passed, false);
+		t.equal(result.error.message, 'Error thrown in test');
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Error thrown in test:');
 		t.match(result.error.values[0].formatted, /.*{.*\n.*foo: 'bar'/);
 	});
 });
@@ -287,9 +287,9 @@ test('skipped assertions count towards the plan', t => {
 		a.notRegex.skip('bar', /foo/);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 16);
-		t.is(instance.assertCount, 16);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 16);
+		t.equal(instance.assertCount, 16);
 	});
 });
 
@@ -316,9 +316,9 @@ test('assertion.skip() is bound', t => {
 		(a.notRegex.skip)('bar', /foo/);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 16);
-		t.is(instance.assertCount, 16);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 16);
+		t.equal(instance.assertCount, 16);
 	});
 });
 
@@ -334,10 +334,10 @@ test('throws and notThrows work with promises', t => {
 		]);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 2);
-		t.is(instance.assertCount, 2);
-		t.is(asyncCalled, true);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 2);
+		t.equal(instance.assertCount, 2);
+		t.equal(asyncCalled, true);
 	});
 });
 
@@ -355,9 +355,9 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		return Promise.all(promises);
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 6);
-		t.is(instance.assertCount, 6);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 6);
+		t.equal(instance.assertCount, 6);
 	});
 });
 
@@ -365,8 +365,8 @@ test('fails if test ends while there are pending assertions', t => {
 	return ava(a => {
 		a.throwsAsync(Promise.reject(new Error()));
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'Error');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'Error');
 		t.match(result.error.message, /Test finished, but an assertion is still pending/);
 	});
 });
@@ -376,8 +376,8 @@ test('fails if async test ends while there are pending assertions', t => {
 		a.throwsAsync(Promise.reject(new Error()));
 		return Promise.resolve();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'Error');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'Error');
 		t.match(result.error.message, /Test finished, but an assertion is still pending/);
 	});
 });
@@ -419,7 +419,7 @@ test('contextRef', t => {
 		failWithoutAssertions: true,
 		fn(a) {
 			a.pass();
-			t.strictDeepEqual(a.context, {foo: 'bar'});
+			t.strictSame(a.context, {foo: 'bar'});
 			t.end();
 		},
 		metadata: {type: 'test'},
@@ -432,7 +432,7 @@ test('failing tests should fail', t => {
 	return ava.failing('foo', a => {
 		a.fail();
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -440,8 +440,8 @@ test('failing tests must not pass', t => {
 	return ava.failing(a => {
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, failingTestHint);
+		t.equal(result.passed, false);
+		t.equal(result.error.message, failingTestHint);
 	});
 });
 
@@ -449,8 +449,8 @@ test('failing tests must not return a fulfilled promise', t => {
 	return ava.failing(a => {
 		return Promise.resolve().then(() => a.pass());
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, failingTestHint);
+		t.equal(result.passed, false);
+		t.equal(result.error.message, failingTestHint);
 	});
 });
 
@@ -459,7 +459,7 @@ test('failing tests pass when returning a rejected promise', t => {
 		a.plan(1);
 		return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => Promise.reject());
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -467,7 +467,7 @@ test('failing tests pass with `t.throwsAsync(nonThrowingPromise)`', t => {
 	return ava.failing(a => {
 		return a.throwsAsync(Promise.resolve(10));
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -475,21 +475,21 @@ test('failing tests fail with `t.notThrowsAsync(throws)`', t => {
 	return ava.failing(a => {
 		return a.notThrowsAsync(Promise.resolve('foo'));
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.message, failingTestHint);
+		t.equal(result.passed, false);
+		t.equal(result.error.message, failingTestHint);
 	});
 });
 
 test('log from tests', t => {
 	return ava(a => {
 		a.log('a log message from a test');
-		t.true(true);
+		t.ok(true);
 		a.log('another log message from a test');
 		a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
 		a.log();
 		(a.log)('bound');
 	}).run().then(result => {
-		t.deepEqual(
+		t.same(
 			result.logs,
 			[
 				'a log message from a test',
@@ -522,7 +522,7 @@ test('assertions are bound', t => {
 		(a.regex)('foo', /foo/);
 		(a.notRegex)('bar', /foo/);
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 });
 
@@ -548,7 +548,7 @@ test('snapshot assertion can be skipped', t => {
 			t.snapshot({name: 'Sindre'});
 		}
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 });
 
@@ -579,9 +579,9 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 
 	await test.run();
 
-	t.true(skipSnapshot.calledTwice);
+	t.ok(skipSnapshot.calledTwice);
 	for (const [index, call] of skipSnapshot.getCalls().entries()) {
-		t.like(call.firstArg, {belongsTo: 'passes', index});
+		t.match(call.firstArg, {belongsTo: 'passes', index});
 	}
 });
 
@@ -594,14 +594,14 @@ test('snapshot assertion can be skipped when updating snapshots', t => {
 			t.snapshot.skip({not: {a: 'match'}});
 		}
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 });
 
 test('implementation runs with null scope', t => {
 	return ava(function (a) {
 		a.pass();
-		t.is(this, null);
+		t.equal(this, null);
 	}).run();
 });
 
@@ -610,7 +610,7 @@ test('timeout with promise', t => {
 		a.timeout(10);
 		return delay(200);
 	}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 		t.match(result.error.message, /timeout/);
 	});
 });
@@ -626,7 +626,7 @@ test('timeout is refreshed on assert', t => {
 			delay(20)
 		]);
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -636,7 +636,7 @@ test('teardown passing test', t => {
 		a.teardown(teardown);
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 		t.ok(teardown.calledOnce);
 	});
 });
@@ -647,7 +647,7 @@ test('teardown failing test', t => {
 		a.teardown(teardown);
 		a.fail();
 	}).run().then(result => {
-		t.is(result.passed, false);
+		t.equal(result.passed, false);
 		t.ok(teardown.calledOnce);
 	});
 });
@@ -661,7 +661,7 @@ test('teardown awaits promise', t => {
 		a.teardown(() => teardownPromise);
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 		t.ok(tornDown);
 	});
 });
@@ -678,7 +678,7 @@ test('teardowns run in reverse order', t => {
 		a.teardown(() => teardownB().then(resolveA));
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 		t.ok(teardownB.calledBefore(teardownA));
 	});
 });
@@ -689,7 +689,7 @@ test('teardown without function callback fails', t => {
 			a.teardown(false);
 		}, {message: 'Expected a function'});
 	}).run().then(result => {
-		t.is(result.passed, true);
+		t.equal(result.passed, true);
 	});
 });
 
@@ -699,8 +699,8 @@ test('teardown errors fail the test', t => {
 		a.teardown(teardown);
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'TeardownError');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'TeardownError');
 		t.ok(teardown.calledOnce);
 	});
 });
@@ -711,8 +711,8 @@ test('teardown errors are hidden behind assertion errors', t => {
 		a.teardown(teardown);
 		a.fail();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
 		t.ok(teardown.calledOnce);
 	});
 });
@@ -725,8 +725,8 @@ test('teardown errors do not stop next teardown from running', t => {
 		a.teardown(teardownB);
 		a.pass();
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'TeardownError');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'TeardownError');
 		t.ok(teardownA.calledOnce);
 		t.ok(teardownB.calledOnce);
 		t.ok(teardownB.calledBefore(teardownA));
@@ -740,7 +740,7 @@ test('teardowns cannot be registered by teardowns', async t => {
 		});
 		a.pass();
 	}).run();
-	t.is(result.passed, false);
+	t.equal(result.passed, false);
 	t.match(result.error.message, /cannot be used during teardown/);
 });
 
@@ -755,7 +755,7 @@ test('.log() is bound', t => {
 			log(value);
 		}
 	}).run().then(result => {
-		t.deepEqual(result.logs, [
+		t.same(result.logs, [
 			'value: 1',
 			'value: 2',
 			'value: 3',
@@ -774,7 +774,7 @@ test('.plan() is bound', t => {
 		a.is(2, 2);
 		a.truthy('string');
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 });
 
@@ -784,7 +784,7 @@ test('.timeout() is bound', t => {
 		timeout(10);
 		a.pass();
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 	});
 });
 
@@ -795,7 +795,7 @@ test('.teardown() is bound', t => {
 		teardown(teardownCallback);
 		a.pass();
 	}).run().then(result => {
-		t.true(result.passed);
+		t.ok(result.passed);
 		t.ok(teardownCallback.calledOnce);
 	});
 });
@@ -804,7 +804,7 @@ test('t.passed value is true when teardown callback is executed for passing test
 	new Test({
 		fn(a) {
 			a.teardown(() => {
-				t.is(a.passed, true);
+				t.equal(a.passed, true);
 				t.end();
 			});
 			a.pass();
@@ -819,7 +819,7 @@ test('t.passed value is false when teardown callback is executed for failing tes
 	new Test({
 		fn(a) {
 			a.teardown(() => {
-				t.is(a.passed, false);
+				t.equal(a.passed, false);
 				t.end();
 			});
 			a.fail();

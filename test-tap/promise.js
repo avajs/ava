@@ -42,10 +42,10 @@ test('assertion plan is tested after returned promise resolves', t => {
 		});
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.planCount, 2);
-		t.is(instance.assertCount, 2);
-		t.true(Date.now() - start >= 500);
+		t.equal(result.passed, true);
+		t.equal(instance.planCount, 2);
+		t.equal(instance.assertCount, 2);
+		t.ok(Date.now() - start >= 500);
 	});
 });
 
@@ -60,8 +60,8 @@ test('missing assertion will fail the test', t => {
 			}, 200);
 		});
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.assertion, 'plan');
+		t.equal(result.passed, false);
+		t.equal(result.error.assertion, 'plan');
 	});
 });
 
@@ -81,8 +81,8 @@ test('extra assertion will fail the test', t => {
 			}, 500);
 		});
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.assertion, 'plan');
+		t.equal(result.passed, false);
+		t.equal(result.error.assertion, 'plan');
 	});
 });
 
@@ -93,8 +93,8 @@ test('assert pass', t => {
 		});
 	});
 	return instance.run().then(result => {
-		t.is(result.passed, true);
-		t.is(instance.assertCount, 1);
+		t.equal(result.passed, true);
+		t.equal(instance.assertCount, 1);
 	});
 });
 
@@ -104,8 +104,8 @@ test('assert fail', t => {
 			a.fail();
 		});
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
 	});
 });
 
@@ -115,11 +115,11 @@ test('reject', t => {
 			a.pass();
 		});
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.message, 'Rejected promise returned by test');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.message, 'Rejected promise returned by test');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
 		t.match(result.error.values[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
 	});
 });
@@ -128,11 +128,11 @@ test('reject with non-Error', t => {
 	return ava(() => {
 		return Promise.reject('failure'); // eslint-disable-line prefer-promise-reject-errors
 	}).run().then(result => {
-		t.is(result.passed, false);
-		t.is(result.error.name, 'AssertionError');
-		t.is(result.error.message, 'Rejected promise returned by test');
-		t.is(result.error.values.length, 1);
-		t.is(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
+		t.equal(result.passed, false);
+		t.equal(result.error.name, 'AssertionError');
+		t.equal(result.error.message, 'Rejected promise returned by test');
+		t.equal(result.error.values.length, 1);
+		t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
 		t.match(result.error.values[0].formatted, /failure/);
 	});
 });

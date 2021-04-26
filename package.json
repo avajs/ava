@@ -140,7 +140,7 @@
 		"replace-string": "^3.1.0",
 		"sinon": "^9.2.4",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^14.11.0",
+		"tap": "^15.0.5",
 		"temp-write": "^4.0.0",
 		"tempy": "^1.0.0",
 		"touch": "^3.1.0",

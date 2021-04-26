@@ -5,10 +5,9 @@ const globs = require('../lib/globs');
 
 const {test} = tap;
 
-tap.afterEach(done => {
+tap.afterEach(() => {
 	// We changed the CWD in some of the tests
 	process.chdir(path.resolve(__dirname, '..'));
-	done();
 });
 
 function fixture(...args) {
@@ -18,7 +17,7 @@ function fixture(...args) {
 
 test('ignores relativeness in patterns', t => {
 	const {filePatterns} = globs.normalizeGlobs({files: ['./foo.js', '!./bar'], extensions: ['js'], providers: []});
-	t.deepEqual(filePatterns, ['foo.js', '!bar']);
+	t.same(filePatterns, ['foo.js', '!bar']);
 	t.end();
 });
 
@@ -32,11 +31,11 @@ test('isTest with defaults', t => {
 	};
 
 	function isTest(file) {
-		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
+		t.ok(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
 	}
 
 	function notTest(file) {
-		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
+		t.notOk(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
 	}
 
 	isTest('__tests__/foo.js');
@@ -107,11 +106,11 @@ test('isTest with patterns', t => {
 	};
 
 	function isTest(file) {
-		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
+		t.ok(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
 	}
 
 	function notTest(file) {
-		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
+		t.notOk(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
 	}
 
 	isTest('foo-bar.js');
@@ -142,11 +141,11 @@ test('isTest (pattern starts with directory)', t => {
 	};
 
 	function isTest(file) {
-		t.true(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
+		t.ok(globs.classify(fixture(file), options).isTest, `${file} should be a test`);
 	}
 
 	function notTest(file) {
-		t.false(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
+		t.notOk(globs.classify(fixture(file), options).isTest, `${file} should not be a test`);
 	}
 
 	notTest('foo-bar.js');
@@ -174,8 +173,8 @@ test('isTest after provider modifications', t => {
 				level: 2,
 				main: {
 					updateGlobs({filePatterns, ignoredByWatcherPatterns}) {
-						t.true(filePatterns.length > 0);
-						t.true(ignoredByWatcherPatterns.length > 0);
+						t.ok(filePatterns.length > 0);
+						t.ok(ignoredByWatcherPatterns.length > 0);
 						return {
 							filePatterns: ['foo.js'],
 							ignoredByWatcherPatterns
@@ -187,8 +186,8 @@ test('isTest after provider modifications', t => {
 		cwd: fixture()
 	};
 
-	t.true(globs.classify(fixture('foo.js'), options).isTest);
-	t.false(globs.classify(fixture('bar.js'), options).isTest);
+	t.ok(globs.classify(fixture('foo.js'), options).isTest);
+	t.notOk(globs.classify(fixture('bar.js'), options).isTest);
 	t.end();
 });
 
@@ -199,11 +198,11 @@ test('isIgnoredByWatcher with defaults', t => {
 	};
 
 	function isIgnoredByWatcher(file) {
-		t.true(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should be ignored`);
+		t.ok(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should be ignored`);
 	}
 
 	function notIgnored(file) {
-		t.false(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should not be ignored`);
+		t.notOk(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should not be ignored`);
 	}
 
 	notIgnored('foo-bar.js');
@@ -238,9 +237,9 @@ test('isIgnoredByWatcher with patterns', t => {
 		cwd: fixture()
 	};
 
-	t.true(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
-	t.true(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
-	t.true(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -255,9 +254,9 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 		cwd: fixture()
 	};
 
-	t.true(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
-	t.false(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
-	t.true(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
+	t.notOk(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -269,8 +268,8 @@ test('isIgnoredByWatcher after provider modifications', t => {
 				level: 2,
 				main: {
 					updateGlobs({filePatterns, ignoredByWatcherPatterns}) {
-						t.true(filePatterns.length > 0);
-						t.true(ignoredByWatcherPatterns.length > 0);
+						t.ok(filePatterns.length > 0);
+						t.ok(ignoredByWatcherPatterns.length > 0);
 						return {
 							filePatterns,
 							ignoredByWatcherPatterns: ['foo.js']
@@ -282,8 +281,8 @@ test('isIgnoredByWatcher after provider modifications', t => {
 		cwd: fixture()
 	};
 
-	t.true(globs.classify(fixture('foo.js'), options).isIgnoredByWatcher);
-	t.false(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classify(fixture('foo.js'), options).isIgnoredByWatcher);
+	t.notOk(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -311,7 +310,7 @@ test('findFiles finds non-ignored files (just .js)', async t => {
 		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['js'], providers: []})
 	});
 	actual.sort();
-	t.deepEqual(actual, expected);
+	t.same(actual, expected);
 });
 
 test('findFiles finds non-ignored files (.js, .jsx)', async t => {
@@ -330,5 +329,5 @@ test('findFiles finds non-ignored files (.js, .jsx)', async t => {
 		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['js', 'jsx'], providers: []})
 	});
 	actual.sort();
-	t.deepEqual(actual, expected);
+	t.same(actual, expected);
 });

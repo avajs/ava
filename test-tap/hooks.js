@@ -26,7 +26,7 @@ test('before', t => {
 			array.push('b');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a', 'b']);
+		t.strictSame(array, ['a', 'b']);
 	});
 });
 
@@ -50,7 +50,7 @@ test('after', t => {
 			array.push('a');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a', 'b']);
+		t.strictSame(array, ['a', 'b']);
 	});
 });
 
@@ -73,7 +73,7 @@ test('after not run if test failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, []);
+		t.strictSame(array, []);
 	});
 });
 
@@ -96,7 +96,7 @@ test('after.always run even if test failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -115,7 +115,7 @@ test('after.always run even if before failed', t => {
 			array.push('a');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -138,7 +138,7 @@ test('stop if before hooks failed', t => {
 			a.end();
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -168,7 +168,7 @@ test('before each with concurrent tests', t => {
 			array[1].push('d');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, [['a', 'b', 'c'], ['a', 'b', 'd']]);
+		t.strictSame(array, [['a', 'b', 'c'], ['a', 'b', 'd']]);
 	});
 });
 
@@ -195,7 +195,7 @@ test('before each with serial tests', t => {
 			array.push('d');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a', 'b', 'c', 'a', 'b', 'd']);
+		t.strictSame(array, ['a', 'b', 'c', 'a', 'b', 'd']);
 	});
 });
 
@@ -220,7 +220,7 @@ test('fail if beforeEach hook fails', t => {
 			a.pass();
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -250,7 +250,7 @@ test('after each with concurrent tests', t => {
 			array[1].push('d');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, [['c', 'a', 'b'], ['d', 'a', 'b']]);
+		t.strictSame(array, [['c', 'a', 'b'], ['d', 'a', 'b']]);
 	});
 });
 
@@ -277,7 +277,7 @@ test('after each with serial tests', t => {
 			array.push('d');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['c', 'a', 'b', 'd', 'a', 'b']);
+		t.strictSame(array, ['c', 'a', 'b', 'd', 'a', 'b']);
 	});
 });
 
@@ -294,7 +294,7 @@ test('afterEach not run if concurrent tests failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, []);
+		t.strictSame(array, []);
 	});
 });
 
@@ -311,7 +311,7 @@ test('afterEach not run if serial tests failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, []);
+		t.strictSame(array, []);
 	});
 });
 
@@ -328,7 +328,7 @@ test('afterEach.always run even if concurrent tests failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -345,7 +345,7 @@ test('afterEach.always run even if serial tests failed', t => {
 			throw new Error('something went wrong');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -367,7 +367,7 @@ test('afterEach.always run even if beforeEach failed', t => {
 			array.push('b');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['b']);
+		t.strictSame(array, ['b']);
 	});
 });
 
@@ -390,7 +390,7 @@ test('afterEach: property `passed` of execution-context is false when test faile
 			a.pass();
 		});
 	}).then(() => {
-		t.strictDeepEqual(passed, [undefined, true]);
+		t.strictSame(passed, [undefined, true]);
 	});
 });
 
@@ -413,7 +413,7 @@ test('afterEach.always: property `passed` of execution-context is false when tes
 			a.pass();
 		});
 	}).then(() => {
-		t.strictDeepEqual(passed, [false, true]);
+		t.strictSame(passed, [false, true]);
 	});
 });
 
@@ -432,7 +432,7 @@ test('afterEach.always: property `passed` of execution-context is false when bef
 			a.pass();
 		});
 	}).then(() => {
-		t.false(passed);
+		t.notOk(passed);
 	});
 });
 
@@ -451,7 +451,7 @@ test('afterEach.always: property `passed` of execution-context is true when test
 			a.pass();
 		});
 	}).then(() => {
-		t.true(passed);
+		t.ok(passed);
 	});
 });
 
@@ -481,7 +481,7 @@ test('ensure hooks run only around tests', t => {
 			array.push('test');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
+		t.strictSame(array, ['before', 'beforeEach', 'test', 'afterEach', 'after']);
 	});
 });
 

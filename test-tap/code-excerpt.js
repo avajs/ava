@@ -23,7 +23,7 @@ test('read code excerpt', t => {
 		` ${chalk.grey('3:')} }             `
 	].join('\n');
 
-	t.is(excerpt, expected);
+	t.equal(excerpt, expected);
 	t.end();
 });
 
@@ -41,7 +41,7 @@ test('truncate lines', t => {
 		` ${chalk.grey('3:')} }       `
 	].join('\n');
 
-	t.is(excerpt, expected);
+	t.equal(excerpt, expected);
 	t.end();
 });
 
@@ -67,7 +67,7 @@ test('format line numbers', t => {
 		` ${chalk.grey('11:')} }             `
 	].join('\n');
 
-	t.is(excerpt, expected);
+	t.equal(excerpt, expected);
 	t.end();
 });
 
@@ -76,18 +76,18 @@ test('noop if file cannot be read', t => {
 	fs.unlinkSync(file);
 
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
-	t.is(excerpt, null);
+	t.equal(excerpt, null);
 	t.end();
 });
 
 test('noop if file is not within project', t => {
 	const excerpt = codeExcerpt({isWithinProject: false, file: __filename, line: 1});
-	t.is(excerpt, null);
+	t.equal(excerpt, null);
 	t.end();
 });
 
 test('noop if file is a dependency', t => {
 	const excerpt = codeExcerpt({isWithinProject: true, isDependency: true, file: __filename, line: 1});
-	t.is(excerpt, null);
+	t.equal(excerpt, null);
 	t.end();
 });

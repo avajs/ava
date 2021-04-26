@@ -42,19 +42,19 @@ function assertFailure(t, subset) {
 		return;
 	}
 
-	t.is(lastFailure.assertion, subset.assertion);
-	t.is(lastFailure.message, subset.message);
-	t.is(lastFailure.name, 'AssertionError');
-	t.is(lastFailure.operator, subset.operator);
+	t.equal(lastFailure.assertion, subset.assertion);
+	t.equal(lastFailure.message, subset.message);
+	t.equal(lastFailure.name, 'AssertionError');
+	t.equal(lastFailure.operator, subset.operator);
 	if (subset.raw) {
-		t.is(lastFailure.raw.expected, subset.raw.expected);
-		t.is(lastFailure.raw.actual, subset.raw.actual);
+		t.equal(lastFailure.raw.expected, subset.raw.expected);
+		t.equal(lastFailure.raw.actual, subset.raw.actual);
 	}
 
 	if (subset.statements) {
-		t.is(lastFailure.statements.length, subset.statements.length);
+		t.equal(lastFailure.statements.length, subset.statements.length);
 		for (const [i, s] of lastFailure.statements.entries()) {
-			t.is(s[0], subset.statements[i][0]);
+			t.equal(s[0], subset.statements[i][0]);
 			t.match(s[1], subset.statements[i][1]);
 		}
 	} else {
@@ -62,9 +62,9 @@ function assertFailure(t, subset) {
 	}
 
 	if (subset.values) {
-		t.is(lastFailure.values.length, subset.values.length);
+		t.equal(lastFailure.values.length, subset.values.length);
 		for (const [i, s] of lastFailure.values.entries()) {
-			t.is(s.label, subset.values[i].label);
+			t.equal(s.label, subset.values[i].label);
 			t.match(stripAnsi(s.formatted), subset.values[i].formatted);
 		}
 	} else {
@@ -105,7 +105,7 @@ function failsWith(t, fn, subset, {expectBoolean = true} = {}) {
 	const retval = fn();
 	assertFailure(t, subset);
 	if (expectBoolean) {
-		t.false(retval);
+		t.notOk(retval);
 	}
 }
 
@@ -113,7 +113,7 @@ function throwsAsyncFails(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
 		return fn().then(retval => {
-			t.is(retval, undefined);
+			t.equal(retval, undefined);
 			assertFailure(t, subset);
 		});
 	});
@@ -123,7 +123,7 @@ function fails(t, fn) {
 	lastFailure = null;
 	const retval = fn();
 	if (lastFailure) {
-		t.false(retval);
+		t.notOk(retval);
 	} else {
 		t.fail('Expected assertion to fail');
 	}
@@ -135,12 +135,12 @@ function passes(t, fn, {expectBoolean = true} = {}) {
 	const retval = fn();
 	if (lastPassed) {
 		if (expectBoolean) {
-			t.true(retval);
+			t.ok(retval);
 		} else {
 			t.pass();
 		}
 	} else {
-		t.ifError(lastFailure, 'Expected assertion to pass');
+		t.error(lastFailure, 'Expected assertion to pass');
 	}
 }
 
@@ -152,7 +152,7 @@ function throwsAsyncPasses(t, fn) {
 			if (lastPassed) {
 				t.pass();
 			} else {
-				t.ifError(lastFailure, 'Expected assertion to pass');
+				t.error(lastFailure, 'Expected assertion to pass');
 			}
 		});
 	});
@@ -1143,7 +1143,7 @@ test('.throws() returns the thrown error', t => {
 		throw expected;
 	});
 
-	t.is(actual, expected);
+	t.equal(actual, expected);
 
 	t.end();
 });
@@ -1219,7 +1219,7 @@ test('.throwsAsync() returns the rejection reason of promise', t => {
 	const expected = new Error();
 
 	return assertions.throwsAsync(Promise.reject(expected)).then(actual => {
-		t.is(actual, expected);
+		t.equal(actual, expected);
 		t.end();
 	});
 });
@@ -1230,7 +1230,7 @@ test('.throwsAsync() returns the rejection reason of a promise returned by the f
 	return assertions.throwsAsync(() => {
 		return Promise.reject(expected);
 	}).then(actual => {
-		t.is(actual, expected);
+		t.equal(actual, expected);
 		t.end();
 	});
 });
@@ -1575,7 +1575,7 @@ test('.notThrowsAsync()', gather(t => {
 
 test('.notThrowsAsync() returns undefined for a fulfilled promise', t => {
 	return assertions.notThrowsAsync(Promise.resolve(Symbol(''))).then(actual => {
-		t.is(actual, undefined);
+		t.equal(actual, undefined);
 	});
 });
 
@@ -1583,7 +1583,7 @@ test('.notThrowsAsync() returns undefined for a fulfilled promise returned by th
 	return assertions.notThrowsAsync(() => {
 		return Promise.resolve(Symbol(''));
 	}).then(actual => {
-		t.is(actual, undefined);
+		t.equal(actual, undefined);
 	});
 });
 
