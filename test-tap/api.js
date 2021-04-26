@@ -203,18 +203,31 @@ for (const opt of opts) {
 
 		api.on('run', plan => {
 			plan.status.on('stateChange', evt => {
-				if (evt.type === 'test-failed') {
-					tests.push({
-						ok: false,
-						title: evt.title
-					});
-				} else if (evt.type === 'test-passed') {
-					tests.push({
-						ok: true,
-						title: evt.title
-					});
-				} else if (evt.type === 'worker-failed') {
-					workerFailures.push(evt);
+				switch (evt.type) {
+					case 'test-failed': {
+						tests.push({
+							ok: false,
+							title: evt.title
+						});
+
+						break;
+					}
+
+					case 'test-passed': {
+						tests.push({
+							ok: true,
+							title: evt.title
+						});
+
+						break;
+					}
+
+					case 'worker-failed': {
+						workerFailures.push(evt);
+
+						break;
+					}
+				// No default
 				}
 			});
 		});
@@ -246,18 +259,31 @@ for (const opt of opts) {
 
 		api.on('run', plan => {
 			plan.status.on('stateChange', evt => {
-				if (evt.type === 'test-failed') {
-					tests.push({
-						ok: false,
-						title: evt.title
-					});
-				} else if (evt.type === 'test-passed') {
-					tests.push({
-						ok: true,
-						title: evt.title
-					});
-				} else if (evt.type === 'timeout') {
-					timeouts.push(evt);
+				switch (evt.type) {
+					case 'test-failed': {
+						tests.push({
+							ok: false,
+							title: evt.title
+						});
+
+						break;
+					}
+
+					case 'test-passed': {
+						tests.push({
+							ok: true,
+							title: evt.title
+						});
+
+						break;
+					}
+
+					case 'timeout': {
+						timeouts.push(evt);
+
+						break;
+					}
+				// No default
 				}
 			});
 		});
