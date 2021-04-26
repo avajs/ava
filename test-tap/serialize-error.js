@@ -1,6 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({});
+require('../lib/worker/options.cjs').set({});
 
 const {test} = require('tap');
 const avaAssert = require('../lib/assert');

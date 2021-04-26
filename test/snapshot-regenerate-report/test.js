@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 require('../../lib/chalk').set({level: 0});
-require('../../lib/worker/options').set({});
+require('../../lib/worker/options.cjs').set({});
 const {load} = require('../../lib/snapshot-manager');
 
 test('snapshot report can be regenerated from .snap file', async t => {

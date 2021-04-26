@@ -1,6 +1,6 @@
 'use strict';
 require('../lib/chalk').set();
-require('../lib/worker/options').set({chalkOptions: {level: 0}});
+require('../lib/worker/options.cjs').set({chalkOptions: {level: 0}});
 
 const path = require('path');
 const {test} = require('tap');
