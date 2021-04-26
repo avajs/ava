@@ -36,7 +36,7 @@ test('include anonymous functions in error reports', t => {
 
 test('--match works', t => {
 	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'matcher-skip.js'], err => {
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 });
@@ -52,7 +52,7 @@ for (const tapFlag of ['--tap', '-t']) {
 
 test('works when no files are found', t => {
 	execCli([], {dirname: 'fixture/globs/no-files'}, (err, stdout) => {
-		t.is(err.code, 1);
+		t.equal(err.code, 1);
 		t.match(stdout, 'Couldn’t find any files to test');
 		t.end();
 	});
@@ -68,7 +68,7 @@ test('should warn ava is required without the cli', t => {
 
 test('tests without assertions do not fail if failWithoutAssertions option is set to false', t => {
 	execCli([], {dirname: 'fixture/pkg-conf/fail-without-assertions'}, err => {
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 });
@@ -76,7 +76,7 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', '--verbose', 'formatting-color.js'], (err, stdout) => {
 		t.ok(err);
-		t.is(stripAnsi(stdout), stdout);
+		t.equal(stripAnsi(stdout), stdout);
 		t.end();
 	});
 });
@@ -84,14 +84,14 @@ test('--no-color disables formatting colors', t => {
 test('--color enables formatting colors', t => {
 	execCli(['--color', '--verbose', 'formatting-color.js'], (err, stdout) => {
 		t.ok(err);
-		t.isNot(stripAnsi(stdout), stdout);
+		t.not(stripAnsi(stdout), stdout);
 		t.end();
 	});
 });
 
 test('sets NODE_ENV to test when it is not set', t => {
 	execCli('node-env-test.js', {env: {}}, (err, stdout) => {
-		t.ifError(err);
+		t.error(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
 	});
@@ -99,7 +99,7 @@ test('sets NODE_ENV to test when it is not set', t => {
 
 test('doesn’t set NODE_ENV when it is set', t => {
 	execCli('node-env-foo.js', {env: {NODE_ENV: 'foo'}}, (err, stdout) => {
-		t.ifError(err);
+		t.error(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
 	});
@@ -107,7 +107,7 @@ test('doesn’t set NODE_ENV when it is set', t => {
 
 test('additional arguments are forwarded to the worker', t => {
 	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], err => {
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 });
@@ -116,18 +116,18 @@ test('reset-cache resets cache', t => {
 	const cacheDir = path.join(__dirname, '..', 'fixture', 'reset-cache', 'node_modules', '.cache', 'ava');
 	fs.mkdirSync(cacheDir, {recursive: true});
 	fs.writeFileSync(path.join(cacheDir, 'file'), '');
-	t.true(fs.readdirSync(cacheDir).length > 0);
+	t.ok(fs.readdirSync(cacheDir).length > 0);
 
 	execCli(['reset-cache'], {dirname: 'fixture/reset-cache'}, err => {
-		t.ifError(err);
-		t.true(fs.readdirSync(cacheDir).length === 0);
+		t.error(err);
+		t.ok(fs.readdirSync(cacheDir).length === 0);
 		t.end();
 	});
 });
 
 test('selects .cjs test files', t => {
 	execCli('cjs.cjs', (err, stdout) => {
-		t.ifError(err);
+		t.error(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
 	});
@@ -135,7 +135,7 @@ test('selects .cjs test files', t => {
 
 test('load .mjs test files', t => {
 	execCli('mjs.mjs', (err, stdout) => {
-		t.ifError(err);
+		t.error(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
 	});
@@ -143,7 +143,7 @@ test('load .mjs test files', t => {
 
 test('load .js test files as ESM modules', t => {
 	execCli('test.js', {dirname: 'fixture/pkg-type-module'}, (err, stdout) => {
-		t.ifError(err);
+		t.error(err);
 		t.match(stdout, /1 test passed/);
 		t.end();
 	});

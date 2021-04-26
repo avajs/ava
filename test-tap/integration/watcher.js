@@ -11,7 +11,7 @@ test('watcher reruns test files upon change', t => {
 
 	const child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 
@@ -37,7 +37,7 @@ test('watcher reruns test files when source dependencies change', t => {
 
 	const child = execCli(['--verbose', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 
@@ -61,7 +61,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 
 	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 
@@ -77,7 +77,7 @@ test('watcher does not rerun test files when they write snapshot files', t => {
 				killed = true;
 			}, 500);
 		} else if (passedFirst && !killed) {
-			t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
+			t.equal(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
 		}
 	});
 });
@@ -91,7 +91,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 			env: {AVA_FORCE_CI: 'not-ci', TEMPLATE: 'true'}
 		},
 		err => {
-			t.ifError(err);
+			t.error(err);
 
 			// Run fixture in watch mode; snapshots should be removed, and watcher should not rerun
 			let killed = false;
@@ -104,7 +104,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 				},
 				err => {
 					t.ok(killed);
-					t.ifError(err);
+					t.error(err);
 					t.end();
 				}
 			);
@@ -121,7 +121,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 						killed = true;
 					}, 500);
 				} else if (passedFirst && !killed) {
-					t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
+					t.equal(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
 				}
 			});
 		}
@@ -133,7 +133,7 @@ test('watcher does not rerun test files when ignored files change', t => {
 
 	const child = execCli(['--verbose', '--watch'], {dirname: 'fixture/watcher/ignored-files', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 
@@ -150,7 +150,7 @@ test('watcher does not rerun test files when ignored files change', t => {
 				killed = true;
 			}, 500);
 		} else if (passedFirst && !killed) {
-			t.is(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
+			t.equal(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
 		}
 	});
 });
@@ -160,7 +160,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 
 	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
-		t.ifError(err);
+		t.error(err);
 		t.end();
 	});
 
@@ -207,7 +207,7 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 
 test('bails when --tap reporter is used while --watch is given', t => {
 	execCli(['--tap', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
+		t.equal(err.code, 1);
 		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 		t.end();
 	});
@@ -215,7 +215,7 @@ test('bails when --tap reporter is used while --watch is given', t => {
 
 test('bails when CI is used while --watch is given', t => {
 	execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (err, stdout, stderr) => {
-		t.is(err.code, 1);
+		t.equal(err.code, 1);
 		t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
 		t.end();
 	});

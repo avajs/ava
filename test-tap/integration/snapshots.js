@@ -25,12 +25,12 @@ for (const object of [
 		const dirname = path.join('fixture/snapshots', object.rel);
 		// Test should pass, and a snapshot gets written
 		execCli(['--update-snapshots', '--verbose'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
-			t.ifError(error);
-			t.true(fs.existsSync(snapPath));
+			t.error(error);
+			t.ok(fs.existsSync(snapPath));
 
 			// Test should pass, and the snapshot gets used
 			execCli([], {dirname}, error => {
-				t.ifError(error);
+				t.error(error);
 				t.end();
 			});
 		});
@@ -92,7 +92,7 @@ test('outdated snapshot version can be updated', t => {
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
 
 	execCli(['test.js', '--update-snapshots'], {dirname: 'fixture/snapshots', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
-		t.ifError(error);
+		t.error(error);
 		t.match(stdout, /2 tests passed/);
 		t.end();
 	});
@@ -172,11 +172,11 @@ test('snapshots infer their location and name from sourcemaps', t => {
 	}
 
 	const verifySnapFixtureFiles = relFilePath => {
-		t.true(fs.existsSync(relFilePath));
+		t.ok(fs.existsSync(relFilePath));
 	};
 
 	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
-		t.ifError(error);
+		t.error(error);
 		for (const x of snapFixtureFilePaths) {
 			verifySnapFixtureFiles(x);
 		}
@@ -219,11 +219,11 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 	}
 
 	const verifySnapFixtureFiles = relFilePath => {
-		t.true(fs.existsSync(relFilePath));
+		t.ok(fs.existsSync(relFilePath));
 	};
 
 	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
-		t.ifError(error);
+		t.error(error);
 		for (const x of snapFixtureFilePaths) {
 			verifySnapFixtureFiles(x);
 		}
@@ -257,17 +257,17 @@ test('snapshots are indentical on different platforms', t => {
 
 	// Test should pass, and a snapshot gets written
 	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
-		t.ifError(error);
-		t.true(fs.existsSync(reportPath));
-		t.true(fs.existsSync(snapPath));
+		t.error(error);
+		t.ok(fs.existsSync(reportPath));
+		t.ok(fs.existsSync(snapPath));
 
 		const reportContents = fs.readFileSync(reportPath);
 		const snapContents = fs.readFileSync(snapPath);
 		const expectedReportContents = fs.readFileSync(expectedReportPath);
 		const expectedSnapContents = fs.readFileSync(expectedSnapPath);
 
-		t.true(reportContents.equals(expectedReportContents), 'report file contents matches snapshot');
-		t.true(snapContents.equals(expectedSnapContents), 'snap file contents matches snapshot');
+		t.ok(reportContents.equals(expectedReportContents), 'report file contents matches snapshot');
+		t.ok(snapContents.equals(expectedSnapContents), 'snap file contents matches snapshot');
 		t.end();
 	});
 });
@@ -295,8 +295,8 @@ test('in CI, new snapshots are not recorded', t => {
 	// Test should fail, no snapshot gets written
 	execCli([], {dirname: fixtureDir}, (_, stdout) => {
 		t.match(stdout, 'No snapshot available — new snapshots are not created in CI environments');
-		t.false(fs.existsSync(reportPath));
-		t.false(fs.existsSync(snapPath));
+		t.notOk(fs.existsSync(reportPath));
+		t.notOk(fs.existsSync(snapPath));
 		t.end();
 	});
 });

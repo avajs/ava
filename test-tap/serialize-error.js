@@ -12,25 +12,25 @@ test('serialize standard props', t => {
 	const error = new Error('Hello');
 	const serializedError = serialize(error);
 
-	t.is(Object.keys(serializedError).length, 9);
-	t.is(serializedError.avaAssertionError, false);
-	t.is(serializedError.nonErrorObject, false);
-	t.deepEqual(serializedError.object, {});
-	t.is(serializedError.name, 'Error');
-	t.is(serializedError.stack, error.stack);
-	t.is(serializedError.message, 'Hello');
-	t.is(serializedError.summary, 'Error: Hello');
-	t.is(serializedError.shouldBeautifyStack, true);
-	t.is(serializedError.source.isWithinProject, true);
-	t.is(serializedError.source.isDependency, false);
-	t.is(typeof serializedError.source.file, 'string');
-	t.is(typeof serializedError.source.line, 'number');
+	t.equal(Object.keys(serializedError).length, 9);
+	t.equal(serializedError.avaAssertionError, false);
+	t.equal(serializedError.nonErrorObject, false);
+	t.same(serializedError.object, {});
+	t.equal(serializedError.name, 'Error');
+	t.equal(serializedError.stack, error.stack);
+	t.equal(serializedError.message, 'Hello');
+	t.equal(serializedError.summary, 'Error: Hello');
+	t.equal(serializedError.shouldBeautifyStack, true);
+	t.equal(serializedError.source.isWithinProject, true);
+	t.equal(serializedError.source.isDependency, false);
+	t.equal(typeof serializedError.source.file, 'string');
+	t.equal(typeof serializedError.source.line, 'number');
 	t.end();
 });
 
 test('additional error properties are preserved', t => {
 	const serializedError = serialize(Object.assign(new Error(), {foo: 'bar'}));
-	t.deepEqual(serializedError.object, {foo: 'bar'});
+	t.same(serializedError.object, {foo: 'bar'});
 	t.end();
 });
 
@@ -38,14 +38,14 @@ test('source file is an absolute path', t => {
 	const error = new Error('Hello');
 	const serializedError = serialize(error);
 
-	t.is(serializedError.source.file, __filename);
+	t.equal(serializedError.source.file, __filename);
 	t.end();
 });
 
 test('sets avaAssertionError to true if indeed an assertion error', t => {
 	const error = new avaAssert.AssertionError({});
 	const serializedError = serialize(error);
-	t.true(serializedError.avaAssertionError);
+	t.ok(serializedError.avaAssertionError);
 	t.end();
 });
 
@@ -60,7 +60,7 @@ test('includes statements of assertion errors', t => {
 	];
 
 	const serializedError = serialize(error);
-	t.is(serializedError.statements, error.statements);
+	t.equal(serializedError.statements, error.statements);
 	t.end();
 });
 
@@ -71,7 +71,7 @@ test('includes values of assertion errors', t => {
 	});
 
 	const serializedError = serialize(error);
-	t.is(serializedError.values, error.values);
+	t.equal(serializedError.values, error.values);
 	t.end();
 });
 
@@ -81,8 +81,8 @@ test('remove non-string error properties', t => {
 		stack: /re/g
 	};
 	const serializedError = serialize(error);
-	t.is(serializedError.name, undefined);
-	t.is(serializedError.stack, undefined);
+	t.equal(serializedError.name, undefined);
+	t.equal(serializedError.stack, undefined);
 	t.end();
 });
 
@@ -92,7 +92,7 @@ test('creates multiline summaries for syntax errors', t => {
 		value: 'Hello\nThere\nSyntaxError here\nIgnore me'
 	});
 	const serializedError = serialize(error);
-	t.is(serializedError.name, 'SyntaxError');
-	t.is(serializedError.summary, 'Hello\nThere\nSyntaxError here');
+	t.equal(serializedError.name, 'SyntaxError');
+	t.equal(serializedError.summary, 'Hello\nThere\nSyntaxError here');
 	t.end();
 });

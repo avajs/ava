@@ -48,7 +48,7 @@ test('runner emits "stateChange" events', t => {
 
 	runner.on('stateChange', evt => {
 		if (evt.type === 'declared-test') {
-			t.deepEqual(evt, {
+			t.same(evt, {
 				type: 'declared-test',
 				title: 'foo',
 				knownFailing: false,
@@ -81,7 +81,7 @@ test('run serial tests before concurrent ones', t => {
 			a.end();
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a', 'b', 'c']);
+		t.strictSame(array, ['a', 'b', 'c']);
 	});
 });
 
@@ -114,7 +114,7 @@ test('anything can be skipped', t => {
 		runner.chain.serial.skip('serial.skip', pusher('serial.skip'));
 	}).then(() => {
 		// Note that afterEach and beforeEach run twice because there are two actual tests - "serial" and "concurrent"
-		t.strictDeepEqual(array, [
+		t.strictSame(array, [
 			'before',
 			'beforeEach',
 			'serial',
@@ -138,7 +138,7 @@ test('test types and titles', t => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed') {
 				const expected = expect.shift();
-				t.is(evt.title, expected.title);
+				t.equal(evt.title, expected.title);
 			}
 		});
 		return promiseEnd(runner, () => setup(runner.chain));
@@ -212,7 +212,7 @@ test('skip test', t => {
 			array.push('b');
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -270,7 +270,7 @@ test('todo test', t => {
 
 		runner.chain.todo('todo');
 	}).then(() => {
-		t.strictDeepEqual(array, ['a']);
+		t.strictSame(array, ['a']);
 	});
 });
 
@@ -327,7 +327,7 @@ test('only test', t => {
 			a.pass();
 		});
 	}).then(() => {
-		t.strictDeepEqual(array, ['b']);
+		t.strictSame(array, ['b']);
 	});
 });
 
@@ -364,7 +364,7 @@ test('options.serial forces all tests to be serial', t => {
 
 		runner.chain('test', a => {
 			a.pass();
-			t.strictDeepEqual(array, [1, 2]);
+			t.strictSame(array, [1, 2]);
 		});
 	});
 });
@@ -397,7 +397,7 @@ test('options.failFast does not stop concurrent tests from running', t => {
 
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
-				t.is(evt.title, expected.shift());
+				t.equal(evt.title, expected.shift());
 			}
 		});
 	});
@@ -431,7 +431,7 @@ test('options.failFast && options.serial stops subsequent tests from running ', 
 
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
-				t.is(evt.title, expected.shift());
+				t.equal(evt.title, expected.shift());
 			}
 		});
 	});
@@ -469,7 +469,7 @@ test('options.failFast & failing serial test stops subsequent tests from running
 
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
-				t.is(evt.title, expected.shift());
+				t.equal(evt.title, expected.shift());
 			}
 		});
 	});
@@ -524,7 +524,7 @@ test('options.match hold no effect on hooks with titles', t => {
 		});
 
 		runner.chain('after', a => {
-			t.is(actual, 'foo');
+			t.equal(actual, 'foo');
 			a.pass();
 		});
 	});
@@ -578,12 +578,12 @@ test('macros: Additional args will be spread as additional args on implementatio
 		});
 
 		runner.chain.before((a, ...rest) => {
-			t.deepEqual(rest, ['foo', 'bar']);
+			t.same(rest, ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
 
 		runner.chain('test1', (a, ...rest) => {
-			t.deepEqual(rest, ['foo', 'bar']);
+			t.same(rest, ['foo', 'bar']);
 			a.pass();
 		}, 'foo', 'bar');
 	});
@@ -605,7 +605,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 	];
 
 	function macroFn(avaT, ...rest) {
-		t.deepEqual(rest, expectedArgs.shift());
+		t.same(rest, expectedArgs.shift());
 		avaT.pass();
 	}
 
@@ -614,7 +614,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 	return promiseEnd(new Runner(), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'declared-test') {
-				t.is(evt.title, expectedTitles.shift());
+				t.equal(evt.title, expectedTitles.shift());
 			}
 		});
 
@@ -660,7 +660,7 @@ test('match applies to macros', t => {
 	return promiseEnd(new Runner({match: ['foobar']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
-				t.is(evt.title, 'foobar');
+				t.equal(evt.title, 'foobar');
 			}
 		});
 
@@ -683,14 +683,14 @@ test('arrays of macros', t => {
 	];
 
 	function macroFnA(a, ...rest) {
-		t.deepEqual(rest, expectedArgsA.shift());
+		t.same(rest, expectedArgsA.shift());
 		a.pass();
 	}
 
 	macroFnA.title = prefix => `${prefix}.A`;
 
 	function macroFnB(a, ...rest) {
-		t.deepEqual(rest, expectedArgsB.shift());
+		t.same(rest, expectedArgsB.shift());
 		a.pass();
 	}
 
@@ -708,8 +708,8 @@ test('arrays of macros', t => {
 		runner.chain('C', macroFnA, 'C');
 		runner.chain('D', macroFnB, 'D');
 	}).then(() => {
-		t.is(expectedArgsA.length, 0);
-		t.is(expectedArgsB.length, 0);
+		t.equal(expectedArgsA.length, 0);
+		t.equal(expectedArgsB.length, 0);
 	});
 });
 
@@ -740,7 +740,7 @@ test('match applies to arrays of macros', t => {
 	return promiseEnd(new Runner({match: ['foobar']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
-				t.is(evt.title, 'foobar');
+				t.equal(evt.title, 'foobar');
 			}
 		});
 
@@ -791,7 +791,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		runner.chain('test', a => a.pass());
 
 		runner.chain.before(() => {
-			t.is(activeCount, 0);
+			t.equal(activeCount, 0);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 20);
@@ -801,7 +801,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.before(() => {
-			t.is(activeCount, 1);
+			t.equal(activeCount, 1);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 10);
@@ -811,7 +811,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.serial.before(() => {
-			t.is(activeCount, 0);
+			t.equal(activeCount, 0);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 10);
@@ -821,7 +821,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.before(() => {
-			t.is(activeCount, 0);
+			t.equal(activeCount, 0);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 20);
@@ -831,7 +831,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.before(() => {
-			t.is(activeCount, 1);
+			t.equal(activeCount, 1);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 10);
@@ -841,7 +841,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.serial.before(() => {
-			t.is(activeCount, 0);
+			t.equal(activeCount, 0);
 			activeCount++;
 			return new Promise(resolve => {
 				setTimeout(resolve, 10);
@@ -851,7 +851,7 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 
 		runner.chain.serial.before(() => {
-			t.is(activeCount, 0);
+			t.equal(activeCount, 0);
 		});
 	});
 });

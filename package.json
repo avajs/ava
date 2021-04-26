@@ -20,7 +20,7 @@
 		}
 	},
 	"engines": {
-		"node": ">=12.20 <13 || >=14.15 <15 || >=15"
+		"node": ">=12.22 <13 || >=14.15 <15 || >=16"
 	},
 	"scripts": {
 		"cover": "c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report",
@@ -140,7 +140,7 @@
 		"replace-string": "^3.1.0",
 		"sinon": "^9.2.4",
 		"source-map-fixtures": "^2.1.0",
-		"tap": "^14.11.0",
+		"tap": "^15.0.5",
 		"temp-write": "^4.0.0",
 		"tempy": "^1.0.0",
 		"touch": "^3.1.0",

@@ -9,38 +9,38 @@ const overrideDir = path.join(__dirname, 'fixture/eslint-plugin-helper/for-overr
 
 test('caches loaded configuration', t => {
 	const expected = load(projectDir);
-	t.is(expected, load(projectDir));
+	t.equal(expected, load(projectDir));
 
 	const withOverride = load(projectDir, {});
 	t.not(expected, withOverride);
-	t.is(withOverride, load(projectDir, {}));
+	t.equal(withOverride, load(projectDir, {}));
 
 	t.end();
 });
 
 test('classifies files according to the configuration', t => {
 	const helper = load(projectDir);
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'tests/test.foo')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.foo')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'tests/_helper.foo')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/_helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'tests/_helper/file.foo')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/_helper/file.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'helpers/helper.foo')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'helpers/helper.foo')), {
 		isHelper: false,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'source.foo')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'source.foo')), {
 		isHelper: false,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(projectDir, 'tests/test.js')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.js')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -53,27 +53,27 @@ test('classifies files according to configuration override', t => {
 		files: ['tests/**/*'],
 		helpers: ['helpers/*']
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'tests/test.foo')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.foo')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'tests/_helper.foo')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/_helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'tests/_helper/file.foo')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/_helper/file.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'helpers/helper.foo')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'helpers/helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'source.foo')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'source.foo')), {
 		isHelper: false,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyFile(path.join(overrideDir, 'tests/test.js')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.js')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -82,23 +82,23 @@ test('classifies files according to configuration override', t => {
 
 test('classifies imports with extension according to the configuration', t => {
 	const helper = load(projectDir);
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/test.foo')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/test.foo')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/_helper.foo')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/_helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/_helper/file.foo')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/_helper/file.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'helpers/helper.foo')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'helpers/helper.foo')), {
 		isHelper: false,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'source.foo')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'source.foo')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -111,23 +111,23 @@ test('classifies imports with extension according to the override', t => {
 		files: ['tests/**/*'],
 		helpers: ['helpers/*']
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/test.foo')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/test.foo')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/_helper.foo')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/_helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/_helper/file.foo')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/_helper/file.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'helpers/helper.foo')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'helpers/helper.foo')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'source.foo')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'source.foo')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -136,23 +136,23 @@ test('classifies imports with extension according to the override', t => {
 
 test('classifies imports without extension according to the configuration', t => {
 	const helper = load(projectDir);
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/test')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/test')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/_helper')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/_helper')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'tests/_helper/file')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'tests/_helper/file')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'helpers/helper')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'helpers/helper')), {
 		isHelper: false,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(projectDir, 'source')), {
+	t.same(helper.classifyImport(path.join(projectDir, 'source')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -165,23 +165,23 @@ test('classifies imports without extension according to the override', t => {
 		files: ['tests/**/*'],
 		helpers: ['helpers/*']
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/test')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/test')), {
 		isHelper: false,
 		isTest: true
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/_helper')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/_helper')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'tests/_helper/file')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'tests/_helper/file')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'helpers/helper')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'helpers/helper')), {
 		isHelper: true,
 		isTest: false
 	});
-	t.deepEqual(helper.classifyImport(path.join(overrideDir, 'source')), {
+	t.same(helper.classifyImport(path.join(overrideDir, 'source')), {
 		isHelper: false,
 		isTest: false
 	});

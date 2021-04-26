@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^12.20, ^14.15, ^15]
+        node-version: [^12.22, ^14.15, ^16]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.20
+          node-version: ^12.22
       - name: Upgrade npm
         run: npm install --global npm@7
       - run: npm ci --no-audit
@@ -69,9 +69,9 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.20
+          node-version: ^12.22
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "7.6.3" ]]; then npm install --global npm@7.6.3; fi
+        run: if [[ "$(npm -v)" != "7.11" ]]; then npm install --global npm@7.11; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
@@ -92,7 +92,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.20
+          node-version: ^12.22
       - name: Upgrade npm
         run: npm install --global npm@7
       - run: npm install --no-shrinkwrap --no-audit
@@ -107,7 +107,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: ^12.20
+          node-version: ^12.22
       - name: Upgrade npm
         run: npm install --global npm@7
       - run: npm ci

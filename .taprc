@@ -1,6 +1,5 @@
 browser: false
 coverage: false
-esm: false
 files:
   - "test-tap/*.js"
   - "test-tap/reporters/*.js"

@@ -12,7 +12,7 @@ test('correctly distributes more test files than CI_NODE_TOTAL', t => {
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3'
 			}
-		}, err => t.ifError(err));
+		}, err => t.error(err));
 	}
 });
 
@@ -26,7 +26,7 @@ test('correctly distributes less test files than CI_NODE_TOTAL', t => {
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3'
 			}
-		}, err => t.ifError(err));
+		}, err => t.error(err));
 	}
 });
 
