@@ -1,10 +1,6 @@
-'use strict';
+import {test} from 'tap';
 
-const {test} = require('tap');
-const {
-	splitPatternAndLineNumbers,
-	getApplicableLineNumbers
-} = require('../lib/line-numbers');
+import {splitPatternAndLineNumbers, getApplicableLineNumbers} from '../lib/line-numbers.js';
 
 test('no line numbers', t => {
 	t.strictSame(splitPatternAndLineNumbers('test.js'), {pattern: 'test.js', lineNumbers: null});

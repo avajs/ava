@@ -1,5 +1,6 @@
 import {expectType} from 'tsd';
-import test, {ExecutionContext, Macro} from '..'; // eslint-disable-line import/no-unresolved
+
+import test, {ExecutionContext, Macro} from '..';
 
 // Explicitly type as a macro.
 {

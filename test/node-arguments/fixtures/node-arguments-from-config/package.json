@@ -1,11 +1,12 @@
 {
+	"type": "module",
 	"ava": {
 		"files": [
 			"*.js"
 		],
 		"nodeArguments": [
 			"--require",
-			"./setup.js"
+			"./setup.cjs"
 		]
 	}
 }

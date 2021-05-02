@@ -1,11 +1,12 @@
-'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options.cjs').set({chalkOptions: {level: 0}});
+import delay from 'delay';
+import {test} from 'tap';
 
-const {test} = require('tap');
-const delay = require('delay');
-const ContextRef = require('../lib/context-ref');
-const {newAva} = require('./helper/ava-test');
+import ContextRef from '../lib/context-ref.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+import {newAva} from './helper/ava-test.js';
+
+setOptions({chalkOptions: {level: 0}});
 
 test('try-commit works', async t => {
 	const ava = newAva();

@@ -3,29 +3,29 @@
 ---tty-stream-chunk-separator
 * ---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [35m⚠ Could not parse ast-syntax-error.js for line number selection[39m---tty-stream-chunk-separator
+* [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ Line numbers for ast-syntax-error.js did not match any tests[39m---tty-stream-chunk-separator
+* [31m✖ Line numbers for ast-syntax-error.cjs did not match any tests[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ No tests found in ava-import-no-test-declaration.js[39m---tty-stream-chunk-separator
+* [31m✖ No tests found in ava-import-no-test-declaration.cjs[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m---tty-stream-chunk-separator
+* [31m✖ No tests found in no-ava-import.cjs, make sure to import "ava" at the top of your test file[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-* [31m✖ Line numbers for test.js did not match any tests[39m---tty-stream-chunk-separator
+* [31m✖ Line numbers for test.cjs did not match any tests[39m---tty-stream-chunk-separator
 [2K[1G---tty-stream-chunk-separator
-[?25h  [31m✖ No tests found in no-ava-import.js, make sure to import "ava" at the top of your test file[39m
-  [31m✖ No tests found in ava-import-no-test-declaration.js[39m
-  [31m✖ No tests found in import-and-use-test-member.js[39m
-  [31m✖ No tests found in throws.js[39m
-  [35m⚠ Could not parse ast-syntax-error.js for line number selection[39m
-  [31m✖ Line numbers for ast-syntax-error.js did not match any tests[39m
-  [31m✖ Line numbers for test.js did not match any tests[39m
+[?25h  [31m✖ No tests found in no-ava-import.cjs, make sure to import "ava" at the top of your test file[39m
+  [31m✖ No tests found in ava-import-no-test-declaration.cjs[39m
+  [31m✖ No tests found in import-and-use-test-member.cjs[39m
+  [31m✖ No tests found in throws.cjs[39m
+  [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m
+  [31m✖ Line numbers for ast-syntax-error.cjs did not match any tests[39m
+  [31m✖ Line numbers for test.cjs did not match any tests[39m
 
   [90m─[39m
 
-  [1mUncaught exception in import-and-use-test-member.js[22m
+  [1mUncaught exception in import-and-use-test-member.cjs[22m
 
-  [90mimport-and-use-test-member.js:3[39m
+  [90mimport-and-use-test-member.cjs:3[39m
 
    [90m2:[39m                             
   [41m 3: test('pass', t => t.pass());[49m
@@ -33,20 +33,20 @@
 
   TypeError: test is not a function
 
-  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)[39m
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.cjs:3:1)[39m
 
 
 
-  [1mUncaught exception in throws.js[22m
+  [1mUncaught exception in throws.cjs[22m
 
-  [90mthrows.js:1[39m
+  [90mthrows.cjs:1[39m
 
   [41m 1: throw new Error('throws');[49m
    [90m2:[39m                           
 
   Error: throws
 
-  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.js:1:7)[39m
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.cjs:1:7)[39m
 
   [90m─[39m
 

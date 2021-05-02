@@ -1,9 +1,12 @@
-const path = require('path');
-const test = require('@ava/test');
-const {loadConfig} = require('../../lib/load-config');
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+import test from '@ava/test';
+
+import {loadConfig} from '../../lib/load-config.js';
 
 const CWD = process.cwd();
-const FIXTURE_ROOT = path.resolve(__dirname, 'fixtures');
+const FIXTURE_ROOT = fileURLToPath(new URL('fixtures', import.meta.url));
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
 

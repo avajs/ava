@@ -1,4 +1,4 @@
-function getSnapshotIds(report) {
+export default function getSnapshotIds(report) {
 	function * matchAll(string, regexp) {
 		let match;
 		while ((match = regexp.exec(string)) !== null) {
@@ -10,5 +10,3 @@ function getSnapshotIds(report) {
 
 	return ids;
 }
-
-module.exports = getSnapshotIds;

@@ -1,9 +1,13 @@
-'use strict';
-const path = require('path');
-const tap = require('tap');
-const globs = require('../lib/globs');
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+import tap from 'tap';
+
+import * as globs from '../lib/globs.js';
 
 const {test} = tap;
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 tap.afterEach(() => {
 	// We changed the CWD in some of the tests
@@ -286,39 +290,39 @@ test('isIgnoredByWatcher after provider modifications', t => {
 	t.end();
 });
 
-test('findFiles finds non-ignored files (just .js)', async t => {
+test('findFiles finds non-ignored files (just .cjs)', async t => {
 	const fixtureDir = fixture('default-patterns');
 	process.chdir(fixtureDir);
 
 	const expected = [
-		'sub/directory/__tests__/_foo.js',
-		'sub/directory/__tests__/foo.js',
-		'sub/directory/bar.spec.js',
-		'sub/directory/bar.test.js',
-		'test-foo.js',
-		'test.js',
-		'test/_foo-help.js',
-		'test/baz.js',
-		'test/deep/deep.js',
-		'tests/baz.js',
-		'tests/deep/deep.js',
-		'tests/_foo-help.js'
+		'sub/directory/__tests__/_foo.cjs',
+		'sub/directory/__tests__/foo.cjs',
+		'sub/directory/bar.spec.cjs',
+		'sub/directory/bar.test.cjs',
+		'test-foo.cjs',
+		'test.cjs',
+		'test/_foo-help.cjs',
+		'test/baz.cjs',
+		'test/deep/deep.cjs',
+		'tests/baz.cjs',
+		'tests/deep/deep.cjs',
+		'tests/_foo-help.cjs'
 	].map(file => path.join(fixtureDir, file)).sort();
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['js'], providers: []})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['cjs'], providers: []})
 	});
 	actual.sort();
 	t.same(actual, expected);
 });
 
-test('findFiles finds non-ignored files (.js, .jsx)', async t => {
+test('findFiles finds non-ignored files (.cjs, .jsx)', async t => {
 	const fixtureDir = fixture('custom-extension');
 	process.chdir(fixtureDir);
 
 	const expected = [
-		'test/do-not-compile.js',
+		'test/do-not-compile.cjs',
 		'test/foo.jsx',
 		'test/sub/_helper.jsx',
 		'test/sub/bar.jsx'
@@ -326,7 +330,7 @@ test('findFiles finds non-ignored files (.js, .jsx)', async t => {
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['js', 'jsx'], providers: []})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['cjs', 'jsx'], providers: []})
 	});
 	actual.sort();
 	t.same(actual, expected);

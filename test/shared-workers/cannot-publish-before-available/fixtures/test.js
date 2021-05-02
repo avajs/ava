@@ -1,9 +1,9 @@
-const test = require('ava');
-const plugin = require('ava/plugin');
+import test from 'ava';
+import * as plugin from 'ava/plugin';
 
 test('cannot publish before ready', t => {
 	const worker = plugin.registerSharedWorker({
-		filename: require.resolve('./_worker'),
+		filename: new URL('_worker.js', import.meta.url),
 		supportedProtocols: ['experimental']
 	});
 

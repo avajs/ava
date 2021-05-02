@@ -1,5 +1,6 @@
 import {expectType} from 'tsd';
-import * as plugin from '../plugin'; // eslint-disable-line import/no-unresolved
+
+import * as plugin from '../plugin';
 
 expectType<plugin.SharedWorker.Plugin.Experimental.Protocol>(plugin.registerSharedWorker({filename: '', supportedProtocols: ['experimental']}));
 

@@ -1,12 +1,14 @@
-'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options.cjs').set({chalkOptions: {level: 0}});
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const path = require('path');
-const stripAnsi = require('strip-ansi');
-const {test} = require('tap');
-const assert = require('../lib/assert');
-const snapshotManager = require('../lib/snapshot-manager');
+import stripAnsi from 'strip-ansi';
+import {test} from 'tap';
+
+import * as assert from '../lib/assert.js';
+import * as snapshotManager from '../lib/snapshot-manager.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+setOptions({chalkOptions: {level: 0}});
 
 let lastFailure = null;
 let lastPassed = false;
@@ -1620,9 +1622,9 @@ test('.snapshot()', t => {
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;
 
-	const projectDir = path.join(__dirname, 'fixture');
+	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.js'),
+		file: path.join(projectDir, 'assert.cjs'),
 		projectDir,
 		fixedLocation: null,
 		recordNewSnapshots: updating,

@@ -1,8 +1,8 @@
-'use strict';
-const stream = require('stream');
-const ansiEscapes = require('ansi-escapes');
+import stream from 'stream';
 
-class TTYStream extends stream.Writable {
+import ansiEscapes from 'ansi-escapes';
+
+export default class TTYStream extends stream.Writable {
 	constructor(options) {
 		super();
 
@@ -65,5 +65,3 @@ class TTYStream extends stream.Writable {
 }
 
 TTYStream.SEPARATOR = Buffer.from('---tty-stream-chunk-separator\n', 'utf8');
-
-module.exports = TTYStream;

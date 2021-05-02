@@ -1,9 +1,11 @@
 /* eslint-disable ava/no-ignored-test-files */
-const crypto = require('crypto');
-const test = require('ava');
-const plugin = require('./_plugin');
+import crypto from 'crypto';
 
-module.exports = testFile => {
+import test from 'ava';
+
+import plugin from './_plugin.js';
+
+export default testFile => {
 	test('becomes available', async t => {
 		await t.notThrowsAsync(plugin.available);
 	});

@@ -1,10 +1,10 @@
-'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options.cjs').set({});
+import delay from 'delay';
+import {test} from 'tap';
 
-const delay = require('delay');
-const {test} = require('tap');
-const Runner = require('../lib/runner');
+import Runner from '../lib/runner.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+setOptions({});
 
 const noop = () => {};
 

@@ -1,4 +1,5 @@
-const plugin = require('ava/plugin');
+import * as plugin from 'ava/plugin';
+
 plugin.registerSharedWorker({
 	supportedProtocols: ['experimental']
 });

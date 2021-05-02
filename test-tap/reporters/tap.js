@@ -1,22 +1,25 @@
-'use strict';
-require('../helper/fix-reporter-env')();
+import {fileURLToPath} from 'url';
 
-const path = require('path');
-const {test} = require('tap');
-const TTYStream = require('../helper/tty-stream');
-const report = require('../helper/report');
-const TapReporter = require('../../lib/reporters/tap');
+import {test} from 'tap';
+
+import TapReporter from '../../lib/reporters/tap.js';
+import fixReporterEnv from '../helper/fix-reporter-env.js';
+import report from '../helper/report.js';
+import TTYStream from '../helper/tty-stream.js';
+
+fixReporterEnv();
 
 const run = (type, sanitizers = []) => t => {
 	t.plan(1);
 
-	const logFile = path.join(__dirname, `tap.${type.toLowerCase()}.${process.version.split('.')[0]}.log`);
+	const logFile = fileURLToPath(new URL(`tap.${type.toLowerCase()}.${process.version.split('.')[0]}.log`, import.meta.url));
 
 	const tty = new TTYStream({
 		columns: 200,
 		sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timers]
 	});
 	const reporter = new TapReporter({
+		extensions: ['cjs'],
 		projectDir: report.projectDir(type),
 		reportStream: tty,
 		stdStream: tty

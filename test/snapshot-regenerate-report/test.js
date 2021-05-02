@@ -1,25 +1,28 @@
-const test = require('@ava/test');
-const exec = require('../helpers/exec');
+import {promises as fs} from 'fs';
+import path from 'path';
 
-const fs = require('fs').promises;
-const path = require('path');
+import test from '@ava/test';
 
-require('../../lib/chalk').set({level: 0});
-require('../../lib/worker/options.cjs').set({});
-const {load} = require('../../lib/snapshot-manager');
+import {set as setChalk} from '../../lib/chalk.js';
+import {load} from '../../lib/snapshot-manager.js';
+import {set as setOptions} from '../../lib/worker/options.cjs';
+import {cwd, fixture} from '../helpers/exec.js';
+
+setChalk({level: 0});
+setOptions({});
 
 test('snapshot report can be regenerated from .snap file', async t => {
-	const cwd = exec.cwd();
+	const workingDir = cwd();
 	const env = {
 		AVA_FORCE_CI: 'not-ci'
 	};
-	const reportPath = path.join(cwd, 'test.js.md');
+	const reportPath = path.join(workingDir, 'test.js.md');
 
 	t.teardown(() => fs.unlink(reportPath));
-	t.teardown(() => fs.unlink(path.join(cwd, 'test.js.snap')));
+	t.teardown(() => fs.unlink(path.join(workingDir, 'test.js.snap')));
 
 	// Run fixture to generate report, snapshot
-	await exec.fixture(['--update-snapshots'], {cwd, env});
+	await fixture(['--update-snapshots'], {cwd: workingDir, env});
 
 	// Read report
 	const report = await fs.readFile(reportPath, 'utf8');
@@ -29,8 +32,8 @@ test('snapshot report can be regenerated from .snap file', async t => {
 
 	// Load snapshot manager from .snap file
 	const snapshots = load({
-		file: path.join(cwd, 'test.js'),
-		projectDir: cwd
+		file: path.join(workingDir, 'test.js'),
+		projectDir: workingDir
 	});
 
 	// Regenerate report
