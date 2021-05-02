@@ -1,2 +1,2 @@
-import test from '../lib/worker/main.js'; // eslint-disable-line import/extensions
+import test from '../lib/worker/main.cjs';
 export default test;
