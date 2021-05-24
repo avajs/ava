@@ -621,13 +621,13 @@ test('timeout with promise', t => {
 
 test('timeout is refreshed on assert', t => {
 	return ava(async a => {
-		a.timeout(10);
+		a.timeout(100);
 		a.plan(3);
 		await Promise.all([
-			delay(5).then(() => a.pass()),
-			delay(10).then(() => a.pass()),
-			delay(15).then(() => a.pass()),
-			delay(20)
+			delay(50).then(() => a.pass()),
+			delay(100).then(() => a.pass()),
+			delay(150).then(() => a.pass()),
+			delay(200)
 		]);
 	}).run().then(result => {
 		t.equal(result.passed, true);
