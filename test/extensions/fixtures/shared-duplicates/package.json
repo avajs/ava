@@ -1,8 +1,14 @@
 {
+	"type": "module",
 	"ava": {
 		"babel": {
-			"extensions": ["js", "jsx"]
+			"extensions": [
+				"js",
+				"jsx"
+			]
 		},
-		"extensions": ["jsx"]
+		"extensions": [
+			"jsx"
+		]
 	}
 }

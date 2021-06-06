@@ -1,8 +1,6 @@
-'use strict';
-require('../../lib/chalk').set();
+import {test} from 'tap';
 
-const {test} = require('tap');
-const improperUsageMessages = require('../../lib/reporters/improper-usage-messages');
+import improperUsageMessages from '../../lib/reporters/improper-usage-messages.js';
 
 test('results when nothing is applicable', t => {
 	const err = {
@@ -15,7 +13,7 @@ test('results when nothing is applicable', t => {
 		}
 	};
 
-	const actualOutput = improperUsageMessages.forError(err);
+	const actualOutput = improperUsageMessages(err);
 
 	t.equal(actualOutput, null);
 	t.end();

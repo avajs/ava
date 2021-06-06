@@ -1,12 +1,12 @@
-'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options').set({});
+import {test} from 'tap';
 
-const {test} = require('tap');
-const avaAssert = require('../lib/assert');
-const serializeError = require('../lib/serialize-error');
+import * as avaAssert from '../lib/assert.js';
+import serializeError from '../lib/serialize-error.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
 
-const serialize = error => serializeError('Test', true, error, __filename);
+setOptions({});
+
+const serialize = error => serializeError('Test', true, error, import.meta.url);
 
 test('serialize standard props', t => {
 	const error = new Error('Hello');
@@ -38,7 +38,7 @@ test('source file is an absolute path', t => {
 	const error = new Error('Hello');
 	const serializedError = serialize(error);
 
-	t.equal(serializedError.source.file, __filename);
+	t.equal(serializedError.source.file, import.meta.url);
 	t.end();
 });
 

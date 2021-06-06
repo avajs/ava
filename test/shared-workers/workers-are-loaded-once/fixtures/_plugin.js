@@ -1,9 +1,9 @@
-const plugin = require('ava/plugin');
-const itFirst = require('it-first');
+import * as plugin from 'ava/plugin';
+import itFirst from 'it-first';
 
 const worker = plugin.registerSharedWorker({
-	filename: require.resolve('./_worker'),
+	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['experimental']
 });
 
-exports.random = itFirst(worker.subscribe());
+export const random = itFirst(worker.subscribe());

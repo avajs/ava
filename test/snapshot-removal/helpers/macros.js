@@ -1,9 +1,10 @@
-const fs = require('fs').promises;
-const exec = require('../../helpers/exec');
-const path = require('path');
-const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
+import {promises as fs} from 'fs';
+import path from 'path';
 
-async function testSnapshotPruning(t, {
+import {fixture} from '../../helpers/exec.js';
+import {withTemporaryFixture} from '../../helpers/with-temporary-fixture.js';
+
+export async function testSnapshotPruning(t, {
 	cwd,
 	env,
 	cli,
@@ -18,7 +19,7 @@ async function testSnapshotPruning(t, {
 
 	if (updating) {
 		// Execute fixture as template to generate snapshots
-		const templateResult = exec.fixture(['--update-snapshots'], {
+		const templateResult = fixture(['--update-snapshots'], {
 			cwd,
 			env: {
 				AVA_FORCE_CI: 'not-ci',
@@ -40,7 +41,7 @@ async function testSnapshotPruning(t, {
 	// Make a temporary copy of the fixture
 	await withTemporaryFixture(cwd, async cwd => {
 		// Execute fixture as run
-		const run = exec.fixture(cli, {
+		const run = fixture(cli, {
 			cwd,
 			env: {
 				AVA_FORCE_CI: 'not-ci',
@@ -68,5 +69,3 @@ async function testSnapshotPruning(t, {
 		}
 	});
 }
-
-module.exports.testSnapshotPruning = testSnapshotPruning;

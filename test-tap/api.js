@@ -1,28 +1,29 @@
-'use strict';
-require('../lib/chalk').set();
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const path = require('path');
-const fs = require('fs');
-const del = require('del');
-const {test} = require('tap');
-const Api = require('../lib/api');
-const {normalizeGlobs} = require('../lib/globs');
-const providerManager = require('../lib/provider-manager');
+import del from 'del';
+import {test} from 'tap';
 
+import Api from '../lib/api.js';
+import {normalizeGlobs} from '../lib/globs.js';
+import providerManager from '../lib/provider-manager.js';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = path.join(__dirname, '..');
 
-function apiCreator(options = {}) {
+async function apiCreator(options = {}) {
 	options.projectDir = options.projectDir || ROOT_DIR;
 	if (options.babelConfig !== undefined) {
 		options.providers = [{
 			type: 'babel',
-			main: providerManager.babel(options.projectDir).main({config: options.babelConfig})
+			main: (await providerManager.babel(options.projectDir)).main({config: options.babelConfig})
 		}];
 	}
 
 	options.chalkOptions = {level: 0};
 	options.concurrency = 2;
-	options.extensions = options.extensions || ['js'];
+	options.extensions = options.extensions || ['cjs'];
 	options.experiments = {};
 	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.ignoredByWatcher, extensions: options.extensions, providers: []});
 	const instance = new Api(options);
@@ -36,19 +37,19 @@ const opts = [
 ];
 
 for (const opt of opts) {
-	test(`test.meta - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator({
+	test(`test.meta - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator({
 			...opt,
 			snapshotDir: 'snapshot-fixture'
 		});
-		return api.run({files: [path.join(__dirname, 'fixture', 'meta.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture', 'meta.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 2);
 			});
 	});
 
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, t => {
-		const api = apiCreator({
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, async t => {
+		const api = await apiCreator({
 			...opt,
 			failFast: true
 		});
@@ -71,7 +72,7 @@ for (const opt of opts) {
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/fail-fast/single-file/test.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/fail-fast/single-file/test.cjs')]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
@@ -88,8 +89,8 @@ for (const opt of opts) {
 				t.equal(runStatus.stats.failedTests, 1);
 			});
 	});
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & serial`, t => {
-		const api = apiCreator({
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & serial`, async t => {
+		const api = await apiCreator({
 			...opt,
 			failFast: true,
 			serial: true
@@ -116,18 +117,18 @@ for (const opt of opts) {
 		});
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
-			path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.js')
+			path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+			path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.cjs')
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
 					ok: true,
-					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
 					title: 'first pass'
 				}, {
 					ok: false,
-					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
 					title: 'second fail'
 				}]);
 				t.equal(runStatus.stats.passedTests, 1);
@@ -135,7 +136,7 @@ for (const opt of opts) {
 			});
 	});
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & interrupt`, async t => {
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			failFast: true,
 			concurrency: 2
@@ -161,8 +162,8 @@ for (const opt of opts) {
 			});
 		});
 
-		const fails = path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js');
-		const passesSlow = path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js');
+		const fails = path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs');
+		const passesSlow = path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.cjs');
 
 		const runStatus = await api.run({files: [fails, passesSlow]});
 		t.ok(api.options.failFast);
@@ -172,27 +173,27 @@ for (const opt of opts) {
 
 		t.strictSame(tests.filter(({testFile}) => testFile === fails), [{
 			ok: true,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
 			title: 'first pass'
 		}, {
 			ok: false,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
 			title: 'second fail'
 		}, {
 			ok: true,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
 			title: 'third pass'
 		}]);
 		if (runStatus.stats.passedTests === 3) {
 			t.strictSame(tests.filter(({testFile}) => testFile === passesSlow), [{
 				ok: true,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
+				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.cjs'),
 				title: 'first pass'
 			}]);
 		}
 	});
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - crash & serial`, t => {
-		const api = apiCreator({
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - crash & serial`, async t => {
+		const api = await apiCreator({
 			...opt,
 			failFast: true,
 			serial: true
@@ -233,21 +234,21 @@ for (const opt of opts) {
 		});
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/fail-fast/crash/crashes.js'),
-			path.join(__dirname, 'fixture/fail-fast/crash/passes.js')
+			path.join(__dirname, 'fixture/fail-fast/crash/crashes.cjs'),
+			path.join(__dirname, 'fixture/fail-fast/crash/passes.cjs')
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, []);
 				t.equal(workerFailures.length, 1);
-				t.equal(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.js'));
+				t.equal(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.cjs'));
 				t.equal(runStatus.stats.passedTests, 0);
 				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
 
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - timeout & serial`, t => {
-		const api = apiCreator({
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - timeout & serial`, async t => {
+		const api = await apiCreator({
 			...opt,
 			failFast: true,
 			serial: true,
@@ -289,8 +290,8 @@ for (const opt of opts) {
 		});
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/fail-fast/timeout/fails.js'),
-			path.join(__dirname, 'fixture/fail-fast/timeout/passes.js')
+			path.join(__dirname, 'fixture/fail-fast/timeout/fails.cjs'),
+			path.join(__dirname, 'fixture/fail-fast/timeout/passes.cjs')
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
@@ -301,15 +302,15 @@ for (const opt of opts) {
 				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - no errors`, t => {
-		const api = apiCreator({
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - no errors`, async t => {
+		const api = await apiCreator({
 			...opt,
 			failFast: true
 		});
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/fail-fast/without-error/a.js'),
-			path.join(__dirname, 'fixture/fail-fast/without-error/b.js')
+			path.join(__dirname, 'fixture/fail-fast/without-error/a.cjs'),
+			path.join(__dirname, 'fixture/fail-fast/without-error/b.cjs')
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
@@ -317,32 +318,32 @@ for (const opt of opts) {
 				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
-	test(`serial execution mode - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator({
+	test(`serial execution mode - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator({
 			...opt,
 			serial: true
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/serial.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/serial.cjs')]})
 			.then(runStatus => {
 				t.ok(api.options.serial);
 				t.equal(runStatus.stats.passedTests, 3);
 				t.equal(runStatus.stats.failedTests, 0);
 			});
 	});
-	test(`run from package.json folder by default - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator(opt);
+	test(`run from package.json folder by default - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map file - workerThreads: ${opt.workerThreads}`, t => {
+	test(`stack traces for exceptions are corrected using a source map file - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			cacheEnabled: true
 		});
@@ -352,21 +353,21 @@ for (const opt of opts) {
 				if (evt.type === 'uncaught-exception') {
 					t.match(evt.err.message, /Thrown by source-map-fixtures/);
 					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
+					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.cjs:5.*$/m);
 				}
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map file in what looks like a browser env - workerThreads: ${opt.workerThreads}`, t => {
+	test(`stack traces for exceptions are corrected using a source map file in what looks like a browser env - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			cacheEnabled: true
 		});
@@ -376,18 +377,18 @@ for (const opt of opts) {
 				if (evt.type === 'uncaught-exception') {
 					t.match(evt.err.message, /Thrown by source-map-fixtures/);
 					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file-browser-env.js:7.*$/m);
+					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file-browser-env.cjs:8.*$/m);
 				}
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file-browser-env.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/source-map-file-browser-env.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`enhanced assertion formatting necessary whitespace and empty strings - workerThreads: ${opt.workerThreads}`, t => {
+	test(`enhanced assertion formatting necessary whitespace and empty strings - workerThreads: ${opt.workerThreads}`, async t => {
 		const expected = [
 			[
 				/foo === "" && "" === foo/,
@@ -411,9 +412,9 @@ for (const opt of opts) {
 		];
 
 		t.plan(15);
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
-			files: ['test-tap/fixture/enhanced-assertion-formatting.js'],
+			files: ['test-tap/fixture/enhanced-assertion-formatting.cjs'],
 			babelConfig: true
 		});
 		const errors = [];
@@ -424,7 +425,7 @@ for (const opt of opts) {
 				}
 			});
 		});
-		return api.run({files: [path.join(__dirname, 'fixture/enhanced-assertion-formatting.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/enhanced-assertion-formatting.cjs')]})
 			.then(runStatus => {
 				t.equal(errors.length, 3);
 				t.equal(runStatus.stats.passedTests, 0);
@@ -437,10 +438,10 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map file (cache off) - workerThreads: ${opt.workerThreads}`, t => {
+	test(`stack traces for exceptions are corrected using a source map file (cache off) - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			cacheEnabled: false
 		});
@@ -450,21 +451,21 @@ for (const opt of opts) {
 				if (evt.type === 'uncaught-exception') {
 					t.match(evt.err.message, /Thrown by source-map-fixtures/);
 					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.js:4.*$/m);
+					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.cjs:5.*$/m);
 				}
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on) - workerThreads: ${opt.workerThreads}`, t => {
+	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on) - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			cacheEnabled: true
 		});
@@ -474,21 +475,21 @@ for (const opt of opts) {
 				if (evt.type === 'uncaught-exception') {
 					t.match(evt.err.message, /Thrown by source-map-fixtures/);
 					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
+					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial.cjs:23.*$/m);
 				}
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off) - workerThreads: ${opt.workerThreads}`, t => {
+	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off) - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			cacheEnabled: false
 		});
@@ -498,28 +499,28 @@ for (const opt of opts) {
 				if (evt.type === 'uncaught-exception') {
 					t.match(evt.err.message, /Thrown by source-map-fixtures/);
 					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial-input.js:14.*$/m);
+					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial.cjs:23.*$/m);
 				}
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`absolute paths - workerThreads:  ${opt.workerThreads}`, t => {
-		const api = apiCreator(opt);
+	test(`absolute paths - workerThreads:  ${opt.workerThreads}`, async t => {
+		const api = await apiCreator(opt);
 
-		return api.run({files: [path.resolve('test-tap/fixture/es2015.js')]})
+		return api.run({files: [path.resolve('test-tap/fixture/es2015.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`symlink to directory containing test files - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator({...opt, files: ['test-tap/fixture/symlink/*.js']});
+	test(`symlink to directory containing test files - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator({...opt, files: ['test-tap/fixture/symlink/*.cjs']});
 
 		return api.run()
 			.then(runStatus => {
@@ -527,60 +528,57 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`symlink to test file directly - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator(opt);
+	test(`symlink to test file directly - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/symlinkfile.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/symlinkfile.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
-	test(`test file in node_modules is ignored - workerThreads: ${opt.workerThreads}`, t => {
+	test(`test file in node_modules is ignored - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(1);
 
-		const api = apiCreator(opt);
-		return api.run({files: [path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]})
+		const api = await apiCreator(opt);
+		return api.run({files: [path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.declaredTests, 0);
 			});
 	});
 
-	test(`Node.js-style --require CLI argument - workerThreads: ${opt.workerThreads}`, t => {
-		const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.js')).replace(/\\/g, '/');
+	test(`Node.js-style --require CLI argument - workerThreads: ${opt.workerThreads}`, async t => {
+		const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.cjs')).replace(/\\/g, '/');
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			require: [requirePath]
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/validate-installed-global.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/validate-installed-global.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
 	test(`Node.js-style --require CLI argument module not found - workerThreads: ${opt.workerThreads}`, t => {
-		t.throws(() => {
-		/* eslint no-new: 0 */
-			apiCreator({...opt, require: ['foo-bar']});
-		}, /^Could not resolve required module ’foo-bar’$/);
+		t.rejects(apiCreator({...opt, require: ['foo-bar']}), /^Could not resolve required module ’foo-bar’$/);
 		t.end();
 	});
 
-	test(`caching is enabled by default - workerThreads: ${opt.workerThreads}`, t => {
+	test(`caching is enabled by default - workerThreads: ${opt.workerThreads}`, async t => {
 		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			babelConfig: true,
 			projectDir: path.join(__dirname, 'fixture/caching')
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-				t.equal(files.filter(x => x.endsWith('.js')).length, 1);
+				t.equal(files.filter(x => x.endsWith('.cjs')).length, 1);
 				t.equal(files.filter(x => x.endsWith('.map')).length, 1);
 				if (files.length === 3) {
 					// This file may be written locally, but not in CI.
@@ -591,25 +589,25 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`caching can be disabled - workerThreads: ${opt.workerThreads}`, t => {
+	test(`caching can be disabled - workerThreads: ${opt.workerThreads}`, async t => {
 		del.sync(path.join(__dirname, 'fixture/caching/node_modules'));
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			projectDir: path.join(__dirname, 'fixture/caching'),
 			cacheEnabled: false
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
 			.then(() => {
 				t.notOk(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
 			});
 	});
 
-	test(`test file with only skipped tests does not create a failure - workerThreads: ${opt.workerThreads}`, t => {
-		const api = apiCreator();
+	test(`test file with only skipped tests does not create a failure - workerThreads: ${opt.workerThreads}`, async t => {
+		const api = await apiCreator();
 
-		return api.run({...opt, files: [path.join(__dirname, 'fixture/skip-only.js')]})
+		return api.run({...opt, files: [path.join(__dirname, 'fixture/skip-only.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.selectedTests, 1);
 				t.equal(runStatus.stats.skippedTests, 1);
@@ -617,10 +615,10 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`test file with only skipped tests does not run hooks - workerThreads:  ${opt.workerThreads}`, t => {
-		const api = apiCreator(opt);
+	test(`test file with only skipped tests does not run hooks - workerThreads:  ${opt.workerThreads}`, async t => {
+		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/hooks-skipped.js')]})
+		return api.run({files: [path.join(__dirname, 'fixture/hooks-skipped.cjs')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.selectedTests, 1);
 				t.equal(runStatus.stats.skippedTests, 1);
@@ -630,20 +628,20 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`emits dependencies for test files - workerThreads: ${opt.workerThreads}`, t => {
+	test(`emits dependencies for test files - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(8);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
-			files: ['test-tap/fixture/with-dependencies/*test*.js'],
-			require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.js')]
+			files: ['test-tap/fixture/with-dependencies/*test*.cjs'],
+			require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.cjs')]
 		});
 
 		const testFiles = new Set([
-			path.resolve('test-tap/fixture/with-dependencies/no-tests.js'),
-			path.resolve('test-tap/fixture/with-dependencies/test.js'),
-			path.resolve('test-tap/fixture/with-dependencies/test-failure.js'),
-			path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.js')
+			path.resolve('test-tap/fixture/with-dependencies/no-tests.cjs'),
+			path.resolve('test-tap/fixture/with-dependencies/test.cjs'),
+			path.resolve('test-tap/fixture/with-dependencies/test-failure.cjs'),
+			path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.cjs')
 		]);
 
 		const sourceFiles = [
@@ -664,15 +662,15 @@ for (const opt of opts) {
 		return api.run();
 	});
 
-	test(`verify test count - workerThreads: ${opt.workerThreads}`, t => {
+	test(`verify test count - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
-		const api = apiCreator(opt);
+		const api = await apiCreator(opt);
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/test-count.js'),
-			path.join(__dirname, 'fixture/test-count-2.js'),
-			path.join(__dirname, 'fixture/test-count-3.js')
+			path.join(__dirname, 'fixture/test-count.cjs'),
+			path.join(__dirname, 'fixture/test-count-2.cjs'),
+			path.join(__dirname, 'fixture/test-count-3.cjs')
 		]}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 4, 'pass count');
 			t.equal(runStatus.stats.failedTests, 3, 'fail count');
@@ -681,10 +679,10 @@ for (const opt of opts) {
 		});
 	});
 
-	test(`using --match with matching tests will only report those passing tests - workerThreads: ${opt.workerThreads}`, t => {
+	test(`using --match with matching tests will only report those passing tests - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(3);
 
-		const api = apiCreator({
+		const api = await apiCreator({
 			...opt,
 			match: ['this test will match']
 		});
@@ -699,21 +697,21 @@ for (const opt of opts) {
 		});
 
 		return api.run({files: [
-			path.join(__dirname, 'fixture/match-no-match.js'),
-			path.join(__dirname, 'fixture/match-no-match-2.js'),
-			path.join(__dirname, 'fixture/test-count.js')
+			path.join(__dirname, 'fixture/match-no-match.cjs'),
+			path.join(__dirname, 'fixture/match-no-match-2.cjs'),
+			path.join(__dirname, 'fixture/test-count.cjs')
 		]}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 1);
 		});
 	});
 }
 
-test('run from package.json folder by default', t => {
-	const api = apiCreator({
+test('run from package.json folder by default', async t => {
+	const api = await apiCreator({
 		workerThreads: false
 	});
 
-	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
+	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.cjs')]})
 		.then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 1);
 		});

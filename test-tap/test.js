@@ -1,14 +1,18 @@
-'use strict';
-require('../lib/chalk').set({level: 0});
-require('../lib/worker/options').set({});
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const path = require('path');
-const {test} = require('tap');
-const sinon = require('sinon');
-const delay = require('delay');
-const snapshotManager = require('../lib/snapshot-manager');
-const Test = require('../lib/test');
-const {ava} = require('./helper/ava-test');
+import delay from 'delay';
+import sinon from 'sinon';
+import {test} from 'tap';
+
+import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import * as snapshotManager from '../lib/snapshot-manager.js';
+import Test from '../lib/test.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+import {ava} from './helper/ava-test.js';
+
+setOptions({});
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
@@ -528,9 +532,9 @@ test('assertions are bound', t => {
 
 // Snapshots reused from test/assert.js
 test('snapshot assertion can be skipped', t => {
-	const projectDir = path.join(__dirname, 'fixture');
+	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.js'),
+		file: path.join(projectDir, 'assert.cjs'),
 		projectDir,
 		fixedLocation: null,
 		recordNewSnapshots: true,
@@ -554,9 +558,9 @@ test('snapshot assertion can be skipped', t => {
 
 // Snapshots reused from test/assert.js
 test('snapshot assertions call options.skipSnapshot when skipped', async t => {
-	const projectDir = path.join(__dirname, 'fixture');
+	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.js'),
+		file: path.join(projectDir, 'assert.cjs'),
 		projectDir,
 		fixedLocation: null,
 		updating: false
@@ -617,13 +621,13 @@ test('timeout with promise', t => {
 
 test('timeout is refreshed on assert', t => {
 	return ava(async a => {
-		a.timeout(10);
+		a.timeout(100);
 		a.plan(3);
 		await Promise.all([
-			delay(5).then(() => a.pass()),
-			delay(10).then(() => a.pass()),
-			delay(15).then(() => a.pass()),
-			delay(20)
+			delay(50).then(() => a.pass()),
+			delay(100).then(() => a.pass()),
+			delay(150).then(() => a.pass()),
+			delay(200)
 		]);
 	}).run().then(result => {
 		t.equal(result.passed, true);

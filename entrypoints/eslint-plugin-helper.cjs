@@ -4,7 +4,14 @@ const url = require('url');
 const v8 = require('v8');
 const {Worker} = require('worker_threads');
 
-const {classify, hasExtension, isHelperish, matches, normalizeFileForMatching, normalizePatterns} = require('../lib/globs');
+const {
+	classify,
+	hasExtension,
+	isHelperish,
+	matches,
+	normalizeFileForMatching,
+	normalizePatterns
+} = require('../lib/glob-helpers.cjs');
 
 const MAX_DATA_LENGTH_EXCLUSIVE = 100 * 1024; // Allocate 100 KiB to exchange globs.
 

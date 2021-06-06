@@ -1,5 +1,6 @@
-const test = require('@ava/test');
-const exec = require('../helpers/exec');
+import test from '@ava/test';
+
+import {fixture} from '../helpers/exec.js';
 
 test('node assertion failures are reported to the console when running in a terminal', async t => {
 	const options = {
@@ -11,14 +12,14 @@ test('node assertion failures are reported to the console when running in a term
 		}
 	};
 
-	const result = await t.throwsAsync(exec.fixture(['assert-failure.js'], options));
+	const result = await t.throwsAsync(fixture(['assert-failure.js'], options));
 	const error = result.stats.getError(result.stats.failed[0]);
 
 	t.true(error.values.every(value => value.formatted.includes('AssertionError')));
 });
 
 test('node assertion failures are reported to the console when not running in a terminal', async t => {
-	const result = await t.throwsAsync(exec.fixture(['assert-failure.js']));
+	const result = await t.throwsAsync(fixture(['assert-failure.js']));
 	const error = result.stats.getError(result.stats.failed[0]);
 
 	t.true(error.values.every(value => value.formatted.includes('AssertionError')));

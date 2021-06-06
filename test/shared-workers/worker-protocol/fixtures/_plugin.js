@@ -1,6 +1,6 @@
-const plugin = require('ava/plugin');
+import * as plugin from 'ava/plugin';
 
-module.exports = plugin.registerSharedWorker({
-	filename: require.resolve('./_worker'),
+export default plugin.registerSharedWorker({
+	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['experimental']
 });

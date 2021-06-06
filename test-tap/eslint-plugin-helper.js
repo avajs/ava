@@ -1,11 +1,12 @@
-'use strict';
-const path = require('path');
-const {test} = require('tap');
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const {load} = require('../entrypoints/eslint-plugin-helper.cjs');
+import {test} from 'tap';
 
-const projectDir = path.join(__dirname, 'fixture/eslint-plugin-helper');
-const overrideDir = path.join(__dirname, 'fixture/eslint-plugin-helper/for-overriding');
+import {load} from '../entrypoints/eslint-plugin-helper.cjs';
+
+const projectDir = fileURLToPath(new URL('fixture/eslint-plugin-helper', import.meta.url));
+const overrideDir = fileURLToPath(new URL('fixture/eslint-plugin-helper/for-overriding', import.meta.url));
 
 test('caches loaded configuration', t => {
 	const expected = load(projectDir);
@@ -40,7 +41,7 @@ test('classifies files according to the configuration', t => {
 		isHelper: false,
 		isTest: false
 	});
-	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.js')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.cjs')), {
 		isHelper: false,
 		isTest: false
 	});
@@ -73,7 +74,7 @@ test('classifies files according to configuration override', t => {
 		isHelper: false,
 		isTest: false
 	});
-	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.js')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.cjs')), {
 		isHelper: false,
 		isTest: false
 	});

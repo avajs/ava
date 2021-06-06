@@ -1,20 +1,23 @@
-'use strict';
-require('../lib/chalk').set({level: 1});
+import fs from 'fs';
+import {pathToFileURL} from 'url';
 
-const fs = require('fs');
-const tempWrite = require('temp-write');
-const {Instance: ChalkInstance} = require('chalk'); // eslint-disable-line unicorn/import-style
-const {test} = require('tap');
-const codeExcerpt = require('../lib/code-excerpt');
+import _chalk from 'chalk';
+import {test} from 'tap';
+import tempWrite from 'temp-write';
 
-const chalk = new ChalkInstance({level: 1});
+import {set as setChalk} from '../lib/chalk.js';
+import codeExcerpt from '../lib/code-excerpt.js';
+
+setChalk({level: 1});
+
+const chalk = new _chalk.Instance({level: 1});
 
 test('read code excerpt', t => {
-	const file = tempWrite.sync([
+	const file = pathToFileURL(tempWrite.sync([
 		'function a() {',
 		'\talert();',
 		'}'
-	].join('\n'));
+	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false});
 	const expected = [
@@ -28,11 +31,11 @@ test('read code excerpt', t => {
 });
 
 test('truncate lines', t => {
-	const file = tempWrite.sync([
+	const file = pathToFileURL(tempWrite.sync([
 		'function a() {',
 		'\talert();',
 		'}'
-	].join('\n'));
+	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false}, {maxWidth: 14});
 	const expected = [
@@ -46,7 +49,7 @@ test('truncate lines', t => {
 });
 
 test('format line numbers', t => {
-	const file = tempWrite.sync([
+	const file = pathToFileURL(tempWrite.sync([
 		'',
 		'',
 		'',
@@ -58,7 +61,7 @@ test('format line numbers', t => {
 		'function a() {',
 		'\talert();',
 		'}'
-	].join('\n'));
+	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
 	const expected = [
@@ -72,7 +75,7 @@ test('format line numbers', t => {
 });
 
 test('noop if file cannot be read', t => {
-	const file = tempWrite.sync('');
+	const file = pathToFileURL(tempWrite.sync(''));
 	fs.unlinkSync(file);
 
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
@@ -81,13 +84,13 @@ test('noop if file cannot be read', t => {
 });
 
 test('noop if file is not within project', t => {
-	const excerpt = codeExcerpt({isWithinProject: false, file: __filename, line: 1});
+	const excerpt = codeExcerpt({isWithinProject: false, file: import.meta.url, line: 1});
 	t.equal(excerpt, null);
 	t.end();
 });
 
 test('noop if file is a dependency', t => {
-	const excerpt = codeExcerpt({isWithinProject: true, isDependency: true, file: __filename, line: 1});
+	const excerpt = codeExcerpt({isWithinProject: true, isDependency: true, file: import.meta.url, line: 1});
 	t.equal(excerpt, null);
 	t.end();
 });

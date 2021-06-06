@@ -1,4 +1,4 @@
-const test = require('ava');
+import test from 'ava';
 
 const id = index => `index: ${index}`;
 const randomDelay = () => new Promise(resolve => {

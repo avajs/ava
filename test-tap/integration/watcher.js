@@ -1,15 +1,19 @@
-'use strict';
-const path = require('path');
-const {test} = require('tap');
-const touch = require('touch');
-const {execCli} = require('../helper/cli');
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+import {test} from 'tap';
+import touch from 'touch';
+
+import {execCli} from '../helper/cli.js';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const END_MESSAGE = 'Type `r` and press enter to rerun tests\nType `u` and press enter to update snapshots\n';
 
 test('watcher reruns test files upon change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--verbose', '--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.error(err);
 		t.end();
@@ -21,7 +25,7 @@ test('watcher reruns test files upon change', t => {
 		buffer += string;
 		if (buffer.includes('1 test passed')) {
 			if (!passedFirst) {
-				touch.sync(path.join(__dirname, '../fixture/watcher/test.js'));
+				touch.sync(path.join(__dirname, '../fixture/watcher/test.cjs'));
 				buffer = '';
 				passedFirst = true;
 			} else if (!killed) {
@@ -35,7 +39,7 @@ test('watcher reruns test files upon change', t => {
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', 'test-1.js', 'test-2.js'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--verbose', '--watch', 'test-1.cjs', 'test-2.cjs'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.error(err);
 		t.end();
@@ -46,7 +50,7 @@ test('watcher reruns test files when source dependencies change', t => {
 	child.stdout.on('data', string => {
 		buffer += string;
 		if (buffer.includes('2 tests passed') && !passedFirst) {
-			touch.sync(path.join(__dirname, '../fixture/watcher/with-dependencies/source.js'));
+			touch.sync(path.join(__dirname, '../fixture/watcher/with-dependencies/source.cjs'));
 			buffer = '';
 			passedFirst = true;
 		} else if (buffer.includes('1 test passed') && !killed) {
@@ -59,7 +63,7 @@ test('watcher reruns test files when source dependencies change', t => {
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.error(err);
 		t.end();
@@ -97,7 +101,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 			let killed = false;
 
 			const child = execCli(
-				['--verbose', '--watch', '--update-snapshots', 'test.js'],
+				['--verbose', '--watch', '--update-snapshots', 'test.cjs'],
 				{
 					dirname: 'fixture/snapshots/watcher-rerun-unlink',
 					env: {AVA_FORCE_CI: 'not-ci'}
@@ -142,7 +146,7 @@ test('watcher does not rerun test files when ignored files change', t => {
 	child.stdout.on('data', string => {
 		buffer += string;
 		if (buffer.includes('1 test passed') && !passedFirst) {
-			touch.sync(path.join(__dirname, '../fixture/watcher/ignored-files/ignored.js'));
+			touch.sync(path.join(__dirname, '../fixture/watcher/ignored-files/ignored.cjs'));
 			buffer = '';
 			passedFirst = true;
 			setTimeout(() => {
@@ -158,7 +162,7 @@ test('watcher does not rerun test files when ignored files change', t => {
 test('watcher reruns test files when snapshot dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.js'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--verbose', '--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
 		t.ok(killed);
 		t.error(err);
 		t.end();
@@ -186,7 +190,7 @@ test('watcher reruns test files when snapshot dependencies change', t => {
 test('`"tap": true` config is ignored when --watch is given', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', '--verbose', 'test.js'], {dirname: 'fixture/watcher/tap-in-conf', env: {AVA_FORCE_CI: 'not-ci'}}, () => {
+	const child = execCli(['--watch', '--verbose', 'test.cjs'], {dirname: 'fixture/watcher/tap-in-conf', env: {AVA_FORCE_CI: 'not-ci'}}, () => {
 		t.ok(killed);
 		t.end();
 	});
@@ -206,7 +210,7 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 });
 
 test('bails when --tap reporter is used while --watch is given', t => {
-	execCli(['--tap', '--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (err, stdout, stderr) => {
+	execCli(['--tap', '--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (err, stdout, stderr) => {
 		t.equal(err.code, 1);
 		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 		t.end();
@@ -214,7 +218,7 @@ test('bails when --tap reporter is used while --watch is given', t => {
 });
 
 test('bails when CI is used while --watch is given', t => {
-	execCli(['--watch', 'test.js'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (err, stdout, stderr) => {
+	execCli(['--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (err, stdout, stderr) => {
 		t.equal(err.code, 1);
 		t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
 		t.end();

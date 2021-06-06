@@ -1,4 +1,4 @@
-module.exports = async ({negotiateProtocol}) => {
+export default async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['experimental']);
 	protocol.ready();
 

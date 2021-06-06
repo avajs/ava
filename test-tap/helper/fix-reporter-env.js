@@ -1,6 +1,8 @@
-'use strict';
-const os = require('os');
-const fakeTimers = require('@sinonjs/fake-timers');
+import os from 'os';
+
+import fakeTimers from '@sinonjs/fake-timers';
+
+import {set as setChalk} from '../../lib/chalk.js';
 
 const fixColors = () => {
 	// Force consistent and high-fidelity logs.
@@ -8,7 +10,7 @@ const fixColors = () => {
 	Object.defineProperty(process, 'platform', {value: 'darwin', enumerable: true, configurable: true});
 };
 
-module.exports = () => {
+export default () => {
 	// Fix timestamps.
 	const clock = fakeTimers.install({
 		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
@@ -21,7 +23,7 @@ module.exports = () => {
 	Object.defineProperty(os, 'EOL', {value: '\n'});
 
 	fixColors();
-	require('../../lib/chalk').set({level: 3});
+	setChalk({level: 3});
 
 	return {
 		restoreClock() {
@@ -30,4 +32,4 @@ module.exports = () => {
 	};
 };
 
-module.exports.onlyColors = fixColors;
+export {fixColors as onlyColors};

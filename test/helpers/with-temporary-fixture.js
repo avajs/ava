@@ -1,7 +1,7 @@
-const tempy = require('tempy');
-const fse = require('fs-extra');
+import fse from 'fs-extra';
+import tempy from 'tempy';
 
-async function withTemporaryFixture(cwd, task) {
+export async function withTemporaryFixture(cwd, task) {
 	let result;
 	await tempy.directory.task(async temporary => {
 		await fse.copy(cwd, temporary);
@@ -10,5 +10,3 @@ async function withTemporaryFixture(cwd, task) {
 
 	return result;
 }
-
-module.exports.withTemporaryFixture = withTemporaryFixture;

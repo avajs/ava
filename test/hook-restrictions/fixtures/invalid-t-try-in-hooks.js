@@ -1,4 +1,4 @@
-const test = require('ava');
+import test from 'ava';
 
 test.before(async t => {
 	await t.try(tt => tt.pass());

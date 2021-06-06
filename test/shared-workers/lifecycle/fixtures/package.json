@@ -1,10 +1,11 @@
 {
-  "ava": {
-    "files": [
-      "*"
-    ],
-    "nonSemVerExperiments": {
-      "sharedWorkers": true
-    }
-  }
+	"type": "module",
+	"ava": {
+		"files": [
+			"*"
+		],
+		"nonSemVerExperiments": {
+			"sharedWorkers": true
+		}
+	}
 }

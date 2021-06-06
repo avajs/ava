@@ -1,4 +1,4 @@
-const test = require('ava');
+import test from 'ava';
 
 test('exec arguments includes --throw-deprecation', t => {
 	t.plan(1);

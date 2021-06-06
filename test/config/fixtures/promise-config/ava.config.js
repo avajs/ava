@@ -1,3 +1,3 @@
-module.exports = Promise.resolve({
+export default Promise.resolve({
 	failFast: true
 });

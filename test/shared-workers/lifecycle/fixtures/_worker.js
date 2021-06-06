@@ -1,3 +1,3 @@
-exports.default = ({negotiateProtocol}) => {
+export default ({negotiateProtocol}) => {
 	negotiateProtocol(['experimental']).ready();
 };

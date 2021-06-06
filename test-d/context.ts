@@ -1,5 +1,6 @@
 import {expectError, expectType} from 'tsd';
-import anyTest, {Macro, TestInterface} from '..'; // eslint-disable-line import/no-unresolved
+
+import anyTest, {Macro, TestInterface} from '..';
 
 interface Context {
 	foo: string;

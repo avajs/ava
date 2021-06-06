@@ -1,4 +1,4 @@
-'use strict';
-import * as plugin from '../lib/worker/plugin.js'; // eslint-disable-line import/extensions
+import * as plugin from '../lib/worker/plugin.cjs';
+
 const {registerSharedWorker} = plugin;
 export {registerSharedWorker};

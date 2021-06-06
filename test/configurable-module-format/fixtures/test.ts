@@ -1,5 +1,4 @@
-// eslint-disable-next-line ava/no-ignored-test-files
-const test = require('ava');
+const test = require('ava'); // eslint-disable-line @typescript-eslint/no-var-requires, ava/no-ignored-test-files
 
 test('always passing test', t => {
 	const numberWithTypes = 0;

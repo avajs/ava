@@ -1,1 +1,3 @@
-require('./_declare')(__filename);
+import declare from './_declare.js';
+
+declare(import.meta.url);
