@@ -1,0 +1,9 @@
+{
+	"type": "module",
+	"ava": {
+		"files": [
+			"*"
+		],
+		"snapshotDir": "snapshot-fixture"
+	}
+}
