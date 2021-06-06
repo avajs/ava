@@ -16,7 +16,7 @@ test('before', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.before(() => {
 			array.push('a');
 		});
@@ -34,7 +34,7 @@ test('after', t => {
 	t.plan(2);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -58,7 +58,7 @@ test('after not run if test failed', t => {
 	t.plan(2);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-failed') {
 				t.pass();
@@ -81,7 +81,7 @@ test('after.always run even if test failed', t => {
 	t.plan(2);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-failed') {
 				t.pass();
@@ -104,7 +104,7 @@ test('after.always run even if before failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.before(() => {
 			throw new Error('something went wrong');
 		});
@@ -123,7 +123,7 @@ test('stop if before hooks failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.before(() => {
 			array.push('a');
 		});
@@ -146,7 +146,7 @@ test('before each with concurrent tests', t => {
 	t.plan(1);
 
 	const array = [[], []];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		let i = 0;
 		let k = 0;
 
@@ -176,7 +176,7 @@ test('before each with serial tests', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.beforeEach(() => {
 			array.push('a');
 		});
@@ -203,7 +203,7 @@ test('fail if beforeEach hook fails', t => {
 	t.plan(2);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed') {
 				t.pass();
@@ -228,7 +228,7 @@ test('after each with concurrent tests', t => {
 	t.plan(1);
 
 	const array = [[], []];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		let i = 0;
 		let k = 0;
 
@@ -258,7 +258,7 @@ test('after each with serial tests', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach(() => {
 			array.push('a');
 		});
@@ -285,7 +285,7 @@ test('afterEach not run if concurrent tests failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach(() => {
 			array.push('a');
 		});
@@ -302,7 +302,7 @@ test('afterEach not run if serial tests failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach(() => {
 			array.push('a');
 		});
@@ -319,7 +319,7 @@ test('afterEach.always run even if concurrent tests failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach.always(() => {
 			array.push('a');
 		});
@@ -336,7 +336,7 @@ test('afterEach.always run even if serial tests failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach.always(() => {
 			array.push('a');
 		});
@@ -353,7 +353,7 @@ test('afterEach.always run even if beforeEach failed', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.beforeEach(() => {
 			throw new Error('something went wrong');
 		});
@@ -376,7 +376,7 @@ test('afterEach: property `passed` of execution-context is false when test faile
 
 	const passed = [];
 	let i;
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach(a => {
 			passed[i] = a.passed;
 		});
@@ -399,7 +399,7 @@ test('afterEach.always: property `passed` of execution-context is false when tes
 
 	const passed = [];
 	let i;
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach.always(a => {
 			passed[i] = a.passed;
 		});
@@ -421,7 +421,7 @@ test('afterEach.always: property `passed` of execution-context is false when bef
 	t.plan(1);
 
 	let passed;
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.before(() => {
 			throw new Error('something went wrong');
 		});
@@ -440,7 +440,7 @@ test('afterEach.always: property `passed` of execution-context is true when test
 	t.plan(1);
 
 	let passed;
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.afterEach(() => {
 			throw new Error('something went wrong');
 		});
@@ -459,7 +459,7 @@ test('ensure hooks run only around tests', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.beforeEach(() => {
 			array.push('beforeEach');
 		});
@@ -486,7 +486,7 @@ test('ensure hooks run only around tests', t => {
 });
 
 test('shared context', t => {
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
 				t.fail();
@@ -529,7 +529,7 @@ test('shared context', t => {
 });
 
 test('shared context of any type', t => {
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
 				t.fail();
@@ -549,7 +549,7 @@ test('shared context of any type', t => {
 
 test('teardowns cannot be used in hooks', async t => {
 	let hookFailure = null;
-	await promiseEnd(new Runner(), runner => {
+	await promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed') {
 				hookFailure = evt;

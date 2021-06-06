@@ -18,7 +18,7 @@ const promiseEnd = (runner, next) => {
 test('nested tests and hooks aren’t allowed', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => {
 			t.throws(() => {
 				runner.chain(noop);
@@ -31,7 +31,7 @@ test('nested tests and hooks aren’t allowed', t => {
 test('tests must be declared synchronously', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => {
 			a.pass();
 			return Promise.resolve();
@@ -44,7 +44,7 @@ test('tests must be declared synchronously', t => {
 });
 
 test('runner emits "stateChange" events', t => {
-	const runner = new Runner();
+	const runner = new Runner({file: import.meta.url});
 
 	runner.on('stateChange', evt => {
 		if (evt.type === 'declared-test') {
@@ -65,7 +65,7 @@ test('runner emits "stateChange" events', t => {
 
 test('run serial tests before concurrent ones', t => {
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => {
 			array.push('c');
 			a.end();
@@ -94,7 +94,7 @@ test('anything can be skipped', t => {
 		};
 	}
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain.after(pusher('after'));
 		runner.chain.after.skip(pusher('after.skip'));
 
@@ -134,7 +134,7 @@ test('test types and titles', t => {
 	const pass = a => a.pass();
 
 	const check = (setup, expect) => {
-		const runner = new Runner();
+		const runner = new Runner({file: import.meta.url});
 		runner.on('stateChange', evt => {
 			if (evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed') {
 				const expected = expect.shift();
@@ -192,7 +192,7 @@ test('skip test', t => {
 	t.plan(3);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test' && evt.skip) {
 				t.pass();
@@ -219,7 +219,7 @@ test('skip test', t => {
 test('tests must have a non-empty title)', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		t.throws(() => {
 			runner.chain('', t => t.pass());
 		}, new TypeError('Tests must have a title'));
@@ -229,7 +229,7 @@ test('tests must have a non-empty title)', t => {
 test('test titles must be unique', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('title', t => t.pass());
 
 		t.throws(() => {
@@ -241,7 +241,7 @@ test('test titles must be unique', t => {
 test('tests must have an implementation', t => {
 	t.plan(1);
 
-	const runner = new Runner();
+	const runner = new Runner({file: import.meta.url});
 
 	t.throws(() => {
 		runner.chain('title');
@@ -252,7 +252,7 @@ test('todo test', t => {
 	t.plan(3);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test' && evt.todo) {
 				t.pass();
@@ -277,7 +277,7 @@ test('todo test', t => {
 test('todo tests must not have an implementation', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		t.throws(() => {
 			runner.chain.todo('todo', () => {});
 		}, new TypeError('`todo` tests are not allowed to have an implementation. Use `test.skip()` for tests with an implementation.'));
@@ -287,7 +287,7 @@ test('todo tests must not have an implementation', t => {
 test('todo tests must have a title', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		t.throws(() => {
 			runner.chain.todo();
 		}, new TypeError('`todo` tests require a title'));
@@ -297,7 +297,7 @@ test('todo tests must have a title', t => {
 test('todo test titles must be unique', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('title', t => t.pass());
 
 		t.throws(() => {
@@ -310,7 +310,7 @@ test('only test', t => {
 	t.plan(2);
 
 	const array = [];
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test') {
 				t.pass();
@@ -334,7 +334,7 @@ test('only test', t => {
 test('options.runOnlyExclusive means only exclusive tests are run', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner({runOnlyExclusive: true}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, runOnlyExclusive: true}), runner => {
 		runner.chain('test', () => {
 			t.fail();
 		});
@@ -349,7 +349,7 @@ test('options.serial forces all tests to be serial', t => {
 	t.plan(1);
 
 	const array = [];
-	return promiseEnd(new Runner({serial: true}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, serial: true}), runner => {
 		runner.chain('async', async a => {
 			await delay(200);
 			array.push(1);
@@ -373,7 +373,7 @@ test('options.failFast does not stop concurrent tests from running', t => {
 	const expected = ['first', 'second'];
 	t.plan(expected.length);
 
-	promiseEnd(new Runner({failFast: true}), runner => {
+	promiseEnd(new Runner({file: import.meta.url, failFast: true}), runner => {
 		let block;
 		let resume;
 		runner.chain.beforeEach(() => {
@@ -407,7 +407,7 @@ test('options.failFast && options.serial stops subsequent tests from running ', 
 	const expected = ['first'];
 	t.plan(expected.length);
 
-	promiseEnd(new Runner({failFast: true, serial: true}), runner => {
+	promiseEnd(new Runner({file: import.meta.url, failFast: true, serial: true}), runner => {
 		let block;
 		let resume;
 		runner.chain.beforeEach(() => {
@@ -441,7 +441,7 @@ test('options.failFast & failing serial test stops subsequent tests from running
 	const expected = ['first'];
 	t.plan(expected.length);
 
-	promiseEnd(new Runner({failFast: true, serial: true}), runner => {
+	promiseEnd(new Runner({file: import.meta.url, failFast: true, serial: true}), runner => {
 		let block;
 		let resume;
 		runner.chain.beforeEach(() => {
@@ -478,7 +478,7 @@ test('options.failFast & failing serial test stops subsequent tests from running
 test('options.match will not run tests with non-matching titles', t => {
 	t.plan(4);
 
-	return promiseEnd(new Runner({match: ['*oo', '!foo']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo', '!foo']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -510,7 +510,7 @@ test('options.match will not run tests with non-matching titles', t => {
 test('options.match hold no effect on hooks with titles', t => {
 	t.plan(2);
 
-	return promiseEnd(new Runner({match: ['!before*']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['!before*']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -533,7 +533,7 @@ test('options.match hold no effect on hooks with titles', t => {
 test('options.match overrides .only', t => {
 	t.plan(4);
 
-	return promiseEnd(new Runner({match: ['*oo']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -555,7 +555,7 @@ test('options.match overrides .only', t => {
 test('options.match matches todo tests', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner({match: ['*oo']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'selected-test' && evt.todo) {
 				t.pass();
@@ -570,7 +570,7 @@ test('options.match matches todo tests', t => {
 test('macros: Additional args will be spread as additional args on implementation function', t => {
 	t.plan(3);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -611,7 +611,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 
 	macroFn.title = (title = 'default', firstArg = undefined) => title + firstArg;
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'declared-test') {
 				t.equal(evt.title, expectedTitles.shift());
@@ -627,7 +627,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 test('macros: test titles must be strings', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		t.throws(() => {
 			const macro = t => t.pass();
 			macro.title = () => [];
@@ -639,7 +639,7 @@ test('macros: test titles must be strings', t => {
 test('macros: hook titles must be strings', t => {
 	t.plan(1);
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		t.throws(() => {
 			const macro = t => t.pass();
 			macro.title = () => [];
@@ -657,7 +657,7 @@ test('match applies to macros', t => {
 
 	macroFn.title = (title, firstArg) => `${firstArg}bar`;
 
-	return promiseEnd(new Runner({match: ['foobar']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['foobar']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.equal(evt.title, 'foobar');
@@ -696,7 +696,7 @@ test('arrays of macros', t => {
 
 	macroFnB.title = prefix => `${prefix}.B`;
 
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -737,7 +737,7 @@ test('match applies to arrays of macros', t => {
 
 	bazMacro.title = (title, firstArg) => `${firstArg}baz`;
 
-	return promiseEnd(new Runner({match: ['foobar']}), runner => {
+	return promiseEnd(new Runner({file: import.meta.url, match: ['foobar']}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.equal(evt.title, 'foobar');
@@ -751,7 +751,7 @@ test('match applies to arrays of macros', t => {
 
 test('silently skips other tests when .only is used', t => {
 	t.plan(1);
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.on('stateChange', evt => {
 			if (evt.type === 'test-passed') {
 				t.pass();
@@ -766,7 +766,7 @@ test('silently skips other tests when .only is used', t => {
 
 test('subsequent always hooks are run even if earlier always hooks fail', t => {
 	t.plan(3);
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => a.pass());
 		runner.chain.serial.after.always(a => {
 			t.pass();
@@ -787,7 +787,7 @@ test('hooks run concurrently, but can be serialized', t => {
 	t.plan(7);
 
 	let activeCount = 0;
-	return promiseEnd(new Runner(), runner => {
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => a.pass());
 
 		runner.chain.before(() => {

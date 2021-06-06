@@ -280,6 +280,8 @@ Available properties:
 * `file`: path to the test file
 * `snapshotDirectory`: directory where snapshots are stored
 
+In AVA 4 these are file URL strings.
+
 ```js
 const test = require('ava');
 

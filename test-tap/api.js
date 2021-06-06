@@ -37,17 +37,6 @@ const opts = [
 ];
 
 for (const opt of opts) {
-	test(`test.meta - workerThreads: ${opt.workerThreads}`, async t => {
-		const api = await apiCreator({
-			...opt,
-			snapshotDir: 'snapshot-fixture'
-		});
-		return api.run({files: [path.join(__dirname, 'fixture', 'meta.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 2);
-			});
-	});
-
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, async t => {
 		const api = await apiCreator({
 			...opt,
