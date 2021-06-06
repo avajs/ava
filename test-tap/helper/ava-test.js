@@ -1,7 +1,7 @@
-const Test = require('../../lib/test');
-const ContextRef = require('../../lib/context-ref');
+import ContextRef from '../../lib/context-ref.js';
+import Test from '../../lib/test.js';
 
-function withExperiments(experiments = {}) {
+export function withExperiments(experiments = {}) {
 	const uniqueTestTitles = new Set();
 	const registerUniqueTitle = title => {
 		if (uniqueTestTitles.has(title)) {
@@ -39,6 +39,5 @@ function withExperiments(experiments = {}) {
 	return ava;
 }
 
-exports.ava = withExperiments();
-exports.withExperiments = withExperiments;
-exports.newAva = () => withExperiments();
+export const ava = withExperiments();
+export const newAva = () => withExperiments();

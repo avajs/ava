@@ -9,7 +9,7 @@
 [2K[1G[1A[2K[1G[1A[2K[1G---tty-stream-chunk-separator
 [?25h  [1ma [90m[2m›[22m[1m[39m fails[22m
 
-  [90ma.js:3[39m
+  [90ma.cjs:3[39m
 
    [90m2:[39m                              
   [41m 3: test('fails', t => t.fail());[49m
@@ -17,7 +17,7 @@
 
   Test failed via `t.fail()`
 
-  [90m› test-tap/fixture/report/failfast/a.js:3:22[39m
+  [90m› test-tap/fixture/report/failfast/a.cjs:3:22[39m
 
   [90m─[39m
 

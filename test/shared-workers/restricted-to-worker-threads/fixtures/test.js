@@ -1,8 +1,8 @@
-const test = require('ava');
-const plugin = require('ava/plugin');
+import test from 'ava';
+import * as plugin from 'ava/plugin';
 
 plugin.registerSharedWorker({
-	filename: require.resolve('./_worker.js'),
+	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['experimental']
 });
 

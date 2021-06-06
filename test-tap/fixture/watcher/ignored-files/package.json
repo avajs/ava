@@ -1,6 +1,10 @@
 {
 	"ava": {
-		"files": ["test.js"],
-		"ignoredByWatcher": ["ignored.js"]
+		"files": [
+			"test.cjs"
+		],
+		"ignoredByWatcher": [
+			"ignored.cjs"
+		]
 	}
 }

@@ -1,12 +1,15 @@
-'use strict';
-require('../lib/chalk').set();
-require('../lib/worker/options').set({chalkOptions: {level: 0}});
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const path = require('path');
-const {test} = require('tap');
-const snapshotManager = require('../lib/snapshot-manager');
-const Test = require('../lib/test');
-const ContextRef = require('../lib/context-ref');
+import {test} from 'tap';
+
+import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import ContextRef from '../lib/context-ref.js';
+import * as snapshotManager from '../lib/snapshot-manager.js';
+import Test from '../lib/test.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+setOptions({});
 
 function setup(title, manager, fn) {
 	return new Test({
@@ -28,9 +31,9 @@ test(async t => {
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
 	const updating = false;
 
-	const projectDir = path.join(__dirname, 'fixture');
+	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'try-snapshot.js'),
+		file: path.join(projectDir, 'try-snapshot.cjs'),
 		projectDir,
 		fixedLocation: null,
 		updating,

@@ -1,6 +1,5 @@
-'use strict';
-const {test} = require('tap');
-const execa = require('execa');
+import execa from 'execa';
+import {test} from 'tap';
 
 test('Throws error when required from the REPL', t => {
 	return execa('node', ['-r', 'ava'], {reject: false}).then(result => {

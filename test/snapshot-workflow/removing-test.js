@@ -1,12 +1,14 @@
-const test = require('@ava/test');
-const exec = require('../helpers/exec');
-const {beforeAndAfter} = require('./helpers/macros');
+import test from '@ava/test';
+
+import {cwd} from '../helpers/exec.js';
+
+import {beforeAndAfter} from './helpers/macros.js';
 
 test.serial(
 	'Removing a test retains its data',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('removing-test'),
+		cwd: cwd('removing-test'),
 		expectChanged: false
 	}
 );
@@ -15,7 +17,7 @@ test.serial(
 	'With --update-snapshots, removing a test removes its block',
 	beforeAndAfter,
 	{
-		cwd: exec.cwd('removing-test'),
+		cwd: cwd('removing-test'),
 		cli: ['--update-snapshots'],
 		expectChanged: true
 	}

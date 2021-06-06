@@ -1,12 +1,13 @@
-const path = require('path');
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const test = require('@ava/test');
-const execa = require('execa');
-const defaultsDeep = require('lodash/defaultsDeep');
-const replaceString = require('replace-string');
+import test from '@ava/test';
+import execa from 'execa';
+import defaultsDeep from 'lodash/defaultsDeep.js';
+import replaceString from 'replace-string';
 
-const cliPath = path.resolve(__dirname, '../../entrypoints/cli.mjs');
-const ttySimulator = path.join(__dirname, './simulate-tty.js');
+const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
+const ttySimulator = fileURLToPath(new URL('simulate-tty.cjs', import.meta.url));
 
 const TEST_AVA_IMPORT_FROM = path.join(process.cwd(), 'entrypoints/main.cjs');
 
@@ -29,8 +30,8 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
-exports.cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
-exports.cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
+export const cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+export const cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
 
 const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
 
@@ -42,14 +43,14 @@ const forwardErrorOutput = async from => {
 	}
 };
 
-exports.fixture = async (args, options = {}) => {
-	const cwd = options.cwd || exports.cwd();
+export const fixture = async (args, options = {}) => {
+	const workingDir = options.cwd || cwd();
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you',
 			TEST_AVA_IMPORT_FROM
 		},
-		cwd,
+		cwd: workingDir,
 		serialization: 'advanced',
 		nodeOptions: ['--require', ttySimulator]
 	}, options));
@@ -83,7 +84,7 @@ exports.fixture = async (args, options = {}) => {
 		switch (statusEvent.type) {
 			case 'hook-failed': {
 				const {title, testFile} = statusEvent;
-				const statObject = {title, file: normalizePath(cwd, testFile)};
+				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				errors.set(statObject, statusEvent.err);
 				stats.failedHooks.push(statObject);
 				break;
@@ -92,12 +93,12 @@ exports.fixture = async (args, options = {}) => {
 			case 'selected-test': {
 				if (statusEvent.skip) {
 					const {title, testFile} = statusEvent;
-					stats.skipped.push({title, file: normalizePath(cwd, testFile)});
+					stats.skipped.push({title, file: normalizePath(workingDir, testFile)});
 				}
 
 				if (statusEvent.todo) {
 					const {title, testFile} = statusEvent;
-					stats.todo.push({title, file: normalizePath(cwd, testFile)});
+					stats.todo.push({title, file: normalizePath(workingDir, testFile)});
 				}
 
 				break;
@@ -111,7 +112,7 @@ exports.fixture = async (args, options = {}) => {
 
 			case 'test-passed': {
 				const {title, testFile} = statusEvent;
-				const statObject = {title, file: normalizePath(cwd, testFile)};
+				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				stats.passed.push(statObject);
 				logs.set(statObject, statusEvent.logs);
 				break;
@@ -119,7 +120,7 @@ exports.fixture = async (args, options = {}) => {
 
 			case 'test-failed': {
 				const {title, testFile} = statusEvent;
-				const statObject = {title, file: normalizePath(cwd, testFile)};
+				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
 				logs.set(statObject, statusEvent.logs);

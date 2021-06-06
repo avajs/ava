@@ -1,5 +1,8 @@
 {
+	"type": "module",
 	"ava": {
-		"extensions": ["js"]
+		"extensions": [
+			"js"
+		]
 	}
 }

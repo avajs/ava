@@ -1,7 +1,8 @@
 {
-  "ava": {
-    "files": [
-      "*.js"
-    ]
-  }
+	"type": "module",
+	"ava": {
+		"files": [
+			"*.js"
+		]
+	}
 }

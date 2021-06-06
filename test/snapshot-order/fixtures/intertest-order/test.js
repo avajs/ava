@@ -1,4 +1,4 @@
-const test = require('ava');
+import test from 'ava';
 
 const reverse = process.env.INTERTEST_ORDER_REVERSE;
 

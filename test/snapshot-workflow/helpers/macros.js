@@ -1,8 +1,11 @@
-const exec = require('../../helpers/exec');
-const path = require('path');
-const fs = require('fs').promises;
-const concordance = require('concordance');
-const {withTemporaryFixture} = require('../../helpers/with-temporary-fixture');
+
+import {promises as fs} from 'fs';
+import path from 'path';
+
+import concordance from 'concordance';
+
+import {fixture} from '../../helpers/exec.js';
+import {withTemporaryFixture} from '../../helpers/with-temporary-fixture.js';
 
 function cleanStringDiff(before, after) {
 	const theme = {
@@ -20,7 +23,7 @@ function cleanStringDiff(before, after) {
 	return diff;
 }
 
-async function beforeAndAfter(t, {
+export async function beforeAndAfter(t, {
 	cwd,
 	expectChanged,
 	env = {},
@@ -30,7 +33,7 @@ async function beforeAndAfter(t, {
 
 	if (updating) {
 		// Run template
-		await exec.fixture(['--update-snapshots'], {
+		await fixture(['--update-snapshots'], {
 			cwd,
 			env: {
 				TEMPLATE: 'true',
@@ -44,7 +47,7 @@ async function beforeAndAfter(t, {
 	// Copy fixture to a temporary directory
 	await withTemporaryFixture(cwd, async cwd => {
 		// Run fixture
-		await exec.fixture(cli, {cwd, env: {AVA_FORCE_CI: 'not-ci', ...env}});
+		await fixture(cli, {cwd, env: {AVA_FORCE_CI: 'not-ci', ...env}});
 
 		const after = await readSnapshots(cwd);
 
@@ -58,8 +61,6 @@ async function beforeAndAfter(t, {
 		}
 	});
 }
-
-exports.beforeAndAfter = beforeAndAfter;
 
 async function readSnapshots(cwd) {
 	const [snapshot, report] = await Promise.all([

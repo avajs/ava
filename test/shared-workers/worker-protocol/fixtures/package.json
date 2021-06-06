@@ -1,7 +1,8 @@
 {
-  "ava": {
-    "nonSemVerExperiments": {
-      "sharedWorkers": true
-    }
-  }
+	"type": "module",
+	"ava": {
+		"nonSemVerExperiments": {
+			"sharedWorkers": true
+		}
+	}
 }

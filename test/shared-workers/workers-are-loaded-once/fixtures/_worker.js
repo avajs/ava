@@ -1,6 +1,6 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-module.exports = async ({negotiateProtocol}) => {
+export default async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['experimental']).ready();
 
 	const random = crypto.randomBytes(16).toString('hex');

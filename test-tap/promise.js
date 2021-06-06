@@ -1,9 +1,10 @@
-'use strict';
-require('../lib/chalk').set({level: 0});
-require('../lib/worker/options').set({});
+import {test} from 'tap';
 
-const {test} = require('tap');
-const Test = require('../lib/test');
+import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import Test from '../lib/test.js';
+import {set as setOptions} from '../lib/worker/options.cjs';
+
+setOptions({});
 
 function ava(fn) {
 	return new Test({

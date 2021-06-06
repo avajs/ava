@@ -1,7 +1,7 @@
 {
 	"ava": {
 		"files": [
-			"src/**/*test.js"
+			"src/**/*test.cjs"
 		],
 		"snapshotDir": "snapshot-fixtures"
 	}

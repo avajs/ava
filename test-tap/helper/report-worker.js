@@ -1,3 +1,4 @@
-'use strict';
-require('./fix-reporter-env').onlyColors();
-require('../../lib/worker/base'); // eslint-disable-line import/no-unassigned-import
+import {onlyColors} from './fix-reporter-env.js';
+
+onlyColors();
+import('../../lib/worker/base.js');

@@ -1,5 +1,6 @@
-const test = require('ava');
-const plugin = require('./_plugin');
+import test from 'ava';
+
+import plugin from './_plugin.js';
 
 test('shared workers crash', async t => {
 	const replies = plugin.publish('🙈').replies();

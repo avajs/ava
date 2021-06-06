@@ -1,4 +1,4 @@
-module.exports = async ({negotiateProtocol}) => {
+export default async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['experimental']);
 
 	// When we're ready to receive workers or messages.

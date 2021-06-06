@@ -1,57 +1,20 @@
-'use strict';
-const childProcess = require('child_process');
-const workerThreads = require('worker_threads');
-const fs = require('fs');
-const path = require('path');
-const globby = require('globby');
-const proxyquire = require('proxyquire');
-const replaceString = require('replace-string');
-const pkg = require('../../package.json');
-const {normalizeGlobs} = require('../../lib/globs');
-const providerManager = require('../../lib/provider-manager');
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath, pathToFileURL} from 'url';
 
-const workerFile = path.join(__dirname, 'report-worker.js');
+import globby from 'globby';
+import replaceString from 'replace-string';
 
-class Worker extends workerThreads.Worker {
-	constructor(filename, options) {
-		super(workerFile, {
-			...options,
-			env: {
-				...options.env,
-				NODE_NO_WARNINGS: '1'
-			}
-		});
-	}
-}
+import Api from '../../lib/api.js';
+import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
+import {normalizeGlobs} from '../../lib/globs.js';
+import pkg from '../../lib/pkg.cjs';
+import providerManager from '../../lib/provider-manager.js';
 
-let _Api = null;
-const createApi = options => {
-	if (!_Api) {
-		_Api = proxyquire('../../lib/api', {
-			'./fork': proxyquire('../../lib/fork', {
-				worker_threads: { // eslint-disable-line camelcase
-					...workerThreads,
-					Worker
-				},
-				child_process: { // eslint-disable-line camelcase
-					...childProcess,
-					fork(filename, argv, options) {
-						return childProcess.fork(workerFile, argv, {
-							...options,
-							env: {
-								...options.env,
-								NODE_NO_WARNINGS: '1'
-							}
-						});
-					}
-				}
-			})
-		});
-	}
+_testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 
-	options.workerThreads = false;
-	return new _Api(options);
-};
+const exports = {};
+export default exports;
 
 exports.assert = (t, logFile, buffer) => {
 	let existing = null;
@@ -76,24 +39,27 @@ exports.assert = (t, logFile, buffer) => {
 	}
 };
 
+const cwdFileUrlPrefix = pathToFileURL(process.cwd());
+
 exports.sanitizers = {
-	cwd: string => replaceString(string, process.cwd(), '~'),
+	cwd: string => replaceString(replaceString(string, cwdFileUrlPrefix, ''), process.cwd(), '~'),
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
 	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
-	version: string => replaceString(string, `v${pkg.version}`, 'v1.0.0-beta.5.1')
+	version: string => replaceString(string, `v${pkg.version}`, 'VERSION')
 };
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
 
-const run = (type, reporter, {match = [], filter} = {}) => {
+const run = async (type, reporter, {match = [], filter} = {}) => {
 	const projectDir = exports.projectDir(type);
 
 	const providers = [{
 		type: 'babel',
 		level: 'ava-3',
-		main: providerManager.babel(projectDir).main({
+		main: (await providerManager.babel(projectDir)).main({
 			config: {
 				testOptions: {
 					plugins: ['@babel/plugin-proposal-do-expressions']
@@ -103,7 +69,7 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 	}];
 
 	const options = {
-		extensions: ['js'],
+		extensions: ['cjs'],
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
@@ -117,15 +83,19 @@ const run = (type, reporter, {match = [], filter} = {}) => {
 		concurrency: 1,
 		updateSnapshots: false,
 		snapshotDir: false,
-		chalkOptions: {level: 1}
+		chalkOptions: {level: 1},
+		workerThreads: false,
+		env: {
+			NODE_NO_WARNINGS: '1'
+		}
 	};
 
 	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
 
-	const api = createApi(options);
+	const api = new Api(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync('*.js', {
+	const files = globby.sync('*.cjs', {
 		absolute: true,
 		brace: true,
 		case: false,
@@ -170,7 +140,7 @@ exports.watch = reporter => run('watch', reporter);
 exports.edgeCases = reporter => run('edgeCases', reporter, {
 	filter: [
 		{pattern: '**/*'},
-		{pattern: '**/test.js', lineNumbers: [2]},
-		{pattern: '**/ast-syntax-error.js', lineNumbers: [7]}
+		{pattern: '**/test.cjs', lineNumbers: [2]},
+		{pattern: '**/ast-syntax-error.cjs', lineNumbers: [7]}
 	]
 });

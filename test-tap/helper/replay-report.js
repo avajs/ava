@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-'use strict';
-const fs = require('fs');
-const delay = require('delay');
-const TTYStream = require('./tty-stream');
+import fs from 'fs';
+
+import delay from 'delay';
+
+import TTYStream from './tty-stream.js';
 
 const lines = fs.readFileSync(process.argv[2], 'utf8').split(TTYStream.SEPARATOR.toString('utf8'));
 

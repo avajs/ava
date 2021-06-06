@@ -1,10 +1,11 @@
-const assert = require('assert');
-const test = require('ava');
-const plugin = require('ava/plugin');
+import assert from 'assert';
+
+import test from 'ava';
+import * as plugin from 'ava/plugin';
 
 let calledLast = false;
 plugin.registerSharedWorker({
-	filename: require.resolve('./_worker.js'),
+	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['experimental'],
 	teardown() {
 		assert(calledLast);
@@ -13,7 +14,7 @@ plugin.registerSharedWorker({
 });
 
 plugin.registerSharedWorker({
-	filename: require.resolve('./_worker.js'),
+	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['experimental'],
 	teardown() {
 		calledLast = true;

@@ -1,6 +1,6 @@
-'use strict';
-const {test} = require('tap');
-const {execCli} = require('../helper/cli');
+import {test} from 'tap';
+
+import {execCli} from '../helper/cli.js';
 
 test('correctly distributes more test files than CI_NODE_TOTAL', t => {
 	t.plan(3);

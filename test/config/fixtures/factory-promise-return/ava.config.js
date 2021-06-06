@@ -1,4 +1,4 @@
-module.exports = async () => {
+export default async () => {
 	return {
 		failFast: true
 	};

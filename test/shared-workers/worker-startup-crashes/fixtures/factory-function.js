@@ -1,7 +1,8 @@
-const test = require('ava');
-const plugin = require('ava/plugin');
+import test from 'ava';
+import * as plugin from 'ava/plugin';
+
 plugin.registerSharedWorker({
-	filename: require.resolve('./_factory-function'),
+	filename: new URL('_factory-function.js', import.meta.url),
 	supportedProtocols: ['experimental']
 });
 

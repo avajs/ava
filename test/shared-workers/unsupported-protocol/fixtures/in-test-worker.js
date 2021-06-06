@@ -1,6 +1,6 @@
-const plugin = require('ava/plugin');
+import * as plugin from 'ava/plugin';
 
 plugin.registerSharedWorker({
 	supportedProtocols: ['🙈'],
-	filename: __filename
+	filename: import.meta.url
 });

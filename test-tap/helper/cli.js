@@ -1,11 +1,13 @@
-'use strict';
-const path = require('path');
-const childProcess = require('child_process');
-const getStream = require('get-stream');
+import childProcess from 'child_process';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
-const cliPath = path.join(__dirname, '../../entrypoints/cli.mjs');
+import getStream from 'get-stream';
 
-function execCli(args, options, cb) {
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
+
+export function execCli(args, options, cb) {
 	let dirname;
 	let env;
 
@@ -52,5 +54,3 @@ function execCli(args, options, cb) {
 
 	return child;
 }
-
-exports.execCli = execCli;

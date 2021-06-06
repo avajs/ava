@@ -1,2 +1,2 @@
 'use strict';
-module.exports = require('../lib/worker/main');
+module.exports = require('../lib/worker/main.cjs');

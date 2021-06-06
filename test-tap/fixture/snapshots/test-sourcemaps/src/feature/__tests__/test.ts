@@ -1,4 +1,4 @@
-const test = require('../../../../../../../entrypoints/main.cjs');
+import test from '../../../../../../../entrypoints/main.cjs';
 
 test('feature test title', t => {
 	t.snapshot({foo: 'bar'});

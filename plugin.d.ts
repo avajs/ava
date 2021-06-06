@@ -1,3 +1,5 @@
+import {URL} from 'url';
+
 export namespace SharedWorker {
 	export type ProtocolIdentifier = 'experimental';
 
@@ -46,7 +48,7 @@ export namespace SharedWorker {
 
 	export namespace Plugin {
 		export type RegistrationOptions<Identifier extends ProtocolIdentifier, Data = unknown> = {
-			readonly filename: string;
+			readonly filename: string | URL;
 			readonly initialData?: Data;
 			readonly supportedProtocols: readonly Identifier[];
 			readonly teardown?: () => void;
