@@ -24,7 +24,7 @@
 		"node": ">=12.22 <13 || >=14.15 <15 || >=16"
 	},
 	"scripts": {
-		"cover": "c8 --report=none tap && c8 --report=none --no-clean test-ava && c8 report",
+		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
 		"test": "xo && tsd && npm run -s cover"
 	},
 	"files": [
