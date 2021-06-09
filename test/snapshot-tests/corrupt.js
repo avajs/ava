@@ -47,8 +47,11 @@ test('snapshot corruption is reported to the console', async t => {
 test('with --update-snapshots, corrupt snapshot files are overwritten', async t => {
 	await withTemporaryFixture(cwd('corrupt'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
+		const env = {
+			AVA_FORCE_CI: 'not-ci'
+		};
 		await fs.writeFile(snapPath, Uint8Array.of(0x00));
-		await fixture(['--update-snapshots'], {cwd});
+		await fixture(['--update-snapshots'], {cwd, env});
 
 		const snapContents = await fs.readFile(snapPath);
 		t.not(snapContents.length, 1);
