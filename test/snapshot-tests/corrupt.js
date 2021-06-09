@@ -10,9 +10,8 @@ test('snapshot corruption is reported to the console', async t => {
 	await withTemporaryFixture(cwd('corrupt'), async cwd => {
 		await fs.writeFile(path.join(cwd, 'test.js.snap'), Uint8Array.of(0x00));
 		const result = await t.throwsAsync(fixture([], {cwd}));
-
-		t.snapshot(cleanOutput(result.stdout), 'fails with message');
-		t.fail('TODO update snapshot when fixed');
+		t.snapshot(result.stats.failed, 'failed tests');
+		t.is([...result.stdout.matchAll(/The snapshot file is corrupted./g)].length, 2);
 	});
 });
 
