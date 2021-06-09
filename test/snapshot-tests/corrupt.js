@@ -3,7 +3,7 @@ import path from 'path';
 
 import test from '@ava/test';
 
-import {cwd, fixture, cleanOutput} from '../helpers/exec.js';
+import {cwd, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
 
 function countMatches(string, regex) {
@@ -11,15 +11,17 @@ function countMatches(string, regex) {
 }
 
 function countStringMatches(string, patternString) {
-	if (patternString.length < 1) {
+	if (patternString.length === 0) {
 		throw new RangeError('Pattern must be non-empty');
 	}
+
 	let index = string.indexOf(patternString);
 	let matches = 0;
 	while (index !== -1 && index < string.length) {
 		matches++;
 		index = string.indexOf(patternString, index + patternString.length);
 	}
+
 	return matches;
 }
 
@@ -47,7 +49,7 @@ test('with --update-snapshots, corrupt snapshot files are overwritten', async t 
 	await withTemporaryFixture(cwd('corrupt'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		await fs.writeFile(snapPath, Uint8Array.of(0x00));
-		const result = await fixture(['--update-snapshots'], {cwd});
+		await fixture(['--update-snapshots'], {cwd});
 
 		const snapContents = await fs.readFile(snapPath);
 		t.not(snapContents.length, 1);
