@@ -30,7 +30,6 @@ test('snapshot corruption is reported to the console', async t => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		await fs.writeFile(snapPath, Uint8Array.of(0x00));
 		const result = await t.throwsAsync(fixture([], {cwd}));
-		t.log(result.stdout);
 		t.snapshot(result.stats.failed, 'failed tests');
 		t.is(countMatches(result.stdout, /The snapshot file is corrupted./g), 2);
 		t.is(countMatches(result.stdout, /File path:/g), 2);
