@@ -291,7 +291,8 @@ for (const opt of opts) {
 
 		return api.run({files: [
 			path.join(__dirname, 'fixture/fail-fast/timeout/fails.cjs'),
-			path.join(__dirname, 'fixture/fail-fast/timeout/passes.cjs')
+			path.join(__dirname, 'fixture/fail-fast/timeout/passes.cjs'),
+			path.join(__dirname, 'fixture/fail-fast/timeout/passes-slow.cjs')
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
