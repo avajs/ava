@@ -21,7 +21,7 @@ export function withExperiments(experiments = {}) {
 			registerUniqueTitle,
 			metadata: {type: 'test'},
 			title,
-			notifyTimeoutUpdate: Object.assign(() => {})
+			notifyTimeoutUpdate() {}
 		});
 	}
 
@@ -34,7 +34,7 @@ export function withExperiments(experiments = {}) {
 			registerUniqueTitle,
 			metadata: {type: 'test', failing: true},
 			title: 'test.failing',
-			notifyTimeoutUpdate: Object.assign(() => {})
+			notifyTimeoutUpdate() {}
 		});
 	};
 
