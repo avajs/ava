@@ -66,16 +66,16 @@ test('runner emits "stateChange" events', t => {
 test('notifyTimeoutUpdate emits "stateChange" event', t => {
 	const runner = new Runner();
 
-	runner.notifyTimeoutUpdate(120);
 	runner.on('stateChange', evt => {
 		if (evt.type === 'test-timeout-configured') {
 			t.same(evt, {
 				type: 'test-timeout-configured',
 				period: 120
 			});
-			t.pass();
+			t.end();
 		}
 	});
+	runner.notifyTimeoutUpdate(120);
 });
 
 test('run serial tests before concurrent ones', t => {
