@@ -1,14 +1,14 @@
 const test = require(process.env.TEST_AVA_IMPORT_FROM);
 
 const f = () => {
-    return [
-        'Hello',
-        'World!'
-    ].join(', ');
+	return [
+		'Hello',
+		'World!'
+	].join(', ');
 };
 
 test('snapshot with a multiline label', t => {
-    const result = f();
-    const label = '```javascript\n' + f.toString() + '\n```';
-    t.snapshot(result, label);
+	const result = f();
+	const label = '```javascript\n' + f.toString() + '\n```';
+	t.snapshot(result, label);
 });
