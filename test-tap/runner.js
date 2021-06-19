@@ -63,6 +63,21 @@ test('runner emits "stateChange" events', t => {
 	});
 });
 
+test('notifyTimeoutUpdate emits "stateChange" event', t => {
+	const runner = new Runner();
+
+	runner.on('stateChange', evt => {
+		if (evt.type === 'test-timeout-configured') {
+			t.same(evt, {
+				type: 'test-timeout-configured',
+				period: 120
+			});
+			t.end();
+		}
+	});
+	runner.notifyTimeoutUpdate(120);
+});
+
 test('run serial tests before concurrent ones', t => {
 	const array = [];
 	return promiseEnd(new Runner(), runner => {
