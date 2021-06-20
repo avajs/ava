@@ -64,7 +64,7 @@ test('runner emits "stateChange" events', t => {
 });
 
 test('notifyTimeoutUpdate emits "stateChange" event', t => {
-	const runner = new Runner();
+	const runner = new Runner({file: import.meta.url});
 
 	runner.on('stateChange', evt => {
 		if (evt.type === 'test-timeout-configured') {
