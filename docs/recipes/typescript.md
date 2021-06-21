@@ -95,6 +95,8 @@ It's worth noting that with this configuration, tests will fail if there are Typ
 
 ## Writing tests
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-basic?file=source%2Ftest.ts&terminal=test&view=editor)
+
 Create a `test.ts` file.
 
 ```ts
@@ -185,6 +187,8 @@ test('providedTitle', macro, '3 * 3', 9);
 ```
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-context?file=source%2Ftest.ts&terminal=test&view=editor)
 
 By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` (in AVA 4 this is `TestFn<Context>`) which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
