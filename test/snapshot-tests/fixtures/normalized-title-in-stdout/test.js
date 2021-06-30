@@ -7,9 +7,9 @@ test(`a rather wordy test title that is wrapped
 	t.pass();
 });
 
-test(`multiline try assertion title`, async t => {
+test('multiline try assertion title', async t => {
 	const firstTry = await t.try(`try assertions
-																can have titles too`, (tt) => tt.pass());
+																can have titles too`, tt => tt.pass());
 	firstTry.commit();
 	t.log(firstTry.title);
 });
