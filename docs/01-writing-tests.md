@@ -290,6 +290,8 @@ console.log('Test file currently being run:', test.meta.file);
 
 ## Reusing test logic through macros
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/macros?file=test.js&terminal=test&view=editor)
+
 Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.
 
 ```js
