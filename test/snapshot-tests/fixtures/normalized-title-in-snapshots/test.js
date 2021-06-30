@@ -1,5 +1,12 @@
 const test = require(process.env.TEST_AVA_IMPORT_FROM);
 
-test(process.env.TEMPLATE ? 'test\r\n\ttitle' : '  test title  ', t => {
+test('test\r\n\ttitle', t => {
 	t.snapshot('Hello, World!');
 });
+
+test('test\r\n\ttitle', Object.assign(t => {
+	t.snapshot('Hello, World!');
+}, {
+	title: title => `macro\n${title}`
+}));
+

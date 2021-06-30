@@ -7,6 +7,12 @@ test(`a rather wordy test title that is wrapped
 	t.pass();
 });
 
+test('test\r\n\ttitle', Object.assign(t => {
+	t.pass();
+}, {
+	title: title => title
+}));
+
 test('multiline try assertion title', async t => {
 	const firstTry = await t.try(`try assertions
 																can have titles too`, tt => tt.pass());
