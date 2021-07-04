@@ -6,6 +6,8 @@ AVA supports snapshot testing, [as introduced by Jest](https://facebook.github.i
 
 ```js
 // Your component
+import React from 'react';
+
 const HelloWorld = () => <h1>Hello World...!</h1>;
 
 export default HelloWorld;
@@ -13,17 +15,18 @@ export default HelloWorld;
 
 ```js
 // Your test
-const test = require('ava');
-const render = require('react-test-renderer');
-const HelloWorld = require('.');
+import test from 'ava';
+import React from 'react';
+import render from 'react-test-renderer';
+import HelloWorld from '.';
 
 test('HelloWorld component', t => {
-	const tree = render.create(<HelloWorld/>).toJSON();
+	const tree = render.create(<HelloWorld />).toJSON();
 	t.snapshot(tree);
 });
 ```
 
-[Try it out in this example project.](https://github.com/avajs/ava-snapshot-example)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/snapshot-testing?file=index.js&terminal=test&view=editor)
 
 Snapshots are stored alongside your test files. If your tests are in a `test` or `tests` folder the snapshots will be stored in a `snapshots` folder. If your tests are in a `__tests__` folder then they they'll be stored in a `__snapshots__` folder.
 
