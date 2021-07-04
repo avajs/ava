@@ -330,7 +330,7 @@ AVA 3 supports an  `options` object that lets you select a specific snapshot, fo
 
 In AVA 3, you cannot update snapshots while using `t.snapshot.skip()`.
 
-### `.try(title?, implementation | macro | macro[], ...args?)`
+### `.try(title?, implementation | macro, ...args?)`
 
 `.try()` allows you to *try* assertions without causing the test to fail.
 

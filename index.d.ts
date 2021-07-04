@@ -411,22 +411,9 @@ export interface TryFn<Context = unknown> {
 
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	 * the test will fail. A macro may be provided. The title may help distinguish attempts from
-	 * one another.
-	 */
-	<Args extends any[]>(title: string, fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
-
-	/**
-	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. A macro may be provided.
 	 */
 	<Args extends any[]>(fn: EitherMacro<Args, Context>, ...args: Args): Promise<TryResult>;
-
-	/**
-	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
-	 * the test will fail. A macro may be provided.
-	 */
-	<Args extends any[]>(fn: [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>], ...args: Args): Promise<TryResult[]>;
 }
 
 export interface AssertionError extends Error {}
@@ -483,18 +470,15 @@ export type Macro<Args extends any[], Context = unknown> = UntitledMacro<Args, C
 
 export type EitherMacro<Args extends any[], Context> = Macro<Args, Context> | UntitledMacro<Args, Context>;
 
-/** Alias for a single macro, or an array of macros. */
-export type OneOrMoreMacros<Args extends any[], Context> = EitherMacro<Args, Context> | [EitherMacro<Args, Context>, ...Array<EitherMacro<Args, Context>>];
-
 export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. */
 	(title: string, implementation: Implementation<Context>): void;
 
-	/** Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	/** Declare a concurrent test that uses a macro. Additional arguments are passed to the macro. */
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
-	/** Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	/** Declare a concurrent test that uses a macro. The macro is responsible for generating a unique test title. */
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -528,10 +512,10 @@ export interface AfterInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests have passed. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
 	always: AlwaysInterface<Context>;
@@ -547,10 +531,10 @@ export interface AlwaysInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, after all tests are done. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	skip: HookSkipInterface<Context>;
 }
@@ -563,10 +547,10 @@ export interface BeforeInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Declare a hook that is run once, before all tests. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a hook that is run once, before all tests. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	skip: HookSkipInterface<Context>;
 }
@@ -576,16 +560,16 @@ export interface FailingInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/**
-	 * Declare a concurrent test that uses one or more macros. Additional arguments are passed to the macro.
+	 * Declare a concurrent test that uses a macro. Additional arguments are passed to the macro.
 	 * The test is expected to fail.
 	 */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/**
-	 * Declare a concurrent test that uses one or more macros. The macro is responsible for generating a unique test title.
+	 * Declare a concurrent test that uses a macro. The macro is responsible for generating a unique test title.
 	 * The test is expected to fail.
 	 */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
@@ -599,10 +583,10 @@ export interface HookSkipInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this hook. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Skip this hook. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 }
 
 export interface OnlyInterface<Context = unknown> {
@@ -610,29 +594,29 @@ export interface OnlyInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/**
-	 * Declare a test that uses one or more macros. Additional arguments are passed to the macro.
+	 * Declare a test that uses a macro. Additional arguments are passed to the macro.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/**
-	 * Declare a test that uses one or more macros. The macro is responsible for generating a unique test title.
+	 * Declare a test that uses a macro. The macro is responsible for generating a unique test title.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 }
 
 export interface SerialInterface<Context = unknown> {
 	/** Declare a serial test. */
 	(title: string, implementation: Implementation<Context>): void;
 
-	/** Declare a serial test that uses one or more macros. Additional arguments are passed to the macro. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	/** Declare a serial test that uses a macro. Additional arguments are passed to the macro. */
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/**
-	 * Declare a serial test that uses one or more macros. The macro is responsible for generating a unique test title.
+	 * Declare a serial test that uses a macro. The macro is responsible for generating a unique test title.
 	 */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Declare a serial hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -659,10 +643,10 @@ export interface SkipInterface<Context = unknown> {
 	(title: string, implementation: Implementation<Context>): void;
 
 	/** Skip this test. */
-	<T extends any[]>(title: string, macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(title: string, macro: EitherMacro<T, Context>, ...rest: T): void;
 
 	/** Skip this test. */
-	<T extends any[]>(macros: OneOrMoreMacros<T, Context>, ...rest: T): void;
+	<T extends any[]>(macro: EitherMacro<T, Context>, ...rest: T): void;
 }
 
 export interface TodoDeclaration {

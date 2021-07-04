@@ -369,68 +369,6 @@ test('try-commit accepts macros', async t => {
 	t.ok(result.passed);
 });
 
-test('try-commit accepts multiple macros', async t => {
-	const ava = newAva();
-	const result = await ava(async a => {
-		const [result1, result2] = await a.try([
-			b => {
-				t.equal(b.title, 'test ─ attempt 1');
-				b.pass();
-			},
-			b => {
-				t.equal(b.title, 'test ─ attempt 2');
-				b.fail();
-			}
-		]);
-		t.ok(result1.passed);
-		result1.commit();
-		t.notOk(result2.passed);
-		result2.discard();
-
-		const [result3, result4] = await a.try([
-			b => {
-				t.equal(b.title, 'test ─ attempt 3');
-				b.pass();
-			},
-			b => {
-				t.equal(b.title, 'test ─ attempt 4');
-				b.fail();
-			}
-		]);
-		t.ok(result3.passed);
-		result3.commit();
-		t.notOk(result4.passed);
-		result4.discard();
-	}).run();
-
-	t.ok(result.passed);
-});
-
-test('try-commit returns results in the same shape as when implementations are passed', async t => {
-	const ava = newAva();
-	const result = await ava(async a => {
-		const [result1, result2, result3] = await Promise.all([
-			a.try(b => b.pass()),
-			a.try([b => b.pass()]),
-			a.try([b => b.pass(), b => b.fail()])
-		]);
-
-		t.match(result1, {passed: true});
-		result1.commit();
-
-		t.equal(result2.length, 1);
-		t.match(result2, [{passed: true}]);
-		result2[0].commit();
-
-		t.equal(result3.length, 2);
-		t.match(result3, [{passed: true}, {passed: false}]);
-		result3[0].commit();
-		result3[1].discard();
-	}).run();
-
-	t.ok(result.passed);
-});
-
 test('try-commit abides timeout', async t => {
 	const ava = newAva();
 	const result1 = await ava(async a => {
