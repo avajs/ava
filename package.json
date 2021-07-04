@@ -125,7 +125,7 @@
 		"yargs": "^16.2.0"
 	},
 	"devDependencies": {
-		"@ava/babel": "^1.0.1",
+		"@ava/babel": "^2.0.0",
 		"@ava/test": "github:avajs/test",
 		"@babel/plugin-proposal-do-expressions": "^7.12.13",
 		"@sinonjs/fake-timers": "^7.0.5",
