@@ -78,7 +78,7 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 });
 
 test('--no-color disables formatting colors', t => {
-	execCli(['--no-color', '--verbose', 'formatting-color.cjs'], (err, stdout) => {
+	execCli(['--no-color', 'formatting-color.cjs'], (err, stdout) => {
 		t.ok(err);
 		t.equal(stripAnsi(stdout), stdout);
 		t.end();
@@ -86,7 +86,7 @@ test('--no-color disables formatting colors', t => {
 });
 
 test('--color enables formatting colors', t => {
-	execCli(['--color', '--verbose', 'formatting-color.cjs'], (err, stdout) => {
+	execCli(['--color', 'formatting-color.cjs'], (err, stdout) => {
 		t.ok(err);
 		t.not(stripAnsi(stdout), stdout);
 		t.end();

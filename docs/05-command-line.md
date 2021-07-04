@@ -38,7 +38,7 @@ Options:
   --timeout, -T           Set global timeout (milliseconds or human-readable,
                           e.g. 10s, 2m)                                 [string]
   --update-snapshots, -u  Update snapshots                             [boolean]
-  --verbose, -v           Enable verbose output                        [boolean]
+  --verbose, -v           Enable verbose output (no-op in AVA 4)       [boolean]
   --watch, -w             Re-run tests when files change               [boolean]
 
 Examples:
@@ -224,13 +224,15 @@ This deletes all files in the `node_modules/.cache/ava` directory.
 
 ## Reporters
 
-By default AVA uses a minimal reporter:
+AVA 4 uses a human readable reporter:
+
+<img src="../media/verbose-reporter.png" width="294">
+
+AVA 3 defaults to a less verbose reporter:
 
 <img src="../media/mini-reporter.gif" width="460">
 
 Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
-
-<img src="../media/verbose-reporter.png" width="294">
 
 ### TAP reporter
 

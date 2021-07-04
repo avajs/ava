@@ -14,7 +14,7 @@ test(async t => {
 	const run = (type, sanitizers = []) => t => {
 		t.plan(1);
 
-		const logFile = fileURLToPath(new URL(`verbose.${type.toLowerCase()}.${process.version.split('.')[0]}.log`, import.meta.url));
+		const logFile = fileURLToPath(new URL(`default.${type.toLowerCase()}.${process.version.split('.')[0]}.log`, import.meta.url));
 
 		const tty = new TTYStream({
 			columns: 200,
@@ -26,7 +26,6 @@ test(async t => {
 			durationThreshold: 60000,
 			reportStream: tty,
 			stdStream: tty,
-			verbose: true,
 			watching: type === 'watch'
 		});
 
@@ -39,14 +38,14 @@ test(async t => {
 			.catch(t.threw);
 	};
 
-	t.test('verbose reporter - regular run', run('regular'));
-	t.test('verbose reporter - failFast run', run('failFast'));
-	t.test('verbose reporter - second failFast run', run('failFast2'));
-	t.test('verbose reporter - only run', run('only'));
-	t.test('verbose reporter - watch mode run', run('watch'));
-	t.test('verbose reporter - edge cases', run('edgeCases'));
+	t.test('default reporter - regular run', run('regular'));
+	t.test('default reporter - failFast run', run('failFast'));
+	t.test('default reporter - second failFast run', run('failFast2'));
+	t.test('default reporter - only run', run('only'));
+	t.test('default reporter - watch mode run', run('watch'));
+	t.test('default reporter - edge cases', run('edgeCases'));
 
-	t.test('verbose reporter - timeout', t => {
+	t.test('default reporter - timeout', t => {
 		restoreClock();
 
 		t.test('single file run', run('timeoutInSingleFile'));

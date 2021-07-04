@@ -38,7 +38,7 @@ test('resolves tests from the package.json dir if none are specified on cli', as
 		cwd: cwd('pkg-with-tests/dir-a-wrapper')
 	};
 
-	const result = await fixture(['--verbose'], options);
+	const result = await fixture([], options);
 
 	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
@@ -48,7 +48,7 @@ test('resolves tests from an .mjs config file', async t => {
 		cwd: cwd('mjs-with-tests/dir-a-wrapper')
 	};
 
-	const result = await fixture(['--verbose'], options);
+	const result = await fixture([], options);
 
 	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
