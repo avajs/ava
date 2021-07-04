@@ -319,21 +319,4 @@ test('providedTitle', macro, '3 * 3', 9);
 
 The `providedTitle` argument defaults to `undefined` if the user does not supply a string title. This means you can use a parameter assignment to set the default value. The example above uses the empty string as the default.
 
-You can also pass arrays of macro functions:
-
-```js
-const safeEval = require('safe-eval');
-
-function evalMacro(t, input, expected) {
-	t.is(eval(input), expected);
-}
-
-function safeEvalMacro(t, input, expected) {
-	t.is(safeEval(input), expected);
-}
-
-test([evalMacro, safeEvalMacro], '2 + 2', 4);
-test([evalMacro, safeEvalMacro], '2 * 3', 6);
-```
-
 We encourage you to use macros instead of building your own test generators ([here is an example](https://github.com/avajs/ava-codemods/blob/47073b5b58aa6f3fb24f98757be5d3f56218d160/test/ok-to-truthy.js#L7-L9) of code that should be replaced with a macro). Macros are designed to perform static analysis of your code, which can lead to better performance, IDE integration, and linter rules.

@@ -10,7 +10,6 @@ import test, {ExecutionContext, Macro} from '..';
 	};
 
 	test('bar has length 3', hasLength, 'bar', 3);
-	test('bar has length 3', [hasLength], 'bar', 3);
 }
 
 // Infer macro
@@ -18,24 +17,13 @@ import test, {ExecutionContext, Macro} from '..';
 	const hasLength = (t: ExecutionContext, input: string, expected: number) => {};
 
 	test('bar has length 3', hasLength, 'bar', 3);
-	test('bar has length 3', [hasLength], 'bar', 3);
-}
-
-// Multiple macros
-{
-	const hasLength = (t: ExecutionContext, input: string, expected: number) => {};
-	const hasCodePoints = (t: ExecutionContext, input: string, expected: number) => {};
-
-	test('bar has length 3', [hasLength, hasCodePoints], 'bar', 3);
 }
 
 // No title
 {
 	const hasLength: Macro<[string, number]> = (t, input, expected) => {};
-	const hasCodePoints: Macro<[string, number]> = (t, input, expected) => {};
 
 	test(hasLength, 'bar', 3);
-	test([hasLength, hasCodePoints], 'bar', 3);
 }
 
 // No arguments
