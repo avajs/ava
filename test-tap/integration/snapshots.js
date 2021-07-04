@@ -28,7 +28,7 @@ for (const object of [
 
 		const dirname = path.join('fixture/snapshots', object.rel);
 		// Test should pass, and a snapshot gets written
-		execCli(['--update-snapshots', '--verbose'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
+		execCli(['--update-snapshots'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 			t.error(error);
 			t.ok(fs.existsSync(snapPath));
 
@@ -54,7 +54,7 @@ test('one', t => {
 })`;
 	fs.writeFileSync(path.join(cwd, 'test.cjs'), initial);
 
-	const run = () => execa(process.execPath, [cliPath, '--verbose', '--no-color'], {cwd, env: {AVA_FORCE_CI: 'not-ci'}, reject: false});
+	const run = () => execa(process.execPath, [cliPath, '--no-color'], {cwd, env: {AVA_FORCE_CI: 'not-ci'}, reject: false});
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
@@ -179,7 +179,7 @@ test('snapshots infer their location and name from sourcemaps', t => {
 		t.ok(fs.existsSync(relFilePath));
 	};
 
-	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
+	execCli([], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.error(error);
 		for (const x of snapFixtureFilePaths) {
 			verifySnapFixtureFiles(x);
@@ -226,7 +226,7 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		t.ok(fs.existsSync(relFilePath));
 	};
 
-	execCli(['--verbose'], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
+	execCli([], {dirname: relativeFixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.error(error);
 		for (const x of snapFixtureFilePaths) {
 			verifySnapFixtureFiles(x);
@@ -260,7 +260,7 @@ test('snapshots are identical on different platforms', t => {
 	}
 
 	// Test should pass, and a snapshot gets written
-	execCli(['--update-snapshots', '--verbose'], {dirname: fixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
+	execCli(['--update-snapshots'], {dirname: fixtureDir, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.error(error);
 		t.ok(fs.existsSync(reportPath));
 		t.ok(fs.existsSync(snapPath));

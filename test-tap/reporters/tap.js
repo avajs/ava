@@ -35,9 +35,9 @@ test(async t => {
 			.catch(t.threw);
 	};
 
-	t.test('verbose reporter - regular run', run('regular'));
-	t.test('verbose reporter - failFast run', run('failFast'));
-	t.test('verbose reporter - second failFast run', run('failFast2'));
-	t.test('verbose reporter - only run', run('only'));
-	t.test('mini reporter - edge cases', run('edgeCases'));
+	t.test('tap reporter - regular run', run('regular'));
+	t.test('tap reporter - failFast run', run('failFast'));
+	t.test('tap reporter - second failFast run', run('failFast2'));
+	t.test('tap reporter - only run', run('only'));
+	t.test('tap reporter - edge cases', run('edgeCases'));
 });

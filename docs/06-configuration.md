@@ -52,7 +52,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
-- `verbose`: if `true`, enables verbose output
+- `verbose`: if `true`, enables verbose output (no-op in AVA 4)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
