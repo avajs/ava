@@ -5,7 +5,7 @@ export interface Subscribable {
 	}): void;
 }
 
-export type Constructor = (new (...args: any[]) => any);
+export type ErrorConstructor = new (...args: any[]) => Error;
 
 /** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation = {
@@ -13,7 +13,7 @@ export type ThrowsExpectation = {
 	code?: string | number;
 
 	/** The thrown error must be an instance of this constructor. */
-	instanceOf?: Constructor;
+	instanceOf?: ErrorConstructor;
 
 	/** The thrown error must be strictly equal to this value. */
 	is?: Error;
