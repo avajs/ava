@@ -1,6 +1,6 @@
 import {expectError, expectType} from 'tsd';
 
-import anyTest, {Macro, TestInterface} from '..';
+import anyTest, {ExecutionContext, TestInterface} from '..';
 
 interface Context {
 	foo: string;
