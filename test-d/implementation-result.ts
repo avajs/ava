@@ -16,7 +16,7 @@ test('return a subscribable', t => {
 	};
 });
 
-test('return anything else', t => {
+test.after('return anything else', t => {
 	return {
 		foo: 'bar',
 		subscribe() {},

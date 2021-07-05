@@ -30,7 +30,9 @@
 	"files": [
 		"entrypoints",
 		"lib",
-		"*.d.ts"
+		"types",
+		"index.d.ts",
+		"plugin.d.ts"
 	],
 	"keywords": [
 		"🦄",
