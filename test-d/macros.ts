@@ -1,63 +1,96 @@
 import {expectType} from 'tsd';
 
-import test, {ExecutionContext, Macro} from '..';
+import test, {ExecutionContext} from '..';
 
-// Explicitly type as a macro.
+// Typed arguments through generics.
 {
-	const hasLength: Macro<[string, number]> = (t, input, expected) => {
+	const hasLength = test.macro<[string, number]>((t, input, expected) => {
 		expectType<string>(input);
 		expectType<number>(expected);
-	};
+	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
 }
 
-// Infer macro
 {
-	const hasLength = (t: ExecutionContext, input: string, expected: number) => {};
+	const hasLength = test.macro<[string, number]>({
+		exec(t, input, expected) {
+			expectType<string>(input);
+			expectType<number>(expected);
+		},
+		title(providedTitle, input, expected) {
+			expectType<string>(input);
+			expectType<number>(expected);
+			return 'title';
+		}
+	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
 }
 
-// No title
+// Typed arguments in execution function.
 {
-	const hasLength: Macro<[string, number]> = (t, input, expected) => {};
+	const hasLength = test.macro((t, input: string, expected: number) => {});
+
+	test('bar has length 3', hasLength, 'bar', 3);
+}
+
+{
+	const hasLength = test.macro({
+		exec(t, input: string, expected: number) {},
+		title(providedTitle, input, expected) {
+			expectType<string>(input);
+			expectType<number>(expected);
+			return 'title';
+		}
+	});
+
+	test('bar has length 3', hasLength, 'bar', 3);
+}
+
+// Untyped arguments
+{
+	const hasLength = test.macro((t, input, expected) => {
+		expectType<any>(input);
+		expectType<any>(expected);
+	});
+
+	test('bar has length 3', hasLength, 'bar', 3);
+}
+
+// Usable without title, even if the macro lacks a title function.
+{
+	const hasLength = test.macro<[string, number]>((t, input, expected) => {});
 
 	test(hasLength, 'bar', 3);
 }
 
 // No arguments
 {
-	const pass: Macro<[]> = (t, ...args) => { // eslint-disable-line @typescript-eslint/ban-types
-		expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
-	};
-
-	pass.title = (providedTitle, ...args) => {
-		expectType<string | undefined>(providedTitle);
-		expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
-		return '';
-	};
+	const pass = test.macro<[]>({ // eslint-disable-line @typescript-eslint/ban-types
+		exec(t, ...args) {
+			expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
+		},
+		title(providedTitle, ...args) {
+			expectType<string | undefined>(providedTitle);
+			expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
+			return '';
+		}
+	});
 
 	test(pass);
 }
 
-// Inline
+// Inline function with explicit argument types.
 test('has length 3', (t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
 
-test((t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
-
-// Completely infer parameters
+// Completely inferred arguments for inline functions.
 test('has length 3', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
 }, 'foo', 3);
 
-test((t, input, expected) => {
-	expectType<string>(input);
-	expectType<number>(expected);
-}, 'foo', 3);
-
-test.skip((t, input, expected) => {
+test.skip('skip', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
 }, 'foo', 3);

@@ -57,9 +57,11 @@ test('all possible variants to pass to t.try', async t => {
 	t.try('test', (tt, a, b) => tt.is(a.length, b), 'hello', 5);
 
 	// Macro with title
-	const macro1: Macro<[string, number]> = (tt, a, b) => tt.is(a.length, b);
-	macro1.title = (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`;
-	const macro2: Macro<[string, number]> = (tt, a, b) => tt.is(a.slice(b), '');
+	const macro1 = test.macro<[string, number]>({
+		exec: (tt, a, b) => tt.is(a.length, b),
+		title: (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`
+	});
+	const macro2 = test.macro<[string, number]>((tt, a, b) => tt.is(a.slice(b), ''));
 
 	t.try(macro1, 'hello', 5);
 	t.try(macro2, 'hello', 5);

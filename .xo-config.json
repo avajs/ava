@@ -71,6 +71,12 @@
 				"import/no-extraneous-dependencies": "off",
 				"import/no-unresolved": "off"
 			}
+		},
+		{
+			"files": "test/macros/fixtures/macros.js",
+			"rules": {
+				"ava/no-identical-title": "off"
+			}
 		}
 	]
 }

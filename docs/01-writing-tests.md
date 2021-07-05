@@ -294,6 +294,8 @@ console.log('Test file currently being run:', test.meta.file);
 
 Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.
 
+You can use plain functions:
+
 ```js
 function macro(t, input, expected) {
 	t.is(eval(input), expected);
@@ -303,7 +305,7 @@ test('2 + 2 = 4', macro, '2 + 2', 4);
 test('2 * 3 = 6', macro, '2 * 3', 6);
 ```
 
-You can build the test title programmatically by attaching a `title` function to the macro:
+With AVA 3 you can build the test title programmatically by attaching a `title` function to the macro:
 
 ```js
 function macro(t, input, expected) {
@@ -318,5 +320,36 @@ test('providedTitle', macro, '3 * 3', 9);
 ```
 
 The `providedTitle` argument defaults to `undefined` if the user does not supply a string title. This means you can use a parameter assignment to set the default value. The example above uses the empty string as the default.
+
+However with AVA 4 the preferred approach is to use the `test.macro()` helper:
+
+```js
+import test from 'ava';
+
+const macro = test.macro((t, input, expected) => {
+	t.is(eval(input), expected);
+});
+
+test('title', macro, '3 * 3', 9);
+```
+
+Or with a title function:
+
+```js
+import test from 'ava';
+
+const macro = test.macro({
+	exec(t, input, expected) {
+		t.is(eval(input), expected);
+	},
+	title(providedTitle = '', input, expected) {
+		return `${providedTitle} ${input} = ${expected}`.trim();
+	}
+});
+
+test(macro, '2 + 2', 4);
+test(macro, '2 * 3', 6);
+test('providedTitle', macro, '3 * 3', 9);
+```
 
 We encourage you to use macros instead of building your own test generators ([here is an example](https://github.com/avajs/ava-codemods/blob/47073b5b58aa6f3fb24f98757be5d3f56218d160/test/ok-to-truthy.js#L7-L9) of code that should be replaced with a macro). Macros are designed to perform static analysis of your code, which can lead to better performance, IDE integration, and linter rules.
