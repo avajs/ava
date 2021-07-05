@@ -121,7 +121,9 @@ const hasLength = (t: ExecutionContext, input: string, expected: number) => {
 test('bar has length 3', hasLength, 'bar', 3);
 ```
 
-In order to be able to assign the `title` property to a macro you need to type the function:
+### AVA 3
+
+With AVA 3, in order to be able to assign the `title` property to a macro you need to type the function:
 
 ```ts
 import test, {Macro} from 'ava';
@@ -147,6 +149,39 @@ const macro: CbMacro<[]> = t => {
 };
 
 test.cb(macro);
+```
+
+### AVA 4
+
+With AVA 4 you can use the `test.macro()` helper to create macros:
+
+```ts
+import test from 'ava';
+
+const macro = test.macro((t, input: string, expected: number) => {
+	t.is(eval(input), expected);
+});
+
+test('title', macro, '3 * 3', 9);
+```
+
+Or with a title function:
+
+```ts
+import test from 'ava';
+
+const macro = test.macro({
+	exec(t, input: string, expected: number) {
+		t.is(eval(input), expected);
+	},
+	title(providedTitle = '', input, expected) {
+		return `${providedTitle} ${input} = ${expected}`.trim();
+	}
+});
+
+test(macro, '2 + 2', 4);
+test(macro, '2 * 3', 6);
+test('providedTitle', macro, '3 * 3', 9);
 ```
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
