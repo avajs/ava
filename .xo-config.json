@@ -23,13 +23,12 @@
 	},
 	"overrides": [
 		{
-			"files": "index.d.ts",
+			"files": [
+				"index.d.ts",
+				"types/*.d.ts"
+			],
 			"rules": {
-				"@typescript-eslint/member-ordering": "off",
-				"@typescript-eslint/method-signature-style": "off",
-				"@typescript-eslint/prefer-readonly-parameter-types": "off",
-				"@typescript-eslint/prefer-function-type": "off",
-				"@typescript-eslint/unified-signatures": "off"
+				"import/extensions": "off"
 			}
 		},
 		{

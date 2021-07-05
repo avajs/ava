@@ -186,10 +186,11 @@ test('providedTitle', macro, '3 * 3', 9);
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
 
-By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` (in AVA 4 this is `TestFn<Context>`) which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
 ```ts
-import anyTest, {TestInterface} from 'ava';
+import anyTest, {TestInterface} from 'ava'; // AVA 3
+// import anyTest, {TestFn as TestInterface} from 'ava'; // AVA 4, usage is the same
 
 const test = anyTest as TestInterface<{foo: string}>;
 
@@ -213,7 +214,7 @@ test('an actual test', t => {
 You can also type the context when creating macros:
 
 ```ts
-import anyTest, {Macro, TestInterface} from 'ava';
+import anyTest, {Macro, TestInterface} from 'ava'; // AVA 3
 
 interface Context {
 	foo: string
