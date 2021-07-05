@@ -51,8 +51,8 @@ import test, {ExecutionContext} from '..';
 // Untyped arguments
 {
 	const hasLength = test.macro((t, input, expected) => {
-		expectType<any>(input);
-		expectType<any>(expected);
+		expectType<unknown>(input);
+		expectType<unknown>(expected);
 	});
 
 	test('bar has length 3', hasLength, 'bar', 3);

@@ -401,15 +401,15 @@ export interface TeardownFn {
 	(fn: () => void): void;
 }
 
-export type ImplementationFn<Args extends any[], Context = unknown> =
+export type ImplementationFn<Args extends unknown[], Context = unknown> =
 	((t: ExecutionContext<Context>, ...args: Args) => PromiseLike<void>) |
 	((t: ExecutionContext<Context>, ...args: Args) => Subscribable) |
 	((t: ExecutionContext<Context>, ...args: Args) => void);
 
-export type TitleFn<Args extends any[]> = (providedTitle: string | undefined, ...args: Args) => string;
+export type TitleFn<Args extends unknown[]> = (providedTitle: string | undefined, ...args: Args) => string;
 
 /** A reusable test or hook implementation. */
-export type Macro<Args extends any[], Context = unknown> = {
+export type Macro<Args extends unknown[], Context = unknown> = {
 	/** The function that is executed when the macro is used. */
 	readonly exec: ImplementationFn<Args, Context>;
 
@@ -418,20 +418,20 @@ export type Macro<Args extends any[], Context = unknown> = {
 };
 
 /** A test or hook implementation. */
-export type Implementation<Args extends any[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
+export type Implementation<Args extends unknown[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
 
 export interface TryFn<Context = unknown> {
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. The title may help distinguish attempts from one another.
 	 */
-	<Args extends any[]>(title: string, fn: Implementation<Args, Context>, ...args: Args): Promise<TryResult>;
+	<Args extends unknown[]>(title: string, fn: Implementation<Args, Context>, ...args: Args): Promise<TryResult>;
 
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail.
 	 */
-	<Args extends any[]>(fn: Implementation<Args, Context>, ...args: Args): Promise<TryResult>;
+	<Args extends unknown[]>(fn: Implementation<Args, Context>, ...args: Args): Promise<TryResult>;
 }
 
 export interface AssertionError extends Error {}
@@ -471,13 +471,13 @@ export interface TryResult {
 
 export interface TestInterface<Context = unknown> {
 	/** Declare a concurrent test. Additional arguments are passed along. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
 	 * Declare a concurrent test that uses a macro. The macro is responsible for generating a unique test title.
 	 * Additional arguments are passed along.
 	 */
-	<Args extends any[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	/** Declare a hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -506,10 +506,10 @@ export interface TestInterface<Context = unknown> {
 
 export interface AfterInterface<Context = unknown> {
 	/** Declare a hook that is run once, after all tests have passed. Additional arguments are passed along. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Declare a hook that is run once, after all tests have passed. Additional arguments are passed along. */
-	<Args extends any[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Declare a hook that is run once, after all tests are done. */
 	always: AlwaysInterface<Context>;
@@ -519,33 +519,33 @@ export interface AfterInterface<Context = unknown> {
 
 export interface AlwaysInterface<Context = unknown> {
 	/** Declare a hook that is run once, after all tests are done. Additional arguments are passed along. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Declare a hook that is run once, after all tests are done. Additional arguments are passed along. */
-	<Args extends any[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	skip: HookSkipInterface<Context>;
 }
 
 export interface BeforeInterface<Context = unknown> {
 	/** Declare a hook that is run once, before all tests. Additional arguments are passed along. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Declare a hook that is run once, before all tests. Additional arguments are passed along. */
-	<Args extends any[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	skip: HookSkipInterface<Context>;
 }
 
 export interface FailingInterface<Context = unknown> {
 	/** Declare a concurrent test. Additional arguments are passed along. The test is expected to fail. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
 	 * Declare a concurrent test that uses a macro. Additional arguments are passed along.
 	 * The macro is responsible for generating a unique test title. The test is expected to fail.
 	 */
-	<Args extends any[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	only: OnlyInterface<Context>;
 	skip: SkipInterface<Context>;
@@ -553,31 +553,31 @@ export interface FailingInterface<Context = unknown> {
 
 export interface HookSkipInterface<Context = unknown> {
 	/** Skip this hook. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Skip this hook. */
-	<Args extends any[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 }
 
 export interface OnlyInterface<Context = unknown> {
 	/** Declare a test. Additional arguments are passed along. Only this test and others declared with `.only()` are run. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
 	 * Declare a test that uses a macro. The macro is responsible for generating a unique test title.
 	 * Only this test and others declared with `.only()` are run.
 	 */
-	<Args extends any[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 }
 
 export interface SerialInterface<Context = unknown> {
 	/** Declare a serial test. Additional arguments are passed along. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
 	 * Declare a serial test that uses a macro. The macro is responsible for generating a unique test title.
 	 */
-	<Args extends any[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	/** Declare a serial hook that is run once, after all tests have passed. */
 	after: AfterInterface<Context>;
@@ -601,10 +601,10 @@ export interface SerialInterface<Context = unknown> {
 
 export interface SkipInterface<Context = unknown> {
 	/** Skip this test. */
-	<Args extends any[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Skip this test. */
-	<Args extends any[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 }
 
 export interface TodoDeclaration {
@@ -612,15 +612,15 @@ export interface TodoDeclaration {
 	(title: string): void;
 }
 
-export type MacroDeclarationOptions<Args extends any[], Context = unknown> = {
+export type MacroDeclarationOptions<Args extends unknown[], Context = unknown> = {
 	exec: ImplementationFn<Args, Context>;
 	title: TitleFn<Args>;
 };
 
 export interface MacroDeclaration<Context = unknown> {
 	/** Declare a reusable test implementation. */
-	<Args extends any[]>(exec: ImplementationFn<Args, Context>): Macro<Args, Context>;
-	<Args extends any[]>(declaration: MacroDeclarationOptions<Args, Context>): Macro<Args, Context>;
+	<Args extends unknown[]>(exec: ImplementationFn<Args, Context>): Macro<Args, Context>;
+	<Args extends unknown[]>(declaration: MacroDeclarationOptions<Args, Context>): Macro<Args, Context>;
 }
 
 export interface MetaInterface {
