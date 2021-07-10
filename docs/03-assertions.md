@@ -229,7 +229,7 @@ Finally, this returns a boolean indicating whether the assertion passed.
 
 ### `.throws(fn, expectation?, message?)`
 
-Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it.
+Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `null` is returned.
 
 `expectation` can be an object with one or more of the following properties:
 
@@ -257,13 +257,11 @@ test('throws', t => {
 });
 ```
 
-Does not return anything.
-
 ### `.throwsAsync(thrower, expectation?, message?)`
 
 Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
-The thrown value *must* be an error. It is returned so you can run more assertions against it.
+The thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `null` is returned.
 
 `expectation` can be an object with one or more of the following properties:
 
@@ -293,8 +291,6 @@ test('rejects', async t => {
 	t.is(error.message, '🦄');
 });
 ```
-
-Does not return anything.
 
 ### `.notThrows(fn, message?)`
 

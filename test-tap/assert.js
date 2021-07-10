@@ -115,6 +115,16 @@ function throwsAsyncFails(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
 		return fn().then(retval => {
+			t.equal(retval, null);
+			assertFailure(t, subset);
+		});
+	});
+}
+
+function notThrowsAsyncFails(t, fn, subset) {
+	return add(() => {
+		lastFailure = null;
+		return fn().then(retval => {
 			t.equal(retval, undefined);
 			assertFailure(t, subset);
 		});
@@ -159,6 +169,8 @@ function throwsAsyncPasses(t, fn) {
 		});
 	});
 }
+
+const notThrowsAsyncPasses = throwsAsyncPasses;
 
 test('.pass()', t => {
 	passes(t, () => {
@@ -1521,31 +1533,31 @@ test('.notThrows()', gather(t => {
 
 test('.notThrowsAsync()', gather(t => {
 	// Passes because the promise is resolved
-	throwsAsyncPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
+	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
 
-	throwsAsyncPasses(t, () => {
+	notThrowsAsyncPasses(t, () => {
 		return assertions.notThrowsAsync(Promise.resolve());
 	});
 
 	// Fails because the promise is rejected
-	throwsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Promise rejected with:', formatted: /Error/}]
 	});
 
 	// Passes because the function returned a resolved promise
-	throwsAsyncPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
+	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
 
 	// Fails because the function returned a rejected promise
-	throwsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
 		assertion: 'notThrowsAsync',
 		message: '',
 		values: [{label: 'Returned promise rejected with:', formatted: /Error/}]
 	});
 
 	// Fails because the function throws synchronously
-	throwsAsyncFails(t, () => assertions.notThrowsAsync(() => {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => {
 		throw new Error('sync');
 	}, 'message'), {
 		assertion: 'notThrowsAsync',
@@ -1556,7 +1568,7 @@ test('.notThrowsAsync()', gather(t => {
 	});
 
 	// Fails because the function did not return a promise
-	throwsAsyncFails(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
 		assertion: 'notThrowsAsync',
 		message: 'message',
 		values: [
@@ -1564,7 +1576,7 @@ test('.notThrowsAsync()', gather(t => {
 		]
 	});
 
-	throwsAsyncFails(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
 		assertion: 'notThrowsAsync',
 		improperUsage: true,
 		message: 'The assertion message must be a string',

@@ -12,13 +12,15 @@ class CustomError extends Error {
 }
 
 test('throws', t => {
-	expectType<Error>(t.throws(() => {}));
-	const error2: CustomError = t.throws(() => {});
-	expectType<CustomError>(error2);
-	expectType<CustomError>(t.throws<CustomError>(() => {}));
+	expectType<Error | null>(t.throws(() => {}));
+	const error2: CustomError | null = t.throws(() => {});
+	expectType<CustomError | null>(error2);
+	expectType<CustomError | null>(t.throws<CustomError>(() => {}));
 });
 
 test('throwsAsync', async t => {
-	expectType<Error>(await t.throwsAsync(Promise.reject()));
-	expectType<CustomError>(await t.throwsAsync<CustomError>(Promise.reject()));
+	expectType<Error | null>(await t.throwsAsync(async () => {}));
+	expectType<CustomError | null>(await t.throwsAsync<CustomError>(async () => {}));
+	expectType<Error | null>(await t.throwsAsync(Promise.reject()));
+	expectType<CustomError | null>(await t.throwsAsync<CustomError>(Promise.reject()));
 });
