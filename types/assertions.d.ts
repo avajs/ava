@@ -281,7 +281,7 @@ export interface ThrowsAssertion {
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations. Returns null when the assertion fails.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations?: ThrowsExpectation | null, message?: string): ThrownError | null;
+	<ThrownError extends Error>(fn: () => any, expectations?: ThrowsExpectation, message?: string): ThrownError | null;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
@@ -292,14 +292,14 @@ export interface ThrowsAsyncAssertion {
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. Returns null when the assertion fails. You must await the result. The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation | null, message?: string): Promise<ThrownError | null>;
+	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | null>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. Returns null when the assertion fails. You must await the result. The error must satisfy all
 	 * expectations.
 	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation | null, message?: string): Promise<ThrownError | null>; // eslint-disable-line @typescript-eslint/unified-signatures
+	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | null>; // eslint-disable-line @typescript-eslint/unified-signatures
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
