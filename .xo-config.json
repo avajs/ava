@@ -76,6 +76,12 @@
 			"rules": {
 				"ava/no-identical-title": "off"
 			}
+		},
+		{
+			"files": "examples/**",
+			"rules": {
+				"ava/no-only-test": "off"
+			}
 		}
 	]
 }

@@ -1,0 +1,10 @@
+{
+	"name": "ava-specific-line-numbers",
+	"description": "Example for running tests at specific line numbers",
+	"scripts": {
+		"test": "ava test.js:5"
+	},
+	"devDependencies": {
+		"ava": "^3.15.0"
+	}
+}
