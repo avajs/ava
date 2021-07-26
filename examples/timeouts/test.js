@@ -1,26 +1,43 @@
 'use strict';
 const test = require('ava');
 
-const {delay} = require('.');
+const {fetchUsers, fetchPosts, createPost} = require('.');
 
-test('start server', async t => {
+test('retrieve users', async t => {
 	t.timeout(100);
 
-	await delay(50);
+	const users = await fetchUsers();
 
-	t.pass();
+	t.deepEqual(users, [
+		{
+			id: 1,
+			firstName: 'Ava',
+			name: 'Rocks',
+			email: 'ava@rocks.com'
+		}
+	]);
 });
 
-test('connect with database', async t => {
-	t.timeout(100, 'make sure database has started');
+test('retrieve posts', async t => {
+	t.timeout(100, 'retrieving posts is too slow');
 
-	await delay(200);
+	const posts = await fetchPosts(1);
 
-	t.pass();
+	t.deepEqual(posts, [
+		{
+			id: 1,
+			userId: 1,
+			message: 'AVA Rocks 🚀'
+		}
+	]);
 });
 
-test('very long and slow operation', async t => {
-	await delay(3000);
+test('create post', async t => {
+	const post = await createPost('I love 🦄 and 🌈');
 
-	t.pass();
+	t.deepEqual(post, {
+		id: 2,
+		userId: 1,
+		message: 'I love 🦄 and 🌈'
+	});
 });
