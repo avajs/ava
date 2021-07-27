@@ -45,7 +45,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `cjs`, `mjs` & `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
 - `ignoredByWatcher`: an array of glob patterns to match files that, even if changed, are ignored by the watcher. See the [watch mode recipe for details](https://github.com/avajs/ava/blob/main/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
-- `cache`: cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
+- `cache`: a boolean value on whether to cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `concurrency`: max number of test files running at the same time (default: CPU cores)
 - `workerThreads`: use worker threads to run tests (requires AVA 4, enabled by default). If `false`, tests will run in child processes (how AVA 3 behaves)
 - `failFast`: stop running further tests once a test fails
