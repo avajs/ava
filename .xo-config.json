@@ -3,7 +3,8 @@
 		"media/**",
 		"test/config/fixtures/config-errors/test.js",
 		"test-tap/fixture/snapshots/test-sourcemaps/build/**",
-		"test-tap/fixture/report/edgecases/ast-syntax-error.cjs"
+		"test-tap/fixture/report/edgecases/ast-syntax-error.cjs",
+		"examples/typescript-*/**/*.ts"
 	],
 	"rules": {
 		"import/no-anonymous-default-export": "off",

@@ -1,0 +1,21 @@
+{
+	"name": "ava-typescript-basic",
+	"description": "Basic example for AVA with TypeScript",
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"@ava/typescript": "^2.0.0",
+		"@sindresorhus/tsconfig": "^1.0.2",
+		"ava": "^3.15.0",
+		"typescript": "^4.3.4"
+	},
+	"ava": {
+		"typescript": {
+			"compile": "tsc",
+			"rewritePaths": {
+				"source/": "build/"
+			}
+		}
+	}
+}
