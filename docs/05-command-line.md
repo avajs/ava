@@ -224,7 +224,7 @@ AVA itself does not cache files unless used with our [`@ava/babel`](https://gith
 npx ava reset-cache
 ```
 
-This notifies you if cache files within the `node_modules/.cache/ava` directory are deleted or if there are no cache files to be deleted.
+This deletes all files in the `node_modules/.cache/ava` directory.
 
 ## Reporters
 
