@@ -115,7 +115,7 @@ function throwsAsyncFails(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
 		return fn().then(retval => {
-			t.equal(retval, null);
+			t.equal(retval, undefined);
 			assertFailure(t, subset);
 		});
 	});
