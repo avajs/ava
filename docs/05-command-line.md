@@ -218,7 +218,7 @@ When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
-AVA may cache certain files, especially when you use our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can reset the cache by running:
+AVA itself does not cache files unless used with our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can try resetting the cache by running:
 
 ```console
 npx ava reset-cache
