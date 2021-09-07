@@ -1,6 +1,6 @@
 import test from '@ava/test';
 
-import trimOffNewlines from '../../lib/trim-off-newlines.j';
+import trimOffNewlines from '../../lib/trim-off-newlines.js';
 
 test('newlines are trimmed on Windows', t => {
 	const text = '\r\nThis is an \r\nexample\r\n of a sentence\r\n with Windows \r\nformatted newlines.\r\n';
