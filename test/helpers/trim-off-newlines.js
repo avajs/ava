@@ -1,5 +1,4 @@
 import test from '@ava/test';
-
 import trimOffNewlines from '../../lib/trim-off-newlines.js';
 
 test('newlines are trimmed on Windows', t => {
