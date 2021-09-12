@@ -1,5 +1,5 @@
-import {promises as fs} from 'fs';
-import path from 'path';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -14,7 +14,7 @@ setOptions({});
 test('snapshot report can be regenerated from .snap file', async t => {
 	const workingDir = cwd();
 	const env = {
-		AVA_FORCE_CI: 'not-ci'
+		AVA_FORCE_CI: 'not-ci',
 	};
 	const reportPath = path.join(workingDir, 'test.js.md');
 
@@ -33,7 +33,7 @@ test('snapshot report can be regenerated from .snap file', async t => {
 	// Load snapshot manager from .snap file
 	const snapshots = load({
 		file: path.join(workingDir, 'test.js'),
-		projectDir: workingDir
+		projectDir: workingDir,
 	});
 
 	// Regenerate report

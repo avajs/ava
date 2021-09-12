@@ -10,8 +10,8 @@ test('correctly distributes more test files than CI_NODE_TOTAL', t => {
 			env: {
 				AVA_FORCE_CI: 'ci',
 				CI_NODE_INDEX: String(i),
-				CI_NODE_TOTAL: '3'
-			}
+				CI_NODE_TOTAL: '3',
+			},
 		}, err => t.error(err));
 	}
 });
@@ -24,8 +24,8 @@ test('correctly distributes less test files than CI_NODE_TOTAL', t => {
 			env: {
 				AVA_FORCE_CI: 'ci',
 				CI_NODE_INDEX: String(i),
-				CI_NODE_TOTAL: '3'
-			}
+				CI_NODE_TOTAL: '3',
+			},
 		}, err => t.error(err));
 	}
 });
@@ -38,8 +38,8 @@ test('fail when there are no files', t => {
 			env: {
 				AVA_FORCE_CI: 'ci',
 				CI_NODE_INDEX: String(i),
-				CI_NODE_TOTAL: '3'
-			}
+				CI_NODE_TOTAL: '3',
+			},
 		}, err => t.ok(err));
 	}
 });

@@ -1,5 +1,5 @@
 export default {
 	extensions: {
-		mjs: 'commonjs'
-	}
+		mjs: 'commonjs',
+	},
 };

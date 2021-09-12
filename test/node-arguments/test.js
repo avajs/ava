@@ -4,7 +4,7 @@ import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
 
 test('passed node arguments to workers', async t => {
 	const options = {
-		cwd: cwd('node-arguments')
+		cwd: cwd('node-arguments'),
 	};
 
 	// Removed --fill-zero-buffer because not supported in worker_threads
@@ -15,7 +15,7 @@ test('passed node arguments to workers', async t => {
 
 test('detects incomplete --node-arguments', async t => {
 	const options = {
-		cwd: cwd('node-arguments')
+		cwd: cwd('node-arguments'),
 	};
 
 	const result = await t.throwsAsync(fixture(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], options));
@@ -25,7 +25,7 @@ test('detects incomplete --node-arguments', async t => {
 
 test('reads node arguments from config', async t => {
 	const options = {
-		cwd: cwd('node-arguments-from-config')
+		cwd: cwd('node-arguments-from-config'),
 	};
 
 	const result = await fixture(['node-arguments-from-config.js'], options);

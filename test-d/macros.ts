@@ -22,7 +22,7 @@ import test, {ExecutionContext} from '..';
 			expectType<string>(input);
 			expectType<number>(expected);
 			return 'title';
-		}
+		},
 	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
@@ -42,7 +42,7 @@ import test, {ExecutionContext} from '..';
 			expectType<string>(input);
 			expectType<number>(expected);
 			return 'title';
-		}
+		},
 	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
@@ -75,7 +75,7 @@ import test, {ExecutionContext} from '..';
 			expectType<string | undefined>(providedTitle);
 			expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
 			return '';
-		}
+		},
 	});
 
 	test(pass);

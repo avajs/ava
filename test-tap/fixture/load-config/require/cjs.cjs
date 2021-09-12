@@ -1,3 +1,3 @@
 module.exports = {
-	files: 'config-file-cjs-test-value'
+	files: 'config-file-cjs-test-value',
 };

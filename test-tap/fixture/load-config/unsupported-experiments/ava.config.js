@@ -1,5 +1,5 @@
 export default {
 	nonSemVerExperiments: {
-		unsupported: true
-	}
+		unsupported: true,
+	},
 };

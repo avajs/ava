@@ -3,6 +3,6 @@ export default {
 	files: ['tests/**/*'],
 	babel: {
 		compileAsTests: ['helpers/*'],
-		extensions: ['foo']
-	}
+		extensions: ['foo'],
+	},
 };

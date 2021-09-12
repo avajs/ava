@@ -51,12 +51,12 @@ test('sets avaAssertionError to true if indeed an assertion error', t => {
 
 test('includes statements of assertion errors', t => {
 	const error = new avaAssert.AssertionError({
-		assertion: 'true'
+		assertion: 'true',
 	});
 	error.statements = [
 		['actual.a[0]', '1'],
 		['actual.a', '[1]'],
-		['actual', '{a: [1]}']
+		['actual', '{a: [1]}'],
 	];
 
 	const serializedError = serialize(error);
@@ -67,7 +67,7 @@ test('includes statements of assertion errors', t => {
 test('includes values of assertion errors', t => {
 	const error = new avaAssert.AssertionError({
 		assertion: 'is',
-		values: [{label: 'actual:', formatted: '1'}, {label: 'expected:', formatted: 'a'}]
+		values: [{label: 'actual:', formatted: '1'}, {label: 'expected:', formatted: 'a'}],
 	});
 
 	const serializedError = serialize(error);
@@ -78,7 +78,7 @@ test('includes values of assertion errors', t => {
 test('remove non-string error properties', t => {
 	const error = {
 		name: [42],
-		stack: /re/g
+		stack: /re/g,
 	};
 	const serializedError = serialize(error);
 	t.equal(serializedError.name, undefined);
@@ -89,7 +89,7 @@ test('remove non-string error properties', t => {
 test('creates multiline summaries for syntax errors', t => {
 	const error = new SyntaxError();
 	Object.defineProperty(error, 'stack', {
-		value: 'Hello\nThere\nSyntaxError here\nIgnore me'
+		value: 'Hello\nThere\nSyntaxError here\nIgnore me',
 	});
 	const serializedError = serialize(error);
 	t.equal(serializedError.name, 'SyntaxError');

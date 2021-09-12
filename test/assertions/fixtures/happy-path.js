@@ -15,17 +15,17 @@ test(passes, 'like', {
 	foo: 'bar',
 	deep: {
 		buz: 'qux',
-		extra: 'irrelevant'
+		extra: 'irrelevant',
 	},
 	extra: 'irrelevant',
 	deepExtra: {
-		extra: 'irrelevant'
-	}
+		extra: 'irrelevant',
+	},
 }, {
 	foo: 'bar',
 	deep: {
-		buz: 'qux'
-	}
+		buz: 'qux',
+	},
 });
 test(passes, 'throws', () => {
 	throw new Error('error');

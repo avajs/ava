@@ -13,9 +13,11 @@ test('fails with "instanceof" expression', t => {
 });
 
 test('fails with multiple lines', t => {
+	/* eslint-disable unicorn/prefer-array-some, arrow-body-style */
 	t.assert(
 		[foo].filter(item => {
 			return item === 'bar';
-		}).length > 0
+		}).length > 0,
 	);
+	/* eslint-enable unicorn/prefer-array-some, arrow-body-style */
 });

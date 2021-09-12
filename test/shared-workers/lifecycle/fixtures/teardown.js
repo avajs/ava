@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 
 import test from 'ava';
 import * as plugin from 'ava/plugin';
@@ -10,7 +10,7 @@ plugin.registerSharedWorker({
 	teardown() {
 		assert(calledLast);
 		console.log('🤗TEARDOWN CALLED');
-	}
+	},
 });
 
 plugin.registerSharedWorker({
@@ -18,7 +18,7 @@ plugin.registerSharedWorker({
 	supportedProtocols: ['experimental'],
 	teardown() {
 		calledLast = true;
-	}
+	},
 });
 
 test('pass', t => {

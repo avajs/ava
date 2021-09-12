@@ -6,7 +6,7 @@ const test = require('../../../../entrypoints/main.cjs');
 
 test.serial('first pass', async t => {
 	t.pass();
-	const timer = setTimeout(() => {}, 60000); // Ensure process stays alive.
+	const timer = setTimeout(() => {}, 60_000); // Ensure process stays alive.
 	const source = parentPort || process;
 	await pEvent(source, 'message', message => {
 		if (message.ava) {

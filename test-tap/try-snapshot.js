@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
 
@@ -20,7 +20,7 @@ function setup(title, manager, fn) {
 		contextRef: new ContextRef(),
 		registerUniqueTitle: () => true,
 		title,
-		compareTestSnapshot: options => manager.compare(options)
+		compareTestSnapshot: options => manager.compare(options),
 	});
 }
 
@@ -37,7 +37,7 @@ test(async t => {
 		projectDir,
 		fixedLocation: null,
 		updating,
-		recordNewSnapshots: updating
+		recordNewSnapshots: updating,
 	});
 
 	await t.test('try-commit snapshots serially', async t => {
@@ -71,7 +71,7 @@ test(async t => {
 				}),
 				a.try(t2 => {
 					t2.snapshot({foo: 'bar'});
-				})
+				}),
 			]);
 			first.commit();
 			second.commit();

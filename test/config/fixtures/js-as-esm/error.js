@@ -1,5 +1,5 @@
 export default {
-	failFast: true
+	failFast: true,
 };
 
 throw new Error('🙈');

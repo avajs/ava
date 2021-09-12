@@ -7,8 +7,6 @@
 		"examples/typescript-*/**/*.ts"
 	],
 	"rules": {
-		"import/no-anonymous-default-export": "off",
-		"import/no-mutable-exports": "off",
 		"import/order": [
 			"error",
 			{
@@ -19,8 +17,7 @@
 			}
 		],
 		"import/newline-after-import": "error",
-		"node/no-unsupported-features/es-syntax": "off",
-		"no-use-extend-native/no-use-extend-native": "off"
+		"unicorn/require-post-message-target-origin": "off"
 	},
 	"overrides": [
 		{
@@ -39,21 +36,28 @@
 			}
 		},
 		{
-			"files": "test-{d,tap}/**/*.ts",
+			"files": "{test,test-{d,tap}}/**/*.ts",
 			"rules": {
 				"@typescript-eslint/explicit-function-return-type": "off",
 				"@typescript-eslint/no-empty-function": "off",
+				"@typescript-eslint/no-unsafe-assignment": "off",
 				"@typescript-eslint/no-unsafe-call": "off",
 				"@typescript-eslint/no-unsafe-member-access": "off",
 				"@typescript-eslint/no-unsafe-return": "off",
 				"@typescript-eslint/no-unused-vars": "off",
-				"@typescript-eslint/prefer-readonly-parameter-types": "off",
-				"import/extensions": "off",
-				"no-unused-vars": "off"
+				"@typescript-eslint/prefer-readonly-parameter-types": "off"
 			}
 		},
 		{
-			"files": "test-tap/**/*.js",
+			"files": "{test,test-{d,tap}}/**",
+			"rules": {
+				"import/no-anonymous-default-export": "off",
+				"node/prefer-global/buffer": "off",
+				"node/prefer-global/process": "off"
+			}
+		},
+		{
+			"files": "test-tap/**",
 			"rules": {
 				"promise/prefer-await-to-then": "off",
 				"unicorn/error-message": "off",
@@ -62,20 +66,18 @@
 			}
 		},
 		{
-			"files": [
-				"test-tap/fixture/**",
-				"test/**/fixtures/**"
-			],
-			"rules": {
-				"ava/no-todo-test": "off",
-				"import/no-extraneous-dependencies": "off",
-				"import/no-unresolved": "off"
-			}
-		},
-		{
 			"files": "test/macros/fixtures/macros.js",
 			"rules": {
 				"ava/no-identical-title": "off"
+			}
+		},
+		{
+			"files": [
+				"examples/**",
+				"test/snapshot-*/fixtures/**"
+			],
+			"rules": {
+				"unicorn/prefer-module": "off"
 			}
 		},
 		{

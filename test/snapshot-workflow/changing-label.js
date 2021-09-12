@@ -9,8 +9,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('changing-label'),
-		expectChanged: false
-	}
+		expectChanged: false,
+	},
 );
 
 test.serial(
@@ -19,6 +19,6 @@ test.serial(
 	{
 		cwd: cwd('changing-label'),
 		cli: ['--update-snapshots'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );

@@ -22,16 +22,16 @@ const run = () => fixture.run();
 `.trim(), {
 	filename: 'source-map-initial-input.cjs',
 	sourceMaps: true,
-	presets: ['@ava/stage-4']
+	presets: ['@ava/stage-4'],
 });
 
 fs.writeFileSync(
 	path.join(__dirname, 'source-map-initial.cjs'),
-	transformed.code + '\n//# sourceMappingURL=./source-map-initial.cjs.map\n// Generated using node test/fixtures/_generate-source-map-initial.js\n'
+	transformed.code + '\n//# sourceMappingURL=./source-map-initial.cjs.map\n// Generated using node test/fixtures/_generate-source-map-initial.js\n',
 );
 fs.writeFileSync(
 	path.join(__dirname, 'source-map-initial.cjs.map'),
-	JSON.stringify(transformed.map)
+	JSON.stringify(transformed.map),
 );
 
 console.log('Generated source-map-initial.cjs');

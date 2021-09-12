@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -11,8 +11,8 @@ test('deterministic and sorted over a large, random test case', async t => {
 	const options = {
 		cwd: cwd('randomness'),
 		env: {
-			AVA_FORCE_CI: 'not-ci'
-		}
+			AVA_FORCE_CI: 'not-ci',
+		},
 	};
 
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');

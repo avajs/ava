@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.2.
+This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.4.
 
 ## Enabling AVA's support for TypeScript test files
 

@@ -1,7 +1,7 @@
 const test = require('../../entrypoints/main.cjs');
 
 const getAnonymousFn = () => () => {
-	throw new Error(); // eslint-disable-line unicorn/error-message
+	throw new Error();
 };
 
 test('test', t => {

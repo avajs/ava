@@ -68,6 +68,15 @@ export type Macro<Args extends unknown[], Context = unknown> = {
 export type Implementation<Args extends unknown[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
 
 export interface TestFn<Context = unknown> {
+	/** Declare a concurrent test. Additional arguments are passed to the implementation or macro. */
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	/**
+	 * Declare a concurrent test that uses a macro. Additional arguments are passed to the macro.
+	 * The macro is responsible for generating a unique test title.
+	 */
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+
 	after: AfterFn<Context>;
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
@@ -79,21 +88,9 @@ export interface TestFn<Context = unknown> {
 	serial: SerialFn<Context>;
 	skip: SkipFn<Context>;
 	todo: TodoFn;
-
-	/** Declare a concurrent test. Additional arguments are passed to the implementation or macro. */
-	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
-
-	/**
-	 * Declare a concurrent test that uses a macro. Additional arguments are passed to the macro.
-	 * The macro is responsible for generating a unique test title.
-	 */
-	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 }
 
 export interface AfterFn<Context = unknown> {
-	always: AlwaysInterface<Context>;
-	skip: HookSkipFn<Context>;
-
 	/**
 	 * Declare a hook that is run once, after all tests have passed.
 	 * Additional arguments are passed to the implementation or macro.
@@ -106,11 +103,11 @@ export interface AfterFn<Context = unknown> {
 	 */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
+	always: AlwaysInterface<Context>;
+	skip: HookSkipFn<Context>;
 }
 
 export interface AlwaysInterface<Context = unknown> {
-	skip: HookSkipFn<Context>;
-
 	/**
 	 * Declare a hook that is run once, after all tests are done.
 	 * Additional arguments are passed to the implementation or macro.
@@ -122,11 +119,11 @@ export interface AlwaysInterface<Context = unknown> {
 	 * Additional arguments are passed to the implementation or macro.
 	 */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	skip: HookSkipFn<Context>;
 }
 
 export interface BeforeFn<Context = unknown> {
-	skip: HookSkipFn<Context>;
-
 	/**
 	 * Declare a hook that is run once, before all tests.
 	 * Additional arguments are passed to the implementation or macro.
@@ -138,12 +135,11 @@ export interface BeforeFn<Context = unknown> {
 	 * Additional arguments are passed to the implementation or macro.
 	 */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	skip: HookSkipFn<Context>;
 }
 
 export interface FailingFn<Context = unknown> {
-	only: OnlyFn<Context>;
-	skip: SkipFn<Context>;
-
 	/**
 	 * Declare a concurrent test that is expected to fail.
 	 * Additional arguments are passed to the implementation or macro.
@@ -155,6 +151,9 @@ export interface FailingFn<Context = unknown> {
 	 * Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	 */
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+
+	only: OnlyFn<Context>;
+	skip: SkipFn<Context>;
 }
 
 export interface HookSkipFn<Context = unknown> {
@@ -180,6 +179,14 @@ export interface OnlyFn<Context = unknown> {
 }
 
 export interface SerialFn<Context = unknown> {
+	/** Declare a serial test. Additional arguments are passed to the implementation or macro. */
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	/**
+	 * Declare a serial test that uses a macro. The macro is responsible for generating a unique test title.
+	 */
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+
 	after: AfterFn<Context>;
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
@@ -188,14 +195,6 @@ export interface SerialFn<Context = unknown> {
 	only: OnlyFn<Context>;
 	skip: SkipFn<Context>;
 	todo: TodoFn;
-
-	/** Declare a serial test. Additional arguments are passed to the implementation or macro. */
-	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
-
-	/**
-	 * Declare a serial test that uses a macro. The macro is responsible for generating a unique test title.
-	 */
-	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 }
 
 export interface SkipFn<Context = unknown> {

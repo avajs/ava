@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import delay from 'delay';
 import sinon from 'sinon';
@@ -16,13 +16,11 @@ setOptions({});
 
 const failingTestHint = 'Test was expected to fail, but succeeded, you should stop marking the test as failing';
 
-test('run test', t => {
-	return ava(a => {
-		a.fail();
-	}).run().then(result => {
-		t.equal(result.passed, false);
-	});
-});
+test('run test', t => ava(a => {
+	a.fail();
+}).run().then(result => {
+	t.equal(result.passed, false);
+}));
 
 test('multiple asserts', t => {
 	const instance = ava(a => {
@@ -75,34 +73,28 @@ test('plan assertion skip() is bound', t => {
 	});
 });
 
-test('run more assertions than planned', t => {
-	return ava(a => {
-		a.plan(2);
-		a.pass();
-		a.pass();
-		a.pass();
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.ok(result.error);
-		t.match(result.error.message, /Planned for 2 assertions, but got 3\./);
-		t.equal(result.error.name, 'AssertionError');
-	});
-});
+test('run more assertions than planned', t => ava(a => {
+	a.plan(2);
+	a.pass();
+	a.pass();
+	a.pass();
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.ok(result.error);
+	t.match(result.error.message, /Planned for 2 assertions, but got 3\./);
+	t.equal(result.error.name, 'AssertionError');
+}));
 
-test('fails if no assertions are run', t => {
-	return ava(() => {}).run().then(result => {
-		t.equal(result.passed, false);
-		t.ok(result.error);
-		t.equal(result.error.name, 'Error');
-		t.match(result.error.message, /Test finished without running any assertions/);
-	});
-});
+test('fails if no assertions are run', t => ava(() => {}).run().then(result => {
+	t.equal(result.passed, false);
+	t.ok(result.error);
+	t.equal(result.error.name, 'Error');
+	t.match(result.error.message, /Test finished without running any assertions/);
+}));
 
-test('fails if no assertions are run, unless so planned', t => {
-	return ava(a => a.plan(0)).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('fails if no assertions are run, unless so planned', t => ava(a => a.plan(0)).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
 test('wrap non-assertion errors', t => {
 	const err = new Error();
@@ -126,7 +118,7 @@ test('title returns the test title', t => {
 			a.pass();
 		},
 		metadata: {type: 'test'},
-		title: 'foo'
+		title: 'foo',
 	}).run();
 });
 
@@ -166,10 +158,10 @@ test('handle testing of objects', t => {
 	const instance = ava(a => {
 		a.deepEqual({
 			foo: 'foo',
-			bar: 'bar'
+			bar: 'bar',
 		}, {
 			foo: 'foo',
-			bar: 'bar'
+			bar: 'bar',
 		});
 	});
 	return instance.run().then(result => {
@@ -182,11 +174,11 @@ test('handle falsy testing of objects', t => {
 	const instance = ava(a => {
 		a.notDeepEqual({
 			foo: 'foo',
-			bar: 'bar'
+			bar: 'bar',
 		}, {
 			foo: 'foo',
 			bar: 'bar',
-			cat: 'cake'
+			cat: 'cake',
 		});
 	});
 	return instance.run().then(result => {
@@ -195,64 +187,52 @@ test('handle falsy testing of objects', t => {
 	});
 });
 
-test('more assertions than planned should emit an assertion error', t => {
-	return ava(a => {
-		a.plan(1);
-		a.pass();
-		a.pass();
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'AssertionError');
-	});
-});
+test('more assertions than planned should emit an assertion error', t => ava(a => {
+	a.plan(1);
+	a.pass();
+	a.pass();
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+}));
 
-test('record test duration', t => {
-	return ava(async a => {
-		await delay(1234);
-		a.pass();
-	}).run().then(result => {
-		t.equal(result.passed, true);
-		t.ok(result.duration >= 1000);
-	});
-});
+test('record test duration', t => ava(async a => {
+	await delay(1234);
+	a.pass();
+}).run().then(result => {
+	t.equal(result.passed, true);
+	t.ok(result.duration >= 1000);
+}));
 
-test('fails with the first assertError', t => {
-	return ava(a => {
-		a.plan(2);
-		a.is(1, 2);
-		a.is(3, 4);
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Difference:');
-		t.match(result.error.values[0].formatted, /- 1\n\+ 2/);
-	});
-});
+test('fails with the first assertError', t => ava(a => {
+	a.plan(2);
+	a.is(1, 2);
+	a.is(3, 4);
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+	t.equal(result.error.values.length, 1);
+	t.equal(result.error.values[0].label, 'Difference:');
+	t.match(result.error.values[0].formatted, /- 1\n\+ 2/);
+}));
 
-test('failing pending assertion causes test to fail, not promise rejection', t => {
-	return ava(a => {
-		return a.throwsAsync(Promise.resolve()).then(() => {
-			throw new Error('Should be ignored');
-		});
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.notMatch(result.error.message, /Rejected promise returned by test/);
-	});
-});
+test('failing pending assertion causes test to fail, not promise rejection', t => ava(a => a.throwsAsync(Promise.resolve()).then(() => {
+	throw new Error('Should be ignored');
+})).run().then(result => {
+	t.equal(result.passed, false);
+	t.notMatch(result.error.message, /Rejected promise returned by test/);
+}));
 
-test('fails with thrown falsy value', t => {
-	return ava(() => {
-		throw 0; // eslint-disable-line no-throw-literal
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.message, 'Error thrown in test');
-		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Error thrown in test:');
-		t.match(result.error.values[0].formatted, /0/);
-	});
-});
+test('fails with thrown falsy value', t => ava(() => {
+	throw 0; // eslint-disable-line no-throw-literal
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.message, 'Error thrown in test');
+	t.equal(result.error.name, 'AssertionError');
+	t.equal(result.error.values.length, 1);
+	t.equal(result.error.values[0].label, 'Error thrown in test:');
+	t.match(result.error.values[0].formatted, /0/);
+}));
 
 test('fails with thrown non-error object', t => {
 	const object = {foo: 'bar'};
@@ -334,7 +314,7 @@ test('throws and notThrows work with promises', t => {
 			a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
 			a.notThrowsAsync(delay(20).then(() => {
 				asyncCalled = true;
-			}))
+			})),
 		]);
 	});
 	return instance.run().then(result => {
@@ -352,7 +332,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		for (let i = 0; i < 3; i++) {
 			promises.push(
 				a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
-				a.notThrowsAsync(delay(10))
+				a.notThrowsAsync(delay(10)),
 			);
 		}
 
@@ -365,26 +345,22 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 	});
 });
 
-test('fails if test ends while there are pending assertions', t => {
-	return ava(a => {
-		a.throwsAsync(Promise.reject(new Error()));
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'Error');
-		t.match(result.error.message, /Test finished, but an assertion is still pending/);
-	});
-});
+test('fails if test ends while there are pending assertions', t => ava(a => {
+	a.throwsAsync(Promise.reject(new Error()));
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'Error');
+	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+}));
 
-test('fails if async test ends while there are pending assertions', t => {
-	return ava(a => {
-		a.throwsAsync(Promise.reject(new Error()));
-		return Promise.resolve();
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'Error');
-		t.match(result.error.message, /Test finished, but an assertion is still pending/);
-	});
-});
+test('fails if async test ends while there are pending assertions', t => ava(a => {
+	a.throwsAsync(Promise.reject(new Error()));
+	return Promise.resolve();
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'Error');
+	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+}));
 
 // This behavior is incorrect, but feedback cannot be provided to the user due to
 // https://github.com/avajs/ava/issues/1330
@@ -418,7 +394,7 @@ test('contextRef', t => {
 		contextRef: {
 			get() {
 				return {foo: 'bar'};
-			}
+			},
 		},
 		failWithoutAssertions: true,
 		fn(a) {
@@ -428,86 +404,66 @@ test('contextRef', t => {
 		},
 		metadata: {type: 'test'},
 		onResult() {},
-		title: 'foo'
+		title: 'foo',
 	}).run();
 });
 
-test('failing tests should fail', t => {
-	return ava.failing('foo', a => {
-		a.fail();
-	}).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('failing tests should fail', t => ava.failing('foo', a => {
+	a.fail();
+}).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
-test('failing tests must not pass', t => {
-	return ava.failing(a => {
-		a.pass();
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.message, failingTestHint);
-	});
-});
+test('failing tests must not pass', t => ava.failing(a => {
+	a.pass();
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.message, failingTestHint);
+}));
 
-test('failing tests must not return a fulfilled promise', t => {
-	return ava.failing(a => {
-		return Promise.resolve().then(() => a.pass());
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.message, failingTestHint);
-	});
-});
+test('failing tests must not return a fulfilled promise', t => ava.failing(a => Promise.resolve().then(() => a.pass())).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.message, failingTestHint);
+}));
 
-test('failing tests pass when returning a rejected promise', t => {
-	return ava.failing(a => {
-		a.plan(1);
-		return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => Promise.reject());
-	}).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('failing tests pass when returning a rejected promise', t => ava.failing(a => {
+	a.plan(1);
+	return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => Promise.reject());
+}).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
-test('failing tests pass with `t.throwsAsync(nonThrowingPromise)`', t => {
-	return ava.failing(a => {
-		return a.throwsAsync(Promise.resolve(10));
-	}).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('failing tests pass with `t.throwsAsync(nonThrowingPromise)`', t => ava.failing(a => a.throwsAsync(Promise.resolve(10))).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
-test('failing tests fail with `t.notThrowsAsync(throws)`', t => {
-	return ava.failing(a => {
-		return a.notThrowsAsync(Promise.resolve('foo'));
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.message, failingTestHint);
-	});
-});
+test('failing tests fail with `t.notThrowsAsync(throws)`', t => ava.failing(a => a.notThrowsAsync(Promise.resolve('foo'))).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.message, failingTestHint);
+}));
 
-test('log from tests', t => {
-	return ava(a => {
-		a.log('a log message from a test');
-		t.ok(true);
-		a.log('another log message from a test');
-		a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
-		a.log();
-		(a.log)('bound');
-	}).run().then(result => {
-		t.same(
-			result.logs,
-			[
-				'a log message from a test',
-				'another log message from a test',
-				'{\n  b: 1,\n  c: {\n    d: 2,\n  },\n} complex log 5 5.1',
-				'bound'
-			]
-		);
-	});
-});
+test('log from tests', t => ava(a => {
+	a.log('a log message from a test');
+	t.ok(true);
+	a.log('another log message from a test');
+	a.log({b: 1, c: {d: 2}}, 'complex log', 5, 5.1);
+	a.log();
+	(a.log)('bound');
+}).run().then(result => {
+	t.same(
+		result.logs,
+		[
+			'a log message from a test',
+			'another log message from a test',
+			'{\n  b: 1,\n  c: {\n    d: 2,\n  },\n} complex log 5 5.1',
+			'bound',
+		],
+	);
+}));
 
-test('assertions are bound', t => {
+test('assertions are bound', t =>
 	// This does not test .fail() and .snapshot(). It'll suffice.
-	return ava(a => {
+	ava(a => {
 		(a.plan)(14);
 		(a.pass)();
 		(a.is)(1, 1);
@@ -527,8 +483,8 @@ test('assertions are bound', t => {
 		(a.notRegex)('bar', /foo/);
 	}).run().then(result => {
 		t.ok(result.passed);
-	});
-});
+	}),
+);
 
 // Snapshots reused from test/assert.js
 test('snapshot assertion can be skipped', t => {
@@ -538,7 +494,7 @@ test('snapshot assertion can be skipped', t => {
 		projectDir,
 		fixedLocation: null,
 		recordNewSnapshots: true,
-		updating: false
+		updating: false,
 	});
 
 	return new Test({
@@ -550,7 +506,7 @@ test('snapshot assertion can be skipped', t => {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
 			t.snapshot({name: 'Sindre'});
-		}
+		},
 	}).run().then(result => {
 		t.ok(result.passed);
 	});
@@ -563,7 +519,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		file: path.join(projectDir, 'assert.cjs'),
 		projectDir,
 		fixedLocation: null,
-		updating: false
+		updating: false,
 	});
 
 	const skipSnapshot = sinon.spy();
@@ -578,7 +534,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 			t.snapshot.skip({not: {a: 'match'}});
 			t.snapshot.skip({not: {b: 'match'}});
 			t.snapshot({name: 'Sindre'});
-		}
+		},
 	});
 
 	await test.run();
@@ -589,50 +545,42 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 	}
 });
 
-test('snapshot assertion can be skipped when updating snapshots', t => {
-	return new Test({
-		updateSnapshots: true,
-		metadata: {},
-		title: 'passes',
-		fn(t) {
-			t.snapshot.skip({not: {a: 'match'}});
-		}
-	}).run().then(result => {
-		t.ok(result.passed);
-	});
-});
+test('snapshot assertion can be skipped when updating snapshots', t => new Test({
+	updateSnapshots: true,
+	metadata: {},
+	title: 'passes',
+	fn(t) {
+		t.snapshot.skip({not: {a: 'match'}});
+	},
+}).run().then(result => {
+	t.ok(result.passed);
+}));
 
-test('implementation runs with null scope', t => {
-	return ava(function (a) {
-		a.pass();
-		t.equal(this, null);
-	}).run();
-});
+test('implementation runs with null scope', t => ava(function (a) {
+	a.pass();
+	t.equal(this, null);
+}).run());
 
-test('timeout with promise', t => {
-	return ava(a => {
-		a.timeout(10);
-		return delay(200);
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.match(result.error.message, /timeout/);
-	});
-});
+test('timeout with promise', t => ava(a => {
+	a.timeout(10);
+	return delay(200);
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.match(result.error.message, /timeout/);
+}));
 
-test('timeout is refreshed on assert', t => {
-	return ava(async a => {
-		a.timeout(100);
-		a.plan(3);
-		await Promise.all([
-			delay(50).then(() => a.pass()),
-			delay(100).then(() => a.pass()),
-			delay(150).then(() => a.pass()),
-			delay(200)
-		]);
-	}).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('timeout is refreshed on assert', t => ava(async a => {
+	a.timeout(100);
+	a.plan(3);
+	await Promise.all([
+		delay(50).then(() => a.pass()),
+		delay(100).then(() => a.pass()),
+		delay(150).then(() => a.pass()),
+		delay(200),
+	]);
+}).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
 test('teardown passing test', t => {
 	const teardown = sinon.spy();
@@ -687,15 +635,11 @@ test('teardowns run in reverse order', t => {
 	});
 });
 
-test('teardown without function callback fails', t => {
-	return ava(a => {
-		return a.throwsAsync(async () => {
-			a.teardown(false);
-		}, {message: 'Expected a function'});
-	}).run().then(result => {
-		t.equal(result.passed, true);
-	});
-});
+test('teardown without function callback fails', t => ava(a => a.throwsAsync(async () => {
+	a.teardown(false);
+}, {message: 'Expected a function'})).run().then(result => {
+	t.equal(result.passed, true);
+}));
 
 test('teardown errors fail the test', t => {
 	const teardown = sinon.stub().throws('TeardownError');
@@ -748,49 +692,43 @@ test('teardowns cannot be registered by teardowns', async t => {
 	t.match(result.error.message, /cannot be used during teardown/);
 });
 
-test('.log() is bound', t => {
-	return ava(a => {
-		const {log} = a;
-		for (const value of [1, 2, 3]) {
-			log('value: ' + value);
-		}
+test('.log() is bound', t => ava(a => {
+	const {log} = a;
+	for (const value of [1, 2, 3]) {
+		log('value: ' + value);
+	}
 
-		for (const value of ['value foo', 'value bar']) {
-			log(value);
-		}
-	}).run().then(result => {
-		t.same(result.logs, [
-			'value: 1',
-			'value: 2',
-			'value: 3',
-			'value foo',
-			'value bar'
-		]);
-	});
-});
+	for (const value of ['value foo', 'value bar']) {
+		log(value);
+	}
+}).run().then(result => {
+	t.same(result.logs, [
+		'value: 1',
+		'value: 2',
+		'value: 3',
+		'value foo',
+		'value bar',
+	]);
+}));
 
-test('.plan() is bound', t => {
-	return ava(a => {
-		const {plan} = a;
-		plan(3);
+test('.plan() is bound', t => ava(a => {
+	const {plan} = a;
+	plan(3);
 
-		a.pass();
-		a.is(2, 2);
-		a.truthy('string');
-	}).run().then(result => {
-		t.ok(result.passed);
-	});
-});
+	a.pass();
+	a.is(2, 2);
+	a.truthy('string');
+}).run().then(result => {
+	t.ok(result.passed);
+}));
 
-test('.timeout() is bound', t => {
-	return ava(a => {
-		const {timeout} = a;
-		timeout(10);
-		a.pass();
-	}).run().then(result => {
-		t.ok(result.passed);
-	});
-});
+test('.timeout() is bound', t => ava(a => {
+	const {timeout} = a;
+	timeout(10);
+	a.pass();
+}).run().then(result => {
+	t.ok(result.passed);
+}));
 
 test('.teardown() is bound', t => {
 	const teardownCallback = sinon.spy();
@@ -815,7 +753,7 @@ test('t.passed value is true when teardown callback is executed for passing test
 		},
 		metadata: {type: 'test'},
 		onResult() {},
-		title: 'foo'
+		title: 'foo',
 	}).run();
 });
 
@@ -830,6 +768,6 @@ test('t.passed value is false when teardown callback is executed for failing tes
 		},
 		metadata: {type: 'test'},
 		onResult() {},
-		title: 'foo'
+		title: 'foo',
 	}).run();
 });

@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import tap from 'tap';
 
@@ -29,9 +29,9 @@ test('isTest with defaults', t => {
 	const options = {
 		...globs.normalizeGlobs({
 			extensions: ['js'],
-			providers: []
+			providers: [],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	function isTest(file) {
@@ -104,9 +104,9 @@ test('isTest with patterns', t => {
 		...globs.normalizeGlobs({
 			files: ['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],
 			extensions: ['js'],
-			providers: []
+			providers: [],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	function isTest(file) {
@@ -139,9 +139,9 @@ test('isTest (pattern starts with directory)', t => {
 		...globs.normalizeGlobs({
 			files: ['bar/**/*'],
 			extensions: ['js'],
-			providers: []
+			providers: [],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	function isTest(file) {
@@ -181,13 +181,13 @@ test('isTest after provider modifications', t => {
 						t.ok(ignoredByWatcherPatterns.length > 0);
 						return {
 							filePatterns: ['foo.js'],
-							ignoredByWatcherPatterns
+							ignoredByWatcherPatterns,
 						};
-					}
-				}
-			}]
+					},
+				},
+			}],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	t.ok(globs.classify(fixture('foo.js'), options).isTest);
@@ -198,7 +198,7 @@ test('isTest after provider modifications', t => {
 test('isIgnoredByWatcher with defaults', t => {
 	const options = {
 		...globs.normalizeGlobs({extensions: ['js'], providers: []}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	function isIgnoredByWatcher(file) {
@@ -236,9 +236,9 @@ test('isIgnoredByWatcher with patterns', t => {
 			files: ['**/foo*'],
 			ignoredByWatcher: ['**/bar*'],
 			extensions: ['js'],
-			providers: []
+			providers: [],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
@@ -253,9 +253,9 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 			files: ['**/foo*'],
 			ignoredByWatcher: ['foo/**/*'],
 			extensions: ['js'],
-			providers: []
+			providers: [],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
@@ -276,13 +276,13 @@ test('isIgnoredByWatcher after provider modifications', t => {
 						t.ok(ignoredByWatcherPatterns.length > 0);
 						return {
 							filePatterns,
-							ignoredByWatcherPatterns: ['foo.js']
+							ignoredByWatcherPatterns: ['foo.js'],
 						};
-					}
-				}
-			}]
+					},
+				},
+			}],
 		}),
-		cwd: fixture()
+		cwd: fixture(),
 	};
 
 	t.ok(globs.classify(fixture('foo.js'), options).isIgnoredByWatcher);
@@ -306,12 +306,12 @@ test('findFiles finds non-ignored files (just .cjs)', async t => {
 		'test/deep/deep.cjs',
 		'tests/baz.cjs',
 		'tests/deep/deep.cjs',
-		'tests/_foo-help.cjs'
+		'tests/_foo-help.cjs',
 	].map(file => path.join(fixtureDir, file)).sort();
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['cjs'], providers: []})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['cjs'], providers: []}),
 	});
 	actual.sort();
 	t.same(actual, expected);
@@ -325,12 +325,12 @@ test('findFiles finds non-ignored files (.cjs, .jsx)', async t => {
 		'test/do-not-compile.cjs',
 		'test/foo.jsx',
 		'test/sub/_helper.jsx',
-		'test/sub/bar.jsx'
+		'test/sub/bar.jsx',
 	].sort().map(file => path.join(fixtureDir, file));
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
-		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['cjs', 'jsx'], providers: []})
+		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['cjs', 'jsx'], providers: []}),
 	});
 	actual.sort();
 	t.same(actual, expected);

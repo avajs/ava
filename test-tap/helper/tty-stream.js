@@ -1,4 +1,4 @@
-import stream from 'stream';
+import stream from 'node:stream';
 
 import ansiEscapes from 'ansi-escapes';
 
@@ -26,7 +26,7 @@ export default class TTYStream extends stream.Writable {
 		if (string !== '' || chunk.length === 0) {
 			this.chunks.push(
 				Buffer.from(string, 'utf8'),
-				TTYStream.SEPARATOR
+				TTYStream.SEPARATOR,
 			);
 		}
 

@@ -24,6 +24,4 @@ test('throwsAsync', t => {
 	t.throwsAsync(() => throwError(), {instanceOf: TypeError});
 });
 
-test('throwsAsync different error', t => {
-	return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});
-});
+test('throwsAsync different error', t => t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError}));

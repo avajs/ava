@@ -13,8 +13,8 @@ test('retrieve users', async t => {
 			id: 1,
 			firstName: 'Ava',
 			name: 'Rocks',
-			email: 'ava@rocks.com'
-		}
+			email: 'ava@rocks.com',
+		},
 	]);
 });
 
@@ -27,8 +27,8 @@ test('retrieve posts', async t => {
 		{
 			id: 1,
 			userId: 1,
-			message: 'AVA Rocks 🚀'
-		}
+			message: 'AVA Rocks 🚀',
+		},
 	]);
 });
 
@@ -38,6 +38,6 @@ test('create post', async t => {
 	t.deepEqual(post, {
 		id: 2,
 		userId: 1,
-		message: 'I love 🦄 and 🌈'
+		message: 'I love 🦄 and 🌈',
 	});
 });

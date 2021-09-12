@@ -3,5 +3,5 @@
 // installed "test-ava" version.
 module.exports = {
 	files: ['test/**', '!test/**/{fixtures,helpers}/**'],
-	ignoredByWatcher: ['{coverage,docs,media,test-d,test-tap}/**']
+	ignoredByWatcher: ['{coverage,docs,media,test-d,test-tap}/**'],
 };

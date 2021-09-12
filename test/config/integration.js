@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 import tempy from 'tempy';
@@ -8,7 +8,7 @@ import {cwd, fixture} from '../helpers/exec.js';
 
 test('formats errors from ava.config.js', async t => {
 	const options = {
-		cwd: cwd('config-errors')
+		cwd: cwd('config-errors'),
 	};
 
 	const result = await t.throwsAsync(fixture(['test.js'], options));
@@ -25,7 +25,7 @@ test('formats errors from ava.config.js', async t => {
 
 test('works as expected when run from the package.json directory', async t => {
 	const options = {
-		cwd: cwd('pkg-with-tests')
+		cwd: cwd('pkg-with-tests'),
 	};
 
 	const result = await fixture([], options);
@@ -35,7 +35,7 @@ test('works as expected when run from the package.json directory', async t => {
 
 test('resolves tests from the package.json dir if none are specified on cli', async t => {
 	const options = {
-		cwd: cwd('pkg-with-tests/dir-a-wrapper')
+		cwd: cwd('pkg-with-tests/dir-a-wrapper'),
 	};
 
 	const result = await fixture([], options);
@@ -45,7 +45,7 @@ test('resolves tests from the package.json dir if none are specified on cli', as
 
 test('resolves tests from an .mjs config file', async t => {
 	const options = {
-		cwd: cwd('mjs-with-tests/dir-a-wrapper')
+		cwd: cwd('mjs-with-tests/dir-a-wrapper'),
 	};
 
 	const result = await fixture([], options);
@@ -60,7 +60,7 @@ test('use current working directory if `package.json` is not found', async t => 
 	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_IMPORT_FROM);\ntest(\'test name\', t => { t.pass(); });');
 
 	const options = {
-		cwd
+		cwd,
 	};
 
 	const result = await fixture([], options);

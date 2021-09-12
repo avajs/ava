@@ -7,6 +7,6 @@ test('test\r\n\ttitle', t => {
 test('test\r\n\ttitle', Object.assign(t => {
 	t.snapshot('Hello, World!');
 }, {
-	title: title => `macro\n${title}`
+	title: title => `macro\n${title}`,
 }));
 
