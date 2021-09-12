@@ -19,8 +19,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - name: Enable symlinks
         if: matrix.os == 'windows-latest'
         run: |
@@ -29,13 +27,14 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
       - name: Upgrade npm
         run: npm install --global npm@7
       - run: npm ci --no-audit
       - run: npm run cover
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2
         with:
-          file: coverage/lcov.info
+          files: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
 
   typescript:
@@ -46,11 +45,10 @@ jobs:
         ts-version: [~4.2]
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
+          cache: npm
       - name: Upgrade npm
         run: npm install --global npm@7
       - run: npm ci --no-audit
@@ -65,11 +63,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
+          cache: npm
       - name: Upgrade npm
         run: if [[ "$(npm -v)" != "7.23" ]]; then npm install --global npm@7.23; fi
       - run: npm ci --no-audit
@@ -88,8 +85,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
@@ -103,12 +98,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
+          cache: npm
       - name: Upgrade npm
         run: npm install --global npm@7
-      - run: npm ci
+      - run: npm ci --no-audit
       - run: npx xo
