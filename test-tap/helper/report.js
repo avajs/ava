@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 
-import globby from 'globby';
+import {globbySync} from 'globby';
 import replaceString from 'replace-string';
 
 import Api from '../../lib/api.js';
@@ -95,7 +95,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 	const api = new Api(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync('*.cjs', {
+	const files = globbySync('*.cjs', {
 		absolute: true,
 		brace: true,
 		case: false,

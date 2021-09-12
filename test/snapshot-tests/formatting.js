@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import test from '@ava/test';
-import figures from 'figures';
+import {mainSymbols, fallbackSymbols} from 'figures';
 import replaceString from 'replace-string';
 
 import {cwd, fixture} from '../helpers/exec.js';
@@ -41,9 +41,9 @@ test('test title should be normalized in stdout', async t => {
 			replaceString(
 				replaceString(
 					replaceString(result.stdout, os.EOL, '\n'),
-					figures.main.info, figures.windows.info,
+					mainSymbols.info, fallbackSymbols.info,
 				),
-				figures.main.tick, figures.windows.tick,
+				mainSymbols.tick, fallbackSymbols.tick,
 			),
 			'stdout');
 	});
