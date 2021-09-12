@@ -120,7 +120,6 @@
 		"strip-ansi": "^6.0.0",
 		"supertap": "^2.0.0",
 		"temp-dir": "^2.0.0",
-		"trim-off-newlines": "^1.0.1",
 		"write-file-atomic": "^3.0.3",
 		"yargs": "^16.2.0"
 	},
