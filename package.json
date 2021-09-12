@@ -109,7 +109,7 @@
 		"p-event": "^4.2.0",
 		"p-map": "^5.1.0",
 		"picomatch": "^2.3.0",
-		"pkg-conf": "^4.0.0",
+		"pkg-conf": "^3.1.0",
 		"plur": "^4.0.0",
 		"pretty-ms": "^7.0.1",
 		"read-pkg": "^7.0.0",
