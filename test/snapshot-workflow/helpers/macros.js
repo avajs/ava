@@ -1,6 +1,6 @@
 
-import {promises as fs} from 'fs';
-import path from 'path';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
 
 import concordance from 'concordance';
 
@@ -12,9 +12,9 @@ function cleanStringDiff(before, after) {
 		string: {
 			multiline: {
 				start: '',
-				end: ''
-			}
-		}
+				end: '',
+			},
+		},
 	};
 	let diff = concordance.diff(before, after, {theme});
 	// Remove all newline control characters, or they'll be duplicated in the
@@ -27,7 +27,7 @@ export async function beforeAndAfter(t, {
 	cwd,
 	expectChanged,
 	env = {},
-	cli = []
+	cli = [],
 }) {
 	const updating = process.argv.includes('--update-fixture-snapshots');
 
@@ -37,8 +37,8 @@ export async function beforeAndAfter(t, {
 			cwd,
 			env: {
 				TEMPLATE: 'true',
-				AVA_FORCE_CI: 'not-ci'
-			}
+				AVA_FORCE_CI: 'not-ci',
+			},
 		});
 	}
 
@@ -65,7 +65,7 @@ export async function beforeAndAfter(t, {
 async function readSnapshots(cwd) {
 	const [snapshot, report] = await Promise.all([
 		fs.readFile(path.join(cwd, 'test.js.snap')),
-		fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
+		fs.readFile(path.join(cwd, 'test.js.md'), 'utf8'),
 	]);
 	return {snapshot, report};
 }

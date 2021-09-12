@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 import execa from 'execa';
@@ -48,11 +48,11 @@ export const fixture = async (args, options = {}) => {
 	const running = execa.node(cliPath, args, defaultsDeep({
 		env: {
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you',
-			TEST_AVA_IMPORT_FROM
+			TEST_AVA_IMPORT_FROM,
 		},
 		cwd: workingDir,
 		serialization: 'advanced',
-		nodeOptions: ['--require', ttySimulator]
+		nodeOptions: ['--require', ttySimulator],
 	}, options));
 
 	// Besides buffering stderr, if this environment variable is set, also pipe
@@ -77,7 +77,7 @@ export const fixture = async (args, options = {}) => {
 		},
 		getLogs(statObject) {
 			return logs.get(statObject);
-		}
+		},
 	};
 
 	running.on('message', statusEvent => {
@@ -141,7 +141,7 @@ export const fixture = async (args, options = {}) => {
 	try {
 		return {
 			stats,
-			...await running
+			...await running,
 		};
 	} catch (error) {
 		throw Object.assign(error, {stats});

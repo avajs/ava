@@ -113,7 +113,7 @@ test('try-commit is properly counted multiple', async t => {
 		const [result1, result2, result3] = await Promise.all([
 			a.try(b => b.pass()),
 			a.try(b => b.pass()),
-			a.try(b => b.pass())
+			a.try(b => b.pass()),
 		]);
 
 		t.equal(instance.pendingAttemptCount, 3);
@@ -185,7 +185,7 @@ test('try-commit fails when no assertions inside multiple try', async t => {
 	const result = await ava(async a => {
 		const [result1, result2] = await Promise.all([
 			a.try(b => b.pass()),
-			a.try(() => {})
+			a.try(() => {}),
 		]);
 
 		result1.commit();
@@ -226,11 +226,11 @@ test('try-commit has proper titles, when going in depth and width', async t => {
 
 				await Promise.all([
 					b.try(c => t.equal(c.title, 'test ─ attempt 1 ─ attempt 1')),
-					b.try(c => t.equal(c.title, 'test ─ attempt 1 ─ attempt 2'))
+					b.try(c => t.equal(c.title, 'test ─ attempt 1 ─ attempt 2')),
 				]);
 			}),
 			a.try(b => t.equal(b.title, 'test ─ attempt 2')),
-			a.try(b => t.equal(b.title, 'test ─ attempt 3'))
+			a.try(b => t.equal(b.title, 'test ─ attempt 3')),
 		]);
 	}).run();
 });
@@ -418,7 +418,7 @@ test('try-commit refreshes the timeout on commit/discard', async t => {
 			delay(1e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
 			delay(2e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
 			delay(3e3).then(() => a.try(b => b.pass())).then(result => result.commit()),
-			delay(4e3)
+			delay(4e3),
 		]);
 	}).run();
 

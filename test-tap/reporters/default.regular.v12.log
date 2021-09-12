@@ -414,11 +414,11 @@
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
 
-  [90mtraces-in-t-throws.cjs:28[39m
+  [90mtraces-in-t-throws.cjs:27[39m
 
-   [90m27:[39m test('throwsAsync different error', t => {                             
-  [41m 28:   return t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[49m
-   [90m29:[39m });                                                                    
+   [90m26:[39m                                                                                                         
+  [41m 27: test('throwsAsync different error', t => t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError}));[49m
+   [90m28:[39m                                                                                                         
 
   Returned promise rejected with unexpected exception:
 
@@ -431,7 +431,7 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:28:11[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44[39m
 
   [90m─[39m
 

@@ -1,11 +1,9 @@
 const test = require(process.env.TEST_AVA_IMPORT_FROM);
 
-const f = () => {
-	return [
-		'Hello',
-		'World!'
-	].join(', ');
-};
+const f = () => [
+	'Hello',
+	'World!',
+].join(', ');
 
 test('snapshot with a multiline label', t => {
 	const result = f();

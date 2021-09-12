@@ -1,5 +1,5 @@
-import {promises as fs} from 'fs';
-import path from 'path';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -11,14 +11,14 @@ import {beforeAndAfter} from './helpers/macros.js';
 test.serial('First run generates a .snap and a .md', async t => {
 	await withTemporaryFixture(cwd('first-run'), async cwd => {
 		const env = {
-			AVA_FORCE_CI: 'not-ci'
+			AVA_FORCE_CI: 'not-ci',
 		};
 
 		await fixture([], {cwd, env});
 
 		const [, report] = await Promise.all([
 			t.notThrowsAsync(fs.access(path.join(cwd, 'test.js.snap'))),
-			fs.readFile(path.join(cwd, 'test.js.md'), 'utf8')
+			fs.readFile(path.join(cwd, 'test.js.md'), 'utf8'),
 		]);
 		t.snapshot(report, 'snapshot report');
 	});
@@ -29,8 +29,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('adding-snapshots'),
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -38,8 +38,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('adding-test'),
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -47,8 +47,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('changing-title'),
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -56,8 +56,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('adding-skipped-snapshots'),
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -65,6 +65,6 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('filling-in-blanks'),
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );

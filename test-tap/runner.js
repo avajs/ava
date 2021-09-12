@@ -8,12 +8,10 @@ setOptions({});
 
 const noop = () => {};
 
-const promiseEnd = (runner, next) => {
-	return new Promise(resolve => {
-		resolve(runner.once('finish'));
-		next(runner);
-	}).then(() => runner);
-};
+const promiseEnd = (runner, next) => new Promise(resolve => {
+	resolve(runner.once('finish'));
+	next(runner);
+}).then(() => runner);
 
 test('nested tests and hooks aren’t allowed', t => {
 	t.plan(1);
@@ -52,7 +50,7 @@ test('runner emits "stateChange" events', t => {
 				type: 'declared-test',
 				title: 'foo',
 				knownFailing: false,
-				todo: false
+				todo: false,
 			});
 			t.end();
 		}
@@ -70,7 +68,7 @@ test('notifyTimeoutUpdate emits "stateChange" event', t => {
 		if (evt.type === 'test-timeout-configured') {
 			t.same(evt, {
 				type: 'test-timeout-configured',
-				period: 120
+				period: 120,
 			});
 			t.end();
 		}
@@ -137,7 +135,7 @@ test('anything can be skipped', t => {
 			'beforeEach',
 			'concurrent',
 			'afterEach',
-			'after'
+			'after',
 		]);
 	});
 });
@@ -164,42 +162,42 @@ test('test types and titles', t => {
 			chain.before(fail);
 			chain('test', pass);
 		}, [
-			{type: 'before', title: 'before hook'}
+			{type: 'before', title: 'before hook'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.after(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'after', title: 'after hook'}
+			{type: 'after', title: 'after hook'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.after.always(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'after', title: 'after.always hook'}
+			{type: 'after', title: 'after.always hook'},
 		]),
 		check(chain => {
 			chain.beforeEach(fail);
 			chain('test', fail);
 		}, [
-			{type: 'beforeEach', title: 'beforeEach hook for test'}
+			{type: 'beforeEach', title: 'beforeEach hook for test'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.afterEach(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'afterEach', title: 'afterEach hook for test'}
+			{type: 'afterEach', title: 'afterEach hook for test'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.afterEach.always(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'afterEach', title: 'afterEach.always hook for test'}
-		])
+			{type: 'afterEach', title: 'afterEach.always hook for test'},
+		]),
 	]);
 });
 
@@ -610,13 +608,13 @@ test('macros: Customize test names attaching a `title` function', t => {
 	const expectedTitles = [
 		'defaultA',
 		'suppliedB',
-		'defaultC'
+		'defaultC',
 	];
 
 	const expectedArgs = [
 		['A'],
 		['B'],
-		['C']
+		['C'],
 	];
 
 	function macroFn(avaT, ...rest) {

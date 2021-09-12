@@ -10,7 +10,7 @@ test('attempt', async t => {
 			expectType<number>(b);
 		},
 		'string',
-		6
+		6,
 	);
 	attempt.commit();
 });
@@ -24,7 +24,7 @@ test('attempt with title', async t => {
 			expectType<number>(b);
 		},
 		'string',
-		6
+		6,
 	);
 	attempt.commit();
 });
@@ -59,7 +59,7 @@ test('all possible variants to pass to t.try', async t => {
 	// Macro with title
 	const macro1 = test.macro<[string, number]>({
 		exec: (tt, a, b) => tt.is(a.length, b),
-		title: (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`
+		title: (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`,
 	});
 	const macro2 = test.macro<[string, number]>((tt, a, b) => tt.is(a.slice(b), ''));
 

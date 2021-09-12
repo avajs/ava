@@ -1,5 +1,5 @@
-import {promises as fs} from 'fs';
-import path from 'path';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -36,9 +36,9 @@ test('snapshot corruption is reported to the console', async t => {
 		t.is(
 			countMatches(
 				result.stdout,
-				/Please run AVA again with the .*--update-snapshots.* flag to recreate it\./g
+				/Please run AVA again with the .*--update-snapshots.* flag to recreate it\./g,
 			),
-			2
+			2,
 		);
 		t.is(countStringMatches(result.stdout, snapPath), 2);
 	});
@@ -48,7 +48,7 @@ test('with --update-snapshots, corrupt snapshot files are overwritten', async t 
 	await withTemporaryFixture(cwd('corrupt'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const env = {
-			AVA_FORCE_CI: 'not-ci'
+			AVA_FORCE_CI: 'not-ci',
 		};
 		await fs.writeFile(snapPath, Uint8Array.of(0x00));
 		await fixture(['--update-snapshots'], {cwd, env});

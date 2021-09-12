@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 
@@ -49,7 +49,7 @@ test.serial('finds config in package.json', ok('package-only'), (t, conf) => {
 
 test.serial('loads config from a particular directory', ok({
 	fixture: 'throws',
-	resolveFrom: resolve('package-only')
+	resolveFrom: resolve('package-only'),
 }), (t, conf) => {
 	t.true(conf.failFast);
 });
@@ -58,26 +58,26 @@ test.serial('throws an error if both configs are present', notOk('package-yes-fi
 
 test.serial('explicit configFile option overrides package.json config', ok({
 	fixture: 'package-yes-explicit-yes',
-	configFile: 'explicit.js'
+	configFile: 'explicit.js',
 }), (t, conf) => {
 	t.is(conf.files, 'package-yes-explicit-yes-test-value');
 });
 
 test.serial('throws if configFile option is not in the same directory as the package.json file', notOk({
 	fixture: 'package-yes-explicit-yes',
-	configFile: 'nested/explicit.js'
+	configFile: 'nested/explicit.js',
 }));
 
 test.serial('throws if configFile option has an unsupported extension', notOk({
 	fixture: 'explicit-bad-extension',
-	configFile: 'explicit.txt'
+	configFile: 'explicit.txt',
 }));
 
 test.serial('merges in defaults passed with initial call', ok({
 	fixture: 'package-only',
 	defaults: {
-		files: ['123', '!456']
-	}
+		files: ['123', '!456'],
+	},
 }), (t, conf, {defaults}) => {
 	t.true(conf.failFast, 'preserves original props');
 	t.is(conf.files, defaults.files, 'merges in extra props');

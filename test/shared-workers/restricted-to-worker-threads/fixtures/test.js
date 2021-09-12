@@ -3,7 +3,7 @@ import * as plugin from 'ava/plugin';
 
 plugin.registerSharedWorker({
 	filename: new URL('_worker.js', import.meta.url),
-	supportedProtocols: ['experimental']
+	supportedProtocols: ['experimental'],
 });
 
 test('registering', t => {

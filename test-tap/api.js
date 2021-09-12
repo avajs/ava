@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import del from 'del';
 import {test} from 'tap';
@@ -17,7 +17,7 @@ async function apiCreator(options = {}) {
 	if (options.babelConfig !== undefined) {
 		options.providers = [{
 			type: 'babel',
-			main: (await providerManager.babel(options.projectDir)).main({config: options.babelConfig})
+			main: (await providerManager.babel(options.projectDir)).main({config: options.babelConfig}),
 		}];
 	}
 
@@ -33,14 +33,14 @@ async function apiCreator(options = {}) {
 
 const opts = [
 	{workerThreads: true},
-	{workerThreads: false}
+	{workerThreads: false},
 ];
 
 for (const opt of opts) {
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, async t => {
 		const api = await apiCreator({
 			...opt,
-			failFast: true
+			failFast: true,
 		});
 
 		const tests = [];
@@ -50,12 +50,12 @@ for (const opt of opts) {
 				if (evt.type === 'test-failed') {
 					tests.push({
 						ok: false,
-						title: evt.title
+						title: evt.title,
 					});
 				} else if (evt.type === 'test-passed') {
 					tests.push({
 						ok: true,
-						title: evt.title
+						title: evt.title,
 					});
 				}
 			});
@@ -66,13 +66,13 @@ for (const opt of opts) {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
 					ok: true,
-					title: 'first pass'
+					title: 'first pass',
 				}, {
 					ok: false,
-					title: 'second fail'
+					title: 'second fail',
 				}, {
 					ok: true,
-					title: 'third pass'
+					title: 'third pass',
 				}]);
 				t.equal(runStatus.stats.passedTests, 2);
 				t.equal(runStatus.stats.failedTests, 1);
@@ -82,7 +82,7 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			failFast: true,
-			serial: true
+			serial: true,
 		});
 
 		const tests = [];
@@ -93,13 +93,13 @@ for (const opt of opts) {
 					tests.push({
 						ok: false,
 						testFile: evt.testFile,
-						title: evt.title
+						title: evt.title,
 					});
 				} else if (evt.type === 'test-passed') {
 					tests.push({
 						ok: true,
 						testFile: evt.testFile,
-						title: evt.title
+						title: evt.title,
 					});
 				}
 			});
@@ -107,18 +107,18 @@ for (const opt of opts) {
 
 		return api.run({files: [
 			path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-			path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.cjs')
+			path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.cjs'),
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
 					ok: true,
 					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-					title: 'first pass'
+					title: 'first pass',
 				}, {
 					ok: false,
 					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-					title: 'second fail'
+					title: 'second fail',
 				}]);
 				t.equal(runStatus.stats.passedTests, 1);
 				t.equal(runStatus.stats.failedTests, 1);
@@ -128,7 +128,7 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			failFast: true,
-			concurrency: 2
+			concurrency: 2,
 		});
 
 		const tests = [];
@@ -139,13 +139,13 @@ for (const opt of opts) {
 					tests.push({
 						ok: false,
 						testFile: evt.testFile,
-						title: evt.title
+						title: evt.title,
 					});
 				} else if (evt.type === 'test-passed') {
 					tests.push({
 						ok: true,
 						testFile: evt.testFile,
-						title: evt.title
+						title: evt.title,
 					});
 				}
 			});
@@ -163,21 +163,21 @@ for (const opt of opts) {
 		t.strictSame(tests.filter(({testFile}) => testFile === fails), [{
 			ok: true,
 			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-			title: 'first pass'
+			title: 'first pass',
 		}, {
 			ok: false,
 			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-			title: 'second fail'
+			title: 'second fail',
 		}, {
 			ok: true,
 			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-			title: 'third pass'
+			title: 'third pass',
 		}]);
 		if (runStatus.stats.passedTests === 3) {
 			t.strictSame(tests.filter(({testFile}) => testFile === passesSlow), [{
 				ok: true,
 				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.cjs'),
-				title: 'first pass'
+				title: 'first pass',
 			}]);
 		}
 	});
@@ -185,7 +185,7 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			failFast: true,
-			serial: true
+			serial: true,
 		});
 
 		const tests = [];
@@ -197,7 +197,7 @@ for (const opt of opts) {
 					case 'test-failed': {
 						tests.push({
 							ok: false,
-							title: evt.title
+							title: evt.title,
 						});
 
 						break;
@@ -206,7 +206,7 @@ for (const opt of opts) {
 					case 'test-passed': {
 						tests.push({
 							ok: true,
-							title: evt.title
+							title: evt.title,
 						});
 
 						break;
@@ -224,7 +224,7 @@ for (const opt of opts) {
 
 		return api.run({files: [
 			path.join(__dirname, 'fixture/fail-fast/crash/crashes.cjs'),
-			path.join(__dirname, 'fixture/fail-fast/crash/passes.cjs')
+			path.join(__dirname, 'fixture/fail-fast/crash/passes.cjs'),
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
@@ -241,7 +241,7 @@ for (const opt of opts) {
 			...opt,
 			failFast: true,
 			serial: true,
-			timeout: '100ms'
+			timeout: '100ms',
 		});
 
 		const tests = [];
@@ -253,7 +253,7 @@ for (const opt of opts) {
 					case 'test-failed': {
 						tests.push({
 							ok: false,
-							title: evt.title
+							title: evt.title,
 						});
 
 						break;
@@ -262,7 +262,7 @@ for (const opt of opts) {
 					case 'test-passed': {
 						tests.push({
 							ok: true,
-							title: evt.title
+							title: evt.title,
 						});
 
 						break;
@@ -281,7 +281,7 @@ for (const opt of opts) {
 		return api.run({files: [
 			path.join(__dirname, 'fixture/fail-fast/timeout/fails.cjs'),
 			path.join(__dirname, 'fixture/fail-fast/timeout/passes.cjs'),
-			path.join(__dirname, 'fixture/fail-fast/timeout/passes-slow.cjs')
+			path.join(__dirname, 'fixture/fail-fast/timeout/passes-slow.cjs'),
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
@@ -295,12 +295,12 @@ for (const opt of opts) {
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - no errors`, async t => {
 		const api = await apiCreator({
 			...opt,
-			failFast: true
+			failFast: true,
 		});
 
 		return api.run({files: [
 			path.join(__dirname, 'fixture/fail-fast/without-error/a.cjs'),
-			path.join(__dirname, 'fixture/fail-fast/without-error/b.cjs')
+			path.join(__dirname, 'fixture/fail-fast/without-error/b.cjs'),
 		]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
@@ -311,7 +311,7 @@ for (const opt of opts) {
 	test(`serial execution mode - workerThreads: ${opt.workerThreads}`, async t => {
 		const api = await apiCreator({
 			...opt,
-			serial: true
+			serial: true,
 		});
 
 		return api.run({files: [path.join(__dirname, 'fixture/serial.cjs')]})
@@ -335,7 +335,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			cacheEnabled: true
+			cacheEnabled: true,
 		});
 
 		api.on('run', plan => {
@@ -359,7 +359,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			cacheEnabled: true
+			cacheEnabled: true,
 		});
 
 		api.on('run', plan => {
@@ -383,29 +383,29 @@ for (const opt of opts) {
 			[
 				/foo === "" && "" === foo/,
 				/foo === ""/,
-				/foo/
+				/foo/,
 			],
 			[
 				/!\(new Object\(foo\) instanceof Object\)/,
 				/new Object\(foo\) instanceof Object/,
 				/Object/,
 				/new Object\(foo\)/,
-				/foo/
+				/foo/,
 			],
 			[
 				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length > 0/,
 				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length/,
 				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\)/,
 				/\[foo]/,
-				/foo/
-			]
+				/foo/,
+			],
 		];
 
 		t.plan(15);
 		const api = await apiCreator({
 			...opt,
 			files: ['test-tap/fixture/enhanced-assertion-formatting.cjs'],
-			babelConfig: true
+			babelConfig: true,
 		});
 		const errors = [];
 		api.on('run', plan => {
@@ -433,7 +433,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			cacheEnabled: false
+			cacheEnabled: false,
 		});
 
 		api.on('run', plan => {
@@ -457,7 +457,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			cacheEnabled: true
+			cacheEnabled: true,
 		});
 
 		api.on('run', plan => {
@@ -481,7 +481,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			cacheEnabled: false
+			cacheEnabled: false,
 		});
 
 		api.on('run', plan => {
@@ -542,7 +542,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			require: [requirePath]
+			require: [requirePath],
 		});
 
 		return api.run({files: [path.join(__dirname, 'fixture/validate-installed-global.cjs')]})
@@ -562,7 +562,7 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			babelConfig: true,
-			projectDir: path.join(__dirname, 'fixture/caching')
+			projectDir: path.join(__dirname, 'fixture/caching'),
 		});
 
 		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
@@ -585,7 +585,7 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			projectDir: path.join(__dirname, 'fixture/caching'),
-			cacheEnabled: false
+			cacheEnabled: false,
 		});
 
 		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
@@ -624,20 +624,20 @@ for (const opt of opts) {
 		const api = await apiCreator({
 			...opt,
 			files: ['test-tap/fixture/with-dependencies/*test*.cjs'],
-			require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.cjs')]
+			require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.cjs')],
 		});
 
 		const testFiles = new Set([
 			path.resolve('test-tap/fixture/with-dependencies/no-tests.cjs'),
 			path.resolve('test-tap/fixture/with-dependencies/test.cjs'),
 			path.resolve('test-tap/fixture/with-dependencies/test-failure.cjs'),
-			path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.cjs')
+			path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.cjs'),
 		]);
 
 		const sourceFiles = [
 			path.resolve('test-tap/fixture/with-dependencies/dep-1.js'),
 			path.resolve('test-tap/fixture/with-dependencies/dep-2.js'),
-			path.resolve('test-tap/fixture/with-dependencies/dep-3.custom')
+			path.resolve('test-tap/fixture/with-dependencies/dep-3.custom'),
 		];
 
 		api.on('run', plan => {
@@ -660,7 +660,7 @@ for (const opt of opts) {
 		return api.run({files: [
 			path.join(__dirname, 'fixture/test-count.cjs'),
 			path.join(__dirname, 'fixture/test-count-2.cjs'),
-			path.join(__dirname, 'fixture/test-count-3.cjs')
+			path.join(__dirname, 'fixture/test-count-3.cjs'),
 		]}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 4, 'pass count');
 			t.equal(runStatus.stats.failedTests, 3, 'fail count');
@@ -674,7 +674,7 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			match: ['this test will match']
+			match: ['this test will match'],
 		});
 
 		api.on('run', plan => {
@@ -689,7 +689,7 @@ for (const opt of opts) {
 		return api.run({files: [
 			path.join(__dirname, 'fixture/match-no-match.cjs'),
 			path.join(__dirname, 'fixture/match-no-match-2.cjs'),
-			path.join(__dirname, 'fixture/test-count.cjs')
+			path.join(__dirname, 'fixture/test-count.cjs'),
 		]}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 1);
 		});
@@ -698,7 +698,7 @@ for (const opt of opts) {
 
 test('run from package.json folder by default', async t => {
 	const api = await apiCreator({
-		workerThreads: false
+		workerThreads: false,
 	});
 
 	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.cjs')]})

@@ -1,5 +1,3 @@
-export default async () => {
-	return {
-		failFast: true
-	};
-};
+export default async () => ({
+	failFast: true,
+});

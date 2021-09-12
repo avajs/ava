@@ -5,13 +5,13 @@ test('like', t => {
 		map: new Map([['foo', 'bar']]),
 		nested: {
 			baz: 'thud',
-			qux: 'quux'
-		}
+			qux: 'quux',
+		},
 	}, {
 		map: new Map([['foo', 'bar']]),
 		nested: {
-			baz: 'thud'
-		}
+			baz: 'thud',
+		},
 	});
 
 	type Foo = {

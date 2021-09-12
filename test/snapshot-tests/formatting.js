@@ -1,6 +1,6 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import test from '@ava/test';
 import figures from 'figures';
@@ -15,8 +15,8 @@ test('multiline snapshot label should be formatted correctly in the report', asy
 		await fixture(['--update-snapshots'], {
 			cwd,
 			env: {
-				AVA_FORCE_CI: 'not-ci'
-			}
+				AVA_FORCE_CI: 'not-ci',
+			},
 		});
 
 		// Assert report is unchanged
@@ -32,8 +32,8 @@ test('test title should be normalized in stdout', async t => {
 		const result = await fixture(['--update-snapshots'], {
 			cwd,
 			env: {
-				AVA_FORCE_CI: 'not-ci'
-			}
+				AVA_FORCE_CI: 'not-ci',
+			},
 		});
 
 		// Assert stdout is unchanged
@@ -41,9 +41,9 @@ test('test title should be normalized in stdout', async t => {
 			replaceString(
 				replaceString(
 					replaceString(result.stdout, os.EOL, '\n'),
-					figures.main.info, figures.windows.info
+					figures.main.info, figures.windows.info,
 				),
-				figures.main.tick, figures.windows.tick
+				figures.main.tick, figures.windows.tick,
 			),
 			'stdout');
 	});
@@ -55,8 +55,8 @@ test('test title should be normalized in snapshot', async t => {
 		await fixture(['--update-snapshots'], {
 			cwd,
 			env: {
-				AVA_FORCE_CI: 'not-ci'
-			}
+				AVA_FORCE_CI: 'not-ci',
+			},
 		});
 
 		// Assert report is unchanged

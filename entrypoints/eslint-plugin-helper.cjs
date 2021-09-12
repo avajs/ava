@@ -10,7 +10,7 @@ const {
 	isHelperish,
 	matches,
 	normalizeFileForMatching,
-	normalizePatterns
+	normalizePatterns,
 } = require('../lib/glob-helpers.cjs');
 
 const MAX_DATA_LENGTH_EXCLUSIVE = 100 * 1024; // Allocate 100 KiB to exchange globs.
@@ -32,15 +32,15 @@ const resolveGlobsSync = (projectDir, overrideExtensions, overrideFiles) => {
 			workerData: {
 				dataBuffer,
 				syncBuffer,
-				firstMessage: {projectDir, overrideExtensions, overrideFiles}
-			}
+				firstMessage: {projectDir, overrideExtensions, overrideFiles},
+			},
 		});
 		worker.unref();
 	} else {
 		worker.postMessage({projectDir, overrideExtensions, overrideFiles});
 	}
 
-	const synchronize = Atomics.wait(sync, 0, 0, 10000);
+	const synchronize = Atomics.wait(sync, 0, 0, 10_000);
 	if (synchronize === 'timed-out') {
 		throw new Error('Timed out resolving AVA configuration');
 	}
@@ -100,7 +100,7 @@ function load(projectDir, overrides) {
 			// Add the first extension. If multiple extensions are available, assume
 			// patterns are not biased to any particular extension.
 			return classifyForESLint(`${importPath}.${globs.extensions[0]}`);
-		}
+		},
 	});
 	helperCache.set(cacheKey, helper);
 	return helper;

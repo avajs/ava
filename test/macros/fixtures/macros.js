@@ -10,7 +10,7 @@ const withTitle = test.macro({
 	},
 	title(provided, arg) {
 		return `${provided || ''} ${arg}`;
-	}
+	},
 });
 
 test('without title', withoutTitle, 'arg');

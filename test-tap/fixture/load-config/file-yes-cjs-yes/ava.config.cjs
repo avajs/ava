@@ -1,3 +1,3 @@
 module.exports = {
-	files: 'package-yes-files-yes-test-value'
+	files: 'package-yes-files-yes-test-value',
 };

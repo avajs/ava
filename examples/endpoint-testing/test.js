@@ -5,7 +5,7 @@ const test = require('ava');
 const got = require('got');
 const listen = require('test-listen');
 
-const app = require('./app');
+const app = require('./app.js');
 
 test.before(async t => {
 	t.context.server = http.createServer(app);

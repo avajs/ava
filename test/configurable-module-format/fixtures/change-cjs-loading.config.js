@@ -1,5 +1,5 @@
 export default {
 	extensions: {
-		cjs: 'module'
-	}
+		cjs: 'module',
+	},
 };

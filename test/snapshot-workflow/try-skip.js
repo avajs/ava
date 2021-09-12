@@ -10,8 +10,8 @@ test.serial(
 	{
 		cwd: cwd('discard-skip'),
 		cli: ['--update-snapshots'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -20,6 +20,6 @@ test.serial(
 	{
 		cwd: cwd('commit-skip'),
 		cli: ['--update-snapshots'],
-		expectChanged: false
-	}
+		expectChanged: false,
+	},
 );

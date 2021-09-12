@@ -262,7 +262,7 @@ not ok 23 - traces-in-t-throws › throwsAsync different error
       returnRejectedPromise
       (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)
 
-      test-tap/fixture/report/regular/traces-in-t-throws.cjs:28:11
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44
   ...
 ---tty-stream-chunk-separator
 ok 24 - uncaught-exception › passes

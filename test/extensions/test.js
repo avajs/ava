@@ -4,11 +4,11 @@ import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
 
 for (const [where, which] of [
 	['top-level', 'top-level-duplicates'],
-	['top-level and babel', 'shared-duplicates']
+	['top-level and babel', 'shared-duplicates'],
 ]) {
 	test(`errors if ${where} extensions include duplicates`, async t => {
 		const options = {
-			cwd: cwd(which)
+			cwd: cwd(which),
 		};
 
 		const result = await t.throwsAsync(fixture([], options));

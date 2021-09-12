@@ -1,4 +1,3 @@
-'use strict';
 const test = require('ava');
 
 const {sum} = require('.');

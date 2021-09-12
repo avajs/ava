@@ -2,7 +2,7 @@ export default {
 	extensions: [],
 	babel: {
 		compileAsTests: ['build/helpers/*'],
-		extensions: ['bar']
+		extensions: ['bar'],
 	},
-	files: ['build/tests/**/*']
+	files: ['build/tests/**/*'],
 };

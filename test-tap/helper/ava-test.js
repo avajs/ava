@@ -21,22 +21,20 @@ export function withExperiments(experiments = {}) {
 			registerUniqueTitle,
 			metadata: {type: 'test'},
 			title,
-			notifyTimeoutUpdate() {}
+			notifyTimeoutUpdate() {},
 		});
 	}
 
-	ava.failing = (fn, contextRef) => {
-		return new Test({
-			contextRef: contextRef || new ContextRef(),
-			experiments,
-			failWithoutAssertions: true,
-			fn,
-			registerUniqueTitle,
-			metadata: {type: 'test', failing: true},
-			title: 'test.failing',
-			notifyTimeoutUpdate() {}
-		});
-	};
+	ava.failing = (fn, contextRef) => new Test({
+		contextRef: contextRef || new ContextRef(),
+		experiments,
+		failWithoutAssertions: true,
+		fn,
+		registerUniqueTitle,
+		metadata: {type: 'test', failing: true},
+		title: 'test.failing',
+		notifyTimeoutUpdate() {},
+	});
 
 	return ava;
 }

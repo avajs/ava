@@ -10,7 +10,7 @@ test(`a rather wordy test title that is wrapped
 test('test\r\n\ttitle', Object.assign(t => {
 	t.pass();
 }, {
-	title: title => title
+	title: title => title,
 }));
 
 test('multiline try assertion title', async t => {

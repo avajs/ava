@@ -1,5 +1,5 @@
 /* eslint-disable ava/no-ignored-test-files */
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 import test from 'ava';
 

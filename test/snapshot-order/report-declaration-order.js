@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -11,8 +11,8 @@ test('snapshot reports are sorted in declaration order', async t => {
 	const options = {
 		cwd: cwd('report-declaration-order'),
 		env: {
-			AVA_FORCE_CI: 'not-ci'
-		}
+			AVA_FORCE_CI: 'not-ci',
+		},
 	};
 
 	// Scehdule snapshot cleanup

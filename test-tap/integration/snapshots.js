@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import execa from 'execa';
 import {test} from 'tap';
@@ -14,7 +14,7 @@ for (const object of [
 	{type: 'colocated', rel: '', dir: ''},
 	{type: '__tests__', rel: '__tests__-dir', dir: '__tests__/__snapshots__'},
 	{type: 'test', rel: 'test-dir', dir: 'test/snapshots'},
-	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'}
+	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'},
 ]) {
 	test(`snapshots work (${object.type})`, t => {
 		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', object.rel, object.dir, 'test.cjs.snap');
@@ -150,17 +150,16 @@ test('snapshots infer their location and name from sourcemaps', t => {
 	const snapDirStructure = [
 		'src',
 		'src/test/snapshots',
-		'src/feature/__tests__/__snapshots__'
+		'src/feature/__tests__/__snapshots__',
 	];
 	const snapFixtureFilePaths = snapDirStructure
-		.map(snapRelativeDir => {
+		.flatMap(snapRelativeDir => {
 			const snapPath = path.join(__dirname, '..', relativeFixtureDir, snapRelativeDir);
 			return [
 				path.join(snapPath, 'test.ts.md'),
-				path.join(snapPath, 'test.ts.snap')
+				path.join(snapPath, 'test.ts.snap'),
 			];
-		})
-		.reduce((a, b) => [...a, ...b], []);
+		});
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);
@@ -197,17 +196,16 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 	const snapDirStructure = [
 		'src',
 		'src/feature',
-		'src/feature/nested-feature'
+		'src/feature/nested-feature',
 	];
 	const snapFixtureFilePaths = snapDirStructure
-		.map(snapRelativeDir => {
+		.flatMap(snapRelativeDir => {
 			const snapPath = path.join(__dirname, '..', relativeFixtureDir, snapDir, snapRelativeDir);
 			return [
 				path.join(snapPath, 'test.cjs.md'),
-				path.join(snapPath, 'test.cjs.snap')
+				path.join(snapPath, 'test.cjs.snap'),
 			];
-		})
-		.reduce((a, b) => [...a, ...b], []);
+		});
 	const removeExistingSnapFixtureFiles = snapPath => {
 		try {
 			fs.unlinkSync(snapPath);

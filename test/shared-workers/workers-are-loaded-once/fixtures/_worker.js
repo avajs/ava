@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 export default async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['experimental']).ready();

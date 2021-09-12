@@ -4,7 +4,7 @@ import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
 
 test('errors if top-level files is an empty array', async t => {
 	const options = {
-		cwd: cwd('files')
+		cwd: cwd('files'),
 	};
 
 	const result = await t.throwsAsync(fixture([], options));
@@ -14,7 +14,7 @@ test('errors if top-level files is an empty array', async t => {
 
 test('errors if top-level ignoredByWatcher is an empty array', async t => {
 	const options = {
-		cwd: cwd('ignored-by-watcher')
+		cwd: cwd('ignored-by-watcher'),
 	};
 
 	const result = await t.throwsAsync(fixture([], options));
