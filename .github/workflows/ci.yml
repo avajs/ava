@@ -71,7 +71,7 @@ jobs:
         with:
           node-version: ^12.22
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "7.11" ]]; then npm install --global npm@7.11; fi
+        run: if [[ "$(npm -v)" != "7.23" ]]; then npm install --global npm@7.23; fi
       - run: npm ci --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
