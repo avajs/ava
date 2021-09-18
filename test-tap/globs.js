@@ -25,6 +25,12 @@ test('ignores relativeness in patterns', t => {
 	t.end();
 });
 
+test('ignores trailing slashes in (simple) patterns', t => {
+	const {filePatterns} = globs.normalizeGlobs({files: ['foo/', '!bar/', 'foo/{bar/,baz/}'], extensions: ['js'], providers: []});
+	t.same(filePatterns, ['foo', '!bar', 'foo/{bar/,baz/}']);
+	t.end();
+});
+
 test('isTest with defaults', t => {
 	const options = {
 		...globs.normalizeGlobs({
