@@ -22,27 +22,6 @@ test('formatted', t => {
 	t.deepEqual('foo', 'bar');
 });
 
-test('power-assert', t => {
-	const foo = '';
-	t.assert(foo);
-});
-
-test('bad throws', t => {
-	const fn = () => {
-		throw new Error('err');
-	};
-
-	t.throws(fn());
-});
-
-test('bad notThrows', t => {
-	const fn = () => {
-		throw new Error('err');
-	};
-
-	t.notThrows(fn());
-});
-
 test('implementation throws non-error', () => {
 	const error = null;
 	throw error;

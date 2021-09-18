@@ -61,7 +61,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 Note that providing files on the CLI overrides the `files` option.
 
-Provide the `babel` option (and install [`@ava/babel`](https://github.com/avajs/babel) as an additional dependency) to enable Babel compilation.
+When using AVA 3, provide the `babel` option (and install [`@ava/babel`](https://github.com/avajs/babel) as an additional dependency) to enable Babel compilation.
 
 Provide the `typescript` option (and install [`@ava/typescript`](https://github.com/avajs/typescript) as an additional dependency) to enable (rudimentary) TypeScript support.
 

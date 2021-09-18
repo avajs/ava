@@ -21,7 +21,7 @@ export type ThrowsExpectation = {
 export interface Assertions {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
-	 * indicating whether the assertion passed. Comes with power-assert.
+	 * indicating whether the assertion passed.
 	 */
 	assert: AssertAssertion;
 
@@ -123,7 +123,7 @@ export interface Assertions {
 export interface AssertAssertion {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
-	 * indicating whether the assertion passed. Comes with power-assert.
+	 * indicating whether the assertion passed.
 	 */
 	(actual: any, message?: string): boolean;
 

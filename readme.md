@@ -22,7 +22,6 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/rea
 - Includes TypeScript definitions
 - [Magic assert](#magic-assert)
 - [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
-- [Write your tests using the latest JavaScript syntax](https://github.com/avajs/babel)
 - [Promise support](./docs/01-writing-tests.md#promise-support)
 - [Async function support](./docs/01-writing-tests.md#async-function-support)
 - [Observable support](./docs/01-writing-tests.md#observable-support)
@@ -148,7 +147,6 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
-- [Configuring Babel](https://github.com/avajs/babel)
 - [Using ES modules](docs/recipes/es-modules.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
 - [Testing React components](docs/recipes/react.md)
@@ -190,7 +188,7 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 - [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) — Lint rules for AVA tests
 - [@ava/typescript](https://github.com/avajs/typescript) — Test TypeScript projects
-- [@ava/babel](https://github.com/avajs/babel) — Compile test files using Babel
+- [@ava/babel](https://github.com/avajs/babel) — Compile test files using Babel, for AVA 3
 - [@ava/cooperate](https://github.com/avajs/cooperate) — Low-level primitives to enable cooperation between test files
 - [@ava/get-port](https://github.com/avajs/get-port) — Reserve a port while testing
 

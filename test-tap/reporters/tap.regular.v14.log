@@ -135,47 +135,7 @@ not ok 14 - test › formatted
     at: 'test-tap/fixture/report/regular/test.cjs:22:4'
   ...
 ---tty-stream-chunk-separator
-not ok 15 - test › power-assert
-  ---
-    name: AssertionError
-    assertion: assert
-    operator: '!!'
-    values:
-      'Value is not truthy:': ''''''
-    at: 'test-tap/fixture/report/regular/test.cjs:27:4'
-  ...
----tty-stream-chunk-separator
-not ok 16 - test › bad throws
-  ---
-    name: AssertionError
-    message: Improper usage of `t.throws()` detected
-    assertion: throws
-    values:
-      'The following error was thrown, possibly before `t.throws()` could be called:': |-
-        Error {
-          message: 'err',
-        }
-    at: |-
-      fn (test-tap/fixture/report/regular/test.cjs:32:9)
-      test-tap/fixture/report/regular/test.cjs:35:11
-  ...
----tty-stream-chunk-separator
-not ok 17 - test › bad notThrows
-  ---
-    name: AssertionError
-    message: Improper usage of `t.notThrows()` detected
-    assertion: notThrows
-    values:
-      'The following error was thrown, possibly before `t.notThrows()` could be called:': |-
-        Error {
-          message: 'err',
-        }
-    at: |-
-      fn (test-tap/fixture/report/regular/test.cjs:40:9)
-      test-tap/fixture/report/regular/test.cjs:43:14
-  ...
----tty-stream-chunk-separator
-not ok 18 - test › implementation throws non-error
+not ok 15 - test › implementation throws non-error
   ---
     name: AssertionError
     message: Error thrown in test
@@ -184,7 +144,7 @@ not ok 18 - test › implementation throws non-error
     at: ''
   ...
 ---tty-stream-chunk-separator
-not ok 19 - traces-in-t-throws › throws
+not ok 16 - traces-in-t-throws › throws
   ---
     name: AssertionError
     assertion: throws
@@ -194,13 +154,16 @@ not ok 19 - traces-in-t-throws › throws
           message: 'uh-oh',
         }
       'Expected instance of:': 'Function TypeError {}'
-    at: |-
+    at: >-
       throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
-      test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17
+
+      t.throws.instanceOf
+      (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)
+
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4
   ...
 ---tty-stream-chunk-separator
-not ok 20 - traces-in-t-throws › notThrows
+not ok 17 - traces-in-t-throws › notThrows
   ---
     name: AssertionError
     assertion: notThrows
@@ -215,7 +178,7 @@ not ok 20 - traces-in-t-throws › notThrows
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4
   ...
 ---tty-stream-chunk-separator
-not ok 21 - traces-in-t-throws › notThrowsAsync
+not ok 18 - traces-in-t-throws › notThrowsAsync
   ---
     name: AssertionError
     assertion: notThrowsAsync
@@ -230,7 +193,7 @@ not ok 21 - traces-in-t-throws › notThrowsAsync
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4
   ...
 ---tty-stream-chunk-separator
-not ok 22 - traces-in-t-throws › throwsAsync
+not ok 19 - traces-in-t-throws › throwsAsync
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -248,7 +211,7 @@ not ok 22 - traces-in-t-throws › throwsAsync
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4
   ...
 ---tty-stream-chunk-separator
-not ok 23 - traces-in-t-throws › throwsAsync different error
+not ok 20 - traces-in-t-throws › throwsAsync different error
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -265,9 +228,9 @@ not ok 23 - traces-in-t-throws › throwsAsync different error
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44
   ...
 ---tty-stream-chunk-separator
-ok 24 - uncaught-exception › passes
+ok 21 - uncaught-exception › passes
 ---tty-stream-chunk-separator
-not ok 25 - Error: Can’t catch me
+not ok 22 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
@@ -276,30 +239,30 @@ not ok 25 - Error: Can’t catch me
       (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)
   ...
 ---tty-stream-chunk-separator
-not ok 26 - uncaught-exception.cjs exited with a non-zero exit code: 1
+not ok 23 - uncaught-exception.cjs exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-ok 27 - unhandled-rejection › passes
+ok 24 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
-ok 28 - unhandled-rejection › unhandled non-error rejection
+ok 25 - unhandled-rejection › unhandled non-error rejection
 ---tty-stream-chunk-separator
-not ok 29 - Error: Can’t catch me
+not ok 26 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
     at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)'
   ...
 ---tty-stream-chunk-separator
-not ok 30 - unhandled-rejection
+not ok 27 - unhandled-rejection
   ---
     message: Non-error object
     formatted: 'null'
   ...
 ---tty-stream-chunk-separator
 
-1..24
-# tests 23
+1..21
+# tests 20
 # pass 6
 # skip 1
-# fail 23
+# fail 20
 
 ---tty-stream-chunk-separator

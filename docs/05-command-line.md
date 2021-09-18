@@ -11,7 +11,8 @@ Commands:
   ava [<pattern>...]        Run tests                                  [default]
   ava debug [<pattern>...]  Activate Node.js inspector and run a single test
                             file
-  ava reset-cache           Reset AVA's compilation cache and exit
+  ava reset-cache           Delete any temporary files and state kept by AVA,
+	                          then exit
 
 Positionals:
   pattern  Glob patterns to select what test files to run. Leave empty if you
@@ -162,7 +163,7 @@ AVA lets you run tests exclusively by referring to their line numbers. Target a 
 
 The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
 
-This feature is only available from the command line. It won't work if you use tools like `ts-node/register` or `@babel/register`, and it does not currently work with `@ava/babel` and `@ava/typescript`.
+This feature is only available from the command line. It won't work if you use tools like `ts-node/register` or `@babel/register`, and it does not currently work with `@ava/babel` (available for AVA 3) and `@ava/typescript`.
 
 ### Running a single test
 
@@ -218,7 +219,7 @@ When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
-AVA itself does not cache files unless used with our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can try resetting the cache by running:
+AVA 3 itself does not cache files unless used with our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can try resetting the cache by running:
 
 ```console
 npx ava reset-cache

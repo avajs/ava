@@ -5,4 +5,4 @@ contact_links:
     about: Questions? Ideas? Something to share?
   - name: Babel
     url: https://github.com/avajs/babel/issues
-    about: Report a bug with AVA's Babel integration
+    about: Report a bug with AVA 3's Babel integration

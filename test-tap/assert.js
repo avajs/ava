@@ -53,16 +53,6 @@ function assertFailure(t, subset) {
 		t.equal(lastFailure.raw.actual, subset.raw.actual);
 	}
 
-	if (subset.statements) {
-		t.equal(lastFailure.statements.length, subset.statements.length);
-		for (const [i, s] of lastFailure.statements.entries()) {
-			t.equal(s[0], subset.statements[i][0]);
-			t.match(s[1], subset.statements[i][1]);
-		}
-	} else {
-		t.same(lastFailure.statements, []);
-	}
-
 	if (subset.values) {
 		t.equal(lastFailure.values.length, subset.values.length);
 		for (const [i, s] of lastFailure.values.entries()) {

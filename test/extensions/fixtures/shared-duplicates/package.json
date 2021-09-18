@@ -1,14 +1,18 @@
 {
 	"type": "module",
 	"ava": {
-		"babel": {
+		"typescript": {
+			"rewritePaths": {
+				"src/": "build/"
+			},
+			"compile": false,
 			"extensions": [
-				"js",
-				"jsx"
+				"ts",
+				"tsx"
 			]
 		},
 		"extensions": [
-			"jsx"
+			"tsx"
 		]
 	}
 }
