@@ -25,6 +25,12 @@ test('ignores relativeness in patterns', t => {
 	t.end();
 });
 
+test('ignores trailing slashes in (simple) patterns', t => {
+	const {filePatterns} = globs.normalizeGlobs({files: ['foo/', '!bar/', 'foo/{bar/,baz/}'], extensions: ['js'], providers: []});
+	t.same(filePatterns, ['foo', '!bar', 'foo/{bar/,baz/}']);
+	t.end();
+});
+
 test('isTest with defaults', t => {
 	const options = {
 		...globs.normalizeGlobs({
@@ -334,26 +340,4 @@ test('findFiles finds non-ignored files (.cjs, .jsx)', async t => {
 	});
 	actual.sort();
 	t.same(actual, expected);
-});
-
-test('normalizePatterns', t => {
-	const patterns = [
-		'test/sub/../**/*',
-		'test/sub/',
-		'test//sub/',
-		'!./test/sub/../**/*',
-		'!test/sub/',
-		'!test//sub/'
-	];
-	const expected = [
-		'test/**/*',
-		'test/sub',
-		'test/sub',
-		'!test/**/*',
-		'!test/sub',
-		'!test/sub'
-	];
-	const actual = globs.normalizePatterns(patterns);
-	t.same(actual, expected);
-	t.end();
 });
