@@ -330,54 +330,6 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`stack traces for exceptions are corrected using a source map file - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(4);
-
-		const api = await apiCreator({
-			...opt,
-			cacheEnabled: true,
-		});
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'uncaught-exception') {
-					t.match(evt.err.message, /Thrown by source-map-fixtures/);
-					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.cjs:5.*$/m);
-				}
-			});
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
-			});
-	});
-
-	test(`stack traces for exceptions are corrected using a source map file in what looks like a browser env - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(4);
-
-		const api = await apiCreator({
-			...opt,
-			cacheEnabled: true,
-		});
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'uncaught-exception') {
-					t.match(evt.err.message, /Thrown by source-map-fixtures/);
-					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file-browser-env.cjs:8.*$/m);
-				}
-			});
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file-browser-env.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
-			});
-	});
-
 	test(`enhanced assertion formatting necessary whitespace and empty strings - workerThreads: ${opt.workerThreads}`, async t => {
 		const expected = [
 			[
@@ -425,78 +377,6 @@ for (const opt of opts) {
 						t.match(statement[0], expected[errorIndex][statementIndex]);
 					}
 				}
-			});
-	});
-
-	test(`stack traces for exceptions are corrected using a source map file (cache off) - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(4);
-
-		const api = await apiCreator({
-			...opt,
-			cacheEnabled: false,
-		});
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'uncaught-exception') {
-					t.match(evt.err.message, /Thrown by source-map-fixtures/);
-					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-file.cjs:5.*$/m);
-				}
-			});
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-file.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
-			});
-	});
-
-	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache on) - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(4);
-
-		const api = await apiCreator({
-			...opt,
-			cacheEnabled: true,
-		});
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'uncaught-exception') {
-					t.match(evt.err.message, /Thrown by source-map-fixtures/);
-					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial.cjs:23.*$/m);
-				}
-			});
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
-			});
-	});
-
-	test(`stack traces for exceptions are corrected using a source map, taking an initial source map for the test file into account (cache off) - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(4);
-
-		const api = await apiCreator({
-			...opt,
-			cacheEnabled: false,
-		});
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'uncaught-exception') {
-					t.match(evt.err.message, /Thrown by source-map-fixtures/);
-					t.match(evt.err.stack, /^.*?\brun\b.*source-map-fixtures.src.throws.js:1.*$/m);
-					t.match(evt.err.stack, /^.*?Immediate\b.*source-map-initial.cjs:23.*$/m);
-				}
-			});
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/source-map-initial.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
