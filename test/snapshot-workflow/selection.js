@@ -10,8 +10,8 @@ test.serial(
 	{
 		cwd: cwd('skipping-snapshot'),
 		cli: ['--update-snapshots'],
-		expectChanged: false
-	}
+		expectChanged: false,
+	},
 );
 
 test.serial(
@@ -20,8 +20,8 @@ test.serial(
 	{
 		cwd: cwd('skipping-snapshot-update'),
 		cli: ['--update-snapshots'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -30,8 +30,8 @@ test.serial(
 	{
 		cwd: cwd('skipping-test'),
 		cli: ['--update-snapshots'],
-		expectChanged: false
-	}
+		expectChanged: false,
+	},
 );
 
 test.serial(
@@ -40,8 +40,8 @@ test.serial(
 	{
 		cwd: cwd('skipping-test-update'),
 		cli: ['--update-snapshots'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -50,8 +50,8 @@ test.serial(
 	{
 		cwd: cwd('select-test-update'),
 		cli: ['--update-snapshots', '--match', 'foo'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );
 
 test.serial(
@@ -60,6 +60,6 @@ test.serial(
 	{
 		cwd: cwd('select-test-update'),
 		cli: ['--update-snapshots', 'test.js:3-5'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );

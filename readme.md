@@ -188,13 +188,11 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Related
 
-- [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) - Lint rules for AVA tests
-- [sublime-ava](https://github.com/avajs/sublime-ava) - Snippets for AVA tests
-- [atom-ava](https://github.com/avajs/atom-ava) - Snippets for AVA tests
-- [vscode-ava](https://github.com/samverschueren/vscode-ava) - Snippets for AVA tests
-- [gulp-ava](https://github.com/avajs/gulp-ava) - Run tests with gulp
-- [grunt-ava](https://github.com/avajs/grunt-ava) - Run tests with grunt
-- [More…](https://github.com/avajs/awesome-ava#packages)
+- [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) — Lint rules for AVA tests
+- [@ava/typescript](https://github.com/avajs/typescript) — Test TypeScript projects
+- [@ava/babel](https://github.com/avajs/babel) — Compile test files using Babel
+- [@ava/cooperate](https://github.com/avajs/cooperate) — Low-level primitives to enable cooperation between test files
+- [@ava/get-port](https://github.com/avajs/get-port) — Reserve a port while testing
 
 ## Links
 

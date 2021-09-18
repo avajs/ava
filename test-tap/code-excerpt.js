@@ -1,5 +1,5 @@
-import fs from 'fs';
-import {pathToFileURL} from 'url';
+import fs from 'node:fs';
+import {pathToFileURL} from 'node:url';
 
 import _chalk from 'chalk';
 import {test} from 'tap';
@@ -16,14 +16,14 @@ test('read code excerpt', t => {
 	const file = pathToFileURL(tempWrite.sync([
 		'function a() {',
 		'\talert();',
-		'}'
+		'}',
 	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false});
 	const expected = [
 		` ${chalk.grey('1:')} function a() {`,
 		chalk.bgRed(' 2:   alert();    '),
-		` ${chalk.grey('3:')} }             `
+		` ${chalk.grey('3:')} }             `,
 	].join('\n');
 
 	t.equal(excerpt, expected);
@@ -34,14 +34,14 @@ test('truncate lines', t => {
 	const file = pathToFileURL(tempWrite.sync([
 		'function a() {',
 		'\talert();',
-		'}'
+		'}',
 	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false}, {maxWidth: 14});
 	const expected = [
 		` ${chalk.grey('1:')} functio…`,
 		chalk.bgRed(' 2:   alert…'),
-		` ${chalk.grey('3:')} }       `
+		` ${chalk.grey('3:')} }       `,
 	].join('\n');
 
 	t.equal(excerpt, expected);
@@ -60,14 +60,14 @@ test('format line numbers', t => {
 		'',
 		'function a() {',
 		'\talert();',
-		'}'
+		'}',
 	].join('\n')));
 
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
 	const expected = [
 		` ${chalk.grey(' 9:')} function a() {`,
 		chalk.bgRed(' 10:   alert();    '),
-		` ${chalk.grey('11:')} }             `
+		` ${chalk.grey('11:')} }             `,
 	].join('\n');
 
 	t.equal(excerpt, expected);

@@ -1,5 +1,3 @@
-export default ({projectDir}) => {
-	return {
-		files: projectDir
-	};
-};
+export default ({projectDir}) => ({
+	files: projectDir,
+});

@@ -1,6 +1,6 @@
-import childProcess from 'child_process';
-import path from 'path';
-import {fileURLToPath} from 'url';
+import childProcess from 'node:child_process';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import getStream from 'get-stream';
 
@@ -29,7 +29,7 @@ export function execCli(args, options, cb) {
 			cwd: dirname,
 			env: {AVA_FORCE_CI: 'ci', ...env}, // Force CI to ensure the correct reporter is selected
 			// env,
-			stdio: [null, 'pipe', 'pipe']
+			stdio: [null, 'pipe', 'pipe'],
 		});
 
 		child.on('close', (code, signal) => {

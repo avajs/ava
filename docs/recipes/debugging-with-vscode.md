@@ -8,7 +8,7 @@ You can debug your tests using [Visual Studio Code](https://code.visualstudio.co
 
 You can use VS Code's “JavaScript Debug Terminal” to automatically debug AVA run on the command-line.
 
-1. From the Command Palette (<kbd>F1</kbd> or <kbd>command + shift + p</kbd> / <kbd>control + shift + p</kbd>), run `Debug: Create JavaScript Debug Terminal`
+1. From the Command Palette (<kbd>F1</kbd> or <kbd>command + shift + p</kbd> / <kbd>control + shift + p</kbd>), run `Debug: JavaScript Debug Terminal`
 2. Run `npx ava` in the terminal
 
 ## Creating a launch configuration

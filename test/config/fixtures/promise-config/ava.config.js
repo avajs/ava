@@ -1,3 +1,3 @@
 export default Promise.resolve({
-	failFast: true
+	failFast: true,
 });

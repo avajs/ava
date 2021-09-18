@@ -8,23 +8,23 @@ test('format with max depth 4', t => {
 	const exp = {
 		a: {
 			b: {
-				foo: 'bar'
-			}
-		}
+				foo: 'bar',
+			},
+		},
 	};
 	const act = {
 		a: {
 			b: {
-				foo: 'bar'
-			}
+				foo: 'bar',
+			},
 		},
 		c: {
 			d: {
 				e: {
-					foo: 'bar'
-				}
-			}
-		}
+					foo: 'bar',
+				},
+			},
+		},
 	};
 	t.deepEqual(exp, act);
 });
@@ -33,24 +33,24 @@ test('format like with max depth 4', t => {
 	const pattern = {
 		a: {
 			b: {
-				foo: 'qux'
-			}
-		}
+				foo: 'qux',
+			},
+		},
 	};
 	const actual = {
 		a: {
 			b: {
 				foo: 'bar',
-				extra: 'irrelevant'
-			}
+				extra: 'irrelevant',
+			},
 		},
 		c: {
 			d: {
 				e: {
-					foo: 'bar'
-				}
-			}
-		}
+					foo: 'bar',
+				},
+			},
+		},
 	};
 	t.like(actual, pattern);
 });

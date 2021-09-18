@@ -1,5 +1,3 @@
-module.exports = ({projectDir}) => {
-	return {
-		files: projectDir
-	};
-};
+module.exports = ({projectDir}) => ({
+	files: projectDir,
+});

@@ -9,8 +9,8 @@ test.serial(
 	beforeAndAfter,
 	{
 		cwd: cwd('removing-test'),
-		expectChanged: false
-	}
+		expectChanged: false,
+	},
 );
 
 test.serial(
@@ -19,6 +19,6 @@ test.serial(
 	{
 		cwd: cwd('removing-test'),
 		cli: ['--update-snapshots'],
-		expectChanged: true
-	}
+		expectChanged: true,
+	},
 );

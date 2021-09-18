@@ -2,6 +2,6 @@ export default {
 	extensions: {
 		js: true,
 		cjs: true,
-		mjs: true
-	}
+		mjs: true,
+	},
 };

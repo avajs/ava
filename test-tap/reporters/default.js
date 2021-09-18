@@ -1,4 +1,4 @@
-import {fileURLToPath} from 'url';
+import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
 
@@ -9,7 +9,7 @@ import TTYStream from '../helper/tty-stream.js';
 const {restoreClock} = fixReporterEnv();
 
 test(async t => {
-	const {default: Reporter} = await import('../../lib/reporters/default.js');
+	const {default: Reporter} = await import('../../lib/reporters/default.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
 
 	const run = (type, sanitizers = []) => t => {
 		t.plan(1);
@@ -18,15 +18,15 @@ test(async t => {
 
 		const tty = new TTYStream({
 			columns: 200,
-			sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timers, report.sanitizers.version]
+			sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timers, report.sanitizers.version],
 		});
 		const reporter = new Reporter({
 			extensions: ['cjs'],
 			projectDir: report.projectDir(type),
-			durationThreshold: 60000,
+			durationThreshold: 60_000,
 			reportStream: tty,
 			stdStream: tty,
-			watching: type === 'watch'
+			watching: type === 'watch',
 		});
 
 		return report[type](reporter)

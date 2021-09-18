@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
 import touch from 'touch';
@@ -92,7 +92,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 		['--update-snapshots'],
 		{
 			dirname: 'fixture/snapshots/watcher-rerun-unlink',
-			env: {AVA_FORCE_CI: 'not-ci', TEMPLATE: 'true'}
+			env: {AVA_FORCE_CI: 'not-ci', TEMPLATE: 'true'},
 		},
 		err => {
 			t.error(err);
@@ -104,13 +104,13 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 				['--watch', '--update-snapshots', 'test.cjs'],
 				{
 					dirname: 'fixture/snapshots/watcher-rerun-unlink',
-					env: {AVA_FORCE_CI: 'not-ci'}
+					env: {AVA_FORCE_CI: 'not-ci'},
 				},
 				err => {
 					t.ok(killed);
 					t.error(err);
 					t.end();
-				}
+				},
 			);
 
 			let buffer = '';
@@ -128,7 +128,7 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 					t.equal(buffer.replace(/\s/g, '').replace(END_MESSAGE.replace(/\s/g, ''), ''), '');
 				}
 			});
-		}
+		},
 	);
 });
 

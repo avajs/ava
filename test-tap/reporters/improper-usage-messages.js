@@ -9,8 +9,8 @@ test('results when nothing is applicable', t => {
 			name: 'VersionMismatchError',
 			snapPath: 'path',
 			snapVersion: 2,
-			expectedVersion: 1
-		}
+			expectedVersion: 1,
+		},
 	};
 
 	const actualOutput = improperUsageMessages(err);

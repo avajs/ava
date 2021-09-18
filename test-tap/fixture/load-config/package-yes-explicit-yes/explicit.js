@@ -1,3 +1,3 @@
 export default {
-	files: 'package-yes-explicit-yes-test-value'
+	files: 'package-yes-explicit-yes-test-value',
 };

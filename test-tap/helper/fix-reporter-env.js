@@ -1,4 +1,4 @@
-import os from 'os';
+import os from 'node:os';
 
 import fakeTimers from '@sinonjs/fake-timers';
 
@@ -15,8 +15,8 @@ export default () => {
 	const clock = fakeTimers.install({
 		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
 		toFake: [
-			'Date'
-		]
+			'Date',
+		],
 	});
 
 	// Fix line endings.
@@ -28,7 +28,7 @@ export default () => {
 	return {
 		restoreClock() {
 			clock.uninstall();
-		}
+		},
 	};
 };
 

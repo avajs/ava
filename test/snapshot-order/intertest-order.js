@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import test from '@ava/test';
 
@@ -9,8 +9,8 @@ test('snapshot files are independent of test resolution order', async t => {
 	const options = {
 		cwd: cwd('intertest-order'),
 		env: {
-			AVA_FORCE_CI: 'not-ci'
-		}
+			AVA_FORCE_CI: 'not-ci',
+		},
 	};
 
 	const snapshotPath = path.join(options.cwd, 'test.js.snap');
@@ -32,8 +32,8 @@ test('snapshot files are independent of test resolution order', async t => {
 		...options,
 		env: {
 			INTERTEST_ORDER_REVERSE: 'true',
-			...options.env
-		}
+			...options.env,
+		},
 	});
 
 	// Read the resulting file

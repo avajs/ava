@@ -5,7 +5,7 @@ import {fixture} from '../helpers/exec.js';
 const options = {
 	// The scheduler only works when not in CI, so trick it into believing it is
 	// not in CI even when it's being tested by AVA's CI.
-	env: {AVA_FORCE_CI: 'not-ci'}
+	env: {AVA_FORCE_CI: 'not-ci'},
 };
 
 function getTimestamps(stats) {

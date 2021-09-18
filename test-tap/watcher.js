@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
-import path from 'path';
-import {PassThrough} from 'stream';
+import EventEmitter from 'node:events';
+import path from 'node:path';
+import {PassThrough} from 'node:stream';
 
 import fakeTimers from '@sinonjs/fake-timers';
 import ignoreByDefault from 'ignore-by-default';
@@ -54,7 +54,7 @@ group('chokidar', (beforeEach, test, group) => {
 
 	beforeEach(() => {
 		chokidar = {
-			watch: sinon.stub()
+			watch: sinon.stub(),
 		};
 		_testOnlyReplaceChokidar(chokidar);
 
@@ -64,13 +64,13 @@ group('chokidar', (beforeEach, test, group) => {
 		reporter = {
 			endRun: sinon.spy(),
 			lineWriter: {
-				writeLine: sinon.spy()
-			}
+				writeLine: sinon.spy(),
+			},
 		};
 
 		api = {
 			on() {},
-			run: sinon.stub()
+			run: sinon.stub(),
 		};
 
 		resetRunStatus = () => {
@@ -92,8 +92,8 @@ group('chokidar', (beforeEach, test, group) => {
 					timeouts: 0,
 					todoTests: 0,
 					uncaughtExceptions: 0,
-					unhandledRejections: 0
-				}
+					unhandledRejections: 0,
+				},
 			};
 
 			return runStatus;
@@ -107,8 +107,8 @@ group('chokidar', (beforeEach, test, group) => {
 			toFake: [
 				'setImmediate',
 				'setTimeout',
-				'clearTimeout'
-			]
+				'clearTimeout',
+			],
 		});
 
 		chokidarEmitter = new EventEmitter();
@@ -118,14 +118,14 @@ group('chokidar', (beforeEach, test, group) => {
 		files = [
 			'test.cjs',
 			'test-*.cjs',
-			'test/**/*.cjs'
+			'test/**/*.cjs',
 		];
 		defaultApiOptions = {
 			clearLogOnNextRun: false,
 			previousFailures: 0,
 			runOnlyExclusive: false,
 			runVector: 1,
-			updateSnapshots: false
+			updateSnapshots: false,
 		};
 
 		resetRunStatus();
@@ -180,8 +180,8 @@ group('chokidar', (beforeEach, test, group) => {
 			{
 				cwd: process.cwd(),
 				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'ava.config.cjs'],
-				ignoreInitial: true
-			}
+				ignoreInitial: true,
+			},
 		]);
 	});
 
@@ -196,8 +196,8 @@ group('chokidar', (beforeEach, test, group) => {
 			{
 				cwd: process.cwd(),
 				ignored: [...defaultIgnore.map(dir => `${dir}/**/*`), '**/node_modules/**/*', '**/*.snap.md', 'ava.config.js', 'ava.config.cjs', 'bar.cjs', 'qux.cjs'],
-				ignoreInitial: true
-			}
+				ignoreInitial: true,
+			},
 		]);
 	});
 
@@ -229,18 +229,18 @@ group('chokidar', (beforeEach, test, group) => {
 		{
 			label: 'is added',
 			fire: add,
-			event: 'add'
+			event: 'add',
 		},
 		{
 			label: 'changes',
 			fire: change,
-			event: 'change'
+			event: 'change',
 		},
 		{
 			label: 'is removed',
 			fire: unlink,
-			event: 'unlink'
-		}
+			event: 'unlink',
+		},
 	]) {
 		test(`logs a debug message when a file is ${variant.label}`, t => {
 			t.plan(2);
@@ -255,16 +255,16 @@ group('chokidar', (beforeEach, test, group) => {
 	for (const variant of [
 		{
 			label: 'is added',
-			fire: add
+			fire: add,
 		},
 		{
 			label: 'changes',
-			fire: change
+			fire: change,
 		},
 		{
 			label: 'is removed',
-			fire: unlink
-		}
+			fire: unlink,
+		},
 	]) {
 		test(`reruns initial tests when a source file ${variant.label}`, t => {
 			t.plan(4);
@@ -286,7 +286,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 
 				// Finish is only called after the run promise fulfils
@@ -304,16 +304,16 @@ group('chokidar', (beforeEach, test, group) => {
 	for (const variant of [
 		{
 			label: 'failures',
-			prop: 'failedTests'
+			prop: 'failedTests',
 		},
 		{
 			label: 'rejections',
-			prop: 'unhandledRejections'
+			prop: 'unhandledRejections',
 		},
 		{
 			label: 'exceptions',
-			prop: 'uncaughtExceptions'
-		}
+			prop: 'uncaughtExceptions',
+		},
 	]) {
 		test(`does not clear log if the previous run had ${variant.label}`, t => {
 			t.plan(2);
@@ -328,7 +328,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
-					runVector: 2
+					runVector: 2,
 				}}]);
 
 				change();
@@ -337,7 +337,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.thirdCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 3
+					runVector: 3,
 				}}]);
 			});
 		});
@@ -439,12 +439,12 @@ group('chokidar', (beforeEach, test, group) => {
 	for (const variant of [
 		{
 			label: 'is added',
-			fire: add
+			fire: add,
 		},
 		{
 			label: 'changes',
-			fire: change
-		}
+			fire: change,
+		},
 	]) {
 		test(`(re)runs a test file when it ${variant.label}`, t => {
 			t.plan(4);
@@ -466,7 +466,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.resolve('test.cjs')], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 
 				// The endRun method is only called after the run promise fulfills
@@ -494,7 +494,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.strictSame(api.run.secondCall.args, [{files: [path.resolve('test-one.cjs'), path.resolve('test-two.cjs')], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
-				runVector: 2
+				runVector: 2,
 			}}]);
 		});
 	});
@@ -512,7 +512,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
-				runVector: 2
+				runVector: 2,
 			}}]);
 		});
 	});
@@ -542,7 +542,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.strictSame(api.run.secondCall.args, [{files: [path.resolve('foo-bar.cjs'), path.resolve('foo-baz.cjs')], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
-				runVector: 2
+				runVector: 2,
 			}}]);
 		});
 	});
@@ -561,7 +561,7 @@ group('chokidar', (beforeEach, test, group) => {
 			t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 				...defaultApiOptions,
 				clearLogOnNextRun: true,
-				runVector: 2
+				runVector: 2,
 			}}]);
 		});
 	});
@@ -622,7 +622,7 @@ group('chokidar', (beforeEach, test, group) => {
 					...defaultApiOptions,
 					clearLogOnNextRun: false,
 					runVector: 2,
-					updateSnapshots: input === 'u'
+					updateSnapshots: input === 'u',
 				}}]);
 			});
 		});
@@ -794,11 +794,11 @@ group('chokidar', (beforeEach, test, group) => {
 					timeouts: 0,
 					todoTests: 0,
 					uncaughtExceptions: 0,
-					unhandledRejections: 0
+					unhandledRejections: 0,
 				},
 				on(event, fn) {
 					runStatusEmitter.on(event, fn);
-				}
+				},
 			};
 		});
 
@@ -819,7 +819,7 @@ group('chokidar', (beforeEach, test, group) => {
 			const absFiles = files.map(relFile => path.resolve(relFile));
 			apiEmitter.emit('run', {
 				files: absFiles,
-				status: runStatus
+				status: runStatus,
 			});
 			emitDependencies(path.resolve(files[0]), [path.resolve('dep-1.cjs'), path.resolve('dep-3.cjs')]);
 			emitDependencies(path.resolve(files[1]), [path.resolve('dep-2.cjs'), path.resolve('dep-3.cjs')]);
@@ -839,7 +839,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.cjs'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -854,7 +854,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -873,8 +873,8 @@ group('chokidar', (beforeEach, test, group) => {
 					runtimeOptions: {
 						...defaultApiOptions,
 						clearLogOnNextRun: true,
-						runVector: 2
-					}
+						runVector: 2,
+					},
 				}]);
 			});
 		});
@@ -890,7 +890,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.cjs'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -906,7 +906,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '2.cjs'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -922,7 +922,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.resolve(path.join('test', '1.cjs'))], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -930,12 +930,12 @@ group('chokidar', (beforeEach, test, group) => {
 		for (const variant of [
 			{
 				desc: 'does not track ignored dependencies',
-				ignoredByWatcher: ['dep-2.cjs']
+				ignoredByWatcher: ['dep-2.cjs'],
 			},
 			{
 				desc: 'exclusion patterns affect tracked source dependencies',
-				ignoredByWatcher: ['dep-2.cjs']
-			}
+				ignoredByWatcher: ['dep-2.cjs'],
+			},
 		]) {
 			test(variant.desc, t => {
 				t.plan(2);
@@ -952,7 +952,7 @@ group('chokidar', (beforeEach, test, group) => {
 					t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 						...defaultApiOptions,
 						clearLogOnNextRun: true,
-						runVector: 2
+						runVector: 2,
 					}}]);
 				});
 			});
@@ -974,7 +974,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [path.join('test', '1.cjs')], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -999,7 +999,7 @@ group('chokidar', (beforeEach, test, group) => {
 			// Ensure `test/1.js` also depends on the excluded files
 			emitDependencies(
 				path.join('test', '1.cjs'),
-				[...excludedFiles.map(relPath => path.resolve(relPath)), 'dep-1.cjs']
+				[...excludedFiles.map(relPath => path.resolve(relPath)), 'dep-1.cjs'],
 			);
 
 			// Modify all excluded files
@@ -1014,7 +1014,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1072,11 +1072,11 @@ group('chokidar', (beforeEach, test, group) => {
 					timeouts: 0,
 					todoTests: 0,
 					uncaughtExceptions: 0,
-					unhandledRejections: 0
+					unhandledRejections: 0,
 				},
 				on(event, fn) {
 					runStatusEmitter.on(event, fn);
-				}
+				},
 			};
 		});
 
@@ -1094,12 +1094,12 @@ group('chokidar', (beforeEach, test, group) => {
 			const watcher = start();
 			apiEmitter.emit('run', {
 				files: [t1Absolute],
-				status: runStatus
+				status: runStatus,
 			});
 
 			runStatusEmitter.emit('stateChange', {
 				type: 'test-failed',
-				testFile: t1Absolute
+				testFile: t1Absolute,
 			});
 
 			done();
@@ -1118,7 +1118,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t1Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1153,11 +1153,11 @@ group('chokidar', (beforeEach, test, group) => {
 					timeouts: 0,
 					todoTests: 0,
 					uncaughtExceptions: 0,
-					unhandledRejections: 0
+					unhandledRejections: 0,
 				},
 				on(event, fn) {
 					runStatusEmitter.on(event, fn);
-				}
+				},
 			};
 		});
 
@@ -1174,7 +1174,7 @@ group('chokidar', (beforeEach, test, group) => {
 				skippedTests: 0,
 				todoTests: 0,
 				uncaughtExceptions: 0,
-				unhandledRejections: 0
+				unhandledRejections: 0,
 			});
 			runStatusEmitter.emit('stateChange', {type: 'worker-finished', testFile});
 		};
@@ -1199,7 +1199,7 @@ group('chokidar', (beforeEach, test, group) => {
 			const watcher = start();
 			apiEmitter.emit('run', {
 				files: [t1Absolute, t2Absolute, t3Absolute, t4Absolute],
-				status: runStatus
+				status: runStatus,
 			});
 			emitStats(t1Absolute, true);
 			emitStats(t2Absolute, true);
@@ -1223,7 +1223,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute, t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1240,7 +1240,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...options,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1256,7 +1256,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t1Absolute, t2Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1275,7 +1275,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1293,7 +1293,7 @@ group('chokidar', (beforeEach, test, group) => {
 				t.strictSame(api.run.secondCall.args, [{files: [t3Absolute, t4Absolute], filter: [], runtimeOptions: {
 					...defaultApiOptions,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1328,11 +1328,11 @@ group('chokidar', (beforeEach, test, group) => {
 					timeouts: 0,
 					todoTests: 0,
 					uncaughtExceptions: 0,
-					unhandledRejections: 0
+					unhandledRejections: 0,
 				},
 				on(event, fn) {
 					runStatusEmitter.on(event, fn);
-				}
+				},
 			};
 		});
 
@@ -1349,7 +1349,7 @@ group('chokidar', (beforeEach, test, group) => {
 			const filesAbsolute = [path.join('test', '1.cjs'), path.join('test', '2.cjs')].map(file => path.resolve(file));
 			apiEmitter.emit('run', {
 				files,
-				status: runStatus
+				status: runStatus,
 			});
 
 			if (seedFailures) {
@@ -1374,7 +1374,7 @@ group('chokidar', (beforeEach, test, group) => {
 			return debounce().then(() => {
 				apiEmitter.emit('run', {
 					files: [fileAbsolute],
-					status: runStatus
+					status: runStatus,
 				});
 				done();
 
@@ -1389,12 +1389,12 @@ group('chokidar', (beforeEach, test, group) => {
 			seed((files, filesAbsolute) => {
 				runStatusEmitter.emit('stateChange', {
 					type: 'test-failed',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				runStatusEmitter.emit('stateChange', {
 					type: 'uncaught-exception',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				other = files[1];
@@ -1406,7 +1406,7 @@ group('chokidar', (beforeEach, test, group) => {
 					...defaultApiOptions,
 					previousFailures: 2,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1419,12 +1419,12 @@ group('chokidar', (beforeEach, test, group) => {
 			seed((files, filesAbsolute) => {
 				runStatusEmitter.emit('stateChange', {
 					type: 'test-failed',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				runStatusEmitter.emit('stateChange', {
 					type: 'test-failed',
-					testFile: filesAbsolute[1]
+					testFile: filesAbsolute[1],
 				});
 
 				first = files[0];
@@ -1436,7 +1436,7 @@ group('chokidar', (beforeEach, test, group) => {
 					...defaultApiOptions,
 					previousFailures: 1,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1449,12 +1449,12 @@ group('chokidar', (beforeEach, test, group) => {
 			seed((files, filesAbsolute) => {
 				runStatusEmitter.emit('stateChange', {
 					type: 'test-failed',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				runStatusEmitter.emit('stateChange', {
 					type: 'uncaught-exception',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				same = files[0];
@@ -1466,7 +1466,7 @@ group('chokidar', (beforeEach, test, group) => {
 					...defaultApiOptions,
 					previousFailures: 0,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});
@@ -1480,12 +1480,12 @@ group('chokidar', (beforeEach, test, group) => {
 			seed((files, filesAbsolute) => {
 				runStatusEmitter.emit('stateChange', {
 					type: 'test-failed',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				runStatusEmitter.emit('stateChange', {
 					type: 'uncaught-exception',
-					testFile: filesAbsolute[0]
+					testFile: filesAbsolute[0],
 				});
 
 				same = files[0];
@@ -1500,7 +1500,7 @@ group('chokidar', (beforeEach, test, group) => {
 					...defaultApiOptions,
 					previousFailures: 0,
 					clearLogOnNextRun: true,
-					runVector: 2
+					runVector: 2,
 				}}]);
 			});
 		});

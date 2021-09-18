@@ -1,3 +1,3 @@
 export default {
-	workerThreads: false
+	workerThreads: false,
 };

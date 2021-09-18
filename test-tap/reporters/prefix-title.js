@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import figures from 'figures';
 import {test} from 'tap';
@@ -33,17 +33,33 @@ test('removes __tests__ from path', t => {
 	t.end();
 });
 
-test('removes .spec from path', t => {
+test('removes .spec from file', t => {
 	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend/run-status.spec.cjs'), 'title'), `backend${sep}run-status${sep}title`);
 	t.end();
 });
 
-test('removes .test from path', t => {
-	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend/run-status.test.cjs'), 'title'), `backend${sep}run-status${sep}title`);
+test('retains .spec elsewhere in path', t => {
+	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend.spec/run-status.cjs'), 'title'), `backend.spec${sep}run-status${sep}title`);
 	t.end();
 });
 
-test('removes test- from path', t => {
+test('removes .test from file', t => {
+	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend/run-status.test.cjs'), 'title'), `backend${sep}run-status${sep}title`);
+	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend/run-status.tests.cjs'), 'title'), `backend${sep}run-status.tests${sep}title`);
+	t.end();
+});
+
+test('retains .test elsewhere in path', t => {
+	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend.test/run-status.cjs'), 'title'), `backend.test${sep}run-status${sep}title`);
+	t.end();
+});
+
+test('removes test- from file', t => {
 	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend/test-run-status.cjs'), 'title'), `backend${sep}run-status${sep}title`);
+	t.end();
+});
+
+test('retains test- elsewhere in path', t => {
+	t.equal(prefixTitle(['cjs'], path.sep, path.normalize('backend-test/run-status.cjs'), 'title'), `backend-test${sep}run-status${sep}title`);
 	t.end();
 });

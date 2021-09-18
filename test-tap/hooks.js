@@ -5,12 +5,10 @@ import {set as setOptions} from '../lib/worker/options.cjs';
 
 setOptions({});
 
-const promiseEnd = (runner, next) => {
-	return new Promise(resolve => {
-		resolve(runner.once('finish'));
-		next(runner);
-	}).then(() => runner);
-};
+const promiseEnd = (runner, next) => new Promise(resolve => {
+	resolve(runner.once('finish'));
+	next(runner);
+}).then(() => runner);
 
 test('before', t => {
 	t.plan(1);
@@ -485,67 +483,63 @@ test('ensure hooks run only around tests', t => {
 	});
 });
 
-test('shared context', t => {
-	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
-			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
-				t.fail();
-			}
-		});
-
-		runner.chain.before(a => {
-			a.deepEqual(a.context, {});
-			a.context.arr = ['a'];
-			a.context.prop = 'before';
-		});
-
-		runner.chain.after(a => {
-			a.deepEqual(a.context.arr, ['a', 'b', 'c', 'd']);
-			a.is(a.context.prop, 'before');
-		});
-
-		runner.chain.beforeEach(a => {
-			a.deepEqual(a.context.arr, ['a']);
-			a.context.arr.push('b');
-			a.is(a.context.prop, 'before');
-			a.context.prop = 'beforeEach';
-		});
-
-		runner.chain('test', a => {
-			a.pass();
-			a.deepEqual(a.context.arr, ['a', 'b']);
-			a.context.arr.push('c');
-			a.is(a.context.prop, 'beforeEach');
-			a.context.prop = 'test';
-		});
-
-		runner.chain.afterEach(a => {
-			a.deepEqual(a.context.arr, ['a', 'b', 'c']);
-			a.context.arr.push('d');
-			a.is(a.context.prop, 'test');
-			a.context.prop = 'afterEach';
-		});
+test('shared context', t => promiseEnd(new Runner({file: import.meta.url}), runner => {
+	runner.on('stateChange', evt => {
+		if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
+			t.fail();
+		}
 	});
-});
 
-test('shared context of any type', t => {
-	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
-			if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
-				t.fail();
-			}
-		});
-
-		runner.chain.beforeEach(a => {
-			a.context = 'foo';
-		});
-
-		runner.chain('test', a => {
-			a.pass();
-			a.is(a.context, 'foo');
-		});
+	runner.chain.before(a => {
+		a.deepEqual(a.context, {});
+		a.context.arr = ['a'];
+		a.context.prop = 'before';
 	});
-});
+
+	runner.chain.after(a => {
+		a.deepEqual(a.context.arr, ['a', 'b', 'c', 'd']);
+		a.is(a.context.prop, 'before');
+	});
+
+	runner.chain.beforeEach(a => {
+		a.deepEqual(a.context.arr, ['a']);
+		a.context.arr.push('b');
+		a.is(a.context.prop, 'before');
+		a.context.prop = 'beforeEach';
+	});
+
+	runner.chain('test', a => {
+		a.pass();
+		a.deepEqual(a.context.arr, ['a', 'b']);
+		a.context.arr.push('c');
+		a.is(a.context.prop, 'beforeEach');
+		a.context.prop = 'test';
+	});
+
+	runner.chain.afterEach(a => {
+		a.deepEqual(a.context.arr, ['a', 'b', 'c']);
+		a.context.arr.push('d');
+		a.is(a.context.prop, 'test');
+		a.context.prop = 'afterEach';
+	});
+}));
+
+test('shared context of any type', t => promiseEnd(new Runner({file: import.meta.url}), runner => {
+	runner.on('stateChange', evt => {
+		if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
+			t.fail();
+		}
+	});
+
+	runner.chain.beforeEach(a => {
+		a.context = 'foo';
+	});
+
+	runner.chain('test', a => {
+		a.pass();
+		a.is(a.context, 'foo');
+	});
+}));
 
 test('teardowns cannot be used in hooks', async t => {
 	let hookFailure = null;

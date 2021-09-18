@@ -1,4 +1,4 @@
-import {URL} from 'url';
+import {URL} from 'node:url';
 
 export namespace SharedWorker {
 	export type ProtocolIdentifier = 'experimental';

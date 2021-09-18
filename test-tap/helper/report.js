@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath, pathToFileURL} from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 
-import globby from 'globby';
+import {globbySync} from 'globby';
 import replaceString from 'replace-string';
 
 import Api from '../../lib/api.js';
@@ -47,7 +47,7 @@ exports.sanitizers = {
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
 	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
-	version: string => replaceString(string, `v${pkg.version}`, 'VERSION')
+	version: string => replaceString(string, `v${pkg.version}`, 'VERSION'),
 };
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -62,10 +62,10 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		main: (await providerManager.babel(projectDir)).main({
 			config: {
 				testOptions: {
-					plugins: ['@babel/plugin-proposal-do-expressions']
-				}
-			}
-		})
+					plugins: ['@babel/plugin-proposal-do-expressions'],
+				},
+			},
+		}),
 	}];
 
 	const options = {
@@ -86,8 +86,8 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		chalkOptions: {level: 1},
 		workerThreads: false,
 		env: {
-			NODE_NO_WARNINGS: '1'
-		}
+			NODE_NO_WARNINGS: '1',
+		},
 	};
 
 	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
@@ -95,7 +95,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 	const api = new Api(options);
 	api.on('run', plan => reporter.startRun(plan));
 
-	const files = globby.sync('*.cjs', {
+	const files = globbySync('*.cjs', {
 		absolute: true,
 		brace: true,
 		case: false,
@@ -109,7 +109,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		matchBase: false,
 		onlyFiles: true,
 		stats: false,
-		unique: true
+		unique: true,
 	}).sort();
 	if (type !== 'watch') {
 		return api.run({files, filter}).then(() => {
@@ -141,6 +141,6 @@ exports.edgeCases = reporter => run('edgeCases', reporter, {
 	filter: [
 		{pattern: '**/*'},
 		{pattern: '**/test.cjs', lineNumbers: [2]},
-		{pattern: '**/ast-syntax-error.cjs', lineNumbers: [7]}
-	]
+		{pattern: '**/ast-syntax-error.cjs', lineNumbers: [7]},
+	],
 });

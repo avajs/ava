@@ -57,7 +57,7 @@ test('handle whitespace', t => {
 test('ignore non-matching patterns', t => {
 	t.strictSame(
 		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [2]}, {pattern: 'foo.js', lineNumbers: [3]}]),
-		[2]
+		[2],
 	);
 	t.end();
 });
@@ -65,7 +65,7 @@ test('ignore non-matching patterns', t => {
 test('deduplicate line numbers', t => {
 	t.strictSame(
 		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [2, 3, 4]}, {pattern: 'test.js', lineNumbers: [3, 4, 5]}]),
-		[2, 3, 4, 5]
+		[2, 3, 4, 5],
 	);
 	t.end();
 });
@@ -73,7 +73,7 @@ test('deduplicate line numbers', t => {
 test('sort line numbers', t => {
 	t.strictSame(
 		getApplicableLineNumbers('test.js', [{pattern: 'test.js', lineNumbers: [1, 3, 5]}, {pattern: 'test.js', lineNumbers: [2, 4, 6]}]),
-		[1, 2, 3, 4, 5, 6]
+		[1, 2, 3, 4, 5, 6],
 	);
 	t.end();
 });

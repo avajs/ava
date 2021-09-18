@@ -12,7 +12,7 @@ test.serial('cat', t => {
 	t.pass();
 });
 
-test.todo('dog');
+test.todo('dog'); // eslint-disable-line ava/no-todo-test
 
 /* eslint-disable max-statements-per-line, ava/no-inline-assertions */
 test('sun', t => t.pass()); test('moon', t => {

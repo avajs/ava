@@ -1,3 +1,3 @@
 export default {
-	extensions: ['js', 'cjs', 'mjs']
+	extensions: ['js', 'cjs', 'mjs'],
 };

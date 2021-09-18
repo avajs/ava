@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.2.
+This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.4.
 
 ## Enabling AVA's support for TypeScript test files
 
@@ -94,6 +94,8 @@ If your `package.json` does not have `"type": "module"`, then this is the AVA co
 It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
 
 ## Writing tests
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-basic?file=source%2Ftest.ts&terminal=test&view=editor)
 
 Create a `test.ts` file.
 
@@ -185,6 +187,8 @@ test('providedTitle', macro, '3 * 3', 9);
 ```
 
 ## Typing [`t.context`](../01-writing-tests.md#test-context)
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-context?file=source%2Ftest.ts&terminal=test&view=editor)
 
 By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` (in AVA 4 this is `TestFn<Context>`) which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 

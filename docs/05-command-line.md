@@ -80,6 +80,8 @@ When using `npm test`, you can pass positional arguments directly `npm test test
 
 ## Running tests with matching titles
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/matching-titles?file=test.js&terminal=test&view=editor)
+
 The `--match` flag allows you to run just the tests that have a matching title. This is achieved with simple wildcard patterns. Patterns are case insensitive. See [`matcher`](https://github.com/sindresorhus/matcher) for more details.
 
 Match titles ending with `foo`:
@@ -154,6 +156,8 @@ test(function foo(t) {
 
 ## Running tests at specific line numbers
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/specific-line-numbers?file=test.js&terminal=test&view=editor)
+
 AVA lets you run tests exclusively by referring to their line numbers. Target a single line, a range of lines or both. You can select any line number of a test.
 
 The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
@@ -214,7 +218,7 @@ When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
-AVA may cache certain files, especially when you use our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can reset the cache by running:
+AVA itself does not cache files unless used with our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can try resetting the cache by running:
 
 ```console
 npx ava reset-cache
@@ -235,6 +239,8 @@ AVA 3 defaults to a less verbose reporter:
 Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
 
 ### TAP reporter
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/tap-reporter?file=test.js&terminal=test&view=editor)
 
 AVA supports the TAP format and thus is compatible with [any TAP reporter](https://github.com/sindresorhus/awesome-tap#reporters). Use the `--tap` flag to enable TAP output.
 

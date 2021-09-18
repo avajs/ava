@@ -1,6 +1,6 @@
 module.exports = {
 	files: [
-		'*.js'
+		'*.js',
 	],
-	cache: false
+	cache: false,
 };

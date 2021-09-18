@@ -12,7 +12,7 @@ function ava(fn) {
 		failWithoutAssertions: true,
 		fn,
 		metadata: {type: 'test'},
-		title: '[anonymous]'
+		title: '[anonymous]',
 	});
 }
 
@@ -50,90 +50,74 @@ test('assertion plan is tested after returned promise resolves', t => {
 	});
 });
 
-test('missing assertion will fail the test', t => {
-	return ava(a => {
-		a.plan(2);
+test('missing assertion will fail the test', t => ava(a => {
+	a.plan(2);
 
-		return new Promise(resolve => {
-			setTimeout(() => {
-				a.pass();
-				resolve();
-			}, 200);
-		});
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.assertion, 'plan');
-	});
-});
-
-test('extra assertion will fail the test', t => {
-	return ava(a => {
-		a.plan(2);
-
+	return new Promise(resolve => {
 		setTimeout(() => {
 			a.pass();
-			a.pass();
+			resolve();
 		}, 200);
-
-		return new Promise(resolve => {
-			setTimeout(() => {
-				a.pass();
-				resolve();
-			}, 500);
-		});
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.assertion, 'plan');
 	});
-});
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.assertion, 'plan');
+}));
+
+test('extra assertion will fail the test', t => ava(a => {
+	a.plan(2);
+
+	setTimeout(() => {
+		a.pass();
+		a.pass();
+	}, 200);
+
+	return new Promise(resolve => {
+		setTimeout(() => {
+			a.pass();
+			resolve();
+		}, 500);
+	});
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.assertion, 'plan');
+}));
 
 test('assert pass', t => {
-	const instance = ava(a => {
-		return pass().then(() => {
-			a.pass();
-		});
-	});
+	const instance = ava(a => pass().then(() => {
+		a.pass();
+	}));
 	return instance.run().then(result => {
 		t.equal(result.passed, true);
 		t.equal(instance.assertCount, 1);
 	});
 });
 
-test('assert fail', t => {
-	return ava(a => {
-		return pass().then(() => {
-			a.fail();
-		});
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'AssertionError');
-	});
-});
+test('assert fail', t => ava(a => pass().then(() => {
+	a.fail();
+})).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+}));
 
-test('reject', t => {
-	return ava(a => {
-		return fail().then(() => {
-			a.pass();
-		});
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.message, 'Rejected promise returned by test');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
-		t.match(result.error.values[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
-	});
-});
+test('reject', t => ava(a => fail().then(() => {
+	a.pass();
+})).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+	t.equal(result.error.message, 'Rejected promise returned by test');
+	t.equal(result.error.values.length, 1);
+	t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
+	t.match(result.error.values[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
+}));
 
-test('reject with non-Error', t => {
-	return ava(() => {
-		return Promise.reject('failure'); // eslint-disable-line prefer-promise-reject-errors
-	}).run().then(result => {
-		t.equal(result.passed, false);
-		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.message, 'Rejected promise returned by test');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
-		t.match(result.error.values[0].formatted, /failure/);
-	});
-});
+test('reject with non-Error', t => ava(() =>
+	Promise.reject('failure'), // eslint-disable-line prefer-promise-reject-errors
+).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+	t.equal(result.error.message, 'Rejected promise returned by test');
+	t.equal(result.error.values.length, 1);
+	t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
+	t.match(result.error.values[0].formatted, /failure/);
+}));

@@ -1,5 +1,5 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 
@@ -49,12 +49,12 @@ test.serial('loads .mjs config', ok('mjs'), (t, conf) => {
 
 test.serial('handles errors when loading .mjs config', notOk({
 	fixture: 'mjs',
-	configFile: 'error.mjs'
+	configFile: 'error.mjs',
 }));
 
 test.serial('fails when .mjs config does not have a default export', notOk({
 	fixture: 'mjs',
-	configFile: 'no-default-export.mjs'
+	configFile: 'no-default-export.mjs',
 }));
 
 test.serial('loads .js config as CommonJS', ok('js-as-cjs'), (t, conf) => {
@@ -67,12 +67,12 @@ test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 
 test.serial('handles errors when loading .js config as ESM', notOk({
 	fixture: 'js-as-esm',
-	configFile: 'error.js'
+	configFile: 'error.js',
 }));
 
 test.serial('fails when .js config does not have a default export', notOk({
 	fixture: 'js-as-esm',
-	configFile: 'no-default-export.js'
+	configFile: 'no-default-export.js',
 }));
 
 test.serial('throws an error if .js, .cjs and .mjs configs are present', notOk('file-yes-cjs-yes-mjs-yes'));

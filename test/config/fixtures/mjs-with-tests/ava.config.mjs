@@ -1,3 +1,3 @@
 export default {
-	files: ['dir-a/*.js']
+	files: ['dir-a/*.js'],
 };
