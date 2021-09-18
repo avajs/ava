@@ -9,7 +9,6 @@ import Api from '../../lib/api.js';
 import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
 import pkg from '../../lib/pkg.cjs';
-import providerManager from '../../lib/provider-manager.js';
 
 _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 
@@ -56,17 +55,7 @@ exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLo
 const run = async (type, reporter, {match = [], filter} = {}) => {
 	const projectDir = exports.projectDir(type);
 
-	const providers = [{
-		type: 'babel',
-		level: 'ava-3',
-		main: (await providerManager.babel(projectDir)).main({
-			config: {
-				testOptions: {
-					plugins: ['@babel/plugin-proposal-do-expressions'],
-				},
-			},
-		}),
-	}];
+	const providers = [];
 
 	const options = {
 		extensions: ['cjs'],

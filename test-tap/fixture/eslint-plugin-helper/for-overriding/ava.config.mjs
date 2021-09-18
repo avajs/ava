@@ -1,7 +1,10 @@
 export default {
 	extensions: [],
-	babel: {
-		compileAsTests: ['build/helpers/*'],
+	typescript: {
+		rewritePaths: {
+			'src/': 'build/',
+		},
+		compile: false,
 		extensions: ['bar'],
 	},
 	files: ['build/tests/**/*'],

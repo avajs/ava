@@ -62,12 +62,6 @@
 ---tty-stream-chunk-separator
   [31m✖[39m test [90m[2m›[22m[39m formatted 
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m power-assert 
----tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m bad throws [31mImproper usage of `t.throws()` detected[39m
----tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m bad notThrows [31mImproper usage of `t.notThrows()` detected[39m
----tty-stream-chunk-separator
   [31m✖[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
 ---tty-stream-chunk-separator
   [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
@@ -243,83 +237,6 @@
 
 
 
-  [1mtest [90m[2m›[22m[1m[39m power-assert[22m
-
-  [90mtest.cjs:27[39m
-
-   [90m26:[39m   const foo = '';
-  [41m 27:   t.assert(foo); [49m
-   [90m28:[39m });              
-
-  Value is not truthy:
-
-  [34m'[39m[34m[39m[34m'[39m
-
-  foo
-  [90m=>[39m [34m'[39m[34m[39m[34m'[39m
-
-  [90m› test-tap/fixture/report/regular/test.cjs:27:4[39m
-
-
-
-  [1mtest [90m[2m›[22m[1m[39m bad throws[22m
-
-  [90mtest.cjs:35[39m
-
-   [90m34:[39m                  
-  [41m 35:   t.throws(fn());[49m
-   [90m36:[39m });              
-
-  Improper usage of `t.throws()` detected
-
-  The following error was thrown, possibly before `t.throws()` could be called:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  Try wrapping the first argument to `t.throws()` in a function:
-
-    [36mt.throws(() => { [39m[90m/* your code here */[39m[36m })[39m
-
-  Visit the following URL for more details:
-
-    [34m[4mhttps://github.com/avajs/ava/blob/VERSION/docs/03-assertions.md#throwsfn-expected-message[24m[39m
-
-  [90m› fn (test-tap/fixture/report/regular/test.cjs:32:9)[39m
-  [90m› test-tap/fixture/report/regular/test.cjs:35:11[39m
-
-
-
-  [1mtest [90m[2m›[22m[1m[39m bad notThrows[22m
-
-  [90mtest.cjs:43[39m
-
-   [90m42:[39m                     
-  [41m 43:   t.notThrows(fn());[49m
-   [90m44:[39m });                 
-
-  Improper usage of `t.notThrows()` detected
-
-  The following error was thrown, possibly before `t.notThrows()` could be called:
-
-  [35mError[39m [90m{[39m
-    message: [34m'[39m[34merr[39m[34m'[39m[90m,[39m
-  [90m}[39m
-
-  Try wrapping the first argument to `t.notThrows()` in a function:
-
-    [36mt.notThrows(() => { [39m[90m/* your code here */[39m[36m })[39m
-
-  Visit the following URL for more details:
-
-    [34m[4mhttps://github.com/avajs/ava/blob/VERSION/docs/03-assertions.md#throwsfn-expected-message[24m[39m
-
-  [90m› fn (test-tap/fixture/report/regular/test.cjs:40:9)[39m
-  [90m› test-tap/fixture/report/regular/test.cjs:43:14[39m
-
-
-
   [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
 
   Error thrown in test:
@@ -347,7 +264,7 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17[39m
+  [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4[39m
 
 
@@ -435,7 +352,7 @@
 
   [90m─[39m
 
-  [31m16 tests failed[39m
+  [31m13 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m

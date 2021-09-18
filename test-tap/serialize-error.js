@@ -49,21 +49,6 @@ test('sets avaAssertionError to true if indeed an assertion error', t => {
 	t.end();
 });
 
-test('includes statements of assertion errors', t => {
-	const error = new avaAssert.AssertionError({
-		assertion: 'true',
-	});
-	error.statements = [
-		['actual.a[0]', '1'],
-		['actual.a', '[1]'],
-		['actual', '{a: [1]}'],
-	];
-
-	const serializedError = serialize(error);
-	t.equal(serializedError.statements, error.statements);
-	t.end();
-});
-
 test('includes values of assertion errors', t => {
 	const error = new avaAssert.AssertionError({
 		assertion: 'is',

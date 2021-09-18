@@ -56,6 +56,8 @@ AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) b
 
 ## Why are the enhanced assertion messages not shown?
 
+Enhanced assertion messages are no longer supported in AVA 4.
+
 Ensure that the first parameter passed into your test is named `t`. This is a requirement of [`power-assert`](https://github.com/power-assert-js/power-assert), the library that provides the [enhanced messages](./03-assertions.md#enhanced-assertion-messages).
 
 ```js

@@ -2,7 +2,13 @@
 ---tty-stream-chunk-separator
   [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m
 ---tty-stream-chunk-separator
-  [31m✖ Line numbers for ast-syntax-error.cjs did not match any tests[39m
+
+  [1mUncaught exception in ast-syntax-error.cjs[22m
+
+  SyntaxError: Unexpected token 'do'
+
+---tty-stream-chunk-separator
+  [31m✖ ast-syntax-error.cjs exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [31m✖ No tests found in ava-import-no-test-declaration.cjs[39m
 ---tty-stream-chunk-separator
@@ -43,5 +49,5 @@
 ---tty-stream-chunk-separator
   [90m─[39m
 
-  [31m2 uncaught exceptions[39m
+  [31m3 uncaught exceptions[39m
 ---tty-stream-chunk-separator

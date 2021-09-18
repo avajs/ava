@@ -7,20 +7,12 @@ import {test} from 'tap';
 
 import Api from '../lib/api.js';
 import {normalizeGlobs} from '../lib/globs.js';
-import providerManager from '../lib/provider-manager.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = path.join(__dirname, '..');
 
 async function apiCreator(options = {}) {
 	options.projectDir = options.projectDir || ROOT_DIR;
-	if (options.babelConfig !== undefined) {
-		options.providers = [{
-			type: 'babel',
-			main: (await providerManager.babel(options.projectDir)).main({config: options.babelConfig}),
-		}];
-	}
-
 	options.chalkOptions = {level: 0};
 	options.concurrency = 2;
 	options.extensions = options.extensions || ['cjs'];
@@ -330,56 +322,6 @@ for (const opt of opts) {
 			});
 	});
 
-	test(`enhanced assertion formatting necessary whitespace and empty strings - workerThreads: ${opt.workerThreads}`, async t => {
-		const expected = [
-			[
-				/foo === "" && "" === foo/,
-				/foo === ""/,
-				/foo/,
-			],
-			[
-				/!\(new Object\(foo\) instanceof Object\)/,
-				/new Object\(foo\) instanceof Object/,
-				/Object/,
-				/new Object\(foo\)/,
-				/foo/,
-			],
-			[
-				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length > 0/,
-				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\).length/,
-				/\[foo].filter\(item => {\n\s+return item === "bar";\n}\)/,
-				/\[foo]/,
-				/foo/,
-			],
-		];
-
-		t.plan(15);
-		const api = await apiCreator({
-			...opt,
-			files: ['test-tap/fixture/enhanced-assertion-formatting.cjs'],
-			babelConfig: true,
-		});
-		const errors = [];
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'test-failed') {
-					errors.push(evt.err);
-				}
-			});
-		});
-		return api.run({files: [path.join(__dirname, 'fixture/enhanced-assertion-formatting.cjs')]})
-			.then(runStatus => {
-				t.equal(errors.length, 3);
-				t.equal(runStatus.stats.passedTests, 0);
-
-				for (const [errorIndex, error] of errors.entries()) {
-					for (const [statementIndex, statement] of error.statements.entries()) {
-						t.match(statement[0], expected[errorIndex][statementIndex]);
-					}
-				}
-			});
-	});
-
 	test(`absolute paths - workerThreads:  ${opt.workerThreads}`, async t => {
 		const api = await apiCreator(opt);
 
@@ -441,20 +383,17 @@ for (const opt of opts) {
 
 		const api = await apiCreator({
 			...opt,
-			babelConfig: true,
 			projectDir: path.join(__dirname, 'fixture/caching'),
 		});
 
 		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
-				t.equal(files.filter(x => x.endsWith('.cjs')).length, 1);
-				t.equal(files.filter(x => x.endsWith('.map')).length, 1);
-				if (files.length === 3) {
+				if (files.length === 1) {
 					// This file may be written locally, but not in CI.
 					t.equal(files.filter(x => x.startsWith('failing-tests.json')).length, 1);
 				} else {
-					t.equal(files.length, 2);
+					t.equal(files.length, 0);
 				}
 			});
 	});
