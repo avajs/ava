@@ -73,11 +73,11 @@ test('renders', t => {
 
 ## Coverage reporting
 
-Follow the [coverage reporting recipe](code-coverage.md), additionally adding the `.vue` extension to the `nyc` config to instrument `.vue` files.
+Follow the [coverage reporting recipe](code-coverage.md), additionally adding the `.vue` extension to the `c8` config to instrument `.vue` files.
 
 ```json
 {
-	"nyc": {
+	"c8": {
 		"extension": [
 			".js",
 			".vue"
