@@ -2,29 +2,28 @@
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/code-coverage.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/code-coverage.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/code-coverage.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/docs/recipes/code-coverage.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/docs/recipes/code-coverage.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/code-coverage.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/code-coverage.md)
 
-Use [`nyc`] to compute the code coverage of your tests.
+Use [`c8`] to compute the code coverage of your tests.
 
-First install [`nyc`]:
+First install [`c8`]:
 
 ```
-$ npm install --save-dev nyc
+$ npm install --save-dev c8
 ```
 
-At its simplest run AVA through [`nyc`]. In your `package.json` file:
+At its simplest run AVA through [`c8`]. In your `package.json` file:
 
 ```json
 {
 	"scripts": {
-		"test": "nyc ava"
+		"test": "c8 ava"
 	}
 }
 ```
 
-You may want to exclude the `.nyc_output` and `coverage` directories from source control. Assuming you're using Git, add the following to your `.gitignore` file:
+You may want to exclude the `coverage` directory from source control. Assuming you're using Git, add the following to your `.gitignore` file:
 
 ```
-.nyc_output
 coverage
 ```
 
-[`nyc`]: https://github.com/istanbuljs/nyc
+[`c8`]: https://github.com/bcoe/c8
