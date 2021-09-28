@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 import execa from 'execa';
-import defaultsDeep from 'lodash/defaultsDeep.js';
+import defaultsDeep from 'lodash.defaultsdeep';
 import replaceString from 'replace-string';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
