@@ -131,7 +131,6 @@
 		"fs-extra": "^10.0.0",
 		"get-stream": "^6.0.1",
 		"it-first": "^1.0.6",
-		"lodash.defaultsdeep": "^4.6.1",
 		"replace-string": "^4.0.0",
 		"sinon": "^11.1.2",
 		"tap": "^15.0.9",

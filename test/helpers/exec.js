@@ -3,7 +3,6 @@ import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 import execa from 'execa';
-import defaultsDeep from 'lodash.defaultsdeep';
 import replaceString from 'replace-string';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
@@ -45,15 +44,17 @@ const forwardErrorOutput = async from => {
 
 export const fixture = async (args, options = {}) => {
 	const workingDir = options.cwd || cwd();
-	const running = execa.node(cliPath, args, defaultsDeep({
+	const running = execa.node(cliPath, args, {
+		...options,
 		env: {
+			...options.env,
 			AVA_EMIT_RUN_STATUS_OVER_IPC: 'I\'ll find a payphone baby / Take some time to talk to you',
 			TEST_AVA_IMPORT_FROM,
 		},
 		cwd: workingDir,
 		serialization: 'advanced',
 		nodeOptions: ['--require', ttySimulator],
-	}, options));
+	});
 
 	// Besides buffering stderr, if this environment variable is set, also pipe
 	// to stderr. This can be useful when debugging the tests.
