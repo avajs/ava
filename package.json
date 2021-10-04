@@ -16,7 +16,8 @@
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
 			"import": "./entrypoints/plugin.mjs",
-			"require": "./entrypoints/plugin.cjs"
+			"require": "./entrypoints/plugin.cjs",
+			"types": "./types/plugin.d.ts"
 		}
 	},
 	"type": "module",
@@ -31,8 +32,7 @@
 		"entrypoints",
 		"lib",
 		"types",
-		"index.d.ts",
-		"plugin.d.ts"
+		"index.d.ts"
 	],
 	"keywords": [
 		"🦄",
