@@ -255,7 +255,7 @@ test('context data is foo', t => {
 });
 ```
 
-Context created in `.before()` hooks is [cloned](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals) before it is passed to `.beforeEach()` hooks and / or tests. The `.after()` and `.after.always()` hooks receive the original context value.
+If `.before()` hooks treat `t.context` as an object, a shallow copy is made and passed to `.beforeEach()` hooks and / or tests. Other types of values are passed as-is. The `.after()` and `.after.always()` hooks receive the original context value.
 
 For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context is *not* shared between different tests, allowing you to set up data such that it will not leak to other tests.
 
