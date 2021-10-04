@@ -5,6 +5,10 @@
 	"license": "MIT",
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
+	"engines": {
+		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4"
+	},
+	"type": "module",
 	"bin": {
 		"ava": "entrypoints/cli.mjs"
 	},
@@ -20,10 +24,6 @@
 			"require": "./entrypoints/plugin.cjs",
 			"types": "./types/plugin.d.ts"
 		}
-	},
-	"type": "module",
-	"engines": {
-		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4"
 	},
 	"types": "./types/main.d.ts",
 	"scripts": {
