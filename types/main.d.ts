@@ -1,9 +1,9 @@
-import type {TestFn} from './types/test-fn';
+import type {TestFn} from './test-fn';
 
-export * from './types/assertions';
-export * from './types/try-fn';
-export * from './types/test-fn';
-export * from './types/subscribable';
+export * from './assertions';
+export * from './try-fn';
+export * from './test-fn';
+export * from './subscribable';
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 declare const test: TestFn;

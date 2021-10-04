@@ -11,7 +11,8 @@
 	"exports": {
 		".": {
 			"import": "./entrypoints/main.mjs",
-			"require": "./entrypoints/main.cjs"
+			"require": "./entrypoints/main.cjs",
+			"types": "./types/main.d.ts"
 		},
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
@@ -24,6 +25,7 @@
 	"engines": {
 		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4"
 	},
+	"types": "./types/main.d.ts",
 	"scripts": {
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
 		"test": "xo && tsd && npm run -s cover"
@@ -31,8 +33,7 @@
 	"files": [
 		"entrypoints",
 		"lib",
-		"types",
-		"index.d.ts"
+		"types"
 	],
 	"keywords": [
 		"🦄",
