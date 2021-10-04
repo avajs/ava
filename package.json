@@ -76,7 +76,7 @@
 		"ansi-styles": "^6.1.0",
 		"arrgv": "^1.0.2",
 		"arrify": "^3.0.0",
-		"callsites": "^3.1.0",
+		"callsites": "^4.0.0",
 		"cbor": "^8.0.0",
 		"chalk": "^4.1.2",
 		"chokidar": "^3.5.2",
