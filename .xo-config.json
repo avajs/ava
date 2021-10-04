@@ -2,6 +2,7 @@
 	"ignores": [
 		"media/**",
 		"test/config/fixtures/config-errors/test.js",
+		"test/line-numbers/fixtures/line-numbers.js",
 		"test-tap/fixture/snapshots/test-sourcemaps/build/**",
 		"test-tap/fixture/report/edgecases/ast-syntax-error.cjs",
 		"examples/typescript-*/**/*.ts"
