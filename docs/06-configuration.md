@@ -197,7 +197,7 @@ export default {
 	nonSemVerExperiments: {
 		nextGenConfig: true
 	},
-	files: ['unit-tests/**/*]
+	files: ['unit-tests/**/*']
 };
 ```
 
