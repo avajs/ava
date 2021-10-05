@@ -110,7 +110,6 @@
 		"pkg-conf": "^4.0.0",
 		"plur": "^4.0.0",
 		"pretty-ms": "^7.0.1",
-		"read-pkg": "^7.0.0",
 		"resolve-cwd": "^3.0.0",
 		"slash": "^3.0.0",
 		"stack-utils": "^2.0.3",
