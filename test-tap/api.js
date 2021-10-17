@@ -463,7 +463,7 @@ for (const opt of opts) {
 			plan.status.on('stateChange', evt => {
 				if (evt.type === 'dependencies') {
 					t.ok(testFiles.has(evt.testFile));
-					t.strictSame(evt.dependencies.slice(-3), sourceFiles);
+					t.strictSame(evt.dependencies.filter(dep => !dep.endsWith('.snap')).slice(-3), sourceFiles);
 				}
 			});
 		});
