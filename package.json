@@ -88,7 +88,6 @@
 		"code-excerpt": "^3.0.0",
 		"common-path-prefix": "^3.0.0",
 		"concordance": "^5.0.4",
-		"convert-source-map": "^1.8.0",
 		"currently-unhandled": "^0.4.1",
 		"debug": "^4.3.2",
 		"del": "^6.0.0",
