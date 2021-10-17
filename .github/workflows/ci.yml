@@ -29,7 +29,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npm run cover
       - uses: codecov/codecov-action@v2
@@ -50,7 +50,7 @@ jobs:
           node-version: ^12.22
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npm i typescript@${TS_VERSION}
         env:
@@ -68,7 +68,7 @@ jobs:
           node-version: ^12.22
           cache: npm
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "7.23" ]]; then npm install --global npm@7.23; fi
+        run: if [[ "$(npm -v)" != "8.1.2" ]]; then npm install --global npm@8.1.2; fi
       - run: npm install --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
@@ -89,7 +89,7 @@ jobs:
         with:
           node-version: ^12.22
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-shrinkwrap --no-audit
       - run: npm run cover
 
@@ -103,6 +103,6 @@ jobs:
           node-version: ^16.4
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npx xo
