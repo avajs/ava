@@ -330,7 +330,7 @@ In AVA 3, you cannot update snapshots while using `t.snapshot.skip()`.
 
 `.try()` allows you to *try* assertions without causing the test to fail.
 
-The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implemetation or macro function.
+The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implementation or macro function.
 
 `.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail.
 
