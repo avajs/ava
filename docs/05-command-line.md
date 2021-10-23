@@ -48,7 +48,7 @@ Examples:
   ava test.js:4,7-9
 ```
 
-*Note that the CLI will use your local install of AVA when available, even when run globally.*
+*Note that, for AVA 3, the CLI will use your local install of AVA when available, even when run globally. AVA 4 cannot be run globally.*
 
 AVA searches for test files using the following patterns:
 
