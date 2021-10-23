@@ -1,0 +1,14 @@
+{
+	"type": "module",
+	"ava": {
+		"files": [
+			"**/test.js"
+		],
+		"typescript": {
+			"compile": false,
+			"rewritePaths": {
+				"src/": "build/"
+			}
+		}
+	}
+}
