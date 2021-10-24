@@ -15,10 +15,11 @@ Commands:
 	                          then exit
 
 Positionals:
-  pattern  Glob patterns to select what test files to run. Leave empty if you
-           want AVA to run all test files instead. Add a colon and specify line
-           numbers of specific tests to run                             [string]
-
+  pattern  Select which test files to run. Leave empty if you want AVA to run
+           all test files as per your configuration. Accepts glob patterns,
+           directories that (recursively) contain test files, and file paths.
+           Add a colon and specify line numbers of specific tests
+           to run                                                       [string]
 Options:
   --version               Show version number                          [boolean]
   --color                 Force color output                           [boolean]

@@ -21,3 +21,21 @@ test('errors if top-level ignoredByWatcher is an empty array', async t => {
 
 	t.snapshot(cleanOutput(result.stderr), 'fails with message');
 });
+
+test('files can be filtered by directory', async t => {
+	const options = {
+		cwd: cwd('filter-by-directory'),
+	};
+
+	const result = await fixture(['directory'], options);
+	t.snapshot(result.stats.passed);
+});
+
+test('additional files can be provided', async t => {
+	const options = {
+		cwd: cwd('treat-patterns-as-files'),
+	};
+
+	const result = await fixture(['foo.js', 'foo.ts', 'missing.js', '_helper.js', 'node_modules/test.js'], options);
+	t.snapshot(result.stats.passed);
+});
