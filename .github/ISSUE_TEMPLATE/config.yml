@@ -3,6 +3,6 @@ contact_links:
   - name: Discussions
     url: https://github.com/avajs/ava/discussions
     about: Questions? Ideas? Something to share?
-  - name: Babel
-    url: https://github.com/avajs/babel/issues
-    about: Report a bug with AVA 3's Babel integration
+  - name: TypeScript compilation
+    url: https://github.com/avajs/typescript/issues
+    about: Report a bug with AVA's TypeScript integration
