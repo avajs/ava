@@ -70,7 +70,6 @@
 		"typescript"
 	],
 	"dependencies": {
-		"@concordance/react": "^2.0.0",
 		"acorn": "^8.5.0",
 		"acorn-walk": "^8.2.0",
 		"ansi-styles": "^6.1.0",
