@@ -52,12 +52,12 @@ Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
 // Start MongoDB instance
-const mongod = new MongoMemoryServer()
+const mongod = await MongoMemoryServer.create();
 
 // Create connection to Mongoose before tests are run
 test.before(async () => {
-	const uri = await mongod.getUri();
-	await mongoose.connect(uri, {useMongoClient: true});
+	const uri = mongod.getUri();
+	await mongoose.connect(uri);
 });
 ```
 
