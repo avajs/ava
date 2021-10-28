@@ -38,26 +38,26 @@ First, include the libraries you need:
 
 ```js
 // Libraries required for testing
-const test = require('ava');
-const request = require('supertest');
-const {MongoMemoryServer} = require('mongodb-memory-server');
-const mongoose = require('mongoose');
+const test = require("ava");
+const request = require("supertest");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const mongoose = require("mongoose");
 
 // Your server and models
-const app = require('../server');
-const User = require('../models/User');
+const app = require("../server");
+const User = require("../models/User");
 ```
 
 Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
 // Start MongoDB instance
-const mongod = new MongoMemoryServer()
+const mongod = await MongoMemoryServer.create();
 
 // Create connection to Mongoose before tests are run
 test.before(async () => {
-	const uri = await mongod.getUri();
-	await mongoose.connect(uri, {useMongoClient: true});
+	const uri = mongod.getUri();
+	await mongoose.connect(uri);
 });
 ```
 
@@ -68,8 +68,8 @@ You'll want to populate your database with dummy data. Here's an example:
 ```js
 test.beforeEach(async () => {
 	const user = new User({
-		email: 'one@example.com',
-		name: 'One'
+		email: "one@example.com",
+		name: "One",
 	});
 	await user.save();
 });
@@ -86,30 +86,28 @@ Now you can use SuperTest to send off a request for your app endpoint. Use AVA f
 ```js
 // Note that the tests are run serially. See below as to why.
 
-test.serial('litmus get user', async t => {
-	const {app} = t.context;
+test.serial("litmus get user", async (t) => {
+	const { app } = t.context;
 	const res = await request(app)
-		.get('/litmus')
-		.send({email: 'one@example.com'});
+		.get("/litmus")
+		.send({ email: "one@example.com" });
 	t.is(res.status, 200);
-	t.is(res.body.name, 'One');
+	t.is(res.body.name, "One");
 });
 
-test.serial('litmus create user', async t => {
-	const {app} = t.context;
-	const res = await request(app)
-		.post('/litmus')
-		.send({
-			email: 'new@example.com',
-			name: 'New name'
-		});
+test.serial("litmus create user", async (t) => {
+	const { app } = t.context;
+	const res = await request(app).post("/litmus").send({
+		email: "new@example.com",
+		name: "New name",
+	});
 
 	t.is(res.status, 200);
-	t.is(res.body.name, 'New name');
+	t.is(res.body.name, "New name");
 
 	// Verify that user is created in DB
-	const newUser = await User.findOne({email: 'new@example.com'});
-	t.is(newUser.name, 'New name');
+	const newUser = await User.findOne({ email: "new@example.com" });
+	t.is(newUser.name, "New name");
 });
 ```
 
@@ -117,10 +115,9 @@ Finally disconnect from and stop MongoDB when all tests are done:
 
 ```js
 test.after.always(async () => {
-	mongoose.disconnect()
-	mongod.stop()
-})
-
+	mongoose.disconnect();
+	mongod.stop();
+});
 ```
 
 And you're done!
