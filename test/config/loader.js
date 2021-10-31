@@ -63,10 +63,12 @@ test.serial('explicit configFile option overrides package.json config', ok({
 	t.is(conf.files, 'package-yes-explicit-yes-test-value');
 });
 
-test.serial('throws if configFile option is not in the same directory as the package.json file', notOk({
+test.serial('configFile does not need to be in the same directory as the package.json file', ok({
 	fixture: 'package-yes-explicit-yes',
 	configFile: 'nested/explicit.js',
-}));
+}), (t, config) => {
+	t.is(path.relative(config.projectDir, config.configFile), path.normalize('nested/explicit.js'));
+});
 
 test.serial('throws if configFile option has an unsupported extension', notOk({
 	fixture: 'explicit-bad-extension',
@@ -99,7 +101,7 @@ test.serial('throws an error if a config factory does not return a plain object'
 
 test.serial('throws an error if a config does not export a plain object', notOk('no-plain-config'));
 
-test.serial('receives a `projectDir` property', ok('package-only'), (t, conf) => {
+test.serial('receives a `projectDir` property', (...args) => ok('package-only')(...args), (t, conf) => {
 	t.assert(conf.projectDir.startsWith(FIXTURE_ROOT));
 });
 

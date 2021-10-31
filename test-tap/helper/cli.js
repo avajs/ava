@@ -27,8 +27,12 @@ export function execCli(args, options, cb) {
 	const processPromise = new Promise(resolve => {
 		child = childProcess.spawn(process.execPath, [cliPath].concat(args), { // eslint-disable-line unicorn/prefer-spread
 			cwd: dirname,
-			env: {AVA_FORCE_CI: 'ci', ...env}, // Force CI to ensure the correct reporter is selected
-			// env,
+			env: {
+				AVA_FORCE_CI: 'ci', // Force CI to ensure the correct reporter is selected
+				AVA_FAKE_SCM_ROOT: '.fake-root', // This is an internal test flag.
+				...env,
+			},
+			// Env,
 			stdio: [null, 'pipe', 'pipe'],
 		});
 

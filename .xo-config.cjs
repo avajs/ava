@@ -1,3 +1,9 @@
+// XO's AVA plugin will use the checked out code to resolve AVA configuration,
+// which causes all kinds of confusion when it finds our own ava.config.cjs file
+// or other ava.config.* fixtures.
+// Use the internal test flag to make XO behave like our own tests.
+require('node:process').env.AVA_FAKE_SCM_ROOT = '.fake-root';
+
 module.exports = {
 	ignores: [
 		'media/**',
