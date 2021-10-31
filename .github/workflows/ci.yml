@@ -24,12 +24,13 @@ jobs:
         run: |
           git config core.symlinks true
           git reset --hard
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npm run cover
       - uses: codecov/codecov-action@v2
@@ -45,12 +46,13 @@ jobs:
         ts-version: [~4.4]
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npm i typescript@${TS_VERSION}
         env:
@@ -63,13 +65,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
           cache: npm
       - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "7.23" ]]; then npm install --global npm@7.23; fi
-      - run: npm install --no-audit
+        run: if [[ "$(npm -v)" != "8.1.2" ]]; then npm install --global npm@8.1.2; fi
+      - run: npm install --no-audit --lockfile-version=3
       - name: Test package-lock for unexpected modifications
         run: |
           npm -v
@@ -85,11 +88,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-shrinkwrap --no-audit
       - run: npm run cover
 
@@ -98,11 +102,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^16.4
           cache: npm
       - name: Upgrade npm
-        run: npm install --global npm@7
+        run: npm install --global npm@^8.1.2
       - run: npm install --no-audit
       - run: npx xo
