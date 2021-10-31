@@ -53,6 +53,16 @@ test('resolves tests from an .mjs config file', async t => {
 	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
 
+test('looks for config files outside of project directory', async t => {
+	const options = {
+		cwd: cwd('monorepo/package'),
+	};
+
+	const result = await fixture([], options);
+
+	t.snapshot(result.stats.passed, 'resolves test files from configuration');
+});
+
 test('use current working directory if `package.json` is not found', async t => {
 	const cwd = tempy.directory();
 	const testFilePath = path.join(cwd, 'test.js');
