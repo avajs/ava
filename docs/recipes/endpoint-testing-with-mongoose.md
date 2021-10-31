@@ -51,13 +51,12 @@ const User = require('../models/User');
 Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
-// Start MongoDB instance
-const mongod = new MongoMemoryServer()
-
 // Create connection to Mongoose before tests are run
-test.before(async () => {
-	const uri = await mongod.getUri();
-	await mongoose.connect(uri, {useMongoClient: true});
+test.before(async t => {
+	// First start MongoDB instance
+	t.context.mongod = await MongoMemoryServer.create();
+	// And connect
+	await mongoose.connect(mongod.getUri());
 });
 ```
 
@@ -117,8 +116,8 @@ Finally disconnect from and stop MongoDB when all tests are done:
 
 ```js
 test.after.always(async () => {
-	mongoose.disconnect()
-	mongod.stop()
+	await mongoose.disconnect()
+	await t.context.mongod.stop()
 })
 
 ```
