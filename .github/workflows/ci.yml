@@ -24,6 +24,7 @@ jobs:
         run: |
           git config core.symlinks true
           git reset --hard
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
@@ -45,6 +46,7 @@ jobs:
         ts-version: [~4.4]
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
@@ -63,13 +65,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
           cache: npm
       - name: Upgrade npm
         run: if [[ "$(npm -v)" != "8.1.2" ]]; then npm install --global npm@8.1.2; fi
-      - run: npm install --no-audit
+      - run: npm install --no-audit --lockfile-version=3
       - name: Test package-lock for unexpected modifications
         run: |
           npm -v
@@ -85,6 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^12.22
@@ -98,6 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm .npmrc
       - uses: actions/setup-node@v2
         with:
           node-version: ^16.4
