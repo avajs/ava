@@ -51,11 +51,13 @@ const User = require('../models/User');
 Next start the in-memory MongoDB instance and connect to Mongoose:
 
 ```js
-// Start MongoDB instance
-const mongod = await MongoMemoryServer.create();
+// initiate MongoDB instance
+let mongod;
 
 // Create connection to Mongoose before tests are run
 test.before(async () => {
+	// Start MongoDB instance
+	mongod = await MongoMemoryServer.create();
 	const uri = mongod.getUri();
 	await mongoose.connect(uri);
 });
