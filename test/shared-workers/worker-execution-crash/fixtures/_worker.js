@@ -1,5 +1,5 @@
 export default async ({negotiateProtocol}) => {
-	const protocol = negotiateProtocol(['experimental']);
+	const protocol = negotiateProtocol(['ava4']);
 	protocol.ready();
 
 	crash(protocol.subscribe());
