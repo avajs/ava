@@ -1,6 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+import ciInfo from 'ci-info';
 import delay from 'delay';
 import sinon from 'sinon';
 import {test} from 'tap';
@@ -569,7 +570,7 @@ test('timeout with promise', t => ava(a => {
 	t.match(result.error.message, /timeout/);
 }));
 
-test('timeout is refreshed on assert', t => ava(async a => {
+test('timeout is refreshed on assert', {skip: ciInfo.isCI}, t => ava(async a => {
 	a.timeout(100);
 	a.plan(3);
 	await Promise.all([

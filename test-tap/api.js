@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+import ciInfo from 'ci-info';
 import del from 'del';
 import {test} from 'tap';
 
@@ -116,7 +117,7 @@ for (const opt of options) {
 				t.equal(runStatus.stats.failedTests, 1);
 			});
 	});
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & interrupt`, async t => {
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - multiple files & interrupt`, {skip: ciInfo.isCI}, async t => {
 		const api = await apiCreator({
 			...opt,
 			failFast: true,
@@ -228,7 +229,7 @@ for (const opt of options) {
 			});
 	});
 
-	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - timeout & serial`, async t => {
+	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - timeout & serial`, {skip: ciInfo.isCI}, async t => {
 		const api = await apiCreator({
 			...opt,
 			failFast: true,
