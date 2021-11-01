@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+import ciInfo from 'ci-info';
 import stripAnsi from 'strip-ansi';
 import {test} from 'tap';
 
@@ -10,7 +11,7 @@ import {execCli} from '../helper/cli.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
-test('timeout', t => {
+test('timeout', {skip: ciInfo.isCI}, t => {
 	execCli(['long-running.cjs', '-T', '1s'], (error, stdout) => {
 		t.ok(error);
 		t.match(stdout, /Timed out/);
@@ -18,17 +19,16 @@ test('timeout', t => {
 	});
 });
 
-// FIXME: This test fails in CI, but not locally. Re-enable at some point…
-// test('interrupt', t => {
-// 	const proc = execCli(['long-running.cjs'], (_, stdout) => {
-// 		t.match(stdout, /SIGINT/);
-// 		t.end();
-// 	});
-//
-// 	setTimeout(() => {
-// 		proc.kill('SIGINT');
-// 	}, 2000);
-// });
+test('interrupt', {skip: ciInfo.isCI}, t => {
+	const proc = execCli(['long-running.cjs'], (_, stdout) => {
+		t.match(stdout, /SIGINT/);
+		t.end();
+	});
+
+	setTimeout(() => {
+		proc.kill('SIGINT');
+	}, 2000);
+});
 
 test('include anonymous functions in error reports', t => {
 	execCli('error-in-anonymous-function.cjs', (error, stdout) => {
