@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import {expectType} from 'tsd';
 
 import test, {ExecutionContext} from '..';

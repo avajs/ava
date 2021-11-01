@@ -1,6 +1,6 @@
 const test = require('ava');
 
-test.default('callable', t => { // eslint-disable-line ava/no-unknown-modifiers
+test.default('callable', t => {
 	t.pass();
 });
 
