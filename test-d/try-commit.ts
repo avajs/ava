@@ -29,32 +29,30 @@ test('attempt with title', async t => {
 	attempt.commit();
 });
 
-{
-	const lengthCheck = (t: ExecutionContext, a: string, b: number): void => {
-		t.is(a.length, b);
-	};
+const lengthCheck = (t: ExecutionContext, a: string, b: number): void => {
+	t.is(a.length, b);
+};
 
-	test('attempt with helper', async t => {
-		const attempt = await t.try(lengthCheck, 'string', 6);
-		attempt.commit();
-	});
+test('attempt with helper', async t => {
+	const attempt = await t.try(lengthCheck, 'string', 6);
+	attempt.commit();
+});
 
-	test('attempt with title', async t => {
-		const attempt = await t.try('title', lengthCheck, 'string', 6);
-		attempt.commit();
-	});
-}
+test('attempt with title', async t => {
+	const attempt = await t.try('title', lengthCheck, 'string', 6);
+	attempt.commit();
+});
 
 test('all possible variants to pass to t.try', async t => {
 	// No params
-	t.try(tt => tt.pass());
+	void t.try(tt => tt.pass());
 
-	t.try('test', tt => tt.pass());
+	void t.try('test', tt => tt.pass());
 
 	// Some params
-	t.try((tt, a, b) => tt.is(a.length, b), 'hello', 5);
+	void t.try((tt, a, b) => tt.is(a.length, b), 'hello', 5);
 
-	t.try('test', (tt, a, b) => tt.is(a.length, b), 'hello', 5);
+	void t.try('test', (tt, a, b) => tt.is(a.length, b), 'hello', 5);
 
 	// Macro with title
 	const macro1 = test.macro<[string, number]>({
@@ -63,8 +61,8 @@ test('all possible variants to pass to t.try', async t => {
 	});
 	const macro2 = test.macro<[string, number]>((tt, a, b) => tt.is(a.slice(b), ''));
 
-	t.try(macro1, 'hello', 5);
-	t.try(macro2, 'hello', 5);
-	t.try('title', macro1, 'hello', 5);
-	t.try('title', macro2, 'hello', 5);
+	void t.try(macro1, 'hello', 5);
+	void t.try(macro2, 'hello', 5);
+	void t.try('title', macro1, 'hello', 5);
+	void t.try('title', macro2, 'hello', 5);
 });

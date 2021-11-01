@@ -1,4 +1,3 @@
-/* eslint-disable ava/test-title, ava/no-unknown-modifiers, ava/use-t */
 import test from 'ava';
 
 const withoutTitle = test.macro((t, arg) => {

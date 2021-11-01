@@ -1,0 +1,7 @@
+{
+	"include": [
+		"test",
+		"test-d",
+		"test-tap"
+	]
+}
