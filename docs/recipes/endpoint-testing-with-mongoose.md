@@ -56,7 +56,7 @@ test.before(async t => {
 	// First start MongoDB instance
 	t.context.mongod = await MongoMemoryServer.create();
 	// And connect
-	await mongoose.connect(mongod.getUri());
+	await mongoose.connect(t.context.mongod.getUri());
 });
 ```
 
@@ -115,10 +115,10 @@ test.serial('litmus create user', async t => {
 Finally disconnect from and stop MongoDB when all tests are done:
 
 ```js
-test.after.always(async () => {
-	await mongoose.disconnect()
-	await t.context.mongod.stop()
-})
+test.after.always(async t => {
+	await mongoose.disconnect();
+	await t.context.mongod.stop();
+});
 
 ```
 
