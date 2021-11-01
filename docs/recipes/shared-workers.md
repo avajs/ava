@@ -37,14 +37,14 @@ Plugins communicate with their shared worker using a *protocol*. Protocols are v
 
 Plugins can be compatible with multiple protocols. AVA will select the best protocol it supports.  If AVA does not support any of the specified protocols it'll throw an error. The selected protocol is available on the returned worker object.
 
-**For AVA 3, substitute `'ava4'` with `'experimental'`.**
+**For AVA 3, substitute `'ava-4'` with `'experimental'`.**
 
 ```js
 import {registerSharedWorker} from 'ava/plugin';
 
 const shared = registerSharedWorker({
   filename: path.resolve(__dirname, 'worker.js'),
-  supportedProtocols: ['ava4']
+  supportedProtocols: ['ava-4']
 });
 ```
 
@@ -55,7 +55,7 @@ You can supply a `teardown()` function which will be called after all tests have
 ```js
 const worker = registerSharedWorker({
   filename: path.resolve(__dirname, 'worker.js'),
-  supportedProtocols: ['ava4'],
+  supportedProtocols: ['ava-4'],
   teardown () {
     // Perform any clean-up within the test process itself.
   }
@@ -68,7 +68,7 @@ You can also provide some data passed to the shared worker when it is loaded. Of
 const shared = registerSharedWorker({
   filename: path.resolve(__dirname, 'worker.js'),
   initialData: {hello: 'world'},
-  supportedProtocols: ['ava4']
+  supportedProtocols: ['ava-4']
 });
 ```
 
@@ -84,7 +84,7 @@ The default export must be a factory method. Like when calling `registerSharedWo
 
 ```js
 export default ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']);
+  const main = negotiateProtocol(['ava-4']);
 }
 ```
 
@@ -104,7 +104,7 @@ In the shared worker you can subscribe to messages from test workers:
 
 ```js
 export default async ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   for await (const message of main.subscribe()) {
     // …
@@ -122,7 +122,7 @@ To illustrate this here's a "game" of Marco Polo:
 
 ```js
 export default ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   play(main.subscribe());
 };
@@ -143,7 +143,7 @@ You can also broadcast messages to all connected test workers:
 
 ```js
 export default async ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   for await (const message of main.subscribe()) {
   	if (message.data === 'Bingo!') {
@@ -163,7 +163,7 @@ Of course you don't need to wait for a message *from* a test worker to access th
 
 ```js
 export default async ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   for await (const testWorker of main.testWorkers()) {
     main.broadcast(`New test file: ${testWorker.file}`);
@@ -205,7 +205,7 @@ You can register teardown functions to be run when the test worker exits:
 
 ```js
 export default async ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   for await (const testWorker of main.testWorkers()) {
     testWorker.teardown(() => {
@@ -221,7 +221,7 @@ More interestingly, a wrapped teardown function is returned so that you can call
 
 ```js
 export default ({negotiateProtocol}) => {
-  const main = negotiateProtocol(['ava4']).ready();
+  const main = negotiateProtocol(['ava-4']).ready();
 
   for await (const worker of testWorkers) {
     counters.set(worker, 0);

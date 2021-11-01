@@ -1,10 +1,10 @@
 import {URL} from 'node:url';
 
 export namespace SharedWorker {
-	export type ProtocolIdentifier = 'ava4';
+	export type ProtocolIdentifier = 'ava-4';
 
 	export type FactoryOptions = {
-		negotiateProtocol <Data = unknown>(supported: readonly ['ava4']): Protocol<Data>;
+		negotiateProtocol <Data = unknown>(supported: readonly ['ava-4']): Protocol<Data>;
 		// Add overloads for additional protocols.
 	};
 
@@ -12,7 +12,7 @@ export namespace SharedWorker {
 
 	export type Protocol<Data = unknown> = {
 		readonly initialData: Data;
-		readonly protocol: 'ava4';
+		readonly protocol: 'ava-4';
 		broadcast: (data: Data) => BroadcastMessage<Data>;
 		ready: () => Protocol<Data>;
 		subscribe: () => AsyncIterableIterator<ReceivedMessage<Data>>;
@@ -55,7 +55,7 @@ export namespace SharedWorker {
 		export type Protocol<Data = unknown> = {
 			readonly available: Promise<void>;
 			readonly currentlyAvailable: boolean;
-			readonly protocol: 'ava4';
+			readonly protocol: 'ava-4';
 			publish: (data: Data) => PublishedMessage<Data>;
 			subscribe: () => AsyncIterableIterator<ReceivedMessage<Data>>;
 		};
@@ -73,5 +73,5 @@ export namespace SharedWorker {
 	}
 }
 
-export function registerSharedWorker<Data = unknown>(options: SharedWorker.Plugin.RegistrationOptions<'ava4', Data>): SharedWorker.Plugin.Protocol<Data>;
+export function registerSharedWorker<Data = unknown>(options: SharedWorker.Plugin.RegistrationOptions<'ava-4', Data>): SharedWorker.Plugin.Protocol<Data>;
 // Add overloads for additional protocols.
