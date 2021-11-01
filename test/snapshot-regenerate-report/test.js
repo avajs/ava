@@ -37,7 +37,7 @@ test('snapshot report can be regenerated from .snap file', async t => {
 	});
 
 	// Regenerate report
-	snapshots.hasChanges = true; // TODO this is a hack
+	snapshots.hasChanges = true; // Force.
 	snapshots.save();
 
 	// Assert that reports match
