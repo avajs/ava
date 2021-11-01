@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import stream from 'node:stream';
 
 import ansiEscapes from 'ansi-escapes';
@@ -20,7 +21,7 @@ export default class TTYStream extends stream.Writable {
 			this.spinnerActivity = [];
 		}
 
-		const string = this.sanitizers.reduce((string_, sanitizer) => sanitizer(string_), chunk.toString('utf8'));
+		const string = this.sanitizers.reduce((string_, sanitizer) => sanitizer(string_), chunk.toString('utf8')); // eslint-disable-line unicorn/no-array-reduce
 		// Ignore the chunk if it was scrubbed completely. Still count 0-length
 		// chunks.
 		if (string !== '' || chunk.length === 0) {
@@ -40,7 +41,7 @@ export default class TTYStream extends stream.Writable {
 		}
 
 		for (const object of chunks) {
-			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8'));
+			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8')); // eslint-disable-line unicorn/no-array-reduce
 		}
 
 		this.chunks.push(TTYStream.SEPARATOR);

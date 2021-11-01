@@ -28,69 +28,40 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: [
-				'index.d.ts',
-				'types/*.d.ts',
-			],
+			files: '**/*.d.ts',
 			rules: {
 				'import/extensions': 'off',
-			},
-		},
-		{
-			files: 'plugin.d.ts',
-			rules: {
-				'node/prefer-global/url': 'off',
-			},
-		},
-		{
-			files: '{test,test-{d,tap}}/**/*.ts',
-			rules: {
-				'@typescript-eslint/explicit-function-return-type': 'off',
-				'@typescript-eslint/no-empty-function': 'off',
-				'@typescript-eslint/no-unsafe-assignment': 'off',
-				'@typescript-eslint/no-unsafe-call': 'off',
-				'@typescript-eslint/no-unsafe-member-access': 'off',
-				'@typescript-eslint/no-unsafe-return': 'off',
-				'@typescript-eslint/no-unused-vars': 'off',
-				'@typescript-eslint/prefer-readonly-parameter-types': 'off',
-			},
-		},
-		{
-			files: '{test,test-{d,tap}}/**',
-			rules: {
-				'import/no-anonymous-default-export': 'off',
-				'node/prefer-global/buffer': 'off',
-				'node/prefer-global/process': 'off',
-			},
-		},
-		{
-			files: 'test-tap/**',
-			rules: {
-				'promise/prefer-await-to-then': 'off',
-				'unicorn/error-message': 'off',
-				'unicorn/no-array-reduce': 'off',
-				'unicorn/prevent-abbreviations': 'off',
-			},
-		},
-		{
-			files: 'test/macros/fixtures/macros.js',
-			rules: {
-				'ava/no-identical-title': 'off',
-			},
-		},
-		{
-			files: [
-				'examples/**',
-				'test/snapshot-*/fixtures/**',
-			],
-			rules: {
-				'unicorn/prefer-module': 'off',
 			},
 		},
 		{
 			files: 'examples/**',
 			rules: {
 				'ava/no-only-test': 'off',
+				'unicorn/prefer-module': 'off',
+			},
+		},
+		{
+			// TODO: Update tests.
+			files: 'test/**',
+			rules: {
+				'import/no-anonymous-default-export': 'off',
+				'node/prefer-global/process': 'off',
+			},
+		},
+		{
+			// TODO: Update tests.
+			files: 'test/snapshot-*/fixtures/**',
+			rules: {
+				'unicorn/prefer-module': 'off',
+			},
+		},
+		{
+			// TODO: Update tests.
+			files: 'test-tap/**',
+			rules: {
+				'import/no-anonymous-default-export': 'off',
+				'node/prefer-global/process': 'off',
+				'unicorn/error-message': 'off',
 			},
 		},
 	],

@@ -23,12 +23,12 @@ async function apiCreator(options = {}) {
 	return instance;
 }
 
-const opts = [
+const options = [
 	{workerThreads: true},
 	{workerThreads: false},
 ];
 
-for (const opt of opts) {
+for (const opt of options) {
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, async t => {
 		const api = await apiCreator({
 			...opt,
