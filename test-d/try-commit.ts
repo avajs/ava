@@ -1,6 +1,6 @@
 import {expectType} from 'tsd';
 
-import test, {ExecutionContext, Macro} from '..';
+import test, {ExecutionContext} from '..';
 
 test('attempt', async t => {
 	const attempt = await t.try(

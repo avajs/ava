@@ -4,6 +4,6 @@ import * as plugin from '../plugin'; // eslint-disable-line import/extensions
 
 expectType<plugin.SharedWorker.Plugin.Experimental.Protocol>(plugin.registerSharedWorker({filename: '', supportedProtocols: ['experimental']}));
 
-const factory: plugin.SharedWorker.Factory = ({negotiateProtocol}) => {
+const factory: plugin.SharedWorker.Factory = ({negotiateProtocol}) => { // eslint-disable-line @typescript-eslint/no-unused-vars
 	expectType<plugin.SharedWorker.Experimental.Protocol>(negotiateProtocol(['experimental']));
 };

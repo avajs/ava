@@ -97,9 +97,9 @@ test('fails if no assertions are run, unless so planned', t => ava(a => a.plan(0
 }));
 
 test('wrap non-assertion errors', t => {
-	const err = new Error();
+	const error = new Error();
 	return ava(() => {
-		throw err;
+		throw error;
 	}).run().then(result => {
 		t.equal(result.passed, false);
 		t.equal(result.error.message, 'Error thrown in test');
@@ -123,10 +123,10 @@ test('title returns the test title', t => {
 });
 
 test('handle non-assertion errors even when planned', t => {
-	const err = new Error('bar');
+	const error = new Error('bar');
 	return ava(a => {
 		a.plan(1);
-		throw err;
+		throw error;
 	}).run().then(result => {
 		t.equal(result.passed, false);
 		t.equal(result.error.name, 'AssertionError');

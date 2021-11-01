@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
 import {expectError, expectType} from 'tsd';
 
 import anyTest, {ExecutionContext, TestFn} from '..';

@@ -38,10 +38,10 @@ export function execCli(args, options, cb) {
 
 		child.on('close', (code, signal) => {
 			if (code) {
-				const err = new Error(`test-worker exited with a non-zero exit code: ${code}`);
-				err.code = code;
-				err.signal = signal;
-				resolve(err);
+				const error = new Error(`test-worker exited with a non-zero exit code: ${code}`);
+				error.code = code;
+				error.signal = signal;
+				resolve(error);
 				return;
 			}
 

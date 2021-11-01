@@ -13,9 +13,9 @@ const END_MESSAGE = 'Type `r` and press enter to rerun tests\nType `u` and press
 test('watcher reruns test files upon change', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ok(killed);
-		t.error(err);
+		t.error(error);
 		t.end();
 	});
 
@@ -39,9 +39,9 @@ test('watcher reruns test files upon change', t => {
 test('watcher reruns test files when source dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', 'test-1.cjs', 'test-2.cjs'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--watch', 'test-1.cjs', 'test-2.cjs'], {dirname: 'fixture/watcher/with-dependencies', env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ok(killed);
-		t.error(err);
+		t.error(error);
 		t.end();
 	});
 
@@ -63,9 +63,9 @@ test('watcher reruns test files when source dependencies change', t => {
 test('watcher does not rerun test files when they write snapshot files', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ok(killed);
-		t.error(err);
+		t.error(error);
 		t.end();
 	});
 
@@ -94,8 +94,8 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 			dirname: 'fixture/snapshots/watcher-rerun-unlink',
 			env: {AVA_FORCE_CI: 'not-ci', TEMPLATE: 'true'},
 		},
-		err => {
-			t.error(err);
+		error => {
+			t.error(error);
 
 			// Run fixture in watch mode; snapshots should be removed, and watcher should not rerun
 			let killed = false;
@@ -106,9 +106,9 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 					dirname: 'fixture/snapshots/watcher-rerun-unlink',
 					env: {AVA_FORCE_CI: 'not-ci'},
 				},
-				err => {
+				error => {
 					t.ok(killed);
-					t.error(err);
+					t.error(error);
 					t.end();
 				},
 			);
@@ -135,9 +135,9 @@ test('watcher does not rerun test files when they unlink snapshot files', t => {
 test('watcher does not rerun test files when ignored files change', t => {
 	let killed = false;
 
-	const child = execCli(['--watch'], {dirname: 'fixture/watcher/ignored-files', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--watch'], {dirname: 'fixture/watcher/ignored-files', env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ok(killed);
-		t.error(err);
+		t.error(error);
 		t.end();
 	});
 
@@ -162,9 +162,9 @@ test('watcher does not rerun test files when ignored files change', t => {
 test('watcher reruns test files when snapshot dependencies change', t => {
 	let killed = false;
 
-	const child = execCli(['--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, err => {
+	const child = execCli(['--watch', '--update-snapshots', 'test.cjs'], {dirname: 'fixture/snapshots/watcher-rerun', env: {AVA_FORCE_CI: 'not-ci'}}, error => {
 		t.ok(killed);
-		t.error(err);
+		t.error(error);
 		t.end();
 	});
 
@@ -210,16 +210,16 @@ test('`"tap": true` config is ignored when --watch is given', t => {
 });
 
 test('bails when --tap reporter is used while --watch is given', t => {
-	execCli(['--tap', '--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (err, stdout, stderr) => {
-		t.equal(err.code, 1);
+	execCli(['--tap', '--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout, stderr) => {
+		t.equal(error.code, 1);
 		t.match(stderr, 'The TAP reporter is not available when using watch mode.');
 		t.end();
 	});
 });
 
 test('bails when CI is used while --watch is given', t => {
-	execCli(['--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (err, stdout, stderr) => {
-		t.equal(err.code, 1);
+	execCli(['--watch', 'test.cjs'], {dirname: 'fixture/watcher', env: {AVA_FORCE_CI: 'ci'}}, (error, stdout, stderr) => {
+		t.equal(error.code, 1);
 		t.match(stderr, 'Watch mode is not available in CI, as it prevents AVA from terminating.');
 		t.end();
 	});

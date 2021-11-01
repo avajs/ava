@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import test from '../../../../../../../entrypoints/main.cjs';
 
 test('feature test title', t => {

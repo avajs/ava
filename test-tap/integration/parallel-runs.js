@@ -12,7 +12,7 @@ test('correctly distributes more test files than CI_NODE_TOTAL', t => {
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3',
 			},
-		}, err => t.error(err));
+		}, error => t.error(error));
 	}
 });
 
@@ -26,7 +26,7 @@ test('correctly distributes less test files than CI_NODE_TOTAL', t => {
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3',
 			},
-		}, err => t.error(err));
+		}, error => t.error(error));
 	}
 });
 
@@ -40,6 +40,6 @@ test('fail when there are no files', t => {
 				CI_NODE_INDEX: String(i),
 				CI_NODE_TOTAL: '3',
 			},
-		}, err => t.ok(err));
+		}, error => t.ok(error));
 	}
 });

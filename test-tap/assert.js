@@ -795,8 +795,8 @@ test('.throws()', gather(t => {
 
 	// Fails because thrown exception is not an error
 	failsWith(t, () => assertions.throws(() => {
-		const err = 'foo';
-		throw err;
+		const error = 'foo';
+		throw error;
 	}), {
 		assertion: 'throws',
 		message: '',
@@ -812,10 +812,10 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => {
-		const err = new Error('foo');
+		const error = new Error('foo');
 		return assertions.throws(() => {
-			throw err;
-		}, {is: err});
+			throw error;
+		}, {is: error});
 	});
 
 	// Fails because the thrown value is not an error
@@ -828,9 +828,9 @@ test('.throws()', gather(t => {
 
 	// Fails because the thrown value is not the right one
 	fails(t, () => {
-		const err = new Error('foo');
+		const error = new Error('foo');
 		return assertions.throws(() => {
-			throw err;
+			throw error;
 		}, {is: {}});
 	});
 
@@ -841,8 +841,8 @@ test('.throws()', gather(t => {
 
 	// Fails because the thrown value is not an error
 	fails(t, () => assertions.throws(() => {
-		const err = {name: 'Bob'};
-		throw err;
+		const error = {name: 'Bob'};
+		throw error;
 	}, {name: 'Bob'}));
 
 	// Fails because the thrown value is not the right one
@@ -852,29 +852,29 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const err = new TypeError();
-		err.code = 'ERR_TEST';
-		throw err;
+		const error = new TypeError();
+		error.code = 'ERR_TEST';
+		throw error;
 	}, {code: 'ERR_TEST'}));
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const err = new TypeError();
-		err.code = 42;
-		throw err;
+		const error = new TypeError();
+		error.code = 42;
+		throw error;
 	}, {code: 42}));
 
 	// Fails because the thrown value is not the right one
 	fails(t, () => assertions.throws(() => {
-		const err = new TypeError();
-		err.code = 'ERR_NOPE';
-		throw err;
+		const error = new TypeError();
+		error.code = 'ERR_NOPE';
+		throw error;
 	}, {code: 'ERR_TEST'}));
 
 	fails(t, () => assertions.throws(() => {
-		const err = new TypeError();
-		err.code = 1;
-		throw err;
+		const error = new TypeError();
+		error.code = 1;
+		throw error;
 	}, {code: 42}));
 
 	// Regression test for https://github.com/avajs/ava/issues/1676
