@@ -251,7 +251,7 @@ export default {
 };
 ```
 
-### Configuring module formats
+## Configuring module formats
 
 Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders). To use this you'll also have to configure AVA to `import()` your test file.
 
@@ -264,9 +264,6 @@ As with the array form, you need to explicitly list `js`, `cjs`, and `mjs` exten
 `ava.config.js`:
 ```js
 export default {
-	nonSemVerExperiments: {
-		configurableModuleFormat: true
-	},
 	extensions: {
 		js: true,
 		ts: 'module'
