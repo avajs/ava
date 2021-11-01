@@ -1,3 +1,3 @@
 export default ({negotiateProtocol}) => {
-	negotiateProtocol(['experimental']).ready();
+	negotiateProtocol(['ava4']).ready();
 };

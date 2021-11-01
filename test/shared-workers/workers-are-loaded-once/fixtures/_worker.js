@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 export default async ({negotiateProtocol}) => {
-	const protocol = negotiateProtocol(['experimental']).ready();
+	const protocol = negotiateProtocol(['ava4']).ready();
 
 	const random = crypto.randomBytes(16).toString('hex');
 	for await (const testWorker of protocol.testWorkers()) {
