@@ -39,7 +39,8 @@ If your `package.json` has `"type": "module"`, then this is the AVA configuratio
 			"configurableModuleFormat": true
 		},
 		"nodeArguments": [
-			"--loader=ts-node/esm"
+			"--loader=ts-node/esm",
+			"--experimental-specifier-resolution=node"
 		]
 	}
 }
@@ -56,7 +57,6 @@ You also need to have this in your `tsconfig.json`:
 }
 ```
 
-And finally, even though you directly import code from your TypeScript files, you **must** import it from your `.ts` files with the `.js` extension instead!
 
 For example if your source file is `index.ts` looks like this:
 
@@ -70,7 +70,10 @@ Then in your AVA test files you must import it **as if it has the `.js` extensio
 import {myFunction} from './index.js';
 ```
 
-The reason that you need to write `.js` to import `.ts` files in your AVA test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
+**NOTE** about the nodeArgument `--experimental-specifier-resolution=node`:    
+This instructs node to attempt to resolve file extensions by "guessing" the most likely extension, whereas the default requires that one is explicit.
+You can omit this setting if your code explicitly includes the `.js` extension when importing (although this is unlikely in a typescript project)   
+See [this ts-node issue](https://github.com/TypeStrong/ts-node/issues/1007) for details.
 
 #### For packages without type "module"
 
