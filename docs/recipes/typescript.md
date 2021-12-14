@@ -57,19 +57,6 @@ You also need to have this in your `tsconfig.json`:
 }
 ```
 
-
-For example if your source file is `index.ts` looks like this:
-
-```ts
-export function myFunction() {}
-```
-
-Then in your AVA test files you must import it **as if it has the `.js` extension** it like so:
-
-```ts
-import {myFunction} from './index.js';
-```
-
 **NOTE** about the nodeArgument `--experimental-specifier-resolution=node`:    
 This instructs node to attempt to resolve file extensions by "guessing" the most likely extension, whereas the default requires that one is explicit.
 You can omit this setting if your code explicitly includes the `.js` extension when importing (although this is unlikely in a typescript project)   
