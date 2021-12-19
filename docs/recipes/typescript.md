@@ -18,7 +18,7 @@ You can use [`ts-node`] to do live testing without transpiling. This can be espe
 
 `npm install --save-dev typescript ts-node`
 
-Then, depending on whether or not your package is of type `module` or not, the required setup differs. See either:
+The required setup depends on the type of your package:
 
 1. [for packages with type "module"](#for-packages-with-type-module)
 2. [for packages without type "module"](#for-packages-without-type-module)
