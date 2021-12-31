@@ -56,21 +56,9 @@ You also need to have this in your `tsconfig.json`:
 }
 ```
 
-And finally, even though you directly import code from your TypeScript files, you **must** import it from your `.ts` files with the `.js` extension instead!
+Remember that, by default, ES modules require you to specify the file extension and TypeScript outputs `.js` files, so you have to write your imports to load from `.js` files not `.ts`.
 
-For example if your source file is `index.ts` looks like this:
-
-```ts
-export function myFunction() {}
-```
-
-Then in your AVA test files you must import it **as if it has the `.js` extension** it like so:
-
-```ts
-import {myFunction} from './index.js';
-```
-
-The reason that you need to write `.js` to import `.ts` files in your AVA test files, is explained by the `ts-node` author [in this post](https://github.com/nodejs/modules/issues/351#issuecomment-621257543).
+If this is not to your liking there is an _experimental_ option in Node.js that you might want to use. You can add it to the `nodeArguments` array in the AVA configuration so it applies to your test runs: [`--experimental-specifier-resolution=node`](https://nodejs.org/api/esm.html#customizing-esm-specifier-resolution-algorithm).
 
 #### For packages without type "module"
 
