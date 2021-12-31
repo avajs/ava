@@ -39,8 +39,7 @@ If your `package.json` has `"type": "module"`, then this is the AVA configuratio
 			"configurableModuleFormat": true
 		},
 		"nodeArguments": [
-			"--loader=ts-node/esm",
-			"--experimental-specifier-resolution=node"
+			"--loader=ts-node/esm"
 		]
 	}
 }
@@ -57,10 +56,9 @@ You also need to have this in your `tsconfig.json`:
 }
 ```
 
-**NOTE** about the nodeArgument `--experimental-specifier-resolution=node`:    
-This instructs node to attempt to resolve file extensions by "guessing" the most likely extension, whereas the default requires that one is explicit.
-You can omit this setting if your code explicitly includes the `.js` extension when importing (although this is unlikely in a typescript project)   
-See [this ts-node issue](https://github.com/TypeStrong/ts-node/issues/1007) for details.
+Remember that, by default, ES modules require you to specify the file extension and TypeScript outputs `.js` files, so you have to write your imports to load from `.js` files not `.ts`.
+
+If this is not to your liking there is an _experimental_ option in Node.js that you might want to use. You can add it to the `nodeArguments` array in the AVA configuration so it applies to your test runs: [`--experimental-specifier-resolution=node`](https://nodejs.org/api/esm.html#customizing-esm-specifier-resolution-algorithm).
 
 #### For packages without type "module"
 
