@@ -2,10 +2,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
+import sinon from 'sinon';
 
 import {loadConfig} from '../../lib/load-config.js';
 
-const CWD = process.cwd();
 const FIXTURE_ROOT = fileURLToPath(new URL('../../test-tap/fixture/load-config', import.meta.url));
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
@@ -22,8 +22,9 @@ const loadFromSetup = setup => {
 const ok = setup => async (t, assert = tt => tt.pass()) => {
 	const fixture = typeof setup === 'string' ? setup : setup.fixture;
 
-	t.teardown(() => process.chdir(CWD));
-	process.chdir(resolve(fixture));
+	const stub = sinon.stub(process, 'cwd');
+	t.teardown(() => stub.restore());
+	stub.returns(resolve(fixture));
 
 	const conf = loadFromSetup(setup);
 	await t.notThrowsAsync(conf);
@@ -34,8 +35,9 @@ const ok = setup => async (t, assert = tt => tt.pass()) => {
 const notOk = setup => async (t, assert = (tt, error) => tt.snapshot(error.message, 'error message')) => {
 	const fixture = typeof setup === 'string' ? setup : setup.fixture;
 
-	t.teardown(() => process.chdir(CWD));
-	process.chdir(resolve(fixture));
+	const stub = sinon.stub(process, 'cwd');
+	t.teardown(() => stub.restore());
+	stub.returns(resolve(fixture));
 
 	const conf = loadFromSetup(setup);
 	const error = await t.throwsAsync(conf);
