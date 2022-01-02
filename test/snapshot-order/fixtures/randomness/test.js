@@ -20,18 +20,20 @@ test('A - declare some more snapshots', async t => {
 test('C - declare some snapshots in a try()', async t => {
 	await randomDelay();
 	t.snapshot(id(5), 'outer');
-	(await t.try('trying', t => {
+	const attempt = await t.try('trying', t => {
 		t.snapshot(id(6), 'inner');
-	})).commit();
+	});
+	attempt.commit();
 	t.snapshot(id(7), 'outer again');
 });
 
 test('E - discard some snapshots in a try()', async t => {
 	await randomDelay();
 	t.snapshot(id(8), 'outer');
-	(await t.try('trying', t => {
+	const attempt = await t.try('trying', t => {
 		t.snapshot(id(9), 'inner');
-	})).discard();
+	});
+	attempt.discard();
 	t.snapshot(id(10), 'outer again');
 });
 
