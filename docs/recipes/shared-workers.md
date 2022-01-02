@@ -4,20 +4,6 @@ Shared workers are a powerful AVA feature. A program can be loaded in a [worker 
 
 When you use watch mode, shared workers remain loaded across runs.
 
-## Enabling the experiment (only needed with AVA 3)
-
-Shared workers are available when you use AVA with Node.js 12.17.0 or newer. AVA 3.13.0 or newer is required. It is an experimental feature so you need to enable it in your AVA configuration:
-
-`ava.config.js`:
-
-```js
-export default {
-  nonSemVerExperiments: {
-    sharedWorkers: true
-  }
-};
-```
-
 ## Available plugins
 
 * [`@ava/get-port`](https://github.com/avajs/get-port) works like [`get-port`](https://github.com/sindresorhus/get-port), but ensures the port is locked across all test files.
@@ -36,8 +22,6 @@ Plugins are registered inside test workers. They'll provide the path for the sha
 Plugins communicate with their shared worker using a *protocol*. Protocols are versioned independently from AVA itself. This allows us to make improvements without breaking existing plugins. Protocols are only removed in major AVA releases.
 
 Plugins can be compatible with multiple protocols. AVA will select the best protocol it supports.  If AVA does not support any of the specified protocols it'll throw an error. The selected protocol is available on the returned worker object.
-
-**For AVA 3, substitute `'ava-4'` with `'experimental'`.**
 
 ```js
 import {registerSharedWorker} from 'ava/plugin';

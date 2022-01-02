@@ -26,10 +26,6 @@ Contains shared state from hooks.
 
 When used in `test.afterEach()` or `test.afterEach.always()` hooks this tells you whether the test has passed. When used in a test itself (including teardown functions) this remains `true` until an assertion fails, the test has ended with an error, or a teardown function caused an error. This value has no meaning in other hooks.
 
-## `t.end()`
-
-End the test. Only works with `test.cb()`. Removed in AVA 4.
-
 ## `t.log(...values)`
 
 Log values contextually alongside the test result instead of immediately printing them to `stdout`. Behaves somewhat like `console.log`, but without support for placeholder tokens.
@@ -40,35 +36,11 @@ Plan how many assertions there are in the test. The test will fail if the actual
 
 ## `t.teardown(fn)`
 
-Registers the `fn` function to be run after the test has finished. You can register multiple functions. In AVA 3 the functions are called in order, but in AVA 4 they'll run in _reverse_ order.<sup>†</sup>. You can use asynchronous functions: only one will run at a time.
+Registers the `fn` function to be run after the test has finished. You can register multiple functions. They'll run in reverse order, so the most last registered function is run first. You can use asynchronous functions: only one will run at a time.
 
 You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
 
 You cannot use `t.teardown()` in hooks either.
-
-<sup>†</sup> You can opt in to this behavior in AVA 3 by enabling the `reverseTeardowns` experiment.
-
-**`package.json`**:
-
-```json
-{
-	"ava": {
-		"nonSemVerExperiments": {
-			"reverseTeardowns": true
-		}
-	}
-}
-```
-
-**`ava.config.js`**:
-
-```js
-export default {
-	nonSemVerExperiments: {
-		reverseTeardowns: true
-	}
-}
-```
 
 ## `t.timeout(ms)`
 

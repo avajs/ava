@@ -29,7 +29,7 @@ Options:
   --help                  Show help                                    [boolean]
   --concurrency, -c       Max number of test files running at the same time
                           (default: CPU cores)                          [number]
-  --no-worker-threads     Don't use worker threads                     [boolean] (AVA 4 only)
+  --no-worker-threads     Don't use worker threads                     [boolean]
   --fail-fast             Stop after first test failure                [boolean]
   --match, -m             Only run tests with matching title (can be repeated)
                                                                         [string]
@@ -40,7 +40,7 @@ Options:
   --timeout, -T           Set global timeout (milliseconds or human-readable,
                           e.g. 10s, 2m)                                 [string]
   --update-snapshots, -u  Update snapshots                             [boolean]
-  --verbose, -v           Enable verbose output (no-op in AVA 4)       [boolean]
+  --verbose, -v           Enable verbose output (default)              [boolean]
   --watch, -w             Re-run tests when files change               [boolean]
 
 Examples:
@@ -48,8 +48,6 @@ Examples:
   ava test.js
   ava test.js:4,7-9
 ```
-
-*Note that, for AVA 3, the CLI will use your local install of AVA when available, even when run globally. AVA 4 cannot be run globally.*
 
 AVA searches for test files using the following patterns:
 
@@ -164,7 +162,7 @@ AVA lets you run tests exclusively by referring to their line numbers. Target a 
 
 The format is a comma-separated list of `[X|Y-Z]` where `X`, `Y` and `Z` are integers between `1` and the last line number of the file.
 
-This feature is only available from the command line. It won't work if you use tools like `ts-node/register` or `@babel/register`, and it does not currently work with `@ava/babel` (available for AVA 3) and `@ava/typescript`.
+This feature is only available from the command line.
 
 ### Running a single test
 
@@ -220,7 +218,7 @@ When running a file with and without line numbers, line numbers take precedence.
 
 ## Resetting AVA's cache
 
-AVA 3 itself does not cache files unless used with our [`@ava/babel`](https://github.com/avajs/babel) provider. If it seems like your latest changes aren't being picked up by AVA you can try resetting the cache by running:
+AVA maintains some temporary state. You can clear this state by running:
 
 ```console
 npx ava reset-cache
@@ -230,15 +228,9 @@ This deletes all files in the `node_modules/.cache/ava` directory.
 
 ## Reporters
 
-AVA 4 uses a human readable reporter:
+AVA uses a human readable reporter by default:
 
 <img src="../media/verbose-reporter.png" width="294">
-
-AVA 3 defaults to a less verbose reporter:
-
-<img src="../media/mini-reporter.gif" width="460">
-
-Use the `--verbose` flag to enable the verbose reporter. This is always used in CI environments unless the [TAP reporter](#tap-reporter) is enabled.
 
 ### TAP reporter
 

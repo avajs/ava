@@ -75,69 +75,6 @@ test('skip assertion', t => {
 });
 ```
 
-## Enhanced assertion messages
-
-With AVA 3, enabling [Babel](./recipes/babel.md) will also enable [`power-assert`](https://github.com/power-assert-js/power-assert), giving you more descriptive assertion messages.
-
-Let's take this example, using Node's standard [`assert` library](https://nodejs.org/api/assert.html):
-
-```js
-const a = /foo/;
-const b = 'bar';
-const c = 'baz';
-require('assert').ok(a.test(b) || b === c);
-```
-
-If you paste that into a Node REPL it'll return:
-
-```
-AssertionError: false == true
-```
-
-With AVA's `assert` assertion however, this test:
-
-```js
-test('enhanced assertions', t => {
-	const a = /foo/;
-	const b = 'bar';
-	const c = 'baz';
-	t.assert(a.test(b) || b === c);
-});
-```
-
-Will output:
-
-```
-6:   const c = 'baz';
-7:   t.assert(a.test(b) || b === c);
-8: });
-
-Value is not truthy:
-
-false
-
-a.test(b) || b === c
-=> false
-
-b === c
-=> false
-
-c
-=> 'baz'
-
-b
-=> 'bar'
-
-a.test(b)
-=> false
-
-b
-=> 'bar'
-
-a
-=> /foo/
-```
-
 ## Custom assertions
 
 You can use any assertion library instead of or in addition to the built-in one, provided it throws exceptions when the assertion fails.
@@ -166,7 +103,7 @@ Failing assertion. Returns a boolean indicating whether the assertion passed.
 
 ### `.assert(value, message?)`
 
-Asserts that `value` is truthy. This is [`power-assert`](#enhanced-assertion-messages) enabled. Returns a boolean indicating whether the assertion passed.
+Asserts that `value` is truthy. Returns a boolean indicating whether the assertion passed.
 
 ### `.truthy(value, message?)`
 
@@ -194,7 +131,7 @@ Assert that `value` is not the same as `expected`. This is based on [`Object.is(
 
 ### `.deepEqual(value, expected, message?)`
 
-Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details. In AVA 3 this works with [React elements and `react-test-renderer`](https://github.com/concordancejs/react).
+Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details.
 
 ### `.notDeepEqual(value, expected, message?)`
 
@@ -239,7 +176,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. The 
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`.
 
 Example:
 
@@ -271,7 +208,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
-`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`. (AVA 3 also allows you to specify `null`. This will be removed in AVA 4. You can opt into this change early by enabling the `disableNullExpectations` experiment.)
+`expectation` does not need to be specified. If you don't need it but do want to set an assertion message you have to specify `undefined`.
 
 Example:
 
@@ -321,10 +258,6 @@ Assert that `contents` does not match `regex`. Returns a boolean indicating whet
 ### `.snapshot(expected, message?)`
 
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles.
-
-AVA 3 supports an  `options` object that lets you select a specific snapshot, for instance `{id: 'my snapshot'}`. This is buggy and will be removed in AVA 4.
-
-In AVA 3, you cannot update snapshots while using `t.snapshot.skip()`.
 
 ### `.try(title?, implementation | macro, ...args?)`
 
