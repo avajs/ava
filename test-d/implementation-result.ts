@@ -3,7 +3,7 @@ import test from '..';
 
 test('return a promise-like', t => ({
 	then(resolve) {
-		resolve?.();
+		resolve?.(); // eslint-disable-line @typescript-eslint/no-floating-promises
 	},
 }));
 
