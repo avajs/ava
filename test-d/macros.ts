@@ -82,6 +82,15 @@ import test, {ExecutionContext} from '..';
 	test(pass);
 }
 
+// Without test.macro()
+{
+	const hasLength = (t: ExecutionContext, input: string, expected: number) => {
+		t.is(input.length, expected);
+	};
+
+	test('bar has length 3', hasLength, 'bar', 3);
+}
+
 // Inline function with explicit argument types.
 test('has length 3', (t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
 

@@ -10,9 +10,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 ## Test isolation
 
-AVA 3 runs each test file in a separate Node.js process. This allows you to change the global state or overriding a built-in in one test file, without affecting another.
-
-AVA 4 runs each test file in a new worker thread, though you can fall back to AVA 3's behavior of running in separate processes.
+Each test file is run in a new worker thread. This is new as of AVA 4, though you can fall back to AVA 3's behavior of running in separate processes.
 
 AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
 
@@ -91,19 +89,6 @@ test('handles observables', t => {
 });
 ```
 
-## Callback support
-
-*👉 AVA 4 removes support for `test.cb()` and `t.end()`.*
-
-AVA 3 supports using `t.end` as the final callback when using Node.js-style error-first callback APIs. AVA will consider any truthy value passed as the first argument to `t.end` to be an error. Note that `t.end` requires "callback mode", which can be enabled by using the `test.cb` chain.
-
-```js
-test.cb('data.txt can be read', t => {
-	// `t.end` automatically checks for error as first argument
-	fs.readFile('data.txt', t.end);
-});
-```
-
 ## Running specific tests
 
 During development it can be helpful to only run a few specific tests. This can be accomplished using the `.only` modifier:
@@ -122,8 +107,6 @@ You can use the `.only` modifier with all tests. It cannot be used with hooks or
 
 *Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
-In AVA 3, you cannot update snapshots when using `.only()`.
-
 ## Skipping tests
 
 Sometimes failing tests can be hard to fix. You can tell AVA to temporarily skip these tests using the `.skip` modifier. They'll still be shown in the output (as having been skipped) but are never run.
@@ -137,8 +120,6 @@ test.skip('will not be run', t => {
 You must specify the implementation function. You can use the `.skip` modifier with all tests and hooks, but not with `.todo()`. You can not apply further modifiers to `.skip`.
 
 If the test is likely to be failing for a while, use `.failing()` instead.
-
-In AVA 3, you cannot update snapshots when using `.skip()`.
 
 ## Test placeholders ("todo")
 
@@ -277,10 +258,8 @@ Access data about the currently loaded test file run by reading `test.meta`.
 
 Available properties:
 
-* `file`: path to the test file
-* `snapshotDirectory`: directory where snapshots are stored
-
-In AVA 4 these are file URL strings.
+* `file`: path to the test file, as a file URL string
+* `snapshotDirectory`: directory where snapshots are stored, as a file URL string
 
 ```js
 const test = require('ava');
@@ -294,7 +273,7 @@ console.log('Test file currently being run:', test.meta.file);
 
 Additional arguments passed to the test declaration will be passed to the test implementation. This is useful for creating reusable test macros.
 
-You can use plain functions:
+You _could_ use plain functions:
 
 ```js
 function macro(t, input, expected) {
@@ -305,23 +284,7 @@ test('2 + 2 = 4', macro, '2 + 2', 4);
 test('2 * 3 = 6', macro, '2 * 3', 6);
 ```
 
-With AVA 3 you can build the test title programmatically by attaching a `title` function to the macro:
-
-```js
-function macro(t, input, expected) {
-	t.is(eval(input), expected);
-}
-
-macro.title = (providedTitle = '', input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
-
-test(macro, '2 + 2', 4);
-test(macro, '2 * 3', 6);
-test('providedTitle', macro, '3 * 3', 9);
-```
-
-The `providedTitle` argument defaults to `undefined` if the user does not supply a string title. This means you can use a parameter assignment to set the default value. The example above uses the empty string as the default.
-
-However with AVA 4 the preferred approach is to use the `test.macro()` helper:
+However the preferred approach is to use the `test.macro()` helper:
 
 ```js
 import test from 'ava';
@@ -344,7 +307,7 @@ const macro = test.macro({
 	},
 	title(providedTitle = '', input, expected) {
 		return `${providedTitle} ${input} = ${expected}`.trim();
-	}
+	},
 });
 
 test(macro, '2 + 2', 4);
@@ -352,4 +315,4 @@ test(macro, '2 * 3', 6);
 test('providedTitle', macro, '3 * 3', 9);
 ```
 
-We encourage you to use macros instead of building your own test generators ([here is an example](https://github.com/avajs/ava-codemods/blob/47073b5b58aa6f3fb24f98757be5d3f56218d160/test/ok-to-truthy.js#L7-L9) of code that should be replaced with a macro). Macros are designed to perform static analysis of your code, which can lead to better performance, IDE integration, and linter rules.
+The `providedTitle` argument defaults to `undefined` if the user does not supply a string title. This means you can use a parameter assignment to set the default value. The example above uses the empty string as the default.

@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/doc
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA 3's definition expects at least version 3.7.5. AVA 4 will require at least version 4.4.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 4.4.
 
 ## Enabling AVA's support for TypeScript test files
 
@@ -111,39 +111,7 @@ const hasLength = (t: ExecutionContext, input: string, expected: number) => {
 test('bar has length 3', hasLength, 'bar', 3);
 ```
 
-### AVA 3
-
-With AVA 3, in order to be able to assign the `title` property to a macro you need to type the function:
-
-```ts
-import test, {Macro} from 'ava';
-
-const macro: Macro<[string, number]> = (t, input, expected) => {
-	t.is(eval(input), expected);
-};
-macro.title = (providedTitle = '', input, expected) => `${providedTitle} ${input} = ${expected}`.trim();
-
-test(macro, '2 + 2', 4);
-test(macro, '2 * 3', 6);
-test('providedTitle', macro, '3 * 3', 9);
-```
-
-You'll need a different type if you're expecting your macro to be used with an AVA 3 callback test:
-
-```ts
-import test, {CbMacro} from 'ava';
-
-const macro: CbMacro<[]> = t => {
-	t.pass();
-	setTimeout(t.end, 100);
-};
-
-test.cb(macro);
-```
-
-### AVA 4
-
-With AVA 4 you can use the `test.macro()` helper to create macros:
+However if you use the `test.macro()` helper you get much better type inference:
 
 ```ts
 import test from 'ava';
@@ -178,13 +146,12 @@ test('providedTitle', macro, '3 * 3', 9);
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-context?file=source%2Ftest.ts&terminal=test&view=editor)
 
-By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` (in AVA 4 this is `TestFn<Context>`) which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestFn<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
 ```ts
-import anyTest, {TestInterface} from 'ava'; // AVA 3
-// import anyTest, {TestFn as TestInterface} from 'ava'; // AVA 4, usage is the same
+import anyTest, {TestFn} from 'ava';
 
-const test = anyTest as TestInterface<{foo: string}>;
+const test = anyTest as TestFn<{foo: string}>;
 
 test.beforeEach(t => {
 	t.context = {foo: 'bar'};
@@ -201,28 +168,6 @@ test.serial.failing('very long chains are properly typed', t => {
 test('an actual test', t => {
 	t.deepEqual(t.context.foo.map(c => c), ['b', 'a', 'r']); // error: Property 'map' does not exist on type 'string'
 });
-```
-
-You can also type the context when creating macros:
-
-```ts
-import anyTest, {Macro, TestInterface} from 'ava'; // AVA 3
-
-interface Context {
-	foo: string
-}
-
-const test = anyTest as TestInterface<Context>;
-
-const macro: Macro<[string], Context> = (t, expected: string) => {
-	t.is(t.context.foo, expected);
-};
-
-test.beforeEach(t => {
-	t.context = {foo: 'bar'};
-});
-
-test('foo is bar', macro, 'bar');
 ```
 
 Note that, despite the type cast above, when executing `t.context` is an empty object unless it's assigned.

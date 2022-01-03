@@ -6,7 +6,7 @@ Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
 
 Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to contribute (issues / PRs / etc).
 
-![](media/mini-reporter.gif)
+![](media/verbose-reporter.png)
 
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/master/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/readme.md)
@@ -147,9 +147,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
-- [Using ES modules](docs/recipes/es-modules.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
-- [Testing React components](docs/recipes/react.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with VSCode](docs/recipes/debugging-with-vscode.md)
@@ -188,7 +186,6 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 - [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava) — Lint rules for AVA tests
 - [@ava/typescript](https://github.com/avajs/typescript) — Test TypeScript projects
-- [@ava/babel](https://github.com/avajs/babel) — Compile test files using Babel, for AVA 3
 - [@ava/cooperate](https://github.com/avajs/cooperate) — Low-level primitives to enable cooperation between test files
 - [@ava/get-port](https://github.com/avajs/get-port) — Reserve a port while testing
 

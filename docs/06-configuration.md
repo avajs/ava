@@ -47,12 +47,12 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: defaults to `true` to cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
 - `concurrency`: max number of test files running at the same time (default: CPU cores)
-- `workerThreads`: use worker threads to run tests (requires AVA 4, enabled by default). If `false`, tests will run in child processes (how AVA 3 behaves)
+- `workerThreads`: use worker threads to run tests (enabled by default). If `false`, tests will run in child processes
 - `failFast`: stop running further tests once a test fails
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
-- `verbose`: if `true`, enables verbose output (no-op in AVA 4)
+- `verbose`: if `true`, enables verbose output (though there currently non-verbose output is not supported)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
@@ -61,31 +61,24 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 Note that providing files on the CLI overrides the `files` option.
 
-When using AVA 3, provide the `babel` option (and install [`@ava/babel`](https://github.com/avajs/babel) as an additional dependency) to enable Babel compilation.
-
 Provide the `typescript` option (and install [`@ava/typescript`](https://github.com/avajs/typescript) as an additional dependency) for AVA to run tests written in TypeScript.
 
 ## Using `ava.config.*` files
 
 Rather than specifying the configuration in the `package.json` file you can use `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` files.
 
-Note: AVA 3 recognizes `ava.config.mjs` files but refuses to load them. They work in AVA 4.
-
 To use these files:
 
 1. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
 2. You must only have one `ava.config.*` file in any directory, so don't mix `ava.config.js` *and* `ava.config.cjs` files
-3. AVA 3 requires these files be in the same directory as your `package.json` file
 
-AVA 4 searches your file system for `ava.config.*` files. First, when you run AVA, it finds the closest `package.json`. Starting in that directory it recursively checks the parent directories until it either reaches the file system root or encounters a `.git` file or directory. The first `ava.config.*` file found is selected. This allows you to use a single configuration file in a monorepo setup.
+AVA searches your file system for `ava.config.*` files. First, when you run AVA, it finds the closest `package.json`. Starting in that directory it recursively checks the parent directories until it either reaches the file system root or encounters a `.git` file or directory. The first `ava.config.*` file found is selected. This allows you to use a single configuration file in a monorepo setup.
 
 ### `ava.config.js`
 
-AVA 4 follows Node.js' behavior, so if you've set `"type": "module"` you must use ESM, and otherwise you must use CommonJS.
+AVA follows Node.js' behavior, so if you've set `"type": "module"` you must use ESM, and otherwise you must use CommonJS.
 
-In AVA 3, for `ava.config.js` files you must use `export default`. You cannot use ["module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope). You cannot import dependencies.
-
-The default export can either be a plain object or a factory function which returns a plain object. Starting in AVA 4 you can export or return a promise for a plain object:
+The default export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
 
 ```js
 export default {
@@ -121,7 +114,7 @@ export default ({projectDir}) => {
 
 For `ava.config.cjs` files you must assign `module.exports`. ["Module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope) is available. You can `require()` dependencies.
 
-The module export can either be a plain object or a factory function which returns a plain object. Starting in AVA 4 you can export or return a promise for a plain object:
+The module export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
 
 ```js
 module.exports = {
@@ -154,8 +147,6 @@ module.exports = ({projectDir}) => {
 ```
 
 ### `ava.config.mjs`
-
-Note that `ava.config.mjs` files are only supported in AVA 4.
 
 The default export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
 
@@ -194,8 +185,6 @@ export default ({projectDir}) => {
 The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file must have either a `.js`, `.cjs` or `.mjs` extension and is processed like an `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` file would be.
 
 When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` files. The configuration is not merged.
-
-Note: In AVA 3 the configuration file *must* be in the same directory as the `package.json` file. This restriction does not apply to AVA 4.
 
 You can use this to customize configuration for a specific test run. For instance, you may want to run unit tests separately from integration tests:
 
@@ -254,10 +243,6 @@ export default {
 ## Configuring module formats
 
 Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders). To use this you'll also have to configure AVA to `import()` your test file.
-
-This is an experimental feature in AVA 3. You can opt in to it by enabling the `configurableModuleFormat` experiment. Afterwards, you'll be able to specify per-extension module formats using an object form.
-
-This feature is available by default in AVA 4.
 
 As with the array form, you need to explicitly list `js`, `cjs`, and `mjs` extensions. These **must** be set using the `true` value; other extensions are configurable using either `'commonjs'` or `'module'`:
 

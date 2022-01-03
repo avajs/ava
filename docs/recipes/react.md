@@ -1,6 +1,8 @@
-# Testing React components
+# Testing React components with AVA 3
 
 Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/react.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/react.md)
+
+**AVA 4 no longer has built-in Babel support, and `t.snapshot()` and `t.deepEqual()` no longer recognize React elements either. Therefore this recipe is mostly relevant for AVA 3 users.**
 
 ## Setting up Babel
 
