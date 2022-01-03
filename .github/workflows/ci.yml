@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~4.4]
+        ts-version: [~4.4, ~4.5]
     steps:
       - uses: actions/checkout@v2
       - run: rm .npmrc
@@ -58,6 +58,7 @@ jobs:
         env:
           TS_VERSION: ${{ matrix.ts-version }}
       - run: npm ls typescript
+        continue-on-error: true
       - run: npx tsd
 
   lockfile_churn:

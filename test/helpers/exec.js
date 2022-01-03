@@ -3,7 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
-import execa from 'execa';
+import {execaNode} from 'execa';
 import replaceString from 'replace-string';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
@@ -30,7 +30,7 @@ const compareStatObjects = (a, b) => {
 	return 1;
 };
 
-export const cwd = (...paths) => path.join(path.dirname(test.meta.file), 'fixtures', ...paths);
+export const cwd = (...paths) => path.join(path.dirname(fileURLToPath(test.meta.file)), 'fixtures', ...paths);
 export const cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
 
 const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
@@ -45,7 +45,7 @@ const forwardErrorOutput = async from => {
 
 export const fixture = async (args, options = {}) => {
 	const workingDir = options.cwd || cwd();
-	const running = execa.node(cliPath, args, {
+	const running = execaNode(cliPath, args, {
 		...options,
 		env: {
 			...options.env,

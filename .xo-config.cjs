@@ -41,6 +41,15 @@ module.exports = {
 			},
 		},
 		{
+			files: [
+				'test/**/fixtures/**',
+				'test-tap/**fixture/**',
+			],
+			rules: {
+				'unicorn/no-empty-file': 'off',
+			},
+		},
+		{
 			// TODO: Update tests.
 			files: 'test/**',
 			rules: {

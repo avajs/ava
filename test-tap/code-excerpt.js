@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {pathToFileURL} from 'node:url';
 
-import _chalk from 'chalk';
+import {Chalk} from 'chalk'; // eslint-disable-line unicorn/import-style
 import {test} from 'tap';
 import tempWrite from 'temp-write';
 
@@ -10,7 +10,7 @@ import codeExcerpt from '../lib/code-excerpt.js';
 
 setChalk({level: 1});
 
-const chalk = new _chalk.Instance({level: 1});
+const chalk = new Chalk({level: 1});
 
 test('read code excerpt', t => {
 	const file = pathToFileURL(tempWrite.sync([

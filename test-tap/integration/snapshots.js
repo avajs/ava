@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import execa from 'execa';
+import {execa} from 'execa';
 import {test} from 'tap';
 import tempy from 'tempy';
 
