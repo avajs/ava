@@ -1303,7 +1303,7 @@ test('.notThrowsAsync() fails if passed a bad value', t => {
 	t.end();
 });
 
-test('.snapshot()', t => {
+test('.snapshot()', async t => {
 	// Set to `true` to update the snapshot, then run:
 	// npx tap test-tap/assert.js
 	//
@@ -1411,7 +1411,7 @@ test('.snapshot()', t => {
 		});
 	}
 
-	manager.save();
+	await manager.save();
 	t.end();
 });
 

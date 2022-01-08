@@ -84,5 +84,5 @@ test(async t => {
 		t.equal(result.error.name, 'Error');
 	});
 
-	manager.save();
+	await manager.save();
 });
