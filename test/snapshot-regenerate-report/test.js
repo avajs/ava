@@ -38,7 +38,7 @@ test('snapshot report can be regenerated from .snap file', async t => {
 
 	// Regenerate report
 	snapshots.hasChanges = true; // Force.
-	snapshots.save();
+	await snapshots.save();
 
 	// Assert that reports match
 	t.is(await fs.readFile(reportPath, 'utf8'), report);
