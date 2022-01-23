@@ -101,51 +101,51 @@ Passing assertion. Returns a boolean indicating whether the assertion passed.
 
 Failing assertion. Returns a boolean indicating whether the assertion passed.
 
-### `.assert(value, message?)`
+### `.assert(actual, message?)`
 
-Asserts that `value` is truthy. Returns a boolean indicating whether the assertion passed.
+Asserts that `actual` is truthy. Returns a boolean indicating whether the assertion passed.
 
-### `.truthy(value, message?)`
+### `.truthy(actual, message?)`
 
-Assert that `value` is truthy. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is truthy. Returns a boolean indicating whether the assertion passed.
 
-### `.falsy(value, message?)`
+### `.falsy(actual, message?)`
 
-Assert that `value` is falsy. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is falsy. Returns a boolean indicating whether the assertion passed.
 
-### `.true(value, message?)`
+### `.true(actual, message?)`
 
-Assert that `value` is `true`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is `true`. Returns a boolean indicating whether the assertion passed.
 
-### `.false(value, message?)`
+### `.false(actual, message?)`
 
-Assert that `value` is `false`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is `false`. Returns a boolean indicating whether the assertion passed.
 
-### `.is(value, expected, message?)`
+### `.is(actual, expected, message?)`
 
-Assert that `value` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
 
-### `.not(value, expected, message?)`
+### `.not(actual, expected, message?)`
 
-Assert that `value` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
 
-### `.deepEqual(value, expected, message?)`
+### `.deepEqual(actual, expected, message?)`
 
-Assert that `value` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details.
+Assert that `actual` is deeply equal to `expected`. See [Concordance](https://github.com/concordancejs/concordance) for details.
 
-### `.notDeepEqual(value, expected, message?)`
+### `.notDeepEqual(actual, expected, message?)`
 
-Assert that `value` is not deeply equal to `expected`. The inverse of `.deepEqual()`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqual()`. Returns a boolean indicating whether the assertion passed.
 
-### `.like(value, selector, message?)`
+### `.like(actual, selector, message?)`
 
-Assert that `value` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `value` does.
+Assert that `actual` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `actual` does.
 
-Instead AVA derives a *comparable* object from `value`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
+Instead AVA derives a *comparable* object from `actual`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
 
-Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `value`.
+Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `actual`.
 
-In the following example, the `map` property of `value` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
+In the following example, the `map` property of `actual` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
 
 ```js
 t.like({
