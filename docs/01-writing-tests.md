@@ -21,7 +21,7 @@ To declare a test you call the `test` function you imported from AVA. Provide th
 **Note:** In order for the [enhanced assertion messages](./03-assertions.md#enhanced-assertion-messages) to behave correctly, the first argument **must** be named `t`.
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 test('my passing test', t => {
 	t.pass();
