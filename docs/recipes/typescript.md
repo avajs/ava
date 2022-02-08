@@ -35,9 +35,6 @@ If your `package.json` has `"type": "module"`, then this is the AVA configuratio
 		"extensions": {
 			"ts": "module"
 		},
-		"nonSemVerExperiments": {
-			"configurableModuleFormat": true
-		},
 		"nodeArguments": [
 			"--loader=ts-node/esm"
 		]
