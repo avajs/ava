@@ -25,8 +25,8 @@ Create the following files:
 In both files, let's first include the packages:
 
 ```js
-const test = require('ava');
-const {Builder, By, Key, until} = require('selenium-webdriver');
+import test from 'ava';
+import {Builder, By, Key, until} from 'selenium-webdriver';
 
 require('chromedriver');
 ```

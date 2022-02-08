@@ -42,7 +42,7 @@ test('fetches foo', async t => {
 If you're using callbacks, promisify the callback function using something like [`util.promisify()`](https://nodejs.org/dist/latest/docs/api/util.html#util_util_promisify_original):
 
 ```js
-const {promisify} = require('util');
+import {promisify} from 'util';
 
 test('fetches foo', async t => {
 	const data = await promisify(fetch)();
@@ -61,7 +61,7 @@ By default AVA executes tests concurrently. This can cause problems if your test
 Take this contrived example:
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 let count = 0;
 const incr = async () => {
@@ -88,7 +88,7 @@ test('increment twice', async t => {
 Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 let count = 0;
 const incr = async () => {

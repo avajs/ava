@@ -214,9 +214,9 @@ You can now run your unit tests through `npx ava` and the integration tests thro
 By default, AVA prints nested objects to a depth of `3`. However, when debugging tests with deeply nested objects, it can be useful to print with more detail. This can be done by setting [`util.inspect.defaultOptions.depth`](https://nodejs.org/api/util.html#util_util_inspect_defaultoptions) to the desired depth, before the test is executed:
 
 ```js
-const util = require('util');
+import util from 'util';
 
-const test = require('ava');
+import test from 'ava';
 
 util.inspect.defaultOptions.depth = 5;  // Increase AVA's printing depth
 

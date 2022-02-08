@@ -260,7 +260,7 @@ Available properties:
 * `snapshotDirectory`: directory where snapshots are stored, as a file URL string
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 console.log('Test file currently being run:', test.meta.file);
 ```
