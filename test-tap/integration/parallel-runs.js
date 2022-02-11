@@ -43,3 +43,17 @@ test('fail when there are no files', t => {
 		}, error => t.ok(error));
 	}
 });
+
+test('correctly applies custom comparator', t => {
+	t.plan(3);
+	for (let i = 0; i < 3; i++) {
+		execCli([], {
+			dirname: 'fixture/parallel-runs/custom-comparator',
+			env: {
+				AVA_FORCE_CI: 'ci',
+				CI_NODE_INDEX: String(i),
+				CI_NODE_TOTAL: '3',
+			},
+		}, error => t.error(error));
+	}
+});
