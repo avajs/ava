@@ -58,6 +58,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
+- `ciParallelRunsComparator`: A comparator function to use when [splitting tests across parallel CI builds](../readme.md#parallel-runs-in-ci). Available only when using a `ava.config.*` file. See example [here](recipes/parallel-runs-in-ci.md).
 
 Note that providing files on the CLI overrides the `files` option.
 
