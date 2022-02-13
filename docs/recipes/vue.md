@@ -30,10 +30,10 @@ The first step is setting up a helper to configure the environment to transpile 
 ```
 
 ```js
-// ./test/_setup.js
+// ./test/_setup.cjs
 
 // Set up JSDom.
-import jsdomGlobal from 'jsdom-global';
+const jsdomGlobal = require('jsdom-global');
 jsdomGlobal();
 
 // Fix the Date object, see <https://github.com/vuejs/vue-test-utils/issues/936#issuecomment-415386167>.
@@ -57,7 +57,7 @@ hooks(['vue', 'js']).exclude(({filename}) => filename.match(/\/node_modules\//))
 ## Sample snapshot test
 
 ```js
-import test from 'ava';
+const test = require('ava');
 const Vue = require('vue');
 const Component = require('component.vue');
 

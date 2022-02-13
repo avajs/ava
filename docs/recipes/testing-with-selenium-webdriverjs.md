@@ -27,8 +27,7 @@ In both files, let's first include the packages:
 ```js
 import test from 'ava';
 import {Builder, By, Key, until} from 'selenium-webdriver';
-
-require('chromedriver');
+import 'chromedriver';
 ```
 
 In the `bingtest.js` file, add the following code, which tests whether searching for `webdriver` on Bing, returns results.
