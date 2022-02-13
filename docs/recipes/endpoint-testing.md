@@ -11,11 +11,11 @@ Since tests run concurrently, it's best to create a fresh server instance at lea
 Check out the example below:
 
 ```js
-const http = require('http');
-const test = require('ava');
-const got = require('got');
-const listen = require('test-listen');
-const app = require('../app');
+import http from 'http';
+import test from 'ava';
+import got from 'got';
+import listen from 'test-listen';
+import app from '../app';
 
 test.before(async t => {
 	t.context.server = http.createServer(app);

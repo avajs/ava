@@ -5,7 +5,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/do
 Each test or hook is called with an execution context. By convention it's named `t`.
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 test('my passing test', t => {
 	t.pass();

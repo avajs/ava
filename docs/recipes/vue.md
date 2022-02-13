@@ -30,10 +30,11 @@ The first step is setting up a helper to configure the environment to transpile 
 ```
 
 ```js
-// ./test/_setup.js
+// ./test/_setup.cjs
 
 // Set up JSDom.
-require('jsdom-global')()
+const jsdomGlobal = require('jsdom-global');
+jsdomGlobal();
 
 // Fix the Date object, see <https://github.com/vuejs/vue-test-utils/issues/936#issuecomment-415386167>.
 window.Date = Date

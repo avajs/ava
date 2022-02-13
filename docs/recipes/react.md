@@ -47,8 +47,8 @@ Create a helper file, prefixed with an underscore. This ensures AVA does not tre
 `test/_setup-enzyme-adapter.js`:
 
 ```js
-const Enzyme = require('enzyme');
-const Adapter = require('enzyme-adapter-react-16');
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({
 	adapter: new Adapter()
@@ -78,10 +78,10 @@ Then you can use Enzyme straight away:
 `test.js`:
 
 ```js
-const test = require('ava');
-const React = require('react');
-const PropTypes = require('prop-types');
-const {shallow} = require('enzyme');
+import test from 'ava';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {shallow} from 'enzyme';
 
 const Foo = ({children}) =>
 	<div className="Foo">
@@ -131,10 +131,10 @@ $ npm install --save-dev jsx-test-helpers
 Usage example:
 
 ```js
-const test = require('ava');
-const React = require('react');
-const PropTypes = require('prop-types');
-const {renderJSX, JSX} = require('jsx-test-helpers');
+import test from 'ava';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {renderJSX, JSX} from 'jsx-test-helpers';
 
 const Foo = ({children}) =>
 	<div className="Foo">

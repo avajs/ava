@@ -13,7 +13,7 @@ The first step is setting up a helper to configure the environment:
 `./test/_withPage.js`
 
 ```js
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 module.exports = async (t, run) => {
 	const browser = await puppeteer.launch();
@@ -32,8 +32,8 @@ module.exports = async (t, run) => {
 `./test/main.js`
 
 ```js
-const test = require('ava');
-const withPage = require('./_withPage');
+import test from 'ava';
+import withPage from './_withPage';
 
 const url = 'https://google.com';
 
