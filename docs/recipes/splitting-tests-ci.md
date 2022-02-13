@@ -4,8 +4,7 @@ AVA automatically detects whether your CI environment supports parallel builds u
 When parallel builds support is detected, AVA sorts the all detected test files by name, and splits them into chunks.
 Each CI machine is assigned a chunk of the tests, and then each chunk is run in parallel.
 
-To better distribute the tests across the machines, you can configure a custom comparator function.
-For example:
+To better distribute the tests across the machines, you can configure a custom comparator function:
 
 **`ava.config.js`:**
 
