@@ -10,13 +10,21 @@ const FIXTURE_ROOT = fileURLToPath(new URL('fixtures', import.meta.url));
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
 
-const loadFromSetup = setup => {
+const loadFromSetup = (setup, t) => {
 	if (typeof setup === 'string') {
 		return loadConfig();
 	}
 
-	const {configFile, defaults, resolveFrom} = setup;
-	return loadConfig({configFile, defaults, resolveFrom});
+	const {
+		configFile,
+		defaults,
+		resolveFrom,
+		handleUnsupportedConfigs = t => unsupportedConfigs => {
+			t.is(unsupportedConfigs.length, 0);
+		},
+	} = setup;
+
+	return loadConfig({configFile, defaults, resolveFrom, handleUnsupportedConfigs: handleUnsupportedConfigs(t)});
 };
 
 const ok = setup => async (t, assert = tt => tt.pass()) => {
@@ -26,7 +34,7 @@ const ok = setup => async (t, assert = tt => tt.pass()) => {
 	t.teardown(() => stub.restore());
 	stub.returns(resolve(fixture));
 
-	const conf = loadFromSetup(setup);
+	const conf = loadFromSetup(setup, t);
 	await t.notThrowsAsync(conf);
 	const result = await t.try(assert, await conf, setup);
 	result.commit();
@@ -39,7 +47,7 @@ const notOk = setup => async (t, assert = (tt, error) => tt.snapshot(error.messa
 	t.teardown(() => stub.restore());
 	stub.returns(resolve(fixture));
 
-	const conf = loadFromSetup(setup);
+	const conf = loadFromSetup(setup, t);
 	const error = await t.throwsAsync(conf);
 	const result = await t.try(assert, error, setup);
 	result.commit();
@@ -66,6 +74,19 @@ test.serial('loads .js config as CommonJS', ok('js-as-cjs'), (t, conf) => {
 test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 	t.true(conf.failFast);
 });
+
+test.serial('finds unsupported configs',
+	ok({
+		fixture: 'unsupported-configs',
+		handleUnsupportedConfigs: t => unsupportedConfigs => {
+			t.is(unsupportedConfigs.length, 1);
+			t.regex(unsupportedConfigs[0], /test\/config\/fixtures\/unsupported-configs\/ava.config.json/);
+		},
+	}),
+	(t, conf) => {
+		t.true(conf.failFast);
+	},
+);
 
 test.serial('handles errors when loading .js config as ESM', notOk({
 	fixture: 'js-as-esm',
