@@ -71,7 +71,7 @@ Don't forget to configure the `test` script in your `package.json` as per above.
 Create a file named `test.js` in the project root directory:
 
 ```js
-const test = require('ava');
+import test from 'ava';
 
 test('foo', t => {
 	t.pass();
