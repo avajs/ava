@@ -80,7 +80,7 @@ test.serial('finds unsupported configs',
 		fixture: 'unsupported-configs',
 		handleUnsupportedConfigs: t => unsupportedConfigs => {
 			t.is(unsupportedConfigs.length, 1);
-			t.regex(unsupportedConfigs[0], /test\/config\/fixtures\/unsupported-configs\/ava.config.json/);
+			t.regex(unsupportedConfigs[0], /ava\.config\.json/);
 		},
 	}),
 	(t, conf) => {
