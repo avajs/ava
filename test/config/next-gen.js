@@ -10,31 +10,31 @@ const FIXTURE_ROOT = fileURLToPath(new URL('fixtures', import.meta.url));
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
 
-const loadFromSetup = (setup, t) => {
+const loadFromSetup = async (setup, t, assertUnsupportedFiles = (tt, files) => tt.is(files.length, 0)) => {
 	if (typeof setup === 'string') {
-		return loadConfig();
+		const loaded = await loadConfig();
+		return loaded.config;
 	}
 
 	const {
 		configFile,
 		defaults,
 		resolveFrom,
-		handleUnsupportedConfigs = t => unsupportedConfigs => {
-			t.is(unsupportedConfigs.length, 0);
-		},
 	} = setup;
 
-	return loadConfig({configFile, defaults, resolveFrom, handleUnsupportedConfigs: handleUnsupportedConfigs(t)});
+	const loaded = await loadConfig({configFile, defaults, resolveFrom});
+	assertUnsupportedFiles(t, loaded.unsupportedFiles);
+	return loaded.config;
 };
 
-const ok = setup => async (t, assert = tt => tt.pass()) => {
+const ok = setup => async (t, assert = tt => tt.pass(), assertUnsupportedFiles = undefined) => {
 	const fixture = typeof setup === 'string' ? setup : setup.fixture;
 
 	const stub = sinon.stub(process, 'cwd');
 	t.teardown(() => stub.restore());
 	stub.returns(resolve(fixture));
 
-	const conf = loadFromSetup(setup, t);
+	const conf = loadFromSetup(setup, t, assertUnsupportedFiles);
 	await t.notThrowsAsync(conf);
 	const result = await t.try(assert, await conf, setup);
 	result.commit();
@@ -78,13 +78,13 @@ test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 test.serial('finds unsupported configs',
 	ok({
 		fixture: 'unsupported-configs',
-		handleUnsupportedConfigs: t => unsupportedConfigs => {
-			t.is(unsupportedConfigs.length, 1);
-			t.regex(unsupportedConfigs[0], /ava\.config\.json/);
-		},
 	}),
 	(t, conf) => {
 		t.true(conf.failFast);
+	},
+	(t, unsupportedFiles) => {
+		t.is(unsupportedFiles.length, 1);
+		t.regex(unsupportedFiles[0], /ava\.config\.json/);
 	},
 );
 
