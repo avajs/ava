@@ -1,0 +1,19 @@
+TAP version 13
+---tty-stream-chunk-separator
+not ok 1 - a › fails
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test-tap/fixture/report/failfast2/a.cjs:3:22'
+  ...
+---tty-stream-chunk-separator
+# 1 test remaining in a.cjs
+---tty-stream-chunk-separator
+
+1..2
+# tests 2
+# pass 0
+# fail 2
+
+---tty-stream-chunk-separator
