@@ -152,3 +152,11 @@ test('load .js test files as ESM modules', t => {
 		t.end();
 	});
 });
+
+test('uses sortTestFiles to sort test files', t => {
+	execCli([], {dirname: 'fixture/sort-tests'}, (error, stdout) => {
+		t.error(error);
+		t.match(stdout, /should run first[\s\S]+?should run second[\s\S]+?should run third/);
+		t.end();
+	});
+});
