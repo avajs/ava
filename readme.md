@@ -145,6 +145,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Watch mode](docs/recipes/watch-mode.md)
 - [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
+- [Splitting tests in CI](docs/recipes/splitting-tests-ci.md)
 - [Code coverage](docs/recipes/code-coverage.md)
 - [Endpoint testing](docs/recipes/endpoint-testing.md)
 - [Browser testing](docs/recipes/browser-testing.md)
