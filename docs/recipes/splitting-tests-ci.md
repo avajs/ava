@@ -11,12 +11,12 @@ import fs from 'node:fs';
 
 // Assuming 'test-data.json' structure is:
 // {
-//    'tests/test1.js': { order: 1 },
-//    'tests/test2.js': { order: 0 }
+// 	'tests/test1.js': { order: 1 },
+// 	'tests/test2.js': { order: 0 }
 // }
 const testData = JSON.parse(fs.readFileSync('test-data.json', 'utf8'));
 
 export default {
-    ciParallelRunsComparator: (file1, file2) => testData[file1].order - testData[file2].order,
+	sortTestFiles: (file1, file2) => testData[file1].order - testData[file2].order,
 };
 ```
