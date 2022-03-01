@@ -12,36 +12,38 @@ Commands:
   ava debug [<pattern>...]  Activate Node.js inspector and run a single test
                             file
   ava reset-cache           Delete any temporary files and state kept by AVA,
-	                          then exit
+                            then exit
 
 Positionals:
   pattern  Select which test files to run. Leave empty if you want AVA to run
            all test files as per your configuration. Accepts glob patterns,
-           directories that (recursively) contain test files, and file paths.
-           Add a colon and specify line numbers of specific tests
-           to run                                                       [string]
-Options:
-  --version               Show version number                          [boolean]
-  --color                 Force color output                           [boolean]
-  --config                Specific JavaScript file for AVA to read its config
-                          from, instead of using package.json or ava.config.*
-                          files
-  --help                  Show help                                    [boolean]
-  --concurrency, -c       Max number of test files running at the same time
-                          (default: CPU cores)                          [number]
-  --no-worker-threads     Don't use worker threads                     [boolean]
-  --fail-fast             Stop after first test failure                [boolean]
-  --match, -m             Only run tests with matching title (can be repeated)
+           directories that (recursively) contain test files, and file paths
+           optionally suffixed with a colon and comma-separated numbers and/or
+           ranges identifying the 1-based line(s) of specific tests to run
                                                                         [string]
-  --node-arguments        Additional Node.js arguments for launching worker
-                          processes (specify as a single string)        [string]
-  --serial, -s            Run tests serially                           [boolean]
-  --tap, -t               Generate TAP output                          [boolean]
-  --timeout, -T           Set global timeout (milliseconds or human-readable,
-                          e.g. 10s, 2m)                                 [string]
-  --update-snapshots, -u  Update snapshots                             [boolean]
-  --verbose, -v           Enable verbose output (default)              [boolean]
-  --watch, -w             Re-run tests when files change               [boolean]
+
+Options:
+      --version            Show version number                         [boolean]
+      --color              Force color output                          [boolean]
+      --config             Specific JavaScript file for AVA to read its config
+                           from, instead of using package.json or ava.config.*
+                           files
+      --help               Show help                                   [boolean]
+  -c, --concurrency        Max number of test files running at the same time
+                           (default: CPU cores)                         [number]
+      --fail-fast          Stop after first test failure               [boolean]
+  -m, --match              Only run tests with matching title (can be repeated)
+                                                                        [string]
+      --no-worker-threads  Don't use worker threads                    [boolean]
+      --node-arguments     Additional Node.js arguments for launching worker
+                           processes (specify as a single string)       [string]
+  -s, --serial             Run tests serially                          [boolean]
+  -t, --tap                Generate TAP output                         [boolean]
+  -T, --timeout            Set global timeout (milliseconds or human-readable,
+                           e.g. 10s, 2m)                                [string]
+  -u, --update-snapshots   Update snapshots                            [boolean]
+  -v, --verbose            Enable verbose output (default)             [boolean]
+  -w, --watch              Re-run tests when files change              [boolean]
 
 Examples:
   ava
