@@ -139,15 +139,15 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 
 ### Recipes
 
-- [Shared workers](docs/recipes/shared-workers.md)
 - [Test setup](docs/recipes/test-setup.md)
-- [Code coverage](docs/recipes/code-coverage.md)
-- [Watch mode](docs/recipes/watch-mode.md)
-- [Endpoint testing](docs/recipes/endpoint-testing.md)
-- [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
-- [Browser testing](docs/recipes/browser-testing.md)
 - [TypeScript](docs/recipes/typescript.md)
+- [Shared workers](docs/recipes/shared-workers.md)
+- [Watch mode](docs/recipes/watch-mode.md)
+- [When to use `t.plan()`](docs/recipes/when-to-use-plan.md)
 - [Passing arguments to your test files](docs/recipes/passing-arguments-to-your-test-files.md)
+- [Code coverage](docs/recipes/code-coverage.md)
+- [Endpoint testing](docs/recipes/endpoint-testing.md)
+- [Browser testing](docs/recipes/browser-testing.md)
 - [Testing Vue.js components](docs/recipes/vue.md)
 - [Debugging tests with Chrome DevTools](docs/recipes/debugging-with-chrome-devtools.md)
 - [Debugging tests with VSCode](docs/recipes/debugging-with-vscode.md)
