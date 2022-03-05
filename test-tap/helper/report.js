@@ -94,6 +94,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 
 	const files = globbySync('*.cjs', {
 		absolute: true,
+		// @ts-ignore
 		brace: true,
 		case: false,
 		cwd: projectDir,

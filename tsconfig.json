@@ -1,6 +1,6 @@
 {
 	"include": ["*","**/*","package.json"],
-	"exclude": ["**/fixtures/*","media/**","examples/**"],
+	"exclude": ["**/fixtures/*","media/**","examples/**","test-tap/fixture/report/edgecases/ast-syntax-error.cjs"],
 	"references": [
 		{ "path": "./test-d" },
 		{ "path": "./test-tap" },

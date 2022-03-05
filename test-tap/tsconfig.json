@@ -1,6 +1,6 @@
 {
 	"include": ["*","**/*","package.json"],
-	"exclude": ["./fixture/**/*"],
+	"exclude": ["./fixture/**/*", "fixture/report/edgecases/ast-syntax-error.cjs"],
 	"references": [
 		{ "path": ".." }
 	],
