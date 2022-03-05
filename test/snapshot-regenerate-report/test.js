@@ -34,6 +34,9 @@ test('snapshot report can be regenerated from .snap file', async t => {
 	const snapshots = load({
 		file: path.join(workingDir, 'test.js'),
 		projectDir: workingDir,
+		fixedLocation: undefined,
+		recordNewSnapshots: false,
+		updating: undefined,
 	});
 
 	// Regenerate report

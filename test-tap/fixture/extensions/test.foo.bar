@@ -1,4 +1,4 @@
-const test = require('../../../entrypoints/main.cjs');
+const { test } = require('../../../entrypoints/main.cjs');
 
 const one = {one: 1};
 const two = {two: 2};

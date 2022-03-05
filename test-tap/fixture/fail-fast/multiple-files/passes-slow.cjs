@@ -1,6 +1,6 @@
 const {parentPort} = require('worker_threads');
 
-const test = require('../../../../entrypoints/main.cjs');
+const { test } = require('../../../../entrypoints/main.cjs');
 
 test.serial('first pass', async t => {
 	t.pass();

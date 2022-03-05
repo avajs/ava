@@ -1,4 +1,4 @@
-const test = require('../../entrypoints/main.cjs');
+const { test } = require('../../entrypoints/main.cjs');
 
 test('this test will match', t => {
 	t.pass();

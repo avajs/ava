@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
 import {expectType} from 'tsd';
 
-import test, {ExecutionContext} from '..';
+import test, {ExecutionContext} from 'ava';
 
 // Typed arguments through generics.
 {

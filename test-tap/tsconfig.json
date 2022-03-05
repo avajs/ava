@@ -1,17 +1,11 @@
 {
 	"include": ["*","**/*","package.json"],
-	"exclude": ["**/fixtures/*","media/**","examples/**"],
+	"exclude": ["./fixture/**/*"],
 	"references": [
-		{ "path": "./test-d" },
-		{ "path": "./test-tap" },
+		{ "path": ".." }
 	],
 	"compilerOptions": {
 		"declarationDir": "types",
-		"rootDirs": [
-			"test",
-			"test-d",
-			"test-tap"
-		],
 		"composite": true,
 		"types": ["@types/node"],
 		"allowJs": true,

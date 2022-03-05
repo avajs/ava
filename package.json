@@ -12,6 +12,9 @@
 	"type": "module",
 	"types": "./index.d.ts",
 	"exports": {
+		"import": "./entrypoints/main.mjs",
+		"require": "./entrypoints/main.cjs",
+		"default": "./entrypoints/main.cjs",
 		"types": "./index.d.ts",
 		".": {
 			"types": "./index.d.ts",

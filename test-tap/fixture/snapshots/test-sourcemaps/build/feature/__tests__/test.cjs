@@ -1,4 +1,4 @@
-const test = require('../../../../../../../entrypoints/main.cjs');
+const { test } = require('../../../../../../../entrypoints/main.cjs');
 test('feature test title', t => {
     t.snapshot({ foo: 'bar' });
     t.snapshot({ answer: 40 });

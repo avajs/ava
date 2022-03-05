@@ -1,4 +1,4 @@
-import test from '../';
+import test from 'ava';
 
 test('like', t => {
 	t.like({

@@ -1,4 +1,4 @@
-const test = require('../../../../entrypoints/main.cjs');
+const { test } = require('../../../../entrypoints/main.cjs');
 
 const passes = t => {
 	Promise.reject(new Error('Can’t catch me'));
