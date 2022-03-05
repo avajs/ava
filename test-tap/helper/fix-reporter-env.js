@@ -6,7 +6,7 @@ import {set as setChalk} from '../../lib/chalk.js';
 
 const fixColors = () => {
 	// Force consistent and high-fidelity logs.
-	process.env.FORCE_COLOR = 3;
+	process.env.FORCE_COLOR = "3";
 	Object.defineProperty(process, 'platform', {value: 'darwin', enumerable: true, configurable: true});
 };
 

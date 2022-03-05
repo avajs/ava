@@ -83,22 +83,29 @@ export const fixture = async (args, options = {}) => {
 	};
 
 	running.on('message', statusEvent => {
+		// @ts-ignore
 		switch (statusEvent.type) {
 			case 'hook-failed': {
+				// @ts-ignore
 				const {title, testFile} = statusEvent;
 				const statObject = {title, file: normalizePath(workingDir, testFile)};
+				// @ts-ignore
 				errors.set(statObject, statusEvent.err);
 				stats.failedHooks.push(statObject);
 				break;
 			}
 
 			case 'selected-test': {
+				// @ts-ignore
 				if (statusEvent.skip) {
+					// @ts-ignore
 					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(workingDir, testFile)});
 				}
 
+				// @ts-ignore
 				if (statusEvent.todo) {
+					// @ts-ignore
 					const {title, testFile} = statusEvent;
 					stats.todo.push({title, file: normalizePath(workingDir, testFile)});
 				}
@@ -107,29 +114,36 @@ export const fixture = async (args, options = {}) => {
 			}
 
 			case 'shared-worker-error': {
+				// @ts-ignore
 				const {message, name, stack} = statusEvent.err;
 				stats.sharedWorkerErrors.push({message, name, stack});
 				break;
 			}
 
 			case 'test-passed': {
+				// @ts-ignore
 				const {title, testFile} = statusEvent;
 				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				stats.passed.push(statObject);
+				// @ts-ignore
 				logs.set(statObject, statusEvent.logs);
 				break;
 			}
 
 			case 'test-failed': {
+				// @ts-ignore
 				const {title, testFile} = statusEvent;
 				const statObject = {title, file: normalizePath(workingDir, testFile)};
+				// @ts-ignore
 				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
+				// @ts-ignore
 				logs.set(statObject, statusEvent.logs);
 				break;
 			}
 
 			case 'uncaught-exception': {
+				// @ts-ignore
 				const {message, name, stack} = statusEvent.err;
 				stats.uncaughtExceptions.push({message, name, stack});
 				break;

@@ -41,7 +41,7 @@ exports.assert = (t, logFile, buffer) => {
 const cwdFileUrlPrefix = pathToFileURL(process.cwd());
 
 exports.sanitizers = {
-	cwd: string => replaceString(replaceString(string, cwdFileUrlPrefix, ''), process.cwd(), '~'),
+	cwd: string => replaceString(replaceString(string, cwdFileUrlPrefix.toString(), ''), process.cwd(), '~'),
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => replaceString(string, '\r\n', '\n'),
 	posix: string => replaceString(string, '\\', '/'),
@@ -52,6 +52,14 @@ exports.sanitizers = {
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 exports.projectDir = type => path.join(__dirname, '../fixture/report', type.toLowerCase());
 
+// TODO: Define Filters
+/**
+ *
+ * @param {*} type
+ * @param {*} reporter
+ * @param {*} param2
+ * @returns
+ */
 const run = async (type, reporter, {match = [], filter} = {}) => {
 	const projectDir = exports.projectDir(type);
 
@@ -79,7 +87,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		},
 	};
 
-	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
+	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: [], ignoredByWatcher: false});
 
 	const api = new Api(options);
 	api.on('run', plan => reporter.startRun(plan));

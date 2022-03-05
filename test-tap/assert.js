@@ -2,6 +2,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import stripAnsi from 'strip-ansi';
+// @ts-ignore
 import {test} from 'tap';
 
 import * as assert from '../lib/assert.js';
@@ -16,9 +17,11 @@ let lastPassed = false;
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
+			// @ts-ignore
 			pass: () => {
 				lastPassed = true;
 			},
+			// @ts-ignore
 			pending: promise => {
 				promise.then(() => {
 					lastPassed = true;
@@ -26,9 +29,11 @@ const AssertionsBase = class extends assert.Assertions {
 					lastFailure = error;
 				});
 			},
+			// @ts-ignore
 			fail: error => {
 				lastFailure = error;
 			},
+			// @ts-ignore
 			skip: () => {},
 			experiments: {},
 			...overwrites,
@@ -527,6 +532,7 @@ test('.deepEqual()', t => {
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
+		// @ts-ignore
 		circular.push(circular);
 		return assertions.deepEqual([circular, 'c'], [circular, 'd']);
 	});
@@ -710,12 +716,14 @@ test('.like()', t => {
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
+		// @ts-ignore
 		circular.push(circular);
 		return assertions.like([circular, 'c'], [circular, 'd']);
 	});
 
 	fails(t, () => {
 		const circular = ['a', 'b'];
+		// @ts-ignore
 		circular.push(circular);
 		return assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
 	});
@@ -853,6 +861,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
 		const error = new TypeError();
+		// @ts-ignore
 		error.code = 'ERR_TEST';
 		throw error;
 	}, {code: 'ERR_TEST'}));
@@ -860,6 +869,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
 		const error = new TypeError();
+		// @ts-ignore
 		error.code = 42;
 		throw error;
 	}, {code: 42}));
@@ -867,12 +877,14 @@ test('.throws()', gather(t => {
 	// Fails because the thrown value is not the right one
 	fails(t, () => assertions.throws(() => {
 		const error = new TypeError();
+		// @ts-ignore
 		error.code = 'ERR_NOPE';
 		throw error;
 	}, {code: 'ERR_TEST'}));
 
 	fails(t, () => assertions.throws(() => {
 		const error = new TypeError();
+		// @ts-ignore
 		error.code = 1;
 		throw error;
 	}, {code: 42}));
@@ -1318,6 +1330,7 @@ test('.snapshot()', async t => {
 		recordNewSnapshots: updating,
 		updating,
 	});
+	// @ts-ignore
 	const setup = _title => new class extends assertions.constructor {
 		constructor(title) {
 			super({
@@ -1343,17 +1356,21 @@ test('.snapshot()', async t => {
 	{
 		const assertions = setup('passes');
 
+		// @ts-ignore
 		passes(t, () => assertions.snapshot({foo: 'bar'}));
 
+		// @ts-ignore
 		passes(t, () => assertions.snapshot({foo: 'bar'}));
 	}
 
 	{
 		const assertions = setup('fails');
 		if (updating) {
+			// @ts-ignore
 			return assertions.snapshot({foo: 'bar'});
 		}
 
+		// @ts-ignore
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
 			assertion: 'snapshot',
 			message: 'Did not match snapshot',
@@ -1364,9 +1381,11 @@ test('.snapshot()', async t => {
 	{
 		const assertions = setup('fails');
 		if (updating) {
+			// @ts-ignore
 			return assertions.snapshot({foo: 'bar'}, 'my message');
 		}
 
+		// @ts-ignore
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
 			assertion: 'snapshot',
 			message: 'my message',
@@ -1376,6 +1395,7 @@ test('.snapshot()', async t => {
 
 	{
 		const assertions = setup('bad message');
+		// @ts-ignore
 		failsWith(t, () => assertions.snapshot(null, null), {
 			assertion: 'snapshot',
 			improperUsage: true,
@@ -1386,6 +1406,7 @@ test('.snapshot()', async t => {
 			}],
 		});
 
+		// @ts-ignore
 		failsWith(t, () => assertions.snapshot(null, ''), {
 			assertion: 'snapshot',
 			improperUsage: true,
@@ -1400,6 +1421,7 @@ test('.snapshot()', async t => {
 	{
 		// See https://github.com/avajs/ava/issues/2669
 		const assertions = setup('id');
+		// @ts-ignore
 		failsWith(t, () => assertions.snapshot({foo: 'bar'}, {id: 'an id'}), {
 			assertion: 'snapshot',
 			improperUsage: true,

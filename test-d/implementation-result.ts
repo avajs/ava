@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-import test from '..';
+import test from 'ava';
 
 test('return a promise-like', t => ({
 	then(resolve) {

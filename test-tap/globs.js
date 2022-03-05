@@ -1,6 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
+// @ts-ignore
 import tap from 'tap';
 
 import * as globs from '../lib/globs.js';
@@ -20,12 +21,14 @@ function fixture(...args) {
 }
 
 test('ignores relativeness in patterns', t => {
+	// @ts-ignore
 	const {filePatterns} = globs.normalizeGlobs({files: ['./foo.js', '!./bar'], extensions: ['js'], providers: []});
 	t.same(filePatterns, ['foo.js', '!bar']);
 	t.end();
 });
 
 test('ignores trailing slashes in (simple) patterns', t => {
+	// @ts-ignore
 	const {filePatterns} = globs.normalizeGlobs({files: ['foo/', '!bar/', 'foo/{bar/,baz/}'], extensions: ['js'], providers: []});
 	t.same(filePatterns, ['foo', '!bar', 'foo/{bar/,baz/}']);
 	t.end();
@@ -33,6 +36,7 @@ test('ignores trailing slashes in (simple) patterns', t => {
 
 test('isTest with defaults', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({
 			extensions: ['js'],
 			providers: [],
@@ -107,6 +111,7 @@ test('isTest with defaults', t => {
 
 test('isTest with patterns', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({
 			files: ['**/foo*.js', '**/foo*/**/*.js', '!**/fixtures', '!**/helpers'],
 			extensions: ['js'],
@@ -142,6 +147,7 @@ test('isTest with patterns', t => {
 
 test('isTest (pattern starts with directory)', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({
 			files: ['bar/**/*'],
 			extensions: ['js'],
@@ -177,6 +183,7 @@ test('isTest (pattern starts with directory)', t => {
 
 test('isTest after provider modifications', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({
 			extensions: ['js'],
 			providers: [{
@@ -203,6 +210,7 @@ test('isTest after provider modifications', t => {
 
 test('isIgnoredByWatcher with defaults', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({extensions: ['js'], providers: []}),
 		cwd: fixture(),
 	};
@@ -272,6 +280,7 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 
 test('isIgnoredByWatcher after provider modifications', t => {
 	const options = {
+		// @ts-ignore
 		...globs.normalizeGlobs({
 			extensions: ['js'],
 			providers: [{
@@ -317,6 +326,7 @@ test('findFiles finds non-ignored files (just .cjs)', async t => {
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
+		// @ts-ignore
 		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['cjs'], providers: []}),
 	});
 	actual.sort();
@@ -336,6 +346,7 @@ test('findFiles finds non-ignored files (.cjs, .jsx)', async t => {
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
+		// @ts-ignore
 		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['cjs', 'jsx'], providers: []}),
 	});
 	actual.sort();

@@ -1,6 +1,6 @@
 import {expectType} from 'tsd';
 
-import test from '..';
+import test from 'ava';
 
 type Expected = {foo: 'bar'};
 const expected: Expected = {foo: 'bar'};

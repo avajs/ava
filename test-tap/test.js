@@ -521,6 +521,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		projectDir,
 		fixedLocation: null,
 		updating: false,
+		recordNewSnapshots: false
 	});
 
 	const skipSnapshot = sinon.spy();

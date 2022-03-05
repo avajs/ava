@@ -26,7 +26,7 @@ test('interrupt', {skip: ciInfo.isCI}, t => {
 	});
 
 	setTimeout(() => {
-		proc.kill('SIGINT');
+		/** @type { childProcess & { kill(arg0: string): void}} */ (proc).kill('SIGINT');
 	}, 2000);
 });
 

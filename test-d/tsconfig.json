@@ -1,22 +1,13 @@
 {
-	"include": ["*","**/*","package.json"],
-	"exclude": ["**/fixtures/*"],
 	"references": [
-		{ "path": "./test-d" }
+		{ "path": "../" }
 	],
 	"compilerOptions": {
-		"declarationDir": "types",
-		"rootDirs": [
-			"test",
-			"test-d",
-			"test-tap"
-		],
 		"composite": true,
 		"types": ["@types/node"],
-		"allowJs": true,
-		"checkJs": true,
 		"declaration": true,
-		"emitDeclarationOnly": true,
+		"emitDeclarationOnly": false,
+		"declarationDir": "types",
 		"moduleResolution": "nodenext",
 		"module": "esnext",
 		"target": "ESNext",

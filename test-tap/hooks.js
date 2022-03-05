@@ -558,5 +558,6 @@ test('teardowns cannot be used in hooks', async t => {
 	});
 
 	t.ok(hookFailure);
+	// @ts-ignore
 	t.match(hookFailure.err.message, /not allowed in hooks/);
 });

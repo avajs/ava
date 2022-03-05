@@ -1,1 +1,2 @@
-export {default} from '../lib/worker/main.cjs';
+import test from '../lib/worker/main.cjs';
+export { test };

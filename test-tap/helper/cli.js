@@ -36,9 +36,10 @@ export function execCli(args, options, cb) {
 			stdio: [null, 'pipe', 'pipe'],
 		});
 
+		/** @typedef {Error & {code: number, signal: string }} execCliError*/
 		child.on('close', (code, signal) => {
 			if (code) {
-				const error = new Error(`test-worker exited with a non-zero exit code: ${code}`);
+				const error = /** @type {execCliError} */ (new Error(`test-worker exited with a non-zero exit code: ${code}`));
 				error.code = code;
 				error.signal = signal;
 				resolve(error);
@@ -56,5 +57,5 @@ export function execCli(args, options, cb) {
 		cb(...args);
 	});
 
-	return child;
+	return /** @type {childProcess} */ (child);
 }

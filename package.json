@@ -8,8 +8,13 @@
 	"bin": {
 		"ava": "entrypoints/cli.mjs"
 	},
+	"main": "./entrypoints/main.cjs",
+	"type": "module",
+	"types": "./index.d.ts",
 	"exports": {
+		"types": "./index.d.ts",
 		".": {
+			"types": "./index.d.ts",
 			"import": "./entrypoints/main.mjs",
 			"require": "./entrypoints/main.cjs"
 		},
@@ -19,7 +24,6 @@
 			"require": "./entrypoints/plugin.cjs"
 		}
 	},
-	"type": "module",
 	"engines": {
 		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4 <17 || >=17"
 	},
@@ -120,6 +124,7 @@
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^3.0.1",
 		"@sinonjs/fake-timers": "^8.1.0",
+		"@types/node": "^17.0.21",
 		"ansi-escapes": "^5.0.0",
 		"c8": "^7.11.0",
 		"delay": "^5.0.0",

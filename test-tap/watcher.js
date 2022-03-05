@@ -2,15 +2,20 @@ import EventEmitter from 'node:events';
 import path from 'node:path';
 import {PassThrough} from 'node:stream';
 
+// @ts-ignore
 import fakeTimers from '@sinonjs/fake-timers';
+// @ts-ignore
 import ignoreByDefault from 'ignore-by-default';
+// @ts-ignore
 import sinon from 'sinon';
+// @ts-ignore
 import {test} from 'tap';
 
 import {normalizeGlobs} from '../lib/globs.js';
 import timers from '../lib/now-and-timers.cjs';
 import Watcher, {_testOnlyReplaceChokidar, _testOnlyReplaceDebug} from '../lib/watcher.js';
 
+// @ts-ignore
 const {setImmediate} = timers;
 const defaultIgnore = ignoreByDefault.directories();
 
@@ -218,6 +223,7 @@ group('chokidar', (beforeEach, test, group) => {
 		// The endRun and lineWriter.writeLine methods are only called after the run promise fulfils
 		t.ok(reporter.endRun.notCalled);
 		t.ok(reporter.lineWriter.writeLine.notCalled);
+		// @ts-ignore
 		done();
 		return delay().then(() => {
 			t.ok(reporter.endRun.calledOnce);
@@ -824,6 +830,7 @@ group('chokidar', (beforeEach, test, group) => {
 			emitDependencies(path.resolve(files[0]), [path.resolve('dep-1.cjs'), path.resolve('dep-3.cjs')]);
 			emitDependencies(path.resolve(files[1]), [path.resolve('dep-2.cjs'), path.resolve('dep-3.cjs')]);
 
+			// @ts-ignore
 			done();
 			api.run.returns(new Promise(() => {}));
 			return watcher;
@@ -1102,6 +1109,7 @@ group('chokidar', (beforeEach, test, group) => {
 				testFile: t1Absolute,
 			});
 
+			// @ts-ignore
 			done();
 			api.run.returns(new Promise(() => {}));
 			return watcher;
@@ -1206,6 +1214,7 @@ group('chokidar', (beforeEach, test, group) => {
 			emitStats(t3Absolute, false);
 			emitStats(t4Absolute, false);
 
+			// @ts-ignore
 			done();
 			api.run.returns(new Promise(() => {}));
 			return watcher;
@@ -1356,6 +1365,7 @@ group('chokidar', (beforeEach, test, group) => {
 				seedFailures(files, filesAbsolute);
 			}
 
+			// @ts-ignore
 			done();
 			api.run.returns(new Promise(() => {}));
 			return watcher;
