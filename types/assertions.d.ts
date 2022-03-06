@@ -138,6 +138,18 @@ export interface DeepEqualAssertion {
 	 */
 	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
 
+	/**
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
+	 */
+	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
+
+	/**
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
+	 */
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
+
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
 }
