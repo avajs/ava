@@ -16,20 +16,20 @@ let lastPassed = false;
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
-			pass: () => {
+			pass() {
 				lastPassed = true;
 			},
-			pending: promise => {
+			pending(promise) {
 				promise.then(() => {
 					lastPassed = true;
 				}, error => {
 					lastFailure = error;
 				});
 			},
-			fail: error => {
+			fail(error) {
 				lastFailure = error;
 			},
-			skip: () => {},
+			skip() {},
 			experiments: {},
 			...overwrites,
 		});

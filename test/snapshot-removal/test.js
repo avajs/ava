@@ -100,7 +100,7 @@ test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
 	cwd: cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*another*\''],
 	remove: false,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
@@ -111,7 +111,7 @@ test.serial('snapshots removed if --match selects all tests', testSnapshotPrunin
 	cwd: cwd('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
 	remove: true,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
@@ -122,7 +122,7 @@ test.serial('snapshots remain if tests selected by line numbers', testSnapshotPr
 	cwd: cwd('removal'),
 	cli: ['test.js:10-17', '--update-snapshots'],
 	remove: false,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
@@ -133,7 +133,7 @@ test.serial('snapshots removed if line numbers select all tests', testSnapshotPr
 	cwd: cwd('removal'),
 	cli: ['test.js:0-100', '--update-snapshots'],
 	remove: true,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 		const result = await run;
 		t.snapshot(result.stats.passed, 'passed tests');
@@ -144,7 +144,7 @@ test.serial('snapshots remain if using test.only', testSnapshotPruning, {
 	cwd: cwd('only-test'),
 	cli: ['--update-snapshots'],
 	remove: false,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	},
 });
@@ -153,7 +153,7 @@ test.serial('snapshots remain if tests are skipped', testSnapshotPruning, {
 	cwd: cwd('skipped-tests'),
 	cli: ['--update-snapshots'],
 	remove: false,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	},
 });
@@ -162,7 +162,7 @@ test.serial('snapshots remain if snapshot assertions are skipped', testSnapshotP
 	cwd: cwd('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	},
 });
@@ -181,7 +181,7 @@ test.serial('snapshots removed if skipped in a discarded try()', testSnapshotPru
 	cwd: cwd('skipped-snapshots-in-try'),
 	cli: ['--update-snapshots'],
 	remove: true,
-	checkRun: async (t, run) => {
+	async checkRun(t, run) {
 		await t.notThrowsAsync(run, 'Expected fixture not to throw');
 	},
 });
