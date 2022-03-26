@@ -172,7 +172,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. The 
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
-* `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
+* `message`: either a *string*, which is compared against the thrown error's message, a *regular expression*, which is matched against this message or a *function* which is passed the thrown error message and must return a boolean. true makes the assertion pass
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
@@ -204,7 +204,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
-* `message`: either a string, which is compared against the thrown error's message, or a regular expression, which is matched against this message
+* `message`: either a *string*, which is compared against the thrown error's message, a *regular expression*, which is matched against this message or a *function* which is passed the thrown error message and must return a boolean. true makes the assertion pass
 * `name`: the expected `.name` value of the thrown error
 * `code`: the expected `.code` value of the thrown error
 
