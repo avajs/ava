@@ -288,7 +288,7 @@ const twoRandomIntegers = () => {
 test('flaky macro', async t => {
 	const firstTry = await t.try((tt, a, b) => {
 		tt.is(a, b);
-	}, ...randomIntegers());
+	}, ...twoRandomIntegers());
 
 	if (firstTry.passed) {
 		firstTry.commit();
@@ -300,7 +300,7 @@ test('flaky macro', async t => {
 
 	const secondTry = await t.try((tt, a, b) => {
 		tt.is(a, b);
-	}, ...randomIntegers());
+	}, ...twoRandomIntegers());
 	secondTry.commit();
 });
 ```
