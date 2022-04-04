@@ -12,7 +12,7 @@ export type ThrowsExpectation = {
 	is?: Error;
 
 	/** The thrown error must have a message that equals the given string, or matches the regular expression. */
-	message?: string | RegExp | Function;
+	message?: string | RegExp | ((message: string) => boolean);
 
 	/** The thrown error must have a name that equals the given string. */
 	name?: string;
