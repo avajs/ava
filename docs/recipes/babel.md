@@ -16,6 +16,6 @@ You can enable Babel support by installing [`@babel/register`](https://babeljs.i
 }
 ```
 
-`@babel/register` binds itself to the node's require hook and automatically compiles files on the fly.This will compile both the source and the test files.
+`@babel/register` is compatible with CommonJS only. It intercepts `require()` calls and compiles files on the fly. This will compile source, helper and test files.
 
-For more information visit the [Babel docs](https://babeljs.io/docs/en/babel-register).
+For more information visit the [Babel documentation](https://babeljs.io/docs/en/babel-register).
