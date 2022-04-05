@@ -41,7 +41,7 @@ export namespace SharedWorker {
 		readonly file: string;
 		publish: (data: Data) => PublishedMessage<Data>;
 		subscribe: () => AsyncIterableIterator<ReceivedMessage<Data>>;
-		teardown: <TeardownFn extends () => void> (fn: TeardownFn) => TeardownFn;
+		teardown: (fn: (() => Promise<void>) | (() => void)) => () => Promise<void>;
 	};
 
 	export namespace Plugin {
