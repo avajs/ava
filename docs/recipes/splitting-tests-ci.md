@@ -20,3 +20,7 @@ export default {
 	sortTestFiles: (file1, file2) => testData[file1].order - testData[file2].order,
 };
 ```
+
+**Disable parallel builds**
+
+To disable this feature, set `utilizeParallelBuilds` to `false` in your [AVA configuration](/docs/06-configuration.md#options).
