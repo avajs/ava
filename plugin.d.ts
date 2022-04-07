@@ -47,6 +47,7 @@ export namespace SharedWorker {
 	export namespace Plugin {
 		export type RegistrationOptions<Identifier extends ProtocolIdentifier, Data = unknown> = {
 			readonly filename: string | URL;
+			readonly key?: string;
 			readonly initialData?: Data;
 			readonly supportedProtocols: readonly Identifier[];
 			readonly teardown?: () => void;
