@@ -20,3 +20,33 @@ export default {
 	sortTestFiles: (file1, file2) => testData[file1].order - testData[file2].order,
 };
 ```
+
+## Splitting tests on GitHub Actions
+
+Although GitHub Actions doesn't support parallel builds out-of-the-box with AVA, you can configure it manually by using a matrix:
+
+**`.github/workflows/test.yml`:**
+
+```yml
+on: push
+jobs:
+  test:
+    strategy:
+      # Don't cancel test runs if one fails
+      fail-fast: false
+      # Run 4 jobs in parallel, each executing a subset of all tests
+      matrix:
+        node_index: [0, 1, 2, 3]
+        total_nodes: [4]
+
+    runs-on: ubuntu-latest
+    steps:
+      # Check out code and perform setup steps
+      # ...
+      
+      - name: Test
+        run: npx ava
+        env:
+          CI_NODE_INDEX: ${{ matrix.node_index }}
+          CI_NODE_TOTAL: ${{ matrix.total_nodes }}
+```
