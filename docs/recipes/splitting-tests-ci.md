@@ -2,6 +2,8 @@
 
 AVA automatically detects whether your CI environment supports parallel builds using [ci-parallel-vars](https://www.npmjs.com/package/ci-parallel-vars). When parallel builds support is detected, AVA sorts the all detected test files by name, and splits them into chunks. Each CI machine is assigned a chunk (subset) of the tests, and then each chunk is run in parallel.
 
+To disable this feature, set `utilizeParallelBuilds` to `false` in your [AVA configuration](/docs/06-configuration.md#options).
+
 To better distribute the tests across the machines, you can configure a custom comparator function:
 
 **`ava.config.js`:**
@@ -43,7 +45,7 @@ jobs:
     steps:
       # Check out code and perform setup steps
       # ...
-      
+
       - name: Test
         run: npx ava
         env:
