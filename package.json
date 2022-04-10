@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "4.1.0",
+	"version": "4.2.0",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
 	"repository": "avajs/ava",
