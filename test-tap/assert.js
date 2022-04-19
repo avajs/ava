@@ -1066,7 +1066,7 @@ test('.throws() fails if passed a bad expectation', t => {
 
 	failsWith(t, () => assertions.throws(() => {}, {message: null}), {
 		assertion: 'throws',
-		message: 'The `message` property of the second argument to `t.throws()` must be a string or regular expression',
+		message: 'The `message` property of the second argument to `t.throws()` must be a string, regular expression or a function',
 		values: [{label: 'Called with:', formatted: /message: null/}],
 	});
 
@@ -1136,7 +1136,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {message: null}), {
 		assertion: 'throwsAsync',
-		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string or regular expression',
+		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string, regular expression or a function',
 		values: [{label: 'Called with:', formatted: /message: null/}],
 	}, {expectBoolean: false});
 
