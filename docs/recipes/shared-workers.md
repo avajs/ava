@@ -40,18 +40,21 @@ If for some reason you want to load the same file as multiple different workers,
 import crypto from 'crypto';
 import {registerSharedWorker} from 'ava/plugin';
 
-const randomKey = crypto.randomBytes(20).toString('hex');
+const key = Math.random() > 0.5 ? 'worker-a' : 'worker-b';
 
 const shared = registerSharedWorker<any>({
   filename: new URL(
     `file:${path.resolve(
       __dirname,
       'worker.js'
-    )}#${encodeURIComponent(randomKey)}`
+    )}#${encodeURIComponent(key)}`
   ),
+  initialData: {workerKey: key},
   supportedProtocols: ['ava-4']
 });
 ```
+
+This works because the `filename` parameter accepts [URL](https://nodejs.org/api/url.html) objects, meaning you could use a query component for the key instead if you wanted.
 
 You can supply a `teardown()` function which will be called after all tests have finished. If you call `registerSharedWorker()` multiple times then the `teardown()` function will be invoked for each registration, even though you only got one worker instance. The most recently registered `teardown()` function is called first, and so forth. `teardown()` functions execute sequentially.
 
