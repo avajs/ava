@@ -5,7 +5,6 @@
   [90m─[39m
 
   [1ma [90m[2m›[22m[1m[39m fails[22m
-
   [90ma.cjs:3[39m
 
    [90m2:[39m                              
@@ -14,7 +13,15 @@
 
   Test failed via `t.fail()`
 
+  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
+  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
+  [90m› ExecutionContext.fail (file://lib/assert.js:282:9)[39m
   [90m› test-tap/fixture/report/failfast/a.cjs:3:22[39m
+  [90m› Test.callFn (file://lib/test.js:507:21)[39m
+  [90m› Test.run (file://lib/test.js:520:23)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
+  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
   [90m─[39m
 
