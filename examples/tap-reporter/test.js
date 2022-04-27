@@ -1,5 +1,5 @@
 'use strict';
-const test = require('ava');
+import test from 'ava';
 
 test('unicorn', t => {
 	t.pass();

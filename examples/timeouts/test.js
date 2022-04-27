@@ -1,7 +1,7 @@
 'use strict';
-const test = require('ava');
+import test from 'ava';
 
-const {fetchUsers, fetchPosts, createPost} = require('.');
+import {fetchUsers, fetchPosts, createPost} from './index.js';
 
 test('retrieve users', async t => {
 	t.timeout(100);

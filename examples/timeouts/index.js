@@ -4,7 +4,7 @@ const delay = ms => new Promise(resolve => {
 	setTimeout(resolve, ms);
 });
 
-exports.fetchUsers = async () => {
+export const fetchUsers = async () => {
 	await delay(50);
 
 	return [
@@ -17,7 +17,7 @@ exports.fetchUsers = async () => {
 	];
 };
 
-exports.fetchPosts = async userId => {
+export const fetchPosts = async userId => {
 	await delay(200);
 
 	return [
@@ -29,7 +29,7 @@ exports.fetchPosts = async userId => {
 	];
 };
 
-exports.createPost = async message => {
+export const createPost = async message => {
 	await delay(3000);
 
 	return {

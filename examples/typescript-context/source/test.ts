@@ -1,8 +1,8 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, {TestFn} from 'ava';
 
 import {concat} from '.';
 
-const test = anyTest as TestInterface<{sort: (a: string, b: string) => number}>;
+const test = anyTest as TestFn<{sort: (a: string, b: string) => number}>;
 
 test.beforeEach(t => {
 	t.context = {
