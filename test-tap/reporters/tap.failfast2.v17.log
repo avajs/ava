@@ -5,17 +5,7 @@ not ok 1 - a › fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.fail (file://lib/assert.js:282:9)
-      test-tap/fixture/report/failfast2/a.cjs:3:22
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:497:24
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/failfast2/a.cjs:3:22'
   ...
 ---tty-stream-chunk-separator
 # 1 test remaining in a.cjs

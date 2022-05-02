@@ -11,9 +11,6 @@
   TypeError: test.serial.test is not a function
 
   [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)[39m
-  [90m› Object.extensions.<computed> [as .js] (file://lib/worker/dependency-tracker.js:42:5)[39m
-  [90m› load (file://lib/worker/base.js:149:10)[39m
-  [90m› run (file://lib/worker/base.js:174:9)[39m
 
 ---tty-stream-chunk-separator
   [31m✖ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
@@ -111,12 +108,6 @@
   Error: Can’t catch me
 
   [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 ---tty-stream-chunk-separator
   [1mUnhandled rejection in unhandled-rejection.cjs[22m
@@ -150,16 +141,7 @@
   [32m+[39m   [90m}[39m[90m,[39m
     [90m}[39m
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.deepEqual (file://lib/assert.js:355:9)[39m
   [90m› test-tap/fixture/report/regular/nested-objects.cjs:29:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -181,16 +163,7 @@
       [90m}[39m[90m,[39m
     [90m}[39m
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.like (file://lib/assert.js:425:9)[39m
   [90m› test-tap/fixture/report/regular/nested-objects.cjs:55:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -203,16 +176,7 @@
 
   Test failed via `t.fail()`
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.fail (file://lib/assert.js:282:9)[39m
   [90m› test-tap/fixture/report/regular/output-in-hook.cjs:34:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -225,27 +189,12 @@
 
   Test failed via `t.fail()`
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.fail (file://lib/assert.js:282:9)[39m
   [90m› test-tap/fixture/report/regular/test.cjs:9:22[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
   [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
-
-  [90m› Test.finish (file://lib/test.js:596:28)[39m
-  [90m› async Runner.runSingle (file://lib/runner.js:285:18)[39m
-  [90m› async Runner.runTest (file://lib/runner.js:361:19)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -258,16 +207,7 @@
 
   Test failed via `t.fail()`
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.fail (file://lib/assert.js:282:9)[39m
   [90m› test-tap/fixture/report/regular/test.cjs:18:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -283,16 +223,7 @@
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› ExecutionContext.deepEqual (file://lib/assert.js:355:9)[39m
   [90m› test-tap/fixture/report/regular/test.cjs:22:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -300,14 +231,6 @@
   Error thrown in test:
 
   [33mnull[39m
-
-  [90m› getErrorWithLongStackTrace (file://lib/assert.js:71:16)[39m
-  [90m› new AssertionError (file://lib/assert.js:51:63)[39m
-  [90m› Test.run (file://lib/test.js:522:24)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
-  [90m› async Runner.start (file://lib/runner.js:534:15)[39m
 
 
 
@@ -330,12 +253,7 @@
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
   [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)[39m
-  [90m› ExecutionContext.throws (file://lib/assert.js:464:14)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
 
 
 
@@ -354,12 +272,7 @@
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:20[39m
-  [90m› ExecutionContext.notThrows (file://lib/assert.js:607:5)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
 
 
 
@@ -378,12 +291,7 @@
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:25[39m
-  [90m› ExecutionContext.notThrowsAsync (file://lib/assert.js:663:14)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
 
 
 
@@ -402,12 +310,7 @@
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
   [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:22)[39m
-  [90m› ExecutionContext.throwsAsync (file://lib/assert.js:565:14)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
 
 
 
@@ -429,13 +332,7 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)[39m
-  [90m› ExecutionContext.throwsAsync (file://lib/assert.js:565:14)[39m
   [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44[39m
-  [90m› Test.callFn (file://lib/test.js:507:21)[39m
-  [90m› Test.run (file://lib/test.js:520:23)[39m
-  [90m› Runner.runSingle (file://lib/runner.js:285:33)[39m
-  [90m› Runner.runTest (file://lib/runner.js:361:30)[39m
-  [90m› async file://lib/runner.js:526:21[39m
 
   [90m─[39m
 

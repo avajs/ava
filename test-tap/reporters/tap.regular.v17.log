@@ -4,15 +4,7 @@ not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
     message: test.serial.test is not a function
-    at: >-
-      Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)
-
-      Object.extensions.<computed> [as .js]
-      (file://lib/worker/dependency-tracker.js:42:5)
-
-      load (file://lib/worker/base.js:149:10)
-
-      run (file://lib/worker/base.js:174:9)
+    at: 'Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)'
   ...
 ---tty-stream-chunk-separator
 not ok 2 - bad-test-chain.cjs exited with a non-zero exit code: 1
@@ -37,17 +29,7 @@ not ok 3 - nested-objects › format with max depth 4
         +     },
         +   },
           }
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.deepEqual (file://lib/assert.js:355:9)
-      test-tap/fixture/report/regular/nested-objects.cjs:29:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/nested-objects.cjs:29:4'
   ...
 ---tty-stream-chunk-separator
 not ok 4 - nested-objects › format like with max depth 4
@@ -64,17 +46,7 @@ not ok 4 - nested-objects › format like with max depth 4
               },
             },
           }
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.like (file://lib/assert.js:425:9)
-      test-tap/fixture/report/regular/nested-objects.cjs:55:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/nested-objects.cjs:55:4'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
@@ -98,17 +70,7 @@ not ok 6 - output-in-hook › failing test
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.fail (file://lib/assert.js:282:9)
-      test-tap/fixture/report/regular/output-in-hook.cjs:34:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/output-in-hook.cjs:34:4'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test
@@ -138,17 +100,7 @@ not ok 10 - test › fails
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.fail (file://lib/assert.js:282:9)
-      test-tap/fixture/report/regular/test.cjs:9:22
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/test.cjs:9:22'
   ...
 ---tty-stream-chunk-separator
 ok 11 - test › known failure
@@ -159,12 +111,7 @@ not ok 12 - test › no longer failing
     message: >-
       Test was expected to fail, but succeeded, you should stop marking the test as
       failing
-    at: |-
-      Test.finish (file://lib/test.js:596:28)
-      async Runner.runSingle (file://lib/runner.js:285:18)
-      async Runner.runTest (file://lib/runner.js:361:19)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: ''
   ...
 ---tty-stream-chunk-separator
 not ok 13 - test › logs
@@ -174,17 +121,7 @@ not ok 13 - test › logs
     name: AssertionError
     message: Test failed via `t.fail()`
     assertion: fail
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.fail (file://lib/assert.js:282:9)
-      test-tap/fixture/report/regular/test.cjs:18:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/test.cjs:18:4'
   ...
 ---tty-stream-chunk-separator
 not ok 14 - test › formatted
@@ -195,17 +132,7 @@ not ok 14 - test › formatted
       'Difference:': |-
         - 'foo'
         + 'bar'
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      ExecutionContext.deepEqual (file://lib/assert.js:355:9)
-      test-tap/fixture/report/regular/test.cjs:22:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'test-tap/fixture/report/regular/test.cjs:22:4'
   ...
 ---tty-stream-chunk-separator
 not ok 15 - test › implementation throws non-error
@@ -214,14 +141,7 @@ not ok 15 - test › implementation throws non-error
     message: Error thrown in test
     values:
       'Error thrown in test:': 'null'
-    at: |-
-      getErrorWithLongStackTrace (file://lib/assert.js:71:16)
-      new AssertionError (file://lib/assert.js:51:63)
-      Test.run (file://lib/test.js:522:24)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: ''
   ...
 ---tty-stream-chunk-separator
 not ok 16 - traces-in-t-throws › throws
@@ -240,17 +160,7 @@ not ok 16 - traces-in-t-throws › throws
       t.throws.instanceOf
       (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)
 
-      ExecutionContext.throws (file://lib/assert.js:464:14)
-
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4
-
-      Test.callFn (file://lib/test.js:507:21)
-
-      Test.run (file://lib/test.js:520:23)
-
-      Runner.runSingle (file://lib/runner.js:285:33)
-
-      Runner.runTest (file://lib/runner.js:361:30)
   ...
 ---tty-stream-chunk-separator
 not ok 17 - traces-in-t-throws › notThrows
@@ -265,12 +175,7 @@ not ok 17 - traces-in-t-throws › notThrows
     at: |-
       throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:20
-      ExecutionContext.notThrows (file://lib/assert.js:607:5)
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
   ...
 ---tty-stream-chunk-separator
 not ok 18 - traces-in-t-throws › notThrowsAsync
@@ -285,12 +190,7 @@ not ok 18 - traces-in-t-throws › notThrowsAsync
     at: |-
       throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:25
-      ExecutionContext.notThrowsAsync (file://lib/assert.js:663:14)
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
   ...
 ---tty-stream-chunk-separator
 not ok 19 - traces-in-t-throws › throwsAsync
@@ -308,17 +208,7 @@ not ok 19 - traces-in-t-throws › throwsAsync
       t.throwsAsync.instanceOf
       (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:22)
 
-      ExecutionContext.throwsAsync (file://lib/assert.js:565:14)
-
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4
-
-      Test.callFn (file://lib/test.js:507:21)
-
-      Test.run (file://lib/test.js:520:23)
-
-      Runner.runSingle (file://lib/runner.js:285:33)
-
-      Runner.runTest (file://lib/runner.js:361:30)
   ...
 ---tty-stream-chunk-separator
 not ok 20 - traces-in-t-throws › throwsAsync different error
@@ -335,19 +225,7 @@ not ok 20 - traces-in-t-throws › throwsAsync different error
       returnRejectedPromise
       (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)
 
-      ExecutionContext.throwsAsync (file://lib/assert.js:565:14)
-
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44
-
-      Test.callFn (file://lib/test.js:507:21)
-
-      Test.run (file://lib/test.js:520:23)
-
-      Runner.runSingle (file://lib/runner.js:285:33)
-
-      Runner.runTest (file://lib/runner.js:361:30)
-
-      async file://lib/runner.js:526:21
   ...
 ---tty-stream-chunk-separator
 ok 21 - uncaught-exception › passes
@@ -371,14 +249,7 @@ not ok 26 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
-    at: |-
-      passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)
-      Test.callFn (file://lib/test.js:507:21)
-      Test.run (file://lib/test.js:520:23)
-      Runner.runSingle (file://lib/runner.js:285:33)
-      Runner.runTest (file://lib/runner.js:361:30)
-      async file://lib/runner.js:526:21
-      async Runner.start (file://lib/runner.js:534:15)
+    at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)'
   ...
 ---tty-stream-chunk-separator
 not ok 27 - unhandled-rejection
