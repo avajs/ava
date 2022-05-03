@@ -903,50 +903,74 @@ test('.throws()', gather(t => {
 	// Fails because the string in the message is incorrect
 	failsWith(
 		t,
-		() => assertions.throws(() => { throw new Error('error') }, { message: 'my error' }),
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: 'my error'},
+			),
 		{
 			assertion: 'throws',
-			message: "",
+			message: '',
 			values: [
-				{ label: 'Function threw unexpected exception:', formatted: /error/ },
-				{ label: 'Expected message to equal:', formatted: /my error/ }
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to equal:', formatted: /my error/},
 			],
-		}
+		},
 	);
 
-	passes(t, () => assertions.throws(() => { throw new Error('error') }, { message: 'error' }));
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: 'error'}));
 
 	// Fails because the regular expression in the message is incorrect
 	failsWith(
 		t,
-		() => assertions.throws(() => { throw new Error('error') }, { message: /my error/ }),
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: /my error/},
+			),
 		{
 			assertion: 'throws',
-			message: "",
+			message: '',
 			values: [
-				{ label: 'Function threw unexpected exception:', formatted: /error/ },
-				{ label: 'Expected message to match:', formatted: /my error/ }
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to match:', formatted: /my error/},
 			],
-		}
+		},
 	);
 
-	passes(t, () => assertions.throws(() => { throw new Error('error') }, { message: /error/ }));
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: /error/}));
 
 	// Fails because the function in the message returns false
 	failsWith(
 		t,
-		() => assertions.throws(() => { throw new Error('error') }, { message: () => false }),
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: () => false},
+			),
 		{
 			assertion: 'throws',
-			message: "",
+			message: '',
 			values: [
-				{ label: 'Function threw unexpected exception:', formatted: /error/ },
-				{ label: 'Expected message to return true:', formatted: /Function/ }
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to return true:', formatted: /Function/},
 			],
-		}
+		},
 	);
 
-	passes(t, () => assertions.throws(() => { throw new Error('error') }, { message: () => true }));
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: () => true}));
 }));
 
 test('.throws() returns the thrown error', t => {
