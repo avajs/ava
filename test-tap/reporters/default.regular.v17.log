@@ -118,6 +118,7 @@
   [90m─[39m
 
   [1mnested-objects [90m[2m›[22m[1m[39m format with max depth 4[22m
+
   [90mnested-objects.cjs:29[39m
 
    [90m28:[39m   };                    
@@ -146,6 +147,7 @@
 
 
   [1mnested-objects [90m[2m›[22m[1m[39m format like with max depth 4[22m
+
   [90mnested-objects.cjs:55[39m
 
    [90m54:[39m   };                      
@@ -168,6 +170,7 @@
 
 
   [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
+
   [90moutput-in-hook.cjs:34[39m
 
    [90m33:[39m test('failing test', t => {
@@ -181,6 +184,7 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m fails[22m
+
   [90mtest.cjs:9[39m
 
    [90m8:[39m                              
@@ -194,11 +198,16 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
+
   Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
 
 
 
   [1mtest [90m[2m›[22m[1m[39m logs[22m
+
+    [35mℹ[39m [90mhello[39m
+    [35mℹ[39m [90mworld[39m
+
   [90mtest.cjs:18[39m
 
    [90m17:[39m   t.log('world');
@@ -212,6 +221,7 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m formatted[22m
+
   [90mtest.cjs:22[39m
 
    [90m21:[39m test('formatted', t => {    
@@ -228,6 +238,7 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
+
   Error thrown in test:
 
   [33mnull[39m
@@ -235,6 +246,7 @@
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
+
   [90mtraces-in-t-throws.cjs:12[39m
 
    [90m11:[39m test('throws', t => {                                   
@@ -258,6 +270,7 @@
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
+
   [90mtraces-in-t-throws.cjs:16[39m
 
    [90m15:[39m test('notThrows', t => {          
@@ -277,6 +290,7 @@
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
+
   [90mtraces-in-t-throws.cjs:20[39m
 
    [90m19:[39m test('notThrowsAsync', t => {          
@@ -296,6 +310,7 @@
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
+
   [90mtraces-in-t-throws.cjs:24[39m
 
    [90m23:[39m test('throwsAsync', t => {                                   
@@ -315,6 +330,7 @@
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
+
   [90mtraces-in-t-throws.cjs:27[39m
 
    [90m26:[39m                                                                                                         
