@@ -204,10 +204,6 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m logs[22m
-
-    [35mℹ[39m [90mhello[39m
-    [35mℹ[39m [90mworld[39m
-
   [90mtest.cjs:18[39m
 
    [90m17:[39m   t.log('world');
