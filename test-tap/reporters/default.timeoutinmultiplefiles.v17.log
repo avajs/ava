@@ -30,4 +30,5 @@
   [90m─[39m
 
   [32m4 tests passed[39m
+  [31m5 tests remained pending after a timeout[39m
 ---tty-stream-chunk-separator
