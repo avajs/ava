@@ -16,20 +16,20 @@ let lastPassed = false;
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
-			pass: () => {
+			pass() {
 				lastPassed = true;
 			},
-			pending: promise => {
+			pending(promise) {
 				promise.then(() => {
 					lastPassed = true;
 				}, error => {
 					lastFailure = error;
 				});
 			},
-			fail: error => {
+			fail(error) {
 				lastFailure = error;
 			},
-			skip: () => {},
+			skip() {},
 			experiments: {},
 			...overwrites,
 		});
@@ -899,6 +899,78 @@ test('.throws()', gather(t => {
 			formatted: /null/,
 		}],
 	});
+
+	// Fails because the string in the message is incorrect
+	failsWith(
+		t,
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: 'my error'},
+			),
+		{
+			assertion: 'throws',
+			message: '',
+			values: [
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to equal:', formatted: /my error/},
+			],
+		},
+	);
+
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: 'error'}));
+
+	// Fails because the regular expression in the message is incorrect
+	failsWith(
+		t,
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: /my error/},
+			),
+		{
+			assertion: 'throws',
+			message: '',
+			values: [
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to match:', formatted: /my error/},
+			],
+		},
+	);
+
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: /error/}));
+
+	// Fails because the function in the message returns false
+	failsWith(
+		t,
+		() =>
+			assertions.throws(
+				() => {
+					throw new Error('error');
+				},
+				{message: () => false},
+			),
+		{
+			assertion: 'throws',
+			message: '',
+			values: [
+				{label: 'Function threw unexpected exception:', formatted: /error/},
+				{label: 'Expected message to return true:', formatted: /Function/},
+			],
+		},
+	);
+
+	passes(t, () => assertions.throws(() => {
+		throw new Error('error');
+	}, {message: () => true}));
 }));
 
 test('.throws() returns the thrown error', t => {
@@ -1066,7 +1138,7 @@ test('.throws() fails if passed a bad expectation', t => {
 
 	failsWith(t, () => assertions.throws(() => {}, {message: null}), {
 		assertion: 'throws',
-		message: 'The `message` property of the second argument to `t.throws()` must be a string or regular expression',
+		message: 'The `message` property of the second argument to `t.throws()` must be a string, regular expression or a function',
 		values: [{label: 'Called with:', formatted: /message: null/}],
 	});
 
@@ -1136,7 +1208,7 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {message: null}), {
 		assertion: 'throwsAsync',
-		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string or regular expression',
+		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string, regular expression or a function',
 		values: [{label: 'Called with:', formatted: /message: null/}],
 	}, {expectBoolean: false});
 

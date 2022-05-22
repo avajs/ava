@@ -10,23 +10,31 @@ const FIXTURE_ROOT = fileURLToPath(new URL('fixtures', import.meta.url));
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
 
-const loadFromSetup = setup => {
+const loadFromSetup = async (setup, t, assertUnsupportedFiles = (tt, files) => tt.is(files.length, 0)) => {
 	if (typeof setup === 'string') {
-		return loadConfig();
+		const loaded = await loadConfig();
+		return loaded.config;
 	}
 
-	const {configFile, defaults, resolveFrom} = setup;
-	return loadConfig({configFile, defaults, resolveFrom});
+	const {
+		configFile,
+		defaults,
+		resolveFrom,
+	} = setup;
+
+	const loaded = await loadConfig({configFile, defaults, resolveFrom});
+	assertUnsupportedFiles(t, loaded.unsupportedFiles);
+	return loaded.config;
 };
 
-const ok = setup => async (t, assert = tt => tt.pass()) => {
+const ok = setup => async (t, assert = tt => tt.pass(), assertUnsupportedFiles = undefined) => {
 	const fixture = typeof setup === 'string' ? setup : setup.fixture;
 
 	const stub = sinon.stub(process, 'cwd');
 	t.teardown(() => stub.restore());
 	stub.returns(resolve(fixture));
 
-	const conf = loadFromSetup(setup);
+	const conf = loadFromSetup(setup, t, assertUnsupportedFiles);
 	await t.notThrowsAsync(conf);
 	const result = await t.try(assert, await conf, setup);
 	result.commit();
@@ -39,7 +47,7 @@ const notOk = setup => async (t, assert = (tt, error) => tt.snapshot(error.messa
 	t.teardown(() => stub.restore());
 	stub.returns(resolve(fixture));
 
-	const conf = loadFromSetup(setup);
+	const conf = loadFromSetup(setup, t);
 	const error = await t.throwsAsync(conf);
 	const result = await t.try(assert, error, setup);
 	result.commit();
@@ -66,6 +74,19 @@ test.serial('loads .js config as CommonJS', ok('js-as-cjs'), (t, conf) => {
 test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 	t.true(conf.failFast);
 });
+
+test.serial('finds unsupported configs',
+	ok({
+		fixture: 'unsupported-configs',
+	}),
+	(t, conf) => {
+		t.true(conf.failFast);
+	},
+	(t, unsupportedFiles) => {
+		t.is(unsupportedFiles.length, 1);
+		t.regex(unsupportedFiles[0], /ava\.config\.json/);
+	},
+);
 
 test.serial('handles errors when loading .js config as ESM', notOk({
 	fixture: 'js-as-esm',

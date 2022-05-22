@@ -90,7 +90,7 @@ function load(projectDir, overrides) {
 
 	const helper = Object.freeze({
 		classifyFile: classifyForESLint,
-		classifyImport: importPath => {
+		classifyImport(importPath) {
 			if (hasExtension(globs.extensions, importPath)) {
 				// The importPath has one of the test file extensions: we can classify
 				// it directly.

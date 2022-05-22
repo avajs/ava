@@ -46,7 +46,7 @@ export interface PlanFn {
 export type TimeoutFn = (ms: number, message?: string) => void;
 
 /** Declare a function to be run after the test has ended. */
-export type TeardownFn = (fn: () => void) => void;
+export type TeardownFn = (fn: (() => Promise<void>) | (() => void)) => void;
 
 export type ImplementationFn<Args extends unknown[], Context = unknown> =
 	((t: ExecutionContext<Context>, ...args: Args) => PromiseLike<void>) |

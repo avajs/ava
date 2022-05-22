@@ -10,13 +10,15 @@ const FIXTURE_ROOT = fileURLToPath(new URL('../../test-tap/fixture/load-config',
 
 const resolve = relpath => path.resolve(FIXTURE_ROOT, relpath);
 
-const loadFromSetup = setup => {
+const loadFromSetup = async setup => {
 	if (typeof setup === 'string') {
-		return loadConfig();
+		const loaded = await loadConfig();
+		return loaded.config;
 	}
 
 	const {configFile, defaults, resolveFrom} = setup;
-	return loadConfig({configFile, defaults, resolveFrom});
+	const loaded = await loadConfig({configFile, defaults, resolveFrom});
+	return loaded.config;
 };
 
 const ok = setup => async (t, assert = tt => tt.pass()) => {

@@ -429,7 +429,9 @@ test('failing tests must not return a fulfilled promise', t => ava.failing(a => 
 
 test('failing tests pass when returning a rejected promise', t => ava.failing(a => {
 	a.plan(1);
-	return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => Promise.reject());
+	return a.notThrowsAsync(delay(10), {value: 'foo'}).then(() => {
+		throw new Error('reject');
+	});
 }).run().then(result => {
 	t.equal(result.passed, true);
 }));

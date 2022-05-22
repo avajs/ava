@@ -12,7 +12,7 @@ export type ThrowsExpectation = {
 	is?: Error;
 
 	/** The thrown error must have a message that equals the given string, or matches the regular expression. */
-	message?: string | RegExp;
+	message?: string | RegExp | ((message: string) => boolean);
 
 	/** The thrown error must have a name that equals the given string. */
 	name?: string;
@@ -137,6 +137,18 @@ export interface DeepEqualAssertion {
 	 * `expected`, returning a boolean indicating whether the assertion passed.
 	 */
 	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
+
+	/**
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
+	 */
+	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
+
+	/**
+	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
+	 * `expected`, returning a boolean indicating whether the assertion passed.
+	 */
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
