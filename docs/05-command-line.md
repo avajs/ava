@@ -259,5 +259,3 @@ Specify the arguments as a single string:
 ```console
 npx ava --node-arguments="--throw-deprecation --zero-fill-buffers"
 ```
-
-**Only pass trusted values.**
