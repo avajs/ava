@@ -15,7 +15,7 @@
 				"default": "./entrypoints/main.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/main.d.cts",
+				"types": "./index.d.cts",
 				"default": "./entrypoints/main.cjs"
 			}
 		},
@@ -26,7 +26,7 @@
 				"default": "./entrypoints/plugin.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/plugin.d.cts",
+				"types": "./plugin.d.cts",
 				"default": "./entrypoints/plugin.cjs"
 			}
 		}
@@ -43,7 +43,9 @@
 		"entrypoints",
 		"lib",
 		"types",
+		"index.d.cts",
 		"index.d.ts",
+		"plugin.d.cts",
 		"plugin.d.ts"
 	],
 	"keywords": [

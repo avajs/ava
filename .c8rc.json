@@ -3,7 +3,7 @@
 	"exclude": [
 		"{coverage,examples,media,test,test-d,test-tap,types}/**",
 		"*.config.cjs",
-		"*.d.ts"
+		"*.d.*(c|m)ts"
 	],
 	"reporter": [
 		"html",
