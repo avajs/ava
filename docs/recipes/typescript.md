@@ -82,7 +82,7 @@ It's worth noting that with this configuration, tests will fail if there are Typ
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-basic?file=source%2Ftest.ts&terminal=test&view=editor)
 
-Create a `test.ts` file.
+Create a `test.ts` file. ESM syntax works best, even if you're targeting CommonJS.
 
 ```ts
 import test from 'ava';
@@ -92,6 +92,22 @@ const fn = () => 'foo';
 test('fn() returns foo', t => {
 	t.is(fn(), 'foo');
 });
+```
+
+You can use CommonJS syntax as well:
+
+```ts
+const test = require('ava');
+```
+
+This works whether `esModuleInterop` is enabled or not.
+
+`import … = require()` syntax is less elegant. It's best like this:
+
+```ts
+import ava = require('ava')
+
+const test = ava.default;
 ```
 
 ## Using [macros](../01-writing-tests.md#reusing-test-logic-through-macros)
