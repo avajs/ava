@@ -43,9 +43,7 @@
 		"entrypoints",
 		"lib",
 		"types",
-		"index.d.cts",
 		"index.d.ts",
-		"plugin.d.cts",
 		"plugin.d.ts"
 	],
 	"keywords": [
