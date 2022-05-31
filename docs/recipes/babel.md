@@ -1,6 +1,6 @@
 # Configuring Babel with AVA
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/babel.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/babel.md)
 
 You can enable Babel support by installing [`@babel/register`](https://babeljs.io/docs/en/babel-register) and `@babel/core`, and then in AVA's configuration requiring `@babel/register`:
 

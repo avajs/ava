@@ -1,6 +1,6 @@
 # Snapshot testing
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/04-snapshot-testing.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/04-snapshot-testing.md)
 
 AVA supports snapshot testing, [as introduced by Jest](https://facebook.github.io/jest/docs/snapshot-testing.html), through its [Assertions](./03-assertions.md) interface. You can snapshot any value.
 

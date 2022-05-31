@@ -1,6 +1,6 @@
 # CLI
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/05-command-line.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/05-command-line.md)
 
 ```console
 ava [<pattern>...]

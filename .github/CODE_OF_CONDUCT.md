@@ -1,6 +1,6 @@
 # Contributor Covenant Code of Conduct
 
-Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/code-of-conduct.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/code-of-conduct.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/code-of-conduct.md), [日本語](https://github.com/avajs/ava-docs/blob/master/ja_JP/code-of-conduct.md), [Português](https://github.com/avajs/ava-docs/blob/master/pt_BR/code-of-conduct.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/code-of-conduct.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/code-of-conduct.md)
+Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/code-of-conduct.md), [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/code-of-conduct.md), [Italiano](https://github.com/avajs/ava-docs/blob/main/it_IT/code-of-conduct.md), [日本語](https://github.com/avajs/ava-docs/blob/main/ja_JP/code-of-conduct.md), [Português](https://github.com/avajs/ava-docs/blob/main/pt_BR/code-of-conduct.md), [Русский](https://github.com/avajs/ava-docs/blob/main/ru_RU/code-of-conduct.md), [简体中文](https://github.com/avajs/ava-docs/blob/main/zh_CN/code-of-conduct.md)
 
 ## Our Pledge
 

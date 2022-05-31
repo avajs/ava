@@ -1,6 +1,6 @@
 # Test timeouts
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/07-test-timeouts.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/07-test-timeouts.md)
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/timeouts?file=test.js&terminal=test&view=editor)
 

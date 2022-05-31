@@ -1,6 +1,6 @@
 # Setting up AVA for browser testing
 
-Translations: [Español](https://github.com/avajs/ava-docs/blob/master/es_ES/docs/recipes/browser-testing.md), [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/browser-testing.md), [Italiano](https://github.com/avajs/ava-docs/blob/master/it_IT/docs/recipes/browser-testing.md), [Русский](https://github.com/avajs/ava-docs/blob/master/ru_RU/docs/recipes/browser-testing.md), [简体中文](https://github.com/avajs/ava-docs/blob/master/zh_CN/docs/recipes/browser-testing.md)
+Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/docs/recipes/browser-testing.md), [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/browser-testing.md), [Italiano](https://github.com/avajs/ava-docs/blob/main/it_IT/docs/recipes/browser-testing.md), [Русский](https://github.com/avajs/ava-docs/blob/main/ru_RU/docs/recipes/browser-testing.md), [简体中文](https://github.com/avajs/ava-docs/blob/main/zh_CN/docs/recipes/browser-testing.md)
 
 AVA does not support running tests in browsers [yet](https://github.com/avajs/ava/issues/24). However JavaScript libraries that require browser specific globals (`window`, `document`, `navigator`, etc) can still be tested with AVA by mocking these globals.
 

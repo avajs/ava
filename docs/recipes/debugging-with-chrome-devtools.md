@@ -1,6 +1,6 @@
 # Debugging tests with Chrome DevTools
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/debugging-with-chrome-devtools.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/debugging-with-chrome-devtools.md)
 
 You can debug your tests using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools).
 

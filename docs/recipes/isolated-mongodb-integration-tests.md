@@ -1,6 +1,6 @@
 # Isolated MongoDB integration tests
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/isolated-mongodb-integration-tests.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/isolated-mongodb-integration-tests.md)
 
 > How to run disposable MongoDB databases in your AVA tests with per-test isolation.
 
