@@ -146,9 +146,9 @@ test('providedTitle', macro, '3 * 3', 9);
 By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestFn<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
 ```ts
-import anyTest, {TestFn} from 'ava';
+import anyTest, {TestInterface} from 'ava';
 
-const test = anyTest as TestFn<{foo: string}>;
+const test = anyTest as TestInterface<{foo: string}>;
 
 test.beforeEach(t => {
 	t.context = {foo: 'bar'};
