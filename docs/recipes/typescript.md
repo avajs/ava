@@ -143,7 +143,7 @@ test('providedTitle', macro, '3 * 3', 9);
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-context?file=source%2Ftest.ts&terminal=test&view=editor)
 
-By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestFn<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
+By default, the type of `t.context` will be the empty object (`{}`). AVA exposes an interface `TestInterface<Context>` which you can use to apply your own type to `t.context`. This can help you catch errors at compile-time:
 
 ```ts
 import anyTest, {TestInterface} from 'ava';
