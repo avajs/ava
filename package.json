@@ -6,28 +6,28 @@
 	"repository": "avajs/ava",
 	"homepage": "https://avajs.dev",
 	"bin": {
-		"ava": "entrypoints/cli.mjs"
+		"ava": "dist/cli.mjs"
 	},
 	"exports": {
 		".": {
 			"import": {
-				"types": "./index.d.ts",
-				"default": "./entrypoints/main.mjs"
+				"types": "./dist/main.d.mts",
+				"default": "./dist/main.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/index.d.cts",
-				"default": "./entrypoints/main.cjs"
+				"types": "./dist/main.d.cts",
+				"default": "./dist/main.cjs"
 			}
 		},
-		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
+		"./eslint-plugin-helper": "./dist/eslint-plugin-helper.cjs",
 		"./plugin": {
 			"import": {
-				"types": "./plugin.d.ts",
-				"default": "./entrypoints/plugin.mjs"
+				"types": "./dist/plugin.d.mts",
+				"default": "./dist/plugin.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/plugin.d.cts",
-				"default": "./entrypoints/plugin.cjs"
+				"types": "./dist/plugin.d.cts",
+				"default": "./dist/plugin.cjs"
 			}
 		}
 	},
@@ -36,15 +36,12 @@
 		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4 <17 || >=18"
 	},
 	"scripts": {
+		"build": "rollup -c",
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
 		"test": "xo && tsd && npm run -s cover"
 	},
 	"files": [
-		"entrypoints",
-		"lib",
-		"types",
-		"index.d.ts",
-		"plugin.d.ts"
+		"dist"
 	],
 	"keywords": [
 		"🦄",
@@ -131,6 +128,9 @@
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^3.0.1",
+		"@rollup/plugin-commonjs": "^22.0.0",
+		"@rollup/plugin-json": "^4.1.0",
+		"@rollup/plugin-node-resolve": "^13.3.0",
 		"@sinonjs/fake-timers": "^9.1.2",
 		"ansi-escapes": "^5.0.0",
 		"c8": "^7.11.3",
@@ -139,6 +139,9 @@
 		"fs-extra": "^10.1.0",
 		"get-stream": "^6.0.1",
 		"replace-string": "^4.0.0",
+		"rollup": "^2.75.5",
+		"rollup-plugin-auto-external": "^2.0.0",
+		"rollup-plugin-dts": "^4.2.2",
 		"sinon": "^13.0.2",
 		"tap": "^16.2.0",
 		"temp-write": "^5.0.0",

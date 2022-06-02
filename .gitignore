@@ -1,4 +1,5 @@
 /coverage
+/dist
 /media/**/node_modules/
 /node_modules/
 /test-tap/**/node_modules/
