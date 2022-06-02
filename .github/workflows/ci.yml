@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~4.4, ~4.5, ~4.6, ~4.7]
+        ts-version: [~4.7]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
