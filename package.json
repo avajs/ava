@@ -156,5 +156,9 @@
 		"@ava/typescript": {
 			"optional": true
 		}
+	},
+	"volta": {
+		"node": "18.3.0",
+		"npm": "8.12.0"
 	}
 }
