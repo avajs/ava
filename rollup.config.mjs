@@ -68,7 +68,7 @@ export default defineConfig([
 		plugins: getPlugins(),
 	},
 	{
-		input: './index.d.ts',
+		input: './types/main.d.ts',
 
 		output: [
 			{
@@ -82,7 +82,7 @@ export default defineConfig([
 		plugins: [dts()],
 	},
 	{
-		input: './plugin.d.ts',
+		input: './types/plugin.d.ts',
 
 		output: [
 			{

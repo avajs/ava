@@ -1,12 +1,9 @@
-import type {TestFn} from './types/test-fn.js';
+/**
+ * @file
+ * This file exists purely so that self references to ava within this package
+ * are able to resolve the correct type information. Any changes to type
+ * information should be made in `./types/main.d.ts`.
+ */
 
-export * from './types/assertions.js';
-export * from './types/try-fn.js';
-export * from './types/test-fn.js';
-export * from './types/subscribable.js';
-
-/** Call to declare a test, or chain to declare hooks or test modifiers */
-declare const test: TestFn;
-
-/** Call to declare a test, or chain to declare hooks or test modifiers */
-export default test;
+export * from './types/main.js';
+export {default} from './types/main.js';

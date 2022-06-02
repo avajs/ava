@@ -1,6 +1,6 @@
 import {expectType} from 'tsd';
 
-import * as plugin from '../plugin'; // eslint-disable-line import/extensions
+import * as plugin from '../types/plugin.js';
 
 expectType<plugin.SharedWorker.Plugin.Protocol>(plugin.registerSharedWorker({filename: '', supportedProtocols: ['ava-4']}));
 
