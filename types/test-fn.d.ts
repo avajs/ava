@@ -219,7 +219,7 @@ export type MacroDeclarationOptions<Args extends unknown[], Context = unknown> =
 export interface MacroFn<Context = unknown> {
 	/** Declare a reusable test implementation. */
 	<Args extends unknown[]>(/** The function that is executed when the macro is used. */ exec: ImplementationFn<Args, Context>): Macro<Args, Context>;
-	<Args extends unknown[]>(declaration: MacroDeclarationOptions<Args, Context>): Macro<Args, Context>; // eslint-disable-line @typescript-eslint/unified-signatures
+	<Args extends unknown[]>(declaration: MacroDeclarationOptions<Args, Context>): Macro<Args, Context>;
 }
 
 export interface Meta {

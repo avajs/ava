@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import test from '..';
 
 test('return a promise-like', t => ({
