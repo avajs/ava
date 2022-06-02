@@ -1,6 +1,6 @@
 # Configuration
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/06-configuration.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/06-configuration.md)
 
 All of the [CLI options][CLI] can be configured in the `ava` section of either your `package.json` file, or an `ava.config.*` file. This allows you to modify the default behavior of the `ava` command, so you don't have to repeatedly type the same options on the command prompt.
 

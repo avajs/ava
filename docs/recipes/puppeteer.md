@@ -1,6 +1,6 @@
 # Testing web apps using Puppeteer
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/recipes/puppeteer.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/puppeteer.md)
 
 ## Dependencies
 

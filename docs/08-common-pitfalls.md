@@ -1,6 +1,6 @@
 # Common Pitfalls
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/master/fr_FR/docs/08-common-pitfalls.md)
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/08-common-pitfalls.md)
 
 If you use [ESLint](https://eslint.org), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
