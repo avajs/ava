@@ -11,18 +11,18 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./index.d.ts",
+				"types": "./entrypoints/main.d.ts",
 				"default": "./entrypoints/main.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/index.d.cts",
+				"types": "./entrypoints/main.d.cts",
 				"default": "./entrypoints/main.cjs"
 			}
 		},
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
 			"import": {
-				"types": "./plugin.d.ts",
+				"types": "./entrypoints/plugin.d.ts",
 				"default": "./entrypoints/plugin.mjs"
 			},
 			"require": {
@@ -42,9 +42,7 @@
 	"files": [
 		"entrypoints",
 		"lib",
-		"types",
-		"index.d.ts",
-		"plugin.d.ts"
+		"types"
 	],
 	"keywords": [
 		"🦄",
