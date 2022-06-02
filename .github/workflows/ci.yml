@@ -31,6 +31,7 @@ jobs:
       - name: Upgrade npm
         run: npm install --global npm@^8.12
       - run: npm install --no-audit
+      - run: npm run build
       - run: npm run cover
       - uses: codecov/codecov-action@v2
         with:
@@ -57,7 +58,8 @@ jobs:
           TS_VERSION: ${{ matrix.ts-version }}
       - run: npm ls typescript
         continue-on-error: true
-      - run: npx tsd
+      - run: npm run build
+      - run: node ./scripts/tsd.cjs
 
   lockfile_churn:
     name: Test package-lock for unexpected modifications
@@ -92,6 +94,7 @@ jobs:
       - name: Upgrade npm
         run: npm install --global npm@^8.12
       - run: npm install --no-package-lock --no-audit
+      - run: npm run build
       - run: npm run cover
 
   xo:
