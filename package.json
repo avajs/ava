@@ -33,7 +33,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4 <17"
+		"node": ">=12.22 <13 || >=14.17 <15 || >=16.4 <17 || >=18"
 	},
 	"scripts": {
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
