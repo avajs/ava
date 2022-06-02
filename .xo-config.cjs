@@ -6,6 +6,7 @@ require('node:process').env.AVA_FAKE_SCM_ROOT = '.fake-root';
 
 module.exports = {
 	ignores: [
+		'dist/**',
 		'media/**',
 		'test/config/fixtures/config-errors/test.js',
 		'test/line-numbers/fixtures/line-numbers.js',
@@ -13,6 +14,15 @@ module.exports = {
 		'test-tap/fixture/report/edgecases/ast-syntax-error.cjs',
 		'examples/typescript-*/**/*.ts',
 	],
+	parser: require.resolve('@babel/eslint-parser'),
+	parserOptions: {
+		requireConfigFile: false,
+		babelOptions: {
+      parserOpts: {
+        plugins: ["importAssertions"],
+      },
+    },
+  },
 	rules: {
 		'import/order': [
 			'error',

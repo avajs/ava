@@ -38,7 +38,8 @@
 	"scripts": {
 		"build": "rollup -c",
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
-		"test": "xo && tsd && npm run -s cover"
+		"pretest": "npm run build",
+		"test": "xo && node ./scripts/tsd.cjs && npm run -s cover"
 	},
 	"files": [
 		"dist"
@@ -128,6 +129,9 @@
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^3.0.1",
+		"@babel/core": "^7.18.2",
+		"@babel/eslint-parser": "^7.18.2",
+		"@babel/plugin-syntax-import-assertions": "^7.17.12",
 		"@rollup/plugin-commonjs": "^22.0.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^13.3.0",
