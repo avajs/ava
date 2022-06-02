@@ -1,4 +1,4 @@
-/* eslint-disable no-lone-blocks, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
+/* eslint-disable no-lone-blocks, @typescript-eslint/no-empty-function */
 import {expectType} from 'tsd';
 
 import test, {ExecutionContext} from '..';

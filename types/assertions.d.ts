@@ -252,7 +252,7 @@ export interface NotThrowsAsyncAssertion {
 	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
 
 	/** Assert that the promise does not reject. You must await the result. */
-	(promise: PromiseLike<any>, message?: string): Promise<void>; // eslint-disable-line @typescript-eslint/unified-signatures
+	(promise: PromiseLike<any>, message?: string): Promise<void>;
 
 	/** Skip this assertion. */
 	skip(nonThrower: any, message?: string): void;
@@ -311,7 +311,7 @@ export interface ThrowsAsyncAssertion {
 	 * rejection reason. Returns undefined when the assertion fails. You must await the result. The error must satisfy all
 	 * expectations.
 	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | undefined>; // eslint-disable-line @typescript-eslint/unified-signatures
+	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | undefined>;
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
