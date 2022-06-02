@@ -10,13 +10,25 @@
 	},
 	"exports": {
 		".": {
-			"import": "./entrypoints/main.mjs",
-			"require": "./entrypoints/main.cjs"
+			"import": {
+				"types": "./index.d.ts",
+				"default": "./entrypoints/main.mjs"
+			},
+			"require": {
+				"types": "./entrypoints/index.d.cts",
+				"default": "./entrypoints/main.cjs"
+			}
 		},
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
-			"import": "./entrypoints/plugin.mjs",
-			"require": "./entrypoints/plugin.cjs"
+			"import": {
+				"types": "./plugin.d.ts",
+				"default": "./entrypoints/plugin.mjs"
+			},
+			"require": {
+				"types": "./entrypoints/plugin.d.cts",
+				"default": "./entrypoints/plugin.cjs"
+			}
 		}
 	},
 	"type": "module",

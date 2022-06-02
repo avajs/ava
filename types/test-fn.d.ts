@@ -1,6 +1,6 @@
-import type {Assertions} from './assertions';
-import type {Subscribable} from './subscribable';
-import type {TryFn} from './try-fn';
+import type {Assertions} from './assertions.js';
+import type {Subscribable} from './subscribable.js';
+import type {TryFn} from './try-fn.js';
 
 /** The `t` value passed to test & hook implementations. */
 export interface ExecutionContext<Context = unknown> extends Assertions {

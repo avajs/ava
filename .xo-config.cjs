@@ -28,7 +28,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: '**/*.d.ts',
+			files: '**/*.d.*(c|m)ts',
 			rules: {
 				'import/extensions': 'off',
 			},
