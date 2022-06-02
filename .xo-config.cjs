@@ -14,15 +14,6 @@ module.exports = {
 		'test-tap/fixture/report/edgecases/ast-syntax-error.cjs',
 		'examples/typescript-*/**/*.ts',
 	],
-	parser: require.resolve('@babel/eslint-parser'),
-	parserOptions: {
-		requireConfigFile: false,
-		babelOptions: {
-      parserOpts: {
-        plugins: ["importAssertions"],
-      },
-    },
-  },
 	rules: {
 		'import/order': [
 			'error',

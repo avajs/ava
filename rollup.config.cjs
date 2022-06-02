@@ -1,15 +1,15 @@
-import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
-import {nodeResolve} from '@rollup/plugin-node-resolve';
-import {defineConfig} from 'rollup';
-import autoExternal from 'rollup-plugin-auto-external';
-import dts from 'rollup-plugin-dts';
+const commonjs = require('@rollup/plugin-commonjs');
+const json = require('@rollup/plugin-json');
+const {nodeResolve} = require('@rollup/plugin-node-resolve');
+const {defineConfig} = require('rollup');
+const autoExternal = require('rollup-plugin-auto-external');
+const {default: dts} = require('rollup-plugin-dts');
 
-import pkg from './package.json' assert { "type": "json" };
+const pkg = require('./package.json');
 
 const getPlugins = () => [autoExternal(), nodeResolve(), commonjs(), json()];
 
-export default defineConfig([
+module.exports = defineConfig([
 	{
 		input: './lib/worker/main.cjs',
 
