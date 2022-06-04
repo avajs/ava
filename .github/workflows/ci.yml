@@ -8,6 +8,9 @@ on:
       - "*.md"
       - "docs/**"
       - "media/**"
+permissions:
+  contents: read
+
 jobs:
   nodejs:
     name: Node.js
