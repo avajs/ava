@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import test from '../../../../../entrypoints/main.cjs';
 
 test('top level test title', t => {

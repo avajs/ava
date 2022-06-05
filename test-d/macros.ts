@@ -1,13 +1,14 @@
-/* eslint-disable no-lone-blocks, @typescript-eslint/no-empty-function */
+/* eslint-disable no-lone-blocks */
+import test, {ExecutionContext} from 'ava';
 import {expectType} from 'tsd';
-
-import test, {ExecutionContext} from '..';
 
 // Typed arguments through generics.
 {
 	const hasLength = test.macro<[string, number]>((t, input, expected) => {
 		expectType<string>(input);
 		expectType<number>(expected);
+		// @ts-expect-error TS2345
+		t.is(input, expected);
 	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
@@ -18,8 +19,10 @@ import test, {ExecutionContext} from '..';
 		exec(t, input, expected) {
 			expectType<string>(input);
 			expectType<number>(expected);
+			// @ts-expect-error TS2345
+			t.is(input, expected);
 		},
-		title(providedTitle, input, expected) {
+		title(_providedTitle, input, expected) {
 			expectType<string>(input);
 			expectType<number>(expected);
 			return 'title';
@@ -31,15 +34,21 @@ import test, {ExecutionContext} from '..';
 
 // Typed arguments in execution function.
 {
-	const hasLength = test.macro((t, input: string, expected: number) => {});
+	const hasLength = test.macro((t, input: string, expected: number) => {
+		// @ts-expect-error TS2345
+		t.is(input, expected);
+	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
 }
 
 {
 	const hasLength = test.macro({
-		exec(t, input: string, expected: number) {},
-		title(providedTitle, input, expected) {
+		exec(t, input: string, expected: number) {
+			// @ts-expect-error TS2345
+			t.is(input, expected);
+		},
+		title(_providedTitle, input, expected) {
 			expectType<string>(input);
 			expectType<number>(expected);
 			return 'title';
@@ -54,6 +63,7 @@ import test, {ExecutionContext} from '..';
 	const hasLength = test.macro((t, input, expected) => {
 		expectType<unknown>(input);
 		expectType<unknown>(expected);
+		t.is(input, expected);
 	});
 
 	test('bar has length 3', hasLength, 'bar', 3);
@@ -61,7 +71,10 @@ import test, {ExecutionContext} from '..';
 
 // Usable without title, even if the macro lacks a title function.
 {
-	const hasLength = test.macro<[string, number]>((t, input, expected) => {});
+	const hasLength = test.macro<[string, number]>((t, input, expected) => {
+		// @ts-expect-error TS2345
+		t.is(input, expected);
+	});
 
 	test(hasLength, 'bar', 3);
 }
@@ -69,7 +82,7 @@ import test, {ExecutionContext} from '..';
 // No arguments
 {
 	const pass = test.macro<[]>({ // eslint-disable-line @typescript-eslint/ban-types
-		exec(t, ...args) {
+		exec(_t, ...args) {
 			expectType<[]>(args); // eslint-disable-line @typescript-eslint/ban-types
 		},
 		title(providedTitle, ...args) {
@@ -92,15 +105,22 @@ import test, {ExecutionContext} from '..';
 }
 
 // Inline function with explicit argument types.
-test('has length 3', (t: ExecutionContext, input: string, expected: number) => {}, 'bar', 3);
+test('has length 3', (t: ExecutionContext, input: string, expected: number) => {
+	// @ts-expect-error TS2345
+	t.is(input, expected);
+}, 'bar', 3);
 
 // Completely inferred arguments for inline functions.
 test('has length 3', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
+	// @ts-expect-error TS2345
+	t.is(input, expected);
 }, 'foo', 3);
 
 test.skip('skip', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
+	// @ts-expect-error TS2345
+	t.is(input, expected);
 }, 'foo', 3);

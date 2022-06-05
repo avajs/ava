@@ -1,4 +1,4 @@
-import test from '..';
+import test from 'ava';
 
 test('like', t => {
 	t.like({
@@ -21,5 +21,5 @@ test('like', t => {
 
 	const foo: Foo = {bar: 'bar'};
 	const {foo: _, ...expected} = foo;
-	t.like({bar: 'bar'}, expected);
+	t.like(expected, {bar: 'bar'});
 });
