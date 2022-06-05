@@ -37,7 +37,7 @@
 	},
 	"scripts": {
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
-		"test": "xo && tsd && npm run -s cover"
+		"test": "xo && tsc --noEmit && npm run -s cover"
 	},
 	"files": [
 		"entrypoints",
