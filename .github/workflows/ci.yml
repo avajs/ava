@@ -74,9 +74,9 @@ jobs:
       - name: Test package-lock for unexpected modifications
         run: |
           npm -v
-          checksum=$(md5sum package-lock.json)
+          checksum=$(sha512sum package-lock.json)
           npm install --package-lock-only --no-audit
-          if ! echo ${checksum} | md5sum --quiet -c -; then
+          if ! echo ${checksum} | sha512sum --quiet -c -; then
             echo "package-lock.json was modified unexpectedly. Please rebuild it using npm@$(npm -v) and commit the changes."
             exit 1
           fi
