@@ -129,6 +129,7 @@
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^3.0.1",
+		"@sindresorhus/tsconfig": "^3.0.1",
 		"@sinonjs/fake-timers": "^9.1.2",
 		"ansi-escapes": "^5.0.0",
 		"c8": "^7.11.3",
