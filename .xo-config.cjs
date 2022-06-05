@@ -50,7 +50,7 @@ module.exports = {
 			},
 		},
 		{
-			files: 'test-d/**',
+			files: 'test-types/**',
 			rules: {
 				'ava/assertion-arguments': 'off',
 				'ava/no-ignored-test-files': 'off',
