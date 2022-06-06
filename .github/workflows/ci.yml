@@ -55,9 +55,8 @@ jobs:
       - run: npm i typescript@${TS_VERSION}
         env:
           TS_VERSION: ${{ matrix.ts-version }}
-      - run: npm ls typescript
-        continue-on-error: true
-      - run: npx tsc --noEmit
+      - run: ./node_modules/typescript/bin/tsc --version
+      - run: ./node_modules/typescript/bin/tsc --noEmit
 
   lockfile_churn:
     name: Test package-lock for unexpected modifications
