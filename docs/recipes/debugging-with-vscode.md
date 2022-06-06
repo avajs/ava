@@ -26,11 +26,12 @@ Alternatively you can create a launch configuration, which makes it easier to de
     "type": "node",
     "request": "launch",
     "name": "Debug AVA test file",
-    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
-    "runtimeArgs": [
+    "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+    "args": [
       "${file}"
     ],
     "outputCapture": "std",
+    "console": "integratedTerminal", // optional
     "skipFiles": [
       "<node_internals>/**/*.js"
     ]
@@ -55,11 +56,12 @@ Assuming the names of your test files are unique you could try the following con
   "type": "node",
   "request": "launch",
   "name": "Debug AVA test file",
-  "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
-  "runtimeArgs": [
+  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+  "args": [
     "build/**/${fileBasenameNoExtension}.*"
   ],
   "outputCapture": "std",
+  "console": "integratedTerminal", // optional
   "skipFiles": [
     "<node_internals>/**/*.js"
   ]
@@ -81,12 +83,13 @@ Or, if you're using a launch configuration, add the `--serial` argument:
   "type": "node",
   "request": "launch",
   "name": "Debug AVA test file",
-  "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
-  "runtimeArgs": [
+  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+  "args": [
     "--serial",
     "${file}"
   ],
   "outputCapture": "std",
+  "console": "integratedTerminal", // optional
   "skipFiles": [
     "<node_internals>/**/*.js"
   ]
