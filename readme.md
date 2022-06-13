@@ -1,5 +1,7 @@
 [![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
 
+[![SWUbanner](https://svgshare.com/i/iHA.svg)](https://www.unicef.org/press-releases/eight-palestinian-children-killed-gaza-strip-last-night)
+
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
 AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that lets you develop with confidence 🚀
@@ -10,9 +12,7 @@ Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to cont
 
 ![](media/verbose-reporter.png)
 
-
 Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/readme.md), [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/readme.md), [Italiano](https://github.com/avajs/ava-docs/blob/main/it_IT/readme.md), [日本語](https://github.com/avajs/ava-docs/blob/main/ja_JP/readme.md), [한국어](https://github.com/avajs/ava-docs/blob/main/ko_KR/readme.md), [Português](https://github.com/avajs/ava-docs/blob/main/pt_BR/readme.md), [Русский](https://github.com/avajs/ava-docs/blob/main/ru_RU/readme.md), [简体中文](https://github.com/avajs/ava-docs/blob/main/zh_CN/readme.md)
-
 
 ## Why AVA?
 
@@ -30,7 +30,6 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/readm
 - [Enhanced assertion messages](./docs/03-assertions.md#enhanced-assertion-messages)
 - [Automatic parallel test runs in CI](#parallel-runs-in-ci)
 - [TAP reporter](./docs/05-command-line.md#tap-reporter)
-
 
 ## Usage
 
@@ -73,15 +72,15 @@ Don't forget to configure the `test` script in your `package.json` as per above.
 Create a file named `test.js` in the project root directory:
 
 ```js
-import test from 'ava';
+import test from "ava";
 
-test('foo', t => {
+test("foo", (t) => {
 	t.pass();
 });
 
-test('bar', async t => {
-	const bar = Promise.resolve('bar');
-	t.is(await bar, 'bar');
+test("bar", async (t) => {
+	const bar = Promise.resolve("bar");
+	t.is(await bar, "bar");
 });
 ```
 
@@ -127,13 +126,13 @@ AVA automatically detects whether your CI environment supports parallel builds. 
 
 Please see the [files in the `docs` directory](./docs):
 
-* [Writing tests](./docs/01-writing-tests.md)
-* [Execution context](./docs/02-execution-context.md)
-* [Assertions](./docs/03-assertions.md)
-* [Snapshot testing](./docs/04-snapshot-testing.md)
-* [Command line (CLI)](./docs/05-command-line.md)
-* [Configuration](./docs/06-configuration.md)
-* [Test timeouts](./docs/07-test-timeouts.md)
+- [Writing tests](./docs/01-writing-tests.md)
+- [Execution context](./docs/02-execution-context.md)
+- [Assertions](./docs/03-assertions.md)
+- [Snapshot testing](./docs/04-snapshot-testing.md)
+- [Command line (CLI)](./docs/05-command-line.md)
+- [Configuration](./docs/06-configuration.md)
+- [Test timeouts](./docs/07-test-timeouts.md)
 
 ### Common pitfalls
 
@@ -201,9 +200,9 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 
 ## Team
 
-[![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus)
----|---
-[Mark Wubben](https://novemberborn.net) | [Sindre Sorhus](https://sindresorhus.com)
+| [![Mark Wubben](https://github.com/novemberborn.png?size=100)](https://github.com/novemberborn) | [![Sindre Sorhus](https://github.com/sindresorhus.png?size=100)](https://github.com/sindresorhus) |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Mark Wubben](https://novemberborn.net)                                                         | [Sindre Sorhus](https://sindresorhus.com)                                                         |
 
 ###### Former
 
@@ -212,7 +211,6 @@ It's the [Andromeda galaxy](https://simple.wikipedia.org/wiki/Andromeda_galaxy).
 - [Juan Soto](https://github.com/sotojuan)
 - [Jeroen Engels](https://github.com/jfmengels)
 - [Vadim Demedes](https://github.com/vadimdemedes)
-
 
 <div align="center">
 	<br>
