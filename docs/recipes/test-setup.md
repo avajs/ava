@@ -16,7 +16,7 @@ You could do all these things using plain setup functions, but there are tradeof
 |---|---
 | ⛔️ &nbsp; used for all tests| ✅ &nbsp; can change or skip depending on test
 | ⛔️ &nbsp; more overhead for beginners, "some magic"| ✅ &nbsp; easier for beginners, "no magic"
-| ✅ &nbsp; supports callback mode, built-in support for observables| ⛔️ &nbsp; must use promises for asynchronous behavior
+| ✅ &nbsp; built-in support for observables| ⛔️ &nbsp; must use promises for asynchronous behavior
 | ✅ &nbsp; failure has friendly output| ⛔️ &nbsp; errors are attributed to the test
 | ✅ &nbsp; corresponding `afterEach` and `afterEach.always` for cleanup| ⛔️ &nbsp; cannot easily clean up
 
