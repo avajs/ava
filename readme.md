@@ -66,6 +66,8 @@ Alternatively you can install `ava` manually:
 npm install --save-dev ava
 ```
 
+*Make sure to install AVA locally. As of AVA 4 it can no longer be run globally.*
+
 Don't forget to configure the `test` script in your `package.json` as per above.
 
 ### Create your test file
