@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/01-writing-tests.md)
 
-Tests are run concurrently. You can specify synchronous and asynchronous tests. Tests are considered synchronous unless you return a promise, an [observable](https://github.com/zenparsing/zen-observable), or declare it as a callback test.
+Tests are run concurrently. You can specify synchronous and asynchronous tests. Tests are considered synchronous unless you return a promise or an [observable](https://github.com/zenparsing/zen-observable).
 
 You must define all tests synchronously. They can't be defined inside `setTimeout`, `setImmediate`, etc.
 
@@ -72,8 +72,6 @@ test('promises the truth', async t => {
 ## Observable support
 
 AVA comes with built-in support for [observables](https://github.com/zenparsing/es-observable). If you return an observable from a test, AVA will automatically consume it to completion before ending the test.
-
-*You do not need to use "callback mode" or call `t.end()`.*
 
 ```js
 test('handles observables', t => {
