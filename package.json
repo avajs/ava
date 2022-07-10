@@ -11,18 +11,18 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./index.d.ts",
+				"types": "./entrypoints/main.d.ts",
 				"default": "./entrypoints/main.mjs"
 			},
 			"require": {
-				"types": "./entrypoints/index.d.cts",
+				"types": "./entrypoints/main.d.cts",
 				"default": "./entrypoints/main.cjs"
 			}
 		},
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
 			"import": {
-				"types": "./plugin.d.ts",
+				"types": "./entrypoints/plugin.d.ts",
 				"default": "./entrypoints/plugin.mjs"
 			},
 			"require": {
@@ -37,14 +37,12 @@
 	},
 	"scripts": {
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
-		"test": "xo && tsd && npm run -s cover"
+		"test": "xo && tsc --noEmit && npm run -s cover"
 	},
 	"files": [
 		"entrypoints",
 		"lib",
-		"types",
-		"index.d.ts",
-		"plugin.d.ts"
+		"types"
 	],
 	"keywords": [
 		"🦄",
@@ -131,6 +129,7 @@
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^3.0.1",
+		"@sindresorhus/tsconfig": "^3.0.1",
 		"@sinonjs/fake-timers": "^9.1.2",
 		"ansi-escapes": "^5.0.0",
 		"c8": "^7.11.3",
@@ -145,7 +144,7 @@
 		"tempy": "^2.0.0",
 		"touch": "^3.1.0",
 		"tsd": "^0.20.0",
-		"typescript": "^4.7.2",
+		"typescript": "^4.7.3",
 		"xo": "^0.49.0",
 		"zen-observable": "^0.8.15"
 	},

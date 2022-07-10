@@ -50,6 +50,15 @@ module.exports = {
 			},
 		},
 		{
+			files: 'test-types/**',
+			rules: {
+				'ava/assertion-arguments': 'off',
+				'ava/no-ignored-test-files': 'off',
+				'ava/no-skip-assert': 'off',
+				'ava/use-t': 'off',
+			},
+		},
+		{
 			// TODO: Update tests.
 			files: 'test/**',
 			rules: {

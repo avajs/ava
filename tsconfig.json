@@ -1,7 +1,8 @@
 {
+	"extends": "@sindresorhus/tsconfig",
 	"include": [
 		"test",
-		"test-d",
-		"test-tap"
+		"test-tap",
+		"test-types"
 	]
 }

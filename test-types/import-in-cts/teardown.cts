@@ -1,4 +1,4 @@
-import test from '..';
+import test from 'ava';
 
 test('test', t => {
 	t.teardown(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
