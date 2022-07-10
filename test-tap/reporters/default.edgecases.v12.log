@@ -1,8 +1,20 @@
 
 ---tty-stream-chunk-separator
   [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m
----tty-stream-chunk-separator
 
+  [90mSyntaxError: Unexpected token (3:11)[39m
+  [90m    at Parser.pp$4.raise (~/node_modules/acorn/dist/acorn.js:3462:15)[39m
+  [90m    at Parser.pp$9.unexpected (~/node_modules/acorn/dist/acorn.js:756:10)[39m
+  [90m    at Parser.pp$5.parseExprAtom (~/node_modules/acorn/dist/acorn.js:2837:12)[39m
+  [90m    at Parser.pp$5.parseExprSubscripts (~/node_modules/acorn/dist/acorn.js:2629:21)[39m
+  [90m    at Parser.pp$5.parseMaybeUnary (~/node_modules/acorn/dist/acorn.js:2595:19)[39m
+  [90m    at Parser.pp$5.parseExprOps (~/node_modules/acorn/dist/acorn.js:2522:21)[39m
+  [90m    at Parser.pp$5.parseMaybeConditional (~/node_modules/acorn/dist/acorn.js:2505:21)[39m
+  [90m    at Parser.pp$5.parseMaybeAssign (~/node_modules/acorn/dist/acorn.js:2472:21)[39m
+  [90m    at Parser.pp$8.parseVar (~/node_modules/acorn/dist/acorn.js:1299:26)[39m
+  [90m    at Parser.pp$8.parseVarStatement (~/node_modules/acorn/dist/acorn.js:1163:10)[39m
+
+---tty-stream-chunk-separator
   [1mUncaught exception in ast-syntax-error.cjs[22m
 
   ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
