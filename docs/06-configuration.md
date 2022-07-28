@@ -55,7 +55,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `verbose`: if `true`, enables verbose output (though there currently non-verbose output is not supported)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
-- `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#process-isolation)
+- `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#test-isolation)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
 - `sortTestFiles`: A comparator function to sort test files with. Available only when using a `ava.config.*` file. See an example use case [here](recipes/splitting-tests-ci.md).
