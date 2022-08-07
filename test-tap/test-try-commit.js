@@ -1,12 +1,15 @@
 import delay from 'delay';
 import {test} from 'tap';
 
+import {set as setChalk} from '../lib/chalk.js';
 import ContextRef from '../lib/context-ref.js';
 import {set as setOptions} from '../lib/worker/options.cjs';
 
 import {newAva} from './helper/ava-test.js';
 
-setOptions({chalkOptions: {level: 0}});
+const options = {chalkOptions: {level: 0}};
+setOptions(options);
+setChalk(options.chalkOptions);
 
 test('try-commit works', async t => {
 	const ava = newAva();

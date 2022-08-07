@@ -1,6 +1,6 @@
 
 ---tty-stream-chunk-separator
-  [31m✖[39m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+  [31m✖ FAIL:[39m a [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
   [90m─[39m
 
@@ -9,7 +9,7 @@
   [90ma.cjs:3[39m
 
    [90m2:[39m                               
-  [41m 3: test('fails', t => t.fail()); [49m
+  [41m[1m 3: test('fails', t => t.fail()); [22m[49m
    [90m4:[39m test('passes', t => t.pass());
 
   Test failed via `t.fail()`

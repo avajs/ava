@@ -5,10 +5,13 @@ import stripAnsi from 'strip-ansi';
 import {test} from 'tap';
 
 import * as assert from '../lib/assert.js';
+import {set as setChalk} from '../lib/chalk.js';
 import * as snapshotManager from '../lib/snapshot-manager.js';
 import {set as setOptions} from '../lib/worker/options.cjs';
 
-setOptions({chalkOptions: {level: 0}});
+const options = {chalkOptions: {level: 0}};
+setOptions(options);
+setChalk(options.chalkOptions);
 
 let lastFailure = null;
 let lastPassed = false;
@@ -279,7 +282,7 @@ test('.is()', t => {
 		message: '',
 		raw: {actual: 'foo', expected: 'bar'},
 		values: [
-			{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/},
+			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/},
 		],
 	});
 
@@ -289,7 +292,7 @@ test('.is()', t => {
 		expected: 42,
 		message: '',
 		values: [
-			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/},
+			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
@@ -297,7 +300,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/},
+			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
@@ -305,7 +308,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Difference:', formatted: /- 0\n\+ -0/},
+			{label: 'Difference (- actual, + expected):', formatted: /- 0\n\+ -0/},
 		],
 	});
 
@@ -313,7 +316,7 @@ test('.is()', t => {
 		assertion: 'is',
 		message: 'my message',
 		values: [
-			{label: 'Difference:', formatted: /- -0\n\+ 0/},
+			{label: 'Difference (- actual, + expected):', formatted: /- -0\n\+ 0/},
 		],
 	});
 
@@ -535,20 +538,20 @@ test('.deepEqual()', t => {
 		assertion: 'deepEqual',
 		message: '',
 		raw: {actual: 'foo', expected: 'bar'},
-		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}],
+		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42), {
 		assertion: 'deepEqual',
 		message: '',
 		raw: {actual: 'foo', expected: 42},
-		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}],
+		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42, 'my message'), {
 		assertion: 'deepEqual',
 		message: 'my message',
-		values: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}],
+		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual({}, {}, null), {
@@ -758,7 +761,7 @@ test('.like()', t => {
 	failsWith(t, () => assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'}), {
 		assertion: 'like',
 		message: '',
-		values: [{label: 'Difference:', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
+		values: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
 	});
 
 	t.end();
@@ -1429,7 +1432,7 @@ test('.snapshot()', async t => {
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
 			assertion: 'snapshot',
 			message: 'Did not match snapshot',
-			values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			values: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 
@@ -1442,7 +1445,7 @@ test('.snapshot()', async t => {
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
 			assertion: 'snapshot',
 			message: 'my message',
-			values: [{label: 'Difference:', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			values: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 

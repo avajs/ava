@@ -14,7 +14,7 @@ not ok 3 - nested-objects › format with max depth 4
     name: AssertionError
     assertion: deepEqual
     values:
-      'Difference:': |2-
+      'Difference (- actual, + expected):': |2-
           {
             a: {
               b: {
@@ -37,7 +37,7 @@ not ok 4 - nested-objects › format like with max depth 4
     name: AssertionError
     assertion: like
     values:
-      'Difference:': |2-
+      'Difference (- actual, + expected):': |2-
           {
             a: {
               b: {
@@ -129,7 +129,7 @@ not ok 14 - test › formatted
     name: AssertionError
     assertion: deepEqual
     values:
-      'Difference:': |-
+      'Difference (- actual, + expected):': |-
         - 'foo'
         + 'bar'
     at: 'test-tap/fixture/report/regular/test.cjs:22:4'
