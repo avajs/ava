@@ -7,11 +7,8 @@ import {test} from 'tap';
 import * as assert from '../lib/assert.js';
 import {set as setChalk} from '../lib/chalk.js';
 import * as snapshotManager from '../lib/snapshot-manager.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
 
-const options = {chalkOptions: {level: 0}};
-setOptions(options);
-setChalk(options.chalkOptions);
+setChalk({level: 0});
 
 let lastFailure = null;
 let lastPassed = false;
