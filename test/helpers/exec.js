@@ -70,6 +70,7 @@ export const fixture = async (args, options = {}) => {
 		failed: [],
 		failedHooks: [],
 		internalErrors: [],
+		interrupts: [],
 		passed: [],
 		selectedTestCount: 0,
 		sharedWorkerErrors: [],
@@ -99,6 +100,14 @@ export const fixture = async (args, options = {}) => {
 				const statObject = {file: normalizePath(workingDir, testFile)};
 				errors.set(statObject, statusEvent.err);
 				stats.internalErrors.push(statObject);
+				break;
+			}
+
+			case 'process-exit': {
+				const {testFile} = statusEvent;
+				const statObject = {file: normalizePath(workingDir, testFile)};
+				errors.set(statObject, statusEvent.err);
+				stats.interrupts.push(statObject);
 				break;
 			}
 
