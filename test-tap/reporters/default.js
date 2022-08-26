@@ -9,7 +9,7 @@ import TTYStream from '../helper/tty-stream.js';
 const {restoreClock} = fixReporterEnv();
 
 test(async t => {
-	const {default: Reporter} = await import('../../lib/reporters/default.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
+	const {default: Reporter} = await import('../../lib/reporters/default.js');
 
 	const run = (type, sanitizers = []) => t => {
 		t.plan(1);

@@ -1,4 +1,5 @@
-import test, {ExecutionContext} from 'ava';
+import type {ExecutionContext} from 'ava';
+import test from 'ava';
 import {expectType} from 'tsd';
 
 test('attempt', async t => {
@@ -37,7 +38,7 @@ test('attempt with helper', async t => {
 	attempt.commit();
 });
 
-test('attempt with title', async t => {
+test('attempt with title and helper', async t => {
 	const attempt = await t.try('title', lengthCheck, 'string', 6);
 	attempt.commit();
 });
@@ -54,11 +55,13 @@ test('all possible variants to pass to t.try', async t => {
 	void t.try('test', (tt, a, b) => tt.is(a.length, b), 'hello', 5);
 
 	// Macro with title
-	const macro1 = test.macro<[string, number]>({
+	const macro1 = test.macro<[string, number]>({ // eslint-disable-line ava/no-nested-tests
 		exec: (tt, a, b) => tt.is(a.length, b),
 		title: (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`,
 	});
-	const macro2 = test.macro<[string, number]>((tt, a, b) => tt.is(a.slice(b), ''));
+	const macro2 = test.macro<[string, number]>((tt, a, b) => { // eslint-disable-line ava/no-nested-tests
+		tt.is(a.slice(b), '');
+	});
 
 	void t.try(macro1, 'hello', 5);
 	void t.try(macro2, 'hello', 5);

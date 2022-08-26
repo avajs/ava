@@ -64,7 +64,13 @@ module.exports = {
 			files: 'test/**',
 			rules: {
 				'import/no-anonymous-default-export': 'off',
-				'node/prefer-global/process': 'off',
+				'n/prefer-global/process': 'off',
+			},
+		},
+		{
+			files: 'test/**/fixtures/**',
+			rules: {
+				'n/file-extension-in-import': 'off',
 			},
 		},
 		{
@@ -79,7 +85,7 @@ module.exports = {
 			files: 'test-tap/**',
 			rules: {
 				'import/no-anonymous-default-export': 'off',
-				'node/prefer-global/process': 'off',
+				'n/prefer-global/process': 'off',
 				'unicorn/error-message': 'off',
 			},
 		},
