@@ -17,6 +17,10 @@
 ---tty-stream-chunk-separator
   [1mUncaught exception in ast-syntax-error.cjs[22m
 
+  ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
+  const fn = do {
+             ^^
+
   SyntaxError: Unexpected token 'do'
 
 ---tty-stream-chunk-separator

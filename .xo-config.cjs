@@ -36,6 +36,7 @@ module.exports = {
 		{
 			files: 'examples/**',
 			rules: {
+				'ava/no-ignored-test-files': 'off',
 				'ava/no-only-test': 'off',
 				'unicorn/prefer-module': 'off',
 			},
