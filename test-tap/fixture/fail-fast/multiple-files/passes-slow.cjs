@@ -6,7 +6,7 @@ test.serial('first pass', async t => {
 	t.pass();
 	const timer = setTimeout(() => {}, 60_000); // Ensure process stays alive.
 	const source = parentPort || process;
-	const {pEvent} = await import('p-event'); // eslint-disable-line node/no-unsupported-features/es-syntax
+	const {pEvent} = await import('p-event');
 	await pEvent(source, 'message', message => {
 		if (message.ava) {
 			return message.ava.type === 'peer-failed';

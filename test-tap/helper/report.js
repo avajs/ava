@@ -41,6 +41,7 @@ exports.assert = (t, logFile, buffer) => {
 const cwdFileUrlPrefix = pathToFileURL(process.cwd());
 
 exports.sanitizers = {
+	acorn: string => string.split('\n').filter(line => !/node_modules.acorn/.test(line)).join('\n'),
 	cwd: string => replaceString(replaceString(string, cwdFileUrlPrefix, ''), process.cwd(), '~'),
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => replaceString(string, '\r\n', '\n'),

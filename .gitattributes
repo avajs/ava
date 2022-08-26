@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.ai binary
 *.psd binary
+*.png binary
+*.snap binary

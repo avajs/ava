@@ -3,7 +3,7 @@ import type {Subscribable} from './subscribable.js';
 import type {TryFn} from './try-fn.js';
 
 /** The `t` value passed to test & hook implementations. */
-export interface ExecutionContext<Context = unknown> extends Assertions {
+export type ExecutionContext<Context = unknown> = {
 	/** Test context, shared with hooks. */
 	context: Context;
 
@@ -18,17 +18,17 @@ export interface ExecutionContext<Context = unknown> extends Assertions {
 	readonly teardown: TeardownFn;
 	readonly timeout: TimeoutFn;
 	readonly try: TryFn<Context>;
-}
+} & Assertions;
 
-export interface LogFn {
+export type LogFn = {
 	/** Log one or more values. */
 	(...values: any[]): void;
 
 	/** Skip logging. */
 	skip(...values: any[]): void;
-}
+};
 
-export interface PlanFn {
+export type PlanFn = {
 	/**
 	 * Plan how many assertion there are in the test. The test will fail if the actual assertion count doesn't match the
 	 * number of planned assertions. See [assertion planning](https://github.com/avajs/ava#assertion-planning).
@@ -37,7 +37,7 @@ export interface PlanFn {
 
 	/** Don't plan assertions. */
 	skip(count: number): void;
-}
+};
 
 /**
  * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
@@ -67,7 +67,7 @@ export type Macro<Args extends unknown[], Context = unknown> = {
 /** A test or hook implementation. */
 export type Implementation<Args extends unknown[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
 
-export interface TestFn<Context = unknown> {
+export type TestFn<Context = unknown> = {
 	/** Declare a concurrent test. Additional arguments are passed to the implementation or macro. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
@@ -88,9 +88,9 @@ export interface TestFn<Context = unknown> {
 	serial: SerialFn<Context>;
 	skip: SkipFn<Context>;
 	todo: TodoFn;
-}
+};
 
-export interface AfterFn<Context = unknown> {
+export type AfterFn<Context = unknown> = {
 	/**
 	 * Declare a hook that is run once, after all tests have passed.
 	 * Additional arguments are passed to the implementation or macro.
@@ -105,9 +105,9 @@ export interface AfterFn<Context = unknown> {
 
 	always: AlwaysInterface<Context>;
 	skip: HookSkipFn<Context>;
-}
+};
 
-export interface AlwaysInterface<Context = unknown> {
+export type AlwaysInterface<Context = unknown> = {
 	/**
 	 * Declare a hook that is run once, after all tests are done.
 	 * Additional arguments are passed to the implementation or macro.
@@ -121,9 +121,9 @@ export interface AlwaysInterface<Context = unknown> {
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	skip: HookSkipFn<Context>;
-}
+};
 
-export interface BeforeFn<Context = unknown> {
+export type BeforeFn<Context = unknown> = {
 	/**
 	 * Declare a hook that is run once, before all tests.
 	 * Additional arguments are passed to the implementation or macro.
@@ -137,9 +137,9 @@ export interface BeforeFn<Context = unknown> {
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	skip: HookSkipFn<Context>;
-}
+};
 
-export interface FailingFn<Context = unknown> {
+export type FailingFn<Context = unknown> = {
 	/**
 	 * Declare a concurrent test that is expected to fail.
 	 * Additional arguments are passed to the implementation or macro.
@@ -154,17 +154,17 @@ export interface FailingFn<Context = unknown> {
 
 	only: OnlyFn<Context>;
 	skip: SkipFn<Context>;
-}
+};
 
-export interface HookSkipFn<Context = unknown> {
+export type HookSkipFn<Context = unknown> = {
 	/** Skip this hook. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Skip this hook. */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
-}
+};
 
-export interface OnlyFn<Context = unknown> {
+export type OnlyFn<Context = unknown> = {
 	/**
 	 * Declare a test. Only this test and others declared with `.only()` are run.
 	 * Additional arguments are passed to the implementation or macro.
@@ -176,9 +176,9 @@ export interface OnlyFn<Context = unknown> {
 	 * Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	 */
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
-}
+};
 
-export interface SerialFn<Context = unknown> {
+export type SerialFn<Context = unknown> = {
 	/** Declare a serial test. Additional arguments are passed to the implementation or macro. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
@@ -195,15 +195,15 @@ export interface SerialFn<Context = unknown> {
 	only: OnlyFn<Context>;
 	skip: SkipFn<Context>;
 	todo: TodoFn;
-}
+};
 
-export interface SkipFn<Context = unknown> {
+export type SkipFn<Context = unknown> = {
 	/** Skip this test. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/** Skip this test. */
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
-}
+};
 
 /** Declare a test that should be implemented later. */
 export type TodoFn = (title: string) => void;
@@ -216,16 +216,16 @@ export type MacroDeclarationOptions<Args extends unknown[], Context = unknown> =
 	title: TitleFn<Args>;
 };
 
-export interface MacroFn<Context = unknown> {
+export type MacroFn<Context = unknown> = {
 	/** Declare a reusable test implementation. */
 	<Args extends unknown[]>(/** The function that is executed when the macro is used. */ exec: ImplementationFn<Args, Context>): Macro<Args, Context>;
 	<Args extends unknown[]>(declaration: MacroDeclarationOptions<Args, Context>): Macro<Args, Context>;
-}
+};
 
-export interface Meta {
+export type Meta = {
 	/** Path to the test file being executed. */
 	file: string;
 
 	/** Directory where snapshots are stored. */
 	snapshotDirectory: string;
-}
+};
