@@ -43,7 +43,7 @@ test(async t => {
 	t.test('default reporter - second failFast run', run('failFast2'));
 	t.test('default reporter - only run', run('only'));
 	t.test('default reporter - watch mode run', run('watch'));
-	t.test('default reporter - edge cases', run('edgeCases'));
+	t.test('default reporter - edge cases', run('edgeCases', [report.sanitizers.acorn]));
 
 	t.test('default reporter - timeout', t => {
 		restoreClock();
