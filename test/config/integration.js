@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import test from '@ava/test';
-import tempy from 'tempy';
+import {temporaryDirectory} from 'tempy';
 
 import {cwd, fixture} from '../helpers/exec.js';
 
@@ -64,7 +64,7 @@ test('looks for config files outside of project directory', async t => {
 });
 
 test('use current working directory if `package.json` is not found', async t => {
-	const cwd = tempy.directory();
+	const cwd = temporaryDirectory();
 	const testFilePath = path.join(cwd, 'test.js');
 
 	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_IMPORT_FROM);\ntest(\'test name\', t => { t.pass(); });');

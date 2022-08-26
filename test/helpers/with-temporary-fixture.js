@@ -1,9 +1,9 @@
 import fse from 'fs-extra';
-import tempy from 'tempy';
+import {temporaryDirectoryTask} from 'tempy';
 
 export async function withTemporaryFixture(cwd, task) {
 	let result;
-	await tempy.directory.task(async temporary => {
+	await temporaryDirectoryTask(async temporary => {
 		await fse.copy(cwd, temporary);
 		result = await task(temporary);
 	});

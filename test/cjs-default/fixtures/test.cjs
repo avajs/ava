@@ -15,6 +15,6 @@ test('not enumerable', t => {
 });
 
 test('main export equals the ESM export', async t => {
-	const {default: exported} = await import('ava'); // eslint-disable-line node/no-unsupported-features/es-syntax
+	const {default: exported} = await import('ava');
 	t.is(test, exported);
 });

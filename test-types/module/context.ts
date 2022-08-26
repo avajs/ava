@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import anyTest, {ExecutionContext, TestFn} from 'ava';
+import type {ExecutionContext, TestFn} from 'ava';
+import anyTest from 'ava';
 import {expectError, expectType} from 'tsd';
 
-interface Context {
+type Context = {
 	foo: string;
-}
+};
 
 const test = anyTest as TestFn<Context>;
 
@@ -24,9 +25,9 @@ anyTest('default context is unknown', t => {
 });
 
 // See https://github.com/avajs/ava/issues/2253
-interface Covariant extends Context {
+type Covariant = {
 	bar: number;
-}
+} & Context;
 
 const test2 = anyTest as TestFn<Covariant>;
 const hook = (_t: ExecutionContext<Context>) => {};

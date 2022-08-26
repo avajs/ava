@@ -7,9 +7,9 @@ export type CommitDiscardOptions = {
 	retainLogs?: boolean;
 };
 
-export interface AssertionError extends Error {}
+export type AssertionError = Record<string, unknown> & Error;
 
-export interface TryResult {
+export type TryResult = {
 	/**
 	* Title of the attempt, helping you tell attempts aparts.
 	*/
@@ -40,9 +40,9 @@ export interface TryResult {
 	 * Discard the attempt.
 	 */
 	discard(options?: CommitDiscardOptions): void;
-}
+};
 
-export interface TryFn<Context = unknown> {
+export type TryFn<Context = unknown> = {
 	/**
 	 * Attempt to run some assertions. The result must be explicitly committed or discarded or else
 	 * the test will fail. The title may help distinguish attempts from one another.
@@ -54,5 +54,5 @@ export interface TryFn<Context = unknown> {
 	 * the test will fail.
 	 */
 	<Args extends unknown[]>(fn: Implementation<Args, Context>, ...args: Args): Promise<TryResult>;
-}
+};
 
