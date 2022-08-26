@@ -5,7 +5,7 @@
   [32m✔ PASS:[39m a [90m[2m›[22m[39m a passes two
 ---tty-stream-chunk-separator
   [31m[39m
-  [31m✖ Timed out while running tests[39m
+  [31m✘ Timed out while running tests[39m
 
   2 tests were pending in a.cjs
 
@@ -18,7 +18,7 @@
   [32m✔ PASS:[39m b [90m[2m›[22m[39m b passes two
 ---tty-stream-chunk-separator
   [31m[39m
-  [31m✖ Timed out while running tests[39m
+  [31m✘ Timed out while running tests[39m
 
   3 tests were pending in b.cjs
 

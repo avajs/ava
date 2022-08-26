@@ -18,7 +18,7 @@ export type ThrowsExpectation = {
 	name?: string;
 };
 
-export interface Assertions {
+export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
@@ -118,9 +118,9 @@ export interface Assertions {
 	 * indicating whether the assertion passed.
 	 */
 	truthy: TruthyAssertion;
-}
+};
 
-export interface AssertAssertion {
+export type AssertAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
@@ -129,9 +129,9 @@ export interface AssertAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
-}
+};
 
-export interface DeepEqualAssertion {
+export type DeepEqualAssertion = {
 	/**
 	 * Assert that `actual` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
 	 * `expected`, returning a boolean indicating whether the assertion passed.
@@ -152,9 +152,9 @@ export interface DeepEqualAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
-}
+};
 
-export interface LikeAssertion {
+export type LikeAssertion = {
 	/**
 	 * Assert that `value` is like `selector`, returning a boolean indicating whether the assertion passed.
 	 */
@@ -162,17 +162,17 @@ export interface LikeAssertion {
 
 	/** Skip this assertion. */
 	skip(value: any, selector: any, message?: string): void;
-}
+};
 
-export interface FailAssertion {
+export type FailAssertion = {
 	/** Fail the test, always returning `false`. */
 	(message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(message?: string): void;
-}
+};
 
-export interface FalseAssertion {
+export type FalseAssertion = {
 	/**
 	 * Assert that `actual` is strictly false, returning a boolean indicating whether the assertion passed.
 	 */
@@ -180,9 +180,9 @@ export interface FalseAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
-}
+};
 
-export interface FalsyAssertion {
+export type FalsyAssertion = {
 	/**
 	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
 	 * indicating whether the assertion passed.
@@ -191,9 +191,9 @@ export interface FalsyAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
-}
+};
 
-export interface IsAssertion {
+export type IsAssertion = {
 	/**
 	 * Assert that `actual` is [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
@@ -203,9 +203,9 @@ export interface IsAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
-}
+};
 
-export interface NotAssertion {
+export type NotAssertion = {
 	/**
 	 * Assert that `actual` is not [the same
 	 * value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) as `expected`,
@@ -215,9 +215,9 @@ export interface NotAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
-}
+};
 
-export interface NotDeepEqualAssertion {
+export type NotDeepEqualAssertion = {
 	/**
 	 * Assert that `actual` is not [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to
 	 * `expected`, returning a boolean indicating whether the assertion passed.
@@ -226,9 +226,9 @@ export interface NotDeepEqualAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
-}
+};
 
-export interface NotRegexAssertion {
+export type NotRegexAssertion = {
 	/**
 	 * Assert that `string` does not match the regular expression, returning a boolean indicating whether the assertion
 	 * passed.
@@ -237,17 +237,17 @@ export interface NotRegexAssertion {
 
 	/** Skip this assertion. */
 	skip(string: string, regex: RegExp, message?: string): void;
-}
+};
 
-export interface NotThrowsAssertion {
+export type NotThrowsAssertion = {
 	/** Assert that the function does not throw. */
 	(fn: () => any, message?: string): void;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, message?: string): void;
-}
+};
 
-export interface NotThrowsAsyncAssertion {
+export type NotThrowsAsyncAssertion = {
 	/** Assert that the async function does not throw. You must await the result. */
 	(fn: () => PromiseLike<any>, message?: string): Promise<void>;
 
@@ -256,17 +256,17 @@ export interface NotThrowsAsyncAssertion {
 
 	/** Skip this assertion. */
 	skip(nonThrower: any, message?: string): void;
-}
+};
 
-export interface PassAssertion {
+export type PassAssertion = {
 	/** Count a passing assertion, always returning `true`. */
 	(message?: string): boolean;
 
 	/** Skip this assertion. */
 	skip(message?: string): void;
-}
+};
 
-export interface RegexAssertion {
+export type RegexAssertion = {
 	/**
 	 * Assert that `string` matches the regular expression, returning a boolean indicating whether the assertion passed.
 	 */
@@ -274,9 +274,9 @@ export interface RegexAssertion {
 
 	/** Skip this assertion. */
 	skip(string: string, regex: RegExp, message?: string): void;
-}
+};
 
-export interface SnapshotAssertion {
+export type SnapshotAssertion = {
 	/**
 	 * Assert that `expected` is [deeply equal](https://github.com/concordancejs/concordance#comparison-details) to a
 	 * previously recorded [snapshot](https://github.com/concordancejs/concordance#serialization-details), or if
@@ -286,9 +286,9 @@ export interface SnapshotAssertion {
 
 	/** Skip this assertion. */
 	skip(expected: any, message?: string): void;
-}
+};
 
-export interface ThrowsAssertion {
+export type ThrowsAssertion = {
 	/**
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations. Returns undefined when the assertion fails.
@@ -297,9 +297,9 @@ export interface ThrowsAssertion {
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
-}
+};
 
-export interface ThrowsAsyncAssertion {
+export type ThrowsAsyncAssertion = {
 	/**
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. Returns undefined when the assertion fails. You must await the result. The error must satisfy all expectations.
@@ -315,9 +315,9 @@ export interface ThrowsAsyncAssertion {
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
-}
+};
 
-export interface TrueAssertion {
+export type TrueAssertion = {
 	/**
 	 * Assert that `actual` is strictly true, returning a boolean indicating whether the assertion passed.
 	 */
@@ -325,9 +325,9 @@ export interface TrueAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
-}
+};
 
-export interface TruthyAssertion {
+export type TruthyAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
@@ -336,4 +336,4 @@ export interface TruthyAssertion {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
-}
+};

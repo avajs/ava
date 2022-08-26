@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 
 import {execa} from 'execa';
 import {test} from 'tap';
-import tempy from 'tempy';
+import {temporaryDirectory} from 'tempy';
 
 import {execCli} from '../helper/cli.js';
 
@@ -46,7 +46,7 @@ test('appends to existing snapshots', t => {
 	const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
 	const avaPath = fileURLToPath(new URL('../../entrypoints/main.cjs', import.meta.url));
 
-	const cwd = tempy.directory();
+	const cwd = temporaryDirectory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
 	const initial = `const test = require(${JSON.stringify(avaPath)})

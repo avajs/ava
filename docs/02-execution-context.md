@@ -36,7 +36,7 @@ Plan how many assertions there are in the test. The test will fail if the actual
 
 ## `t.teardown(fn)`
 
-Registers the `fn` function to be run after the test has finished. You can register multiple functions. They'll run in reverse order, so the most last registered function is run first. You can use asynchronous functions: only one will run at a time.
+Registers the `fn` function to be run after the test has finished. You can register multiple functions. They'll run in reverse order, so the last registered function is run first. You can use asynchronous functions: only one will run at a time.
 
 You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
 
