@@ -9,7 +9,7 @@ import TTYStream from '../helper/tty-stream.js';
 fixReporterEnv();
 
 test(async t => {
-	const {default: TapReporter} = await import('../../lib/reporters/tap.js'); // eslint-disable-line node/no-unsupported-features/es-syntax
+	const {default: TapReporter} = await import('../../lib/reporters/tap.js');
 
 	const run = (type, sanitizers = []) => t => {
 		t.plan(1);

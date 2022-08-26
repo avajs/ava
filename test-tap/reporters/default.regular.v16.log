@@ -13,11 +13,11 @@
   [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)[39m
 
 ---tty-stream-chunk-separator
-  [31m✖ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m nested-objects [90m[2m›[22m[39m format with max depth 4 
+  [31m✘[39m nested-objects [90m[2m›[22m[39m format with max depth 4 
 ---tty-stream-chunk-separator
-  [31m✖[39m nested-objects [90m[2m›[22m[39m format like with max depth 4 
+  [31m✘[39m nested-objects [90m[2m›[22m[39m format like with max depth 4 
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m before hook
     [35mℹ[39m [90mbefore[39m
@@ -30,7 +30,7 @@
 ---tty-stream-chunk-separator
   [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
-  [31m✖[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+  [31m✘[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
     [35mℹ[39m [90mafterEach[39m
@@ -50,29 +50,29 @@
 ---tty-stream-chunk-separator
   [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+  [31m✘[39m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
 ---tty-stream-chunk-separator
   [31m✔[39m [31mtest [90m[2m›[22m[39m[31m known failure[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
+  [31m✘[39m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
+  [31m✘[39m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m formatted 
+  [31m✘[39m test [90m[2m›[22m[39m formatted 
 ---tty-stream-chunk-separator
-  [31m✖[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
+  [31m✘[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throws 
+  [31m✘[39m traces-in-t-throws [90m[2m›[22m[39m throws 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
+  [31m✘[39m traces-in-t-throws [90m[2m›[22m[39m notThrows 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
+  [31m✘[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
+  [31m✘[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync 
 ---tty-stream-chunk-separator
-  [31m✖[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
+  [31m✘[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error 
 ---tty-stream-chunk-separator
   [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
@@ -90,7 +90,7 @@
   [90m› Immediate.<anonymous> (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)[39m
 
 ---tty-stream-chunk-separator
-  [31m✖ uncaught-exception.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ uncaught-exception.cjs exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator

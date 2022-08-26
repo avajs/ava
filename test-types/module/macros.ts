@@ -1,5 +1,6 @@
 /* eslint-disable no-lone-blocks */
-import test, {ExecutionContext} from 'ava';
+import type {ExecutionContext} from 'ava';
+import test from 'ava';
 import {expectType} from 'tsd';
 
 // Typed arguments through generics.
@@ -105,20 +106,20 @@ import {expectType} from 'tsd';
 }
 
 // Inline function with explicit argument types.
-test('has length 3', (t: ExecutionContext, input: string, expected: number) => {
+test('has length 3 (explicit)', (t: ExecutionContext, input: string, expected: number) => {
 	// @ts-expect-error TS2345
 	t.is(input, expected);
 }, 'bar', 3);
 
 // Completely inferred arguments for inline functions.
-test('has length 3', (t, input, expected) => {
+test('has length 3 (inferred)', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
 	// @ts-expect-error TS2345
 	t.is(input, expected);
 }, 'foo', 3);
 
-test.skip('skip', (t, input, expected) => {
+test.skip('skip', (t, input, expected) => { // eslint-disable-line ava/no-skip-test
 	expectType<string>(input);
 	expectType<number>(expected);
 	// @ts-expect-error TS2345
