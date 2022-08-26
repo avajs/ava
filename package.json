@@ -1,6 +1,6 @@
 {
 	"name": "ava",
-	"version": "4.3.1",
+	"version": "4.3.3",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
 	"repository": "avajs/ava",
@@ -157,7 +157,7 @@
 		}
 	},
 	"volta": {
-		"node": "18.3.0",
-		"npm": "8.12.0"
+		"node": "18.8.0",
+		"npm": "8.18.0"
 	}
 }
