@@ -3,11 +3,13 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
+import {set as setChalk} from '../../lib/chalk.js';
 import {load} from '../../lib/snapshot-manager.js';
 import {set as setOptions} from '../../lib/worker/options.cjs';
 import {cwd, fixture} from '../helpers/exec.js';
 
-setOptions({chalkOptions: {level: 0}});
+setChalk({level: 0});
+setOptions({});
 
 test('snapshot report can be regenerated from .snap file', async t => {
 	const workingDir = cwd();
