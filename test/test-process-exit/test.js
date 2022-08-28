@@ -8,6 +8,5 @@ test('process.exit is intercepted', async t => {
 	t.like(result, {timedOut: false, isCanceled: false, killed: false});
 	t.is(result.stats.selectedTestCount, 3);
 	t.is(result.stats.passed.length, 2);
-	const error = result.stats.getError(result.stats.interrupts[0]);
-	t.is(error.message, 'Unexpected process.exit()');
+	t.is(result.stats.processExits.length, 1);
 });
