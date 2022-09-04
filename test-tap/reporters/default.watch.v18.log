@@ -1,6 +1,6 @@
 
 ---tty-stream-chunk-separator
-  [32m✔ PASS:[39m test [90m[2m›[22m[39m passes
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
   [90m─[39m
 
@@ -11,7 +11,7 @@
 ---tty-stream-chunk-separator
 
 ---tty-stream-chunk-separator
-  [32m✔ PASS:[39m test [90m[2m›[22m[39m passes
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
   [90m─[39m
 
@@ -23,7 +23,7 @@
 ---tty-stream-chunk-separator
 
 ---tty-stream-chunk-separator
-  [32m✔ PASS:[39m test [90m[2m›[22m[39m passes
+  [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
   [90m─[39m
 
