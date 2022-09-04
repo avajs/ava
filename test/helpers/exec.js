@@ -69,7 +69,10 @@ export const fixture = async (args, options = {}) => {
 	const stats = {
 		failed: [],
 		failedHooks: [],
+		internalErrors: [],
+		processExits: [],
 		passed: [],
+		selectedTestCount: 0,
 		sharedWorkerErrors: [],
 		skipped: [],
 		todo: [],
@@ -92,7 +95,23 @@ export const fixture = async (args, options = {}) => {
 				break;
 			}
 
+			case 'internal-error': {
+				const {testFile} = statusEvent;
+				const statObject = {file: normalizePath(workingDir, testFile)};
+				errors.set(statObject, statusEvent.err);
+				stats.internalErrors.push(statObject);
+				break;
+			}
+
+			case 'process-exit': {
+				const {testFile} = statusEvent;
+				const statObject = {file: normalizePath(workingDir, testFile)};
+				stats.processExits.push(statObject);
+				break;
+			}
+
 			case 'selected-test': {
+				stats.selectedTestCount++;
 				if (statusEvent.skip) {
 					const {title, testFile} = statusEvent;
 					stats.skipped.push({title, file: normalizePath(workingDir, testFile)});
