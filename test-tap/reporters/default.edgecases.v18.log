@@ -24,7 +24,7 @@
   [90mimport-and-use-test-member.cjs:3[39m
 
    [90m2:[39m                             
-  [41m 3: test('pass', t => t.pass());[49m
+  [41m[1m 3: test('pass', t => t.pass());[22m[49m
    [90m4:[39m                             
 
   TypeError: test is not a function
@@ -43,7 +43,7 @@
 
   [90mthrows.cjs:1[39m
 
-  [41m 1: throw new Error('throws');[49m
+  [41m[1m 1: throw new Error('throws');[22m[49m
    [90m2:[39m                           
 
   Error: throws
