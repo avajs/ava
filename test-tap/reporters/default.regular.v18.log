@@ -30,7 +30,7 @@
 ---tty-stream-chunk-separator
   [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
-  [31m✘ [fail]:[39m output-in-hook [90m[2m›[22m[39m failing test [31mTest failed via `t.fail()`[39m
+  [31m✘ [fail]:[39m output-in-hook [90m[2m›[22m[39m failing test [3m[31mTest failed via `t.fail()`[39m[23m
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
     [35mℹ[39m [90mafterEach[39m
@@ -50,19 +50,19 @@
 ---tty-stream-chunk-separator
   [32m✔[39m test [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
-  [31m✘ [fail]:[39m test [90m[2m›[22m[39m fails [31mTest failed via `t.fail()`[39m
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m fails [3m[31mTest failed via `t.fail()`[39m[23m
 ---tty-stream-chunk-separator
   [31m✔ [expected fail][39m test [90m[2m›[22m[39m known failure
 ---tty-stream-chunk-separator
-  [31m✘ [unexpected pass]:[39m test [90m[2m›[22m[39m no longer failing [31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m
+  [31m✘ [unexpected pass]:[39m test [90m[2m›[22m[39m no longer failing [3m[31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m[23m
 ---tty-stream-chunk-separator
-  [31m✘ [fail]:[39m test [90m[2m›[22m[39m logs [31mTest failed via `t.fail()`[39m
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m logs [3m[31mTest failed via `t.fail()`[39m[23m
     [35mℹ[39m [90mhello[39m
     [35mℹ[39m [90mworld[39m
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m test [90m[2m›[22m[39m formatted
 ---tty-stream-chunk-separator
-  [31m✘ [fail]:[39m test [90m[2m›[22m[39m implementation throws non-error [31mError thrown in test[39m
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m implementation throws non-error [3m[31mError thrown in test[39m[23m
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throws
 ---tty-stream-chunk-separator
