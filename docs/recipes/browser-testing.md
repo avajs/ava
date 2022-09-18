@@ -1,82 +1,42 @@
 # Setting up AVA for browser testing
 
-Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/docs/recipes/browser-testing.md), [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/browser-testing.md), [Italiano](https://github.com/avajs/ava-docs/blob/main/it_IT/docs/recipes/browser-testing.md), [Русский](https://github.com/avajs/ava-docs/blob/main/ru_RU/docs/recipes/browser-testing.md), [简体中文](https://github.com/avajs/ava-docs/blob/main/zh_CN/docs/recipes/browser-testing.md)
+AVA is running in a __Node.js__ environment. JavaScript that runs in a browser will likely expect the browser DOM globals to be in place.
+With help from a package called [jsdom](https://github.com/jsdom/jsdom),
+you can write unit tests with `ava` also for JavaScript that will run in a browser
+and relying on browser specific globals such as `window`, `document` and `navigator`.
 
-AVA does not support running tests in browsers [yet](https://github.com/avajs/ava/issues/24). However JavaScript libraries that require browser specific globals (`window`, `document`, `navigator`, etc) can still be tested with AVA by mocking these globals.
+## Install jsdom
 
-This recipe works for any library that needs a mocked browser environment.
-
-## Install browser-env
-
-> **❗️ Important note**
->
->`browser-env` adds properties from the `jsdom` window namespace to the Node.js global namespace. This is explicitly [recommended against](https://github.com/tmpvar/jsdom/wiki/Don't-stuff-jsdom-globals-onto-the-Node-global) by `jsdom`. Please read through the linked wiki page and make sure you understand the caveats. If you don't have lots of dependencies that also require a browser environment then [`window`](https://github.com/lukechilds/window#universal-testing-pattern) may be a better solution.
-
-Install [browser-env](https://github.com/lukechilds/browser-env).
-
-> Simulates a global browser environment using jsdom.
-
-```
-$ npm install --save-dev browser-env
+```bash
+npm install --save-dev jsdom
 ```
 
-## Setup browser-env
+## Writing unit tests
 
-Create a helper file, prefixed with an underscore. This ensures AVA does not treat it as a test.
+Use `jsdom` to set the globals and the DOM elements that the test target is expecting.
 
-`test/_setup-browser-env.js`:
 
-```js
-import browserEnv from 'browser-env';
-browserEnv();
-```
+### An example Unit Test
+The JavaScript code to be tested is doing a DOM query, such as: `document.querySelector('#my-element-id')`.
 
-By default, `browser-env` will add all global browser variables to the Node.js global scope, creating a full browser environment. This should have good compatibility with most front-end libraries, however, it's generally not a good idea to create lots of global variables if you don't need to. If you know exactly which browser globals you need, you can pass an array of them.
-
-```js
-import browserEnv from 'browser-env';
-browserEnv(['window', 'document', 'navigator']);
-```
-
-You can expose more global variables by assigning them to the `global` object. For instance, jQuery is typically available through the `$` variable:
-
-```js
-import browserEnv from 'browser-env';
-import jQuery from 'jquery';
-
-browserEnv();
-global.$ = jQuery(window);
-```
-
-## Configure tests to use browser-env
-
-Configure AVA to `require` the helper before every test file.
-
-**`package.json`:**
-
-```json
-{
-	"ava": {
-		"require": [
-			"./test/_setup-browser-env.js"
-		]
-	}
-}
-```
-
-## Enjoy!
-
-Write your tests and enjoy a mocked browser environment.
-
-`test.js`:
+To make the code testable with `ava`, add the element to `jsdom` and set the global object.
 
 ```js
 import test from 'ava';
+import { JSDOM } from 'jsdom';
 
-test('Insert to DOM', t => {
-	const div = document.createElement('div');
-	document.body.appendChild(div);
+test.before(() => {
+  const dom = new JSDOM('<div id="my-element-id" />');  // insert any html needed for the unit test suite here
+  global.document = dom.window.document; // add the globals needed for the unit tests in this suite.
+});
 
-	t.is(document.querySelector('div'), div);
+test('this is an example', (t) => {
+    const res = myTarget.runFunctionThatExpectsTheDocumentGlobalAndElement();
+
+    t.truthy(res);
 });
 ```
+
+## Important note
+In general, adding globals to the `Node.js` environment is [recommended against](https://github.com/jsdom/jsdom/wiki/Don't-stuff-jsdom-globals-onto-the-Node-global) by `jsdom`.
+Please read through the linked wiki page and make sure you understand why.
