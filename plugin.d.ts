@@ -1,6 +1,3 @@
-// Shim for ./entrypoints/plugin, which is only resolved under the Node16 module
-// resolution algorithm.
-/* eslint-disable n/file-extension-in-import */
+// For compatibility with resolution algorithms other than Node16.
 
-export * from './entrypoints/plugin';
-export {default} from './entrypoints/plugin';
+export * from './entrypoints/plugin.cjs';
