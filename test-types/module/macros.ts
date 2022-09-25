@@ -49,7 +49,7 @@ import {expectType} from 'tsd';
 			// @ts-expect-error TS2345
 			t.is(input, expected);
 		},
-		title(_providedTitle, input, expected) {
+		title(_providedTitle, input: string, expected: number) {
 			expectType<string>(input);
 			expectType<number>(expected);
 			return 'title';
