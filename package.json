@@ -42,7 +42,8 @@
 	"files": [
 		"entrypoints",
 		"lib",
-		"types"
+		"types",
+		"*.d.ts"
 	],
 	"keywords": [
 		"🦄",

@@ -1,4 +1,4 @@
-import type {Implementation} from './test-fn.js';
+import type {Implementation} from './test-fn.cjs';
 
 export type CommitDiscardOptions = {
 	/**
