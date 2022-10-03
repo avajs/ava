@@ -113,7 +113,7 @@ AVA supports the latest release of any major version that [is supported by Node.
 
 ### Magic assert
 
-AVA adds code excerpts and clean diffs for actual and expected values. If values in the assertion are objects or arrays, only a diff is displayed, to remove the noise and focus on the problem. The diff is syntax-highlighted too! If you are comparing strings, both single and multi line, AVA displays a different kind of output, highlighting the added or missing characters.
+AVA adds code excerpts and clean diffs for actual and expected values. If values in the assertion are objects or arrays, only a diff is displayed, to remove the noise and focus on the problem. The diff is syntax-highlighted too! If you are comparing strings, both single and multi lines, AVA display a different kind of output, highlighting the added or missing characters.
 
 ![](media/magic-assert-combined.png)
 
@@ -139,7 +139,7 @@ Please see the [files in the `docs` directory](./docs):
 
 ### Common pitfalls
 
-We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment in [this issue](https://github.com/avajs/ava/issues/404).
+We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may experience while using AVA. If you encounter any issues you think are common, comment on [this issue](https://github.com/avajs/ava/issues/404).
 
 ### Recipes
 
@@ -167,7 +167,7 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 
 Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use). It's not very opinionated and executes tests serially without process isolation, making it slow.
 
-Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
+Tape and tap are pretty good. AVA is highly inspired by their syntax. They execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly, though so you always end up using an external tap reporter.
 
 In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
