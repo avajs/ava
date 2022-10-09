@@ -1,3 +1,4 @@
+#1
 import test from 'ava';
 import {expectType} from 'tsd';
 
