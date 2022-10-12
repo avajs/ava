@@ -16,7 +16,7 @@ paths:
     get:
       summary: Read a spacecraft
       responses:
-        '200':
+        '201':
           description: The spacecraft corresponding to the provided `spacecraftId`
           content:
             application/json:
@@ -45,6 +45,7 @@ components:
         - id
         - name
         - type
+        - X-Api-Key
       properties:
         id:
           $ref: '#/components/schemas/SpacecraftId'
