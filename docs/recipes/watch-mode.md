@@ -4,6 +4,17 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs
 
 AVA comes with an intelligent watch mode. It watches for files to change and runs just those tests that are affected.
 
+AVA 6 is introducing a new watch mode that relies on recurse file watching in Node.js. To use the old watch mode, set the implementation to `ava5+chokidar` and install [`chokidar`] alongside AVA:
+
+`ava.config.mjs`:
+```js
+export default {
+	watchMode: {
+		implementation: 'ava5+chokidar',
+	},
+}
+```
+
 ## Running tests with watch mode enabled
 
 You can enable watch mode using the `--watch` or `-w` flags:
@@ -16,7 +27,9 @@ Please note that integrated debugging and the TAP reporter are unavailable when 
 
 ## Requirements
 
-AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
+AVA 5 uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
+
+The same applies with AVA 6 when using the `ava5+chokidar` watcher. However you'll need to install `chokidar` separately.
 
 ## Ignoring changes
 
@@ -30,7 +43,9 @@ If your tests write to disk they may trigger the watcher to rerun your tests. Co
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.*` file][config], and not from inside your test file. Files accessed using the `fs` module are not tracked.
+AVA 5 (and the `ava5+chokidar` watcher in AVA 6) spies on `require()` calls to track dependencies. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.*` file][config], and not from inside your test file.
+
+Files accessed using the `fs` module are not tracked.
 
 ## Watch mode and the `.only` modifier
 

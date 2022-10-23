@@ -49,7 +49,7 @@ test('--match works', t => {
 
 for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
-		execCli([tapFlag, 'test.cjs'], {dirname: 'fixture/watcher'}, error => {
+		execCli([tapFlag, 'test.cjs'], {dirname: 'fixture/tap'}, error => {
 			t.ok(!error);
 			t.end();
 		});
