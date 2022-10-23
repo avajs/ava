@@ -438,40 +438,6 @@ for (const opt of options) {
 			});
 	});
 
-	test(`emits dependencies for test files - workerThreads: ${opt.workerThreads}`, async t => {
-		t.plan(8);
-
-		const api = await apiCreator({
-			...opt,
-			files: ['test-tap/fixture/with-dependencies/*test*.cjs'],
-			require: [path.resolve('test-tap/fixture/with-dependencies/require-custom.cjs')],
-		});
-
-		const testFiles = new Set([
-			path.resolve('test-tap/fixture/with-dependencies/no-tests.cjs'),
-			path.resolve('test-tap/fixture/with-dependencies/test.cjs'),
-			path.resolve('test-tap/fixture/with-dependencies/test-failure.cjs'),
-			path.resolve('test-tap/fixture/with-dependencies/test-uncaught-exception.cjs'),
-		]);
-
-		const sourceFiles = [
-			path.resolve('test-tap/fixture/with-dependencies/dep-1.js'),
-			path.resolve('test-tap/fixture/with-dependencies/dep-2.js'),
-			path.resolve('test-tap/fixture/with-dependencies/dep-3.custom'),
-		];
-
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
-				if (evt.type === 'dependencies') {
-					t.ok(testFiles.has(evt.testFile));
-					t.strictSame(evt.dependencies.filter(dep => !dep.endsWith('.snap')).slice(-3), sourceFiles);
-				}
-			});
-		});
-
-		return api.run();
-	});
-
 	test(`verify test count - workerThreads: ${opt.workerThreads}`, async t => {
 		t.plan(4);
 
