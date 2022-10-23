@@ -108,12 +108,12 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 	}
 
 	// Mimick watch mode
-	return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 1}}).then(() => {
+	return api.run({files, filter, runtimeOptions: {previousFailures: 0, firstRun: true}}).then(() => {
 		reporter.endRun();
-		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: true, previousFailures: 2, runVector: 2}});
+		return api.run({files, filter, runtimeOptions: {previousFailures: 2, firstRun: false}});
 	}).then(() => {
 		reporter.endRun();
-		return api.run({files, filter, runtimeOptions: {clearLogOnNextRun: false, previousFailures: 0, runVector: 3}});
+		return api.run({files, filter, runtimeOptions: {previousFailures: 0, firstRun: false}});
 	}).then(() => {
 		reporter.endRun();
 	});

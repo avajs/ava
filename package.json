@@ -81,6 +81,7 @@
 		"typescript"
 	],
 	"dependencies": {
+		"@vercel/nft": "^0.22.1",
 		"acorn": "^8.8.1",
 		"acorn-walk": "^8.2.0",
 		"ansi-styles": "^6.2.1",
@@ -89,7 +90,6 @@
 		"callsites": "^4.0.0",
 		"cbor": "^8.1.0",
 		"chalk": "^5.1.2",
-		"chokidar": "^3.5.3",
 		"chunkd": "^2.0.1",
 		"ci-info": "^3.6.1",
 		"ci-parallel-vars": "^1.0.1",

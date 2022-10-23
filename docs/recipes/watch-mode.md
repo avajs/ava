@@ -14,9 +14,9 @@ $ npx ava --watch
 
 Please note that integrated debugging and the TAP reporter are unavailable when using watch mode.
 
-## Requirements
+## Limitations
 
-AVA uses [`chokidar`] as the file watcher. Note that even if you see warnings about optional dependencies failing during install, it will still work fine. Please refer to the *[Install Troubleshooting]* section of `chokidar` documentation for how to resolve the installation problems with chokidar.
+AVA uses `fs.watch()`. On supported platforms, `recursive` mode is used. When not supported, `fs.watch()` is used with individual directories, based on the dependency tracking (see below). This is an approximation. `recursive` mode is available with Node.js 19.1 on Linux, MacOS and Windows so we will not attempt to improve our fallback implementation.
 
 ## Ignoring changes
 
@@ -30,7 +30,7 @@ If your tests write to disk they may trigger the watcher to rerun your tests. Co
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for required modules. Custom extensions and transpilers are supported, provided you [added them in your `package.json` or `ava.config.*` file][config], and not from inside your test file. Files accessed using the `fs` module are not tracked.
+Dependency tracking works for `require()` and `import` syntax, as supported by [@vercel/nft](https://github.com/vercel/nft). `import()` is supported but dynamic paths such as `import(myVariable)` are not. Files accessed using the `fs` module are not tracked.
 
 ## Watch mode and the `.only` modifier
 
@@ -60,8 +60,6 @@ $ DEBUG=ava:watcher npx ava --watch
 
 Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/avajs/ava/issues) any issues you encounter. Thanks!
 
-[`chokidar`]: https://github.com/paulmillr/chokidar
-[Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`.only` modifier]: ../01-writing-tests.md#running-specific-tests
 [config]: ../06-configuration.md
