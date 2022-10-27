@@ -8,6 +8,7 @@
 	"bin": {
 		"ava": "entrypoints/cli.mjs"
 	},
+  	"main": "./entrypoints/main.cjs",
 	"exports": {
 		".": {
 			"import": {
