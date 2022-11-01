@@ -126,6 +126,7 @@ exports.only = reporter => run('only', reporter);
 exports.timeoutInSingleFile = reporter => run('timeoutInSingleFile', reporter);
 exports.timeoutInMultipleFiles = reporter => run('timeoutInMultipleFiles', reporter);
 exports.timeoutWithMatch = reporter => run('timeoutWithMatch', reporter, {match: ['*needle*']});
+exports.timeoutContextLogs = reporter => run('timeoutContextLogs', reporter);
 exports.watch = reporter => run('watch', reporter);
 exports.edgeCases = reporter => run('edgeCases', reporter, {
 	filter: [

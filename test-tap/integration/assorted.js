@@ -21,6 +21,7 @@ test('timeout', {skip: ciInfo.isCI}, t => {
 
 test('interrupt', {skip: ciInfo.isCI}, t => {
 	const proc = execCli(['long-running.cjs'], (_, stdout) => {
+		t.match(stdout, 'helpful log of a pending test');
 		t.match(stdout, /SIGINT/);
 		t.end();
 	});
