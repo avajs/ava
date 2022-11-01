@@ -14,6 +14,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 test('timeout', {skip: ciInfo.isCI}, t => {
 	execCli(['long-running.cjs', '-T', '1s'], (error, stdout) => {
 		t.ok(error);
+		t.match(stdout, 'helpful log of a pending test');
 		t.match(stdout, /Timed out/);
 		t.end();
 	});

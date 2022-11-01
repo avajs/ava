@@ -51,7 +51,7 @@ test(async t => {
 		t.test('single file run', run('timeoutInSingleFile'));
 		t.test('multiple files run', run('timeoutInMultipleFiles'));
 		t.test('single file with only certain tests matched run', run('timeoutWithMatch'));
-		t.test('logs provided during a pending test logged at the end', run('timeoutContextLogs'))
+		t.test('logs provided during a pending test logged at the end', run('timeoutContextLogs'));
 		t.end();
 	});
 });
