@@ -110,7 +110,7 @@ test.serial('receives a `projectDir` property', (...args) => ok('package-only')(
 });
 
 test.serial('rethrows wrapped module errors', notOk('throws'), (t, error) => {
-	t.is(error.parent.message, 'foo');
+	t.is(error.cause.message, 'foo');
 });
 
 test.serial('throws an error if a .js config file has no default export', notOk('no-default-export'));
