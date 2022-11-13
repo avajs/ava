@@ -1,6 +1,10 @@
 TAP version 13
 ---tty-stream-chunk-separator
-not ok 1 - SyntaxError: Unexpected token 'do'
+not ok 1 - ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
+const fn = do {
+           ^^
+
+SyntaxError: Unexpected token 'do'
   ---
     name: SyntaxError
     message: Unexpected token 'do'
