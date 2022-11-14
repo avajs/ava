@@ -1,4 +1,3 @@
-/* eslint-disable no-lone-blocks */
 import type {ExecutionContext} from 'ava';
 import test from 'ava';
 import {expectType} from 'tsd';
