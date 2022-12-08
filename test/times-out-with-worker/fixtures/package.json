@@ -4,6 +4,6 @@
 		"files": [
 			"*.js"
 		],
-		"timeout": "2s"
+		"timeout": "5s"
 	}
 }

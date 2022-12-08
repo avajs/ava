@@ -6,5 +6,4 @@ test('times out', async t => {
 	const error = await t.throwsAsync(async () => fixture());
 
 	t.is(error.exitCode, 1);
-	t.true(error.timedOut);
 });
