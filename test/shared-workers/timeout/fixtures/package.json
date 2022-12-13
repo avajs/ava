@@ -1,0 +1,9 @@
+{
+	"type": "module",
+	"ava": {
+		"files": [
+			"*.js"
+		],
+		"timeout": "5s"
+	}
+}
