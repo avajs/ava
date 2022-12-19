@@ -17,10 +17,14 @@ const worker2 = registerSharedWorker({
 	},
 });
 
+const messageFromWorker1 = worker1.subscribe().next();
+const messageFromWorker2 = worker2.subscribe().next();
+
 test('can load multiple workers', async t => {
-	const {value: {data: dataFromWorker1}} = await worker1.subscribe().next();
-	const {value: {data: dataFromWorker2}} = await worker2.subscribe().next();
+	const {value: {data: dataFromWorker1}} = await messageFromWorker1;
+	const {value: {data: dataFromWorker2}} = await messageFromWorker2;
 
 	t.deepEqual(dataFromWorker1, {id: '1'});
 	t.deepEqual(dataFromWorker2, {id: '2'});
+	t.pass();
 });
