@@ -28,8 +28,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-      - name: Upgrade npm
-        run: npm install --global npm@^9.3
+      - name: Install npm@8 for Node.js 14
+        if: matrix.node-version == '^14.19'
+        run: npm install --global npm@^8
       - run: npm install --no-audit
       - run: npm run cover
       - uses: codecov/codecov-action@v2
@@ -49,8 +50,6 @@ jobs:
         with:
           node-version-file: package.json
           cache: npm
-      - name: Upgrade npm
-        run: npm install --global npm@^9.3
       - run: npm install --no-audit
       - run: npm i typescript@${TS_VERSION}
         env:
@@ -67,8 +66,8 @@ jobs:
         with:
           node-version-file: package.json
           cache: npm
-      - name: Upgrade npm
-        run: if [[ "$(npm -v)" != "9.3.0" ]]; then npm install --global npm@9.3.0; fi
+      - name: Pin npm
+        run: npm install --global npm@9.3.0
       - run: npm install --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
@@ -88,8 +87,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: package.json
-      - name: Upgrade npm
-        run: npm install --global npm@^9.3
       - run: npm install --no-package-lock --no-audit
       - run: npm run cover
 
@@ -102,7 +99,5 @@ jobs:
         with:
           node-version-file: package.json
           cache: npm
-      - name: Upgrade npm
-        run: npm install --global npm@^9.3
       - run: npm install --no-audit
       - run: npx xo
