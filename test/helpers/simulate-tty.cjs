@@ -1,5 +1,5 @@
 'use strict';
-const tty = require('tty');
+const tty = require('node:tty');
 
 // Call original method to ensure the correct errors are thrown.
 const assertHasColorsArguments = count => {

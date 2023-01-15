@@ -154,8 +154,9 @@ export const fixture = async (args, options = {}) => {
 				break;
 			}
 
-			default:
+			default: {
 				break;
+			}
 		}
 	});
 

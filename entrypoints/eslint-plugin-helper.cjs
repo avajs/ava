@@ -1,8 +1,8 @@
 'use strict';
-const path = require('path');
-const url = require('url');
-const v8 = require('v8');
-const {Worker} = require('worker_threads');
+const path = require('node:path');
+const url = require('node:url');
+const v8 = require('node:v8');
+const {Worker} = require('node:worker_threads');
 
 const {
 	classify,

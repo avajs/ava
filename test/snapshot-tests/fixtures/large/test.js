@@ -1,4 +1,4 @@
-const {Buffer} = require('buffer');
+const {Buffer} = require('node:buffer');
 
 const test = require(process.env.TEST_AVA_IMPORT_FROM);
 

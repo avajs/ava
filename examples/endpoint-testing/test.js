@@ -1,5 +1,5 @@
 'use strict';
-const http = require('http');
+const http = require('node:http');
 
 const test = require('ava');
 const got = require('got');

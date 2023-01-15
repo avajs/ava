@@ -1,6 +1,6 @@
 import os from 'node:os';
 
-import fakeTimers from '@sinonjs/fake-timers';
+import sinon from 'sinon';
 
 import {set as setChalk} from '../../lib/chalk.js';
 
@@ -12,7 +12,7 @@ const fixColors = () => {
 
 export default () => {
 	// Fix timestamps.
-	const clock = fakeTimers.install({
+	const clock = sinon.useFakeTimers({
 		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
 		toFake: [
 			'Date',
