@@ -2,7 +2,6 @@ import EventEmitter from 'node:events';
 import path from 'node:path';
 import {PassThrough} from 'node:stream';
 
-import fakeTimers from '@sinonjs/fake-timers';
 import ignoreByDefault from 'ignore-by-default';
 import sinon from 'sinon';
 import {test} from 'tap';
@@ -103,7 +102,7 @@ group('chokidar', (beforeEach, test, group) => {
 			clock.uninstall();
 		}
 
-		clock = fakeTimers.install({
+		clock = sinon.useFakeTimers({
 			toFake: [
 				'setImmediate',
 				'setTimeout',
