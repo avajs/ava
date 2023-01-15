@@ -1,4 +1,4 @@
-const util = require('util'); // eslint-disable-line unicorn/import-style
+const util = require('node:util');
 
 const test = require('../../../../entrypoints/main.cjs');
 

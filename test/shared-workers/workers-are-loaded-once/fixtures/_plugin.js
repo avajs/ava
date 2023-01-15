@@ -6,4 +6,4 @@ const worker = plugin.registerSharedWorker({
 });
 
 const messages = worker.subscribe();
-export const random = messages.next().then(({value}) => value).finally(() => messages.return());
+export const random = messages.next().then(({value}) => value).finally(() => messages.return()); // eslint-disable-line unicorn/prefer-top-level-await
