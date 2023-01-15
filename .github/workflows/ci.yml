@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ^18
+          node-version-file: package.json
           cache: npm
       - name: Upgrade npm
         run: npm install --global npm@^9.3
@@ -65,7 +65,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ^18
+          node-version-file: package.json
           cache: npm
       - name: Upgrade npm
         run: if [[ "$(npm -v)" != "9.3.0" ]]; then npm install --global npm@9.3.0; fi
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ^18
+          node-version-file: package.json
       - name: Upgrade npm
         run: npm install --global npm@^9.3
       - run: npm install --no-package-lock --no-audit
@@ -100,7 +100,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ^18
+          node-version-file: package.json
           cache: npm
       - name: Upgrade npm
         run: npm install --global npm@^9.3
