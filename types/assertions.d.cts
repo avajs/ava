@@ -1,15 +1,20 @@
-export type ErrorConstructor = new (...args: any[]) => Error;
+export type ErrorConstructor<ErrorType extends Error = Error> = {
+	new (...args: any[]): ErrorType;
+	readonly prototype: ErrorType;
+}
+
+export type ThrownError<ErrorType extends ErrorConstructor | Error> = ErrorType extends ErrorConstructor ? ErrorType['prototype'] : ErrorType;
 
 /** Specify one or more expectations the thrown error must satisfy. */
-export type ThrowsExpectation = {
+export type ThrowsExpectation<ErrorType extends ErrorConstructor | Error> = {
 	/** The thrown error must have a code that equals the given string or number. */
 	code?: string | number;
 
 	/** The thrown error must be an instance of this constructor. */
-	instanceOf?: ErrorConstructor;
+	instanceOf?: ErrorType extends ErrorConstructor ? ErrorType : ErrorType extends Error ? ErrorConstructor<ErrorType> : never;
 
 	/** The thrown error must be strictly equal to this value. */
-	is?: Error;
+	is?: ErrorType extends ErrorConstructor ? ErrorType['prototype'] : ErrorType;
 
 	/** The thrown error must have a message that equals the given string, or matches the regular expression. */
 	message?: string | RegExp | ((message: string) => boolean);
@@ -293,7 +298,7 @@ export type ThrowsAssertion = {
 	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
 	 * The error must satisfy all expectations. Returns undefined when the assertion fails.
 	 */
-	<ThrownError extends Error>(fn: () => any, expectations?: ThrowsExpectation, message?: string): ThrownError | undefined;
+	<ErrorType extends ErrorConstructor | Error>(fn: () => any, expectations?: ThrowsExpectation<ErrorType>, message?: string): ThrownError<ErrorType> | undefined;
 
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
@@ -304,14 +309,14 @@ export type ThrowsAsyncAssertion = {
 	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
 	 * value. Returns undefined when the assertion fails. You must await the result. The error must satisfy all expectations.
 	 */
-	<ThrownError extends Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | undefined>;
+	<ErrorType extends ErrorConstructor | Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation<ErrorType>, message?: string): Promise<ThrownError<ErrorType> | undefined>;
 
 	/**
 	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
 	 * rejection reason. Returns undefined when the assertion fails. You must await the result. The error must satisfy all
 	 * expectations.
 	 */
-	<ThrownError extends Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation, message?: string): Promise<ThrownError | undefined>;
+	<ErrorType extends ErrorConstructor | Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation<ErrorType>, message?: string): Promise<ThrownError<ErrorType> | undefined>;
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
