@@ -45,11 +45,12 @@ Your `package.json` will then look like this (exact version notwithstanding):
 ```json
 {
 	"name": "awesome-package",
+	"type": "module",
 	"scripts": {
 		"test": "ava"
 	},
 	"devDependencies": {
-		"ava": "^1.0.0"
+		"ava": "^5.0.0"
 	}
 }
 ```
@@ -72,7 +73,9 @@ Don't forget to configure the `test` script in your `package.json` as per above.
 
 ### Create your test file
 
-Create a file named `test.js` in the project root directory:
+Create a file named `test.js` in the project root directory.
+
+_Note that AVA's documentation assumes you're using ES modules._
 
 ```js
 import test from 'ava';
