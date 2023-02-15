@@ -88,7 +88,7 @@ It's worth noting that with this configuration, tests will fail if there are Typ
 		],
 		"environmentVariables": {
 			"TS_NODE_LOG_ERROR": "true"
-                },
+		},
 		"require": [
 			"ts-node/register"
 		]
