@@ -761,6 +761,8 @@ test('.like()', t => {
 		values: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
 	});
 
+	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
+
 	t.end();
 });
 
