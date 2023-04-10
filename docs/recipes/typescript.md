@@ -59,21 +59,19 @@ If this is not to your liking there is an _experimental_ option in Node.js that 
 
 #### For packages without type "module"
 
-If your `package.json` does not have `"type": "module"`, then this is the AVA configuration you need:
+If your `package.json` does not have `"type": "module"`, then you should use the [`tsx`](https://github.com/esbuild-kit/tsx) loader. To utilize this loader, after installing it to your dev dependencies, use this AVA configuration:
 
 `package.json`:
 
 ```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	}
-}
+"ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=tsx"
+    ]
+  }
 ```
 
 It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. Suppose you want to test while ignoring these errors. In that case, you can use `ts-node/register/transpile-only` instead of `ts-node/register` or add an environment variable for ts-node to log errors to stderr instead of throwing an exception.
