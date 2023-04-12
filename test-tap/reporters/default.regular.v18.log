@@ -62,21 +62,7 @@
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m test [90m[2m›[22m[39m formatted
 ---tty-stream-chunk-separator
-  [31m✘ Internal error when running test.cjs[39m
-  [31mTypeError: Cannot read properties of null (reading 'matcherResult')[39m
-  [90mTypeError: Cannot read properties of null (reading 'matcherResult')[39m
-  [90m    at isExternalAssertError (file://~/lib/test.js:12:12)[39m
-  [90m    at Test.run (file://~/lib/test.js:532:8)[39m
-  [90m    at Runner.runSingle (file://~/lib/runner.js:285:33)[39m
-  [90m    at Runner.runTest (file://~/lib/runner.js:367:30)[39m
-  [90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
-  [90m    at async Promise.all (index 6)[39m
-  [90m    at async file://~/lib/runner.js:532:21[39m
-  [90m    at async Runner.start (file://~/lib/runner.js:540:15)[39m
-
-
----tty-stream-chunk-separator
-  [31m✘ test.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m implementation throws non-error [3m[31mError thrown in test[39m[23m
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throws
 ---tty-stream-chunk-separator
@@ -247,6 +233,14 @@
 
 
 
+  [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
+
+  Error thrown in test:
+
+  [33mnull[39m
+
+
+
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
 
   [90mtraces-in-t-throws.cjs:12[39m
@@ -354,7 +348,7 @@
 
   [90m─[39m
 
-  [31m12 tests failed[39m
+  [31m13 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m
   [34m1 test todo[39m

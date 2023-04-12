@@ -135,25 +135,16 @@ not ok 14 - test › formatted
     at: 'test-tap/fixture/report/regular/test.cjs:22:4'
   ...
 ---tty-stream-chunk-separator
-not ok 15 - TypeError: Cannot read properties of null (reading 'matcherResult')
+not ok 15 - test › implementation throws non-error
   ---
-    name: TypeError
-    message: Cannot read properties of null (reading 'matcherResult')
-    at: |-
-      TypeError: Cannot read properties of null (reading 'matcherResult')
-          at isExternalAssertError (file://~/lib/test.js:12:12)
-          at Test.run (file://~/lib/test.js:532:8)
-          at Runner.runSingle (file://~/lib/runner.js:285:33)
-          at Runner.runTest (file://~/lib/runner.js:367:30)
-          at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-          at async Promise.all (index 6)
-          at async file://~/lib/runner.js:532:21
-          at async Runner.start (file://~/lib/runner.js:540:15)
+    name: AssertionError
+    message: Error thrown in test
+    values:
+      'Error thrown in test:': 'null'
+    at: ''
   ...
 ---tty-stream-chunk-separator
-not ok 16 - test.cjs exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-not ok 17 - traces-in-t-throws › throws
+not ok 16 - traces-in-t-throws › throws
   ---
     name: AssertionError
     assertion: throws
@@ -172,7 +163,7 @@ not ok 17 - traces-in-t-throws › throws
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4
   ...
 ---tty-stream-chunk-separator
-not ok 18 - traces-in-t-throws › notThrows
+not ok 17 - traces-in-t-throws › notThrows
   ---
     name: AssertionError
     assertion: notThrows
@@ -187,7 +178,7 @@ not ok 18 - traces-in-t-throws › notThrows
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4
   ...
 ---tty-stream-chunk-separator
-not ok 19 - traces-in-t-throws › notThrowsAsync
+not ok 18 - traces-in-t-throws › notThrowsAsync
   ---
     name: AssertionError
     assertion: notThrowsAsync
@@ -202,7 +193,7 @@ not ok 19 - traces-in-t-throws › notThrowsAsync
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4
   ...
 ---tty-stream-chunk-separator
-not ok 20 - traces-in-t-throws › throwsAsync
+not ok 19 - traces-in-t-throws › throwsAsync
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -220,7 +211,7 @@ not ok 20 - traces-in-t-throws › throwsAsync
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4
   ...
 ---tty-stream-chunk-separator
-not ok 21 - traces-in-t-throws › throwsAsync different error
+not ok 20 - traces-in-t-throws › throwsAsync different error
   ---
     name: AssertionError
     assertion: throwsAsync
@@ -237,9 +228,9 @@ not ok 21 - traces-in-t-throws › throwsAsync different error
       test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44
   ...
 ---tty-stream-chunk-separator
-ok 22 - uncaught-exception › passes
+ok 21 - uncaught-exception › passes
 ---tty-stream-chunk-separator
-not ok 23 - Error: Can’t catch me
+not ok 22 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
@@ -248,20 +239,20 @@ not ok 23 - Error: Can’t catch me
       (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)
   ...
 ---tty-stream-chunk-separator
-not ok 24 - uncaught-exception.cjs exited with a non-zero exit code: 1
+not ok 23 - uncaught-exception.cjs exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-ok 25 - unhandled-rejection › passes
+ok 24 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
-ok 26 - unhandled-rejection › unhandled non-error rejection
+ok 25 - unhandled-rejection › unhandled non-error rejection
 ---tty-stream-chunk-separator
-not ok 27 - Error: Can’t catch me
+not ok 26 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
     at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)'
   ...
 ---tty-stream-chunk-separator
-not ok 28 - unhandled-rejection
+not ok 27 - unhandled-rejection
   ---
     message: Non-error object
     formatted: 'null'
@@ -272,6 +263,6 @@ not ok 28 - unhandled-rejection
 # tests 20
 # pass 6
 # skip 1
-# fail 22
+# fail 20
 
 ---tty-stream-chunk-separator
