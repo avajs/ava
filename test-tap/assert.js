@@ -763,6 +763,10 @@ test('.like()', t => {
 
 	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
 
+	passes(t, () => assertions.like([1, 2, 3], [1, 2, 3]));
+
+	fails(t, () => assertions.like([1, 2, 3], [3, 2, 1]));
+
 	t.end();
 });
 
