@@ -100,7 +100,6 @@
 		"concordance": "^5.0.4",
 		"currently-unhandled": "^0.4.1",
 		"debug": "^4.3.4",
-		"del": "^7.0.0",
 		"emittery": "^1.0.1",
 		"figures": "^5.0.0",
 		"globby": "^13.1.3",

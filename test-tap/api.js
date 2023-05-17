@@ -3,7 +3,6 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
-import {deleteSync} from 'del';
 import {test} from 'tap';
 
 import Api from '../lib/api.js';
@@ -380,7 +379,10 @@ for (const opt of options) {
 	});
 
 	test(`caching is enabled by default - workerThreads: ${opt.workerThreads}`, async t => {
-		deleteSync(path.join(__dirname, 'fixture/caching/node_modules'));
+		const nodeModulesPath = path.join(__dirname, 'fixture/caching/node_modules');
+		if (fs.existsSync(nodeModulesPath)) {
+			fs.rmSync(nodeModulesPath, {recursive: true, force: true});
+		}
 
 		const api = await apiCreator({
 			...opt,
@@ -400,7 +402,10 @@ for (const opt of options) {
 	});
 
 	test(`caching can be disabled - workerThreads: ${opt.workerThreads}`, async t => {
-		deleteSync(path.join(__dirname, 'fixture/caching/node_modules'));
+		const nodeModulesPath = path.join(__dirname, 'fixture/caching/node_modules');
+		if (fs.existsSync(nodeModulesPath)) {
+			fs.rmSync(nodeModulesPath, {recursive: true, force: true});
+		}
 
 		const api = await apiCreator({
 			...opt,
