@@ -1,0 +1,6 @@
+{
+	"type": "module",
+	"ava": {
+		"require": "./required.cjs"
+	}
+}

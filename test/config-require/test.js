@@ -1,10 +1,23 @@
 import test from '@ava/test';
 
-import {fixture} from '../helpers/exec.js';
+import {cwd, fixture} from '../helpers/exec.js';
 
-test.only('load sculpt0r', async t => {
-	const result = await fixture(['required-default/test.js']);
-	const files = new Set(result.stats.passed.map(({file}) => file));
+test('loads required modules with arguments', async t => {
+	const result = await fixture([], {cwd: cwd('with-arguments')});
+	t.is(result.stats.passed.length, 2);
+});
 
-	t.true(files.has('required-default/test.js'));
+test('loads required modules, not as an array', async t => {
+	const result = await fixture([], {cwd: cwd('single-argument')});
+	t.is(result.stats.passed.length, 1);
+});
+
+test('calls exports.default (CJS)', async t => {
+	const result = await fixture([], {cwd: cwd('exports-default')});
+	t.is(result.stats.passed.length, 1);
+});
+
+test('crashes if module cannot be loaded', async t => {
+	const result = await t.throwsAsync(fixture([], {cwd: cwd('failed-import')}));
+	t.is(result.stats.uncaughtExceptions.length, 1);
 });
