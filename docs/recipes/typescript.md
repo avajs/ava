@@ -76,7 +76,25 @@ If your `package.json` does not have `"type": "module"`, then this is the AVA co
 }
 ```
 
-It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. If you want to test while ignoring these errors you can use `ts-node/register/transpile-only` instead of `ts-node/register`.
+It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. Suppose you want to test while ignoring these errors. In that case, you can use `ts-node/register/transpile-only` instead of `ts-node/register` or add an environment variable for ts-node to log errors to stderr instead of throwing an exception.
+
+`package.json`:
+
+```json
+{
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"environmentVariables": {
+			"TS_NODE_LOG_ERROR": "true"
+		},
+		"require": [
+			"ts-node/register"
+		]
+	}
+}
+```
 
 ## Writing tests
 
