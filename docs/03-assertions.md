@@ -141,9 +141,9 @@ Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqu
 
 Assert that `actual` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `actual` does.
 
-Instead AVA derives a *comparable* object from `actual`, based on the deeply-nested properties of `selector`. This object is then compared to `selector` using `.deepEqual()`.
+Instead AVA derives a *comparable* value from `actual`, recursively based on the shape of `selector`. This value is then compared to `selector` using `.deepEqual()`.
 
-Any values in `selector` that are not regular objects should be deeply equal to the corresponding values in `actual`.
+Any values in `selector` that are not arrays or regular objects should be deeply equal to the corresponding values in `actual`.
 
 In the following example, the `map` property of `actual` must be deeply equal to that of `selector`. However `nested.qux` is ignored, because it's not in `selector`.
 
@@ -162,6 +162,12 @@ t.like({
 })
 ```
 
+You can also use arrays, but note that any indices in `actual` that are not in `selector` are ignored:
+
+```js
+t.like([1, 2, 3], [1, 2])
+```
+
 Finally, this returns a boolean indicating whether the assertion passed.
 
 ### `.throws(fn, expectation?, message?)`
@@ -172,7 +178,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. The 
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
-* `message`: the following types are valid: 
+* `message`: the following types are valid:
   * *string* - it is compared against the thrown error's message
   * *regular expression* - it is matched against this message
   * *function* - it is passed the thrown error message and must return a boolean for whether the assertion passed
@@ -207,7 +213,7 @@ The thrown value *must* be an error. It is returned so you can run more assertio
 
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
-* `message`: the following types are valid: 
+* `message`: the following types are valid:
   * *string* - it is compared against the thrown error's message
   * *regular expression* - it is matched against this message
   * *function* - it is passed the thrown error message and must return a boolean for whether the assertion passed
