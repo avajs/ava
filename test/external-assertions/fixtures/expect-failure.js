@@ -6,5 +6,5 @@ test('test', () => {
 });
 
 test('test async', async () => {
-	expect(false).toBeTruthy();
+	expect(await Promise.resolve(false)).toBeTruthy();
 });

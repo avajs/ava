@@ -7,5 +7,5 @@ test('test', () => {
 });
 
 test('test async', async () => {
-	assert(false);
+	assert(await Promise.resolve(false));
 });
