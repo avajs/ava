@@ -66,8 +66,6 @@ jobs:
         with:
           node-version-file: package.json
           cache: npm
-      - name: Pin npm
-        run: npm install --global npm@9.3.0
       - run: npm install --no-audit
       - name: Test package-lock for unexpected modifications
         run: |
