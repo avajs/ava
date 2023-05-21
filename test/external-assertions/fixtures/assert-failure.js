@@ -5,3 +5,7 @@ import test from 'ava';
 test('test', () => {
 	assert(false);
 });
+
+test('test async', async () => {
+	assert(false);
+});
