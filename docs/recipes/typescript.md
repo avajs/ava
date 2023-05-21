@@ -8,58 +8,21 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Enabling AVA's support for TypeScript test files
 
-### With precompile step
+Broadly speaking, there are two ways to run tests written in TypeScript:
 
-Out of the box AVA does not load TypeScript test files. You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions.
+1. Build first, then test against the build output
+2. Configure loaders which build test files as they're loaded
 
-### Using `ts-node`
+**The first option is the most reliable since it doesn't rely on experimental Node.js features.** You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions. **This package also sets up the various TypeScript file extensions for you.**
 
-You can use [`ts-node`] to do live testing without transpiling. This can be especially helpful when you're using a bundler. Be sure to install the required dev dependencies:
+**You can use loaders, but you're largely on your own. [Please post questions to our Discussions forum if you're stuck](https://github.com/avajs/ava/discussions/categories/q-a).**
 
-`npm install --save-dev typescript ts-node`
+There are two components to a setup like this:
 
-The required setup depends on the type of your package:
+1. [Make sure AVA recognizes the extensions of your TypeScript files](./06-configuration.md#configuring-module-formats)
+2. Install the loader [through `nodeArguments`](https://github.com/avajs/ava/blob/main/docs/06-configuration.md#node-arguments)
 
-1. [for packages with type "module"](#for-packages-with-type-module)
-2. [for packages without type "module"](#for-packages-without-type-module)
-
-#### For packages with type `module`
-
-If your `package.json` has `"type": "module"`, then this is the AVA configuration you need:
-
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": {
-			"ts": "module"
-		},
-		"nodeArguments": [
-			"--loader=ts-node/esm"
-		]
-	}
-}
-```
-
-You also need to have this in your `tsconfig.json`:
-
-```json
-{
-	"compilerOptions": {
-		"module": "ES2020",
-		"moduleResolution": "node"
-	}
-}
-```
-
-Remember that, by default, ES modules require you to specify the file extension and TypeScript outputs `.js` files, so you have to write your imports to load from `.js` files not `.ts`.
-
-If this is not to your liking there is an _experimental_ option in Node.js that you might want to use. You can add it to the `nodeArguments` array in the AVA configuration so it applies to your test runs: [`--experimental-specifier-resolution=node`](https://nodejs.org/api/esm.html#customizing-esm-specifier-resolution-algorithm).
-
-#### For packages without type "module"
-
-If your `package.json` does not have `"type": "module"`, then you should use the [`tsx`](https://github.com/esbuild-kit/tsx) loader. To utilize this loader, after installing it to your dev dependencies, use this AVA configuration:
+[`tsx`](https://github.com/esbuild-kit/tsx) may be the best loader available. The setup, assuming your TypeScript config outputs ES modules, would look like this:
 
 `package.json`:
 
@@ -72,26 +35,6 @@ If your `package.json` does not have `"type": "module"`, then you should use the
       "--loader=tsx"
     ]
   }
-```
-
-It's worth noting that with this configuration, tests will fail if there are TypeScript build errors. Suppose you want to test while ignoring these errors. In that case, you can use `ts-node/register/transpile-only` instead of `ts-node/register` or add an environment variable for ts-node to log errors to stderr instead of throwing an exception.
-
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"environmentVariables": {
-			"TS_NODE_LOG_ERROR": "true"
-		},
-		"require": [
-			"ts-node/register"
-		]
-	}
-}
 ```
 
 ## Writing tests
@@ -234,47 +177,4 @@ test('throwsAsync', async t => {
 
 Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
 
-### Using module path mapping
-
-`ts-node` [does not support module path mapping](https://github.com/TypeStrong/ts-node/issues/138), however you can use [`tsconfig-paths`](https://github.com/dividab/tsconfig-paths#readme).
-
-Once installed, add the `tsconfig-paths/register` entry to the `require` section of AVA's config:
-
-`package.json`:
-
-```json
-{
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register",
-			"tsconfig-paths/register"
-		]
-	}
-}
-```
-
-Then you can start using module aliases:
-
-`tsconfig.json`:
-```json
-{
-	"baseUrl": ".",
-	"paths": {
-		"@helpers/*": ["helpers/*"]
-	}
-}
-```
-
-Test:
-
-```ts
-import myHelper from '@helpers/myHelper';
-
-// Rest of the file
-```
-
 [`@ava/typescript`]: https://github.com/avajs/typescript
-[`ts-node`]: https://www.npmjs.com/package/ts-node
