@@ -19,8 +19,8 @@ Broadly speaking, there are two ways to run tests written in TypeScript:
 
 There are two components to a setup like this:
 
-1. [Make sure AVA recognizes the extensions of your TypeScript files](./06-configuration.md#configuring-module-formats)
-2. Install the loader [through `nodeArguments`](https://github.com/avajs/ava/blob/main/docs/06-configuration.md#node-arguments)
+1. [Make sure AVA recognizes the extensions of your TypeScript files](../06-configuration.md#configuring-module-formats)
+2. Install the loader [through `nodeArguments`](../06-configuration.md#node-arguments)
 
 [`tsx`](https://github.com/esbuild-kit/tsx) may be the best loader available. The setup, assuming your TypeScript config outputs ES modules, would look like this:
 
