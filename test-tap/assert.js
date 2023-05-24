@@ -761,6 +761,16 @@ test('.like()', t => {
 		values: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
 	});
 
+	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
+	passes(t, () => assertions.like([{a: 1, b: 2}], [{a: 1}]));
+	passes(t, () => assertions.like([{a: 1, b: 2}, {c: 3}], [{a: 1}]));
+
+	passes(t, () => assertions.like([1, 2, 3], [1, 2, 3]));
+	passes(t, () => assertions.like([1, 2, 3], [1, 2]));
+
+	fails(t, () => assertions.like([1, 2, 3], [3, 2, 1]));
+	fails(t, () => assertions.like([1, 2], [1, 2, 3]));
+
 	t.end();
 });
 
