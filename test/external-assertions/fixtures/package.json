@@ -1,0 +1,11 @@
+{
+	"type": "module",
+	"ava": {
+		"files": [
+			"*.js"
+		]
+	},
+	"dependencies": {
+		"expect": "^29.5.0"
+	}
+}
