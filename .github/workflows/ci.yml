@@ -33,7 +33,7 @@ jobs:
         run: npm install --global npm@^8
       - run: npm install --no-audit
       - run: npm run cover
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           files: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
