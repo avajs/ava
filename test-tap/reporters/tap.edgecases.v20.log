@@ -1,0 +1,46 @@
+TAP version 13
+---tty-stream-chunk-separator
+not ok 1 - ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
+const fn = do {
+           ^^
+
+SyntaxError: Unexpected token 'do'
+  ---
+    name: SyntaxError
+    message: Unexpected token 'do'
+    at: ''
+  ...
+---tty-stream-chunk-separator
+not ok 2 - ast-syntax-error.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+not ok 3 - No tests found in ava-import-no-test-declaration.cjs
+---tty-stream-chunk-separator
+not ok 4 - TypeError: test is not a function
+  ---
+    name: TypeError
+    message: test is not a function
+    at: >-
+      Object.<anonymous>
+      (test-tap/fixture/report/edgecases/import-and-use-test-member.cjs:3:1)
+  ...
+---tty-stream-chunk-separator
+not ok 5 - import-and-use-test-member.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+not ok 6 - No tests found in no-ava-import.cjs, make sure to import "ava" at the top of your test file
+---tty-stream-chunk-separator
+not ok 7 - Error: throws
+  ---
+    name: Error
+    message: throws
+    at: 'Object.<anonymous> (test-tap/fixture/report/edgecases/throws.cjs:1:7)'
+  ...
+---tty-stream-chunk-separator
+not ok 8 - throws.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+
+1..0
+# tests 0
+# pass 0
+# fail 8
+
+---tty-stream-chunk-separator

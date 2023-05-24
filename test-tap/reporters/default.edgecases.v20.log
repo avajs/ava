@@ -1,0 +1,59 @@
+
+---tty-stream-chunk-separator
+  [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m
+
+  [90mSyntaxError: Unexpected token (3:11)[39m
+
+---tty-stream-chunk-separator
+  [1mUncaught exception in ast-syntax-error.cjs[22m
+
+  ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
+  const fn = do {
+             ^^
+
+  SyntaxError: Unexpected token 'do'
+
+---tty-stream-chunk-separator
+  [31m✘ ast-syntax-error.cjs exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [31m✘ No tests found in ava-import-no-test-declaration.cjs[39m
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in import-and-use-test-member.cjs[22m
+
+  [90mimport-and-use-test-member.cjs:3[39m
+
+   [90m2:[39m                             
+  [41m[1m 3: test('pass', t => t.pass());[22m[49m
+   [90m4:[39m                             
+
+  TypeError: test is not a function
+
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.cjs:3:1)[39m
+
+---tty-stream-chunk-separator
+  [31m✘ import-and-use-test-member.cjs exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [31m✘ No tests found in no-ava-import.cjs, make sure to import "ava" at the top of your test file[39m
+---tty-stream-chunk-separator
+  [31m✘ Line numbers for test.cjs did not match any tests[39m
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in throws.cjs[22m
+
+  [90mthrows.cjs:1[39m
+
+  [41m[1m 1: throw new Error('throws');[22m[49m
+   [90m2:[39m                           
+
+  Error: throws
+
+  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/throws.cjs:1:7)[39m
+
+---tty-stream-chunk-separator
+  [31m✘ throws.cjs exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [90m─[39m
+
+  [31m3 uncaught exceptions[39m
+---tty-stream-chunk-separator

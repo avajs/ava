@@ -1,0 +1,20 @@
+
+---tty-stream-chunk-separator
+  [32m✔[39m passes
+---tty-stream-chunk-separator
+  [32m✔[39m passes two
+---tty-stream-chunk-separator
+  [31m[39m
+  [31m✘ Timed out while running tests[39m
+
+  2 tests were pending in a.cjs
+
+  ◌ slow
+  ◌ slow two
+
+---tty-stream-chunk-separator
+  [90m─[39m
+
+  [32m2 tests passed[39m
+  [31m2 tests remained pending after a timeout[39m
+---tty-stream-chunk-separator
