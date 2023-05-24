@@ -69,7 +69,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		match,
 		providers,
 		projectDir,
-		timeout: type.startsWith('timeout') ? '10s' : undefined,
+		timeout: type.startsWith('timeout') ? '2.5s' : undefined,
 		concurrency: 1,
 		updateSnapshots: false,
 		snapshotDir: false,
