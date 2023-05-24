@@ -1,0 +1,357 @@
+
+---tty-stream-chunk-separator
+  [1mUncaught exception in bad-test-chain.cjs[22m
+
+  [90mbad-test-chain.cjs:3[39m
+
+   [90m2:[39m                                           
+  [41m[1m 3: test.serial.test('passes', t => t.pass());[22m[49m
+   [90m4:[39m                                           
+
+  TypeError: test.serial.test is not a function
+
+  [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)[39m
+
+---tty-stream-chunk-separator
+  [31m✘ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format with max depth 4
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format like with max depth 4
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m before hook
+    [35mℹ[39m [90mbefore[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    [35mℹ[39m [90mbeforeEach[39m
+---tty-stream-chunk-separator
+  [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m output-in-hook [90m[2m›[22m[39m failing test [3m[31mTest failed via `t.fail()`[39m[23m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    [35mℹ[39m [90mafterEach[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    [35mℹ[39m [90mafterEachAlways[39m
+---tty-stream-chunk-separator
+    output-in-hook [90m[2m›[22m[39m cleanup
+    [35mℹ[39m [90mafterAlways[39m
+---tty-stream-chunk-separator
+  [33m- [skip] test [90m[2m›[22m[39m[33m skip[39m
+---tty-stream-chunk-separator
+  [34m- [todo] test [90m[2m›[22m[39m[34m todo[39m
+---tty-stream-chunk-separator
+  [32m✔[39m test [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m fails [3m[31mTest failed via `t.fail()`[39m[23m
+---tty-stream-chunk-separator
+  [31m✔ [expected fail][39m test [90m[2m›[22m[39m known failure
+---tty-stream-chunk-separator
+  [31m✘ [unexpected pass]:[39m test [90m[2m›[22m[39m no longer failing [3m[31mTest was expected to fail, but succeeded, you should stop marking the test as failing[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m logs [3m[31mTest failed via `t.fail()`[39m[23m
+    [35mℹ[39m [90mhello[39m
+    [35mℹ[39m [90mworld[39m
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m formatted
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m test [90m[2m›[22m[39m implementation throws non-error [3m[31mError thrown in test[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throws
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m notThrows
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m notThrowsAsync
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
+---tty-stream-chunk-separator
+  [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+
+  [1mUncaught exception in uncaught-exception.cjs[22m
+
+  [90muncaught-exception.cjs:5[39m
+
+   [90m4:[39m   setImmediate(() => {                
+  [41m[1m 5:     throw new Error('Can’t catch me');[22m[49m
+   [90m6:[39m   });                                 
+
+  Error: Can’t catch me
+
+  [90m› Immediate.<anonymous> (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)[39m
+
+---tty-stream-chunk-separator
+  [31m✘ uncaught-exception.cjs exited with a non-zero exit code: 1[39m
+---tty-stream-chunk-separator
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
+---tty-stream-chunk-separator
+  [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
+---tty-stream-chunk-separator
+
+  [1mUnhandled rejection in unhandled-rejection.cjs[22m
+
+  [90munhandled-rejection.cjs:4[39m
+
+   [90m3:[39m const passes = t => {                         
+  [41m[1m 4:   Promise.reject(new Error('Can’t catch me'));[22m[49m
+   [90m5:[39m   t.pass();                                   
+
+  Error: Can’t catch me
+
+  [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)[39m
+
+---tty-stream-chunk-separator
+  [1mUnhandled rejection in unhandled-rejection.cjs[22m
+
+  [33mnull[39m
+
+---tty-stream-chunk-separator
+  [90m─[39m
+
+  [1mnested-objects [90m[2m›[22m[1m[39m format with max depth 4[22m
+
+  [90mnested-objects.cjs:29[39m
+
+   [90m28:[39m   };                    
+  [41m[1m 29:   t.deepEqual(exp, act);[22m[49m
+   [90m30:[39m });                     
+
+  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+
+    [90m{[39m
+      a: [90m{[39m
+        b: [90m{[39m
+          foo: [34m'[39m[34mbar[39m[34m'[39m[90m,[39m
+        [90m}[39m[90m,[39m
+      [90m}[39m[90m,[39m
+  [32m+[39m   c: [90m{[39m
+  [32m+[39m     d: [90m{[39m
+  [32m+[39m       e: [90m{[39m
+  [32m+[39m         foo: [34m'[39m[34mbar[39m[34m'[39m[90m,[39m
+  [32m+[39m       [90m}[39m[90m,[39m
+  [32m+[39m     [90m}[39m[90m,[39m
+  [32m+[39m   [90m}[39m[90m,[39m
+    [90m}[39m
+
+  [90m› test-tap/fixture/report/regular/nested-objects.cjs:29:4[39m
+
+
+
+  [1mnested-objects [90m[2m›[22m[1m[39m format like with max depth 4[22m
+
+  [90mnested-objects.cjs:55[39m
+
+   [90m54:[39m   };                      
+  [41m[1m 55:   t.like(actual, pattern);[22m[49m
+   [90m56:[39m });                       
+
+  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+
+    [90m{[39m
+      a: [90m{[39m
+        b: [90m{[39m
+  [31m-[39m       foo: [34m'[39m[31mbar[39m[34m'[39m[90m,[39m
+  [32m+[39m       foo: [34m'[39m[32mqux[39m[34m'[39m[90m,[39m
+        [90m}[39m[90m,[39m
+      [90m}[39m[90m,[39m
+    [90m}[39m
+
+  [90m› test-tap/fixture/report/regular/nested-objects.cjs:55:4[39m
+
+
+
+  [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
+
+  [90moutput-in-hook.cjs:34[39m
+
+   [90m33:[39m test('failing test', t => {
+  [41m[1m 34:   t.fail();                [22m[49m
+   [90m35:[39m });                        
+
+  Test failed via `t.fail()`
+
+  [90m› test-tap/fixture/report/regular/output-in-hook.cjs:34:4[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m fails[22m
+
+  [90mtest.cjs:9[39m
+
+   [90m8:[39m                              
+  [41m[1m 9: test('fails', t => t.fail());[22m[49m
+   [90m10:[39m                              
+
+  Test failed via `t.fail()`
+
+  [90m› test-tap/fixture/report/regular/test.cjs:9:22[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
+
+  Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m logs[22m
+  [90mtest.cjs:18[39m
+
+   [90m17:[39m   t.log('world');
+  [41m[1m 18:   t.fail();      [22m[49m
+   [90m19:[39m });              
+
+  Test failed via `t.fail()`
+
+  [90m› test-tap/fixture/report/regular/test.cjs:18:4[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m formatted[22m
+
+  [90mtest.cjs:22[39m
+
+   [90m21:[39m test('formatted', t => {    
+  [41m[1m 22:   t.deepEqual('foo', 'bar');[22m[49m
+   [90m23:[39m });                         
+
+  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+
+  [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
+  [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
+
+  [90m› test-tap/fixture/report/regular/test.cjs:22:4[39m
+
+
+
+  [1mtest [90m[2m›[22m[1m[39m implementation throws non-error[22m
+
+  Error thrown in test:
+
+  [33mnull[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
+
+  [90mtraces-in-t-throws.cjs:12[39m
+
+   [90m11:[39m test('throws', t => {                                   
+  [41m[1m 12:   t.throws(() => throwError(), {instanceOf: TypeError});[22m[49m
+   [90m13:[39m });                                                     
+
+  Function threw unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
+  [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
+
+  [90mtraces-in-t-throws.cjs:16[39m
+
+   [90m15:[39m test('notThrows', t => {          
+  [41m[1m 16:   t.notThrows(() => throwError());[22m[49m
+   [90m17:[39m });                               
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:20[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
+
+  [90mtraces-in-t-throws.cjs:20[39m
+
+   [90m19:[39m test('notThrowsAsync', t => {          
+  [41m[1m 20:   t.notThrowsAsync(() => throwError());[22m[49m
+   [90m21:[39m });                                    
+
+  Function threw:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:25[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
+
+  [90mtraces-in-t-throws.cjs:24[39m
+
+   [90m23:[39m test('throwsAsync', t => {                                   
+  [41m[1m 24:   t.throwsAsync(() => throwError(), {instanceOf: TypeError});[22m[49m
+   [90m25:[39m });                                                          
+
+  Function threw synchronously. Use `t.throws()` instead:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
+  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:22)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4[39m
+
+
+
+  [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
+
+  [90mtraces-in-t-throws.cjs:27[39m
+
+   [90m26:[39m                                                                                                         
+  [41m[1m 27: test('throwsAsync different error', t => t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError}));[22m[49m
+   [90m28:[39m                                                                                                         
+
+  Returned promise rejected with unexpected exception:
+
+  [35mError[39m [90m{[39m
+    message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
+  [90m}[39m
+
+  Expected instance of:
+
+  [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
+
+  [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44[39m
+
+  [90m─[39m
+
+  [31m13 tests failed[39m
+  [31m1 known failure[39m
+  [33m1 test skipped[39m
+  [34m1 test todo[39m
+  [31m2 unhandled rejections[39m
+  [31m2 uncaught exceptions[39m
+---tty-stream-chunk-separator

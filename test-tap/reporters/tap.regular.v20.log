@@ -1,0 +1,268 @@
+TAP version 13
+---tty-stream-chunk-separator
+not ok 1 - TypeError: test.serial.test is not a function
+  ---
+    name: TypeError
+    message: test.serial.test is not a function
+    at: 'Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)'
+  ...
+---tty-stream-chunk-separator
+not ok 2 - bad-test-chain.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+not ok 3 - nested-objects › format with max depth 4
+  ---
+    name: AssertionError
+    assertion: deepEqual
+    values:
+      'Difference (- actual, + expected):': |2-
+          {
+            a: {
+              b: {
+                foo: 'bar',
+              },
+            },
+        +   c: {
+        +     d: {
+        +       e: {
+        +         foo: 'bar',
+        +       },
+        +     },
+        +   },
+          }
+    at: 'test-tap/fixture/report/regular/nested-objects.cjs:29:4'
+  ...
+---tty-stream-chunk-separator
+not ok 4 - nested-objects › format like with max depth 4
+  ---
+    name: AssertionError
+    assertion: like
+    values:
+      'Difference (- actual, + expected):': |2-
+          {
+            a: {
+              b: {
+        -       foo: 'bar',
+        +       foo: 'qux',
+              },
+            },
+          }
+    at: 'test-tap/fixture/report/regular/nested-objects.cjs:55:4'
+  ...
+---tty-stream-chunk-separator
+# output-in-hook › before hook
+---tty-stream-chunk-separator
+# output-in-hook › before hook
+---tty-stream-chunk-separator
+#   before
+---tty-stream-chunk-separator
+# output-in-hook › beforeEach hook for passing test
+---tty-stream-chunk-separator
+#   beforeEach
+---tty-stream-chunk-separator
+# output-in-hook › beforeEach hook for failing test
+---tty-stream-chunk-separator
+#   beforeEach
+---tty-stream-chunk-separator
+ok 5 - output-in-hook › passing test
+---tty-stream-chunk-separator
+not ok 6 - output-in-hook › failing test
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test-tap/fixture/report/regular/output-in-hook.cjs:34:4'
+  ...
+---tty-stream-chunk-separator
+# output-in-hook › afterEach hook for passing test
+---tty-stream-chunk-separator
+#   afterEach
+---tty-stream-chunk-separator
+# output-in-hook › afterEach.always hook for failing test
+---tty-stream-chunk-separator
+#   afterEachAlways
+---tty-stream-chunk-separator
+# output-in-hook › afterEach.always hook for passing test
+---tty-stream-chunk-separator
+#   afterEachAlways
+---tty-stream-chunk-separator
+# output-in-hook › cleanup
+---tty-stream-chunk-separator
+#   afterAlways
+---tty-stream-chunk-separator
+ok 7 - test › skip # SKIP
+---tty-stream-chunk-separator
+not ok 8 - test › todo # TODO
+---tty-stream-chunk-separator
+ok 9 - test › passes
+---tty-stream-chunk-separator
+not ok 10 - test › fails
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test-tap/fixture/report/regular/test.cjs:9:22'
+  ...
+---tty-stream-chunk-separator
+ok 11 - test › known failure
+---tty-stream-chunk-separator
+not ok 12 - test › no longer failing
+  ---
+    name: Error
+    message: >-
+      Test was expected to fail, but succeeded, you should stop marking the test as
+      failing
+    at: ''
+  ...
+---tty-stream-chunk-separator
+not ok 13 - test › logs
+#   hello
+#   world
+  ---
+    name: AssertionError
+    message: Test failed via `t.fail()`
+    assertion: fail
+    at: 'test-tap/fixture/report/regular/test.cjs:18:4'
+  ...
+---tty-stream-chunk-separator
+not ok 14 - test › formatted
+  ---
+    name: AssertionError
+    assertion: deepEqual
+    values:
+      'Difference (- actual, + expected):': |-
+        - 'foo'
+        + 'bar'
+    at: 'test-tap/fixture/report/regular/test.cjs:22:4'
+  ...
+---tty-stream-chunk-separator
+not ok 15 - test › implementation throws non-error
+  ---
+    name: AssertionError
+    message: Error thrown in test
+    values:
+      'Error thrown in test:': 'null'
+    at: ''
+  ...
+---tty-stream-chunk-separator
+not ok 16 - traces-in-t-throws › throws
+  ---
+    name: AssertionError
+    assertion: throws
+    values:
+      'Function threw unexpected exception:': |-
+        Error {
+          message: 'uh-oh',
+        }
+      'Expected instance of:': 'Function TypeError {}'
+    at: >-
+      throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
+
+      t.throws.instanceOf
+      (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)
+
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4
+  ...
+---tty-stream-chunk-separator
+not ok 17 - traces-in-t-throws › notThrows
+  ---
+    name: AssertionError
+    assertion: notThrows
+    values:
+      'Function threw:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: |-
+      throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:20
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4
+  ...
+---tty-stream-chunk-separator
+not ok 18 - traces-in-t-throws › notThrowsAsync
+  ---
+    name: AssertionError
+    assertion: notThrowsAsync
+    values:
+      'Function threw:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: |-
+      throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:25
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4
+  ...
+---tty-stream-chunk-separator
+not ok 19 - traces-in-t-throws › throwsAsync
+  ---
+    name: AssertionError
+    assertion: throwsAsync
+    values:
+      'Function threw synchronously. Use `t.throws()` instead:': |-
+        Error {
+          message: 'uh-oh',
+        }
+    at: >-
+      throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)
+
+      t.throwsAsync.instanceOf
+      (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:22)
+
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4
+  ...
+---tty-stream-chunk-separator
+not ok 20 - traces-in-t-throws › throwsAsync different error
+  ---
+    name: AssertionError
+    assertion: throwsAsync
+    values:
+      'Returned promise rejected with unexpected exception:': |-
+        Error {
+          message: 'uh-oh',
+        }
+      'Expected instance of:': 'Function TypeError {}'
+    at: >-
+      returnRejectedPromise
+      (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)
+
+      test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44
+  ...
+---tty-stream-chunk-separator
+ok 21 - uncaught-exception › passes
+---tty-stream-chunk-separator
+not ok 22 - Error: Can’t catch me
+  ---
+    name: Error
+    message: Can’t catch me
+    at: >-
+      Immediate.<anonymous>
+      (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)
+  ...
+---tty-stream-chunk-separator
+not ok 23 - uncaught-exception.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
+ok 24 - unhandled-rejection › passes
+---tty-stream-chunk-separator
+ok 25 - unhandled-rejection › unhandled non-error rejection
+---tty-stream-chunk-separator
+not ok 26 - Error: Can’t catch me
+  ---
+    name: Error
+    message: Can’t catch me
+    at: 'passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)'
+  ...
+---tty-stream-chunk-separator
+not ok 27 - unhandled-rejection
+  ---
+    message: Non-error object
+    formatted: 'null'
+  ...
+---tty-stream-chunk-separator
+
+1..21
+# tests 20
+# pass 6
+# skip 1
+# fail 20
+
+---tty-stream-chunk-separator
