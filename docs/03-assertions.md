@@ -165,7 +165,7 @@ t.like({
 You can also use arrays, but note that any indices in `actual` that are not in `selector` are ignored:
 
 ```js
-t.like([1, 2, 3], [1, 2])
+t.like([1, 2, 3, 4], [1, , 3])
 ```
 
 Finally, this returns a boolean indicating whether the assertion passed.
