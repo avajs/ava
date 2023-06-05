@@ -141,7 +141,7 @@ Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqu
 
 Assert that `actual` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `actual` does.
 
-Instead AVA derives a *comparable* value from `actual`, recursively based on the shape of `selector`. This value is then compared to `selector` using `.deepEqual()`.
+Instead AVA derives a *comparable* value from `actual`, recursively based on the enumerable shape of `selector`. This value is then compared to `selector` using `.deepEqual()`.
 
 Any values in `selector` that are not arrays or regular objects should be deeply equal to the corresponding values in `actual`.
 
