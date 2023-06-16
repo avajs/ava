@@ -720,7 +720,7 @@ test('.like()', t => {
 		return assertions.like({xc: [circular, 'c']}, {xc: [circular, 'd']});
 	});
 
-	failsWith(t, () => assertions.like({a: 'a'}, {}), {
+	failsWith(t, () => assertions.like({a: 'a'}, Object.defineProperties({}, {ignored: {}})), {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
 		values: [{label: 'Called with:', formatted: '{}'}],
@@ -730,6 +730,15 @@ test('.like()', t => {
 		assertion: 'like',
 		message: '`t.like()` selector must be a non-empty object',
 		values: [{label: 'Called with:', formatted: '\'bar\''}],
+	});
+
+	passes(t, () => {
+		const specimen = {[Symbol.toStringTag]: 'Custom', extra: true};
+		const selector = Object.defineProperties(
+			{[Symbol.toStringTag]: 'Custom'},
+			{ignored: {value: true}},
+		);
+		return assertions.like(specimen, selector);
 	});
 
 	failsWith(t, () => {
@@ -767,8 +776,12 @@ test('.like()', t => {
 
 	passes(t, () => assertions.like([1, 2, 3], [1, 2, 3]));
 	passes(t, () => assertions.like([1, 2, 3], [1, 2]));
+	// eslint-disable-next-line no-sparse-arrays
+	passes(t, () => assertions.like([1, 2, 3], [1, , 3]));
 
 	fails(t, () => assertions.like([1, 2, 3], [3, 2, 1]));
+	// eslint-disable-next-line no-sparse-arrays
+	fails(t, () => assertions.like([1, 2, 3], [1, , 4]));
 	fails(t, () => assertions.like([1, 2], [1, 2, 3]));
 
 	t.end();
