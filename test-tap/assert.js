@@ -741,6 +741,11 @@ test('.like()', t => {
 		return assertions.like(specimen, selector);
 	});
 
+	passes(t, () => {
+		const array = ['c1', 'c2'];
+		return assertions.like({a: 'a', b: 'b', c: ['c1', 'c2'], d: ['c1', 'c2']}, {b: 'b', d: array, c: array});
+	});
+
 	failsWith(t, () => {
 		const likePattern = {
 			a: 'a',
