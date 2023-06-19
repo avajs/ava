@@ -12,7 +12,7 @@ test('non-JSON arguments can be provided (worker threads)', async t => {
 	t.is(result.stats.passed.length, 1);
 });
 
-test.failing('non-JSON arguments can be provided (child process)', async t => {
+test('non-JSON arguments can be provided (child process)', async t => {
 	const result = await fixture(['--no-worker-threads'], {cwd: cwd('non-json')});
 	t.is(result.stats.passed.length, 1);
 });
