@@ -54,6 +54,16 @@ test('fetches foo', async t => {
 
 AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) back to the test that triggered them. Callback-taking functions may lead to uncaught exceptions that can then be hard to debug. Consider promisifying and using `async`/`await`, as in the above example. This should allow AVA to catch the exception and attribute it to the correct test.
 
+## Node.js command line options, child processes and worker threads
+
+By default AVA runs test files in worker threads. However, not all Node.js command line options (those that end up in [`process.execArgv`](https://nodejs.org/api/process.html#processexecargv)) are compatible with worker threads. You may get an error like this:
+
+```
+Error [ERR_WORKER_INVALID_EXEC_ARGV]: Initiated Worker with invalid execArgv flags: --title
+```
+
+If possible don't specify the command line option when running AVA. Alternatively you could [disable worker threads in AVA](./06-configuration.md#options).
+
 ## Sharing variables between asynchronous tests
 
 By default AVA executes tests concurrently. This can cause problems if your tests are asynchronous and share variables.
