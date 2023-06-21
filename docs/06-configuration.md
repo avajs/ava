@@ -260,7 +260,9 @@ export default {
 
 ## Requiring extra modules
 
-Use the `require` configuration to load extra modules before test files are loaded. **Accepts relative paths only**. Paths are resolved against the project directory. You may specify a single value, or an array of values:
+Use the `require` configuration to load extra modules before test files are loaded. **Accepts relative paths only**. Paths are resolved against the project directory and can be loaded through `@ava/typescript`.
+
+You may specify a single value, or an array of values:
 
 `ava.config.js`:
 ```js
