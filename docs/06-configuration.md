@@ -260,7 +260,7 @@ export default {
 
 ## Requiring extra modules
 
-Use the `require` configuration to load extra modules before test files are loaded. **Accepts relative paths only**. Paths are resolved against the project directory and can be loaded through `@ava/typescript`.
+Use the `require` configuration to load extra modules before test files are loaded. Relative paths are resolved against the project directory and can be loaded through `@ava/typescript`. Otherwise, modules are loaded from within the `node_modules` directory inside the project.
 
 You may specify a single value, or an array of values:
 
@@ -320,19 +320,16 @@ export default function (first, second) { // 'my', 'arguments'
 
 Arguments are copied using the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This means `Map` values survive, but a `Buffer` will come out as a `Uint8Array`.
 
-To load another dependency you need to wrap it in a helper file. This ensures that your dependencies are resolved from your project, not from within AVA:
+You can load dependencies installed in your project:
 
 `ava.config.js`:
 ```js
 export default {
-	require: './_register-babel.cjs'
+	require: '@babel/register'
 }
 ```
 
-`_register-babel.cjs`:
-```
-require('@babel/register')
-```
+These may also export a function which is then invoked, and can receive arguments.
 
 ## Node arguments
 

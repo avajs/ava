@@ -27,6 +27,11 @@ test('calls exports.default (CJS)', async t => {
 	t.is(result.stats.passed.length, 1);
 });
 
+test('loads dependencies', async t => {
+	const result = await fixture([], {cwd: cwd('require-dependency')});
+	t.is(result.stats.passed.length, 1);
+});
+
 test('crashes if module cannot be loaded', async t => {
 	const result = await t.throwsAsync(fixture([], {cwd: cwd('failed-import')}));
 	t.is(result.stats.uncaughtExceptions.length, 1);
