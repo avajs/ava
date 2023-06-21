@@ -56,10 +56,6 @@ Sometimes watch mode does something surprising like rerunning all tests when you
 $ DEBUG=ava:watcher npx ava --watch
 ```
 
-## Help us make watch mode better
-
-Watch mode is relatively new and there might be some rough edges. Please [report](https://github.com/avajs/ava/issues) any issues you encounter. Thanks!
-
 [`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
