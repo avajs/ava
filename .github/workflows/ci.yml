@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^14.19, ^16.15, ^18, ^20]
+        node-version: [^16.18, ^18.16, ^20.3]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v3
@@ -28,9 +28,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-      - name: Install npm@8 for Node.js 14
-        if: matrix.node-version == '^14.19'
-        run: npm install --global npm@^8
       - run: npm install --no-audit
       - run: npm run cover
       - uses: codecov/codecov-action@v3
