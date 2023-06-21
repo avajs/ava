@@ -318,6 +318,8 @@ export default function (first, second) { // 'my', 'arguments'
 }
 ```
 
+Arguments are copied using the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This means `Map` values survive, but a `Buffer` will come out as a `Uint8Array`.
+
 To load another dependency you need to wrap it in a helper file. This ensures that your dependencies are resolved from your project, not from within AVA:
 
 `ava.config.js`:
