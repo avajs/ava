@@ -33,7 +33,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": ">=14.19 <15 || >=16.15 <17 || >=18"
+		"node": "^16.18 || ^18.16 || ^20.3"
 	},
 	"scripts": {
 		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
@@ -156,6 +156,6 @@
 		}
 	},
 	"volta": {
-		"node": "20.2.0"
+		"node": "20.3.1"
 	}
 }
