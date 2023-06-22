@@ -4,14 +4,13 @@ import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 import {execaNode} from 'execa';
-import replaceString from 'replace-string';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
 const ttySimulator = fileURLToPath(new URL('simulate-tty.cjs', import.meta.url));
 
 const TEST_AVA_IMPORT_FROM = path.join(process.cwd(), 'entrypoints/main.cjs');
 
-const normalizePosixPath = string => replaceString(string, '\\', '/');
+const normalizePosixPath = string => string.replaceAll('\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
 
 const compareStatObjects = (a, b) => {
