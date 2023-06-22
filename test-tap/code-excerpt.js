@@ -1,9 +1,8 @@
-import fs from 'node:fs';
 import {pathToFileURL} from 'node:url';
 
 import {Chalk} from 'chalk'; // eslint-disable-line unicorn/import-style
 import {test} from 'tap';
-import tempWrite from 'temp-write';
+import {temporaryFile, temporaryWriteSync} from 'tempy';
 
 import {set as setChalk} from '../lib/chalk.js';
 import codeExcerpt from '../lib/code-excerpt.js';
@@ -13,11 +12,9 @@ setChalk({level: 1});
 const chalk = new Chalk({level: 1});
 
 test('read code excerpt', t => {
-	const file = pathToFileURL(tempWrite.sync([
-		'function a() {',
-		'\talert();',
-		'}',
-	].join('\n')));
+	const file = pathToFileURL(temporaryWriteSync(`function a() {
+	alert();
+}`));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false});
 	const expected = [
@@ -31,11 +28,9 @@ test('read code excerpt', t => {
 });
 
 test('truncate lines', t => {
-	const file = pathToFileURL(tempWrite.sync([
-		'function a() {',
-		'\talert();',
-		'}',
-	].join('\n')));
+	const file = pathToFileURL(temporaryWriteSync(`function a() {
+	alert();
+}`));
 
 	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false}, {maxWidth: 14});
 	const expected = [
@@ -49,19 +44,17 @@ test('truncate lines', t => {
 });
 
 test('format line numbers', t => {
-	const file = pathToFileURL(tempWrite.sync([
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'function a() {',
-		'\talert();',
-		'}',
-	].join('\n')));
+	const file = pathToFileURL(temporaryWriteSync(`
+
+
+
+
+
+
+
+function a() {
+	alert();
+}`));
 
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
 	const expected = [
@@ -75,9 +68,7 @@ test('format line numbers', t => {
 });
 
 test('noop if file cannot be read', t => {
-	const file = pathToFileURL(tempWrite.sync(''));
-	fs.unlinkSync(file);
-
+	const file = pathToFileURL(temporaryFile());
 	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
 	t.equal(excerpt, null);
 	t.end();

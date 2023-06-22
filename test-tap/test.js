@@ -1,8 +1,8 @@
 import path from 'node:path';
+import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
-import delay from 'delay';
 import sinon from 'sinon';
 import {test} from 'tap';
 
@@ -312,7 +312,9 @@ test('throws and notThrows work with promises', t => {
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
-			a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
+			a.throwsAsync(delay(10).then(() => {
+				throw new Error('foo');
+			}), {message: 'foo'}),
 			a.notThrowsAsync(delay(20).then(() => {
 				asyncCalled = true;
 			})),
@@ -332,7 +334,9 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 		const promises = [];
 		for (let i = 0; i < 3; i++) {
 			promises.push(
-				a.throwsAsync(delay.reject(10, {value: new Error('foo')}), {message: 'foo'}),
+				a.throwsAsync(delay(10).then(() => {
+					throw new Error('foo');
+				}), {message: 'foo'}),
 				a.notThrowsAsync(delay(10)),
 			);
 		}

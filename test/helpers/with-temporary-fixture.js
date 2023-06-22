@@ -1,10 +1,11 @@
-import fse from 'fs-extra';
+import fs from 'node:fs/promises';
+
 import {temporaryDirectoryTask} from 'tempy';
 
 export async function withTemporaryFixture(cwd, task) {
 	let result;
 	await temporaryDirectoryTask(async temporary => {
-		await fse.copy(cwd, temporary);
+		await fs.cp(cwd, temporary, {recursive: true});
 		result = await task(temporary);
 	});
 

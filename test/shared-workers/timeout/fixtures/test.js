@@ -1,6 +1,7 @@
+import {setTimeout as delay} from 'node:timers/promises';
+
 import test from 'ava';
 import {registerSharedWorker} from 'ava/plugin';
-import delay from 'delay';
 
 registerSharedWorker({
 	filename: new URL('worker.mjs', import.meta.url),
