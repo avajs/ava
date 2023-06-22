@@ -4,7 +4,6 @@ import path from 'node:path';
 
 import test from '@ava/test';
 import {mainSymbols, fallbackSymbols} from 'figures';
-import replaceString from 'replace-string';
 
 import {cwd, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
@@ -38,13 +37,10 @@ test('test title should be normalized in stdout', async t => {
 
 		// Assert stdout is unchanged
 		t.snapshot(
-			replaceString(
-				replaceString(
-					replaceString(result.stdout, os.EOL, '\n'),
-					mainSymbols.info, fallbackSymbols.info,
-				),
-				mainSymbols.tick, fallbackSymbols.tick,
-			),
+			result.stdout
+				.replaceAll(os.EOL, '\n')
+				.replaceAll(mainSymbols.info, fallbackSymbols.info)
+				.replaceAll(mainSymbols.tick, fallbackSymbols.tick),
 			'stdout');
 	});
 });

@@ -136,7 +136,6 @@
 		"expect": "^29.5.0",
 		"fs-extra": "^11.1.1",
 		"get-stream": "^6.0.1",
-		"replace-string": "^4.0.0",
 		"sinon": "^15.1.0",
 		"tap": "^16.3.4",
 		"temp-write": "^5.0.0",

@@ -3,7 +3,6 @@ import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 
 import {globbySync} from 'globby';
-import replaceString from 'replace-string';
 
 import Api from '../../lib/api.js';
 import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
@@ -42,12 +41,12 @@ const cwdFileUrlPrefix = pathToFileURL(process.cwd());
 
 exports.sanitizers = {
 	acorn: string => string.split('\n').filter(line => !/node_modules.acorn/.test(line)).join('\n'),
-	cwd: string => replaceString(replaceString(string, cwdFileUrlPrefix, ''), process.cwd(), '~'),
+	cwd: string => string.replaceAll(cwdFileUrlPrefix, '').replaceAll(process.cwd(), '~'),
 	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
-	lineEndings: string => replaceString(string, '\r\n', '\n'),
-	posix: string => replaceString(string, '\\', '/'),
+	lineEndings: string => string.replaceAll('\r\n', '\n'),
+	posix: string => string.replaceAll('\\', '/'),
 	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
-	version: string => replaceString(string, `v${pkg.version}`, 'VERSION'),
+	version: string => string.replaceAll(`v${pkg.version}`, 'VERSION'),
 };
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
