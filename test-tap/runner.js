@@ -1,4 +1,5 @@
-import delay from 'delay';
+import {setTimeout as delay} from 'node:timers/promises';
+
 import {test} from 'tap';
 
 import Runner from '../lib/runner.js';

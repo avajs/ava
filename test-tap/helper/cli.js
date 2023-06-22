@@ -2,8 +2,6 @@ import childProcess from 'node:child_process';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import getStream from 'get-stream';
-
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
 
@@ -48,8 +46,8 @@ export function execCli(args, options, cb) {
 			resolve(code);
 		});
 
-		stdout = getStream(child.stdout);
-		stderr = getStream(child.stderr);
+		stdout = child.stdout.toArray().then(chunks => chunks.join(''));
+		stderr = child.stderr.toArray().then(chunks => chunks.join(''));
 	});
 
 	Promise.all([processPromise, stdout, stderr]).then(args => {

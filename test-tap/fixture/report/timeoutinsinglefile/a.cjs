@@ -1,4 +1,4 @@
-const delay = require('delay');
+const {setTimeout: delay} = require('node:timers/promises');
 
 const test = require('../../../../entrypoints/main.cjs');
 
