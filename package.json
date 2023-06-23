@@ -81,6 +81,7 @@
 		"typescript"
 	],
 	"dependencies": {
+		"@vercel/nft": "^0.22.6",
 		"acorn": "^8.8.2",
 		"acorn-walk": "^8.2.0",
 		"ansi-styles": "^6.2.1",
@@ -126,8 +127,9 @@
 	},
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
-		"@ava/typescript": "^4.0.0",
+		"@ava/typescript": "^4.1.0",
 		"@sindresorhus/tsconfig": "^3.0.1",
+		"@types/node": "^20.3.2",
 		"ansi-escapes": "^6.2.0",
 		"c8": "^7.13.0",
 		"execa": "^7.1.1",

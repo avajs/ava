@@ -67,7 +67,7 @@ test('use current working directory if `package.json` is not found', async t => 
 	const cwd = temporaryDirectory();
 	const testFilePath = path.join(cwd, 'test.js');
 
-	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_IMPORT_FROM);\ntest(\'test name\', t => { t.pass(); });');
+	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_REQUIRE_FROM);\ntest(\'test name\', t => { t.pass(); });');
 
 	const options = {
 		cwd,
