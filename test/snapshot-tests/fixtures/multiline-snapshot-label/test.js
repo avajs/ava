@@ -1,4 +1,4 @@
-const test = require(process.env.TEST_AVA_IMPORT_FROM);
+const test = require(process.env.TEST_AVA_REQUIRE_FROM);
 
 const f = () => [
 	'Hello',

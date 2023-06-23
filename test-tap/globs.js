@@ -208,11 +208,11 @@ test('isIgnoredByWatcher with defaults', t => {
 	};
 
 	function isIgnoredByWatcher(file) {
-		t.ok(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should be ignored`);
+		t.ok(globs.classifyAva5Watcher(fixture(file), options).isIgnoredByWatcher, `${file} should be ignored`);
 	}
 
 	function notIgnored(file) {
-		t.notOk(globs.classify(fixture(file), options).isIgnoredByWatcher, `${file} should not be ignored`);
+		t.notOk(globs.classifyAva5Watcher(fixture(file), options).isIgnoredByWatcher, `${file} should not be ignored`);
 	}
 
 	notIgnored('foo-bar.js');
@@ -247,9 +247,9 @@ test('isIgnoredByWatcher with patterns', t => {
 		cwd: fixture(),
 	};
 
-	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
-	t.ok(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
-	t.ok(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('foo/bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -264,9 +264,9 @@ test('isIgnoredByWatcher (pattern starts with directory)', t => {
 		cwd: fixture(),
 	};
 
-	t.ok(globs.classify(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
-	t.notOk(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
-	t.ok(globs.classify(fixture('foo/bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('node_modules/foo/foo.js'), options).isIgnoredByWatcher);
+	t.notOk(globs.classifyAva5Watcher(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('foo/bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 
@@ -291,8 +291,8 @@ test('isIgnoredByWatcher after provider modifications', t => {
 		cwd: fixture(),
 	};
 
-	t.ok(globs.classify(fixture('foo.js'), options).isIgnoredByWatcher);
-	t.notOk(globs.classify(fixture('bar.js'), options).isIgnoredByWatcher);
+	t.ok(globs.classifyAva5Watcher(fixture('foo.js'), options).isIgnoredByWatcher);
+	t.notOk(globs.classifyAva5Watcher(fixture('bar.js'), options).isIgnoredByWatcher);
 	t.end();
 });
 

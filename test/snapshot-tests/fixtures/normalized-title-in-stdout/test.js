@@ -1,4 +1,4 @@
-const test = require(process.env.TEST_AVA_IMPORT_FROM);
+const test = require(process.env.TEST_AVA_REQUIRE_FROM);
 
 test(`a rather wordy test title that is wrapped
 			to  meet  line  length  requirements   in
