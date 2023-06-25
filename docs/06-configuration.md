@@ -55,7 +55,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `verbose`: if `true`, enables verbose output (though there currently non-verbose output is not supported)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
 - `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
-- `require`: extra modules to require before tests are run. Modules are required in the [worker processes](./01-writing-tests.md#test-isolation)
+- `require`: [extra modules to load before test files](#requiring-extra-modules)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
 - `sortTestFiles`: A comparator function to sort test files with. Available only when using a `ava.config.*` file. See an example use case [here](recipes/splitting-tests-ci.md).
@@ -84,14 +84,14 @@ The default export can either be a plain object or a factory function which retu
 
 ```js
 export default {
-	require: ['./_my-test-helper']
+	require: ['./_my-test-helper.js']
 };
 ```
 
 ```js
 export default function factory() {
 	return {
-		require: ['./_my-test-helper']
+		require: ['./_my-test-helper.js']
 	};
 };
 ```
@@ -120,14 +120,14 @@ The module export can either be a plain object or a factory function which retur
 
 ```js
 module.exports = {
-	require: ['./_my-test-helper']
+	require: ['./_my-test-helper.js']
 };
 ```
 
 ```js
 module.exports = () => {
 	return {
-		require: ['./_my-test-helper']
+		require: ['./_my-test-helper.js']
 	};
 };
 ```
@@ -154,14 +154,14 @@ The default export can either be a plain object or a factory function which retu
 
 ```js
 export default {
-	require: ['./_my-test-helper']
+	require: ['./_my-test-helper.js']
 };
 ```
 
 ```js
 export default function factory() {
 	return {
-		require: ['./_my-test-helper']
+		require: ['./_my-test-helper.js']
 	};
 };
 ```
@@ -257,6 +257,79 @@ export default {
 	}
 };
 ```
+
+## Requiring extra modules
+
+Use the `require` configuration to load extra modules before test files are loaded. Relative paths are resolved against the project directory and can be loaded through `@ava/typescript`. Otherwise, modules are loaded from within the `node_modules` directory inside the project.
+
+You may specify a single value, or an array of values:
+
+`ava.config.js`:
+```js
+export default {
+	require: './_my-test-helper.js'
+}
+```
+```js
+export default {
+	require: ['./_my-test-helper.js']
+}
+```
+
+If the module exports a function, it is called and awaited:
+
+`_my-test-helper.js`:
+```js
+export default function () {
+	// Additional setup
+}
+```
+
+`_my-test-helper.cjs`:
+```js
+module.exports = function () {
+	// Additional setup
+}
+```
+
+In CJS files, a `default` export is also supported:
+
+```js
+exports.default = function () {
+	// Never called
+}
+```
+
+You can provide arguments:
+
+`ava.config.js`:
+```js
+export default {
+	require: [
+		['./_my-test-helper.js', 'my', 'arguments']
+	]
+}
+```
+
+`_my-test-helper.js`:
+```js
+export default function (first, second) { // 'my', 'arguments'
+	// Additional setup
+}
+```
+
+Arguments are copied using the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This means `Map` values survive, but a `Buffer` will come out as a `Uint8Array`.
+
+You can load dependencies installed in your project:
+
+`ava.config.js`:
+```js
+export default {
+	require: '@babel/register'
+}
+```
+
+These may also export a function which is then invoked, and can receive arguments.
 
 ## Node arguments
 

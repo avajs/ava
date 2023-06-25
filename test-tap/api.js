@@ -359,25 +359,6 @@ for (const opt of options) {
 			});
 	});
 
-	test(`Node.js-style --require CLI argument - workerThreads: ${opt.workerThreads}`, async t => {
-		const requirePath = './' + path.relative('.', path.join(__dirname, 'fixture/install-global.cjs')).replace(/\\/g, '/');
-
-		const api = await apiCreator({
-			...opt,
-			require: [requirePath],
-		});
-
-		return api.run({files: [path.join(__dirname, 'fixture/validate-installed-global.cjs')]})
-			.then(runStatus => {
-				t.equal(runStatus.stats.passedTests, 1);
-			});
-	});
-
-	test(`Node.js-style --require CLI argument module not found - workerThreads: ${opt.workerThreads}`, t => {
-		t.rejects(apiCreator({...opt, require: ['foo-bar']}), /^Could not resolve required module ’foo-bar’$/);
-		t.end();
-	});
-
 	test(`caching is enabled by default - workerThreads: ${opt.workerThreads}`, async t => {
 		fs.rmSync(path.join(__dirname, 'fixture/caching/node_modules'), {recursive: true, force: true});
 
