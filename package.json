@@ -36,8 +36,7 @@
 		"node": "^16.18 || ^18.16 || ^20.3"
 	},
 	"scripts": {
-		"cover": "c8 --report=none test-ava && c8 --report=none --no-clean tap && c8 report",
-		"test": "xo && tsc --noEmit && npm run -s cover"
+		"test": "./scripts/test.sh"
 	},
 	"files": [
 		"entrypoints",
