@@ -8,7 +8,7 @@ const withTitle = test.macro({
 		t.is(arg, 'arg');
 	},
 	title(provided, arg) {
-		return `${provided || ''} ${arg}`;
+		return `${provided ?? ''} ${arg}`.trim();
 	},
 });
 

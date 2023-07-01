@@ -10,7 +10,7 @@ export default class TTYStream extends stream.Writable {
 		this.isTTY = true;
 		this.columns = options.columns;
 
-		this.sanitizers = options.sanitizers || [];
+		this.sanitizers = options.sanitizers ?? [];
 		this.chunks = [];
 		this.spinnerActivity = [];
 	}

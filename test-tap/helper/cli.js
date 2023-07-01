@@ -14,8 +14,8 @@ export function execCli(args, options, cb) {
 		dirname = path.resolve(__dirname, '..', 'fixture');
 		env = {};
 	} else {
-		dirname = path.resolve(__dirname, '..', options.dirname || 'fixture');
-		env = options.env || {};
+		dirname = path.resolve(__dirname, '..', options.dirname ?? 'fixture');
+		env = options.env ?? {};
 	}
 
 	let child;

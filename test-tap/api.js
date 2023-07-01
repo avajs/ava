@@ -12,10 +12,10 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = path.join(__dirname, '..');
 
 async function apiCreator(options = {}) {
-	options.projectDir = options.projectDir || ROOT_DIR;
+	options.projectDir = options.projectDir ?? ROOT_DIR;
 	options.chalkOptions = {level: 0};
 	options.concurrency = 2;
-	options.extensions = options.extensions || ['cjs'];
+	options.extensions = options.extensions ?? ['cjs'];
 	options.experiments = {};
 	options.globs = normalizeGlobs({files: options.files, ignoredByWatcher: options.watchMode?.ignoreChanges, extensions: options.extensions, providers: []});
 	const instance = new Api(options);

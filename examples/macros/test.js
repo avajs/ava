@@ -6,7 +6,7 @@ function macro(t, a, b, expected) {
 	t.is(sum(a, b), expected);
 }
 
-macro.title = (providedTitle, a, b, expected) => `${providedTitle || ''} ${a}+${b} = ${expected}`.trim();
+macro.title = (providedTitle, a, b, expected) => `${providedTitle ?? ''} ${a}+${b} = ${expected}`.trim();
 
 test(macro, 2, 2, 4);
 test(macro, 3, 3, 6);

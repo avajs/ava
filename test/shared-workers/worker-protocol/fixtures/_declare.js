@@ -24,7 +24,7 @@ export default testFile => {
 
 	test('broadcasts', async t => {
 		for await (const message of plugin.subscribe()) {
-			if ('broadcast' in message.data && message.data.broadcast === testFile) {
+			if (message.data.broadcast === testFile) {
 				const expected = new Uint8Array(crypto.randomBytes(16));
 				for await (const reply of message.reply(expected).replies()) { // eslint-disable-line no-unreachable-loop
 					t.deepEqual(reply.data, expected);
@@ -47,7 +47,7 @@ export default testFile => {
 				plugin.publish('👋');
 			}
 
-			if ('bye' in message.data && message.data.bye === testFile) {
+			if (message.data.bye === testFile) {
 				t.is(message.data.byeCount, 1);
 				return;
 			}
