@@ -1426,7 +1426,7 @@ test('.snapshot()', async t => {
 						belongsTo: this.title,
 						expected: assertionOptions.expected,
 						index: this.snapshotInvocationCount++,
-						label: assertionOptions.message || `Snapshot ${this.snapshotInvocationCount}`,
+						label: assertionOptions.message ?? `Snapshot ${this.snapshotInvocationCount}`,
 					});
 					if (record) {
 						record();

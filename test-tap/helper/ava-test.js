@@ -14,7 +14,7 @@ export function withExperiments(experiments = {}) {
 
 	function ava(fn, contextRef, title = 'test') {
 		return new Test({
-			contextRef: contextRef || new ContextRef(),
+			contextRef: contextRef ?? new ContextRef(),
 			experiments,
 			failWithoutAssertions: true,
 			fn,
@@ -26,7 +26,7 @@ export function withExperiments(experiments = {}) {
 	}
 
 	ava.failing = (fn, contextRef) => new Test({
-		contextRef: contextRef || new ContextRef(),
+		contextRef: contextRef ?? new ContextRef(),
 		experiments,
 		failWithoutAssertions: true,
 		fn,
