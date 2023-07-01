@@ -37,7 +37,17 @@ Otherwise, AVA 6 uses `fs.watch()`. Support for `recursive` mode is required. No
 
 By default AVA watches for changes to all files, except for those with a `.snap.md` extension, `ava.config.*` and files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
-You can configure additional patterns for files to ignore in the [`ava` section of your `package.json`, or `ava.config.*` file][config], using the `ignoredByWatcher` key.
+With AVA 5, you can configure additional patterns for files to ignore in the [`ava` section of your `package.json`, or `ava.config.*` file][config], using the `ignoredByWatcher` key.
+
+With AVA 6, place these patterns within the `watchMode` object:
+
+```js
+export default {
+	watchMode: {
+		ignoreChanges: ['coverage'],
+	},
+};
+```
 
 If your tests write to disk they may trigger the watcher to rerun your tests. Configuring additional ignore patterns helps avoid this.
 

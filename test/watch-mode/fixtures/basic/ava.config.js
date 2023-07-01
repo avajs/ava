@@ -1,3 +1,5 @@
 export default {
-	ignoredByWatcher: ['ignored-by-watcher.js'],
+	watchMode: {
+		ignoreChanges: ['ignored-by-watcher.js'],
+	},
 };
