@@ -12,7 +12,7 @@ test('errors if top-level files is an empty array', async t => {
 	t.snapshot(cleanOutput(result.stderr), 'fails with message');
 });
 
-test('errors if top-level ignoredByWatcher is an empty array', async t => {
+test('errors if watchMode.ignoreChanges is an empty array', async t => {
 	const options = {
 		cwd: cwd('ignored-by-watcher'),
 	};
