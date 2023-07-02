@@ -1,4 +1,4 @@
-import test, {ExecutionContext} from 'ava';
+import test, {ExecutionContext} from '../../entrypoints/main.cjs';
 import {expectType} from 'tsd';
 
 test('attempt', async t => {

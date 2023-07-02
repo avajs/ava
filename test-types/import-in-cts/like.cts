@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from '../../entrypoints/main.cjs';
 
 test('like', t => {
 	t.like({

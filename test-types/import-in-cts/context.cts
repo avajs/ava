@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import anyTest, {ExecutionContext, TestFn} from 'ava';
+import anyTest, {ExecutionContext, TestFn} from '../../entrypoints/main.cjs';
 import {expectError, expectType} from 'tsd';
 
 interface Context {

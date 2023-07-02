@@ -1,5 +1,5 @@
 /* eslint-disable no-lone-blocks */
-import test, {ExecutionContext} from 'ava';
+import test, {ExecutionContext} from '../../entrypoints/main.cjs';
 import {expectType} from 'tsd';
 
 // Typed arguments through generics.

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import test from 'ava';
+import test from '../../entrypoints/main.cjs';
 
 test.after('return anything else', _t => ({
 	foo: 'bar',

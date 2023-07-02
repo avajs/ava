@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import type {ExecutionContext, TestFn} from 'ava';
-import anyTest from 'ava';
 import {expectError, expectType} from 'tsd';
+
+import type {ExecutionContext, TestFn} from '../../entrypoints/main.mjs';
+import anyTest from '../../entrypoints/main.mjs';
 
 type Context = {
 	foo: string;

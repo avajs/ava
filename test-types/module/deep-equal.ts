@@ -1,5 +1,6 @@
-import test from 'ava';
 import {expectType} from 'tsd';
+
+import test from '../../entrypoints/main.mjs';
 
 test('actual extends expected', t => {
 	type Expected = {foo: [1, 2, 3]};

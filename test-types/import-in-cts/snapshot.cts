@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from '../../entrypoints/main.cjs';
 import {expectError} from 'tsd';
 
 test('snapshot', t => {

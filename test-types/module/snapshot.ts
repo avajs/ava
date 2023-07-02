@@ -1,5 +1,6 @@
-import test from 'ava';
 import {expectError} from 'tsd';
+
+import test from '../../entrypoints/main.mjs';
 
 test('snapshot', t => {
 	t.snapshot({foo: 'bar'});
