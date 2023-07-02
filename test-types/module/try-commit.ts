@@ -1,6 +1,7 @@
-import type {ExecutionContext} from 'ava';
-import test from 'ava';
 import {expectType} from 'tsd';
+
+import type {ExecutionContext} from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.mjs';
 
 test('attempt', async t => {
 	const attempt = await t.try(
@@ -55,11 +56,11 @@ test('all possible variants to pass to t.try', async t => {
 	void t.try('test', (tt, a, b) => tt.is(a.length, b), 'hello', 5);
 
 	// Macro with title
-	const macro1 = test.macro<[string, number]>({ // eslint-disable-line ava/no-nested-tests
+	const macro1 = test.macro<[string, number]>({
 		exec: (tt, a, b) => tt.is(a.length, b),
 		title: (title, a, b) => `${title ? `${String(title)} ` : ''}str: "${String(a)}" with len: "${String(b)}"`,
 	});
-	const macro2 = test.macro<[string, number]>((tt, a, b) => { // eslint-disable-line ava/no-nested-tests
+	const macro2 = test.macro<[string, number]>((tt, a, b) => {
 		tt.is(a.slice(b), '');
 	});
 

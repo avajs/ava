@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from '../../entrypoints/main.cjs';
 import {expectType} from 'tsd';
 
 type Expected = {foo: 'bar'};

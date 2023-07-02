@@ -11,7 +11,7 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./entrypoints/main.d.ts",
+				"types": "./entrypoints/main.d.mts",
 				"default": "./entrypoints/main.mjs"
 			},
 			"require": {
@@ -22,7 +22,7 @@
 		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
 		"./plugin": {
 			"import": {
-				"types": "./entrypoints/plugin.d.ts",
+				"types": "./entrypoints/plugin.d.mts",
 				"default": "./entrypoints/plugin.mjs"
 			},
 			"require": {

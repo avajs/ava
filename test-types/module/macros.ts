@@ -1,6 +1,7 @@
-import type {ExecutionContext} from 'ava';
-import test from 'ava';
 import {expectType} from 'tsd';
+
+import type {ExecutionContext} from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.mjs';
 
 // Typed arguments through generics.
 {
@@ -118,7 +119,7 @@ test('has length 3 (inferred)', (t, input, expected) => {
 	t.is(input, expected);
 }, 'foo', 3);
 
-test.skip('skip', (t, input, expected) => { // eslint-disable-line ava/no-skip-test
+test.skip('skip', (t, input, expected) => {
 	expectType<string>(input);
 	expectType<number>(expected);
 	// @ts-expect-error TS2345

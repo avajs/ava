@@ -1,4 +1,4 @@
-import test from 'ava';
+import test from '../../entrypoints/main.mjs';
 
 test('like', t => {
 	t.like({

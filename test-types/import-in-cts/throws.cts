@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import test from 'ava';
+import test from '../../entrypoints/main.cjs';
 import {expectType} from 'tsd';
 
 class CustomError extends Error {
