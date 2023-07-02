@@ -45,3 +45,5 @@ You cannot use `t.teardown()` in hooks either.
 ## `t.timeout(ms)`
 
 Set a timeout for the test, in milliseconds. The test will fail if this timeout is exceeded. The timeout is reset each time an assertion is made.
+
+Use `t.timeout.clear()` to clear the timeout and restore the default behavior.

@@ -88,7 +88,7 @@ export const withFixture = fixture => async (t, task) => {
 							idlePromise = new Promise(() => {});
 							assertingIdle = false;
 							// TODO: When testing using AVA 6, enable for better managed timeouts.
-							// t.timeout(0);
+							// t.timeout.clear();
 							if (failedIdleAssertion) {
 								failedIdleAssertion = false;
 								t.fail('Watcher performed a test run while it should have been idle');

@@ -39,11 +39,16 @@ export type PlanFn = {
 	skip(count: number): void;
 };
 
-/**
- * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
- * The timeout is reset each time an assertion is made.
- */
-export type TimeoutFn = (ms: number, message?: string) => void;
+export type TimeoutFn = {
+	/**
+	 * Set a timeout for the test, in milliseconds. The test will fail if the timeout is exceeded.
+	 * The timeout is reset each time an assertion is made.
+	 */
+	(ms: number, message?: string): void;
+
+	/** Clear the timeout and restore the default behavior. */
+	clear(): void;
+}
 
 /** Declare a function to be run after the test has ended. */
 export type TeardownFn = (fn: (() => Promise<void>) | (() => void)) => void;

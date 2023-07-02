@@ -589,6 +589,18 @@ test('timeout is refreshed on assert', {skip: ciInfo.isCI}, t => ava(async a => 
 	t.equal(result.passed, true);
 }));
 
+test('timeout can be cleared', {skip: ciInfo.isCI}, t => ava(async a => {
+	a.timeout(100);
+	a.plan(2);
+	await Promise.all([
+		delay(50).then(() => a.pass()),
+		delay(100).then(() => a.timeout.clear()),
+		delay(350).then(() => a.pass()),
+	]);
+}).run().then(result => {
+	t.equal(result.passed, true);
+}));
+
 test('teardown passing test', t => {
 	const teardown = sinon.spy();
 	return ava(a => {
