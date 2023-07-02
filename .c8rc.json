@@ -2,7 +2,10 @@
 	"all": true,
 	"exclude": [
 		"{coverage,examples,media,test,test-types,test-tap,types}/**",
-		"*.config.cjs",
+		"entrypoints/**",
+		"!entrypoints/eslint-plugin-helper.cjs",
+		"ava.config.js",
+		".xo-config.cjs",
 		"*.d.*(c|m)ts"
 	],
 	"reporter": [
