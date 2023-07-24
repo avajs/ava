@@ -28,13 +28,43 @@ There are two components to a setup like this:
 
 ```json
 "ava": {
-    "extensions": {
-      "ts": "module"
-    },
-    "nodeArguments": [
-      "--loader=tsx"
-    ]
-  }
+	"extensions": {
+		"ts": "module"
+	},
+	"nodeArguments": [
+		"--loader=tsx"
+	]
+}
+```
+
+### Mocking
+
+Mocking with `tsx` (such as with [`esmock`](https://github.com/iambumblehead/esmock)) isn't currently possible (https://github.com/esbuild-kit/tsx/issues/264). [`ts-node`](https://github.com/TypeStrong/ts-node) can be used instead:
+
+`package.json`:
+
+```json
+"ava": {
+	"extensions": {
+		"ts": "module"
+	},
+	"nodeArguments": [
+		"--loader=ts-node/esm",
+		"--loader=esmock"
+	]
+}
+```
+
+### Node.js 20
+
+In Node.js 20, custom loaders must be specified via the `NODE_OPTIONS` environment variable:
+
+`package.json`:
+
+```json
+"scripts": {
+	"test": "NODE_OPTIONS='--loader=tsx' ava"
+}
 ```
 
 ## Writing tests
