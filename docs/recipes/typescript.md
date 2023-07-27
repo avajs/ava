@@ -56,7 +56,7 @@ Mocking with `tsx` (such as with [`esmock`](https://github.com/iambumblehead/esm
 }
 ```
 
-### Node.js 20
+#### Node.js 20
 
 In Node.js 20, custom loaders must be specified via the `NODE_OPTIONS` environment variable:
 
