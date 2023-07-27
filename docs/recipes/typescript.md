@@ -36,8 +36,9 @@ There are two components to a setup like this:
 	]
 }
 ```
+### When using custom loaders
 
-### Mocking
+#### Mocking
 
 Mocking with `tsx` (such as with [`esmock`](https://github.com/iambumblehead/esmock)) isn't currently possible (https://github.com/esbuild-kit/tsx/issues/264). [`ts-node`](https://github.com/TypeStrong/ts-node) can be used instead:
 
