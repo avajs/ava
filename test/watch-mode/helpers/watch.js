@@ -13,7 +13,6 @@ export const test = available(fileURLToPath(import.meta.url)) ? ava : ava.skip;
 export const serial = available(fileURLToPath(import.meta.url)) ? ava.serial : ava.serial.skip;
 
 export const withFixture = fixture => async (t, task) => {
-	let completedTask = false;
 	await temporaryDirectoryTask(async dir => {
 		await fs.cp(cwd(fixture), dir, {recursive: true});
 
@@ -143,24 +142,5 @@ export const withFixture = fixture => async (t, task) => {
 		});
 
 		t.is(activeWatchCount, 0, 'Handlers for all watch() calls should have invoked `this.done()` to end their tests');
-		completedTask = true;
-	}).catch(error => {
-		if (!completedTask) {
-			throw error;
-		}
-
-		switch (error.code) { // https://github.com/sindresorhus/tempy/issues/47
-			case 'EBUSY':
-			case 'EMFILE':
-			case 'ENFILE':
-			case 'ENOTEMPTY':
-			case 'EPERM ': {
-				return;
-			}
-
-			default: {
-				throw error;
-			}
-		}
 	});
 };
