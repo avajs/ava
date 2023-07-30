@@ -104,7 +104,6 @@
 		"globby": "^13.2.1",
 		"ignore-by-default": "^2.1.0",
 		"indent-string": "^5.0.0",
-		"is-error": "^2.2.2",
 		"is-plain-object": "^5.0.0",
 		"is-promise": "^4.0.0",
 		"matcher": "^5.0.0",
