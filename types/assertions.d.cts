@@ -103,12 +103,12 @@ export type Assertions = {
 	snapshot: SnapshotAssertion;
 
 	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
+	 * Assert that the function throws a native error. If so, returns the error value.
 	 */
 	throws: ThrowsAssertion;
 
 	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error), or the promise rejects
+	 * Assert that the async function throws a native error, or the promise rejects
 	 * with one. If so, returns a promise for the error value, which must be awaited.
 	 */
 	throwsAsync: ThrowsAsyncAssertion;
@@ -295,7 +295,7 @@ export type SnapshotAssertion = {
 
 export type ThrowsAssertion = {
 	/**
-	 * Assert that the function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error value.
+	 * Assert that the function throws a native error. If so, returns the error value.
 	 * The error must satisfy all expectations. Returns undefined when the assertion fails.
 	 */
 	<ErrorType extends ErrorConstructor | Error>(fn: () => any, expectations?: ThrowsExpectation<ErrorType>, message?: string): ThrownError<ErrorType> | undefined;
@@ -306,13 +306,13 @@ export type ThrowsAssertion = {
 
 export type ThrowsAsyncAssertion = {
 	/**
-	 * Assert that the async function throws [an error](https://www.npmjs.com/package/is-error). If so, returns the error
+	 * Assert that the async function throws a native error. If so, returns the error
 	 * value. Returns undefined when the assertion fails. You must await the result. The error must satisfy all expectations.
 	 */
 	<ErrorType extends ErrorConstructor | Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation<ErrorType>, message?: string): Promise<ThrownError<ErrorType> | undefined>;
 
 	/**
-	 * Assert that the promise rejects with [an error](https://www.npmjs.com/package/is-error). If so, returns the
+	 * Assert that the promise rejects with a native error. If so, returns the
 	 * rejection reason. Returns undefined when the assertion fails. You must await the result. The error must satisfy all
 	 * expectations.
 	 */

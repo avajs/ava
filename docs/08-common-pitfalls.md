@@ -4,6 +4,18 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs
 
 If you use [ESLint](https://eslint.org), you can install [eslint-plugin-ava](https://github.com/avajs/eslint-plugin-ava). It will help you use AVA correctly and avoid some common pitfalls.
 
+## Error edge cases
+
+The `throws()` and `throwsAsync()` assertions use the Node.js built-in [`isNativeError()`](https://nodejs.org/api/util.html#utiltypesisnativeerrorvalue) to determine whether something is an error. This only recognizes actual instances of `Error` (and subclasses).
+
+Note that the following is not a native error:
+
+```js
+const error = Object.create(Error.prototype);
+```
+
+This can be surprising, since `error instanceof Error` returns `true`.
+
 ## AVA in Docker
 
 If you run AVA in Docker as part of your CI, you need to fix the appropriate environment variables. Specifically, adding `-e CI=true` in the `docker exec` command. See [#751](https://github.com/avajs/ava/issues/751).
