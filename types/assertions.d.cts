@@ -125,12 +125,14 @@ export type Assertions = {
 	truthy: TruthyAssertion;
 };
 
+type Falsy = false | 0 | -0 | 0n | '' | null | undefined;
+
 export type AssertAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string): actual is Exclude<T, Falsy>;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -192,7 +194,7 @@ export type FalsyAssertion = {
 	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
 	 * indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string): actual is T extends Falsy ? T :never;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -337,7 +339,7 @@ export type TruthyAssertion = {
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string): actual is Exclude<T, Falsy>;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
