@@ -43,7 +43,7 @@ test('false', t => {
 });
 
 test('falsy', t => {
-	type Actual = Expected | undefined | null | false | 0 | '' | 0n;
+	type Actual = Expected | undefined | false | 0 | '' | 0n;
 	const actual = undefined as Actual;
 	if (t.falsy(actual)) {
 		expectType<Exclude<Actual, Expected>>(actual);
