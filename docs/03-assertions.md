@@ -137,6 +137,10 @@ Assert that `actual` is deeply equal to `expected`. See [Concordance](https://gi
 
 Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqual()`. Returns a boolean indicating whether the assertion passed.
 
+### `.unorderedEqual(actual, expected, message?)`
+
+Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed.
+
 ### `.like(actual, selector, message?)`
 
 Assert that `actual` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `actual` does.

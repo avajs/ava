@@ -342,3 +342,18 @@ export type TruthyAssertion = {
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
 };
+
+// TODO: limit to Map | Set | Array
+export type UnorderedEqualAssertion = {
+	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
+
+	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
+
+	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
+
+	/** Skip this assertion. */
+	skip(actual: any, expected: any, message?: string): void;
+};

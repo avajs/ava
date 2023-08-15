@@ -270,11 +270,12 @@ test('skipped assertions count towards the plan', t => {
 		a.false.skip(false);
 		a.regex.skip('foo', /foo/);
 		a.notRegex.skip('bar', /foo/);
+		a.unorderedEqual.skip([1, 2, 3], [2, 3, 1]);
 	});
 	return instance.run().then(result => {
 		t.equal(result.passed, true);
-		t.equal(instance.planCount, 16);
-		t.equal(instance.assertCount, 16);
+		t.equal(instance.planCount, 17);
+		t.equal(instance.assertCount, 17);
 	});
 });
 
@@ -299,11 +300,12 @@ test('assertion.skip() is bound', t => {
 		(a.false.skip)(false);
 		(a.regex.skip)('foo', /foo/);
 		(a.notRegex.skip)('bar', /foo/);
+		(a.unorderedEqual.skip)([1, 2, 3], [2, 3, 1]);
 	});
 	return instance.run().then(result => {
 		t.equal(result.passed, true);
-		t.equal(instance.planCount, 16);
-		t.equal(instance.assertCount, 16);
+		t.equal(instance.planCount, 17);
+		t.equal(instance.assertCount, 17);
 	});
 });
 
@@ -488,6 +490,7 @@ test('assertions are bound', t =>
 		(a.false)(false);
 		(a.regex)('foo', /foo/);
 		(a.notRegex)('bar', /foo/);
+		(a.unorderedEquals)([1, 2, 3], [2, 3, 1]);
 	}).run().then(result => {
 		t.ok(result.passed);
 	}),

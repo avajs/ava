@@ -1809,3 +1809,98 @@ test('.assert()', t => {
 
 	t.end();
 });
+
+test('.unorderedEqual()', t => {
+	passes(t, () => assertions.unorderedEqual([1, 2, 3], [2, 3, 1]));
+
+	passes(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), new Set([2, 3, 1])));
+
+	passes(t, () => assertions.unorderedEqual([1, 2, 3], new Set([2, 3, 1])));
+
+	passes(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), [2, 3, 1]));
+
+	passes(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 2], ['c', 3]]),
+		new Map([['b', 2], ['c', 3], ['a', 1]]),
+	));
+
+	// Types must match
+
+	fails(t, () => assertions.unorderedEqual('foo', [1, 2, 3]));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3], 'foo'));
+
+	// Sizes must match
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3], [1, 2, 3, 4]));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3, 4], [1, 2, 3]));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), new Set([1, 2, 3, 4])));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3, 4]), new Set([1, 2, 3])));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), [1, 2, 3, 4]));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3, 4]), [1, 2, 3]));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3], new Set([1, 2, 3, 4])));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3, 4], new Set([1, 2, 3])));
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 2], ['c', 3]]),
+		new Map([['a', 1], ['b', 2]])),
+	);
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 2]]),
+		new Map([['a', 1], ['b', 2], ['c', 3]])),
+	);
+
+	// Keys must match - maps
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 2], ['c', 3]]),
+		new Map([['a', 1], ['d', 2], ['c', 3]])),
+	);
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['d', 2], ['c', 3]]),
+		new Map([['a', 1], ['b', 2], ['c', 3]])),
+	);
+
+	// Values must match - maps
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 2], ['c', 3]]),
+		new Map([['a', 1], ['b', 4], ['c', 3]])),
+	);
+
+	fails(t, () => assertions.unorderedEqual(
+		new Map([['a', 1], ['b', 4], ['c', 3]]),
+		new Map([['a', 1], ['b', 2], ['c', 3]])),
+	);
+
+	// Values must match - sets
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3], [1, 2, 4]));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 4], [1, 2, 3]));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), new Set([1, 2, 4])));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 4]), new Set([1, 2, 3])));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 3]), [1, 2, 4]));
+
+	fails(t, () => assertions.unorderedEqual(new Set([1, 2, 4]), [1, 2, 3]));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 3], new Set([1, 2, 4])));
+
+	fails(t, () => assertions.unorderedEqual([1, 2, 4], new Set([1, 2, 3])));
+
+	// TODO: check error messages
+
+	t.end();
+});
