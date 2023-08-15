@@ -123,6 +123,9 @@ export type Assertions = {
 	 * indicating whether the assertion passed.
 	 */
 	truthy: TruthyAssertion;
+
+	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	unorderedEqual: UnorderedEqualAssertion;
 };
 
 export type AssertAssertion = {
