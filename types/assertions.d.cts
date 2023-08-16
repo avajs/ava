@@ -27,6 +27,8 @@ export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	assert: AssertAssertion;
 
@@ -121,16 +123,23 @@ export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	truthy: TruthyAssertion;
 };
+
+type FalsyValue = false | 0 | 0n | '' | null | undefined;
+type Falsy<T> = T extends Exclude<T, FalsyValue> ? (T extends number | string | bigint ? T & FalsyValue : never) : T;
 
 export type AssertAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string): actual is T extends Falsy<T> ? never : T;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -192,7 +201,7 @@ export type FalsyAssertion = {
 	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
 	 * indicating whether the assertion passed.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string): actual is Falsy<T>;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -336,8 +345,10 @@ export type TruthyAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
-	(actual: any, message?: string): boolean;
+	<T>(actual: T, message?: string):  actual is T extends Falsy<T> ? never : T;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
