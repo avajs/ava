@@ -28,7 +28,7 @@ export type Assertions = {
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
 	 * 
-	 * Note: with typescript, an `else` clause using this as a typeguard will be subtly incorrect for string and number types and will not give `0` or `''` as a potential value in an `else` clause
+	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	assert: AssertAssertion;
 
