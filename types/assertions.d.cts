@@ -27,6 +27,8 @@ export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: with typescript, an `else` clause using this as a typeguard will be subtly incorrect for string and number types and will not give `0` or `''` as a potential value in an `else` clause
 	 */
 	assert: AssertAssertion;
 
@@ -121,18 +123,23 @@ export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: with typescript, an `else` clause using this as a typeguard will be subtly incorrect for string and number types and will not give `0` or `''` as a potential value in an `else` clause
 	 */
 	truthy: TruthyAssertion;
 };
 
-type Falsy = false | 0 | 0n | '' | null | undefined;
+type FalsyValue = false | 0 | 0n | '' | null | undefined;
+type Falsy<T> = T extends Exclude<T, FalsyValue> ? (T extends number | string | bigint ? T & FalsyValue : never) : T;
 
 export type AssertAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: with typescript, an `else` clause using this as a typeguard will be subtly incorrect for string and number types and will not give `0` or `''` as a potential value in an `else` clause
 	 */
-	<T>(actual: T, message?: string): actual is Exclude<T, Falsy>;
+	<T>(actual: T, message?: string): actual is T extends Falsy<T> ? never : T;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -194,7 +201,7 @@ export type FalsyAssertion = {
 	 * Assert that `actual` is [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy), returning a boolean
 	 * indicating whether the assertion passed.
 	 */
-	<T>(actual: T, message?: string): actual is T extends Falsy ? T :never;
+	<T>(actual: T, message?: string): actual is Falsy<T>;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
@@ -338,8 +345,10 @@ export type TruthyAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
+	 * 
+	 * Note: with typescript, an `else` clause using this as a typeguard will be subtly incorrect for string and number types and will not give `0` or `''` as a potential value in an `else` clause
 	 */
-	<T>(actual: T, message?: string): actual is Exclude<T, Falsy>;
+	<T>(actual: T, message?: string):  actual is T extends Falsy<T> ? never : T;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
