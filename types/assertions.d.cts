@@ -348,13 +348,37 @@ export type TruthyAssertion = {
 
 // TODO: limit to Map | Set | Array
 export type UnorderedEqualAssertion = {
-	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns a boolean indicating whether the assertion passed.
+	 */
 	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
 
-	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns a boolean indicating whether the assertion passed.
+	 */
 	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
 
-	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns a boolean indicating whether the assertion passed.
+	 */
 	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
 
 	/** Skip this assertion. */
