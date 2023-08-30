@@ -1,8 +1,8 @@
 # Debugging tests with WebStorm
 
-Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/debugging-with-webstorm.md)
+⚠️ **This recipe is outdated.** ⚠️ Please vote for the [ticket tracking Webstorm native support for AVA](https://youtrack.jetbrains.com/issue/WEB-21788).
 
-**This recipe is outdated.**
+Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/debugging-with-webstorm.md)
 
 ---
 
