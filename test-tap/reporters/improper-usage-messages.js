@@ -4,8 +4,8 @@ import improperUsageMessages from '../../lib/reporters/improper-usage-messages.j
 
 test('results when nothing is applicable', t => {
 	const error = {
-		assertion: 'assertion',
 		improperUsage: {
+			assertion: 'assertion',
 			name: 'VersionMismatchError',
 			snapPath: 'path',
 			snapVersion: 2,

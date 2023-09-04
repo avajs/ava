@@ -1,14 +1,10 @@
 TAP version 13
 ---tty-stream-chunk-separator
 not ok 1 - ~/test-tap/fixture/report/edgecases/ast-syntax-error.cjs:3
-const fn = do {
-           ^^
-
-SyntaxError: Unexpected token 'do'
   ---
     name: SyntaxError
     message: Unexpected token 'do'
-    at: ''
+    at: 'const fn = do {'
   ...
 ---tty-stream-chunk-separator
 not ok 2 - ast-syntax-error.cjs exited with a non-zero exit code: 1
@@ -21,7 +17,7 @@ not ok 4 - TypeError: test is not a function
     message: test is not a function
     at: >-
       Object.<anonymous>
-      (test-tap/fixture/report/edgecases/import-and-use-test-member.cjs:3:1)
+      (~/test-tap/fixture/report/edgecases/import-and-use-test-member.cjs:3:1)
   ...
 ---tty-stream-chunk-separator
 not ok 5 - import-and-use-test-member.cjs exited with a non-zero exit code: 1
@@ -32,7 +28,7 @@ not ok 7 - Error: throws
   ---
     name: Error
     message: throws
-    at: 'Object.<anonymous> (test-tap/fixture/report/edgecases/throws.cjs:1:7)'
+    at: 'Object.<anonymous> (~/test-tap/fixture/report/edgecases/throws.cjs:1:7)'
   ...
 ---tty-stream-chunk-separator
 not ok 8 - throws.cjs exited with a non-zero exit code: 1

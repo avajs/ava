@@ -199,7 +199,7 @@
 
   [1mtest [90m[2m›[22m[1m[39m no longer failing[22m
 
-  Error: Test was expected to fail, but succeeded, you should stop marking the test as failing
+  Test was expected to fail, but succeeded, you should stop marking the test as failing
 
 
 
