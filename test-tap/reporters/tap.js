@@ -25,6 +25,7 @@ test(async t => {
 			projectDir: report.projectDir(type),
 			reportStream: tty,
 			stdStream: tty,
+			sanitizeStackOutput: report.sanitizers.cwd,
 		});
 		return report[type](reporter)
 			.then(() => {

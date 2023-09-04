@@ -3,9 +3,9 @@ TAP version 13
 not ok 1 - a › fails
   ---
     name: AssertionError
+    assertion: t.fail()
     message: Test failed via `t.fail()`
-    assertion: fail
-    at: 'test-tap/fixture/report/failfast2/a.cjs:3:22'
+    at: 'ExecutionContext.fail (/lib/assert.js:285:9)'
   ...
 ---tty-stream-chunk-separator
 # 1 test remaining in a.cjs

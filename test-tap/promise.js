@@ -61,7 +61,7 @@ test('missing assertion will fail the test', t => ava(a => {
 	});
 }).run().then(result => {
 	t.equal(result.passed, false);
-	t.equal(result.error.assertion, 'plan');
+	t.equal(result.error.assertion, 't.plan()');
 }));
 
 test('extra assertion will fail the test', t => ava(a => {
@@ -80,7 +80,7 @@ test('extra assertion will fail the test', t => ava(a => {
 	});
 }).run().then(result => {
 	t.equal(result.passed, false);
-	t.equal(result.error.assertion, 'plan');
+	t.equal(result.error.assertion, 't.plan()');
 }));
 
 test('assert pass', t => {
@@ -106,9 +106,9 @@ test('reject', t => ava(a => fail().then(() => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
 	t.equal(result.error.message, 'Rejected promise returned by test');
-	t.equal(result.error.values.length, 1);
-	t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
-	t.match(result.error.values[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
+	t.equal(result.error.formattedDetails.length, 1);
+	t.equal(result.error.formattedDetails[0].label, 'Rejected promise returned by test. Reason:');
+	t.match(result.error.formattedDetails[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
 }));
 
 test('reject with non-Error', t => ava(() =>
@@ -117,7 +117,7 @@ test('reject with non-Error', t => ava(() =>
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
 	t.equal(result.error.message, 'Rejected promise returned by test');
-	t.equal(result.error.values.length, 1);
-	t.equal(result.error.values[0].label, 'Rejected promise returned by test. Reason:');
-	t.match(result.error.values[0].formatted, /failure/);
+	t.equal(result.error.formattedDetails.length, 1);
+	t.equal(result.error.formattedDetails[0].label, 'Rejected promise returned by test. Reason:');
+	t.match(result.error.formattedDetails[0].formatted, /failure/);
 }));
