@@ -838,6 +838,11 @@ test('.throws()', gather(t => {
 		throw new Error('foo');
 	}));
 
+	// Passes when string is thrown, only when any is set to true.
+	passes(t, () => assertions.throws(() => {
+		throw 'foo';
+	}, {any: true}));
+
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		const error = new Error('foo');
@@ -1040,8 +1045,18 @@ test('.throwsAsync()', gather(t => {
 		values: [{label: 'Returned promise resolved with:', formatted: /'foo'/}],
 	});
 
+	// Fails because the function returned a promise that rejected, but not with an error.
+	throwsAsyncFails(t, () => assertions.throwsAsync(() => Promise.reject('foo')), {
+		assertion: 'throwsAsync',
+		message: '',
+		values: [{label: 'Returned promise rejected with exception that is not an error:', formatted: /'foo'/}],
+	});
+
 	// Passes because the promise was rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+
+	// Passes because the promise was rejected with an with an non-error exception, & set `any` to true in expectation.
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true}));
 
 	// Passes because the function returned a promise rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
