@@ -7,7 +7,7 @@ const expected: Expected = {foo: 'bar'};
 
 test('assert', t => {
 	const actual = expected as Expected | undefined;
-	if (t.truthy(actual)) {
+	if (t.assert(actual)) {
 		expectType<Expected>(actual);
 	} else {
 		expectType<undefined>(actual);
