@@ -14,7 +14,12 @@ Note that the following is not a native error:
 const error = Object.create(Error.prototype);
 ```
 
-This can be surprising, since `error instanceof Error` returns `true`.
+This can be surprising, since `error instanceof Error` returns `true`. You can set `any: true` in the expectations to handle these values:
+
+```js
+const error = Object.create(Error.prototype);
+t.throws(() => { throw error }, {any: true});
+```
 
 ## AVA in Docker
 
