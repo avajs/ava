@@ -12,5 +12,5 @@ test('timeout messages must be strings', async t => {
 	const result = await t.throwsAsync(fixture(['invalid-message.js']));
 	const error = result.stats.getError(result.stats.failed[0]);
 	t.snapshot(error.message, 'error message');
-	t.snapshot(error.values, 'formatted values');
+	t.snapshot(error.formattedDetails, 'formatted details');
 });
