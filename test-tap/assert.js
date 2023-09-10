@@ -1167,6 +1167,12 @@ test('.throws() fails if passed a bad expectation', t => {
 		values: [{label: 'Called with:', formatted: /\[]/}],
 	});
 
+	failsWith(t, () => assertions.throws(() => {}, {any: {}}), {
+		assertion: 'throws',
+		message: 'The `any` property of the second argument to `t.throws()` must be a boolean',
+		values: [{label: 'Called with:', formatted: /any: {}/}],
+	});
+
 	failsWith(t, () => assertions.throws(() => {}, {code: {}}), {
 		assertion: 'throws',
 		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
@@ -1235,6 +1241,12 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertion: 'throwsAsync',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		values: [{label: 'Called with:', formatted: /\[]/}],
+	}, {expectBoolean: false});
+
+	failsWith(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
+		assertion: 'throwsAsync',
+		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
+		values: [{label: 'Called with:', formatted: /any: {}/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
