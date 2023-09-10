@@ -89,13 +89,5 @@ module.exports = {
 				'unicorn/error-message': 'off',
 			},
 		},
-		{
-			files: 'test-tap/assert.js',
-			rules: {
-				'prefer-promise-reject-errors': 'off',
-				'no-throw-literal': 'off',
-			},
-		},
-
 	],
 };
