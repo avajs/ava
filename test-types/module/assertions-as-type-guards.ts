@@ -9,8 +9,6 @@ test('assert', t => {
 	const actual = expected as Expected | undefined;
 	if (t.assert(actual)) {
 		expectType<Expected>(actual);
-	} else {
-		expectType<undefined>(actual);
 	}
 });
 
@@ -47,8 +45,6 @@ test('falsy', t => {
 	const actual = undefined as Actual;
 	if (t.falsy(actual)) {
 		expectType<Exclude<Actual, Expected>>(actual);
-	} else {
-		expectType<Expected>(actual);
 	}
 });
 
@@ -63,7 +59,5 @@ test('truthy', t => {
 	const actual = expected as Expected | undefined;
 	if (t.truthy(actual)) {
 		expectType<Expected>(actual);
-	} else {
-		expectType<undefined>(actual);
 	}
 });

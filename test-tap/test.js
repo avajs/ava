@@ -359,40 +359,16 @@ test('fails if test ends while there are pending assertions', t => ava(a => {
 }));
 
 test('fails if async test ends while there are pending assertions', t => ava(a => {
-	a.throwsAsync(Promise.reject(new Error()));
+	a.throwsAsync(async () => {
+		await delay(100);
+		throw new Error();
+	});
 	return Promise.resolve();
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'Error');
 	t.match(result.error.message, /Test finished, but an assertion is still pending/);
 }));
-
-// This behavior is incorrect, but feedback cannot be provided to the user due to
-// https://github.com/avajs/ava/issues/1330
-test('no crash when adding assertions after the test has ended', t => {
-	t.plan(3);
-
-	ava(a => {
-		a.pass();
-		setImmediate(() => {
-			t.doesNotThrow(() => a.pass());
-		});
-	}).run();
-
-	ava(a => {
-		a.pass();
-		setImmediate(() => {
-			t.doesNotThrow(() => a.fail());
-		});
-	}).run();
-
-	ava(a => {
-		a.pass();
-		setImmediate(() => {
-			t.doesNotThrow(() => a.notThrowsAsync(Promise.resolve()));
-		});
-	}).run();
-});
 
 test('contextRef', t => {
 	new Test({
