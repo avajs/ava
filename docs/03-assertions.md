@@ -176,7 +176,7 @@ Assert that an error is thrown. `fn` must be a function which should throw. By d
 
 `expectation` can be an object with one or more of the following properties:
 
-* `any`: a boolean, if `true` then the thrown value does not need to be an error. Defaults to `false`
+* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:
@@ -212,7 +212,7 @@ By default, the thrown value *must* be an error. It is returned so you can run m
 
 `expectation` can be an object with one or more of the following properties:
 
-* `any`: a boolean, if `true` then the thrown value does not need to be an error. Defaults to `false`
+* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:
