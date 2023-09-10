@@ -289,9 +289,9 @@
 
   [90mtraces-in-t-throws.cjs:20[39m
 
-   [90m19:[39m test('notThrowsAsync', t => {          
-  [41m[1m 20:   t.notThrowsAsync(() => throwError());[22m[49m
-   [90m21:[39m });                                    
+   [90m19:[39m test('notThrowsAsync', async t => {          
+  [41m[1m 20:   await t.notThrowsAsync(() => throwError());[22m[49m
+   [90m21:[39m });                                          
 
   Function threw:
 
@@ -300,8 +300,8 @@
   [90m}[39m
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:25[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:4[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:31[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:10[39m
 
 
 
@@ -309,9 +309,9 @@
 
   [90mtraces-in-t-throws.cjs:24[39m
 
-   [90m23:[39m test('throwsAsync', t => {                                   
-  [41m[1m 24:   t.throwsAsync(() => throwError(), {instanceOf: TypeError});[22m[49m
-   [90m25:[39m });                                                          
+   [90m23:[39m test('throwsAsync', async t => {                                   
+  [41m[1m 24:   await t.throwsAsync(() => throwError(), {instanceOf: TypeError});[22m[49m
+   [90m25:[39m });                                                                
 
   Function threw synchronously. Use `t.throws()` instead:
 
@@ -320,18 +320,18 @@
   [90m}[39m
 
   [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:22)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:4[39m
+  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:28)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:10[39m
 
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
 
-  [90mtraces-in-t-throws.cjs:27[39m
+  [90mtraces-in-t-throws.cjs:28[39m
 
-   [90m26:[39m                                                                                                         
-  [41m[1m 27: test('throwsAsync different error', t => t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError}));[22m[49m
-   [90m28:[39m                                                                                                         
+   [90m27:[39m test('throwsAsync different error', async t => {                      
+  [41m[1m 28:   await t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[22m[49m
+   [90m29:[39m });                                                                   
 
   Returned promise rejected with unexpected exception:
 
@@ -344,7 +344,7 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:27:44[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:28:10[39m
 
   [90m─[39m
 
