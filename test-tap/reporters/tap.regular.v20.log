@@ -30,7 +30,7 @@ not ok 3 - nested-objects › format with max depth 4
         +   },
           }
     message: ''
-    at: 'ExecutionContext.deepEqual (/lib/assert.js:351:9)'
+    at: 'ExecutionContext.deepEqual (/lib/assert.js:360:9)'
   ...
 ---tty-stream-chunk-separator
 not ok 4 - nested-objects › format like with max depth 4
@@ -48,7 +48,7 @@ not ok 4 - nested-objects › format like with max depth 4
             },
           }
     message: ''
-    at: 'ExecutionContext.like (/lib/assert.js:413:9)'
+    at: 'ExecutionContext.like (/lib/assert.js:422:9)'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
@@ -72,7 +72,7 @@ not ok 6 - output-in-hook › failing test
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js:285:9)'
+    at: 'ExecutionContext.fail (/lib/assert.js:294:9)'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test
@@ -102,7 +102,7 @@ not ok 10 - test › fails
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js:285:9)'
+    at: 'ExecutionContext.fail (/lib/assert.js:294:9)'
   ...
 ---tty-stream-chunk-separator
 ok 11 - test › known failure
@@ -123,7 +123,7 @@ not ok 13 - test › logs
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js:285:9)'
+    at: 'ExecutionContext.fail (/lib/assert.js:294:9)'
   ...
 ---tty-stream-chunk-separator
 not ok 14 - test › formatted
@@ -135,7 +135,7 @@ not ok 14 - test › formatted
         - 'foo'
         + 'bar'
     message: ''
-    at: 'ExecutionContext.deepEqual (/lib/assert.js:351:9)'
+    at: 'ExecutionContext.deepEqual (/lib/assert.js:360:9)'
   ...
 ---tty-stream-chunk-separator
 not ok 15 - test › implementation throws non-error

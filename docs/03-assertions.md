@@ -172,10 +172,11 @@ Finally, this returns a boolean indicating whether the assertion passed.
 
 ### `.throws(fn, expectation?, message?)`
 
-Assert that an error is thrown. `fn` must be a function which should throw. The thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
+Assert that an error is thrown. `fn` must be a function which should throw. By default, the thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
 
 `expectation` can be an object with one or more of the following properties:
 
+* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:
@@ -207,10 +208,11 @@ test('throws', t => {
 
 Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
-The thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
+By default, the thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
 
 `expectation` can be an object with one or more of the following properties:
 
+* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:

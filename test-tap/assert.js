@@ -822,6 +822,11 @@ test('.throws()', gather(t => {
 		throw new Error('foo');
 	}));
 
+	// Passes when string is thrown, only when any is set to true.
+	passes(t, () => assertions.throws(() => {
+		throw 'foo'; // eslint-disable-line no-throw-literal
+	}, {any: true}));
+
 	// Passes because the correct error is thrown.
 	passes(t, () => {
 		const error = new Error('foo');
@@ -1023,8 +1028,18 @@ test('.throwsAsync()', gather(t => {
 		formattedDetails: [{label: 'Returned promise resolved with:', formatted: /'foo'/}],
 	});
 
+	// Fails because the function returned a promise that rejected, but not with an error.
+	throwsAsyncFails(t, () => assertions.throwsAsync(() => Promise.reject('foo')), { // eslint-disable-line prefer-promise-reject-errors
+		assertion: 't.throwsAsync()',
+		message: '',
+		formattedDetails: [{label: 'Returned promise rejected with exception that is not an error:', formatted: /'foo'/}],
+	});
+
 	// Passes because the promise was rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+
+	// Passes because the promise was rejected with an with an non-error exception, & set `any` to true in expectation.
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true})); // eslint-disable-line prefer-promise-reject-errors
 
 	// Passes because the function returned a promise rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
@@ -1134,6 +1149,12 @@ test('.throws() fails if passed a bad expectation', t => {
 		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
 	});
 
+	failsWith(t, () => assertions.throws(() => {}, {any: {}}), {
+		assertion: 't.throws()',
+		message: 'The `any` property of the second argument to `t.throws()` must be a boolean',
+		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
+	});
+
 	failsWith(t, () => assertions.throws(() => {}, {code: {}}), {
 		assertion: 't.throws()',
 		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
@@ -1202,6 +1223,12 @@ test('.throwsAsync() fails if passed a bad expectation', t => {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+	}, {expectBoolean: false});
+
+	failsWith(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
+		assertion: 't.throwsAsync()',
+		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
+		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
