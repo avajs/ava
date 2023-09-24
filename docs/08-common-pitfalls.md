@@ -112,7 +112,7 @@ test('increment twice', async t => {
 });
 ```
 
-Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
+Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
 ```js
 import test from 'ava';
