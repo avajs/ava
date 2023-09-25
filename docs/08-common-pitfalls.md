@@ -14,7 +14,12 @@ Note that the following is not a native error:
 const error = Object.create(Error.prototype);
 ```
 
-This can be surprising, since `error instanceof Error` returns `true`.
+This can be surprising, since `error instanceof Error` returns `true`. You can set `any: true` in the expectations to handle these values:
+
+```js
+const error = Object.create(Error.prototype);
+t.throws(() => { throw error }, {any: true});
+```
 
 ## AVA in Docker
 
@@ -107,7 +112,7 @@ test('increment twice', async t => {
 });
 ```
 
-Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state you this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
+Concurrent tests allow for asynchronous tests to execute more quickly, but if they rely on shared state this may lead to unexpected test failures. If the shared state cannot be avoided, you can execute your tests serially:
 
 ```js
 import test from 'ava';

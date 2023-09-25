@@ -105,9 +105,9 @@ test('wrap non-assertion errors', t => {
 		t.equal(result.passed, false);
 		t.equal(result.error.message, 'Error thrown in test');
 		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Error thrown in test:');
-		t.match(result.error.values[0].formatted, /Error/);
+		t.equal(result.error.formattedDetails.length, 1);
+		t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
+		t.match(result.error.formattedDetails[0].formatted, /Error/);
 	});
 });
 
@@ -212,9 +212,9 @@ test('fails with the first assertError', t => ava(a => {
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
-	t.equal(result.error.values.length, 1);
-	t.equal(result.error.values[0].label, 'Difference (- actual, + expected):');
-	t.match(result.error.values[0].formatted, /- 1\n\+ 2/);
+	t.equal(result.error.formattedDetails.length, 1);
+	t.equal(result.error.formattedDetails[0].label, 'Difference (- actual, + expected):');
+	t.match(result.error.formattedDetails[0].formatted, /- 1\n\+ 2/);
 }));
 
 test('failing pending assertion causes test to fail, not promise rejection', t => ava(a => a.throwsAsync(Promise.resolve()).then(() => {
@@ -230,9 +230,9 @@ test('fails with thrown falsy value', t => ava(() => {
 	t.equal(result.passed, false);
 	t.equal(result.error.message, 'Error thrown in test');
 	t.equal(result.error.name, 'AssertionError');
-	t.equal(result.error.values.length, 1);
-	t.equal(result.error.values[0].label, 'Error thrown in test:');
-	t.match(result.error.values[0].formatted, /0/);
+	t.equal(result.error.formattedDetails.length, 1);
+	t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
+	t.match(result.error.formattedDetails[0].formatted, /0/);
 }));
 
 test('fails with thrown non-error object', t => {
@@ -243,9 +243,9 @@ test('fails with thrown non-error object', t => {
 		t.equal(result.passed, false);
 		t.equal(result.error.message, 'Error thrown in test');
 		t.equal(result.error.name, 'AssertionError');
-		t.equal(result.error.values.length, 1);
-		t.equal(result.error.values[0].label, 'Error thrown in test:');
-		t.match(result.error.values[0].formatted, /.*{.*\n.*foo: 'bar'/);
+		t.equal(result.error.formattedDetails.length, 1);
+		t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
+		t.match(result.error.formattedDetails[0].formatted, /.*{.*\n.*foo: 'bar'/);
 	});
 });
 

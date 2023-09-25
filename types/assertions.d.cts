@@ -7,6 +7,9 @@ export type ThrownError<ErrorType extends ErrorConstructor | Error> = ErrorType 
 
 /** Specify one or more expectations the thrown error must satisfy. */
 export type ThrowsExpectation<ErrorType extends ErrorConstructor | Error> = {
+	/** If true, the thrown error is not required to be a native error. */
+	any?: false;
+
 	/** The thrown error must have a code that equals the given string or number. */
 	code?: string | number;
 
@@ -23,11 +26,22 @@ export type ThrowsExpectation<ErrorType extends ErrorConstructor | Error> = {
 	name?: string;
 };
 
+export type ThrowsAnyExpectation = Omit<ThrowsExpectation<any>, 'any' | 'instanceOf' | 'is'> & {
+	/** If true, the thrown error is not required to be a native error. */
+	any: true;
+
+	/** The thrown error must be an instance of this constructor. */
+	instanceOf?: new (...args: any[]) => any;
+
+	/** The thrown error must be strictly equal to this value. */
+	is?: any;
+}
+
 export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
-	 * 
+	 *
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	assert: AssertAssertion;
@@ -123,7 +137,7 @@ export type Assertions = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
-	 * 
+	 *
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	truthy: TruthyAssertion;
@@ -136,7 +150,7 @@ export type AssertAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
-	 * 
+	 *
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	<T>(actual: T, message?: string): actual is T extends Falsy<T> ? never : T;
@@ -309,23 +323,44 @@ export type ThrowsAssertion = {
 	 */
 	<ErrorType extends ErrorConstructor | Error>(fn: () => any, expectations?: ThrowsExpectation<ErrorType>, message?: string): ThrownError<ErrorType> | undefined;
 
+	/**
+	 * Assert that the function throws. If so, returns the error value.
+	 * The error must satisfy all expectations. Returns undefined when the assertion fails.
+	 */
+	(fn: () => any, expectations?: ThrowsAnyExpectation, message?: string): unknown;
+
 	/** Skip this assertion. */
 	skip(fn: () => any, expectations?: any, message?: string): void;
 };
 
 export type ThrowsAsyncAssertion = {
 	/**
-	 * Assert that the async function throws a native error. If so, returns the error
-	 * value. Returns undefined when the assertion fails. You must await the result. The error must satisfy all expectations.
+	 * Assert that the async function throws a native error. If so, returns the
+	 * error value. Returns undefined when the assertion fails. You must await the
+	 * result. The error must satisfy all expectations.
 	 */
 	<ErrorType extends ErrorConstructor | Error>(fn: () => PromiseLike<any>, expectations?: ThrowsExpectation<ErrorType>, message?: string): Promise<ThrownError<ErrorType> | undefined>;
 
 	/**
 	 * Assert that the promise rejects with a native error. If so, returns the
-	 * rejection reason. Returns undefined when the assertion fails. You must await the result. The error must satisfy all
-	 * expectations.
+	 * rejection reason. Returns undefined when the assertion fails. You must
+	 * await the result. The error must satisfy all expectations.
 	 */
 	<ErrorType extends ErrorConstructor | Error>(promise: PromiseLike<any>, expectations?: ThrowsExpectation<ErrorType>, message?: string): Promise<ThrownError<ErrorType> | undefined>;
+
+	/**
+	 * Assert that the async function throws. If so, returns the error value.
+	 * Returns undefined when the assertion fails. You must await the result. The
+	 * error must satisfy all expectations.
+	 */
+	(fn: () => PromiseLike<any>, expectations?: ThrowsAnyExpectation, message?: string): Promise<unknown>;
+
+	/**
+	 * Assert that the promise rejects. If so, returns the rejection reason.
+	 * Returns undefined when the assertion fails. You must await the result. The
+	 * error must satisfy all expectations.
+	 */
+	(promise: PromiseLike<any>, expectations?: ThrowsAnyExpectation, message?: string): Promise<unknown>;
 
 	/** Skip this assertion. */
 	skip(thrower: any, expectations?: any, message?: string): void;
@@ -345,7 +380,7 @@ export type TruthyAssertion = {
 	/**
 	 * Assert that `actual` is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy), returning a boolean
 	 * indicating whether the assertion passed.
-	 * 
+	 *
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	<T>(actual: T, message?: string):  actual is T extends Falsy<T> ? never : T;

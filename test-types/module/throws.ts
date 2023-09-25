@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {expectType} from 'tsd';
+import {expectError, expectType} from 'tsd';
 
 import test from '../../entrypoints/main.mjs';
 
@@ -24,6 +24,14 @@ test('throws', t => {
 	expectType<CustomError | undefined>(error4);
 	const error5 = t.throws(() => {}, {instanceOf: CustomError, is: new CustomError()});
 	expectType<CustomError | undefined>(error5);
+	const error6 = t.throws(() => {
+		throw 'foo'; // eslint-disable-line @typescript-eslint/no-throw-literal
+	}, {any: true});
+	expectType<unknown>(error6);
+	expectError(t.throws(() => {
+		throw 'foo'; // eslint-disable-line @typescript-eslint/no-throw-literal
+		// @ts-expect-error TS2769
+	}, {instanceOf: String, is: 'foo'}));
 });
 
 test('throwsAsync', async t => {
@@ -39,4 +47,12 @@ test('throwsAsync', async t => {
 	expectType<CustomError | undefined>(error4);
 	const error5 = await t.throwsAsync(async () => {}, {instanceOf: CustomError, is: new CustomError()});
 	expectType<CustomError | undefined>(error5);
+	const error6 = await t.throwsAsync(async () => {
+		throw 'foo'; // eslint-disable-line @typescript-eslint/no-throw-literal
+	}, {any: true});
+	expectType<unknown>(error6);
+	// @ts-expect-error TS2769
+	expectError(t.throwsAsync(async () => {
+		throw 'foo'; // eslint-disable-line @typescript-eslint/no-throw-literal
+	}, {instanceOf: String, is: 'foo'}));
 });

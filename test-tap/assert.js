@@ -47,20 +47,15 @@ function assertFailure(t, subset) {
 	t.equal(lastFailure.assertion, subset.assertion);
 	t.equal(lastFailure.message, subset.message);
 	t.equal(lastFailure.name, 'AssertionError');
-	t.equal(lastFailure.operator, subset.operator);
-	if (subset.raw) {
-		t.equal(lastFailure.raw.expected, subset.raw.expected);
-		t.equal(lastFailure.raw.actual, subset.raw.actual);
-	}
 
-	if (subset.values) {
-		t.equal(lastFailure.values.length, subset.values.length);
-		for (const [i, s] of lastFailure.values.entries()) {
-			t.equal(stripAnsi(s.label), subset.values[i].label);
-			t.match(stripAnsi(s.formatted), subset.values[i].formatted);
+	if (subset.formattedDetails) {
+		t.equal(lastFailure.formattedDetails.length, subset.formattedDetails.length);
+		for (const [i, s] of lastFailure.formattedDetails.entries()) {
+			t.equal(stripAnsi(s.label), subset.formattedDetails[i].label);
+			t.match(stripAnsi(s.formatted), subset.formattedDetails[i].formatted);
 		}
 	} else {
-		t.same(lastFailure.values, []);
+		t.same(lastFailure.formattedDetails, []);
 	}
 }
 
@@ -172,25 +167,24 @@ test('.pass()', t => {
 
 test('.fail()', t => {
 	failsWith(t, () => assertions.fail(), {
-		assertion: 'fail',
+		assertion: 't.fail()',
 		message: 'Test failed via `t.fail()`',
 	});
 
 	failsWith(t, () => assertions.fail('my message'), {
-		assertion: 'fail',
+		assertion: 't.fail()',
 		message: 'my message',
 	});
 
 	failsWith(t, () => assertions.fail(), {
-		assertion: 'fail',
+		assertion: 't.fail()',
 		message: 'Test failed via `t.fail()`',
 	});
 
 	failsWith(t, () => assertions.fail(null), {
-		assertion: 'fail',
-		improperUsage: true,
+		assertion: 't.fail()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -264,64 +258,62 @@ test('.is()', t => {
 	fails(t, () => assertions.is('foo', Number.NaN));
 
 	failsWith(t, () => assertions.is({foo: 'bar'}, {foo: 'bar'}), {
-		assertion: 'is',
+		assertion: 't.is()',
 		message: '',
 		actual: {foo: 'bar'},
 		expected: {foo: 'bar'},
-		values: [{
+		formattedDetails: [{
 			label: 'Values are deeply equal to each other, but they are not the same:',
 			formatted: /foo/,
 		}],
 	});
 
 	failsWith(t, () => assertions.is('foo', 'bar'), {
-		assertion: 'is',
+		assertion: 't.is()',
 		message: '',
-		raw: {actual: 'foo', expected: 'bar'},
-		values: [
+		formattedDetails: [
 			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/},
 		],
 	});
 
 	failsWith(t, () => assertions.is('foo', 42), {
 		actual: 'foo',
-		assertion: 'is',
+		assertion: 't.is()',
 		expected: 42,
 		message: '',
-		values: [
+		formattedDetails: [
 			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
 	failsWith(t, () => assertions.is('foo', 42, 'my message'), {
-		assertion: 'is',
+		assertion: 't.is()',
 		message: 'my message',
-		values: [
+		formattedDetails: [
 			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
 	failsWith(t, () => assertions.is(0, -0, 'my message'), {
-		assertion: 'is',
+		assertion: 't.is()',
 		message: 'my message',
-		values: [
+		formattedDetails: [
 			{label: 'Difference (- actual, + expected):', formatted: /- 0\n\+ -0/},
 		],
 	});
 
 	failsWith(t, () => assertions.is(-0, 0, 'my message'), {
-		assertion: 'is',
+		assertion: 't.is()',
 		message: 'my message',
-		values: [
+		formattedDetails: [
 			{label: 'Difference (- actual, + expected):', formatted: /- -0\n\+ 0/},
 		],
 	});
 
 	failsWith(t, () => assertions.is(0, 0, null), {
-		assertion: 'is',
-		improperUsage: true,
+		assertion: 't.is()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -340,23 +332,21 @@ test('.not()', t => {
 	fails(t, () => assertions.not(0 / 0, Number.NaN));
 
 	failsWith(t, () => assertions.not('foo', 'foo'), {
-		assertion: 'not',
+		assertion: 't.not()',
 		message: '',
-		raw: {actual: 'foo', expected: 'foo'},
-		values: [{label: 'Value is the same as:', formatted: /foo/}],
+		formattedDetails: [{label: 'Value is the same as:', formatted: /foo/}],
 	});
 
 	failsWith(t, () => assertions.not('foo', 'foo', 'my message'), {
-		assertion: 'not',
+		assertion: 't.not()',
 		message: 'my message',
-		values: [{label: 'Value is the same as:', formatted: /foo/}],
+		formattedDetails: [{label: 'Value is the same as:', formatted: /foo/}],
 	});
 
 	failsWith(t, () => assertions.not(0, 1, null), {
-		assertion: 'not',
-		improperUsage: true,
+		assertion: 't.not()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -532,30 +522,27 @@ test('.deepEqual()', t => {
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 'bar'), {
-		assertion: 'deepEqual',
+		assertion: 't.deepEqual()',
 		message: '',
-		raw: {actual: 'foo', expected: 'bar'},
-		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42), {
-		assertion: 'deepEqual',
+		assertion: 't.deepEqual()',
 		message: '',
-		raw: {actual: 'foo', expected: 42},
-		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42, 'my message'), {
-		assertion: 'deepEqual',
+		assertion: 't.deepEqual()',
 		message: 'my message',
-		values: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual({}, {}, null), {
-		assertion: 'deepEqual',
-		improperUsage: true,
+		assertion: 't.deepEqual()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -575,24 +562,22 @@ test('.notDeepEqual()', t => {
 	const expected = {a: 'a'};
 	failsWith(t, () => assertions.notDeepEqual(actual, expected), {
 		actual,
-		assertion: 'notDeepEqual',
+		assertion: 't.notDeepEqual()',
 		expected,
 		message: '',
-		raw: {actual, expected},
-		values: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message'), {
-		assertion: 'notDeepEqual',
+		assertion: 't.notDeepEqual()',
 		message: 'my message',
-		values: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual({}, [], null), {
-		assertion: 'notDeepEqual',
-		improperUsage: true,
+		assertion: 't.notDeepEqual()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -721,15 +706,15 @@ test('.like()', t => {
 	});
 
 	failsWith(t, () => assertions.like({a: 'a'}, Object.defineProperties({}, {ignored: {}})), {
-		assertion: 'like',
+		assertion: 't.like()',
 		message: '`t.like()` selector must be a non-empty object',
-		values: [{label: 'Called with:', formatted: '{}'}],
+		formattedDetails: [{label: 'Called with:', formatted: '{}'}],
 	});
 
 	failsWith(t, () => assertions.like('foo', 'bar'), {
-		assertion: 'like',
+		assertion: 't.like()',
 		message: '`t.like()` selector must be a non-empty object',
-		values: [{label: 'Called with:', formatted: '\'bar\''}],
+		formattedDetails: [{label: 'Called with:', formatted: '\'bar\''}],
 	});
 
 	passes(t, () => {
@@ -754,25 +739,24 @@ test('.like()', t => {
 
 		return assertions.like({}, likePattern);
 	}, {
-		assertion: 'like',
+		assertion: 't.like()',
 		message: '`t.like()` selector must not contain circular references',
-		values: [{label: 'Called with:', formatted: '{\n  a: \'a\',\n  circular: [Circular],\n}'}],
+		formattedDetails: [{label: 'Called with:', formatted: '{\n  a: \'a\',\n  circular: [Circular],\n}'}],
 	});
 
 	failsWith(t, () => assertions.like({}, {}, null), {
-		assertion: 'like',
-		improperUsage: true,
+		assertion: 't.like()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
 	});
 
 	failsWith(t, () => assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'}), {
-		assertion: 'like',
+		assertion: 't.like()',
 		message: '',
-		values: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
 	});
 
 	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
@@ -795,30 +779,30 @@ test('.like()', t => {
 test('.throws()', gather(t => {
 	// Fails because function doesn't throw.
 	failsWith(t, () => assertions.throws(() => {}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: '',
-		values: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: '',
-		values: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
 	});
 
 	// Fails because function doesn't throw. Asserts that 'my message' is used
 	// as the assertion message (*not* compared against the error).
 	failsWith(t, () => assertions.throws(() => {}, undefined, 'my message'), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'my message',
-		values: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
 	});
 
 	// Fails because the function returned a promise.
 	failsWith(t, () => assertions.throws(() => Promise.resolve()), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: '',
-		values: [{label: 'Function returned a promise. Use `t.throwsAsync()` instead:', formatted: /Promise/}],
+		formattedDetails: [{label: 'Function returned a promise. Use `t.throwsAsync()` instead:', formatted: /Promise/}],
 	});
 
 	// Fails because thrown exception is not an error
@@ -826,9 +810,9 @@ test('.throws()', gather(t => {
 		const error = 'foo';
 		throw error;
 	}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: '',
-		values: [
+		formattedDetails: [
 			{label: 'Function threw exception that is not an error:', formatted: /'foo'/},
 		],
 	});
@@ -837,6 +821,11 @@ test('.throws()', gather(t => {
 	passes(t, () => assertions.throws(() => {
 		throw new Error('foo');
 	}));
+
+	// Passes when string is thrown, only when any is set to true.
+	passes(t, () => assertions.throws(() => {
+		throw 'foo'; // eslint-disable-line no-throw-literal
+	}, {any: true}));
 
 	// Passes because the correct error is thrown.
 	passes(t, () => {
@@ -919,10 +908,9 @@ test('.throws()', gather(t => {
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, undefined, null), {
-		assertion: 'throws',
-		improperUsage: true,
+		assertion: 't.throws()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -939,9 +927,9 @@ test('.throws()', gather(t => {
 				{message: 'my error'},
 			),
 		{
-			assertion: 'throws',
+			assertion: 't.throws()',
 			message: '',
-			values: [
+			formattedDetails: [
 				{label: 'Function threw unexpected exception:', formatted: /error/},
 				{label: 'Expected message to equal:', formatted: /my error/},
 			],
@@ -963,9 +951,9 @@ test('.throws()', gather(t => {
 				{message: /my error/},
 			),
 		{
-			assertion: 'throws',
+			assertion: 't.throws()',
 			message: '',
-			values: [
+			formattedDetails: [
 				{label: 'Function threw unexpected exception:', formatted: /error/},
 				{label: 'Expected message to match:', formatted: /my error/},
 			],
@@ -987,9 +975,9 @@ test('.throws()', gather(t => {
 				{message: () => false},
 			),
 		{
-			assertion: 'throws',
+			assertion: 't.throws()',
 			message: '',
-			values: [
+			formattedDetails: [
 				{label: 'Function threw unexpected exception:', formatted: /error/},
 				{label: 'Expected message to return true:', formatted: /Function/},
 			],
@@ -1015,33 +1003,43 @@ test('.throws() returns the thrown error', t => {
 test('.throwsAsync()', gather(t => {
 	// Fails because the promise is resolved, not rejected.
 	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: '',
-		values: [{label: 'Promise resolved with:', formatted: /'foo'/}],
+		formattedDetails: [{label: 'Promise resolved with:', formatted: /'foo'/}],
 	});
 
 	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve('foo')), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: '',
-		values: [{label: 'Promise resolved with:', formatted: /'foo'/}],
+		formattedDetails: [{label: 'Promise resolved with:', formatted: /'foo'/}],
 	});
 
 	// Fails because the promise is resolved with an Error
 	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(new Error())), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: '',
-		values: [{label: 'Promise resolved with:', formatted: /Error/}],
+		formattedDetails: [{label: 'Promise resolved with:', formatted: /Error/}],
 	});
 
 	// Fails because the function returned a promise that resolved, not rejected.
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => Promise.resolve('foo')), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: '',
-		values: [{label: 'Returned promise resolved with:', formatted: /'foo'/}],
+		formattedDetails: [{label: 'Returned promise resolved with:', formatted: /'foo'/}],
+	});
+
+	// Fails because the function returned a promise that rejected, but not with an error.
+	throwsAsyncFails(t, () => assertions.throwsAsync(() => Promise.reject('foo')), { // eslint-disable-line prefer-promise-reject-errors
+		assertion: 't.throwsAsync()',
+		message: '',
+		formattedDetails: [{label: 'Returned promise rejected with exception that is not an error:', formatted: /'foo'/}],
 	});
 
 	// Passes because the promise was rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+
+	// Passes because the promise was rejected with an with an non-error exception, & set `any` to true in expectation.
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true})); // eslint-disable-line prefer-promise-reject-errors
 
 	// Passes because the function returned a promise rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
@@ -1050,27 +1048,26 @@ test('.throwsAsync()', gather(t => {
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => {
 		throw new Error('sync');
 	}, undefined, 'message'), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'message',
-		values: [
+		formattedDetails: [
 			{label: 'Function threw synchronously. Use `t.throws()` instead:', formatted: /Error/},
 		],
 	});
 
 	// Fails because the function did not return a promise
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => {}, undefined, 'message'), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'message',
-		values: [
+		formattedDetails: [
 			{label: 'Function returned:', formatted: /undefined/},
 		],
 	});
 
 	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(), undefined, null), {
-		assertion: 'throwsAsync',
-		improperUsage: true,
+		assertion: 't.throwsAsync()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1097,9 +1094,9 @@ test('.throwsAsync() returns the rejection reason of a promise returned by the f
 
 test('.throws() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.throws('not a function'), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: '`t.throws()` must be called with a function',
-		values: [{label: 'Called with:', formatted: /not a function/}],
+		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
 	});
 
 	t.end();
@@ -1107,9 +1104,9 @@ test('.throws() fails if passed a bad value', t => {
 
 test('.throwsAsync() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.throwsAsync('not a function'), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: '`t.throwsAsync()` must be called with a function or promise',
-		values: [{label: 'Called with:', formatted: /not a function/}],
+		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
 	}, {expectBoolean: false});
 
 	t.end();
@@ -1117,69 +1114,75 @@ test('.throwsAsync() fails if passed a bad value', t => {
 
 test('.throws() fails if passed a bad expectation', t => {
 	failsWith(t, () => assertions.throws(() => {}, true), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /true/}],
+		formattedDetails: [{label: 'Called with:', formatted: /true/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, 'foo'), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /foo/}],
+		formattedDetails: [{label: 'Called with:', formatted: /foo/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, /baz/), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /baz/}],
+		formattedDetails: [{label: 'Called with:', formatted: /baz/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, class Bar {}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /Bar/}],
+		formattedDetails: [{label: 'Called with:', formatted: /Bar/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, []), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+	});
+
+	failsWith(t, () => assertions.throws(() => {}, {any: {}}), {
+		assertion: 't.throws()',
+		message: 'The `any` property of the second argument to `t.throws()` must be a boolean',
+		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {code: {}}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
-		values: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {instanceOf: null}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The `instanceOf` property of the second argument to `t.throws()` must be a function',
-		values: [{label: 'Called with:', formatted: /instanceOf: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /instanceOf: null/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {message: null}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The `message` property of the second argument to `t.throws()` must be a string, regular expression or a function',
-		values: [{label: 'Called with:', formatted: /message: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /message: null/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {name: null}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The `name` property of the second argument to `t.throws()` must be a string',
-		values: [{label: 'Called with:', formatted: /name: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /name: null/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` contains unexpected properties',
-		values: [{label: 'Called with:', formatted: /foo: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /foo: null/}],
 	});
 
 	t.end();
@@ -1187,69 +1190,75 @@ test('.throws() fails if passed a bad expectation', t => {
 
 test('.throwsAsync() fails if passed a bad expectation', t => {
 	failsWith(t, () => assertions.throwsAsync(() => {}, true), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /true/}],
+		formattedDetails: [{label: 'Called with:', formatted: /true/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, 'foo'), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /foo/}],
+		formattedDetails: [{label: 'Called with:', formatted: /foo/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, /baz/), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /baz/}],
+		formattedDetails: [{label: 'Called with:', formatted: /baz/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, class Bar {}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /Bar/}],
+		formattedDetails: [{label: 'Called with:', formatted: /Bar/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, []), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		values: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+	}, {expectBoolean: false});
+
+	failsWith(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
+		assertion: 't.throwsAsync()',
+		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
+		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string or number',
-		values: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {instanceOf: null}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The `instanceOf` property of the second argument to `t.throwsAsync()` must be a function',
-		values: [{label: 'Called with:', formatted: /instanceOf: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /instanceOf: null/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {message: null}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string, regular expression or a function',
-		values: [{label: 'Called with:', formatted: /message: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /message: null/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {name: null}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The `name` property of the second argument to `t.throwsAsync()` must be a string',
-		values: [{label: 'Called with:', formatted: /name: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /name: null/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throwsAsync(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` contains unexpected properties',
-		values: [{label: 'Called with:', formatted: /foo: null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /foo: null/}],
 	}, {expectBoolean: false});
 
 	t.end();
@@ -1261,9 +1270,9 @@ test('.throws() fails if passed null expectation', t => {
 	failsWith(t, () => {
 		asserter.throws(() => {}, null);
 	}, {
-		assertion: 'throws',
+		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object or `undefined`',
-		values: [{label: 'Called with:', formatted: /null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /null/}],
 	});
 
 	t.end();
@@ -1275,9 +1284,9 @@ test('.throwsAsync() fails if passed null', t => {
 	failsWith(t, () => {
 		asserter.throwsAsync(() => {}, null);
 	}, {
-		assertion: 'throwsAsync',
+		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `undefined`',
-		values: [{label: 'Called with:', formatted: /null/}],
+		formattedDetails: [{label: 'Called with:', formatted: /null/}],
 	});
 
 	t.end();
@@ -1293,9 +1302,9 @@ test('.notThrows()', gather(t => {
 	failsWith(t, () => assertions.notThrows(() => {
 		throw new Error('foo');
 	}), {
-		assertion: 'notThrows',
+		assertion: 't.notThrows()',
 		message: '',
-		values: [{label: 'Function threw:', formatted: /foo/}],
+		formattedDetails: [{label: 'Function threw:', formatted: /foo/}],
 	}, {expectBoolean: false});
 
 	// Fails because the function throws. Asserts that message is used for the
@@ -1303,16 +1312,15 @@ test('.notThrows()', gather(t => {
 	failsWith(t, () => assertions.notThrows(() => {
 		throw new Error('foo');
 	}, 'my message'), {
-		assertion: 'notThrows',
+		assertion: 't.notThrows()',
 		message: 'my message',
-		values: [{label: 'Function threw:', formatted: /foo/}],
+		formattedDetails: [{label: 'Function threw:', formatted: /foo/}],
 	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.notThrows(() => {}, null), {
-		assertion: 'notThrows',
-		improperUsage: true,
+		assertion: 't.notThrows()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1327,9 +1335,9 @@ test('.notThrowsAsync()', gather(t => {
 
 	// Fails because the promise is rejected
 	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
-		assertion: 'notThrowsAsync',
+		assertion: 't.notThrowsAsync()',
 		message: '',
-		values: [{label: 'Promise rejected with:', formatted: /Error/}],
+		formattedDetails: [{label: 'Promise rejected with:', formatted: /Error/}],
 	});
 
 	// Passes because the function returned a resolved promise
@@ -1337,36 +1345,35 @@ test('.notThrowsAsync()', gather(t => {
 
 	// Fails because the function returned a rejected promise
 	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
-		assertion: 'notThrowsAsync',
+		assertion: 't.notThrowsAsync()',
 		message: '',
-		values: [{label: 'Returned promise rejected with:', formatted: /Error/}],
+		formattedDetails: [{label: 'Returned promise rejected with:', formatted: /Error/}],
 	});
 
 	// Fails because the function throws synchronously
 	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => {
 		throw new Error('sync');
 	}, 'message'), {
-		assertion: 'notThrowsAsync',
+		assertion: 't.notThrowsAsync()',
 		message: 'message',
-		values: [
+		formattedDetails: [
 			{label: 'Function threw:', formatted: /Error/},
 		],
 	});
 
 	// Fails because the function did not return a promise
 	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => {}, 'message'), {
-		assertion: 'notThrowsAsync',
+		assertion: 't.notThrowsAsync()',
 		message: 'message',
-		values: [
+		formattedDetails: [
 			{label: 'Function did not return a promise. Use `t.notThrows()` instead:', formatted: /undefined/},
 		],
 	});
 
 	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.resolve(), null), {
-		assertion: 'notThrowsAsync',
-		improperUsage: true,
+		assertion: 't.notThrowsAsync()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1383,9 +1390,9 @@ test('.notThrowsAsync() returns undefined for a fulfilled promise returned by th
 
 test('.notThrows() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notThrows('not a function'), {
-		assertion: 'notThrows',
+		assertion: 't.notThrows()',
 		message: '`t.notThrows()` must be called with a function',
-		values: [{label: 'Called with:', formatted: /not a function/}],
+		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
 	});
 
 	t.end();
@@ -1393,9 +1400,9 @@ test('.notThrows() fails if passed a bad value', t => {
 
 test('.notThrowsAsync() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notThrowsAsync('not a function'), {
-		assertion: 'notThrowsAsync',
+		assertion: 't.notThrowsAsync()',
 		message: '`t.notThrowsAsync()` must be called with a function or promise',
-		values: [{label: 'Called with:', formatted: /not a function/}],
+		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
 	}, {
 		expectBoolean: false,
 	});
@@ -1455,9 +1462,9 @@ test('.snapshot()', async t => {
 		}
 
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
-			assertion: 'snapshot',
+			assertion: 't.snapshot()',
 			message: 'Did not match snapshot',
-			values: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 
@@ -1468,29 +1475,27 @@ test('.snapshot()', async t => {
 		}
 
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
-			assertion: 'snapshot',
+			assertion: 't.snapshot()',
 			message: 'my message',
-			values: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 
 	{
 		const assertions = setup('bad message');
 		failsWith(t, () => assertions.snapshot(null, null), {
-			assertion: 'snapshot',
-			improperUsage: true,
+			assertion: 't.snapshot()',
 			message: 'The assertion message must be a string',
-			values: [{
+			formattedDetails: [{
 				label: 'Called with:',
 				formatted: /null/,
 			}],
 		});
 
 		failsWith(t, () => assertions.snapshot(null, ''), {
-			assertion: 'snapshot',
-			improperUsage: true,
+			assertion: 't.snapshot()',
 			message: 'The snapshot assertion message must be a non-empty string',
-			values: [{
+			formattedDetails: [{
 				label: 'Called with:',
 				formatted: '\'\'',
 			}],
@@ -1501,10 +1506,9 @@ test('.snapshot()', async t => {
 		// See https://github.com/avajs/ava/issues/2669
 		const assertions = setup('id');
 		failsWith(t, () => assertions.snapshot({foo: 'bar'}, {id: 'an id'}), {
-			assertion: 'snapshot',
-			improperUsage: true,
-			message: 'AVA 4 no longer supports snapshot IDs',
-			values: [{
+			assertion: 't.snapshot()',
+			message: 'Since AVA 4, snapshot IDs are no longer supported',
+			formattedDetails: [{
 				label: 'Called with id:',
 				formatted: '\'an id\'',
 			}],
@@ -1517,17 +1521,15 @@ test('.snapshot()', async t => {
 
 test('.truthy()', t => {
 	failsWith(t, () => assertions.truthy(0), {
-		assertion: 'truthy',
+		assertion: 't.truthy()',
 		message: '',
-		operator: '!!',
-		values: [{label: 'Value is not truthy:', formatted: /0/}],
+		formattedDetails: [{label: 'Value is not truthy:', formatted: /0/}],
 	});
 
 	failsWith(t, () => assertions.truthy(false, 'my message'), {
-		assertion: 'truthy',
+		assertion: 't.truthy()',
 		message: 'my message',
-		operator: '!!',
-		values: [{label: 'Value is not truthy:', formatted: /false/}],
+		formattedDetails: [{label: 'Value is not truthy:', formatted: /false/}],
 	});
 
 	passes(t, () => assertions.truthy(1)
@@ -1536,10 +1538,9 @@ test('.truthy()', t => {
 	passes(t, () => assertions.truthy(1) && assertions.truthy(true));
 
 	failsWith(t, () => assertions.truthy(true, null), {
-		assertion: 'truthy',
-		improperUsage: true,
+		assertion: 't.truthy()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1550,17 +1551,15 @@ test('.truthy()', t => {
 
 test('.falsy()', t => {
 	failsWith(t, () => assertions.falsy(1), {
-		assertion: 'falsy',
+		assertion: 't.falsy()',
 		message: '',
-		operator: '!',
-		values: [{label: 'Value is not falsy:', formatted: /1/}],
+		formattedDetails: [{label: 'Value is not falsy:', formatted: /1/}],
 	});
 
 	failsWith(t, () => assertions.falsy(true, 'my message'), {
-		assertion: 'falsy',
+		assertion: 't.falsy()',
 		message: 'my message',
-		operator: '!',
-		values: [{label: 'Value is not falsy:', formatted: /true/}],
+		formattedDetails: [{label: 'Value is not falsy:', formatted: /true/}],
 	});
 
 	passes(t, () => assertions.falsy(0)
@@ -1570,10 +1569,9 @@ test('.falsy()', t => {
             && assertions.falsy(false));
 
 	failsWith(t, () => assertions.falsy(false, null), {
-		assertion: 'falsy',
-		improperUsage: true,
+		assertion: 't.falsy()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1584,27 +1582,27 @@ test('.falsy()', t => {
 
 test('.true()', t => {
 	failsWith(t, () => assertions.true(1), {
-		assertion: 'true',
+		assertion: 't.true()',
 		message: '',
-		values: [{label: 'Value is not `true`:', formatted: /1/}],
+		formattedDetails: [{label: 'Value is not `true`:', formatted: /1/}],
 	});
 
 	failsWith(t, () => assertions.true(0), {
-		assertion: 'true',
+		assertion: 't.true()',
 		message: '',
-		values: [{label: 'Value is not `true`:', formatted: /0/}],
+		formattedDetails: [{label: 'Value is not `true`:', formatted: /0/}],
 	});
 
 	failsWith(t, () => assertions.true(false), {
-		assertion: 'true',
+		assertion: 't.true()',
 		message: '',
-		values: [{label: 'Value is not `true`:', formatted: /false/}],
+		formattedDetails: [{label: 'Value is not `true`:', formatted: /false/}],
 	});
 
 	failsWith(t, () => assertions.true('foo', 'my message'), {
-		assertion: 'true',
+		assertion: 't.true()',
 		message: 'my message',
-		values: [{label: 'Value is not `true`:', formatted: /foo/}],
+		formattedDetails: [{label: 'Value is not `true`:', formatted: /foo/}],
 	});
 
 	passes(t, () => assertions.true(true));
@@ -1615,10 +1613,9 @@ test('.true()', t => {
 	});
 
 	failsWith(t, () => assertions.true(true, null), {
-		assertion: 'true',
-		improperUsage: true,
+		assertion: 't.true()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1629,27 +1626,27 @@ test('.true()', t => {
 
 test('.false()', t => {
 	failsWith(t, () => assertions.false(0), {
-		assertion: 'false',
+		assertion: 't.false()',
 		message: '',
-		values: [{label: 'Value is not `false`:', formatted: /0/}],
+		formattedDetails: [{label: 'Value is not `false`:', formatted: /0/}],
 	});
 
 	failsWith(t, () => assertions.false(1), {
-		assertion: 'false',
+		assertion: 't.false()',
 		message: '',
-		values: [{label: 'Value is not `false`:', formatted: /1/}],
+		formattedDetails: [{label: 'Value is not `false`:', formatted: /1/}],
 	});
 
 	failsWith(t, () => assertions.false(true), {
-		assertion: 'false',
+		assertion: 't.false()',
 		message: '',
-		values: [{label: 'Value is not `false`:', formatted: /true/}],
+		formattedDetails: [{label: 'Value is not `false`:', formatted: /true/}],
 	});
 
 	failsWith(t, () => assertions.false('foo', 'my message'), {
-		assertion: 'false',
+		assertion: 't.false()',
 		message: 'my message',
-		values: [{label: 'Value is not `false`:', formatted: /foo/}],
+		formattedDetails: [{label: 'Value is not `false`:', formatted: /foo/}],
 	});
 
 	passes(t, () => assertions.false(false));
@@ -1660,10 +1657,9 @@ test('.false()', t => {
 	});
 
 	failsWith(t, () => assertions.false(false, null), {
-		assertion: 'false',
-		improperUsage: true,
+		assertion: 't.false()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1678,28 +1674,27 @@ test('.regex()', t => {
 	passes(t, () => assertions.regex('abc', /^abc$/));
 
 	failsWith(t, () => assertions.regex('foo', /^abc$/), {
-		assertion: 'regex',
+		assertion: 't.regex()',
 		message: '',
-		values: [
+		formattedDetails: [
 			{label: 'Value must match expression:', formatted: /foo/},
 			{label: 'Regular expression:', formatted: /\/\^abc\$\//},
 		],
 	});
 
 	failsWith(t, () => assertions.regex('foo', /^abc$/, 'my message'), {
-		assertion: 'regex',
+		assertion: 't.regex()',
 		message: 'my message',
-		values: [
+		formattedDetails: [
 			{label: 'Value must match expression:', formatted: /foo/},
 			{label: 'Regular expression:', formatted: /\/\^abc\$\//},
 		],
 	});
 
 	failsWith(t, () => assertions.regex('foo', /^abc$/, null), {
-		assertion: 'regex',
-		improperUsage: true,
+		assertion: 't.regex()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1710,16 +1705,15 @@ test('.regex()', t => {
 
 test('.regex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.regex(42, /foo/), {
-		assertion: 'regex',
-		improperUsage: true,
+		assertion: 't.regex()',
 		message: '`t.regex()` must be called with a string',
-		values: [{label: 'Called with:', formatted: /42/}],
+		formattedDetails: [{label: 'Called with:', formatted: /42/}],
 	});
 
 	failsWith(t, () => assertions.regex('42', {}), {
-		assertion: 'regex',
+		assertion: 't.regex()',
 		message: '`t.regex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
 	});
 
 	t.end();
@@ -1731,28 +1725,27 @@ test('.notRegex()', t => {
 	passes(t, () => assertions.notRegex('abc', /def/));
 
 	failsWith(t, () => assertions.notRegex('abc', /abc/), {
-		assertion: 'notRegex',
+		assertion: 't.notRegex()',
 		message: '',
-		values: [
+		formattedDetails: [
 			{label: 'Value must not match expression:', formatted: /abc/},
 			{label: 'Regular expression:', formatted: /\/abc\//},
 		],
 	});
 
 	failsWith(t, () => assertions.notRegex('abc', /abc/, 'my message'), {
-		assertion: 'notRegex',
+		assertion: 't.notRegex()',
 		message: 'my message',
-		values: [
+		formattedDetails: [
 			{label: 'Value must not match expression:', formatted: /abc/},
 			{label: 'Regular expression:', formatted: /\/abc\//},
 		],
 	});
 
 	failsWith(t, () => assertions.notRegex('abc', /abc/, null), {
-		assertion: 'notRegex',
-		improperUsage: true,
+		assertion: 't.notRegex()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
@@ -1763,15 +1756,15 @@ test('.notRegex()', t => {
 
 test('.notRegex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notRegex(42, /foo/), {
-		assertion: 'notRegex',
+		assertion: 't.notRegex()',
 		message: '`t.notRegex()` must be called with a string',
-		values: [{label: 'Called with:', formatted: /42/}],
+		formattedDetails: [{label: 'Called with:', formatted: /42/}],
 	});
 
 	failsWith(t, () => assertions.notRegex('42', {}), {
-		assertion: 'notRegex',
+		assertion: 't.notRegex()',
 		message: '`t.notRegex()` must be called with a regular expression',
-		values: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
 	});
 
 	t.end();
@@ -1779,17 +1772,15 @@ test('.notRegex() fails if passed a bad value', t => {
 
 test('.assert()', t => {
 	failsWith(t, () => assertions.assert(0), {
-		assertion: 'assert',
+		assertion: 't.assert()',
 		message: '',
-		operator: '!!',
-		values: [{label: 'Value is not truthy:', formatted: /0/}],
+		formattedDetails: [{label: 'Value is not truthy:', formatted: /0/}],
 	});
 
 	failsWith(t, () => assertions.assert(false, 'my message'), {
-		assertion: 'assert',
+		assertion: 't.assert()',
 		message: 'my message',
-		operator: '!!',
-		values: [{label: 'Value is not truthy:', formatted: /false/}],
+		formattedDetails: [{label: 'Value is not truthy:', formatted: /false/}],
 	});
 
 	passes(t, () => assertions.assert(1)
@@ -1798,10 +1789,9 @@ test('.assert()', t => {
 	passes(t, () => assertions.assert(1) && assertions.assert(true));
 
 	failsWith(t, () => assertions.assert(null, null), {
-		assertion: 'assert',
-		improperUsage: true,
+		assertion: 't.assert()',
 		message: 'The assertion message must be a string',
-		values: [{
+		formattedDetails: [{
 			label: 'Called with:',
 			formatted: /null/,
 		}],
