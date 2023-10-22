@@ -1,0 +1,24 @@
+
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m a [90m[2m›[22m[39m fails [3m[31mTest failed via `t.fail()`[39m[23m
+---tty-stream-chunk-separator
+  [90m─[39m
+
+  [1ma [90m[2m›[22m[1m[39m fails[22m
+
+  [90ma.cjs:3[39m
+
+   [90m2:[39m                              
+  [41m[1m 3: test('fails', t => t.fail());[22m[49m
+   [90m4:[39m                              
+
+  Test failed via `t.fail()`
+
+  [90m› test-tap/fixture/report/failfast/a.cjs:3:22[39m
+
+  [90m─[39m
+
+  [35m`--fail-fast` is on. 1 test file was skipped.[39m
+
+  [31m1 test failed[39m
+---tty-stream-chunk-separator
