@@ -31,14 +31,7 @@
 			}
 		},
 		"./internal": {
-			"import": {
-				"types": "./entrypoints/internal.d.mts",
-				"default": "./entrypoints/internal.mjs"
-			},
-			"require": {
-				"types": "./entrypoints/internal.d.cts",
-				"default": "./entrypoints/internal.cjs"
-			}
+			"types": "./entrypoints/internal.d.mts"
 		}
 	},
 	"type": "module",
