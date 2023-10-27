@@ -20,6 +20,6 @@ export type RunEvent = {
 
 export type {StateChangeEvent} from '../types/state-change-events.d.cts';
 
-export type Run = {
+export type ObservedRun = {
 	events: AsyncIterableIterator<RunEvent>;
 };
