@@ -12,10 +12,8 @@ export default {
 	async observeRun(run) {
 		for await (const event of run.events) {
 			internalEvents.push(event);
-
-			if (event.type === 'end') {
-				await fs.writeFile('internal-events.json', JSON.stringify(internalEvents));
-			}
 		}
+
+		await fs.writeFile('internal-events.json', JSON.stringify(internalEvents));
 	},
 };
