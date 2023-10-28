@@ -13,7 +13,7 @@ export default {
 		for await (const event of run.events) {
 			internalEvents.push(event);
 
-			if (event.type === 'stateChange' && event.stateChange.type === 'end') {
+			if (event.type === 'end') {
 				await fs.writeFile('internal-events.json', JSON.stringify(internalEvents));
 			}
 		}
