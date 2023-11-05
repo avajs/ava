@@ -21,7 +21,7 @@ function cleanStringDiff(before, after) {
 	let diff = concordance.diff(before, after, {theme});
 	// Remove all newline control characters, or they'll be duplicated in the
 	// snapshot report
-	diff = diff.replace(/␊/g, '');
+	diff = diff.replaceAll('␊', '');
 	return diff;
 }
 

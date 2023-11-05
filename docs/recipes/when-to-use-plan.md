@@ -98,8 +98,8 @@ As stated in the previous example, using the `t.throws()` assertion with `async`
 In most cases, it's a bad idea to use any complex branching inside your tests. A notable exception is for tests that are auto-generated (perhaps from a JSON document). Below `t.plan()` is used to ensure the correctness of the JSON input:
 
 ```js
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const testData = JSON.parse(fs.readFileSync(new URL('./fixtures/test-definitions.json', import.meta.url)));
 

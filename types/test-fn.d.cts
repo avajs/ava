@@ -48,7 +48,7 @@ export type TimeoutFn = {
 
 	/** Clear the timeout and restore the default behavior. */
 	clear(): void;
-}
+};
 
 /** Declare a function to be run after the test has ended. */
 export type TeardownFn = (fn: (() => Promise<void>) | (() => void)) => void;

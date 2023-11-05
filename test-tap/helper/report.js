@@ -42,10 +42,10 @@ const cwdFileUrlPrefix = pathToFileURL(process.cwd());
 exports.sanitizers = {
 	acorn: string => string.split('\n').filter(line => !/node_modules.acorn/.test(line)).join('\n'),
 	cwd: string => string.replaceAll(cwdFileUrlPrefix, '').replaceAll(process.cwd(), '~'),
-	experimentalWarning: string => string.replace(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
+	experimentalWarning: string => string.replaceAll(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => string.replaceAll('\r\n', '\n'),
 	posix: string => string.replaceAll('\\', '/'),
-	timers: string => string.replace(/timers\.js:\d+:\d+/g, 'timers.js'),
+	timers: string => string.replaceAll(/timers\.js:\d+:\d+/g, 'timers.js'),
 	version: string => string.replaceAll(`v${pkg.version}`, 'VERSION'),
 };
 

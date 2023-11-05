@@ -73,7 +73,7 @@ test('should warn ava is required without the cli', t => {
 });
 
 test('tests without assertions do not fail if failWithoutAssertions option is set to false', t => {
-	execCli([], {dirname: 'fixture/pkg-conf/fail-without-assertions'}, error => {
+	execCli([], {dirname: 'fixture/package-config/fail-without-assertions'}, error => {
 		t.error(error);
 		t.end();
 	});

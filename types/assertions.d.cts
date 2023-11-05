@@ -1,7 +1,7 @@
 export type ErrorConstructor<ErrorType extends Error = Error> = {
-	new (...args: any[]): ErrorType;
 	readonly prototype: ErrorType;
-}
+	new (...args: any[]): ErrorType;
+};
 
 export type ThrownError<ErrorType extends ErrorConstructor | Error> = ErrorType extends ErrorConstructor ? ErrorType['prototype'] : ErrorType;
 
@@ -35,7 +35,7 @@ export type ThrowsAnyExpectation = Omit<ThrowsExpectation<any>, 'any' | 'instanc
 
 	/** The thrown error must be strictly equal to this value. */
 	is?: any;
-}
+};
 
 export type Assertions = {
 	/**
@@ -143,7 +143,7 @@ export type Assertions = {
 	truthy: TruthyAssertion;
 };
 
-type FalsyValue = false | 0 | 0n | '' | null | undefined;
+type FalsyValue = false | 0 | 0n | '' | null | undefined; // eslint-disable-line @typescript-eslint/ban-types
 type Falsy<T> = T extends Exclude<T, FalsyValue> ? (T extends number | string | bigint ? T & FalsyValue : never) : T;
 
 export type AssertAssertion = {
@@ -395,7 +395,7 @@ export type TruthyAssertion = {
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will
 	 * not give `0` or `''` as a potential value in an `else` clause.
 	 */
-	<T>(actual: T, message?: string):  actual is T extends Falsy<T> ? never : T;
+	<T>(actual: T, message?: string): actual is T extends Falsy<T> ? never : T;
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
