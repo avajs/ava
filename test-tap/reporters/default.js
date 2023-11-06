@@ -18,7 +18,7 @@ test(async t => {
 
 		const tty = new TTYStream({
 			columns: 200,
-			sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.timers, report.sanitizers.version],
+			sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.tapLoaders, report.sanitizers.timers, report.sanitizers.version],
 		});
 		const reporter = new Reporter({
 			extensions: ['cjs'],

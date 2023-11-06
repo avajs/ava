@@ -11,7 +11,7 @@ Since tests run concurrently, it's best to create a fresh server instance at lea
 Check out the example below:
 
 ```js
-import http from 'http';
+import http from 'node:http';
 import test from 'ava';
 import got from 'got';
 import listen from 'test-listen';

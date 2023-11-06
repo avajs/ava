@@ -43,7 +43,7 @@ export function execCli(args, options, cb) {
 				return;
 			}
 
-			resolve(code);
+			resolve(null);
 		});
 
 		stdout = child.stdout.toArray().then(chunks => chunks.join(''));
