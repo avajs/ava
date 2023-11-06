@@ -44,7 +44,9 @@ exports.sanitizers = {
 	cwd: string => string.replaceAll(cwdFileUrlPrefix, '').replaceAll(process.cwd(), '~'),
 	experimentalWarning: string => string.replaceAll(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => string.replaceAll('\r\n', '\n'),
+	// The following are invjected by tap@18.
 	posix: string => string.replaceAll('\\', '/'),
+	tapLoaders: string => string.replaceAll(/.+(Module\._compile|node_modules.pirates|require\.extensions).+\r?\n/g, ''),
 	timers: string => string.replaceAll(/timers\.js:\d+:\d+/g, 'timers.js'),
 	version: string => string.replaceAll(`v${pkg.version}`, 'VERSION'),
 };
