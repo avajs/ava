@@ -139,14 +139,10 @@
 		"zen-observable": "^0.10.0"
 	},
 	"peerDependencies": {
-		"@ava/typescript": "*",
-		"chokidar": "^3.5.3"
+		"@ava/typescript": "*"
 	},
 	"peerDependenciesMeta": {
 		"@ava/typescript": {
-			"optional": true
-		},
-		"chokidar": {
 			"optional": true
 		}
 	},
