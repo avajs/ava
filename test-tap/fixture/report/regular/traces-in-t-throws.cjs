@@ -16,12 +16,14 @@ test('notThrows', t => {
 	t.notThrows(() => throwError());
 });
 
-test('notThrowsAsync', t => {
-	t.notThrowsAsync(() => throwError());
+test('notThrowsAsync', async t => {
+	await t.notThrowsAsync(() => throwError());
 });
 
-test('throwsAsync', t => {
-	t.throwsAsync(() => throwError(), {instanceOf: TypeError});
+test('throwsAsync', async t => {
+	await t.throwsAsync(() => throwError(), {instanceOf: TypeError});
 });
 
-test('throwsAsync different error', t => t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError}));
+test('throwsAsync different error', async t => {
+	await t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});
+});

@@ -1,10 +1,7 @@
-browser: false
-coverage: false
+disable-coverage: true
+allow-empty-coverage: true
 files:
   - "test-tap/*.js"
   - "test-tap/reporters/*.js"
   - "test-tap/integration/*.js"
-flow: false
-jsx: false
 timeout: 300
-ts: false

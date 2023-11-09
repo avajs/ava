@@ -2,11 +2,13 @@ import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {gunzipSync} from 'node:zlib';
 
 import {execa} from 'execa';
 import {test} from 'tap';
 import {temporaryDirectory} from 'tempy';
 
+import {extractCompressedSnapshot} from '../../lib/snapshot-manager.js';
 import {execCli} from '../helper/cli.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -265,9 +267,9 @@ test('snapshots are identical on different platforms', t => {
 		t.ok(fs.existsSync(snapPath));
 
 		const reportContents = fs.readFileSync(reportPath);
-		const snapContents = fs.readFileSync(snapPath);
+		const snapContents = gunzipSync(extractCompressedSnapshot(fs.readFileSync(snapPath)).compressed);
 		const expectedReportContents = fs.readFileSync(expectedReportPath);
-		const expectedSnapContents = fs.readFileSync(expectedSnapPath);
+		const expectedSnapContents = gunzipSync(extractCompressedSnapshot(fs.readFileSync(expectedSnapPath)).compressed);
 
 		t.ok(reportContents.equals(expectedReportContents), 'report file contents matches snapshot');
 		t.ok(snapContents.equals(expectedSnapContents), 'snap file contents matches snapshot');

@@ -13,21 +13,40 @@ setOptions({chalkOptions: {level: 0}});
 let lastFailure = null;
 let lastPassed = false;
 
+class AssertionFailed extends Error {
+	constructor() {
+		super('Assertion failed');
+		this.name = 'AssertionFailed';
+	}
+}
+
 const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
 			pass() {
 				lastPassed = true;
+				// Match behavior in lib/test.js, not great for this test suite but refactoring is a much larger task.
+				return true;
 			},
 			pending(promise) {
 				promise.then(() => {
 					lastPassed = true;
 				}, error => {
-					lastFailure = error;
+					if (error.name !== 'AssertionFailed') {
+						lastFailure = error;
+					}
 				});
 			},
 			fail(error) {
 				lastFailure = error;
+				return new AssertionFailed();
+			},
+			failPending(error) {
+				if (error.name !== 'AssertionFailed') {
+					lastFailure = error;
+				}
+
+				return new AssertionFailed();
 			},
 			skip() {},
 			experiments: {},
@@ -87,21 +106,41 @@ function add(fn) {
 	return gatheringPromise;
 }
 
-function failsWith(t, fn, subset, {expectBoolean = true} = {}) {
+function failsWith(t, fn, subset) {
 	lastFailure = null;
-	const retval = fn();
-	assertFailure(t, subset);
-	if (expectBoolean) {
-		t.notOk(retval);
+	try {
+		fn();
+	} catch (error) {
+		if (error.name !== 'AssertionFailed') {
+			throw error;
+		}
 	}
+
+	assertFailure(t, subset);
+}
+
+async function failsWithAsync(t, fn, subset) {
+	lastFailure = null;
+	try {
+		await fn();
+	} catch (error) {
+		if (error.name !== 'AssertionFailed') {
+			throw error;
+		}
+	}
+
+	assertFailure(t, subset);
 }
 
 function throwsAsyncFails(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
-		return fn().then(retval => {
-			t.equal(retval, undefined);
-			assertFailure(t, subset);
+		return fn().catch(error => {
+			if (error.name === 'AssertionFailed') {
+				assertFailure(t, subset);
+			} else {
+				throw error;
+			}
 		});
 	});
 }
@@ -109,16 +148,27 @@ function throwsAsyncFails(t, fn, subset) {
 function notThrowsAsyncFails(t, fn, subset) {
 	return add(() => {
 		lastFailure = null;
-		return fn().then(retval => {
-			t.equal(retval, undefined);
-			assertFailure(t, subset);
+		return fn().catch(error => {
+			if (error.name === 'AssertionFailed') {
+				assertFailure(t, subset);
+			} else {
+				throw error;
+			}
 		});
 	});
 }
 
 function fails(t, fn) {
 	lastFailure = null;
-	const retval = fn();
+	let retval;
+	try {
+		retval = fn();
+	} catch (error) {
+		if (error.name !== 'AssertionFailed') {
+			throw error;
+		}
+	}
+
 	if (lastFailure) {
 		t.notOk(retval);
 	} else {
@@ -132,7 +182,7 @@ function passes(t, fn, {expectBoolean = true} = {}) {
 	const retval = fn();
 	if (lastPassed) {
 		if (expectBoolean) {
-			t.ok(retval);
+			t.equal(retval, true);
 		} else {
 			t.pass();
 		}
@@ -820,12 +870,12 @@ test('.throws()', gather(t => {
 	// Passes because an error is thrown.
 	passes(t, () => assertions.throws(() => {
 		throw new Error('foo');
-	}));
+	}), {expectBoolean: false});
 
 	// Passes when string is thrown, only when any is set to true.
 	passes(t, () => assertions.throws(() => {
 		throw 'foo'; // eslint-disable-line no-throw-literal
-	}, {any: true}));
+	}, {any: true}), {expectBoolean: false});
 
 	// Passes because the correct error is thrown.
 	passes(t, () => {
@@ -833,7 +883,7 @@ test('.throws()', gather(t => {
 		return assertions.throws(() => {
 			throw error;
 		}, {is: error});
-	});
+	}, {expectBoolean: false});
 
 	// Fails because the thrown value is not an error
 	fails(t, () => {
@@ -854,7 +904,7 @@ test('.throws()', gather(t => {
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
 		throw new TypeError();
-	}, {name: 'TypeError'}));
+	}, {name: 'TypeError'}), {expectBoolean: false});
 
 	// Fails because the thrown value is not an error
 	fails(t, () => assertions.throws(() => {
@@ -872,14 +922,14 @@ test('.throws()', gather(t => {
 		const error = new TypeError();
 		error.code = 'ERR_TEST';
 		throw error;
-	}, {code: 'ERR_TEST'}));
+	}, {code: 'ERR_TEST'}), {expectBoolean: false});
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
 		const error = new TypeError();
 		error.code = 42;
 		throw error;
-	}, {code: 42}));
+	}, {code: 42}), {expectBoolean: false});
 
 	// Fails because the thrown value is not the right one
 	fails(t, () => assertions.throws(() => {
@@ -901,11 +951,11 @@ test('.throws()', gather(t => {
 
 	passes(t, () => assertions.throws(() => {
 		throw new Error('foo');
-	}, undefined));
+	}, undefined), {expectBoolean: false});
 
 	passes(t, async () => {
 		await assertions.throwsAsync(() => Promise.reject(new Error('foo')), undefined);
-	});
+	}, {expectBoolean: false});
 
 	failsWith(t, () => assertions.throws(() => {}, undefined, null), {
 		assertion: 't.throws()',
@@ -938,7 +988,7 @@ test('.throws()', gather(t => {
 
 	passes(t, () => assertions.throws(() => {
 		throw new Error('error');
-	}, {message: 'error'}));
+	}, {message: 'error'}), {expectBoolean: false});
 
 	// Fails because the regular expression in the message is incorrect
 	failsWith(
@@ -962,7 +1012,7 @@ test('.throws()', gather(t => {
 
 	passes(t, () => assertions.throws(() => {
 		throw new Error('error');
-	}, {message: /error/}));
+	}, {message: /error/}), {expectBoolean: false});
 
 	// Fails because the function in the message returns false
 	failsWith(
@@ -986,7 +1036,7 @@ test('.throws()', gather(t => {
 
 	passes(t, () => assertions.throws(() => {
 		throw new Error('error');
-	}, {message: () => true}));
+	}, {message: () => true}), {expectBoolean: false});
 }));
 
 test('.throws() returns the thrown error', t => {
@@ -1102,15 +1152,13 @@ test('.throws() fails if passed a bad value', t => {
 	t.end();
 });
 
-test('.throwsAsync() fails if passed a bad value', t => {
-	failsWith(t, () => assertions.throwsAsync('not a function'), {
+test('.throwsAsync() fails if passed a bad value', gather(t => {
+	throwsAsyncFails(t, () => assertions.throwsAsync('not a function'), {
 		assertion: 't.throwsAsync()',
 		message: '`t.throwsAsync()` must be called with a function or promise',
 		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
-	}, {expectBoolean: false});
-
-	t.end();
-});
+	});
+}));
 
 test('.throws() fails if passed a bad expectation', t => {
 	failsWith(t, () => assertions.throws(() => {}, true), {
@@ -1188,78 +1236,78 @@ test('.throws() fails if passed a bad expectation', t => {
 	t.end();
 });
 
-test('.throwsAsync() fails if passed a bad expectation', t => {
-	failsWith(t, () => assertions.throwsAsync(() => {}, true), {
+test('.throwsAsync() fails if passed a bad expectation', async t => {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, true), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /true/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, 'foo'), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, 'foo'), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /foo/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, /baz/), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, /baz/), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /baz/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, class Bar {}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, class Bar {}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /Bar/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, []), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, []), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
 		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string or number',
 		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {instanceOf: null}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {instanceOf: null}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `instanceOf` property of the second argument to `t.throwsAsync()` must be a function',
 		formattedDetails: [{label: 'Called with:', formatted: /instanceOf: null/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {message: null}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {message: null}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `message` property of the second argument to `t.throwsAsync()` must be a string, regular expression or a function',
 		formattedDetails: [{label: 'Called with:', formatted: /message: null/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {name: null}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {name: null}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `name` property of the second argument to `t.throwsAsync()` must be a string',
 		formattedDetails: [{label: 'Called with:', formatted: /name: null/}],
-	}, {expectBoolean: false});
+	});
 
-	failsWith(t, () => assertions.throwsAsync(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` contains unexpected properties',
 		formattedDetails: [{label: 'Called with:', formatted: /foo: null/}],
-	}, {expectBoolean: false});
+	});
 
 	t.end();
 });
@@ -1278,12 +1326,10 @@ test('.throws() fails if passed null expectation', t => {
 	t.end();
 });
 
-test('.throwsAsync() fails if passed null', t => {
+test('.throwsAsync() fails if passed null', async t => {
 	const asserter = new AssertionsBase();
 
-	failsWith(t, () => {
-		asserter.throwsAsync(() => {}, null);
-	}, {
+	await failsWithAsync(t, () => asserter.throwsAsync(() => {}, null), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object or `undefined`',
 		formattedDetails: [{label: 'Called with:', formatted: /null/}],
@@ -1294,9 +1340,9 @@ test('.throwsAsync() fails if passed null', t => {
 
 test('.notThrows()', gather(t => {
 	// Passes because the function doesn't throw
-	passes(t, () => assertions.notThrows(() => {}), {expectBoolean: false});
+	passes(t, () => assertions.notThrows(() => {}));
 
-	passes(t, () => assertions.notThrows(() => {}), {expectBoolean: false});
+	passes(t, () => assertions.notThrows(() => {}));
 
 	// Fails because the function throws.
 	failsWith(t, () => assertions.notThrows(() => {
@@ -1305,7 +1351,7 @@ test('.notThrows()', gather(t => {
 		assertion: 't.notThrows()',
 		message: '',
 		formattedDetails: [{label: 'Function threw:', formatted: /foo/}],
-	}, {expectBoolean: false});
+	});
 
 	// Fails because the function throws. Asserts that message is used for the
 	// assertion, not to validate the thrown error.
@@ -1315,7 +1361,7 @@ test('.notThrows()', gather(t => {
 		assertion: 't.notThrows()',
 		message: 'my message',
 		formattedDetails: [{label: 'Function threw:', formatted: /foo/}],
-	}, {expectBoolean: false});
+	});
 
 	failsWith(t, () => assertions.notThrows(() => {}, null), {
 		assertion: 't.notThrows()',
@@ -1324,7 +1370,7 @@ test('.notThrows()', gather(t => {
 			label: 'Called with:',
 			formatted: /null/,
 		}],
-	}, {expectBoolean: false});
+	});
 }));
 
 test('.notThrowsAsync()', gather(t => {
@@ -1380,14 +1426,6 @@ test('.notThrowsAsync()', gather(t => {
 	});
 }));
 
-test('.notThrowsAsync() returns undefined for a fulfilled promise', t => assertions.notThrowsAsync(Promise.resolve(Symbol(''))).then(actual => {
-	t.equal(actual, undefined);
-}));
-
-test('.notThrowsAsync() returns undefined for a fulfilled promise returned by the function', t => assertions.notThrowsAsync(() => Promise.resolve(Symbol(''))).then(actual => {
-	t.equal(actual, undefined);
-}));
-
 test('.notThrows() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notThrows('not a function'), {
 		assertion: 't.notThrows()',
@@ -1398,13 +1436,11 @@ test('.notThrows() fails if passed a bad value', t => {
 	t.end();
 });
 
-test('.notThrowsAsync() fails if passed a bad value', t => {
-	failsWith(t, () => assertions.notThrowsAsync('not a function'), {
+test('.notThrowsAsync() fails if passed a bad value', async t => {
+	await failsWithAsync(t, () => assertions.notThrowsAsync('not a function'), {
 		assertion: 't.notThrowsAsync()',
 		message: '`t.notThrowsAsync()` must be called with a function or promise',
 		formattedDetails: [{label: 'Called with:', formatted: /not a function/}],
-	}, {
-		expectBoolean: false,
 	});
 
 	t.end();

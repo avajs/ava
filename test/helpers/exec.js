@@ -33,7 +33,7 @@ const compareStatObjects = (a, b) => {
 };
 
 export const cwd = (...paths) => path.join(path.dirname(fileURLToPath(test.meta.file)), 'fixtures', ...paths);
-export const cleanOutput = string => string.replace(/^\W+/, '').replace(/\W+\n+$/g, '').trim();
+export const cleanOutput = string => string.replace(/^\W+/, '').replaceAll(/\W+\n+$/g, '').trim();
 
 const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
 

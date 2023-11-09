@@ -21,7 +21,13 @@ test('unicorns are truthy', t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-Assertions return a boolean indicating whether they passed. You can use this to return early from a test. Note that this does not apply to the "throws" and `snapshot()` assertions.
+In AVA 6, assertions return `true` if they've passed and throw otherwise. Catching this error does not cause the test to pass. The error value is undocumented.
+
+In AVA 5, assertions return a boolean and do not throw. You can use this to return early from a test. The `snapshot()` assertion does not return a value.
+
+If you use TypeScript you can use some assertions as type guards.
+
+Note that the "throws" assertions return the error that was thrown (provided the assertion passed). In AVA 5, they return `undefined` if the assertion failed.
 
 ## Assertion planning
 
@@ -95,39 +101,39 @@ test('custom assertion', t => {
 
 ### `.pass(message?)`
 
-Passing assertion. Returns a boolean indicating whether the assertion passed.
+Passing assertion.
 
 ### `.fail(message?)`
 
-Failing assertion. Returns a boolean indicating whether the assertion passed.
+Failing assertion.
 
 ### `.assert(actual, message?)`
 
-Asserts that `actual` is truthy. Returns a boolean indicating whether the assertion passed.
+Asserts that `actual` is truthy.
 
 ### `.truthy(actual, message?)`
 
-Assert that `actual` is truthy. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is truthy.
 
 ### `.falsy(actual, message?)`
 
-Assert that `actual` is falsy. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is falsy.
 
 ### `.true(actual, message?)`
 
-Assert that `actual` is `true`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is `true`.
 
 ### `.false(actual, message?)`
 
-Assert that `actual` is `false`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is `false`.
 
 ### `.is(actual, expected, message?)`
 
-Assert that `actual` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.not(actual, expected, message?)`
 
-Assert that `actual` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is not the same as `expected`. This is based on [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is).
 
 ### `.deepEqual(actual, expected, message?)`
 
@@ -135,7 +141,7 @@ Assert that `actual` is deeply equal to `expected`. See [Concordance](https://gi
 
 ### `.notDeepEqual(actual, expected, message?)`
 
-Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqual()`. Returns a boolean indicating whether the assertion passed.
+Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
 ### `.like(actual, selector, message?)`
 
@@ -168,12 +174,9 @@ You can also use arrays, but note that any indices in `actual` that are not in `
 t.like([1, 2, 3, 4], [1, , 3])
 ```
 
-Finally, this returns a boolean indicating whether the assertion passed.
-
 ### `.throws(fn, expectation?, message?)`
 
-Assert that an error is thrown. `fn` must be a function which should throw. By default, the thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
-
+Assert that an error is thrown. `fn` must be a function which should throw. By default, the thrown value *must* be an error. It is returned so you can run more assertions against it.
 `expectation` can be an object with one or more of the following properties:
 
 * `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
@@ -208,8 +211,7 @@ test('throws', t => {
 
 Assert that an error is thrown. `thrower` can be an async function which should throw, or a promise that should reject. This assertion must be awaited.
 
-By default, the thrown value *must* be an error. It is returned so you can run more assertions against it. If the assertion fails then `undefined` is returned.
-
+By default, the thrown value *must* be an error. It is returned so you can run more assertions against it.
 `expectation` can be an object with one or more of the following properties:
 
 * `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
@@ -245,7 +247,7 @@ test('rejects', async t => {
 
 ### `.notThrows(fn, message?)`
 
-Assert that no error is thrown. `fn` must be a function which shouldn't throw. Does not return anything.
+Assert that no error is thrown. `fn` must be a function which shouldn't throw.
 
 ### `.notThrowsAsync(nonThrower, message?)`
 
@@ -259,15 +261,13 @@ test('resolves', async t => {
 });
 ```
 
-Does not return anything.
-
 ### `.regex(contents, regex, message?)`
 
-Assert that `contents` matches `regex`. Returns a boolean indicating whether the assertion passed.
+Assert that `contents` matches `regex`.
 
 ### `.notRegex(contents, regex, message?)`
 
-Assert that `contents` does not match `regex`. Returns a boolean indicating whether the assertion passed.
+Assert that `contents` does not match `regex`.
 
 ### `.snapshot(expected, message?)`
 
@@ -279,7 +279,7 @@ Compares the `expected` value with a previously recorded snapshot. Snapshots are
 
 The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implementation or macro function.
 
-`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail.
+`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail. In AVA 6, calling `commit()` on a failed result will throw an error.
 
 You can check whether the attempt passed using the `passed` property. Any assertion errors are available through the `errors` property. The attempt title is available through the `title` property.
 
@@ -318,5 +318,3 @@ test('flaky macro', async t => {
 	secondTry.commit();
 });
 ```
-
-Returns a boolean indicating whether the assertion passed.

@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/docs/
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 5.1.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 5.2.
 
 ## Enabling AVA's support for TypeScript test files
 
@@ -177,7 +177,7 @@ Note that, despite the type cast above, when executing `t.context` is an empty o
 
 ## Typing `throws` assertions
 
-The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an Error. You can customize the error class using generics:
+In AVA 6, the `t.throws()` and `t.throwsAsync()` assertions are typed to always return an `Error`. You can customize the error class using generics:
 
 ```ts
 import test from 'ava';
@@ -206,6 +206,6 @@ test('throwsAsync', async t => {
 });
 ```
 
-Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
+In AVA 5, the assertion is typed to return the `Error` if the assertion passes *or* `undefined` if it fails.
 
 [`@ava/typescript`]: https://github.com/avajs/typescript
