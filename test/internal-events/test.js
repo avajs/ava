@@ -22,7 +22,7 @@ test('internal events are emitted', async t => {
 		testFile: fileURLToPath(new URL('fixtures/test.js', import.meta.url)),
 	});
 
-	t.like(result[result.length - 1], {
+	t.like(result.at(-1), {
 		type: 'end',
 	});
 });
