@@ -22,8 +22,7 @@ type NativeSerializedError = SerializedErrorBase & {
 	source: ErrorSource | undefined;
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-type AVASerializedError = SerializedErrorBase & {
+type AvaSerializedError = SerializedErrorBase & {
 	type: 'ava';
 	assertion: string;
 	improperUsage: unknown | undefined;
@@ -32,7 +31,7 @@ type AVASerializedError = SerializedErrorBase & {
 	source: ErrorSource | undefined;
 };
 
-type SerializedError = AggregateSerializedError | NativeSerializedError | AVASerializedError;
+type SerializedError = AggregateSerializedError | NativeSerializedError | AvaSerializedError;
 
 export type StateChangeEvent = {
 	type: 'starting';
