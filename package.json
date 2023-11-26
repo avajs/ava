@@ -29,6 +29,9 @@
 				"types": "./entrypoints/plugin.d.cts",
 				"default": "./entrypoints/plugin.cjs"
 			}
+		},
+		"./internal": {
+			"types": "./entrypoints/internal.d.mts"
 		}
 	},
 	"type": "module",
