@@ -5,3 +5,5 @@ files:
   - "test-tap/reporters/*.js"
   - "test-tap/integration/*.js"
 timeout: 300
+plugin:
+  - "!@tapjs/typescript"

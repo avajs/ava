@@ -10,7 +10,6 @@ const snapshotStdout = (t, stdout) => {
 		.replaceAll(/\/{3}/g, '//')
 		.replaceAll(/(\b)at.*\n/g, '$1at ---\n');
 
-	t.log(process.versions.node.split('.')[0]);
 	t.snapshot(normalized);
 };
 
