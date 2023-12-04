@@ -246,11 +246,13 @@ not ok 27 - unhandled-rejection
     formatted: 'null'
   ...
 ---tty-stream-chunk-separator
+not ok 28 - unhandled-rejection.cjs exited with a non-zero exit code: 1
+---tty-stream-chunk-separator
 
 1..21
 # tests 20
 # pass 6
 # skip 1
-# fail 20
+# fail 21
 
 ---tty-stream-chunk-separator
