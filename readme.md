@@ -4,7 +4,7 @@
 
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
-AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that lets you develop with confidence 🚀
+AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and htread isolation that lets you develop with confidence 🚀
 
 Watch this repository and follow the [Discussions](https://github.com/avajs/ava/discussions) for updates.
 
