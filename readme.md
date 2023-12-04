@@ -6,7 +6,7 @@
 
 AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that lets you develop with confidence 🚀
 
-Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
+Watch this repository and follow the [Discussions](https://github.com/avajs/ava/discussions) for updates.
 
 Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to contribute (issues / PRs / etc).
 
