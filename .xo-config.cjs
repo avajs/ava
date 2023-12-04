@@ -12,6 +12,7 @@ module.exports = {
 		'test/**/fixtures',
 		'test-tap/fixture/snapshots/test-sourcemaps/build/**',
 		'test-tap/fixture/report/edgecases/ast-syntax-error.cjs',
+		'test-tap/fixture/**/*.ts',
 		'test-types',
 		'examples/typescript-*/**/*.ts',
 	],
