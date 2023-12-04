@@ -25,7 +25,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/readm
 - No implicit globals
 - Includes TypeScript definitions
 - [Magic assert](#magic-assert)
-- [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
+- [Isolated environment for each test file](./docs/01-writing-tests.md#test-isolation)
 - [Promise support](./docs/01-writing-tests.md#promise-support)
 - [Async function support](./docs/01-writing-tests.md#async-function-support)
 - [Observable support](./docs/01-writing-tests.md#observable-support)
