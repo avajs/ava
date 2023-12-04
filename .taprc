@@ -1,7 +1,8 @@
 disable-coverage: true
 allow-empty-coverage: true
-files:
-  - "test-tap/*.js"
-  - "test-tap/reporters/*.js"
-  - "test-tap/integration/*.js"
+include:
+  - test-tap/*.js
+  - test-tap/reporters/*.js
+  - test-tap/integration/*.js
 timeout: 300
+tsconfig: test-tap/tsconfig.json
