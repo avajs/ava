@@ -177,7 +177,7 @@ Note that, despite the type cast above, when executing `t.context` is an empty o
 
 ## Typing `throws` assertions
 
-In AVA 6, the `t.throws()` and `t.throwsAsync()` assertions are typed to always return an `Error`. You can customize the error class using generics:
+The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an `Error`. You can customize the error class using generics:
 
 ```ts
 import test from 'ava';
@@ -205,7 +205,5 @@ test('throwsAsync', async t => {
 	t.is(err.parent.name, 'TypeError');
 });
 ```
-
-In AVA 5, the assertion is typed to return the `Error` if the assertion passes *or* `undefined` if it fails.
 
 [`@ava/typescript`]: https://github.com/avajs/typescript

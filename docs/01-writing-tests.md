@@ -10,7 +10,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 ## Test isolation
 
-Each test file is run in a new worker thread. This is new as of AVA 4, though you can fall back to AVA 3's behavior of running in separate processes.
+By default each test file is run in a new worker thread. You can fall back running in separate processes.
 
 AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
 

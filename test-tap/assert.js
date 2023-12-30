@@ -1538,19 +1538,6 @@ test('.snapshot()', async t => {
 		});
 	}
 
-	{
-		// See https://github.com/avajs/ava/issues/2669
-		const assertions = setup('id');
-		failsWith(t, () => assertions.snapshot({foo: 'bar'}, {id: 'an id'}), {
-			assertion: 't.snapshot()',
-			message: 'Since AVA 4, snapshot IDs are no longer supported',
-			formattedDetails: [{
-				label: 'Called with id:',
-				formatted: '\'an id\'',
-			}],
-		});
-	}
-
 	await manager.save();
 	t.end();
 });
