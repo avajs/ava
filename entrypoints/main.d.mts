@@ -10,3 +10,11 @@ declare const test: TestFn;
 
 /** Call to declare a test, or chain to declare hooks or test modifiers */
 export default test;
+
+/**
+ * Register a function to be called when AVA has completed a test run without uncaught exceptions or unhandled rejections.
+ *
+ * Completion handlers are invoked in order of registration. Results are not awaited.
+ */
+declare const registerCompletionHandler: (handler: () => void) => void;
+export {registerCompletionHandler};

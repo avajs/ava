@@ -81,6 +81,37 @@ Error [ERR_WORKER_INVALID_EXEC_ARGV]: Initiated Worker with invalid execArgv fla
 
 If possible don't specify the command line option when running AVA. Alternatively you could [disable worker threads in AVA](./06-configuration.md#options).
 
+## Timeouts because a file failed to exit
+
+You may get a "Timed out while running tests" error because AVA failed to exit when running a particular file.
+
+AVA waits for Node.js to exit the worker thread or child process. If this takes too long, AVA counts it as a timeout.
+
+It is best practice to make sure your code exits cleanly. We've also seen occurrences where an explicit `process.exit()` call inside a worker thread could not be observed in AVA's main process.
+
+For these reasons we're not providing an option to disable this timeout behavior. However, it is possible to register a callback for when AVA has completed the test run without uncaught exceptions or unhandled rejections. From inside this callback you can do whatever you need to do, including calling `process.exit()`.
+
+Create a `_force-exit.mjs` file:
+
+```js
+import process from 'node:process';
+import { registerCompletionHandler } from 'ava';
+
+registerCompletionHandler(() => {
+	process.exit();
+});
+```
+
+Completion handlers are invoked in order of registration. Results are not awaited.
+
+Load it for all test files through AVA's `require` option:
+
+```js
+export default {
+	require: ['./_force-exit.mjs'],
+};
+```
+
 ## Sharing variables between asynchronous tests
 
 By default AVA executes tests concurrently. This can cause problems if your tests are asynchronous and share variables.

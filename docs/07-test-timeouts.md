@@ -4,7 +4,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/timeouts?file=test.js&terminal=test&view=editor)
 
-Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests.
+Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. This same mechanism is used to determine when a test file is preventing a clean exit.
 
 The default timeout is 10 seconds.
 
