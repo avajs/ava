@@ -113,7 +113,7 @@ not ok 12 - test › no longer failing
     message: >-
       Test was expected to fail, but succeeded, you should stop marking the test as
       failing
-    at: 'Test.finish (/lib/test.js:633:28)'
+    at: 'Test.finish (/lib/test.js:629:28)'
   ...
 ---tty-stream-chunk-separator
 not ok 13 - test › logs
@@ -144,7 +144,7 @@ not ok 15 - test › implementation throws non-error
     details:
       'Error thrown in test:': 'null'
     message: Error thrown in test
-    at: 'Test.run (/lib/test.js:546:25)'
+    at: 'Test.run (/lib/test.js:542:25)'
   ...
 ---tty-stream-chunk-separator
 not ok 16 - traces-in-t-throws › throws
