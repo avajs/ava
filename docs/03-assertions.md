@@ -21,13 +21,11 @@ test('unicorns are truthy', t => {
 
 If multiple assertion failures are encountered within a single test, AVA will only display the *first* one.
 
-In AVA 6, assertions return `true` if they've passed and throw otherwise. Catching this error does not cause the test to pass. The error value is undocumented.
-
-In AVA 5, assertions return a boolean and do not throw. You can use this to return early from a test. The `snapshot()` assertion does not return a value.
+Assertions return `true` if they've passed and throw otherwise. Catching this error does not cause the test to pass. The error value is undocumented.
 
 If you use TypeScript you can use some assertions as type guards.
 
-Note that the "throws" assertions return the error that was thrown (provided the assertion passed). In AVA 5, they return `undefined` if the assertion failed.
+Note that the "throws" assertions return the error that was thrown (provided the assertion passed).
 
 ## Assertion planning
 
@@ -179,7 +177,7 @@ t.like([1, 2, 3, 4], [1, , 3])
 Assert that an error is thrown. `fn` must be a function which should throw. By default, the thrown value *must* be an error. It is returned so you can run more assertions against it.
 `expectation` can be an object with one or more of the following properties:
 
-* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
+* `any`: a boolean, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:
@@ -214,7 +212,7 @@ Assert that an error is thrown. `thrower` can be an async function which should 
 By default, the thrown value *must* be an error. It is returned so you can run more assertions against it.
 `expectation` can be an object with one or more of the following properties:
 
-* `any`: a boolean only available in AVA 6, if `true` then the thrown value does not need to be an error. Defaults to `false`
+* `any`: a boolean, if `true` then the thrown value does not need to be an error. Defaults to `false`
 * `instanceOf`: a constructor, the thrown error must be an instance of
 * `is`: the thrown error must be strictly equal to `expectation.is`
 * `message`: the following types are valid:
@@ -279,7 +277,7 @@ Compares the `expected` value with a previously recorded snapshot. Snapshots are
 
 The implementation function behaves the same as any other test function. You can even use macros. The first title argument is always optional. Additional arguments are passed to the implementation or macro function.
 
-`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail. In AVA 6, calling `commit()` on a failed result will throw an error.
+`.try()` is an asynchronous function. You must `await` it. The result object has `commit()` and `discard()` methods. You must decide whether to commit or discard the result. If you commit a failed result, your test will fail. Calling `commit()` on a failed result will throw an error.
 
 You can check whether the attempt passed using the `passed` property. Any assertion errors are available through the `errors` property. The attempt title is available through the `title` property.
 
