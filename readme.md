@@ -1,5 +1,7 @@
 *[Please support our friend Vadim Demedes and the people in Ukraine.](https://stand-with-ukraine.pp.ua/)*
 
+[![Ceasefire Now](https://badge.techforpalestine.org/ceasefire-now)](https://techforpalestine.org/learn-more)
+
 ---
 
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
