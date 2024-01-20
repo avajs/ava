@@ -1,4 +1,4 @@
-import type {StateChangeEvent} from '../types/state-change-events.d';
+import type {StateChangeEvent} from '../types/state-change-events.d.cts';
 
 export type Event = StateChangeEvent;
 
