@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 
-const {fetchUsers, fetchPosts, createPost} = require('.');
+const {fetchUsers, fetchPosts, createPost} = require('./index.js');
 
 test('retrieve users', async t => {
 	t.timeout(100);

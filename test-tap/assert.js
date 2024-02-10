@@ -538,13 +538,21 @@ test('.deepEqual()', t => {
 			{foo: {z: 100, y: 200, x: 300}},
 			'bar',
 			11,
-			{baz: {d: 4, a: 1, b: 2, c: 3}},
+			{
+				baz: {
+					d: 4, a: 1, b: 2, c: 3,
+				},
+			},
 		],
 		[
 			{foo: {x: 300, y: 200, z: 100}},
 			'bar',
 			11,
-			{baz: {c: 3, b: 2, a: 1, d: 4}},
+			{
+				baz: {
+					c: 3, b: 2, a: 1, d: 4,
+				},
+			},
 		],
 	));
 
@@ -778,7 +786,9 @@ test('.like()', t => {
 
 	passes(t, () => {
 		const array = ['c1', 'c2'];
-		return assertions.like({a: 'a', b: 'b', c: ['c1', 'c2'], d: ['c1', 'c2']}, {b: 'b', d: array, c: array});
+		return assertions.like({
+			a: 'a', b: 'b', c: ['c1', 'c2'], d: ['c1', 'c2'],
+		}, {b: 'b', d: array, c: array});
 	});
 
 	failsWith(t, () => {
@@ -1227,7 +1237,9 @@ test('.throws() fails if passed a bad expectation', t => {
 		formattedDetails: [{label: 'Called with:', formatted: /name: null/}],
 	});
 
-	failsWith(t, () => assertions.throws(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
+	failsWith(t, () => assertions.throws(() => {}, {
+		is: {}, message: '', name: '', of() {}, foo: null,
+	}), {
 		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` contains unexpected properties',
 		formattedDetails: [{label: 'Called with:', formatted: /foo: null/}],
@@ -1303,7 +1315,9 @@ test('.throwsAsync() fails if passed a bad expectation', async t => {
 		formattedDetails: [{label: 'Called with:', formatted: /name: null/}],
 	});
 
-	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {is: {}, message: '', name: '', of() {}, foo: null}), {
+	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {
+		is: {}, message: '', name: '', of() {}, foo: null,
+	}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` contains unexpected properties',
 		formattedDetails: [{label: 'Called with:', formatted: /foo: null/}],

@@ -29,6 +29,7 @@ module.exports = {
 		'import/newline-after-import': 'error',
 		'unicorn/require-post-message-target-origin': 'off',
 		'unicorn/prefer-event-target': 'off',
+		'unicorn/prevent-abbreviations': 'off',
 	},
 	overrides: [
 		{

@@ -16,7 +16,9 @@ test('read code excerpt', t => {
 	alert();
 }`));
 
-	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false});
+	const excerpt = codeExcerpt({
+		file, line: 2, isWithinProject: true, isDependency: false,
+	});
 	const expected = [
 		` ${chalk.grey('1:')} function a() {`,
 		chalk.bgRed.bold(' 2:   alert();    '),
@@ -32,7 +34,9 @@ test('truncate lines', t => {
 	alert();
 }`));
 
-	const excerpt = codeExcerpt({file, line: 2, isWithinProject: true, isDependency: false}, {maxWidth: 14});
+	const excerpt = codeExcerpt({
+		file, line: 2, isWithinProject: true, isDependency: false,
+	}, {maxWidth: 14});
 	const expected = [
 		` ${chalk.grey('1:')} functio…`,
 		chalk.bgRed.bold(' 2:   alert…'),
@@ -56,7 +60,9 @@ function a() {
 	alert();
 }`));
 
-	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
+	const excerpt = codeExcerpt({
+		file, line: 10, isWithinProject: true, isDependency: false,
+	});
 	const expected = [
 		` ${chalk.grey(' 9:')} function a() {`,
 		chalk.bgRed.bold(' 10:   alert();    '),
@@ -69,7 +75,9 @@ function a() {
 
 test('noop if file cannot be read', t => {
 	const file = pathToFileURL(temporaryFile());
-	const excerpt = codeExcerpt({file, line: 10, isWithinProject: true, isDependency: false});
+	const excerpt = codeExcerpt({
+		file, line: 10, isWithinProject: true, isDependency: false,
+	});
 	t.equal(excerpt, null);
 	t.end();
 });
@@ -81,7 +89,9 @@ test('noop if file is not within project', t => {
 });
 
 test('noop if file is a dependency', t => {
-	const excerpt = codeExcerpt({isWithinProject: true, isDependency: true, file: import.meta.url, line: 1});
+	const excerpt = codeExcerpt({
+		isWithinProject: true, isDependency: true, file: import.meta.url, line: 1,
+	});
 	t.equal(excerpt, null);
 	t.end();
 });
