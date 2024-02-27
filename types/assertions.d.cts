@@ -413,7 +413,7 @@ export type UnorderedEqualAssertion = {
 	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
 	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
 	 *
-	 * Returns a boolean indicating whether the assertion passed.
+	 * Returns `true` if the assertion passed and throws otherwise.
 	 */
 	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
 
@@ -424,7 +424,7 @@ export type UnorderedEqualAssertion = {
 	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
 	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
 	 *
-	 * Returns a boolean indicating whether the assertion passed.
+	 * Returns `true` if the assertion passed and throws otherwise.
 	 */
 	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
 
@@ -435,9 +435,9 @@ export type UnorderedEqualAssertion = {
 	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
 	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
 	 *
-	 * Returns a boolean indicating whether the assertion passed.
+	 * Returns `true` if the assertion passed and throws otherwise.
 	 */
-	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): boolean;
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): true;
 
 	/** Skip this assertion. */
 	skip(actual: any, expected: any, message?: string): void;
