@@ -65,7 +65,9 @@ const initState = () => {
 		},
 	};
 
-	return {errors, logs, stats, stdout: '', stderr: ''};
+	return {
+		errors, logs, stats, stdout: '', stderr: '',
+	};
 };
 
 const sortStats = stats => {
@@ -121,7 +123,9 @@ export async function * exec(args, options) {
 		const item = await Promise.race([done, statusEvents.next()]); // eslint-disable-line no-await-in-loop
 		if (item.execa) {
 			sortStats(stats);
-			yield {process: execaProcess, stats, stdout, stderr, runCount};
+			yield {
+				process: execaProcess, stats, stdout, stderr, runCount,
+			};
 			break;
 		}
 
@@ -134,7 +138,9 @@ export async function * exec(args, options) {
 			case 'end': {
 				sortStats(stats);
 				runCount++;
-				yield {process: execaProcess, stats, stdout, stderr, runCount};
+				yield {
+					process: execaProcess, stats, stdout, stderr, runCount,
+				};
 				({errors, logs, stats, stdout, stderr} = initState());
 				break;
 			}

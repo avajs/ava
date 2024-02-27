@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const {sum} = require('.');
+const {sum} = require('./index.js');
 
 function macro(t, a, b, expected) {
 	t.is(sum(a, b), expected);
