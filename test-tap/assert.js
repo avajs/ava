@@ -882,9 +882,14 @@ test('.throws()', gather(t => {
 		throw new Error('foo');
 	}), {expectBoolean: false});
 
-	// Passes when string is thrown, only when any is set to true.
+	// Passes when string is thrown and `expectation.any` is true.
 	passes(t, () => assertions.throws(() => {
 		throw 'foo'; // eslint-disable-line no-throw-literal
+	}, {any: true}), {expectBoolean: false});
+
+	// Passes when false is thrown and `expectation.any` is true.
+	passes(t, () => assertions.throws(() => {
+		throw false; // eslint-disable-line no-throw-literal
 	}, {any: true}), {expectBoolean: false});
 
 	// Passes because the correct error is thrown.
@@ -1098,8 +1103,11 @@ test('.throwsAsync()', gather(t => {
 	// Passes because the promise was rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
 
-	// Passes because the promise was rejected with an with an non-error exception, & set `any` to true in expectation.
+	// Passes because the promise was rejected with a non-error reason and `expectation.any` is true.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true})); // eslint-disable-line prefer-promise-reject-errors
+
+	// Passes because the promise was rejected with a falsy non-error reason and `expectation.any` is true.
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(), {any: true}));
 
 	// Passes because the function returned a promise rejected with an error.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
