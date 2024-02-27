@@ -1,9 +1,11 @@
 
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
+import {gunzipSync} from 'node:zlib';
 
 import concordance from 'concordance';
 
+import {extractCompressedSnapshot} from '../../../lib/snapshot-manager.js';
 import {fixture} from '../../helpers/exec.js';
 import {withTemporaryFixture} from '../../helpers/with-temporary-fixture.js';
 
@@ -19,7 +21,7 @@ function cleanStringDiff(before, after) {
 	let diff = concordance.diff(before, after, {theme});
 	// Remove all newline control characters, or they'll be duplicated in the
 	// snapshot report
-	diff = diff.replace(/␊/g, '');
+	diff = diff.replaceAll('␊', '');
 	return diff;
 }
 
@@ -63,9 +65,12 @@ export async function beforeAndAfter(t, {
 }
 
 async function readSnapshots(cwd) {
+	const snapPath = path.join(cwd, 'test.js.snap');
 	const [snapshot, report] = await Promise.all([
-		fs.readFile(path.join(cwd, 'test.js.snap')),
+		fs.readFile(snapPath),
 		fs.readFile(path.join(cwd, 'test.js.md'), 'utf8'),
 	]);
-	return {snapshot, report};
+
+	const {version, compressed} = extractCompressedSnapshot(snapshot, snapPath);
+	return {snapshot: {version, decompressed: gunzipSync(compressed)}, report};
 }

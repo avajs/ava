@@ -1,10 +1,12 @@
-[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
+*[Please support our friend Vadim Demedes and the people in Ukraine.](https://stand-with-ukraine.pp.ua/)*
+
+---
 
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
-AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and process isolation that lets you develop with confidence 🚀
+AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and thread isolation that lets you develop with confidence 🚀
 
-Follow the [AVA Twitter account](https://twitter.com/ava__js) for updates.
+Watch this repository and follow the [Discussions](https://github.com/avajs/ava/discussions) for updates.
 
 Read our [contributing guide](.github/CONTRIBUTING.md) if you're looking to contribute (issues / PRs / etc).
 
@@ -23,7 +25,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/readm
 - No implicit globals
 - Includes TypeScript definitions
 - [Magic assert](#magic-assert)
-- [Isolated environment for each test file](./docs/01-writing-tests.md#process-isolation)
+- [Isolated environment for each test file](./docs/01-writing-tests.md#test-isolation)
 - [Promise support](./docs/01-writing-tests.md#promise-support)
 - [Async function support](./docs/01-writing-tests.md#async-function-support)
 - [Observable support](./docs/01-writing-tests.md#observable-support)
@@ -67,7 +69,7 @@ Alternatively you can install `ava` manually:
 npm install --save-dev ava
 ```
 
-*Make sure to install AVA locally. As of AVA 4 it can no longer be run globally.*
+*Make sure to install AVA locally. AVA cannot be run globally.*
 
 Don't forget to configure the `test` script in your `package.json` as per above.
 
@@ -165,14 +167,6 @@ We have a growing list of [common pitfalls](docs/08-common-pitfalls.md) you may 
 - [Testing web apps using Selenium WebDriverJS](docs/recipes/testing-with-selenium-webdriverjs.md)
 
 ## FAQ
-
-### Why not `mocha`, `tape`, `tap`?
-
-Mocha requires you to use implicit globals like `describe` and `it` with the default interface (which most people use). It's not very opinionated and executes tests serially without process isolation, making it slow.
-
-Tape and tap are pretty good. AVA is highly inspired by their syntax. They too execute tests serially. Their default [TAP](https://testanything.org) output isn't very user-friendly though so you always end up using an external tap reporter.
-
-In contrast AVA is highly opinionated and runs tests concurrently, with a separate process for each test file. Its default reporter is easy on the eyes and yet AVA still supports TAP output through a CLI flag.
 
 ### How is the name written and pronounced?
 

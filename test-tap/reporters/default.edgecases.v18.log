@@ -2,7 +2,7 @@
 ---tty-stream-chunk-separator
   [35m⚠ Could not parse ast-syntax-error.cjs for line number selection[39m
 
-  [90mSyntaxError: Unexpected token (3:11)[39m
+  SyntaxError: Unexpected token (3:11)
 
 ---tty-stream-chunk-separator
   [1mUncaught exception in ast-syntax-error.cjs[22m

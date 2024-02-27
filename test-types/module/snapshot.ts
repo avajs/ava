@@ -6,7 +6,7 @@ test('snapshot', t => {
 	t.snapshot({foo: 'bar'});
 	t.snapshot(null, 'a snapshot with a message');
 	// @ts-expect-error TS2345
-	expectError(t.snapshot('hello world', null)); // eslint-disable-line @typescript-eslint/no-confusing-void-expression
+	expectError(t.snapshot('hello world', null));
 });
 
 test('snapshot.skip', t => {

@@ -1,5 +1,3 @@
-import type {URL} from 'node:url';
-
 export namespace SharedWorker {
 	export type ProtocolIdentifier = 'ava-4';
 

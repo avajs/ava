@@ -80,23 +80,19 @@ export const withFixture = fixture => async (t, task) => {
 				const assertIdle = async next => {
 					assertingIdle = true;
 
-					// TODO: When testing using AVA 6, enable for better managed timeouts.
-					// t.timeout(10_000);
+					t.timeout(30_000);
 
 					const promise = Promise.all([delay(5000, null, {ref: false}), next?.()]).finally(() => {
 						if (idlePromise === promise) {
 							idlePromise = new Promise(() => {});
 							assertingIdle = false;
-							// TODO: When testing using AVA 6, enable for better managed timeouts.
-							// t.timeout.clear();
+							t.timeout.clear();
 							if (failedIdleAssertion) {
 								failedIdleAssertion = false;
 								t.fail('Watcher performed a test run while it should have been idle');
 							}
 						}
-
-						return {};
-					});
+					}).then(() => ({}));
 					idlePromise = promise;
 
 					await promise;
@@ -104,12 +100,32 @@ export const withFixture = fixture => async (t, task) => {
 
 				let state = {};
 				let pendingState;
+				let process;
+
+				t.teardown(async () => {
+					if (process?.connected) {
+						process.send('abort-watcher');
+					}
+
+					// Sending the `abort-watcher` message should suffice, but on Linux
+					// the recursive watch handle does not close properly. See
+					// <https://github.com/nodejs/node/issues/48437> but there seem to be
+					// other isues.
+					setTimeout(() => {
+						process.kill('SIGKILL');
+					}, 1000).unref();
+
+					try {
+						await process;
+					} catch {}
+				});
 
 				const results = run(args, options);
 				try {
 					let nextResult = results.next();
-					while (true) { // eslint-disable-line no-constant-condition
+					while (!isDone) { // eslint-disable-line no-unmodified-loop-condition
 						const item = await Promise.race([nextResult, idlePromise, donePromise]); // eslint-disable-line no-await-in-loop
+						process ??= item.value?.process;
 
 						if (item.value) {
 							failedIdleAssertion ||= assertingIdle;
@@ -124,8 +140,8 @@ export const withFixture = fixture => async (t, task) => {
 							}
 						}
 
-						if (item.done || isDone) {
-							item.value?.process.send('abort-watcher');
+						if (item.done) {
+							await pendingState; // eslint-disable-line no-await-in-loop
 							break;
 						}
 					}

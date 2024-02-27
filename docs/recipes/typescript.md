@@ -4,7 +4,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/docs/
 
 AVA comes bundled with a TypeScript definition file. This allows developers to leverage TypeScript for writing tests.
 
-This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 5.1.
+This guide assumes you've already set up TypeScript for your project. Note that AVA's definition expects at least version 5.2.
 
 ## Enabling AVA's support for TypeScript test files
 
@@ -17,12 +17,21 @@ Broadly speaking, there are two ways to run tests written in TypeScript:
 
 **You can use loaders, but you're largely on your own. [Please post questions to our Discussions forum if you're stuck](https://github.com/avajs/ava/discussions/categories/q-a).**
 
+> [!NOTE]
+> Custom loaders changed with the release of Node.js 20. This recipe assumes your Node.js version is equal to or higher than the following. For older versions, please see a [previous commit](https://github.com/avajs/ava/blob/aae39b20ba3ef80e5bedb1e5882432a3cd7c44eb/docs/recipes/typescript.md).
+>
+> | Node.js Major Version | Minimum Version |
+> | --------------------- | --------------- |
+> |                    18 | 18.18.0         |
+> |                    20 | 20.8.0          |
+> |                    21 | 21.0.0          |
+
 There are two components to a setup like this:
 
 1. [Make sure AVA recognizes the extensions of your TypeScript files](../06-configuration.md#configuring-module-formats)
 2. Install the loader [through `nodeArguments`](../06-configuration.md#node-arguments)
 
-[`tsx`](https://github.com/esbuild-kit/tsx) may be the best loader available. The setup, assuming your TypeScript config outputs ES modules, would look like this:
+[`tsimp`](https://github.com/tapjs/tsimp) may be the best loader available. The setup, assuming your TypeScript config outputs ES modules, would look like this:
 
 `package.json`:
 
@@ -32,39 +41,8 @@ There are two components to a setup like this:
 		"ts": "module"
 	},
 	"nodeArguments": [
-		"--loader=tsx"
+		"--import=tsimp"
 	]
-}
-```
-### When using custom loaders
-
-#### Mocking
-
-Mocking with `tsx` (such as with [`esmock`](https://github.com/iambumblehead/esmock)) isn't currently possible (https://github.com/esbuild-kit/tsx/issues/264). [`ts-node`](https://github.com/TypeStrong/ts-node) can be used instead:
-
-`package.json`:
-
-```json
-"ava": {
-	"extensions": {
-		"ts": "module"
-	},
-	"nodeArguments": [
-		"--loader=ts-node/esm",
-		"--loader=esmock"
-	]
-}
-```
-
-#### Node.js 20
-
-In Node.js 20, custom loaders must be specified via the `NODE_OPTIONS` environment variable:
-
-`package.json`:
-
-```json
-"scripts": {
-	"test": "NODE_OPTIONS='--loader=tsx' ava"
 }
 ```
 
@@ -177,7 +155,7 @@ Note that, despite the type cast above, when executing `t.context` is an empty o
 
 ## Typing `throws` assertions
 
-The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an Error. You can customize the error class using generics:
+The `t.throws()` and `t.throwsAsync()` assertions are typed to always return an `Error`. You can customize the error class using generics:
 
 ```ts
 import test from 'ava';
@@ -205,7 +183,5 @@ test('throwsAsync', async t => {
 	t.is(err.parent.name, 'TypeError');
 });
 ```
-
-Note that, despite the typing, the assertion returns `undefined` if it fails. Typing the assertions as returning `Error | undefined` didn't seem like the pragmatic choice.
 
 [`@ava/typescript`]: https://github.com/avajs/typescript

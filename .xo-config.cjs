@@ -9,8 +9,11 @@ module.exports = {
 		'media/**',
 		'test/config/fixtures/config-errors/test.js',
 		'test/line-numbers/fixtures/line-numbers.js',
+		'test/**/fixtures',
 		'test-tap/fixture/snapshots/test-sourcemaps/build/**',
 		'test-tap/fixture/report/edgecases/ast-syntax-error.cjs',
+		'test-tap/fixture/**/*.ts',
+		'test-types',
 		'examples/typescript-*/**/*.ts',
 	],
 	rules: {
@@ -25,6 +28,7 @@ module.exports = {
 		],
 		'import/newline-after-import': 'error',
 		'unicorn/require-post-message-target-origin': 'off',
+		'unicorn/prefer-event-target': 'off',
 	},
 	overrides: [
 		{

@@ -10,7 +10,7 @@ AVA tries to run test files with their current working directory set to the dire
 
 ## Test isolation
 
-Each test file is run in a new worker thread. This is new as of AVA 4, though you can fall back to AVA 3's behavior of running in separate processes.
+By default each test file is run in a new worker thread. You can fall back running in separate processes.
 
 AVA will set `process.env.NODE_ENV` to `test`, unless the `NODE_ENV` environment variable has been set. This is useful if the code you're testing has test defaults (for example when picking what database to connect to). It may cause your code or its dependencies to behave differently though. Note that `'NODE_ENV' in process.env` will always be `true`.
 
@@ -154,7 +154,7 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
-*You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test.
+*You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test. Or use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run cleanup code after AVA has completed its work.
 
 Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
 

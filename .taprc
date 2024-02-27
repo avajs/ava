@@ -1,10 +1,8 @@
-browser: false
-coverage: false
-files:
-  - "test-tap/*.js"
-  - "test-tap/reporters/*.js"
-  - "test-tap/integration/*.js"
-flow: false
-jsx: false
+disable-coverage: true
+allow-empty-coverage: true
+include:
+  - test-tap/*.js
+  - test-tap/reporters/*.js
+  - test-tap/integration/*.js
 timeout: 300
-ts: false
+tsconfig: test-tap/tsconfig.json
