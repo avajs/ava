@@ -141,6 +141,9 @@ export type Assertions = {
 	 * Note: An `else` clause using this as a type guard will be subtly incorrect for `string` and `number` types and will not give `0` or `''` as a potential value in an `else` clause.
 	 */
 	truthy: TruthyAssertion;
+
+	/** Assert that all values in `actual` are in `expected`, returning a boolean indicating whether the assertion passed. */
+	unorderedEqual: UnorderedEqualAssertion;
 };
 
 type FalsyValue = false | 0 | 0n | '' | null | undefined; // eslint-disable-line @typescript-eslint/ban-types
@@ -399,4 +402,43 @@ export type TruthyAssertion = {
 
 	/** Skip this assertion. */
 	skip(actual: any, message?: string): void;
+};
+
+// TODO: limit to Map | Set | Array
+export type UnorderedEqualAssertion = {
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns `true` if the assertion passed and throws otherwise.
+	 */
+	<Actual, Expected extends Actual>(actual: Actual, expected: Expected, message?: string): actual is Expected;
+
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns `true` if the assertion passed and throws otherwise.
+	 */
+	<Actual extends Expected, Expected>(actual: Actual, expected: Expected, message?: string): expected is Actual;
+
+	/**
+	 * Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend
+	 * on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+	 *
+	 * The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in
+	 * `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+	 *
+	 * Returns `true` if the assertion passed and throws otherwise.
+	 */
+	<Actual, Expected>(actual: Actual, expected: Expected, message?: string): true;
+
+	/** Skip this assertion. */
+	skip(actual: any, expected: any, message?: string): void;
 };
