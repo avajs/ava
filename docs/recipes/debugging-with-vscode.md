@@ -68,6 +68,26 @@ Assuming the names of your test files are unique you could try the following con
 }
 ```
 
+### Using Yarn PnP (Plug'n'Play)
+
+As [Yarn's PnP (Plug'n'Play)](https://yarnpkg.com/features/pnp) installation strategy does not produce a `node_modules` folder, the `ava` binary must be called using `yarn run`:
+
+```json
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Debug AVA test file",
+  "runtimeExecutable": "yarn",
+  "runtimeArgs": ["run", "ava"],
+  "args": ["${file}"],
+  "outputCapture": "std",
+  "console": "integratedTerminal", // optional
+  "skipFiles": [
+    "<node_internals>/**/*.js"
+  ]
+}
+```
+
 ## Serial debugging
 
 By default AVA runs tests concurrently. This may complicate debugging. Instead make sure AVA runs only one test at a time.
