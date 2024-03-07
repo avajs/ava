@@ -2,6 +2,8 @@
 
 ---
 
+**IMPORTANT: AVA doesn't work with typescript out of the box. You have two options: 1. Building then running AVA, or 2: using a node typescript loader. See [here](https://github.com/avajs/ava/blob/main/docs/recipes/typescript.md#enabling-avas-support-for-typescript-test-files) to get this setup.**
+
 # <img src="media/header.png" title="AVA" alt="AVA logo" width="530">
 
 AVA is a test runner for Node.js with a concise API, detailed error output, embrace of new language features and thread isolation that lets you develop with confidence 🚀
