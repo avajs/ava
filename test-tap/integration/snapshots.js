@@ -1,4 +1,3 @@
-import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -10,6 +9,7 @@ import {temporaryDirectory} from 'tempy';
 
 import {extractCompressedSnapshot} from '../../lib/snapshot-manager.js';
 import {execCli} from '../helper/cli.js';
+import {stringToUint8Array} from 'uint8array-extras';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -82,7 +82,7 @@ test('two', t => {
 
 test('outdated snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
-	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
+	fs.writeFileSync(snapPath, stringToUint8Array([0x0A, 0x00, 0x00]));
 
 	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
@@ -96,7 +96,7 @@ test('outdated snapshot version is reported to the console', t => {
 
 test('outdated snapshot version can be updated', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
-	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
+	fs.writeFileSync(snapPath, stringToUint8Array([0x0A, 0x00, 0x00]));
 
 	execCli(['test.cjs', '--update-snapshots'], {dirname: 'fixture/snapshots', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.error(error);
@@ -107,7 +107,7 @@ test('outdated snapshot version can be updated', t => {
 
 test('newer snapshot version is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
-	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
+	fs.writeFileSync(snapPath, stringToUint8Array([0x0A, 0xFF, 0xFF]));
 
 	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
@@ -121,7 +121,7 @@ test('newer snapshot version is reported to the console', t => {
 
 test('snapshot corruption is reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
-	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x03, 0x00]));
+	fs.writeFileSync(snapPath, stringToUint8Array([0x0A, 0x03, 0x00]));
 
 	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
@@ -135,7 +135,7 @@ test('snapshot corruption is reported to the console', t => {
 
 test('legacy snapshot files are reported to the console', t => {
 	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
-	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
+	fs.writeFileSync(snapPath, stringToUint8Array('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
 
 	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);

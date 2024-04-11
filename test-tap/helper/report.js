@@ -8,25 +8,26 @@ import Api from '../../lib/api.js';
 import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
 import pkg from '../../lib/pkg.cjs';
+import {uint8ArrayToString} from 'uint8array-extras';
 
 _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 
 const exports = {};
 export default exports;
 
-exports.assert = (t, logFile, buffer) => {
+exports.assert = (t, logFile, array) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
 	} catch {}
 
 	if (existing === null || process.env.UPDATE_REPORTER_LOG) {
-		fs.writeFileSync(logFile, buffer);
-		existing = buffer;
+		fs.writeFileSync(logFile, array);
+		existing = array;
 	}
 
-	const expected = existing.toString('utf8');
-	const actual = buffer.toString('utf8');
+	const expected = uint8ArrayToString(existing);
+	const actual = uint8ArrayToString(array);
 	if (actual === expected) {
 		t.pass();
 	} else {

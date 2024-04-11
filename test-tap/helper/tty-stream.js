@@ -1,7 +1,7 @@
-import {Buffer} from 'node:buffer';
 import stream from 'node:stream';
 
 import ansiEscapes from 'ansi-escapes';
+import {stringToUint8Array, concatUint8Arrays, uint8ArrayToString} from 'uint8array-extras';
 
 export default class TTYStream extends stream.Writable {
 	constructor(options) {
@@ -17,7 +17,7 @@ export default class TTYStream extends stream.Writable {
 
 	_write(chunk, encoding, callback) {
 		if (this.spinnerActivity.length > 0) {
-			this.chunks.push(Buffer.concat(this.spinnerActivity), TTYStream.SEPARATOR);
+			this.chunks.push(concatUint8Arrays(this.spinnerActivity), TTYStream.SEPARATOR);
 			this.spinnerActivity = [];
 		}
 
@@ -26,7 +26,7 @@ export default class TTYStream extends stream.Writable {
 		// chunks.
 		if (string !== '' || chunk.length === 0) {
 			this.chunks.push(
-				Buffer.from(string, 'utf8'),
+				stringToUint8Array(string),
 				TTYStream.SEPARATOR,
 			);
 		}
@@ -36,33 +36,37 @@ export default class TTYStream extends stream.Writable {
 
 	_writev(chunks, callback) {
 		if (this.spinnerActivity.length > 0) {
-			this.chunks.push(Buffer.concat(this.spinnerActivity), TTYStream.SEPARATOR);
+			this.chunks.push(concatUint8Arrays(this.spinnerActivity), TTYStream.SEPARATOR);
 			this.spinnerActivity = [];
 		}
 
 		for (const object of chunks) {
-			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8')); // eslint-disable-line unicorn/no-array-reduce
+			this.chunks.push(stringToUint8Array(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), uint8ArrayToString(object.chunk)))); // eslint-disable-line unicorn/no-array-reduce
 		}
 
 		this.chunks.push(TTYStream.SEPARATOR);
 		callback();
 	}
 
-	asBuffer() {
-		return Buffer.concat(this.chunks);
+	asUint8Array() {
+		return concatUint8Arrays(this.chunks);
+	}
+
+	toString() {
+		return uint8ArrayToString(array);
 	}
 
 	clearLine() {
-		this.spinnerActivity.push(Buffer.from(ansiEscapes.eraseLine, 'ascii'));
+		this.spinnerActivity.push(stringToUint8Array(ansiEscapes.eraseLine));
 	}
 
 	cursorTo(x, y) {
-		this.spinnerActivity.push(Buffer.from(ansiEscapes.cursorTo(x, y), 'ascii'));
+		this.spinnerActivity.push(stringToUint8Array(ansiEscapes.cursorTo(x, y)));
 	}
 
 	moveCursor(dx, dy) {
-		this.spinnerActivity.push(Buffer.from(ansiEscapes.cursorMove(dx, dy), 'ascii'));
+		this.spinnerActivity.push(stringToUint8Array(ansiEscapes.cursorMove(dx, dy)));
 	}
 }
 
-TTYStream.SEPARATOR = Buffer.from('---tty-stream-chunk-separator\n', 'utf8');
+TTYStream.SEPARATOR = stringToUint8Array('---tty-stream-chunk-separator\n');
