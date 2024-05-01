@@ -28,6 +28,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+      - if: runner.os == 'Windows' && matrix.node-version == '^22'
+        shell: bash
+        run: |
+          npm install -g npm
       - run: npm install --no-audit
       - run: ./scripts/ci.sh
         shell: bash
