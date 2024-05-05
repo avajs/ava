@@ -36,7 +36,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "^18.18 || ^20.8 || ^21"
+		"node": "^18.18 || ^20.8 || ^21 || ^22"
 	},
 	"scripts": {
 		"test": "./scripts/test.sh"
