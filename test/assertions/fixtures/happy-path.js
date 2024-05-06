@@ -43,3 +43,4 @@ test(passes, 'false', false);
 test(passes, 'regex', 'foo', /foo/);
 test(passes, 'notRegex', 'bar', /foo/);
 test(passes, 'assert', 1);
+test(passes, 'unorderedEqual', [1, 2, 3], [2, 3, 1]);

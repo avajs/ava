@@ -141,6 +141,14 @@ Assert that `actual` is deeply equal to `expected`. See [Concordance](https://gi
 
 Assert that `actual` is not deeply equal to `expected`. The inverse of `.deepEqual()`.
 
+### `.unorderedEqual(actual, expected, message?)`
+
+Assert that all values in `actual` are in `expected`. This is a variant of `.deepEqual()` that does not depend on the order of `actual`/`expected` and only compares instances of `Map`s or `Set`s/arrays.
+
+The size of `actual` and `expected` must be equal. For `Map`s, each key-value pair in `actual` must be in `expected`, and vice-versa. For `Set`s/arrays, each value in `actual` must be in `expected`.
+
+Returns a boolean indicating whether the assertion passed.
+
 ### `.like(actual, selector, message?)`
 
 Assert that `actual` is like `selector`. This is a variant of `.deepEqual()`, however `selector` does not need to have the same enumerable properties as `actual` does.
