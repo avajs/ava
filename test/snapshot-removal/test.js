@@ -1,4 +1,3 @@
-import {Buffer} from 'node:buffer';
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
 
@@ -54,7 +53,7 @@ test.serial('removing non-existent snapshots doesn\'t throw', async t => {
 test.serial('without --update-snapshots, invalid .snaps are retained', async t => {
 	await withTemporaryFixture(cwd('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
-		const invalid = Buffer.of(0x0A, 0x00, 0x00);
+		const invalid = new Uint8Array([0x0A, 0x00, 0x00]);
 		await fs.writeFile(snapPath, invalid);
 
 		await fixture([], {cwd});
@@ -67,7 +66,7 @@ test.serial('without --update-snapshots, invalid .snaps are retained', async t =
 test.serial('with --update-snapshots, invalid .snaps are removed', async t => {
 	await withTemporaryFixture(cwd('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
-		const invalid = Buffer.of(0x0A, 0x00, 0x00);
+		const invalid = new Uint8Array([0x0A, 0x00, 0x00]);
 		await fs.writeFile(snapPath, invalid);
 
 		await fixture(['--update-snapshots'], {cwd});

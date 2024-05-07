@@ -1,4 +1,3 @@
-import {Buffer} from 'node:buffer';
 import {on} from 'node:events';
 import path from 'node:path';
 import {Writable} from 'node:stream';
@@ -6,6 +5,7 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 
 import test from '@ava/test';
 import {execaNode} from 'execa';
+import {stringToUint8Array} from 'uint8array-extras';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
 const ttySimulator = fileURLToPath(new URL('simulate-tty.cjs', import.meta.url));
@@ -35,7 +35,7 @@ const compareStatObjects = (a, b) => {
 export const cwd = (...paths) => path.join(path.dirname(fileURLToPath(test.meta.file)), 'fixtures', ...paths);
 export const cleanOutput = string => string.replace(/^\W+/, '').replaceAll(/\W+\n+$/g, '').trim();
 
-const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
+const NO_FORWARD_PREFIX = stringToUint8Array('🤗');
 
 const forwardErrorOutput = chunk => {
 	if (chunk.length < 4 || NO_FORWARD_PREFIX.compare(chunk, 0, 4) !== 0) {

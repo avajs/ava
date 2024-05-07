@@ -32,9 +32,9 @@ test(async t => {
 		return report[type](reporter)
 			.then(() => {
 				tty.end();
-				return tty.asBuffer();
+				return tty.asUint8Array();
 			})
-			.then(buffer => report.assert(t, logFile, buffer))
+			.then(array => report.assert(t, logFile, array))
 			.catch(t.threw);
 	};
 

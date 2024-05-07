@@ -1,4 +1,3 @@
-import {Buffer} from 'node:buffer';
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
 
@@ -13,7 +12,7 @@ test.serial('With invalid .snap file and --update-snapshots, skipped snaps are o
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const reportPath = path.join(cwd, 'test.js.md');
 
-		await fs.writeFile(snapPath, Buffer.of(0x0A, 0x00, 0x00));
+		await fs.writeFile(snapPath, new Uint8Array([0x0A, 0x00, 0x00]));
 
 		const result = await fixture(['--update-snapshots'], {cwd, env});
 		const report = await fs.readFile(reportPath, 'utf8');

@@ -121,6 +121,7 @@
 		"strip-ansi": "^7.1.0",
 		"supertap": "^3.0.1",
 		"temp-dir": "^3.0.0",
+		"uint8array-extras": "^1.1.0",
 		"write-file-atomic": "^5.0.1",
 		"yargs": "^17.7.2"
 	},
