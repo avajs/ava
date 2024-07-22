@@ -1,0 +1,22 @@
+{
+	"name": "ava-typescript-context",
+	"description": "TypeScript example for typing t.context",
+	"type": "module",
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"@sindresorhus/tsconfig": "^6.0.0",
+		"ava": "^6.1.3",
+		"tsimp": "^2.0.11",
+		"typescript": "~5.5.3"
+	},
+	"ava": {
+		"extensions": {
+			"ts": "module"
+		},
+		"nodeArguments": [
+			"--import=tsimp"
+		]
+	}
+}

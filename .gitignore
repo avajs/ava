@@ -6,4 +6,3 @@
 /test/**/fixtures/**/node_modules/*/
 /examples/**/node_modules/
 /examples/**/package-lock.json
-/examples/**/build/
