@@ -43,7 +43,6 @@ module.exports = {
 			rules: {
 				'ava/no-ignored-test-files': 'off',
 				'ava/no-only-test': 'off',
-				'unicorn/prefer-module': 'off',
 			},
 		},
 		{

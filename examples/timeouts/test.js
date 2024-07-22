@@ -1,21 +1,18 @@
-'use strict';
-const test = require('ava');
+import test from 'ava';
 
-const {fetchUsers, fetchPosts, createPost} = require('./index.js');
+import {fetchUsers, fetchPosts, createPost} from './index.js';
 
 test('retrieve users', async t => {
 	t.timeout(100);
 
 	const users = await fetchUsers();
 
-	t.deepEqual(users, [
-		{
-			id: 1,
-			firstName: 'Ava',
-			name: 'Rocks',
-			email: 'ava@rocks.com',
-		},
-	]);
+	t.deepEqual(users, [{
+		id: 1,
+		firstName: 'Ava',
+		name: 'Rocks',
+		email: 'ava@rocks.com',
+	}]);
 });
 
 test('retrieve posts', async t => {
@@ -23,13 +20,11 @@ test('retrieve posts', async t => {
 
 	const posts = await fetchPosts(1);
 
-	t.deepEqual(posts, [
-		{
-			id: 1,
-			userId: 1,
-			message: 'AVA Rocks 🚀',
-		},
-	]);
+	t.deepEqual(posts, [{
+		id: 1,
+		userId: 1,
+		message: 'AVA Rocks 🚀',
+	}]);
 });
 
 test('create post', async t => {

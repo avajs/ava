@@ -1,12 +1,13 @@
-const test = require('ava');
+import test from 'ava';
 
-const {sum} = require('./index.js');
+import {sum} from './index.js';
 
-function macro(t, a, b, expected) {
-	t.is(sum(a, b), expected);
-}
-
-macro.title = (providedTitle, a, b, expected) => `${providedTitle ?? ''} ${a}+${b} = ${expected}`.trim();
+const macro = test.macro({
+	exec(t, a, b, expected) {
+		t.is(sum(a, b), expected);
+	},
+	title: (providedTitle, a, b, expected) => `${providedTitle ?? ''} ${a}+${b} = ${expected}`.trim(),
+});
 
 test(macro, 2, 2, 4);
 test(macro, 3, 3, 6);

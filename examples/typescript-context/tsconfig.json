@@ -1,7 +1,6 @@
 {
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
-		"module": "commonjs",
 		"outDir": "build",
 	}
 }

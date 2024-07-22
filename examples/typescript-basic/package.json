@@ -1,14 +1,15 @@
 {
 	"name": "ava-typescript-basic",
 	"description": "Basic example for AVA with TypeScript",
+	"type": "module",
 	"scripts": {
 		"test": "ava"
 	},
 	"devDependencies": {
-		"@ava/typescript": "^2.0.0",
-		"@sindresorhus/tsconfig": "^1.0.2",
-		"ava": "^3.15.0",
-		"typescript": "^4.3.4"
+		"@ava/typescript": "^5.0.0",
+		"@sindresorhus/tsconfig": "^6.0.0",
+		"ava": "^6.1.3",
+		"typescript": "~5.5.3"
 	},
 	"ava": {
 		"typescript": {

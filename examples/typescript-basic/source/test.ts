@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import {sum, subtract} from '.';
+import {sum, subtract} from './index.js';
 
 test('sum', t => {
 	t.is(sum(0, 0), 0);
