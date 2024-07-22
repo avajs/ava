@@ -1,35 +1,29 @@
-'use strict';
-
 const delay = ms => new Promise(resolve => {
 	setTimeout(resolve, ms);
 });
 
-exports.fetchUsers = async () => {
+export async function fetchUsers() {
 	await delay(50);
 
-	return [
-		{
-			id: 1,
-			firstName: 'Ava',
-			name: 'Rocks',
-			email: 'ava@rocks.com',
-		},
-	];
-};
+	return [{
+		id: 1,
+		firstName: 'Ava',
+		name: 'Rocks',
+		email: 'ava@rocks.com',
+	}];
+}
 
-exports.fetchPosts = async userId => {
+export async function fetchPosts(userId) {
 	await delay(200);
 
-	return [
-		{
-			id: 1,
-			userId,
-			message: 'AVA Rocks 🚀',
-		},
-	];
-};
+	return [{
+		id: 1,
+		userId,
+		message: 'AVA Rocks 🚀',
+	}];
+}
 
-exports.createPost = async message => {
+export async function createPost(message) {
 	await delay(3000);
 
 	return {
@@ -37,4 +31,4 @@ exports.createPost = async message => {
 		userId: 1,
 		message,
 	};
-};
+}
