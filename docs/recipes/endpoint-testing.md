@@ -40,7 +40,6 @@ test.serial('404', async t => {
 		{message: /Request failed with status code 404 Not Found/, instanceOf: HTTPError},
 	);
 });
-
 ```
 
 Other libraries you may find useful:
