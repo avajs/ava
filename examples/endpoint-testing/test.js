@@ -1,14 +1,13 @@
-'use strict';
-const http = require('node:http');
+import {createServer} from 'node:http';
 
-const test = require('ava');
-const got = require('got');
-const listen = require('test-listen');
+import {listen} from 'async-listen';
+import test from 'ava';
+import ky, {HTTPError} from 'ky';
 
-const app = require('./app.js');
+import app from './app.js';
 
 test.before(async t => {
-	t.context.server = http.createServer(app);
+	t.context.server = createServer(app);
 	t.context.prefixUrl = await listen(t.context.server);
 });
 
@@ -17,7 +16,14 @@ test.after.always(t => {
 });
 
 test.serial('get /user', async t => {
-	const {email} = await got('user', {prefixUrl: t.context.prefixUrl}).json();
+	const {email} = await ky('user', {prefixUrl: t.context.prefixUrl}).json();
 
 	t.is(email, 'ava@rocks.com');
+});
+
+test.serial('404', async t => {
+	await t.throwsAsync(
+		ky('password', {prefixUrl: t.context.prefixUrl}),
+		{message: /Request failed with status code 404 Not Found/, instanceOf: HTTPError},
+	);
 });
