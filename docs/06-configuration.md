@@ -337,3 +337,18 @@ These may also export a function which is then invoked, and can receive argument
 The `nodeArguments` configuration may be used to specify additional arguments for launching worker processes. These are combined with `--node-arguments` passed on the CLI and any arguments passed to the `node` binary when starting AVA.
 
 [CLI]: ./05-command-line.md
+
+## Thread arguments filter
+
+In a config file only, `threadArgumentsFilter` may provide a function used for filtering `nodeArguments` sent to worker threads. This enables excluding arguments that throw if sent to a thread. The filter is ignored by worker processes.
+
+```js
+const processOnly = new Set([
+	'--allow-natives-syntax',
+	'--expose-gc'
+]);
+
+export default {
+	threadArgumentsFilter: argument => !processOnly.has(argument)
+}
+```
