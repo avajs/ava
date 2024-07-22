@@ -13,6 +13,16 @@ test('passed node arguments to workers', async t => {
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
+test('`threadArgumentsFilter` configuration filters arguments for worker thread', async t => {
+	const options = {
+		cwd: cwd('thread-arguments-filter'),
+	};
+
+	const result = await fixture(['--config=thread-arguments-filter.config.mjs', 'thread.js'], options);
+
+	t.snapshot(result.stats.passed, 'tests pass');
+});
+
 test('detects incomplete --node-arguments', async t => {
 	const options = {
 		cwd: cwd('node-arguments'),
