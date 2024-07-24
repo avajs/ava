@@ -342,6 +342,7 @@ The `nodeArguments` configuration may be used to specify additional arguments fo
 
 In a config file only, `threadArgumentsFilter` may provide a function used for filtering `nodeArguments` sent to worker threads. This enables excluding arguments that throw if sent to a thread. The filter is ignored by worker processes.
 
+`ava.config.js`:
 ```js
 const processOnly = new Set([
 	'--allow-natives-syntax',
