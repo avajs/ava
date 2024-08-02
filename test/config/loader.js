@@ -117,7 +117,7 @@ test.serial('throws an error if a .js config file has no default export', notOk(
 
 test.serial('throws an error if a config file contains `ava` property', notOk('contains-ava-property'));
 
-test.serial('throws an error if a config file contains a non-function `threadArgumentsFilter` property', notOk('non-function'));
+test.serial('throws an error if a config file contains a non-function `filterNodeArgumentsForWorkerThreads` property', notOk('non-function'));
 
 test.serial('throws an error if a config file contains a non-object `nonSemVerExperiments` property', notOk('non-object-experiments'));
 

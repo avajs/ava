@@ -5,5 +5,5 @@ export default {
 		'--throw-deprecation',
 		'--allow-natives-syntax',
 	],
-	threadArgumentsFilter: argument => !processOnly.has(argument),
+	filterNodeArgumentsForWorkerThreads: argument => !processOnly.has(argument),
 };

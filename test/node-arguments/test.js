@@ -13,7 +13,7 @@ test('passed node arguments to workers', async t => {
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
-test('`threadArgumentsFilter` configuration filters arguments for worker thread', async t => {
+test('`filterNodeArgumentsForWorkerThreads` configuration filters arguments for worker thread', async t => {
 	const options = {
 		cwd: cwd('thread-arguments-filter'),
 	};
@@ -23,7 +23,7 @@ test('`threadArgumentsFilter` configuration filters arguments for worker thread'
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
-test('`threadArgumentsFilter` configuration ignored for worker process', async t => {
+test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker process', async t => {
 	const options = {
 		cwd: cwd('thread-arguments-filter'),
 	};

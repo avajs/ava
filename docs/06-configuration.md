@@ -338,9 +338,9 @@ The `nodeArguments` configuration may be used to specify additional arguments fo
 
 [CLI]: ./05-command-line.md
 
-## Thread arguments filter
+## Node arguments filter for worker threads
 
-In a config file only, `threadArgumentsFilter` may provide a function used for filtering `nodeArguments` sent to worker threads. This enables excluding arguments that throw if sent to a thread. The filter is ignored by worker processes.
+In a config file only, `filterNodeArgumentsForWorkerThreads` may provide a function used for filtering `nodeArguments` sent to worker threads. This enables excluding arguments that throw if sent to a thread. The filter is ignored by worker processes.
 
 `ava.config.js`:
 ```js
@@ -350,6 +350,6 @@ const processOnly = new Set([
 ]);
 
 export default {
-	threadArgumentsFilter: argument => !processOnly.has(argument)
+	filterNodeArgumentsForWorkerThreads: argument => !processOnly.has(argument)
 }
 ```
