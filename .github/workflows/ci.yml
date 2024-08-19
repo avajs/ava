@@ -31,10 +31,11 @@ jobs:
       - run: npm install --no-audit
       - run: ./scripts/ci.sh
         shell: bash
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   typescript:
     name: TypeScript compatibility
