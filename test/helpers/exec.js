@@ -1,5 +1,4 @@
 import {Buffer} from 'node:buffer';
-import {on} from 'node:events';
 import path from 'node:path';
 import {Writable} from 'node:stream';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -79,6 +78,8 @@ const sortStats = stats => {
 };
 
 export async function * exec(args, options) {
+	let {errors, logs, stats, stdout, stderr} = initState();
+
 	const workingDir = options.cwd ?? cwd();
 	const execaProcess = execaNode(cliPath, args, {
 		...options,
@@ -89,31 +90,30 @@ export async function * exec(args, options) {
 			TEST_AVA_REQUIRE_FROM,
 		},
 		cwd: workingDir,
-		serialization: 'advanced',
 		nodeOptions: ['--require', ttySimulator],
+		stdout: ['pipe', new Writable({
+			write(chunk, encoding, callback) {
+				stdout += chunk;
+				callback();
+			},
+		})],
+		stderr: ['pipe', new Writable({
+			write(chunk, encoding, callback) {
+				stderr += chunk;
+
+				// Besides buffering stderr, if this environment variable is set, also pipe
+				// to stderr. This can be useful when debugging the tests.
+				if (process.env.DEBUG_TEST_AVA) {
+					forwardErrorOutput(chunk);
+				}
+
+				callback();
+			},
+		})],
 	});
 
-	let {errors, logs, stats, stdout, stderr} = initState();
-
-	execaProcess.pipeStdout(new Writable({
-		write(chunk) {
-			stdout += chunk;
-		},
-	}));
-	execaProcess.pipeStderr(new Writable({
-		write(chunk) {
-			stderr += chunk;
-
-			// Besides buffering stderr, if this environment variable is set, also pipe
-			// to stderr. This can be useful when debugging the tests.
-			if (process.env.DEBUG_TEST_AVA) {
-				forwardErrorOutput(chunk);
-			}
-		},
-	}));
-
 	let runCount = 0;
-	const statusEvents = on(execaProcess, 'message');
+	const statusEvents = execaProcess.getEachMessage();
 	const done = execaProcess.then(result => ({execa: true, result}), error => { // eslint-disable-line promise/prefer-await-to-then
 		sortStats(stats);
 		throw Object.assign(error, {stats, runCount});
@@ -133,7 +133,7 @@ export async function * exec(args, options) {
 			break;
 		}
 
-		const {value: [statusEvent]} = item;
+		const {value: statusEvent} = item;
 		switch (statusEvent.type) {
 			case 'end': {
 				sortStats(stats);
