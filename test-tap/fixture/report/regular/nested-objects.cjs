@@ -1,8 +1,8 @@
-const util = require('node:util');
+const {inspect} = require('node:util');
 
 const test = require('../../../../entrypoints/main.cjs');
 
-util.inspect.defaultOptions.depth = 4;
+inspect.defaultOptions.depth = 4;
 
 test('format with max depth 4', t => {
 	const exp = {

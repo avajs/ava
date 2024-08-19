@@ -114,7 +114,7 @@ export async function * exec(args, options) {
 
 	let runCount = 0;
 	const statusEvents = on(execaProcess, 'message');
-	const done = execaProcess.then(result => ({execa: true, result}), error => {
+	const done = execaProcess.then(result => ({execa: true, result}), error => { // eslint-disable-line promise/prefer-await-to-then
 		sortStats(stats);
 		throw Object.assign(error, {stats, runCount});
 	});
