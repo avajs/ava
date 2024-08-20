@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-# Set environment variable to have the AVA config skip wathch mode tests.
+# Set environment variable to have the AVA config skip watch mode tests.
 TEST_AVA_SKIP_WATCH_MODE=1 npx c8 --report=none npx test-ava
 
 # Reduce concurrency to give watch mode tests a better chance of succeeding in

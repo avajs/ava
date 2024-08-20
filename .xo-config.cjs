@@ -36,6 +36,7 @@ module.exports = {
 			files: '**/*.d.*(c|m)ts',
 			rules: {
 				'import/extensions': 'off',
+				'n/file-extension-in-import': 'off',
 			},
 		},
 		{
@@ -91,6 +92,7 @@ module.exports = {
 			rules: {
 				'import/no-anonymous-default-export': 'off',
 				'n/prefer-global/process': 'off',
+				'promise/prefer-await-to-then': 'off',
 				'unicorn/error-message': 'off',
 			},
 		},
