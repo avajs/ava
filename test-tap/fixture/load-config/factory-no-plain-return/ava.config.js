@@ -1,3 +1,5 @@
 class Config {}
 
-export default () => new Config();
+const configFactory = () => new Config();
+
+export default configFactory;

@@ -1,3 +1,5 @@
-export default ({projectDir}) => ({
+const configFactory = ({projectDir}) => ({
 	files: projectDir,
 });
+
+export default configFactory;

@@ -1,12 +1,6 @@
 TAP version 13
 ---tty-stream-chunk-separator
-(node:14132) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
 ok 1 - a › only
----tty-stream-chunk-separator
-(node:14135) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
 ok 2 - b › passes
 ---tty-stream-chunk-separator

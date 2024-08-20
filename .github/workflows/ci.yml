@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^18.18, ^20.8, ^21, ^22]
+        node-version: [^18.18, ^20.8, ^22]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
@@ -31,17 +31,18 @@ jobs:
       - run: npm install --no-audit
       - run: ./scripts/ci.sh
         shell: bash
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   typescript:
     name: TypeScript compatibility
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~5.2, ~5.3]
+        ts-version: [~5.2, ~5.3, ~5.4, ~5.5]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
