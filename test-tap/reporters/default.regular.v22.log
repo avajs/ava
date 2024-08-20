@@ -1,8 +1,5 @@
 
 ---tty-stream-chunk-separator
-(node:14114) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
   [1mUncaught exception in bad-test-chain.cjs[22m
 
   [90mbad-test-chain.cjs:3[39m
@@ -18,15 +15,9 @@
 ---tty-stream-chunk-separator
   [31m✘ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
-(node:14115) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
   [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format with max depth 4
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format like with max depth 4
----tty-stream-chunk-separator
-(node:14119) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m before hook
     [35mℹ[39m [90mbefore[39m
@@ -53,9 +44,6 @@
     output-in-hook [90m[2m›[22m[39m cleanup
     [35mℹ[39m [90mafterAlways[39m
 ---tty-stream-chunk-separator
-(node:14121) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
   [33m- [skip] test [90m[2m›[22m[39m[33m skip[39m
 ---tty-stream-chunk-separator
   [34m- [todo] test [90m[2m›[22m[39m[34m todo[39m
@@ -76,9 +64,6 @@
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m test [90m[2m›[22m[39m implementation throws non-error [3m[31mError thrown in test[39m[23m
 ---tty-stream-chunk-separator
-(node:14122) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throws
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m notThrows
@@ -88,9 +73,6 @@
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m traces-in-t-throws [90m[2m›[22m[39m throwsAsync different error
----tty-stream-chunk-separator
-(node:14124) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
   [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
@@ -109,9 +91,6 @@
 
 ---tty-stream-chunk-separator
   [31m✘ uncaught-exception.cjs exited with a non-zero exit code: 1[39m
----tty-stream-chunk-separator
-(node:14126) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
