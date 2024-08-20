@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
@@ -20,6 +21,7 @@ async function apiCreator(options = {}) {
 	options.globs = normalizeGlobs({
 		files: options.files, ignoredByWatcher: options.watchMode?.ignoreChanges, extensions: options.extensions, providers: [],
 	});
+	options.nodeArguments = process.execArgv;
 	const instance = new Api(options);
 
 	return instance;
