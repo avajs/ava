@@ -66,6 +66,31 @@ Sometimes watch mode does something surprising like rerunning all tests when you
 $ DEBUG=ava:watcher npx ava --watch
 ```
 
+## Watcher crashing when saving files in Vim/NeoVim
+
+When saving a file, Vim and NeoVim may delete the file being saved and replace it with its backup copy, depending on the setting of the `backupcopy` option (see its documentation in the [Vim manual](https://vimdoc.sourceforge.net/htmldoc/options.html#'backupcopy') and [NeoVim manual](https://neovim.io/doc/user/options.html#'backupcopy')). This can cause Ava's watcher to crash with this error:
+
+```console
+node:fs:1659
+  const stats = binding.stat(
+                        ^
+
+Error: ENOENT: no such file or directory, stat '/home/user/project/file-just-saved.txt'
+    at statSync (node:fs:1659:25)
+    at FSWatcher.<anonymous> (node:internal/fs/recursive_watch:160:28)
+    at FSWatcher.emit (node:events:518:28)
+    at FSWatcher._handle.onchange (node:internal/fs/watchers:215:12) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/home/user/project/file-just-saved.txt'
+}
+```
+
+This crash happens (at least) on a Linux-based system using Node v20.12.2, but not with Node v20.15.1.
+
+If you're unable to upgrade Node.js, use `set backupcopy=yes` (or `vim.opt.backupcopy = "yes"` in NeoVim with Lua) to change the editor's file saving behavior and prevent the crash.
+
 [`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
