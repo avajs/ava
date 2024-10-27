@@ -36,7 +36,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "^18.18 || ^20.8 || ^22"
+		"node": "^18.18 || ^20.8 || ^22 || >=23"
 	},
 	"scripts": {
 		"test": "./scripts/test.sh"
@@ -83,9 +83,9 @@
 		"typescript"
 	],
 	"dependencies": {
-		"@vercel/nft": "^0.27.3",
-		"acorn": "^8.12.1",
-		"acorn-walk": "^8.3.3",
+		"@vercel/nft": "^0.27.5",
+		"acorn": "^8.13.0",
+		"acorn-walk": "^8.3.4",
 		"ansi-styles": "^6.2.1",
 		"arrgv": "^1.0.2",
 		"arrify": "^3.0.0",
@@ -100,7 +100,7 @@
 		"common-path-prefix": "^3.0.0",
 		"concordance": "^5.0.4",
 		"currently-unhandled": "^0.4.1",
-		"debug": "^4.3.6",
+		"debug": "^4.3.7",
 		"emittery": "^1.0.3",
 		"figures": "^6.1.0",
 		"globby": "^14.0.2",
@@ -121,23 +121,23 @@
 		"strip-ansi": "^7.1.0",
 		"supertap": "^3.0.1",
 		"temp-dir": "^3.0.0",
-		"write-file-atomic": "^5.0.1",
+		"write-file-atomic": "^6.0.0",
 		"yargs": "^17.7.2"
 	},
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
 		"@ava/typescript": "^5.0.0",
 		"@sindresorhus/tsconfig": "^5.1.1",
-		"@types/node": "^20.16.1",
+		"@types/node": "^22.8.1",
 		"ansi-escapes": "^7.0.0",
 		"c8": "^10.1.2",
-		"execa": "^9.3.1",
+		"execa": "^9.5.0",
 		"expect": "^29.7.0",
-		"sinon": "^18.0.0",
+		"sinon": "^19.0.2",
 		"tap": "^20.0.3",
 		"tempy": "^3.1.0",
-		"tsd": "^0.31.1",
-		"typescript": "~5.5.4",
+		"tsd": "^0.31.2",
+		"typescript": "~5.6.3",
 		"xo": "^0.59.3",
 		"zen-observable": "^0.10.0"
 	},
@@ -150,6 +150,6 @@
 		}
 	},
 	"volta": {
-		"node": "22.6.0"
+		"node": "22.10.0"
 	}
 }

@@ -6,6 +6,7 @@ import {set as setChalk} from '../../lib/chalk.js';
 
 const fixColors = () => {
 	// Force consistent and high-fidelity logs.
+	delete process.env.NO_COLOR; // Avoid warning in Node.js 23 about NO_COLOR being ignored due to FORCE_COLOR being set.
 	process.env.FORCE_COLOR = 3;
 	Object.defineProperty(process, 'platform', {value: 'darwin', enumerable: true, configurable: true});
 };
