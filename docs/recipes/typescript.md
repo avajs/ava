@@ -151,6 +151,20 @@ test('an actual test', t => {
 });
 ```
 
+Alternatively, you can extend the type globally:
+
+```ts
+declare module 'ava' {
+    interface AvaContext {
+        foo: string;
+    }
+}
+
+test.beforeEach(t => {
+	t.context = {foo: 'bar'};
+});
+```
+
 Note that, despite the type cast above, when executing `t.context` is an empty object unless it's assigned.
 
 ## Typing `throws` assertions
