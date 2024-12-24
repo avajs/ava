@@ -72,7 +72,9 @@ export type Macro<Args extends unknown[], Context = unknown> = {
 /** A test or hook implementation. */
 export type Implementation<Args extends unknown[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
 
-export type TestFn<Context = unknown> = {
+interface AvaContext {}
+
+export type TestFn<Context = AvaContext> = {
 	/** Declare a concurrent test. Additional arguments are passed to the implementation or macro. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
