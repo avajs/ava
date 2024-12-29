@@ -1,6 +1,6 @@
 import test from '@ava/test';
 
-import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
+import {cwd, fixture} from '../helpers/exec.js';
 
 test('passed node arguments to workers', async t => {
 	const options = {
@@ -33,14 +33,14 @@ test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker pro
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
-test('detects incomplete --node-arguments', async t => {
+test('forgive incomplete --node-arguments', async t => {
 	const options = {
 		cwd: cwd('node-arguments'),
 	};
 
 	const result = await t.throwsAsync(fixture(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], options));
 
-	t.snapshot(cleanOutput(result.stderr), 'fails with message');
+	t.snapshot(result.stats.passed, 'tests pass');
 });
 
 test('reads node arguments from config', async t => {
