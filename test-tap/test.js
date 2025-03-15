@@ -12,6 +12,8 @@ import Test from '../lib/test.js';
 import {set as setOptions} from '../lib/worker/options.cjs';
 
 import {ava} from './helper/ava-test.js';
+import test from 'ava';
+
 
 setOptions({});
 
@@ -765,4 +767,12 @@ test('t.passed value is false when teardown callback is executed for failing tes
 		onResult() {},
 		title: 'foo',
 	}).run();
+});
+
+
+test('DOMException should be considered an error', async t => {
+    await t.throwsAsync(
+        Promise.reject(new DOMException('an error')),
+        { instanceOf: DOMException } // Explicitly specify the expected error type
+    );
 });
