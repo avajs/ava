@@ -769,10 +769,10 @@ test('t.passed value is false when teardown callback is executed for failing tes
 	}).run();
 });
 
+
 test('DOMException should be considered an error', async t => {
     await t.throwsAsync(
         Promise.reject(new DOMException('an error')),
         { instanceOf: DOMException } // Explicitly specify the expected error type
     );
 });
-
