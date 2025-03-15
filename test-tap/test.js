@@ -768,8 +768,6 @@ test('t.passed value is false when teardown callback is executed for failing tes
 		title: 'foo',
 	}).run();
 });
-
-
 test('DOMException should be considered an error', async t => {
     await t.throwsAsync(
         Promise.reject(new DOMException('an error')),
