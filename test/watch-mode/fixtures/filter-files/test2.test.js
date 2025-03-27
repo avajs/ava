@@ -10,9 +10,7 @@ test("frank", async (t) => {
 });
 
 test("gina", async (t) => {
-  const { promise, resolve } = Promise.withResolvers();
-  setTimeout(resolve, 50);
-  return promise.then(() => t.pass());
+  t.is(1, 1);
 });
 
 test("harry", async (t) => {
