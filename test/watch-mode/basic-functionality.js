@@ -106,9 +106,7 @@ test(
 			},
 
 			async 2({stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 4);
 				for (const skipped of stats.skipped) {
@@ -150,9 +148,7 @@ test(
 			},
 
 			async 2({stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 8);
 				for (const skipped of stats.skipped) {
@@ -184,9 +180,7 @@ test(
 			},
 
 			async 2({process, stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 8);
 				for (const skipped of stats.skipped) {
@@ -196,9 +190,7 @@ test(
 				process.stdin.write('a\n');
 			},
 			async 3({stats}) {
-				/**
-				 * All tests should run
-				 */
+				// All tests should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.passed.length, 6);
 
@@ -227,9 +219,7 @@ test(
 			},
 
 			async 2({stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 7);
 				for (const skipped of stats.skipped) {
@@ -266,9 +256,7 @@ test(
 			},
 
 			async 2({stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 8);
 				for (const skipped of stats.skipped) {
@@ -300,9 +288,7 @@ test(
 			},
 
 			async 2({process, stats}) {
-				/**
-				 * Only tests from test1 should run
-				 */
+				// Only tests from test1 should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.skipped.length, 8);
 				for (const skipped of stats.skipped) {
@@ -312,9 +298,7 @@ test(
 				process.stdin.write('a\n');
 			},
 			async 3({stats}) {
-				/**
-				 * All tests should run
-				 */
+				// All tests should run
 				t.is(stats.selectedTestCount, 8);
 				t.is(stats.passed.length, 6);
 
