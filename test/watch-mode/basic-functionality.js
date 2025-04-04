@@ -95,41 +95,35 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('p\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch {
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('p\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 4);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.file, test1Regex);
-					}
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 4);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.file, test1Regex);
+				}
 
-					t.is(stats.passed.length, 3);
-					for (const skipped of stats.passed) {
-						t.regex(skipped.file, test1Regex);
-					}
+				t.is(stats.passed.length, 3);
+				for (const skipped of stats.passed) {
+					t.regex(skipped.file, test1Regex);
+				}
 
-					t.is(stats.failed.length, 1);
-					for (const skipped of stats.failed) {
-						t.regex(skipped.file, test1Regex);
-					}
-				} catch {}
+				t.is(stats.failed.length, 1);
+				for (const skipped of stats.failed) {
+					t.regex(skipped.file, test1Regex);
+				}
 
 				this.done();
 			},
@@ -145,31 +139,25 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('p\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch {
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('p\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 8);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.file, test1Regex);
-					}
-				} catch {}
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 8);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.file, test1Regex);
+				}
 
 				this.done();
 			},
@@ -185,44 +173,34 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('p\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch {
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('p\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({process, stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 8);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.file, test1Regex);
-					}
-
-					process.stdin.write('a\n');
-				} catch {
-					this.done();
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 8);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.file, test1Regex);
 				}
+
+				process.stdin.write('a\n');
 			},
 			async 3({stats}) {
-				try {
-					/**
-					 * All tests should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
-				} catch {}
+				/**
+				 * All tests should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
 				this.done();
 			},
@@ -238,38 +216,30 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('t\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch (error) {
-					console.log('e');
-					console.log(error);
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('t\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 7);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.title, test1Regex);
-					}
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 7);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.title, test1Regex);
+				}
 
-					t.is(stats.passed.length, 1);
-					for (const skipped of stats.passed) {
-						t.regex(skipped.title, test1Regex);
-					}
-				} catch {}
+				t.is(stats.passed.length, 1);
+				for (const skipped of stats.passed) {
+					t.regex(skipped.title, test1Regex);
+				}
 
 				this.done();
 			},
@@ -285,31 +255,25 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('t\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch {
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('t\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 8);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.title, test1Regex);
-					}
-				} catch {}
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 8);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.title, test1Regex);
+				}
 
 				this.done();
 			},
@@ -325,44 +289,34 @@ test(
 		const test1Regex = new RegExp(test1RegexString);
 		await fixture.watch({
 			async 1({process, stats}) {
-				try {
-					// First run should run all tests
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
+				// First run should run all tests
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
-					// Set a file filter to only run test1.js
-					process.stdin.write('t\n');
-					process.stdin.write(`${test1RegexString}\n`);
-					return stats;
-				} catch {
-					this.done();
-				}
+				// Set a file filter to only run test1.js
+				process.stdin.write('t\n');
+				process.stdin.write(`${test1RegexString}\n`);
+				return stats;
 			},
 
 			async 2({process, stats}) {
-				try {
-					/**
-					 * Only tests from test1 should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.skipped.length, 8);
-					for (const skipped of stats.skipped) {
-						t.notRegex(skipped.file, test1Regex);
-					}
-
-					process.stdin.write('a\n');
-				} catch {
-					this.done();
+				/**
+				 * Only tests from test1 should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.skipped.length, 8);
+				for (const skipped of stats.skipped) {
+					t.notRegex(skipped.file, test1Regex);
 				}
+
+				process.stdin.write('a\n');
 			},
 			async 3({stats}) {
-				try {
-					/**
-					 * All tests should run
-					 */
-					t.is(stats.selectedTestCount, 8);
-					t.is(stats.passed.length, 6);
-				} catch {}
+				/**
+				 * All tests should run
+				 */
+				t.is(stats.selectedTestCount, 8);
+				t.is(stats.passed.length, 6);
 
 				this.done();
 			},
