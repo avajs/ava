@@ -5,14 +5,13 @@ test("alice", (t) => {
 });
 
 test("bob", async (t) => {
-  const bar = Promise.resolve("bar");
-  t.is(await bar, "bar");
+  t.pass();
 });
 
 test("catherine", async (t) => {
-  t.is(1, 1);
+  t.pass();
 });
 
 test("david", async (t) => {
-  t.is(1, 2);
+  t.fail();
 });
