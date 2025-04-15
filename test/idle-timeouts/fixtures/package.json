@@ -3,6 +3,7 @@
 	"ava": {
 		"files": [
 			"*.js"
-		]
+		],
+		"timeout": "500ms"
 	}
 }
