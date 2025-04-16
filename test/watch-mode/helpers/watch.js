@@ -12,6 +12,17 @@ import {cwd, exec} from '../../helpers/exec.js';
 export const test = available(fileURLToPath(import.meta.url)) ? ava : ava.skip;
 export const serial = available(fileURLToPath(import.meta.url)) ? ava.serial : ava.serial.skip;
 
+/**
+ * Races between `promises` and returns the result, unless `possiblyErroring` rejects first.
+ *
+ * `possiblyErroring` may be any value and is ignored, unless it rejects.
+ */
+const raceUnlessError = async (possiblyErroring, ...promises) => {
+	const race = Promise.race(promises);
+	const intermediate = await Promise.race([Promise.resolve(possiblyErroring).then(() => raceUnlessError), race]);
+	return intermediate === raceUnlessError ? race : intermediate;
+};
+
 export const withFixture = fixture => async (t, task) => {
 	let completedTask = false;
 	await temporaryDirectoryTask(async dir => {
@@ -124,7 +135,7 @@ export const withFixture = fixture => async (t, task) => {
 				try {
 					let nextResult = results.next();
 					while (!isDone) { // eslint-disable-line no-unmodified-loop-condition
-						const item = await Promise.race([nextResult, idlePromise, donePromise]); // eslint-disable-line no-await-in-loop
+						const item = await raceUnlessError(pendingState, nextResult, idlePromise, donePromise); // eslint-disable-line no-await-in-loop
 						process ??= item.value?.process;
 
 						if (item.value) {
