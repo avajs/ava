@@ -100,7 +100,6 @@ Sometimes watch mode does something surprising like rerunning all tests when you
 $ DEBUG=ava:watcher npx ava --watch
 ```
 
-[`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`.only` modifier]: ../01-writing-tests.md#running-specific-tests
