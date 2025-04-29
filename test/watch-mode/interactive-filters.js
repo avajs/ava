@@ -84,63 +84,55 @@ test(
 	},
 );
 
-test(
-	'can filter tests by test title pattern',
-	withFixture('filter-files'),
-	async (t, fixture) => {
-		const test1RegexString = 'bob';
-		const test1Regex = new RegExp(test1RegexString);
-		await fixture.watch({
-			async 1({process, stats}) {
-				// First run should run all tests
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+test('can filter tests by title', withFixture('filter-files'), async (t, fixture) => {
+	await fixture.watch({
+		async 1({process, stats}) {
+			// First run should run all tests
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				// Set a file filter to only run test1.js
-				process.stdin.write('t\n');
-				process.stdin.write(`${test1RegexString}\n`);
-				return stats;
-			},
+			// Set a title filter to only run bob from test1.test.js
+			process.stdin.write('m\n');
+			process.stdin.write('bob\n');
+		},
 
-			async 2({stats}) {
-				// Only tests that match the test title should run
-				t.is(stats.selectedTestCount, 1);
-				t.is(stats.passed.length, 1);
-				for (const skipped of stats.passed) {
-					t.regex(skipped.title, test1Regex);
-				}
+		async 2({stats}) {
+			// Only tests that match the test title should run
+			t.is(stats.selectedTestCount, 1);
+			t.is(stats.passed.length, 1);
+			for (const ran of stats.passed) {
+				t.regex(ran.title, /bob/);
+			}
 
-				this.done();
-			},
-		});
-	},
-);
+			this.done();
+		},
+	});
+});
 
-test(
-	'can filter tests by test pattern and have no tests run',
-	withFixture('filter-files'),
-	async (t, fixture) => {
-		const test1RegexString = 'sirnotappearinginthisfilm';
-		await fixture.watch({
-			async 1({process, stats}) {
-				// First run should run all tests
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+test('can filter tests title and have no tests run', withFixture('filter-files'),	async (t, fixture) => {
+	await fixture.watch({
+		async 1({process, stats}) {
+			// First run should run all tests
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				// Set a file filter to only run test1.js
-				process.stdin.write('t\n');
-				process.stdin.write(`${test1RegexString}\n`);
-				return stats;
-			},
+			// Set a title filter that doesn't match any tests
+			process.stdin.write('m\n');
+			process.stdin.write('sirnotappearinginthisfilm\n');
+		},
 
-			async 2({stats}) {
-				// No tests should run
-				t.is(stats.selectedTestCount, 0);
-				this.done();
-			},
-		});
-	},
-);
+		async 2({process, stats}) {
+			// No tests should run
+			t.is(stats.selectedTestCount, 0);
+
+			process.send('abort-watcher');
+			const {stdout} = await process;
+			t.regex(stdout, /Couldn’t find any matching tests/);
+
+			this.done();
+		},
+	});
+});
 
 test(
 	'can filter tests by test pattern, and run all tests with \'a',
