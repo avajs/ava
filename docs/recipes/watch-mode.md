@@ -76,10 +76,6 @@ Dependency tracking works for `require()` and `import` syntax, as supported by [
 
 Files accessed using the `fs` module are not tracked.
 
-## Watch mode and the `.only` modifier
-
-The [`.only` modifier] disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
-
 ## Watch mode and CI
 
 If you run AVA in your CI with watch mode, the execution will exit with an error (`Error : Watch mode is not available in CI, as it prevents AVA from terminating.`). AVA will not run with the `--watch` (`-w`) option in CI, because CI processes should terminate, and with the `--watch` option, AVA will never terminate.
