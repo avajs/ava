@@ -52,37 +52,31 @@ test('can filter test files by glob pattern and have no tests run', withFixture(
 	});
 });
 
-test(
-	'can filter tests by filepath pattern, and run all tests with \'a',
-	withFixture('filter-files'),
-	async (t, fixture) => {
-		const test1RegexString = 'test1';
-		await fixture.watch({
-			async 1({process, stats}) {
-				// First run should run all tests
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+test('when filtering by glob pattern, run all tests with \'a', withFixture('filter-files'), async (t, fixture) => {
+	await fixture.watch({
+		async 1({process, stats}) {
+			// First run should run all tests
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				// Set a file filter to only run test1.js
-				process.stdin.write('p\n');
-				process.stdin.write(`${test1RegexString}\n`);
-				return stats;
-			},
+			// Set a file filter to only run test1.test.js
+			process.stdin.write('g\n');
+			process.stdin.write('**/test1.*\n');
+		},
 
-			async 2({process, stats}) {
-				t.is(stats.selectedTestCount, 4);
+		async 2({process, stats}) {
+			t.is(stats.selectedTestCount, 4);
 
-				process.stdin.write('a\n');
-			},
-			async 3({stats}) {
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+			process.stdin.write('a\n');
+		},
+		async 3({stats}) {
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				this.done();
-			},
-		});
-	},
-);
+			this.done();
+		},
+	});
+});
 
 test('can filter tests by title', withFixture('filter-files'), async (t, fixture) => {
 	await fixture.watch({
@@ -134,39 +128,28 @@ test('can filter tests title and have no tests run', withFixture('filter-files')
 	});
 });
 
-test(
-	'can filter tests by test pattern, and run all tests with \'a',
-	withFixture('filter-files'),
-	async (t, fixture) => {
-		const test1RegexString = 'sirnotappearinginthisfilm';
-		const test1Regex = new RegExp(test1RegexString);
-		await fixture.watch({
-			async 1({process, stats}) {
-				// First run should run all tests
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+test('when filtering by title, run all tests with \'a', withFixture('filter-files'), async (t, fixture) => {
+	await fixture.watch({
+		async 1({process, stats}) {
+			// First run should run all tests
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				// Set a file filter to only run test1.js
-				process.stdin.write('t\n');
-				process.stdin.write(`${test1RegexString}\n`);
-				return stats;
-			},
+			// Set a file filter to only run bob from test1.test.js
+			process.stdin.write('m\n');
+			process.stdin.write('bob\n');
+		},
 
-			async 2({process, stats}) {
-				t.is(stats.selectedTestCount, 0);
-				for (const skipped of stats.skipped) {
-					t.notRegex(skipped.file, test1Regex);
-				}
+		async 2({process, stats}) {
+			t.is(stats.selectedTestCount, 1);
 
-				process.stdin.write('a\n');
-			},
-			async 3({stats}) {
-				// All tests should run
-				t.is(stats.selectedTestCount, 8);
-				t.is(stats.passed.length, 6);
+			process.stdin.write('a\n');
+		},
+		async 3({stats}) {
+			t.is(stats.selectedTestCount, 8);
+			t.is(stats.passed.length, 6);
 
-				this.done();
-			},
-		});
-	},
-);
+			this.done();
+		},
+	});
+});
