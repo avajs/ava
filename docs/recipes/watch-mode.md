@@ -45,17 +45,11 @@ npx ava --watch
 You will see a prompt like this:
 
 ```console
-Type `p` and press enter to filter by a filename regex pattern
-	[Current filename filter is $pattern]
-Type `t` and press enter to filter by a test name regex pattern
-	[Current test filter is $pattern]
-
-[Type `a` and press enter to run *all* tests]
-(Type `r` and press enter to rerun tests ||
-	Type `r` and press enter to rerun tests that match your filters)
-Type `u` and press enter to update snapshots
-
-command >
+ Type `g` followed by enter to filter test files by a glob pattern
+ Type `m` followed by enter to filter tests by their title
+ Type `r` followed by enter to rerun tests
+ Type `u` followed by enter to update snapshots in selected tests
+> 
 ```
 
 So, to run only tests numbered like
@@ -64,7 +58,7 @@ So, to run only tests numbered like
 - foo4343
 - foo93823
 
-You can type `t` and press enter, then type `foo\d+` and press enter. This will then run all tests that match that pattern.
+You can type `m` and press enter, then type `foo*` and press enter. This will then run all tests that match that glob.
 
 Afterwards you can use the `r` command to run the matched tests again, or `a` command to run **all** tests.
 
