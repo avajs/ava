@@ -1,12 +1,13 @@
 {
-        "extends": "@sindresorhus/tsconfig",
-        "compilerOptions": {
-                "forceConsistentCasingInFileNames": false,
-                "rootDir": "./test"
-        },
-        "include": [
-                "test",
-                "test-tap",
-                "test-types"
-        ]
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": false,
+    "rootDir": "./test",
+    "noUncheckedSideEffectImports": false
+  },
+  "include": [
+    "test",
+    "test-tap",
+    "test-types"
+  ]
 }
