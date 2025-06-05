@@ -1,0 +1,2466 @@
+* [33m36934b23[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix error handling in watcher tests
+* [33m31a1262e[m Test with Node.js 24, remove v23 test runs
+* [33ma6f42ea4[m Upgrade @ava/test to 6.3.0
+* [33mca4240db[m 6.3.0
+* [33mf243cab3[m Do not count writes to stdout/stderr as non-idling activity for timeouts
+* [33m4abb780b[m Update dependencies
+* [33m024de32a[m 6.2.0
+* [33m563fa5f1[m Pre-release updates
+* [33me5b355d4[m Link to CLI options to clarify how to run tests in separate processes
+* [33m86185b4e[m Add `filterNodeArgumentsForWorkerThreads` option
+* [33mb15df539[m Update dependencies & other general maintenance
+* [33mf8bf00cd[m 6.1.3
+* [33m002b3a0e[m Include Node.js 22 in supported engines and test matrix
+* [33mec1a8d23[m Document `serial` configuration option
+* [33m01ec2804[m Add VS Code debugging instructions for Yarn PnP projects
+* [33m5d48c953[m 6.1.2
+* [33mbe5000aa[m Fix throws assertions rejecting falsy values when any: true
+* [33m1d62caf5[m Upgrade xo to v0.57.0
+* [33m2e0c2b1c[m 6.1.1
+* [33m5161bf77[m Update dependencies
+* [33m15dddf3f[m Fix external-assertions snapshot for Node.js 20.11
+* [33mdb0fdb29[m Fix 'previous failures' in watch mode always incrementing
+* [33m735bf417[m Update TypeScript recipe to suggest --import flag and tsimp
+* [33maae39b20[m 6.1.0
+* [33mc3e2c72e[m Fix ava/internal ESM type module
+* [33m0a050243[m Implement registerCompletionHandler()
+* [33mcc8b8397[m Ensure AVA exits with code 1 after an unexpected process.exit() in a test worker
+* [33m35f6c86b[m Fix potential bug with watch mode when no failed test files are written
+* [33mfde8671a[m Test with AVA 6
+* [33m808a5613[m Change recursive watch mode test detection to be non-persistent
+* [33m70a6e257[m Ensure watcher tests exit cleanly
+* [33m783f62b9[m Only test reporters on Linux (CI)
+* [33m9f3bf7e4[m Remove references to older AVA versions
+* [33m316ffe12[m Fix typo in README
+* [33m5975b602[m 6.0.1
+* [33m32f282fc[m Ensure watch mode works outside of its integration tests
+* [33mcf7a2886[m 6.0.0
+* [33maf5684df[m Don't force-exit after tests have completed
+* [33m88e43337[m Update dependencies & other minor tweaks
+* [33mcac1d1fe[m Tweak README
+* [33m0492d328[m Fix external assertions tests for Node.js 21
+* [33madbfcde9[m Experimentally expose internal events for custom reporters
+* [33m6790d502[m Update memoize dependency
+* [33me07179bf[m Remove ability to select AVA 5 watcher
+* [33mcf0fa4ce[m Update dependencies, rely on Node.js 18, other small changes
+* [33m03a6723a[m Drop Node.js 16, upgrade minimal 18 and 20, test 21
+* [33mb6fbd584[m Make assertions throw
+* [33mc792f104[m Fix type tests for t.assert()
+* [33m0d7bbd5e[m Fix typo in common pitfalls doc
+* [33me81f413f[m Allow throws / throwsAsync to work with any value, not just errors
+* [33m4c5b4698[m Refactor error processing
+* [33me27183a9[m Make `assert`, `truthy` and `falsy` typeguards
+* [33me58f466c[m Only treat native errors as errors
+* [33mf2726f18[m Update TypeScript recipe for mocks, Node.js 20
+* [33mf047694d[m Remove p-event dependency
+* [33m75330201[m Remove workaround for worker.terminate() crashes
+* [33m10e2e8a3[m Add t.timeout.clear() to restore default behavior
+* [33m5a9a6271[m Make test-types work with tsc and XO
+* [33m6ca0f1c6[m Pro-actively write out code coverage
+* [33m018d64f0[m Test AVA using AVA 5
+* [33ma6951cc3[m Lazy-load dependencies in CLI entrypoint
+* [33m3ec06177[m Tweak c8 config
+* [33mabd43d1f[m Update dependencies
+* [33me24cdb6e[m Expect TypeScript 5.1 (or newer)
+* [33m1c661946[m Update transitive dependencies
+* [33me5f19d9f[m Modernize some syntax
+* [33m6cc417bb[m Set up CI to test the new watcher
+* [33mc0b0d7bb[m Move ignoredByWatcher to watchMode.ignoreChanges
+* [33m4f52a9f1[m Add a brand new watcher
+* [33m13f7451f[m Require opt-in to AVA 5's watcher and separate install of chokidar
+* [33m94bb3619[m Minor changes to watch mode
+* [33m4dc385b4[m Enhance `require` feature
+* [33m1fff08d8[m Remove checks against very old config options and related cleanup
+* [33m6f62c2d5[m Remove superfluous dependencies
+* [33mfae3f873[m Use ES2022 APIs
+* [33m8f1d308a[m Drop support for Node.js 14, update minimal requirements for 16, 18 and 20
+* [33m583b5139[m Document execArgv incompatibility with worker threads
+* [33m306e37c3[m 5.3.1
+* [33m63987725[m Fix circular selector detection in t.like()
+* [33mc988e274[m Support Symbol keys and ignore non-enumerable properties in t.like()
+* [33m568fe40c[m 5.3.0
+* [33m784ca4c3[m Dependency updates and so forth
+* [33m55583679[m Recognize typical assertion errors and use their formatting
+* [33mfaa96547[m Replace 'del' dependency by built-in recursive fs.rm (#3198)
+* [33md7c61204[m Support arrays in t.like() assertion
+* [33m49e55826[m Update TypeScript recipe to remove ts-node recommendation (#3192)
+* [33m5bf01a32[m Add Node.js 20 to test matrix
+* [33m0574e5e6[m Add t-node error handling section to TypeScript recipe
+* [33m1c567642[m Explicitly configure script name for CLI
+* [33m38593a7a[m Properly end sentence
+* [33m1353b08a[m 5.2.0
+* [33m75596139[m Infer thrown error from expectations
+* [33m84152614[m State that documentation assumes ES modules
+* [33mc7493485[m 5.1.1
+* [33mda3d2bcf[m Update dependencies and such
+* [33mffed9483[m De-register all shared workers
+* [33m639b9050[m Unref shared worker when all test workers have deregistered
+* [33m4ecfe7d8[m 5.1.0
+* [33m609b307a[m Update dependencies
+* [33m647d3e15[m Check for --config file extensions after they fail to load, allowing custom loaders (#3135)
+* [33m92069280[m Output logs for tests that remain pending when AVA exits
+* [33m136dde36[m Update reporter logs for latest Node.js 16
+* [33m7007f134[m 5.0.1
+* [33m48dcafa2[m Update dependencies; more type tweaks
+* [33m3ebe65cb[m Re-organize types for maximum compatibility
+* [33m2d3f3940[m Update to the browser testing recipe to use jsdom directly
+* [33m52b22700[m Cap idle timeouts to the maximum possible value
+* [33md84dbc1c[m 5.0.0
+* [33m797287ad[m Improve test result accessibility
+* [33mcc10b0c4[m Count timeouts separately from the timed out tests
+* [33mea597d86[m Detect process.exit() called from tests
+* [33m4b03662c[m Work around os.cpus() returning an empty array on unsupported platforms
+* [33m02f626f5[m Update dependencies
+*   [33m14061be6[m Merge branch 'v4-hotfix'
+[32m|[m[33m\[m  
+[32m|[m * [33m7c48c4d9[m Update to node@18.8 and npm@8.18 and fix test suite
+[32m|[m * [33m98f7d6ea[m Test with AVA 4.3.3
+[32m|[m * [33ma1347a58[m 4.3.3
+[32m|[m * [33m6b78f493[m Handle `null` source maps during line number selection
+[32m|[m * [33mc37ea844[m Test with AVA 4.3.2
+[32m|[m * [33m6d93de52[m 4.3.2
+[32m|[m * [33me81f5bdf[m Handle findSourceMap returning null since Node.js 18.8.0
+* [33m|[m [33mf4067b2d[m Handle findSourceMap returning null since Node.js 18.8.0
+* [33m|[m [33m392ab65c[m Handle png and snap files as binary (repo only)
+* [33m|[m [33md66fc7fe[m Fix typo in Execution Context documentation
+* [33m|[m [33m6f8e30c9[m Fix link to test isolation
+* [33m|[m [33mfd7f0ed7[m Require Node.js 14.19, 16.15 or 18
+* [33m|[m [33m02f4e27b[m Rely on TypeScript 4.7 and update integration + tests
+* [33m|[m [33md0af7297[m Parse for line numbers with latest supported ECMA version
+[33m|[m[33m/[m  
+* [33m53e57099[m 4.3.1
+* [33md57c76c4[m Report error when parsing for line number selection
+* [33m35723426[m When translating line numbers, check whether the source map entry has original values
+* [33mac0d75d0[m Document that AVA 4 cannot be run globally
+* [33m26a2e5d5[m Remove mentions of "callback mode" from docs
+* [33m91f5254d[m Update recommended VS Code debug configuration
+* [33m3f17f8c7[m Update checksum algorithm for lockfile churn detection
+* [33ma24dc9b4[m 4.3.0
+* [33m62403933[m Assorted updates
+* [33mb208d143[m Link to correct branch in ava-docs repository
+* [33mc218a210[m Fix TS 4.7 compatibility
+* [33m714c474a[m Add number of timeouts in test summary
+* [33mabfef8e8[m Remove logs from test failure summary
+* [33me387cba6[m Support message testing function in `throws` & `throwsAsync` assertions
+* [33mf5caa8fb[m Document how to load multiple instances of the same "shared" worker
+* [33m843644b1[m 4.2.0
+* [33mc299fdb4[m Allow parallel builds to be disabled
+* [33m388ea53a[m Improve typing of teardown methods
+* [33m4257d284[m Document parallel builds for GitHub Actions
+* [33mae0042c9[m Update Babel recipe for AVA 4
+* [33mf8be1528[m Fix function reference in t.try() assertion documentation
+* [33mc5d2b53d[m Add banner to support Ukraine
+* [33m4f14c6b6[m 4.1.0
+* [33m419047b8[m Update dependencies
+* [33m9f797b07[m Loosen type constraints for deepEqual assertion
+* [33mb5f934d1[m Add Node.js 17 reporter logs
+* [33m9d355933[m Warn when unsupported ava.config.json files are encountered
+* [33mada1a4f8[m Allow customized sorting of test files prior to execution
+* [33m7276f086[m Better explain the syntax and semantics of CLI pattern arguments
+* [33me13d4993[m Remove accidentally committed test-ava symlink
+* [33m01bc445a[m Use ESM import in introductory example
+* [33m576f534b[m Update examples in docs to use ES Modules
+* [33m3131ccd9[m Explicitly configure ava --version value
+* [33m51d2a51f[m Remove reference to enhanced assertion messages
+* [33m18c04f99[m Remove outdated AVA 3 config from TypeScript recipe
+* [33m1cda8c7e[m Refer to assertion inputs as "actual"
+* [33m6b63b1bc[m 4.0.1
+* [33mc384e9a0[m Fix encoding of large snapshot data
+* [33m9bc615e2[m 4.0.0
+* [33mf09742f7[m Clean up documentation in preparation for AVA 4
+* [33m0187779a[m Dependency updates
+* [33m29024af7[m Test compatibility with TypeScript 4.5
+* [33m8df118b0[m Use AVA 4 for the self-hosted tests
+* [33mbedd1d04[m Remove dependency on `equal-length`
+* [33md4ec0971[m Improve wording in TypeScript recipe
+* [33mb3a1b727[m Mention experimental specifier resolution in TypeScript recipe
+* [33m77623a5f[m Handle path sources
+* [33m5cdeb9d4[m 4.0.0-rc.1
+* [33m88e7680c[m Final ESM tweaks
+* [33m60b7cf8f[m Align shared worker protocol identifier with provider protocols
+* [33mad521af6[m Graduate shared workers to be non-experimental
+* [33m0edfd008[m Skip flaky tests in CI
+* [33mc4f67234[m Use thread IDs
+* [33maf30e730[m Remove dead code and obsolete TODOs
+* [33m6ed3ad16[m Reduce XO exceptions
+* [33m5a488932[m Update XO and fix problems
+* [33ma7737cd0[m Update dependencies
+* [33mdc405ef3[m Fix Mongoose recipe
+* [33mc214512d[m Find ava.config.* files outside of project directory
+* [33m44aebd99[m Exclude more files from code coverage
+* [33mdef28851[m Improve handling of temporary file changes in watch mode
+* [33m1a62f157[m Switch to .xo-config.cjs
+* [33m2fe3ff11[m Update configuration docs for TypeScript
+* [33m42fc7cee[m Upgrade to npm 8 and remove backwards-compatible lockfile
+* [33m3a0d1021[m Update Mongoose recipe
+* [33m7098eece[m Remove superfluous @concordance/react dependency
+* [33ma5ac79eb[m Refine test selection for AVA 4
+* [33m9bc5e440[m Update issue template to link to our TypeScript project
+* [33ma763592d[m Clarify AVA 4 cannot be run globally
+* [33m9717f2ba[m Fix typo in assertions documentation
+* [33md9706b09[m Test with Node.js 17
+* [33m4e703aca[m Use built-in source map support for determining snapshot location
+* [33m7331a1f7[m Add full source map support to line number selection
+* [33m4d6aa8d7[m Convert lib/worker/line-numbers to ESM
+* [33m71173f37[m Fix reporting of errors that crash test workers
+* [33m7727e610[m Remove dependency on `read-pkg`
+* [33m30a16652[m Fix discarding of timeout trigger
+* [33md36806a1[m Replace Lodash with built-in syntax, libraries, and some code
+* [33m55c430d5[m Fix typo in documentation
+* [33mb0b76a03[m Use c8 for code coverage examples instead of nyc
+* [33m678f9caf[m Remove Babel support, and therefore enhanced assertions
+* [33m6d9c4d70[m Normalize glob patterns with trailing slashes
+* [33m66939e7e[m Rely on Node.js to apply source maps to stack traces
+* [33m716d643d[m Fix iterating over p-map aggregate errors
+* [33mc4a8f80d[m Fix prefix normalization
+* [33m69b88f9b[m Add a mostly hidden test.default that provides test
+* [33m87929b4d[m Upgrade pkg-conf
+* [33me8a49769[m Update all the things
+* [33me96b82dd[m Remove trim-off-newlines
+* [33m725c5d62[m Match name of debug task to current VSCode
+* [33mdc93f372[m Return undefined when throws assertions fail
+* [33mddda6ede[m Clarify caching
+* [33ma87460ac[m Updated list of related projects
+* [33ma8981540[m Add StackBlitz examples for TypeScript
+* [33m58150a0c[m Add StackBlitz example for test timeouts
+* [33m9a106dd4[m Add StackBlitz example endpoint testing
+* [33m0d5860f0[m Add StackBlitz examples for command line documentation
+* [33mb237d33e[m Update type definitions to disallow null throws expectations
+* [33mdd997f82[m Return null when throws() and throwsAsync() assertions fail
+* [33m4b4b2f63[m Refactor type definition
+* [33mfe12bd4c[m Add test for implementation result types
+* [33m4d8262b8[m Add test for context covariance
+* [33m8efb9d14[m Change implementation argument type constraint to unknown
+* [33mfadc6c8a[m Add test.macro(), change how macros are typed
+* [33ma8cbfb72[m Change constructor type for instanceOf expectation
+* [33md7c2b90a[m Remove support for passing multiple test implementations
+* [33m59b03512[m Remove support for the AVA 3.0 provider protocol
+* [33m0a6e2df4[m Always use verbose reporter
+* [33mbd0ef39b[m Normalize test titles
+* [33m4d3e2203[m Add StackBlitz example for macros
+* [33m074373ce[m Attempt to workaround worker thread termination crash
+* [33mc1c7edbe[m Fix runner test
+* [33mfbbacb6e[m Remove `update-notifier` dependency
+* [33m1d92b789[m Support multiline snapshot labels
+* [33m11aaf2aa[m Run self-hosted tests first
+* [33m58cf2480[m Change test.meta properties to be file URLs
+* [33m35994d49[m Have the global timeout take into account t.timeout() durations
+* [33ma8c908e2[m Detect more forms of snapshot file corruption
+* [33mc57067bf[m Switch to ESM for internals
+* [33mb8f5685e[m Improve callsite handling
+* [33me9a69dca[m Update dependencies
+* [33m9a9a5d46[m Update supported Node.js versions
+* [33m97525a97[m 4.0.0-alpha.2
+* [33mbdf2cf07[m Make shared workers available in worker threads only
+* [33meef1a555[m Remove --preserve-symlink and npm link detection
+* [33m000c42e6[m Correctly resolve ESLint plugin helper worker path
+* [33m3aac5e8f[m Time out ESLint config resolution after 10 seconds
+* [33m5e084445[m Explicit and separate CJS and ESM entrypoints
+* [33mcc4e6229[m Assume test files import the correct AVA installation
+* [33m1ee1e826[m Remove import-local
+* [33mf5b970cc[m 4.0.0-alpha.1
+* [33m9cedc977[m Update dependencies and such
+* [33mc5bada9b[m Scheduler follow-up
+* [33md7426720[m Schedule previously failing tests to run first
+* [33m2eebb60f[m Remove Flow recipe
+* [33m8571b2a7[m Remove test.cb()
+* [33m14ec281d[m Introducing AVA snapshots v3
+* [33mcbec4cb0[m Update suggested AVA invocation in watch mode recipe
+* [33ma0791529[m Improve TypeScript recipe for ESM and ts-node usage
+* [33m61ded90c[m Snapshot assertions do not return booleans
+* [33m0e5cc7dc[m Run test files in worker threads
+* [33m5eea6083[m Turn assertions into type guards
+* [33m72a4e2fd[m Return booleans indicating whether assertions passed
+* [33md8b1e89e[m Remove support for snapshot IDs
+* [33m24266857[m Add Babel and TypeScript provider packages as optional peer dependencies
+* [33m2011b92b[m Remove support for the esm package
+* [33m5b76b0b6[m ES Modules are no longer experimental since Node.js 12.17
+* [33ma7faa3eb[m No need to detect ESM support
+* [33m6cb0944e[m Document that concurrency can be configured in the config files
+* [33m41e9473a[m Use main branch
+* [33mc7b78209[m Land ESM-based config support without requiring opt-in
+* [33mdc4483f4[m Teardowns run in reverse order
+* [33mbcb750c1[m snapshot() assertion no longer works in hooks
+* [33m7f64f5c8[m Disallow null expectations for throws() and throwsAsync() assertions
+* [33mf7cb1c7b[m Enable configurable module format
+* [33m8ed86e68[m Update dependencies
+* [33m26999c4c[m Remove built-in React support
+* [33m69fbe058[m Upgrade XO and apply fixes
+* [33m6429581e[m Test against TypeScript 4.1, not any older version
+* [33m022d3a96[m Use npm@7
+* [33m5dd22c96[m Target Node.js 12.20, 14.15 and 15
+* [33mb6a3cb72[m Update endpoint testing with Mongoose recipe
+* [33m378f605f[m Fix link to Discussions in issue template
+* [33m32c54253[m 3.15.0
+* [33m0f69088c[m Update dependencies
+* [33ma2f2614c[m Next-generation configuration loading
+* [33m711bcf26[m Housekeeping
+* [33m4f093abf[m Remove snapshot files when a test file stops using snapshots
+* [33m98595dae[m Fix timeout reporting in TAP reporter
+* [33m3fe4c40f[m Only create the cache directory when needed (#2628)
+* [33m99ab93ad[m Upgrade supertap and print `t.log` entries according to TAP diagnostics spec
+* [33m5d3b2006[m 3.14.0
+* [33m9b2bd5f7[m Update dependencies
+* [33me66b54ce[m Deterministic snapshot files, declaration-ordered snapshot reports
+* [33m73015e57[m Update dependencies & fix reporter tests
+* [33m09c5568d[m Document shared workers
+* [33mc3e43bf6[m Test with Node.js 15
+* [33mdcd58317[m Remove link to avacasts
+* [33mb71f396d[m shared-workers: Don't warn when too many message listeners are added
+* [33mfd4da2f2[m 3.13.0
+* [33ma3379fad[m Improve TypeScript recipe
+* [33mdf216e36[m Update dependencies
+* [33m51245470[m Experimentally implement shared workers
+* [33mba4f426b[m Clean-up in lib/fork.js
+* [33m759c3fa7[m Tweak reporter integration tests
+* [33mdc83c39a[m Implement flow-control for test worker IPC
+* [33mf328a693[m Experimentally disable null expectations for throws assertions
+* [33m33172dc2[m Convert integration tests to be self-hosted
+* [33m900dc6d4[m Make `t.passed` usable in tests and teardown functions
+* [33mf42e0e03[m Sanitize timers.js positions in reporter logs
+* [33mdb5d2c36[m Update enzyme recipe to work with latest enzyme
+* [33m983ce0cb[m Fix typo in VSCode recipe
+* [33mac2ae054[m 3.12.1
+* [33mf499cbf2[m Revert advanced IPC
+* [33m76941715[m 3.12.0
+* [33m41a47bf2[m Update dependencies
+* [33m5c9dbb96[m Experimentally configure module formats for test files
+* [33m2b41fb03[m Test compatibility with TypeScript 4.0
+* [33mea66e645[m Don't use global setImmediate
+* [33mef74c8b1[m Delete unused Node.js 13 reporter logs
+* [33m0f879f46[m Use advanced serialization (when available) for worker communication
+* [33m20bc7810[m Use ESM syntax for ESM example
+* [33m43dda520[m Move Vadim to the 'Former' contributors list ❤️
+* [33m0483b8cb[m 3.11.1
+* [33m1150991b[m Self-host the built-in Node.js assert tests
+* [33m5ddc9fda[m Temporarily uncork report stream when clearing spinner
+* [33m8d03e1df[m 3.11.0
+* [33md7ff7512[m Update dependencies
+* [33mfac7990e[m Unflag t.like() assertion
+* [33mbc39bcc3[m Detect active inspectors; update VSCode debugging recipe
+* [33m142363b7[m Fix reporter logs for Node.js 14
+* [33m07602f5b[m 3.10.1
+* [33ma557bc08[m Reinstall XO to fix CI error
+* [33m7d4aa459[m Revert "Use advanced serialization (when available) for test worker communication"
+* [33m38686110[m 3.10.0
+* [33mb023a976[m Update dependencies
+* [33md01db61e[m Detect t.try() usage in hooks; experimentally disable t.snapshot()
+* [33meee2f7b7[m Fix t.like() selector type
+* [33mb154612b[m Updates to our self-hosted tests
+* [33m51fafed9[m Use advanced serialization (when available) for test worker communication
+* [33mca8ea455[m Support assertion message in `t.timeout()`
+* [33mf72fab40[m Don't update snapshots when executing a subset of tests
+* [33m78cfaa17[m 3.9.0
+* [33mf06c506d[m Update dependencies; supported Node.js versions
+* [33m27d2c6a3[m Clean up whitespace in reporter code
+* [33m19c4f35f[m Experimentally implement `t.like()` assertion
+* [33m952a0177[m Experimentally reverse teardown order
+* [33mb3866b6b[m Merge mini and verbose reporter implementations
+* [33mf5e1f941[m Adjust integration tests for Node.js 12.17 supporting ESM out of the box
+* [33ma901672b[m Remove ESM from Puppeteer recipe
+* [33m34a134a3[m Update dependencies
+* [33m4b797400[m Update endpoint testing recipe to use correct options for got
+* [33mbaaf99a7[m Reporter improvements
+* [33mdace9767[m 3.8.2
+* [33m05c3158e[m Prep for release
+* [33mfd92b4a3[m Correctly use picomatch dependency
+* [33mbec7c9e1[m Configure import/no-unresolved linter rule
+* [33mc8f31a39[m Test AVA using AVA
+* [33ma5385a41[m Use configured depth limit for diffs in assertion failures
+* [33m7df43970[m 3.8.1
+* [33m63ea26c2[m Upgrade matcher
+* [33ma9c165f6[m Tweak codecov uploads
+* [33mb669efad[m 3.8.0
+* [33m0976cfe2[m Dependency updates
+* [33m1222ce95[m Run tests at selected line numbers
+* [33m75cbc3b2[m Add `t.teardown()`
+* [33m993bb903[m Remove test slowness output checks from reporter tests
+* [33maf7b2d59[m Don't print empty error stacks
+* [33m2e7c76b8[m Node.js 14 compatibility
+* [33m59c227d9[m Fix watch mode with mini reporter
+* [33m9a9351dd[m Retain (most of) Node.js internals in stack traces
+* [33m3c0fc03c[m 3.7.1
+* [33m26c8326b[m Support parallel runs that do not need to run test files
+* [33m7eb23ddd[m Remove now unnecessary `finishPromised()` from lib/test.js
+* [33m276c16af[m Use HTTPS links
+* [33m18aeac64[m 3.7.0
+* [33mdce14c67[m Update dependencies
+* [33mfc930982[m Test our type definitions with multiple TS versions
+* [33mcb5f9f70[m Expose snapshot directory through test.meta
+* [33m447d3715[m 3.6.0
+* [33m886b4d7f[m Rebuild lockfile
+* [33m1f59b052[m Dependency updates
+* [33m489b13e0[m Fix TypeScript documentation for t.try()
+* [33m4bf64d04[m Remove link to previously removed recipe
+* [33m8f312c0f[m Add t.passed to execution contexts
+* [33mede4f322[m Fix typo in endpoint testing recipe
+* [33m4c3e791d[m 3.5.2
+* [33m60784a51[m Upgrade XO
+* [33mf07eec80[m Reorganize tests
+* [33m5d791707[m 3.5.1
+* [33m2c8b75d3[m Tweak test timeouts to reduce flakiness
+* [33m52bbd5b2[m Allow tests to force AVA to behave like in CI or not
+* [33m3195eb8e[m Simplify Codecov setup
+* [33mb6a46bd7[m 3.5.0
+* [33m13d66519[m Add debug --host option
+* [33m86306368[m 3.4.0
+* [33m12ba7bcd[m Ship t.try() without requiring opt-in
+* [33mf4d4edd3[m Evaluate ava.config.js scripts in current context
+* [33m8831f54d[m Improve detection of ESM support
+* [33md0e21612[m Support undefined as second argument to t.throws and t.throwsAsync
+* [33m324e45f2[m Document `t.try()` (#2251)
+* [33mda52e5fc[m Bump dependencies
+* [33m55a36490[m Ensure t.try() assigns unique titles when multiple implementations are passed
+* [33m7ee3a0e5[m Prefix attempt titles with that of parent test
+* [33ma69e4f2c[m Bump dependencies
+* [33m7a1dacf3[m Remove @types/node reference
+* [33m3f9c616b[m Update Vue recipe to use JSDom rather than browser-env
+* [33mf5a8c2b2[m Improve error message when `test.cb()` is used with promises
+* [33mc166e050[m 3.3.0
+* [33m362b6f98[m Upgrade @ava/babel
+* [33m04ba44b4[m Support loading ESM test files
+* [33mea05758c[m 3.2.0
+* [33m6c911530[m Improve integration with the TypeScript provider
+* [33m7ccb2082[m Clarify comment
+* [33mf4008d57[m Map provider protocols to 'levels'
+* [33m56338dcb[m 3.1.0
+* [33me4fef0cf[m Rudimentary support for loading TypeScript test files
+* [33m91a00864[m Remove v2 configuration from TypeScript recipe
+* [33mb4cfc8dd[m 3.0.0
+* [33m776788f5[m Ship v3 🎉
+* [33m0d11ff70[m More issue template tweaks
+* [33m99839767[m Update various contributing documents and GitHub configuration
+* [33m5a335729[m Fix fail-fast interrupt test
+* [33m61e0d05e[m Fix VSCode debugging instructions
+* [33m630aac3f[m Fix remaining AVA link
+* [33m5c8bcecf[m Fix AVA link in snapshot reports
+* [33m7b20f6c8[m Allow Node arguments to be configured
+* [33mad27246d[m 3.0.0-beta.2
+* [33mae948d8d[m Lowercase CLI argument description asides
+* [33mac8c852a[m Update dependencies
+* [33m2bd890fc[m Disable timeouts in debug mode
+* [33m15d73ca5[m Make console & process globals available to ava.config.js files
+* [33mefa86354[m Fix patterns and unpin picomatch
+* [33m580705e4[m Fix --update-snapshots
+* [33mcf26b6d3[m Ensure t.assert() counts as a passed assertion
+* [33m82cef5c2[m Add Selenium WebDriverJS recipe
+* [33m090884b5[m Use question mark to indicate optional argument in docs
+* [33m7c352db5[m 3.0.0-beta.1
+* [33m66dd09fd[m Rebuild package-lock
+* [33mf02ac7a2[m Install latest @ava/babel
+* [33m8bdcf8be[m Anticipate asynchronous loads
+* [33me919b403[m Pass extensions to load as modules to Babel provider
+* [33m6995471e[m Don't replace global console
+* [33m7f99aef6[m Remove legacy .throws() and .throwsAsync() interfaces
+* [33m54ff1303[m Pin picomatch@~2.1.1 due to regressions
+* [33m9f477c76[m Directly use picomatch
+* [33md09161a3[m Remove the faking of the TTY in worker processes
+* [33m465aef29[m Update Babel protocol
+* [33mbd5c05f5[m Passing --color/--no-color to worker processes is unnecessary
+* [33m1f10a7cf[m Stop rewriting NODE_PATH values to be absolute paths
+* [33mf2172526[m Set a default timeout of 10 seconds
+* [33mb78c71d5[m Type observables based on how they're consumed by AVA
+* [33ma07daeb7[m Initialize Chalk in worker processes with same level as main process
+* [33m4fdd416a[m Remove bench files; clean up & bump dependencies
+* [33m8fa28254[m Add support for .cjs files; select but do not yet handle .mjs files
+* [33m98c47b45[m Increase timeout in fail-fast interrupt test
+* [33m33075127[m Correctly print relative paths in reporters
+* [33m83b43a58[m Allow CLI to select a subset of test files
+* [33m806c4db3[m Do not pass babelProvider to watcher code
+* [33m647c24e9[m Do not treat files in underscore-prefixed directories as test files
+* [33me330c3ee[m Only select test.* files in specific locations
+* [33mee0cbe10[m Ignore likely helper and fixture files during test file globbing
+* [33ma7f06290[m Glob patterns should be relative
+* [33mb7b7383f[m Always glob for test files
+* [33m643de7b9[m Remove file selection weirdness
+* [33m522e77a8[m Tweak timeout value in t.try() test
+* [33meaf6e648[m Fix color initialization
+* [33m79b2ea30[m Use CJS syntax in documentation
+* [33m9deaa413[m Refactor globbing
+* [33mb09eb2d2[m Refactor extension normalization
+* [33mcff88718[m Refine check for now unsupported compileEnhancements configuration
+* [33mb446f69f[m Simplify Babel integration by separating the use cases
+* [33m30f0e14b[m Remove support for outdated 'esm' versions
+* [33mb4ea4352[m Remove built-in Babel support
+* [33m49534572[m Add built-in debug command
+* [33mfef2ef6b[m Replace meow by yargs
+* [33mf1cb455f[m Remove profile.js
+* [33m4a4ef8a9[m When checking for file existence, use normalized files
+* [33maad4cd68[m CI: Run when merged to master
+* [33m5b249b96[m Correctly set Chalk level based on --color CLI boolean flag
+* [33mcdb5019b[m Bump dependencies
+* [33mc49c0bd6[m Lint fixes now Node.js 8 is no longer supported
+* [33m5c44d7d6[m Require the most recent Node.js releases, drop Node.js 8 support
+* [33m3172a608[m CI: Use codecov action
+* [33m97571901[m Remove array-union and array-uniq dependencies
+* [33m9ec61643[m Tweak GitHub Actions setup
+* [33m6b5a7135[m Update mongodb-memory-server import in recipe
+* [33m641c52f2[m Change casing in endpoint testing example
+* [33m11c13da8[m TAP: Report hook failures as test failures
+* [33ma69e6357[m Bump dependencies
+* [33mf69425ba[m Remove iron-node mentions
+* [33m37206e7e[m Remove Travis, test with latest npm, test Node.js 13
+* [33m3875001a[m Use @ava/babel
+* [33m7a668a63[m Update maintaining.md
+* [33med32b813[m Require latest Node.js releases whenever we do a major release
+* [33m525dc66e[m Update examples of odd-numbered Node.js versions
+* [33m981e54af[m Remove obsolete note from support statement
+* [33m20f86d68[m Refactor Babel integration to prepare for extraction
+* [33m7b54317b[m Fix typo in the docs for writing tests (#2265)
+* [33mdc2c4efa[m Loosen matches for import syntax errors
+* [33m1bcaaa4e[m Experimentally disable Babel out of the box
+* [33mef39793e[m Indent fatal CLI startup errors
+* [33m2c3bb0c4[m Print experiments warning in CLI file, not reporters
+* [33m7c535b2f[m Document module path mapping in TypeScript recipe
+* [33m05f077e8[m 2.4.0
+* [33mca4eff74[m Bump dependencies
+* [33m67e4deac[m Update endpoint testing recipe to focus on the concept, not libraries
+* [33m4fdb02dd[m Implement experimental t.try() assertion
+* [33m782c2d87[m Run some tests on Travis still
+* [33m4c890d9a[m Add OpenCollective link to README
+* [33m03c15093[m Groundwork to support experimental features
+* [33m0a5c933b[m Remove unnecessary flag from tap invocation
+* [33me598c30c[m Detect whether error source is on a different drive (on Windows)
+* [33mfb0c5360[m Fix serialize-error tests on Windows with GitHub Actions
+* [33m53d7fe13[m Allow some fixtures to pass linting when XO is installed without lockfile
+* [33m11771ba5[m Run CI using GitHub Actions
+* [33m5538bdc6[m Replace an indexOf() by includes()
+* [33m49b202fb[m Add shared variables & asynchronous tests to common pitfalls
+* [33m1c81c4bf[m 2.3.0
+* [33m9e8d28f4[m Watcher: Only track test files has having exclusive tests if at least one test was selected
+* [33m7dcb473d[m Update fake-tty for changes in Node.js 12.7.0
+* [33m9baca8ca[m Enable V8 supported stage-3 syntax, as well as stage-4 syntax
+* [33m7fb0546f[m Bump dependencies
+* [33mffa62ce9[m Consistent paths in watcher
+* [33mb27cb8d5[m Print internal errors when precompiler setup or globbing fails
+* [33m8628976e[m Print hooks and remaining tests as TAP comments
+* [33mf01d05f0[m Ensure CLI receives file paths
+* [33m2fc7d564[m Change default Context type to unknown
+* [33m24514841[m 2.2.0
+* [33me528ad24[m Bump dependencies
+* [33m2dae2bfa[m Implement --config flag
+* [33m58b23506[m Disable deprecation warnings in reporter tests
+* [33md3997971[m Fake `hasColors()` in worker processes
+* [33m90acbb93[m Stop testing Node.js 11, remove from engines entry
+* [33m533ee4bc[m Link to VSCode debugging recipe
+* [33mdc917257[m Fix grammar in readme
+* [33m851316f8[m Remove Flow references
+* [33m00d9517a[m 2.1.0
+* [33m911d1983[m Tweak dependencies, CI
+* [33m52fc67aa[m Fix package lock
+* [33mbb44da71[m Explicitly reference the Node.js type definition
+* [33mb3c9ea71[m Allow ESLint rules to override extensions and glob patterns
+* [33m7366a9d2[m Store an error object in AssertionError rather than a stack trace
+* [33m007c7af5[m Include logs from successful hooks in TAP output
+* [33mac212ba1[m Include all (beautified) stack trace lines in TAP reporter output
+* [33m486acaf4[m Document timeout units
+* [33me1572d9f[m 2.0.0
+* [33m2daf6a9b[m Bump dependencies
+* [33mb1e54b1a[m By default, select test and helpers inside 'tests' directories
+* [33m677578fc[m Replace individual lodash packages with the main package
+* [33ma53ea157[m Define environment variables to be injected in the test file processes
+* [33m626e58c4[m 2.0.0-rc.1
+* [33m51433bed[m Implement helper for our ESLint plugin
+* [33mc10e38c1[m Remove underline from Babel configuration validation errors
+* [33m928ed144[m Bump dependencies
+* [33m98034fbb[m Make the object printing depth configurable (#2121)
+* [33mf26634b1[m 2.0.0-beta.2
+* [33m80d72ff2[m Bump dependencies
+* [33m5f4c96f9[m Further helper selection improvements
+* [33mba5cd804[m Fix TypeScript definition allowing macro-without-title-using-tests to be skipped
+* [33m13a89e16[m Reduce size of logo in readme
+* [33m799eb912[m Update domain name
+* [33mcb4c8095[m Make watch mode dependency tracking work with custom require hooks
+* [33m08e99e51[m Treat .spec.js files as test files
+* [33m91b76414[m Use underscore-prefixed helpers in documentation
+* [33mc2d8218b[m Improve the TypeScript definition `ObservableLike` type
+* [33m5bae97c4[m Fix sample test in Flow recipe
+* [33m2762d3cb[m Fix require path in Babel recipe
+* [33m05f925f9[m Fix sample test in TypeScript recipe
+* [33m8a3f6cad[m Remove mention of the obsolete `devtool` package
+* [33me60c54e3[m 2.0.0-beta.1
+* [33m3193e9c3[m Test under Node.js 12; bump dependencies
+* [33m4f4dfc75[m Refactor glob handling
+* [33m5f3d75d4[m Remove warning for legacy 'source' configuration
+* [33meb9641b4[m Sort options when instantiating API
+* [33m49120aaf[m Ensure the assertion message is a string
+* [33m0804107b[m Fail snapshot assertions in CI if snapshot is missing
+* [33m2ce19993[m Manage assertions through a class
+* [33mc633cf08[m Remove Flow type definitions
+* [33m3a4afc6c[m Require Node.js 8.9.4
+* [33m2704b162[m Move api.js into lib/
+* [33mebf48077[m Simplify macro types in TypeScript definition
+* [33m9ef456bf[m 1.4.1
+* [33m55d973d6[m Tweak reporter integration tests so they pass on Node.js 12-pre
+* [33ma7605dec[m Add t.assert() to type definitions
+* [33m20db4749[m 1.4.0
+* [33m0154a7f4[m Bump dependencies
+* [33m94064702[m Only apply power-assert to new t.assert() assertion
+* [33mc1f6fdfe[m Shim all tty methods
+* [33m23e302a8[m Don't report filtered tests as pending
+* [33m99a10a16[m Document that there is no default timeout
+* [33mcd256ac5[m Print commands in watch mode
+* [33m960f4cd2[m 1.3.1
+* [33m9beb6007[m Check whether the code expectation was given
+* [33mb0fadb47[m 1.3.0
+* [33m9600966f[m Bump dependencies
+* [33m82daa5e3[m Assert on expected error code, even when a number
+* [33m1e3b072a[m Document `timeout` configuration
+* [33md97f11dd[m Improve pronunciation examples
+* [33m40f331c2[m Fix unbound reference to clearTimeout
+* [33m334e15b4[m Support require() in config files
+* [33m5751226e[m Added few tests for lib/chalk.js
+* [33m7d10446e[m Fix link to Babel recipe
+* [33m565822e0[m Update esm package detection
+* [33m2fce19f8[m Remove the `typings` field in package.json
+* [33md066f6fb[m Recognize snapshot files as source files
+* [33m65133a85[m 1.2.1
+* [33m30788922[m Send options to worker process over IPC
+* [33m010914b9[m 1.2.0
+* [33mad087f25[m Fix stack traces in throw assertions
+* [33m8ad5efdd[m Bump dependencies
+* [33m2b605563[m Print pending tests on interrupt, and on timeout in mini reporter
+* [33m0a5fe429[m Change deprecated workspaceRoot variable to the equivalent workspaceFolder
+* [33mb65c6d7d[m Add `t.timeout()`
+* [33med7807e3[m Linter fixes
+* [33mf0a07cdc[m Rely on npm 6.6.0
+* [33m6b10f2e7[m Bump XO and fix some lint issues
+* [33m72e0762d[m Fix accidental truncation of multi-line error messages
+* [33medfc0055[m Fix profile.js example
+* [33ma28094a3[m 1.1.0
+* [33m7262a78a[m Bump dependencies
+* [33md1877122[m Fix t.log() in hooks
+* [33mbccd297f[m Expose test file path within worker process
+* [33mc3bcbf2a[m Improve Babel and Vue recipes
+* [33mdc552bcb[m Update link to `t.throws()` assertion in AVA output
+* [33mf4b2d196[m Fix links to French translation of docs (#2005)
+* [33m2e72fe7c[m Fix npm install command in readme (#2001)
+* [33m7b6e578d[m Use newer ES syntax where possible
+* [33m783944f2[m 1.0.1
+* [33m024bab72[m 1.0.0
+* [33maac41dcb[m Reword introduction
+* [33m84d8fff8[m Bump dependencies & update documentation
+* [33mc1364a1c[m Update the tagline and readme intro (#1983)
+* [33meed2e7a9[m Clarify that not all configuration options can be overridden by CLI flags
+* [33m93e91c9a[m Fix 'sources' option in configuration docs
+* [33m3bc80b05[m Remove moot ESLint disable comment
+* [33m311c197d[m Fix snapshot skip interface
+* [33m0e82b044[m 1.0.0-rc.2
+* [33mf97e277d[m Bump dependencies
+* [33m6f54db84[m Type additional arguments used by macros
+* [33ma82fee56[m Documentation updates
+* [33mafe028a0[m CI updates
+* [33m1ba31d8f[m Reorganize documentation
+* [33m5db3573e[m Use ts-ignore comment (#1969)
+* [33maa35f154[m Pass an undefined title argument to macro-title functions
+* [33m37390e6e[m Handle esm's error "improvements"
+* [33ma130a9e3[m Use source-mapped file to build snapshots
+* [33mcc3e0eab[m Link to French translation of puppeteer recipe (#1966)
+* [33mbf00d79a[m Insert a trailing newline when appending new snapshot entries
+* [33m6ab6d35d[m Add recipe for AVA & Puppeteer (#1913)
+* [33m1cc1bd53[m Minor tweaks to the Flow and TS recipe
+* [33ma9758eef[m 1.0.0-rc.1
+* [33meccd2470[m Update dependencies
+* [33m7be3f995[m Better typing for throws assertions
+* [33mff09749e[m Support babel.config.js
+* [33mff552361[m Restore Babel cache invalidation
+* [33m626bd067[m Clarify which config blocks are based on package.json files
+* [33mf93b341d[m Detect `ava` property in ava.config.js configuration
+* [33m20345107[m Show correct coverage badge
+* [33m460dd916[m Change babel-register to @babel/register
+* [33mf125b4df[m Providing useful feedback when using t.throws() with async functions
+* [33m71eede72[m Upgrade Concordance
+* [33m2ff66842[m Use chunkd to compute files to test in parallel CI runs
+* [33m6d12abfd[m Print tests that were pending when a timeout occurs
+* [33m30a80b6e[m Respect extension configuration in profile.js
+* [33m92034482[m Document --reset-cache flag
+* [33mbfe16300[m Bump dev dependencies (#1927)
+* [33mbec03640[m Bump @ava/babel-preset-transform-test-files
+* [33me6e40adf[m 1.0.0-beta.8
+* [33m2fb02f6b[m Upgrade to Babel 7
+* [33m40be5978[m Update mini reporter to include files-without-tests in final output
+* [33m99072ed8[m Test reporter edge cases, e.g. test file exceptions, no test declarations
+* [33md3bfb73f[m Fix detection of existing syntax plugins
+* [33m8f54022c[m Bump dependencies
+* [33m28fe4e88[m Ensure different OSes generate consistent snapshots
+* [33m0ecd0be8[m Add test.serial.failing.{only|skip} implementations
+* [33m846920a4[m Fix missing `projectDir` in profile.js
+* [33m7f974ccd[m Allow `code` in throws expectations to be a number
+* [33m99098cc5[m Fake TTY support for stderr
+* [33m0ea713c2[m Document `verbose` configuration option
+* [33mf7fce6a8[m 1.0.0-beta.7
+* [33m153cb30f[m Update Babel-related dependencies
+* [33m17a18dea[m Ensure the watcher supports custom extensions
+* [33mc9361cbe[m Ensure source maps contain relative paths
+* [33m6fb09649[m Bump deps
+* [33m604dd4a6[m Bump source-map-support and update tests
+* [33m31bc787c[m Fix typo in assertExpectations function
+* [33m23b45326[m Ignore node_modules/* in @babel/register example
+* [33mb1737cbd[m Bump XO (#1888)
+* [33m55e40213[m Provide getColorDepth() shim for fake TTYs
+* [33m76a8ce8f[m Don't use `white` color for test titles
+* [33m3ac2a8f8[m Fix error message when requiring AVA from a REPL
+* [33mb0078245[m Fix typo in endpoint-testing-with-mongoose
+* [33m7babf6be[m Move promise-handling code to t.throwsAsync and t.notThrowsAsync
+* [33me0f914a2[m Copy flow's promise then() interface into PromiseLike
+* [33me5699df6[m Modernize some code (#1876)
+* [33mc4f607cc[m Automatically spread test file runs across parallel CI jobs
+* [33mdbeebd16[m Use npm@6.2.0 in CI
+* [33m359e14b1[m Drop Node.js 9 support
+* [33m214ff436[m Disable concurrency of our tests
+* [33m08e56387[m Improve scoping of CLI tests to a particular fixture directory
+* [33m671b90ce[m Fix integration tests not actually running
+* [33m6b6aa067[m Upgrade esm and use force option
+* [33md5dd981d[m Remove observable support in t.throws() and t.notThrows()
+* [33md7c6b3de[m Remove test export
+* [33m02d768f0[m Remove support for iterators returned by test implementations
+* [33m223f9928[m Fix snapshot report merging
+* [33mfd73358d[m 1.0.0-beta.6
+* [33m645d61b3[m Update Babel related dependencies
+* [33m5cce79ad[m Pretty-print TypeScript build errors
+* [33m199cc70f[m Update TypeScript recipe for new extensions support
+* [33m09f2d875[m Use verbose reporter when stdout is not a TTY
+* [33mb3f7a707[m Fix custom extension compilation without disabling Babel
+* [33ma66bc0ff[m Split up cli.js tests
+* [33m9cdc29bb[m Print links to version-specific documentation
+* [33mb6a95b14[m Correct key to configure watched sources
+* [33ma4f741cf[m 1.0.0-beta.5.1
+* [33m12713c9b[m Fix missing `del` dependency (#1823)
+* [33m1142ead3[m 1.0.0-beta.5
+* [33m673f81c3[m Fix type comment for message expectation
+* [33mb91f7e0d[m Add type definitions for code expectation
+* [33mad2d96de[m Support optional-catch-binding syntax in Babel pipeline
+* [33m068bae7d[m Update to Babel 7 beta 49
+* [33m1951677e[m Remove safe-buffer dependency
+* [33m02ea7b60[m Update non-Babel-related dependencies
+* [33m5ff3e099[m Use npm@6.1.0 in CI
+* [33m179f26ad[m Support err.code in t.throws() expectation
+* [33m16f47424[m Add support for ava.config.js files
+* [33m3533aba3[m Make test & helper file extensions configurable
+* [33mf0f0c3b1[m Allow testOptions to disable source maps
+* [33m4c6eef38[m Prevent testOptions from changing the Babel working directory
+* [33ma5de3691[m Use Babel directly
+* [33mebb39488[m Implement --reset-cache
+* [33m8c9c4748[m Remove --no-cache CLI flag
+* [33m0d6986c5[m Remove indentation from CLI exit message
+* [33mc68d92eb[m Return Chalk instance from set() call
+* [33m2167c575[m Update 'sources' option in README
+* [33m434cb742[m Remove moot codeblock syntax in the readme
+* [33ma76d462b[m Update Flow type `PromiseLike` to be compatible with libdefs in Flow v0.70.0 and v0.69.0
+* [33m94986c7b[m Support Node.js 10 & assume npm 6 (#1783)
+* [33m43313990[m Fix minor typo in readme example (#1781)
+* [33m1e0e8e84[m Suffer package-lock churn
+* [33mcb9c1929[m Remove TAP job concurrency when running Windows tests
+* [33md8349f5b[m Don't restart timeout timer when receiving events from timed out workers
+* [33m7e5ff0fd[m Remove unused fixtures
+* [33mf843d2f1[m Remove unnecessary try/catch from cli script
+* [33mb2a3b21e[m Remove visual tests
+* [33m57d180a0[m Refactor IPC, status and reporters
+* [33m0dc141d7[m Smarter error serialization
+* [33m2bd570ed[m Use an AVA-specific Chalk instance
+* [33m8938577f[m Reorganize worker code
+* [33m7c3b90f7[m Explicitly exit CLI with a message rather than throwing an error
+* [33mf803a226[m Remove time-require
+* [33ma681ecfd[m Ensure 'this' in test implementations is null
+* [33mb30e6a67[m Instantiate runner in test-worker
+* [33m5ea6ea72[m Add integration tests for reporters
+* [33m388c6d46[m Set up reporter streams so they can be overridden in tests
+* [33m2609494f[m Read TTY columns from stream, not stdout
+* [33m6882bd0d[m Remove additional dependency lines from stacks
+* [33m25cc9178[m GitHub now natively supports SVG
+* [33m718349ec[m 1.0.0-beta.4
+* [33m319d0792[m Update installation instructions
+* [33m6bba7662[m Update Vue docs for AVA 1.0
+* [33mc41efb02[m Update Babel to beta 44
+* [33m53fb487e[m Add inline docs to Assertions interfaces
+* [33ma5100889[m Clarify directory exclusions in glob patterns
+* [33m4e24ecec[m Update dependencies
+* [33m28c8acd4[m Remove obsolete rule from .gitignore
+* [33m251a21e3[m Use npm@5.8.0 in CI
+* [33md258ce3b[m Remove support for Node.js 4
+* [33me196257f[m Indicate we may eagerly drop Node.js support in a pre-release
+* [33m977cf4f4[m Fix missing import In bench/run.js
+* [33m3311d69d[m Replace --init flag with npx recommendation
+* [33m84a884ed[m Upgrade std/esm to just esm 🎊
+* [33m29d2c5d3[m Update JSPM recipe for Babel 7
+* [33m04d88b5d[m Update webpack recipe for Babel 7
+* [33ma36422ce[m Update React recipe for Babel 7
+* [33mecc219ae[m Add inline docs to test interface type definitions
+* [33md3bade8c[m Suggest running ava with npx
+* [33me9d417fb[m Explicitly cast `test` context in TypeScript
+* [33mc833d552[m Move to Spectrum
+* [33m565a37c7[m Update dependencies
+* [33me4446544[m Remove `t.ifError()` assertion
+* [33m1d9f176b[m 1.0.0-beta.3
+* [33ma6fb0a76[m Fix --fail-fast accidentally interrupting test files
+* [33maf2c2b67[m Simplify code coverage recipe
+* [33m349648a7[m Update URL to XO
+* [33m14a842fd[m 1.0.0-beta.2
+* [33m932a7700[m Document context support in before & after hooks
+* [33m29ae3070[m Update dependencies
+* [33m672736d6[m Link to French translation of Passing arguments recipe (#1709)
+* [33mdcff56a8[m Bump dev dependencies and fix new lint issues
+* [33m3c13c339[m Reimplement t.throws() and t.notThrows() (#1704)
+* [33mac300c1e[m Allow worker CLI flags to be specified
+* [33m9482a9e1[m Don't reload Babel config in watch mode
+* [33m0948d87a[m Link to French translation of test-setup recipe (#1706)
+* [33mae50a135[m Add recipe on how to set up tests
+* [33m98e66da9[m Link to French translation of es-modules recipe
+* [33m03337735[m Update links to French docs translations
+* [33m2a18f31f[m Make source compilation clearer
+* [33m73e98f9d[m Fix t.snapshot.skip()
+* [33m20f4cea3[m Bind assertions, move skip()
+* [33m53771993[m Implement t.log() in ExecutionContext itself
+* [33m0b27db54[m Add ES Modules recipe
+* [33m632dc3e0[m Readme tweaks
+* [33m71d285bc[m Indicate former AVA maintainers in the readme
+* [33mc1b418f5[m Interrupt test workers when a test fails and --fail-fast is enabled
+* [33m963f5cf4[m Refactor how tests are actually run
+* [33m8de26301[m Print number of skipped test files when --fail-fast is used
+* [33mb501fa22[m Remove anonymous test handling in verbose reporter
+* [33mb1ffb5d3[m Remove commented out fork test
+* [33m2153497c[m Rename confusing precompiler hook test
+* [33m61286254[m Keep IPC channel referenced once it's needed again
+* [33m7762ea23[m Clean up collecting and running tests
+* [33md4d60dbd[m Move logic from lib/main.js to lib/test-worker.js
+* [33m019f0378[m Special serialization logic for SyntaxErrors
+* [33m039b6464[m Consistent output for rejections/exceptions in mini and verbose reporters
+* [33mda9bb0ae[m Replace lib/globals
+* [33m1f4d5034[m Access worker options through dedicated module
+* [33mf83f8c0d[m Improve failFast at API level
+* [33m5c8baff6[m Update timeout documentation
+* [33m82f4083b[m Refactor API module
+* [33m705b787e[m Remove 'with pool' prefix from API tests
+* [33m51a0ff02[m Support t.context in before and after hooks
+* [33m73baf704[m Update README and installation instructions for the beta releases
+* [33mb2954a8d[m Refactor Flowtype definition
+* [33mbac3c113[m Refactor TypeScript definition
+* [33m7c0bf9b7[m Restrict test modifier chaining
+* [33ma28c8961[m Clarify JSON location for Vue recipe (#1680)
+* [33m47b8b565[m Docs: Add link to french translation (babel & support-statement) (#1679)
+* [33m4d60d5de[m 1.0.0-beta.1
+* [33maafe225f[m Upgrade to babel@7.0.0-beta.39
+* [33m1de36578[m Ensure profile.js skips test file compilation like regular runs
+* [33md42865be[m Fix required title in test fixture
+* [33mb8364cac[m Document how to configure @babel/register to *not* compile test and helper files
+* [33m56b56c1a[m Load compiled helpers if in the "require" configuration
+* [33m50b0b4e6[m Document how to preserve ES module syntax in test files
+* [33m18b09b24[m Update @ava/stage-4 preset
+* [33ma84c96f5[m Share glob caches (#1661)
+* [33mb6fa8b93[m Clean up CLI module
+* [33mfe7a8a1c[m Require unique test titles
+* [33m40604eed[m Support promise & observable returning functions in t.throws() and t.notThrows()
+* [33m7be7fe80[m Update deps
+* [33m74cd9344[m Use prepare script
+* [33m2e54c17b[m Add support statement
+* [33mb33cb1d5[m Babel 7 support and additional enhancements
+* [33ma051d3e1[m 0.25.0
+* [33m4f896c28[m Make `t.log()` behave more like `console.log()`
+* [33mf00f3c46[m Don't set `Error.stackTraceLimit` in worker processes
+* [33mc2b42ecb[m Mention #1319 as a pitfall
+* [33mbcb77fc4[m Recommend skipFiles for VSCode debugging
+* [33mcd8c91b7[m Add more clarification for different Babel config in .babelrc.md (#1642)
+* [33m947f207d[m Update code-excerpt to ^2.1.1
+* [33m4a139664[m Debug serially in the "Debugging tests with VS Code" recipe (#1634)
+* [33maaddc37a[m Use absolute source map paths in precompiled files
+* [33m72c53bee[m support @std/esm (#1618)
+* [33m29e5dfdc[m Add TS types for t.snapshot(content, options)
+* [33mc1faf95b[m Fix typo in precompiling-with-webpack.md (#1625)
+* [33m4e8f8270[m Switch time-require to @ladjs/time-require
+* [33m965cbc65[m Use supertap to generate TAP output (#1610)
+* [33m4124d77b[m Update npm, test Node.js 9, detect package-lock churn in CI (#1601)
+* [33me401bd15[m 0.24.0
+* [33m8141395d[m Churn and dedupe package-lock
+* [33mf2979a36[m Bump dependencies
+* [33mefc3b319[m Code style tweaks
+* [33mcb1c3f70[m Fix documentation of snapshotDir option
+* [33mc41b2afc[m Provide feedback when t.is() values are deeply equal but not the same
+* [33m1cd3a04f[m Don't run before and after hooks when all tests are skipped
+* [33mf98a8810[m Document how to title macros when using TypeScript
+* [33mb3c4090c[m Fix broken link in contributing guide
+* [33m37c9122c[m Include syntax-object-rest-spread in default Babel options for Node.js >= 8.3.0
+* [33m035fd31c[m Verify package-lock when linting
+* [33m37e8b49a[m Use babel-generator to regenerate enhanced assertion statements
+* [33m3b81e2ca[m 0.23.0
+* [33m3f81fc43[m Limit concurrency to 2 in a CI environment
+* [33m1cb9d4f9[m Adjust NODE_PATH test to fix linting issue
+* [33m1ea758f3[m Only display timestamp in verbose logger if watch mode is active (#1557)
+* [33mc72f4f24[m Include anonymous functions in stacktraces (#1508)
+* [33meebf26e6[m Add Awesome mentioned badge
+* [33mf43d5ae5[m Recipe instructions for making jQuery available in browser (#1543)
+* [33m68ce4b81[m Update tsconfig.json docs link in the TS recipe
+* [33m837b0ddc[m Fix TypeScript recipe typo (#1549)
+* [33m2349316b[m Update package-lock with changes in #1407
+* [33mbb91862e[m Version warning when local version is behind (#1407)
+* [33m42e7c74c[m Set NODE_ENV to to 'test' if not already set (#1523)
+* [33m64b7755d[m Add t.log() for Flow and TypeScript (#1538)
+* [33m8955e15a[m Lint test fixtures
+* [33mfa4f73c2[m Update to npm@5.4.2
+* [33mb888419c[m Stabilize colors (#1524)
+* [33m61101d92[m Bluebird long stack traces integration test
+* [33m3c8b1bed[m Add `t.title` to TypeScript definitions (#1529)
+* [33m14238788[m Remove React section from browser testing recipe (#1528)
+* [33m03149d79[m Prioritize npm over Yarn install method in the readme (#1518)
+* [33m1df502df[m Match anonymous tests as if they had an empty title (#1502)
+* [33m6915dde5[m Bump dependencies
+* [33m40ce6d66[m Enforce minimum stack-utils version
+* [33m9c9dfefb[m Docs: Add link to french translation (Endpoint testing with Mongoose) (#1504)
+* [33m69b6b627[m Document configuration options (#1491)
+* [33mebf78b3e[m Remove Bluebird.longStackTraces() (#1496)
+* [33mc9fe8dbf[m Add recipe for endpoint testing with Mongoose (#1420)
+* [33m7fadc34f[m Improve where snapshots are stored (#1489)
+* [33mde5e8b9a[m Assume npm@5.4, work around permissions issue (#1499)
+* [33mded7ab80[m Update snapshot signature for Flow types (#1500)
+* [33mdd9e8b2e[m 0.22.0
+* [33mb6eef5ac[m Fail hard when `--concurrency` is set to invalid values (#1478)
+* [33m57f50072[m Fix typo in `t.notThrows` example (#1486)
+* [33md8c21a6b[m Update debugging with webstorm recipe (#1483)
+* [33m14f7095d[m Implement t.log() (#1452)
+* [33me28be057[m Fixed makeApp() in endpoint testing recipe (#1479)
+* [33m465fcecc[m Limit concurrency to the number of CPU cores (#1467)
+* [33m4eea2263[m Use --verbose when testing CLI output (#1477)
+* [33ma0d5b373[m Simplify readme avatar URLs
+* [33m31b13801[m Add tests for improper-usage-messages (#1462)
+* [33ma1afbe34[m 0.21.0
+* [33mf9b865a1[m Update safe-buffer in package-lock.json
+* [33md0fc8c9c[m Avoid directly using newish Buffer APIs (#1448)
+* [33m9e4ee3fe[m Upgrade concordance (#1450)
+* [33m761f7f77[m Update expected package.json version in readme (#1449)
+* [33me794e73e[m Resolve strict checking of function call arity (#1441)
+* [33m1cbcb064[m Revert "Handle package-lock.json churn"
+* [33m8d981bfc[m Handle package-lock.json churn
+* [33mc09462c3[m Assume npm 5.2.0 during development and CI
+* [33m2b4e35d4[m Add an additional npm-based recipe for Jetbrains IDEs (#1444)
+* [33m4a769f8f[m Update flow def for AssertContext.throws to match typescript def (#1443)
+* [33m3f6e134a[m Include raw actual and expected objects in AssertionError (#1432)
+* [33m0069a7ef[m Remove non-existent npm run script in maintaining.md (#1434)
+* [33me58e96e3[m Minor readme tweak (#1422)
+* [33m5ae434a0[m Bump dependencies
+* [33m7a28c595[m Don’t use `chalk.stripColor`
+* [33m05bfafef[m Allow extra input params during profiling (#1429)
+* [33m854203a7[m 0.20.0
+* [33m652705b7[m Add more screenshot fixtures
+* [33m9d3b1bad[m Deep update of XO and its dependencies
+* [33m8d09ba5c[m Link to ava-snapshot-example
+* [33m23602561[m Redo all of the screenshots
+* [33m589489db[m Meta tweaks
+* [33mf507e364[m Add command for updating snapshots in watch mode (#1413)
+* [33m87eef846[m Automatically watch for snapshot changes
+* [33ma1410332[m concordance@2
+* [33mf62c1376[m Update readme
+* [33m0e82f8f9[m Add integration test for appending to an existing snapshot file
+* [33mebd572a0[m Determine snapshot directory by where the test is located
+* [33mdbc78dc1[m Treat loaded snapshot files as test dependencies
+* [33m50b60a11[m Track snapshot files touched during test run, ignore in watcher
+* [33m6d3c279e[m Include dirty sources in watcher debug output
+* [33mf1a2a9f3[m Increase debounce delays in watcher
+* [33m25f1064e[m Fail gracefully when legacy snapshot files are encountered
+* [33mc182a974[m Print useful errors when snapshot files are incompatible or corrupted
+* [33ma005915b[m Utilize invert option in snapshot diffs
+* [33mf81eeaa2[m Utilize maxDepth option
+* [33m9933833e[m Add @concordance/react plugin
+* [33m549e99b2[m Document t.title accessor
+* [33mec94f949[m Implement AVA snapshots using Concordance
+* [33m41e99664[m Use Concordance
+* [33m387d1f62[m Reduce repetition between error message and value label
+* [33m74055cba[m Consistent use of newlines in mini and verbose reporters
+* [33m6d704e98[m Fix 'label' property in verbose reporter tests
+* [33mbcd99431[m Reorder test-worker imports
+* [33m07e31fb3[m Ensure ExecutionContext properties are not enumerable
+* [33md2b05cff[m Don't indent actual/expected/difference values
+* [33m9d461bba[m Extract serialized error formatting into its own module
+* [33ma868b02f[m Fix debugging with Webstorm on Node.js 8 (#1414)
+* [33m212b5de5[m Clean up the webpack recipe
+* [33mf228401a[m Improve webpack recipe (#1385)
+* [33m7c62b352[m Use the `import-local` module (#1376)
+* [33mdfca2d9a[m Output message when `t.throws()` fails (#1408)
+* [33me4569519[m Update @ava/babel-preset-stage-4
+* [33m2d05b4d6[m Also change regular (non-Windows) test timeout to 5 minutes
+* [33m9275ac5a[m Stop caching node_modules in CI
+* [33maa25df5e[m Ignore new atimeMs values in babel-config test
+* [33m1c7ba396[m Time out tests after 5 minutes
+* [33m127854ad[m Update appveyor.yml
+* [33mc23990dc[m Update .travis.yml
+* [33mc4c5e7bb[m Explicitly require hullabaloo-config-manager@^1.1.0
+* [33m8b8acfc4[m Support npm@5, test with Node.js 8 (#1398)
+* [33m8c6dbfda[m Fix spec markdown link (#1397)
+* [33m8c35a1a4[m Fail hard when `--concurrency` is used without a value (#1373)
+* [33m140c0e03[m Docs: Extend VSCode debugging notes (#1389)
+* [33mcd8ffef7[m Docs: Add link to french translation (Vue.js recipe) (#1391)
+* [33mff3bba95[m Add Vue.js recipe (#1361)
+* [33m0b470718[m Docs: Add link to french translation (VSCode and MongoDB) (#1384)
+* [33m2ed94853[m Various minor tweaks
+* [33ma1e08ab8[m Remove moot eslint-disable comments
+* [33m81d57a05[m Remove outdated workshop reference in React recipe
+* [33mcf5c4596[m Clean up #1357
+* [33m970872cc[m MongoDB testing recipe (#1357)
+* [33m1d041531[m Add recipe on debugging with VSCode (#1375)
+* [33m2b9f2913[m Add some more keywords to package.json
+* [33m90fb60a8[m Fix link to ES2017 Support section in babel-config (#1369)
+* [33m9a081ec5[m Use `ansi-escapes` module
+* [33me6143751[m Remove dead Flow types
+* [33mdb399615[m Make `t.is()` use `Object.is()` (#1353)
+* [33mc01ac05e[m Add warning to browser recipe (#1355)
+* [33m4cc3403b[m 0.19.1
+* [33md169f0e7[m Fix context for beforeEach and afterEach hooks in Flow type definition file (#1344)
+* [33mbd81ef4a[m Fix TypeScript definition for callback tests
+* [33m6224f314[m Set up regression testing for TypeScript
+* [33md27bc8ff[m Avoid MaxListenersExceededWarning in Sequence
+* [33m8f80ed10[m 0.19.0
+* [33m054d39b7[m Fix get-port usage
+* [33maffbb457[m Fail tests that finish with pending assertions
+* [33m2e489705[m Remove unnecessary test to verify throws/notThrows return promises
+* [33md2a294d4[m Reword error message for when assertions are used after test has finished
+* [33mecdadfa9[m Improve Babel recipe (#1290)
+* [33m146c3e25[m Set default color config based on supports-color
+* [33m22832473[m Document --color CLI flag
+* [33mb5819837[m Don't highlight formatted values with --no-color
+* [33m941c42e5[m Bump hullabaloo-config-manager
+* [33m57fd0510[m Make snapshots usable again
+* [33m48b892af[m Refactor Runner
+* [33mf23c17d0[m Remove mention of stage-2 in readme (#1325)
+* [33md924045a[m Integrate with improved throws helper
+* [33m5e7ea9a9[m Print error message before formatted assertion
+* [33m2d68282f[m Annotate AssertionErrors thrown due to improper usage
+* [33m9e910161[m Expose runner instance to test worker
+* [33me8488984[m Allow error source to be fixed when assertion errors are created
+* [33m2a206311[m Fix formatValue() reference (#1323)
+* [33m3a44b751[m Fix issue with using 'chalk' in tests (#1244)
+* [33m9fdf234b[m Fail test due to pending assertion, not a returned promise rejection
+* [33me81d3f28[m Pass options object to Test constructor
+* [33mf6a42ba0[m Record stack for async throws assertions
+* [33m880e87e1[m Fail async tests if not ended before event loop empties
+* [33m3a4553cf[m Fail tests that finish without running assertions
+* [33m09b23e0d[m Try to fail test if assertions are added after test finishes
+* [33md3748b4a[m Refactor Test implementation
+* [33m3e8a689c[m Stop returning full test results
+* [33m88955027[m Simplify Concurrent and Sequence
+* [33ma4fecd58[m Pass bail option to TestCollection constructor
+* [33md56db757[m Don't leak internal AssertionErrors to user code
+* [33mdf543242[m Clean up test-worker and process-adapter
+* [33mf25935ec[m Always skip todo tests
+* [33m689ea16e[m Remove unused hook class
+* [33mead12e82[m Anticipate timers firing early
+* [33m3da8603b[m Bump dependencies and fix lint issues
+* [33mf0629817[m Typecheck arguments to t.regex() and t.notRegex()
+* [33m0510d80d[m Reduce depth of formatted statements
+* [33m4f87f323[m Format values when AssertionErrors are created
+* [33me5108a22[m More consistent use of backticks around assertions in error messages
+* [33m59f27456[m Remove stackStartFunction from AssertionError
+* [33mbb5a0dee[m Fix `nodeExternals` in the precompiling-with-webpack recipe (#1310)
+* [33m1be456d1[m Readme: Team-table minor fix (#1308)
+* [33m6eae738e[m Separate config keys from CLI flags (#1297)
+* [33m50ad2137[m Make test context optionally type aware for TypeScript (#1298)
+* [33m827cc724[m Always fail tests with an assertion error
+* [33m22c93ed2[m Always print actual or expected assertion value
+* [33m0b9de332[m Refactor error serialization
+* [33mc3e09408[m Remove unnecessary variable and title fallback from mini reporter
+* [33m22fb2dfd[m Ensure test workers emit properly serialized errors
+* [33m4463f386[m Refactor assertions
+* [33m3aeb8b01[m Rename PublicApi to ExecutionContext
+* [33m0b11db77[m Define getters for t.title and t.end() in PublicApi class
+* [33md1bebf4b[m Remove assertCount getter from execution context
+* [33m366588bf[m Don't rely on is() assertion when validating test implementation
+* [33m1ad347c5[m Docs: Add link to french translation of recipe webpack (#1305)
+* [33ma49f66b5[m Add recipe for precompiling source files with webpack (#1212)
+* [33m32793369[m Improve YAML blocks in TAP reporter (#1301)
+* [33m157ef25a[m Fix reporter bug when rejecting non-errors (#1281)
+* [33m7a6b3c15[m Update dependencies and some other minor tweaks
+* [33m0464b145[m Resolve Babel options ahead of time 🎉 (#1262)
+* [33mbd5ed603[m Use `diff-match-patch` for text diffs (#1285)
+* [33m9f2ff094[m Make sure all string diff output is red by default (#1287)
+* [33m35738969[m Fix Babel require hook test for Node.js 7.6.0
+* [33m767c3f8e[m Readme tweak (#1282)
+* [33m98dded55[m 0.18.2
+* [33m7cba283d[m Speed up flow check (#1241)
+* [33md47c5c80[m Document that deepEqual() uses lodash.isequal
+* [33m2ff56ce4[m Don't call toJSON() when formatting values
+* [33m795f097c[m @ava/pretty-format@^1.1.0
+* [33m9cea60d9[m Ensure test run failures crash worker (#1265)
+* [33mf3b60f41[m Code excerpt fixes (#1271)
+* [33m8d6f9bc2[m Fix typo in babelrc docs
+* [33m3d75834a[m Remove Notes section from babelrc documentation
+* [33m4f87059e[m Ensure watcher rethrows logger errors
+* [33mda68f294[m Simplify failure output - fixes #1072 (#1234)
+* [33m2c683b9e[m Clean up API tests (#1258)
+* [33m8a8669c7[m Generate HTML coverage reports (#1259)
+* [33m87ea70f6[m Ensure TAP reporter test does not write to stderr (#1240)
+* [33m09a47651[m Avoid helper compilation during API tests
+* [33m314ef001[m Clarify directories used by API (#1252)
+* [33m73394f15[m Document helper precompilation caveat (in code at least) (#1251)
+* [33m45fec330[m Flow type definition for snapshot assertion #1245 (#1247)
+* [33m93417201[m Add TypeScript definition for the snapshot assertion (#1243)
+* [33mfa9abeca[m Bump `stack-utils`
+* [33m2dc47532[m Fix some minor issues with #1198
+* [33m5c4c2707[m Added support for --no-color flag in verbose and mini reporters (#1198)
+* [33m80ed0803[m Add flow type tests (#1230)
+* [33m6a8ed2c3[m Show how many tests were skipped by --fail-fast (#1221)
+* [33mb886c5b2[m Add Flow and TS type definitions to "Why AVA?"
+* [33m518252f6[m Fix flow errors using t.throws and t.notThrows (#1219)
+* [33mdcdfbee6[m 0.18.1
+* [33m154215df[m remove t.is and t.not from enhanced assertions
+* [33m2623c11a[m 0.18.0
+* [33ma45cdb9e[m Mention magic assert in the readme
+* [33mc980f978[m Fix crash with snapshot testing
+* [33m34bebc45[m Removed `--source` CLI flag (#1215)
+* [33mca016c09[m Remove the `repeating` dependency
+* [33m751d2a8b[m Cut testing time of AVA itself by more than half
+* [33mb3eaf30e[m Bump dependencies
+* [33maa1b8bb6[m Finish ES2015ifying the codebase \o/
+* [33mc9e6e6fa[m Magic assert (#1154)
+* [33m9616dde5[m Improve metadata checks (#980)
+* [33m173da288[m Improve error message for watch mode in CI (#1208)
+* [33m872d2edb[m Various minor tweaks
+* [33m2bdf72a0[m Bump `lodash.isequal` (#1206)
+* [33m0606ff70[m Exit with error if --watch is used in CI (#1203)
+* [33m83937bfc[m Some tweaks to the TS make file
+* [33m82acc595[m Update link to is-ci’s environment variables (#1201)
+* [33mad5122d5[m Use new Babel presets
+* [33m95ff309a[m Stop using Babel for types/make.js
+* [33m0603edcb[m Fix test.todo() type generation
+* [33mc010fd7f[m Remove deprecated assertions
+* [33m5a3b7929[m Only print fail-fast when there are remaning tests (#1179)
+* [33ma2d79735[m Use template literals more
+* [33m4b6323e8[m Use Map/Set instead of Object.create(null)
+* [33m9c8d7a2a[m ES2015ify `ava-files` from #1196
+* [33meccd823d[m Move the `ava-files` package back into core (#1196)
+* [33ma380fe4f[m Docs: Add link to french translation of RFC001 (#1191)
+* [33m7856cdc4[m Removed period at end of exclusive output in mini and verbose reporters (#1189)
+* [33m22a60818[m Print out warning in verbose & mini reporter when .only() tests are used
+* [33mfb10c4fd[m Resolve relative modules in profile.js just like with CLI/API (#1184)
+* [33m076eb81c[m RFC 001: Improving language support (#1159)
+* [33mce42fcb7[m Change ts/flow signature of true + false assertion
+* [33m1a9ddbe2[m Even more ES2015ification
+* [33m61cdd094[m More ES2015ification
+* [33m410cb8d3[m Precompile helpers (#1078)
+* [33m09d23f56[m Print out warning in verbose & mini reporter when `--fail-fast` is enabled (#1160)
+* [33mab314c4c[m Recommend supertest for endpoint testing (#1170)
+* [33m314f7a05[m Fix Flow type ambiguity (#1164)
+* [33mc84694bb[m Removed unused code in mini reporter (#1169)
+* [33m8171dbcf[m Bump dependencies
+* [33m033d4dcd[m Support symlinked test files - fixes #1143 (#1145)
+* [33m415cd2fa[m Use consistent comment capitalization
+* [33m2c6082f7[m Add `powerAssert` status to package salt (#1151)
+* [33mfeb2087e[m Bump ava-files
+* [33m0d539573[m Enable Git symlinks on AppVeyor
+* [33m0f040015[m Add AVA Casts to readme (#1142)
+* [33mfb57cff8[m Update expected package.json version in readme (#1133)
+* [33m9394bc94[m Remove duplicate test (#1141)
+* [33m262911f0[m ES2015ify #1113
+* [33mee65b6db[m Add snapshot assertion (#1113)
+* [33m09bf88a1[m Fix vadimdemedes github link (#1140)
+* [33m63e68fa2[m Recommend Yarn for installation (#1130)
+* [33m36ba8f26[m Remove now moot workarounds for Node.js 0.10
+* [33mabd947e8[m bump dependencies
+* [33m4acb78fc[m Various minor cleanup
+* [33meda412c6[m Move `nyc` config to an object
+* [33m5158ac8b[m Use `babel-preset-node6` on Node.js 6 and higher
+* [33mfa82a24a[m Convert some classes to ES2015 classes
+* [33m8530fcdf[m Drop support for Node.js 0.10 and 0.12
+* [33m8440982d[m Add link to French translation of "Debugging tests with Chrome DevTools"
+* [33m1caefe16[m improve `t.throws` & `t.notThrows` docs
+* [33mc39b9dc5[m docs: recipe to debug with DevTools (#1115)
+* [33mbee4a591[m Readme: explain how to debug (fixes #1112) (#1116)
+* [33me02bd644[m remove webstorm recipe note
+* [33mb24495d5[m 0.17.0
+* [33m056f2276[m bump dev dependencies and make XO happy
+* [33m26bcab02[m temp fix for Node.js internal stack traces showing
+* [33m2d047635[m Add docs for test parameter need to be named `t` (#1096)
+* [33m59254b74[m Use current working directory if no `package.json` (#1044)
+* [33m3c3a6d8b[m add XO badge
+* [33me0a170b5[m Speed up CI (#1076)
+* [33m257b34d2[m Upgrade XO (#1080)
+* [33m3ea2ba11[m Ensure test files load correct AVA installation (#1085)
+* [33m476c6539[m Change the current working directory of tests to be the same directory as package.json (#1074)
+* [33m1b214bed[m clean up caching precompiler (#1077)
+* [33m6165a233[m linting: turn off the `no-use-extend-native` rule
+* [33me10338eb[m Update readme.md (#1075)
+* [33mdae3a449[m make XO happy
+* [33mc258d037[m Fix link to configuration in readme (#1073)
+* [33m17119bcf[m Remove --require CLI option (#1070)
+* [33m4025d81b[m Reduce transpilation on Node.js >=4 (#1068)
+* [33m16b7e538[m Add link to first contribution blog post
+* [33m88566842[m Switch to `lodash.isEqual` for deep quality check (#1063)
+* [33m446886e3[m Clean up API (#1061)
+* [33m9a9ce50e[m Replace `jsdom` with `browser-env` in browser recipe (#1054)
+* [33m40cbfb66[m highlights - Automatic migration from other test runners
+* [33m2c9fd513[m bump `tap` and `nyc`
+* [33m8811f374[m bump all the `babel` related modules to latest
+* [33m25554616[m Do not say that `t` is the only argument of a test
+* [33m09de0064[m Document more async pitfalls (#1045)
+* [33m4baa1703[m Add `always` to TS definition (#1025)
+* [33m66a15384[m Add link to Spanish translation of browser testing docs
+* [33m20ab39de[m Fix tests in Node 6.5.0
+* [33m7d3b58ba[m Docs: Add link to french translation of 'Debugging tests with WebStorm' (#1036)
+* [33m64584549[m Add Flow type definition (#1007)
+* [33mfe3cf4c8[m Mention `eslint-plugin-ava` in the common pitfalls docs (#1022)
+* [33m24a38acc[m Add option to disable power-assert - fixes #1017 (#1024)
+* [33m88f50d20[m Upgrade tap and ensure asynchronous tests return promises (#1014)
+* [33mf038f8d1[m fix typo (#1015)
+* [33m30ab26f4[m WebStorm recipe (#1009)
+* [33mc40477a0[m fix context in beforeEach and afterEach hooks - fixes #1004 (#1008)
+* [33ma4d0e817[m remove misleading screenshot in the readme
+* [33me4487986[m Remove t.doesNotThrow - fixes #850 (#1001)
+* [33me4f90e0f[m Improve failure output of the default mini reporter (#951)
+* [33m28bb0d5c[m Deprecate `t.error()` - fixes #995 (#999)
+* [33m8446f48d[m Improve tests for deepEqual (#1000)
+* [33mc268c8df[m set child process debug port to an available port - fixes #342 (#874)
+* [33m8816faf6[m support test macros in typescript definitions (#975)
+* [33mea25b20a[m improve test coverage by adding more tests (#967)
+* [33mee137252[m use path.relative() to detect local AVA installation (#993)
+* [33md19d1d1d[m Use updated ava-files module (#994)
+* [33m40b4bcd3[m modularize the class binding
+* [33madc823ec[m 📢 Delighted to welcome @jfmengels to the team! 🎉
+* [33m78d47b3c[m fix `run-status.js` tests on Windows
+* [33m204f2be2[m Support `karma-ava`
+* [33m01a110e1[m 0.16.0
+* [33m1bff5316[m bump dependencies and remove unused ones
+* [33mf9fe8f24[m Add type definitions to notRegex (#979)
+* [33m1c6abe02[m Update Juan Soto link
+* [33m8edd9c2e[m provide clear error message when users attempt nested/async calls to `test` (#961)
+* [33mc82f9801[m minor code style tweaks
+* [33m1dd6d5b9[m Auto generate TypeScript definition to allow chaining (#884)
+* [33m05f1890e[m add Dependency CI badge
+* [33m7440ac9d[m minor readme tweaks
+* [33mb54eafa3[m add new reporters section in the readme (#955)
+* [33ma539c7e1[m Update JSPM+SystemJS recipe per @jamestalmage.
+* [33m7827fa17[m Translate React recipe to Spanish (es_ES) (#940)
+* [33m6635af0e[m fix lint issues
+* [33m13cbdc22[m Docs: Add link to french translation of JSPM recipe (#957)
+* [33m5cfe0d10[m fix import-order linting errors
+* [33mc3539c17[m JSPM and SystemJS recipe.
+* [33m6c0f0936[m Fix link to issue 751 and add link to french translation (#946)
+* [33m187b8b49[m Document common pitfalls (#919)
+* [33m4d3ed278[m Fix babel-config file name. (#932)
+* [33mca800ebd[m minor tweaks
+* [33ma27c7332[m linter: disable max-lines rule for tests
+* [33m81ffd8db[m Extract babel config generation into it's own submodule (#924)
+* [33mbdc57f4f[m extract ava-files to it's own module (#925)
+* [33m9efcee09[m readme: add note about uncaught exceptions (#918)
+* [33mfa854896[m Chokidar shouldn't be an optional dependency (#916)
+* [33m6669a34f[m Fix babel config in react recipe (#927)
+* [33m6fd817c2[m clarify readme example on adding AVA to package.json
+* [33mdc30b00c[m bump dependencies
+* [33mc9259200[m fix lint issues with latest XO
+* [33mc95fa7fb[m bump ava-throws-helper
+* [33mc229e9b1[m swap arr-diff for lodash.difference (#914)
+* [33mcddd2481[m move power assert error message formatting to child processes (#911)
+* [33m68db38ed[m fix typo in test/api.js (#910)
+* [33m2a6c5a9f[m Fix TypeScript recipe. (#907)
+* [33m402a7d59[m Add link to Typescript recipe (#906)
+* [33m43103f86[m Add concurrency to package.json config in readme.
+*   [33m6d636f23[m Merge branch '0.15'
+[34m|[m[35m\[m  
+[34m|[m * [33m19625c9d[m 0.15.2
+[34m|[m * [33m94ef9053[m use currently-unhandled
+* [35m|[m [33m1b00f42e[m Fix Italian recipe links (#902)
+* [35m|[m [33mfb3af506[m update to new power-assert-runtime (#903)
+* [35m|[m [33m60890c49[m switch to AVA AppVeyor account
+* [35m|[m [33m2e984380[m Add `after.always` and `afterEach.always` runners to type definitions (#873)
+* [35m|[m [33mc7402023[m add t.notRegex (#879)
+[35m|[m[35m/[m  
+* [33m63b47822[m 0.15.1
+* [33mab3418fe[m Prevent suppression of defaults in ava-files (#878)
+* [33mabd8bd23[m minor tweaks
+* [33mc9c00d62[m 0.15.0
+* [33m7486dcba[m add test.failing and add cb to test.serial (#866)
+* [33m77b55e57[m Move images to media folder.
+* [33m463dbd4d[m bump update-notifier. (#869)
+* [33mbc11e082[m Fix AppVeyor Badge (leave it pointing to Sindre's account).
+* [33m6f832643[m document always hook with fail fast flag (#858)
+* [33m1d512315[m fix warning message
+* [33ma4995236[m Drop unused `silent` option from `lib/fork.js`. (#864)
+* [33ma543b9f7[m revert npm link fix. (#859)
+* [33m0ef6dc4f[m Fix "Test files must be run with the AVA CLI" warning. (#862)
+* [33me01ee00a[m Pass shared caches to `globby`. (#860)
+* [33m37631098[m Avoid running the same file multiple times (#856)
+* [33m178175f0[m add output for failing tests (#837)
+* [33mea9c7527[m added missing todo definition for typescript (#846)
+* [33mf35da7e1[m RunStatus#prefixTitle should remove this.base only if it occurs at the beginning of the path (#844)
+* [33m6f0ac1fd[m doc: add korean translations link (#855)
+* [33md35689ff[m Add test.failing to the API section (#853)
+* [33m47f08e09[m Update links to link to `avajs` (#852)
+* [33m7d0f4205[m Remove timestamp from non-watch test runs (#838)
+* [33md814dca6[m Improve the issue template.
+* [33mfdd79708[m refactor watcher (#766)
+* [33m54e11064[m update coveralls badge
+* [33mee76aa9f[m api#run should return runStatus even when no files are found (#839)
+* [33m34d27674[m readme - linkify the logo
+* [33maf8cfb35[m too much work setting up an org account for appveyor, blah
+* [33m8757e49a[m remove mention-bot
+* [33mb8bc21d9[m move the project into an organization ✨
+* [33ma4541289[m Add macro support. (#832)
+* [33m60bd8a5e[m Protect against bad argument passed to t.throws. (#834)
+* [33m36512412[m Follow-up to #831 (#835)
+* [33m0410a03b[m A way to submit tests that should fail. (#831)
+* [33m0fa229e3[m fix crash in 'fake' browser env (#829)
+* [33m3407f58c[m Remove 'ready' event from API (#828)
+* [33m4abb3519[m Only fix `npm link` of AVA as necessary. (#827)
+* [33m1c3c86c0[m Limited Process Pools (#791)
+* [33m8ba38111[m Fix typo in `browser-testing` recipe (#821)
+* [33m61f09584[m add `after.always` and `afterEach.always` hooks (#806)
+* [33m5f831351[m Fix profiling script and add some tests for it. (#812)
+* [33m1368d0eb[m Fix `npm link` usage on Node.js 6 (#815)
+* [33m8c9f7b2a[m Added std dev to benchmark stats (#744)
+* [33mf9f75883[m update the fly-ava repository url (#813)
+* [33m71404c23[m add podcast episode to links (#804)
+* [33m0c1dbf0e[m update code of conduct
+* [33m6d8aeefb[m test Node.js 6 on AppVeyor
+* [33m3c4babd0[m Strip ANSI escape codes in TAP test titles (#792)
+* [33m5ef4b141[m doc: Adding french translation link to the React recipe (#796)
+* [33m6d736ee8[m Remove unneeded eslint-disable comment (#801)
+* [33m737adf98[m use strict deep equality assertions in tests
+* [33md3f18233[m minor cleanup of #747
+* [33m4c69c796[m React recipe (#747)
+* [33m7dd7055d[m 🐐 removed XO by mistake in https://github.com/sindresorhus/ava/commit/ec05e53a1d50b54465f904493553ec0dc3c612ce
+* [33mec05e53a[m test on Node.js 6
+* [33m973624d0[m Use `not-so-shallow` module to improve `t.deepEqual()` (#777)
+* [33mc4e58e3e[m add spinner fallback for Windows
+* [33ma727f5e3[m remove duplicate babel-code-frame dependency (#778)
+* [33md6acdde0[m Throwing synchronously inside a callback style test should fail it immediately. (#774)
+*   [33m3a4fc998[m Merge pull request #760 from sindresorhus/package-hash
+[36m|[m[1;31m\[m  
+[36m|[m * [33mcdc5fdaf[m caching-precompiler: set default .babelConfig value
+[36m|[m * [33mea9fe533[m compute cache salt using package-hash
+* [1;31m|[m [33m27bdab9d[m update t.plan recipe (#769)
+* [1;31m|[m [33m70758de9[m bump dependencies
+* [1;31m|[m [33m6b5c6c2d[m Remove trailing comma to make JSON valid (#768)
+* [1;31m|[m [33m958677bc[m Removed stray characters from CLI sample output (#767)
+* [1;31m|[m [33m13971931[m remove XO ignore in package.json
+* [1;31m|[m [33md245c7ec[m ✨ Delighted to welcome @sotojuan to the team! 🎉
+* [1;31m|[m [33m58e9f702[m minor maintaining.md tweaks
+* [1;31m|[m [33m40025a5c[m fix some XO lint issues
+* [1;31m|[m [33m8c604b43[m fix typo in readme (#763)
+* [1;31m|[m   [33mf8c7f443[m Merge pull request #758 from sindresorhus/remember-failures
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33maab22072[m watcher: remember failures from previous tests
+[1;32m|[m * [1;31m|[m [33m3decf2bc[m api: use relative paths for RunStatus exceptions
+[1;32m|[m [1;31m|[m[1;31m/[m  
+* [1;31m/[m [33me076b5ba[m Fix region dependent test failures. (#761)
+[1;31m|[m[1;31m/[m  
+* [33m97c3234a[m watcher: Don't clear reporter if previous run had errors (#757)
+* [33mf5246e17[m ensure watcher receives dependencies again (#756)
+* [33m14ae70e1[m change remaining TestData identifiers to RunStatus (#755)
+* [33mabc25388[m fix failing test
+* [33m95a5c979[m Improve watch logging (#737)
+* [33ma3565fd6[m Improve source pattern handling (#730)
+* [33m02b0aaeb[m Disable TAP reporter in watch mode (#732)
+* [33m3201b1b4[m detect improper use of t.throws (#742)
+* [33m195390ec[m doc: add Italian translations links (#746)
+* [33mda39639b[m rename `TestData` => `RunStatus`
+* [33mdcfd6a1a[m Improve babelrc recipe (#743)
+* [33m84c05fe9[m increase power-assert's maxDepth option to 3. (#740)
+* [33md39bea9d[m Put failing TAP test title in the second line (#734)
+* [33m9ceeb115[m Support more test filename conventions (#721)
+* [33me33ce7a4[m clean up stat collection in runner (#728)
+* [33mad14f508[m Document issue labels (#729)
+* [33m22951189[m Add strict mode in `enhanced-assert.js` (#741)
+* [33mbd417795[m fix lint issues
+* [33m55dfa4ac[m add missing link to .only modifier in watch mode recipe
+* [33m31b268e6[m Refactor API
+* [33m1e0b1c14[m 0.14.0
+* [33me57908a9[m watch mode always runs all exclusive tests
+* [33m08ce2559[m Replace "callback" with "implementation" when talking about tests
+* [33m21bdcc58[m Add test-like output when test file does not exist
+* [33m61848ee4[m watcher: fix recursive test file matcher
+* [33m37c67b90[m Docs: Link to French translation for babelrc recipe
+* [33ma7f50eb8[m rename `t.ok()` to `t.truthy()` and `t.notOk()` to `t.falsy()`
+* [33mbcda7537[m Add a recipe for properly configuring babel when using `.babelrc`.
+* [33m9288d78a[m add tests that demonstrate various ways to use babel config.
+* [33m84659345[m Bump convert-source-map dependency, clean up duplicate require call
+* [33m5b3c27ac[m don't modify configured babel plugins array
+* [33mc4ec8e7e[m Clean up caching-precompiler
+* [33me9c6cc28[m rename `t.same()` to `t.deepEqual()`
+*   [33me3e17528[m Merge pull request #654 from sindresorhus/timeout
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mae457525[m calculate current stats in runner
+[1;34m|[m * [33md1a3669e[m add timeout functionality
+* [1;35m|[m [33m8d6490a2[m Make `test.todo(title, fn)` produce a failure
+* [1;35m|[m [33mc78e7367[m Throw meaningful error if --require dependency is not found
+[1;35m|[m[1;35m/[m  
+*   [33m005b656b[m Merge pull request #692 from sindresorhus/revert-rerun-watch
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33mba1f5e83[m Revert "rerun tests using "r" key"
+[1;36m|[m[1;36m/[m  
+*   [33m8bf6a9ed[m Merge pull request #656 from kutyel/patch-1
+[32m|[m[33m\[m  
+[32m|[m * [33m85ad2e2c[m Add Spanish link to TypeScript recipee
+[32m|[m[32m/[m  
+* [33m25a91cbd[m use HTML comments to hide instructions in the issue & PR templates
+* [33me6b60bf3[m code style tweaks
+* [33m0a9cfce4[m fix module import order
+*   [33mefa43690[m Merge pull request #682 from zhaozhiming/zh_CN
+[34m|[m[35m\[m  
+[34m|[m * [33m349ee817[m doc: add Simplified Chinese translation link in docs
+* [35m|[m   [33m0f0c0706[m Merge pull request #680 from sindresorhus/sigabrt
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33m8949b85b[m reject test runs when forks exit with an unexpected signal
+[36m|[m * [35m|[m [33m96e12631[m test fork rejection behavior
+[36m|[m * [35m|[m [33m02fc6a17[m remove node 0.10 sigterm code handling
+[36m|[m[36m/[m [35m/[m  
+* [35m|[m   [33mf2c07098[m Merge pull request #664 from kentcdodds/pr/update-contributing
+[1;32m|[m[1;33m\[m [35m\[m  
+[1;32m|[m * [35m|[m [33md306c4ac[m add note about AVA mantra in contributing guidelines
+* [1;33m|[m [35m|[m   [33md2e0c64f[m Merge pull request #667 from jamestalmage/print-plan-expectation
+[1;34m|[m[1;35m\[m [1;33m\[m [35m\[m  
+[1;34m|[m * [1;33m|[m [35m|[m [33m07febb2c[m Print the planned and actual assertion count when incorrect.
+[1;34m|[m [1;33m|[m[1;33m/[m [35m/[m  
+* [1;33m|[m [35m|[m   [33m92e034b5[m Merge pull request #662 from sindresorhus/add-test-file-source-map-comments
+[1;36m|[m[31m\[m [1;33m\[m [35m\[m  
+[1;36m|[m * [1;33m|[m [35m|[m [33m592ff138[m ensure source map can be resolved from cached code
+[1;36m|[m * [1;33m|[m [35m|[m [33m934d57fa[m use .js.map extension for cached source maps
+[1;36m|[m [1;33m|[m[1;33m/[m [35m/[m  
+* [1;33m|[m [35m|[m   [33m12301d72[m Merge pull request #666 from jamestalmage/fix-gitter-badge
+[1;33m|[m[33m\[m [1;33m\[m [35m\[m  
+[1;33m|[m [33m|[m[1;33m/[m [35m/[m  
+[1;33m|[m[1;33m/[m[33m|[m [35m|[m   
+[1;33m|[m * [35m|[m [33mb738e9bd[m Fix Gitter badge on npm.
+[1;33m|[m[1;33m/[m [35m/[m  
+* [35m|[m   [33mad02c321[m Merge pull request #658 from sindresorhus/rerun-watch
+[34m|[m[35m\[m [35m\[m  
+[34m|[m * [35m|[m [33m5f109b6c[m rerun tests using "r" key
+[34m|[m [35m|[m[35m/[m  
+* [35m|[m   [33m13077e27[m Merge pull request #659 from jamestalmage/use-clean-yaml-object
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33mcd5767e1[m switch from serialize-error to clean-yaml-object
+[36m|[m [35m|[m[35m/[m  
+* [35m|[m   [33me4ef5f2a[m Merge pull request #400 from jamestalmage/rewrite-runtime
+[35m|[m[1;33m\[m [35m\[m  
+[35m|[m [1;33m|[m[35m/[m  
+[35m|[m[35m/[m[1;33m|[m   
+[35m|[m * [33m382e50dc[m rewrite `babel-runtime` require statements to use absolute file paths.
+[35m|[m[35m/[m  
+*   [33m8d471194[m Merge pull request #651 from sindresorhus/fix-enhanced-assert-throws-not-returning
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m26d2291c[m ensure t.throws() returns the error
+* [1;35m|[m   [33m6cb7e6bb[m Merge pull request #652 from maur8ino/fix-readme
+[1;35m|[m[31m\[m [1;35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+[1;35m|[m * [33m67bf0472[m fix default AVA's Babel configuration in readme.md
+[1;35m|[m[1;35m/[m  
+*   [33mefc89fd6[m Merge pull request #647 from sindresorhus/verify-babel-config
+[32m|[m[33m\[m  
+[32m|[m * [33mfebbaa2a[m show error if babel config value is invalid
+* [33m|[m   [33m0e77367e[m Merge pull request #646 from sindresorhus/mini-skip-todo
+[33m|[m[35m\[m [33m\[m  
+[33m|[m [35m|[m[33m/[m  
+[33m|[m[33m/[m[35m|[m   
+[33m|[m * [33mecc87cbd[m don't log skip/todo tests in mini reporter
+[33m|[m[33m/[m  
+* [33mb163fdef[m add "more" link to related projects in the readme
+*   [33mc8faedb5[m Merge pull request #638 from bouzuya/fix-d-ts
+[36m|[m[1;31m\[m  
+[36m|[m * [33md675c399[m fix index.d.ts for noImplicitAny option
+* [1;31m|[m   [33m56c0b8bd[m Merge pull request #642 from sindresorhus/fix-run-crashes
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33mcd6961a6[m don't send to fork once it's been told to exit
+[1;32m|[m * [1;31m|[m [33m54358207[m correctly track run attempts
+[1;32m|[m [1;31m|[m[1;31m/[m  
+* [1;31m|[m [33m6d5f3225[m Close #639 PR: Truncate mini reporter titles. Fixes #629
+* [1;31m|[m   [33m62acd21c[m Merge pull request #640 from mattkrick/master
+[1;31m|[m[1;35m\[m [1;31m\[m  
+[1;31m|[m [1;35m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;35m|[m   
+[1;31m|[m * [33ma7826cf1[m Switch from deeper to only-shallow so t.same doesn't check constructor equality
+[1;31m|[m[1;31m/[m  
+*   [33m5ad82849[m Merge pull request #634 from forresst/link-russian-watch-mode
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m82c02bce[m Docs: Add link to russian translation for watch mode
+[1;36m|[m[1;36m/[m  
+*   [33me4ec18f4[m Merge pull request #633 from forresst/fix-typo-readme
+[32m|[m[33m\[m  
+[32m|[m * [33md5274c06[m Docs : fix typo readme
+[32m|[m[32m/[m  
+*   [33m6fa26253[m Merge pull request #632 from jvandemo/fix/readme
+[34m|[m[35m\[m  
+[34m|[m * [33m1d7e3be6[m fix(readme): fix typo
+[34m|[m[34m/[m  
+* [33m6f2d7a95[m bump dev dependencies
+* [33m2b0dd459[m Close #625 PR: Test chalk colors in reporter tests. Fixes #605
+* [33ma723eb12[m 0.13.0
+* [33me9de64bf[m add gif of the mini reporter
+*   [33m83ab1e4d[m Merge pull request #621 from sindresorhus/sticky-only
+[36m|[m[1;31m\[m  
+[36m|[m * [33mb4abee1d[m make .only sticky in watch mode
+[36m|[m[36m/[m  
+*   [33me810ed4f[m Merge pull request #624 from sindresorhus/watch-and-syntax-errors
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m768ef9db[m handle exceptions when initially running files
+[1;32m|[m * [33m901c48cc[m move unreportedFiles closer to where it's used
+* [1;33m|[m   [33mf1966d9c[m Merge pull request #618 from sindresorhus/mini-reporter-color
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33m9c867e9b[m remove color from test title in mini reporter
+[1;34m|[m [1;33m|[m[1;33m/[m  
+* [1;33m|[m   [33m73c8b6b8[m Merge pull request #627 from forresst/link-watch-mode-french
+[1;33m|[m[31m\[m [1;33m\[m  
+[1;33m|[m [31m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[31m|[m   
+[1;33m|[m * [33md74335e8[m Docs: Link to French translation for watch mode
+[1;33m|[m[1;33m/[m  
+* [33m76860dd0[m Close #599 PR: Add busy indicator to mini reporter. Fixes #598
+*   [33mcac933e1[m Merge pull request #607 from sindresorhus/document-watch
+[32m|[m[33m\[m  
+[32m|[m * [33m81b7f1e2[m also rerun tests when 'r' is entered
+[32m|[m * [33m755849fd[m add -S shorthand for --source
+[32m|[m * [33m2bf3f1c1[m document watch mode
+[32m|[m[32m/[m  
+* [33m1868204c[m Close #597 PR: Readme improvements
+*   [33m45f96bd5[m Merge pull request #612 from sindresorhus/match-without-match
+[34m|[m[35m\[m  
+[34m|[m * [33m4f4a6601[m don't run tests if --match has no matches
+[34m|[m * [33m08c8b003[m refactor how api tries to run the tests
+[34m|[m[34m/[m  
+* [33ma03f8264[m Close PR #573: Added support for babel config under package.json/ava key
+* [33m3fcd4926[m add a naive Babel plugin that can be used by integration tests
+*   [33meaca9f08[m Merge pull request #610 from forresst/link-russian-translation-new-recipe
+[36m|[m[1;31m\[m  
+[36m|[m * [33m8e2f3dca[m Links to Russian translation
+[36m|[m[36m/[m  
+* [33m94c03f6f[m Close #600 PR: Fix AVA hanging when `test` is used incorrectly. Fixes #574
+*   [33m94b352cc[m Merge pull request #603 from sindresorhus/fix-flaky-test
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m7168e8ef[m try to fix flaky api test
+* [1;33m|[m [33mc928cb59[m Close #592 PR: Add `match` CLI option to run only matching tests. Fixes #476
+* [1;33m|[m   [33mfc544ed8[m Merge pull request #602 from sindresorhus/lint-cli-again
+[1;33m|[m[1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m   
+[1;33m|[m * [33m262d0cab[m no longer ignore cli.js when linting
+[1;33m|[m[1;33m/[m  
+*   [33ma13aeb22[m Merge pull request #601 from sindresorhus/fix-xo-errors
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m54726d80[m fix linting error
+[1;36m|[m[1;36m/[m  
+* [33me697629a[m Close #565 PR: Add `todo` test modifier. Fixes #563
+*   [33md967956b[m Merge pull request #596 from forresst/link-french-translation-new-recipe
+[32m|[m[33m\[m  
+[32m|[m * [33m7917dd48[m Link to French translation
+[32m|[m[32m/[m  
+*   [33m1e62626c[m Merge pull request #591 from sindresorhus/fix-010-watch-test
+[34m|[m[35m\[m  
+[34m|[m * [33m7d0c6f3b[m stop allowing node 0.10 test failures
+[34m|[m * [33m00d8f8c1[m don't pause stderr in watcher test
+[34m|[m * [33m776a0f43[m use buffer variable in watcher test
+[34m|[m[34m/[m  
+*   [33m4a1bd79f[m Merge pull request #556 from naptowncode/support_.only_for_all_files
+[36m|[m[1;31m\[m  
+[36m|[m * [33m6b1617a9[m Support ".only()" across all test files in a suite.
+* [1;31m|[m   [33m829f91cd[m Merge pull request #576 from kasperlewau/throws-return
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33me03b82c9[m throws returns error or rejection reason of promise
+* [1;33m|[m [1;31m|[m   [33mc94c6de7[m Merge pull request #587 from avivr/remove-unused-variable-from-api
+[1;34m|[m[1;35m\[m [1;33m\[m [1;31m\[m  
+[1;34m|[m * [1;33m|[m [1;31m|[m [33m5e557e96[m remove unnecessary `counted` variable in api.js
+* [1;35m|[m [1;33m|[m [1;31m|[m   [33mf63711f0[m Merge pull request #579 from sindresorhus/issue-templates
+[1;36m|[m[31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[1;36m|[m * [1;35m|[m [1;33m|[m [1;31m|[m [33mc73aac86[m add issue and PR templates
+* [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [33m20c66fe0[m Close #589 PR: Add TypeScript recipe.
+[1;33m|[m [31m|[m[1;33m_[m[1;35m|[m[1;33m/[m [1;31m/[m  
+[1;33m|[m[1;33m/[m[31m|[m [1;35m|[m [1;31m|[m   
+* [31m|[m [1;35m|[m [1;31m|[m [33m5e02387a[m Close #582 PR: [breaking] Don't convert non-Error promise rejection reason. Fixes #468
+* [31m|[m [1;35m|[m [1;31m|[m   [33mdb4658dd[m Merge pull request #588 from SamVerschueren/typedef
+[32m|[m[33m\[m [31m\[m [1;35m\[m [1;31m\[m  
+[32m|[m * [31m|[m [1;35m|[m [1;31m|[m [33m6c1eb922[m do not provide context in before and after hooks
+[32m|[m [1;35m|[m [31m|[m[1;35m/[m [1;31m/[m  
+[32m|[m [1;35m|[m[1;35m/[m[31m|[m [1;31m|[m   
+* [1;35m|[m [31m|[m [1;31m|[m [33m2f104486[m Close #585 PR: Added recipe for writing test with code depending on a window object.
+[1;31m|[m [1;35m|[m[1;31m_[m[31m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;35m|[m [31m|[m   
+* [1;35m|[m [31m|[m   [33m752ddd39[m Merge pull request #544 from novemberborn/run-tests-for-changed-sources
+[1;35m|[m[35m\[m [1;35m\[m [31m\[m  
+[1;35m|[m [35m|[m[1;35m/[m [31m/[m  
+[1;35m|[m[1;35m/[m[35m|[m [31m|[m   
+[1;35m|[m * [31m|[m [33m3ae50429[m improve windows path handling
+[1;35m|[m * [31m|[m [33mbf01232f[m only run tests for changed sources
+[1;35m|[m * [31m|[m [33m854d96c3[m guard against repeated teardowns
+[1;35m|[m * [31m|[m [33mf85bcd60[m abstract tap grouping in watcher test
+[1;35m|[m * [31m|[m [33mf57fe5e1[m refactor watcher
+* [35m|[m [31m|[m [33mefd88eb9[m Close #586 PR: Add t.context to TypeScript typings. Fixes #571
+* [35m|[m [31m|[m [33m58e1c561[m drop reference to #111 from readme
+* [35m|[m [31m|[m   [33mc7024471[m Merge pull request #539 from sindresorhus/cleanup-sequence
+[36m|[m[1;31m\[m [35m\[m [31m\[m  
+[36m|[m * [35m|[m [31m|[m [33mce1b0348[m optimize Sequence for performance by using Promise.each
+* [1;31m|[m [35m|[m [31m|[m   [33mff5aa163[m Merge pull request #542 from sindresorhus/cleanup-test-collection
+[31m|[m[1;33m\[m [1;31m\[m [35m\[m [31m\[m  
+[31m|[m [1;33m|[m[31m_[m[1;31m|[m[31m_[m[35m|[m[31m/[m  
+[31m|[m[31m/[m[1;33m|[m [1;31m|[m [35m|[m   
+[31m|[m * [1;31m|[m [35m|[m [33me9b69bb5[m clean up test-collection
+* [1;33m|[m [1;31m|[m [35m|[m   [33mcc6f0f50[m Merge pull request #578 from forresst/link-russian
+[1;34m|[m[1;35m\[m [1;33m\[m [1;31m\[m [35m\[m  
+[1;34m|[m * [1;33m|[m [1;31m|[m [35m|[m [33m89767ec3[m Link to Russian translation
+[1;34m|[m[1;34m/[m [1;33m/[m [1;31m/[m [35m/[m  
+* [1;33m|[m [1;31m|[m [35m|[m [33mf77ded95[m link up the AVA awesome list
+* [1;33m|[m [1;31m|[m [35m|[m [33m0e188658[m Close #571 PR: Add TypeScript typings. Fixes #568
+* [1;33m|[m [1;31m|[m [35m|[m [33m691fdb6f[m maintaining.md tweaks
+[35m|[m [1;33m|[m[35m_[m[1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;33m|[m [1;31m|[m   
+* [1;33m|[m [1;31m|[m [33me26bd05e[m Close #536 PR: Move files argument to api.run(). Fixes #534
+* [1;33m|[m [1;31m|[m   [33mb76f8408[m Merge pull request #530 from naptowncode/clean_up_redudant_assertion_error_output
+[1;36m|[m[31m\[m [1;33m\[m [1;31m\[m  
+[1;36m|[m * [1;33m|[m [1;31m|[m [33m30f379fc[m Remove redundant line from assertion error output in mini reporter
+* [31m|[m [1;33m|[m [1;31m|[m [33mb2555090[m forgot to add novemberborn to the mentionbot ignore list
+* [31m|[m [1;33m|[m [1;31m|[m [33m11f4362b[m 📢 Welcoming @novemberborn to the project! ✨
+* [31m|[m [1;33m|[m [1;31m|[m   [33me089a8a9[m Merge pull request #570 from sotojuan/tap-line
+[32m|[m[33m\[m [31m\[m [1;33m\[m [1;31m\[m  
+[32m|[m * [31m|[m [1;33m|[m [1;31m|[m [33md00aa7e8[m Fix failed line missing from TAP output
+[32m|[m[32m/[m [31m/[m [1;33m/[m [1;31m/[m  
+* [31m|[m [1;33m|[m [1;31m|[m   [33m83d4a81b[m Merge pull request #547 from sindresorhus/cleanup-concurrent
+[34m|[m[35m\[m [31m\[m [1;33m\[m [1;31m\[m  
+[34m|[m * [31m|[m [1;33m|[m [1;31m|[m [33m241ce403[m clean up concurrent
+[34m|[m [1;31m|[m [31m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[34m|[m [1;31m|[m[1;31m/[m[31m|[m [1;33m|[m   
+* [1;31m|[m [31m|[m [1;33m|[m [33mc6b71f04[m Close #564 PR: Logger coverage improvement and refactor.
+* [1;31m|[m [31m|[m [1;33m|[m   [33mc4988c54[m Merge pull request #566 from TrySound/fix-babel-register
+[31m|[m[1;31m\[m [1;31m\[m [31m\[m [1;33m\[m  
+[31m|[m [1;31m|[m[31m_[m[1;31m|[m[31m/[m [1;33m/[m  
+[31m|[m[31m/[m[1;31m|[m [1;31m|[m [1;33m|[m   
+[31m|[m * [1;31m|[m [1;33m|[m [33m5ba0053e[m Fix babel-register in documentation
+[31m|[m[31m/[m [1;31m/[m [1;33m/[m  
+* [1;31m|[m [1;33m|[m [33mf435f35f[m 0.12.0
+* [1;31m|[m [1;33m|[m   [33m63d0faed[m Merge pull request #555 from novemberborn/errors-are-errors
+[1;32m|[m[1;33m\[m [1;31m\[m [1;33m\[m  
+[1;32m|[m * [1;31m|[m [1;33m|[m [33m86ff25ef[m consistent error handling in test callbacks
+[1;32m|[m * [1;31m|[m [1;33m|[m [33mbc326bdb[m consistent error messaging for rejected promises
+[1;32m|[m * [1;31m|[m [1;33m|[m [33m5710e65d[m ensure test errors are errors
+[1;32m|[m * [1;31m|[m [1;33m|[m [33m2bd6ab84[m consistent error determination
+* [1;33m|[m [1;31m|[m [1;33m|[m [33m11e82e93[m Close #562 PR: Add note about running tests in serial.
+* [1;33m|[m [1;31m|[m [1;33m|[m [33m7d108aa0[m cleanup #559
+* [1;33m|[m [1;31m|[m [1;33m|[m [33mb6bce036[m Close #559 PR: Fix wrong handling of NODE_PATH and relative test.
+* [1;33m|[m [1;31m|[m [1;33m|[m [33m69dbcf23[m cleanup #531
+* [1;33m|[m [1;31m|[m [1;33m|[m [33m0675d344[m Close #531 PR: Support NODE_PATH in forked process. Fixes #515
+* [1;33m|[m [1;31m|[m [1;33m|[m [33me50f3deb[m Close #557 PR: improve test coverage for calling classes without the `new` keyword. Fixes #161
+* [1;33m|[m [1;31m|[m [1;33m|[m [33mef371bd2[m add `vscode-ava` to the readme
+[1;33m|[m[1;33m/[m [1;31m/[m [1;33m/[m  
+* [1;31m|[m [1;33m|[m [33m3c12940c[m add `sublime-ava` & `atom-ava` to the readme
+* [1;31m|[m [1;33m|[m [33m61acdc67[m add `eslint-plugin-ava` to the readme
+* [1;31m|[m [1;33m|[m [33me28e24ce[m readme tweaks
+* [1;31m|[m [1;33m|[m   [33mea911b64[m Merge pull request #552 from makotot/link-to-ja_jp
+[1;34m|[m[1;35m\[m [1;31m\[m [1;33m\[m  
+[1;34m|[m * [1;31m|[m [1;33m|[m [33m559dda50[m Link to Japanese translation
+[1;34m|[m[1;34m/[m [1;31m/[m [1;33m/[m  
+* [1;31m|[m [1;33m|[m   [33md21b40d0[m Merge pull request #548 from sotojuan/fix-test-worker
+[1;36m|[m[31m\[m [1;31m\[m [1;33m\[m  
+[1;36m|[m * [1;31m|[m [1;33m|[m [33m34efa78d[m Use `console.error` instead of `log.error`
+* [31m|[m [1;31m|[m [1;33m|[m [33me9cb25df[m Close #494 PR: Return empty string instead of null for a single anonymous test. Fixes #487
+[31m|[m[31m/[m [1;31m/[m [1;33m/[m  
+* [1;31m|[m [1;33m|[m   [33m93af8d8d[m Merge pull request #541 from novemberborn/cli-watcher-test
+[32m|[m[33m\[m [1;31m\[m [1;33m\[m  
+[32m|[m * [1;31m|[m [1;33m|[m [33mb8c444de[m test watcher from the cli
+[32m|[m [1;33m|[m [1;31m|[m[1;33m/[m  
+[32m|[m [1;33m|[m[1;33m/[m[1;31m|[m   
+* [1;33m|[m [1;31m|[m [33m9c22ee4a[m Close #543 PR: Clean up beautify-stack.
+* [1;33m|[m [1;31m|[m   [33m3779f2b9[m Merge pull request #546 from forresst/link-translated-t-plan
+[1;31m|[m[35m\[m [1;33m\[m [1;31m\[m  
+[1;31m|[m [35m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[35m|[m [1;33m|[m   
+[1;31m|[m * [1;33m|[m [33m04909000[m Link to Español translation : recipe 'when to use t.plan()'
+[1;31m|[m[1;31m/[m [1;33m/[m  
+* [1;33m/[m [33ma4ecd4ee[m make AvaError inherit from Error
+[1;33m|[m[1;33m/[m  
+* [33mbdb8b6eb[m allow Node.js 0.10 to fail on Travis until we track down #498
+*   [33mf6fb592b[m Merge pull request #491 from jamestalmage/auto-start-profiler
+[36m|[m[1;31m\[m  
+[36m|[m * [33m55353273[m auto start the CPU profiler
+* [1;31m|[m [33mf0f4f344[m Close #502 PR: Implement --watch. Fixes #70
+* [1;31m|[m [33m158916cc[m various doc tweaks
+* [1;31m|[m [33m3157c5af[m silence deprecation notice of `t.doesNotThrow`
+* [1;31m|[m [33m388ad88f[m Close #526 PR: Clarifies `npm test` default file is `test.js`.
+* [1;31m|[m   [33mf732dd73[m Merge pull request #525 from allensb/handle_callback_err
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33m7f9b2cb5[m Removed warning for handle-callback-err
+[1;32m|[m[1;32m/[m [1;31m/[m  
+* [1;31m|[m [33m789b648d[m ignore top-level markdown files in mention-bot
+* [1;31m|[m [33m780d48f8[m Close #523 PR: add start-ava to related section in readme.
+* [1;31m|[m [33m49cdbf06[m link to the Twitter account
+* [1;31m|[m [33ma35d1308[m Close #508 PR: `t.doesNotThrow` → `t.notThrows`. Fixes #507
+* [1;31m|[m [33m4111f948[m Close #519 PR: Link to Português translation.
+* [1;31m|[m   [33me0bdcf28[m Merge pull request #510 from SamVerschueren/iss509
+[1;34m|[m[1;35m\[m [1;31m\[m  
+[1;34m|[m * [1;31m|[m [33m5f3ea25a[m fix beautify stack split error - fixes #509, fixes #459
+* [1;35m|[m [1;31m|[m   [33mf5740fc0[m Merge pull request #514 from sotojuan/mini-empty-line
+[1;36m|[m[31m\[m [1;35m\[m [1;31m\[m  
+[1;36m|[m * [1;35m|[m [1;31m|[m [33m308b09e6[m Add empty line before output to mini reporter
+[1;36m|[m[1;36m/[m [1;35m/[m [1;31m/[m  
+* [1;35m|[m [1;31m|[m [33mc668935b[m configure mention-bot
+* [1;35m|[m [1;31m|[m   [33md51c3314[m Merge pull request #495 from sindresorhus/cleanup-sequence
+[1;35m|[m[33m\[m [1;35m\[m [1;31m\[m  
+[1;35m|[m [33m|[m[1;35m/[m [1;31m/[m  
+[1;35m|[m[1;35m/[m[33m|[m [1;31m|[m   
+[1;35m|[m * [1;31m|[m [33m6d21f372[m clean up sequence
+* [33m|[m [1;31m|[m   [33m64fb5bb3[m Merge pull request #497 from jamestalmage/send-less-data
+[34m|[m[35m\[m [33m\[m [1;31m\[m  
+[34m|[m * [33m|[m [1;31m|[m [33m9b0d5f79[m Send less data
+[34m|[m [33m|[m[33m/[m [1;31m/[m  
+* [33m|[m [1;31m|[m [33mcdacb5dc[m Close #503 PR: Fix the `--serial` and `--fail-fast` flags.. Fixes #499
+* [33m|[m [1;31m|[m [33m39982a5c[m Close #492 PR: recipe: when to use t.plan.
+* [33m|[m [1;31m|[m [33mc22eabd7[m add benchmarking instructions to maintaining.md
+* [33m|[m [1;31m|[m [33m85cab944[m Close #496 PR: Add a benchmark suite.
+[33m|[m[33m/[m [1;31m/[m  
+* [1;31m|[m [33m0316047c[m Close #489 PR: Add additional profiling recommendations .
+* [1;31m|[m [33m9f1a38e2[m improve `t.throws` docs - fixes #142
+* [1;31m|[m   [33m135e53ab[m Merge pull request #490 from jamestalmage/david-badges
+[1;31m|[m[1;31m\[m [1;31m\[m  
+[1;31m|[m [1;31m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;31m|[m   
+[1;31m|[m * [33m4732375b[m Add david-dm.org badges in `maintaining.md`.
+[1;31m|[m[1;31m/[m  
+* [33me38c56ab[m Close #488 PR: Fix skip count not reporting properly. Fixes #470
+*   [33m14a21b0d[m Merge pull request #482 from jamestalmage/shorten-plan-stack
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m341c84b7[m Shorten the plan stack.
+* [1;33m|[m   [33m56a2b8b2[m Merge pull request #486 from kasperlewau/feat/regex
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33ma10b9e8b[m add `.regex()` assertion method
+[1;34m|[m [1;33m|[m[1;33m/[m  
+* [1;33m|[m [33me7780474[m followup tweaks to #475
+* [1;33m|[m [33m49b9d028[m Close #475 PR: Add a profile script.
+[1;33m|[m[1;33m/[m  
+*   [33m761c2e34[m Merge pull request #478 from sindresorhus/class-consistency
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m7bb08856[m Consistently require `new` for classes
+[1;36m|[m[1;36m/[m  
+* [33mffef6d62[m minor style tweaks
+* [33me010816a[m Close #466 PR: Improve runner performance.
+* [33m0e6db13a[m minor doc and style tweaks
+* [33md72723b9[m Link up Japanese (日本語) translation of the docs
+* [33m678fb5f7[m 0.11.0
+*   [33mda0cce68[m Merge pull request #464 from sotojuan/fix-undefined-skip
+[32m|[m[33m\[m  
+[32m|[m * [33m24b234d1[m Fix undefined skip count
+* [33m|[m   [33m3f98ac1c[m Merge pull request #467 from forresst/link-docs-translated
+[34m|[m[35m\[m [33m\[m  
+[34m|[m * [33m|[m [33mf05d57c0[m Add links translations for new docs
+[34m|[m [33m|[m[33m/[m  
+* [33m|[m   [33mcb1a0a79[m Merge pull request #461 from jamestalmage/prototype-based-api
+[33m|[m[1;31m\[m [33m\[m  
+[33m|[m [1;31m|[m[33m/[m  
+[33m|[m[33m/[m[1;31m|[m   
+[33m|[m * [33ma4821994[m bump empower-core
+[33m|[m * [33m5f48185c[m Test: Avoid unnecessary creation of promises
+[33m|[m * [33m76399f42[m Test: remove unreachable statement
+[33m|[m * [33m2ac60bd0[m Test: remove unnecessary setImmediate
+[33m|[m * [33m5d80bcd0[m Test: define the `assertCount` getter on the prototype instead of with every new test
+[33m|[m * [33m3762f92f[m Test: move try/catch out of large function to avoid deoptimization
+[33m|[m * [33mf45d6242[m Test: use prototypes for performance enhancement
+[33m|[m * [33m4e23943e[m Runner: use more efficient method to build list of tests
+[33m|[m * [33mea551c73[m Runner: improve efficiency of `select` method
+[33m|[m[33m/[m  
+*   [33m68068be2[m Merge pull request #454 from jamestalmage/dont-use-promise.defer
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m385c48d0[m Promise.pending is deprecated. Inline a ponyfill.
+[1;32m|[m[1;32m/[m  
+* [33mc636fe46[m minor tweaks to coverage recipe
+*   [33ma7da9c2d[m Merge pull request #451 from forresst/improve-coverage
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mee2289b4[m Improve Code Coverage for Windows
+[1;34m|[m[1;34m/[m  
+*   [33ma7c1ea18[m Merge pull request #450 from jamestalmage/revert-regenerator-pinning
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33mbcb82961[m Revert "lock `babel-plugin-transform-regenerator` dependency to fix #425"
+[1;36m|[m[1;36m/[m  
+*   [33m36733b9a[m Merge pull request #436 from jamestalmage/use-option-chain
+[32m|[m[33m\[m  
+[32m|[m * [33m0276c63b[m Move method chaining to an external module (`option-chain`)
+* [33m|[m [33m66aeefb5[m Close #444 PR: Add a code coverage recipe.
+* [33m|[m   [33me23647ec[m Merge branch 'kasperisager-count-skipped-tests'
+[34m|[m[35m\[m [33m\[m  
+[34m|[m * [33m|[m [33m3739d4bf[m Close #434 PR: Allow files with only skipped tests
+[34m|[m [33m|[m[33m/[m  
+* [33m|[m [33m5d36a804[m Add shortflags to the CLI
+* [33m|[m   [33m175ca413[m Merge pull request #442 from pine613/master
+[36m|[m[1;31m\[m [33m\[m  
+[36m|[m * [33m|[m [33m61008b23[m add fly-ava plugin
+[36m|[m[36m/[m [33m/[m  
+* [33m|[m [33md6032fc4[m add a FAQ regarding custom reporters - #432
+* [33m|[m   [33m971afb4d[m Merge pull request #438 from jamestalmage/use-verbose-on-ci
+[33m|[m[1;33m\[m [33m\[m  
+[33m|[m [1;33m|[m[33m/[m  
+[33m|[m[33m/[m[1;33m|[m   
+[33m|[m * [33m21a60f9a[m Default to the verbose reporter on CI servers. Fixes #435
+[33m|[m[33m/[m  
+*   [33mced24c50[m Merge pull request #433 from jamestalmage/bump-observable-to-promise
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m93097ea7[m bump observable-to-promise
+[1;34m|[m[1;34m/[m  
+* [33m3e869956[m 0.10.0
+*   [33m412a1208[m Merge pull request #431 from sindresorhus/bump-deps
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m71051127[m bump devDependencies
+[1;36m|[m * [33m9cf22c3b[m lock `babel-plugin-transform-regenerator` dependency to fix #425 (cherry picked from commit 08c3285)
+* [31m|[m   [33mdcf84b6f[m Merge pull request #430 from sindresorhus/fix-429
+[31m|[m[33m\[m [31m\[m  
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33me7bdd7de[m Add babel-runtime and core-js to list of internals. Fixes #429
+[31m|[m[31m/[m  
+*   [33m2c0c5588[m Merge pull request #428 from sindresorhus/nice-stack-traces
+[34m|[m[35m\[m  
+[34m|[m * [33mf5369c77[m add clean stack traces to readme
+* [35m|[m   [33m766c9ec5[m Merge pull request #427 from sindresorhus/code-of-conduct
+[35m|[m[1;31m\[m [35m\[m  
+[35m|[m [1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;31m|[m   
+[35m|[m * [33mb76f3d51[m add Code of Conduct
+[35m|[m[35m/[m  
+*   [33m1a6dbc7d[m Merge pull request #418 from jamestalmage/use-stack-utils
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33maf37305e[m use stack-utils for nicer stack traces.
+* [1;33m|[m [33mad728359[m update FAQ about TAP support - fixes #426
+* [1;33m|[m [33mc060e94c[m add link to buy AVA logo sticker
+[1;33m|[m[1;33m/[m  
+*   [33m3fdb6fc1[m Merge pull request #415 from jamestalmage/fix-mini-reporter-logging
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m3d7f036a[m Prevent log corruption when using mini reporter. Fixes #392.
+* [1;35m|[m [33meea8752a[m Close #414 PR: Fix t.throws/doesNotThrow not outputting failure reason.
+* [1;35m|[m   [33m8e0a6e9f[m Merge pull request #416 from twada/remove-capt-expr
+[1;35m|[m[31m\[m [1;35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+[1;35m|[m * [33m70dd2a7e[m update empower-core and babel-plugin-espower to make `t._capt` and `t._expr` unnecessary
+[1;35m|[m[1;35m/[m  
+* [33m7b764ea3[m Close #412 PR: Standardize colors across reporters.. Fixes #410
+* [33m37e0dd84[m cleanup #402
+* [33m4d96a3e7[m Close #402 PR: add endpoint testing example to FAQ. Fixes #310
+* [33ma2b282eb[m Close #410 PR. Print skip count in yellow for all reporters. Fixes #408
+* [33m37cd6858[m add Español (Spanish) translation of the docs
+*   [33mdd88680d[m Merge pull request #407 from jamestalmage/use-pkg-conf
+[32m|[m[33m\[m  
+[32m|[m * [33m16c7282e[m Allow configuration of default settings via `package.json`.
+[32m|[m[32m/[m  
+*   [33m87a3430c[m Merge pull request #398 from jamestalmage/dont-read-babelrc
+[34m|[m[35m\[m  
+[34m|[m * [33m5f5be31a[m add tests for ignoring babelrc
+[34m|[m[34m/[m  
+*   [33mce47844e[m Merge pull request #390 from jamestalmage/transpile-in-main-thread
+[36m|[m[1;31m\[m  
+[36m|[m * [33m614eb121[m Transpile test files in the main process:
+[36m|[m[36m/[m  
+*   [33mf696271c[m Merge pull request #397 from jamestalmage/document-skipped-assertions
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m879e036c[m Document skippable assertions.
+[1;32m|[m[1;32m/[m  
+*   [33mf8701d5a[m Merge pull request #394 from jamestalmage/long-stack-traces-in-forks
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mda6a2f4a[m use long stack traces in forks.
+* [1;35m|[m   [33mb04d0046[m Merge pull request #395 from jamestalmage/assertions-return-promises
+[1;35m|[m[31m\[m [1;35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+[1;35m|[m * [33m821436ae[m Regression: Assertions should return promises.
+[1;35m|[m[1;35m/[m  
+*   [33mc7ce760d[m Merge pull request #389 from jamestalmage/use-latest-nyc
+[32m|[m[33m\[m  
+[32m|[m * [33m7c5d179a[m use latest nyc and caching
+[32m|[m[32m/[m  
+*   [33mb83e4f5d[m Merge pull request #388 from ntwb/patch-1
+[34m|[m[35m\[m  
+[34m|[m * [33m345700e9[m Travis CI: Switch from deprecated `stable` NodeJS version to v4.x.x and v5.x.x
+[34m|[m[34m/[m  
+* [33m10b52c52[m 0.9.1
+*   [33ma8805c6c[m Merge pull request #387 from sindresorhus/promises-rejected-not-error
+[36m|[m[1;31m\[m  
+[36m|[m * [33mbef1dfb8[m support promises rejected with non-Errors
+* [1;31m|[m   [33mb86dcc98[m Merge pull request #384 from jamestalmage/hide-annoying-error-printouts
+[1;31m|[m[1;33m\[m [1;31m\[m  
+[1;31m|[m [1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;33m|[m   
+[1;31m|[m * [33m6033e9c2[m Hide annoying error print outs.
+* [1;33m|[m   [33m15601387[m Merge pull request #385 from jamestalmage/better-test-scripts
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33me1b25083[m Improve test scripts
+[1;34m|[m [1;33m|[m[1;33m/[m  
+* [1;33m/[m [33m974ab6f8[m 0.9.0
+[1;33m|[m[1;33m/[m  
+* [33m5e6327de[m Fix plan count in api test.
+*   [33m96930e34[m Merge pull request #378 from ariporad/recursive
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m72e87d94[m Deeply recurse directories.
+* [31m|[m [33mfc3b9693[m Better test prefixes
+* [31m|[m   [33m5aeb2708[m Merge pull request #380 from sindresorhus/power-assert-in-mini
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m|[m [33me30685f2[m display power-assert output in mini reporter
+[32m|[m[32m/[m [31m/[m  
+* [31m|[m [33m437e88f2[m drop lgtm.co
+* [31m|[m   [33mb0e508ac[m Merge pull request #375 from ariporad/rename-babel.js
+[34m|[m[35m\[m [31m\[m  
+[34m|[m * [31m|[m [33m07299978[m Rename lib/babel.js to lib/test-worker.js
+[34m|[m [31m|[m[31m/[m  
+* [31m|[m   [33m7e13552f[m Merge pull request #371 from sindresorhus/internal-error
+[31m|[m[1;31m\[m [31m\[m  
+[31m|[m [1;31m|[m[31m/[m  
+[31m|[m[31m/[m[1;31m|[m   
+[31m|[m * [33mac468d1f[m use AvaError for internal errors
+[31m|[m[31m/[m  
+* [33m8346d355[m link to the French translation of the docs
+*   [33m945dbea4[m Merge pull request #354 from sindresorhus/fix-error-stacks
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mcbea0035[m show full stack trace for non-assert errors
+* [1;33m|[m   [33mb79fdfd8[m Merge pull request #359 from sindresorhus/mini-reporter
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33m2c77314f[m add mini reporter
+* [1;35m|[m [1;33m|[m [33me52db692[m Close #360 PR: Fix promise assertions. Fixes #309
+* [1;35m|[m [1;33m|[m [33m48656744[m minor cleanup
+* [1;35m|[m [1;33m|[m [33m0a40bdb1[m use relative file paths on the fork.js output
+* [1;35m|[m [1;33m|[m   [33m865cc055[m Merge pull request #352 from sindresorhus/cache-babel
+[1;33m|[m[31m\[m [1;35m\[m [1;33m\[m  
+[1;33m|[m [31m|[m[1;33m_[m[1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[31m|[m [1;35m|[m   
+[1;33m|[m * [1;35m|[m [33m0daec3e2[m cache babel-transpiled code
+* [31m|[m [1;35m|[m [33mdaca89da[m Close #364 PR: fix usage example in the readme.
+* [31m|[m [1;35m|[m [33m83b189b5[m cleanup test fixtures
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+* [31m|[m [33m4353d061[m use globbing in the `files` field in package.json
+* [31m|[m   [33mab08598d[m Merge pull request #357 from sotojuan/ignore-fixture-helpers
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m|[m [33mf6cef7fc[m Ignore files in fixtures and helpers directories
+* [33m|[m [31m|[m   [33m94fbb1a3[m Merge pull request #363 from sindresorhus/reporters
+[31m|[m[35m\[m [33m\[m [31m\[m  
+[31m|[m [35m|[m[31m_[m[33m|[m[31m/[m  
+[31m|[m[31m/[m[35m|[m [33m|[m   
+[31m|[m * [33m|[m [33m2fab4b1e[m introduce reporters
+[31m|[m[31m/[m [33m/[m  
+* [33m|[m   [33m65ae07c7[m Merge pull request #356 from jamestalmage/seek-early-feedback
+[33m|[m[1;31m\[m [33m\[m  
+[33m|[m [1;31m|[m[33m/[m  
+[33m|[m[33m/[m[1;31m|[m   
+[33m|[m * [33m94c0f9b4[m contributing.md: seek early feedback
+[33m|[m[33m/[m  
+* [33mae446f07[m Make --require relative to where the command is run
+*   [33m5add6ad3[m Merge pull request #353 from jamestalmage/require-babel-plugins-directly
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m94797b10[m Require babel plugins directly. Fixes #350.
+[1;32m|[m[1;32m/[m  
+* [33m52d2a7a1[m followup to #333
+* [33m9e6d9724[m Close #333 PR: Upgrade to Babel 6.
+* [33ma5e63c0d[m add TAP support
+*   [33mdf3e0352[m Merge pull request #347 from sotojuan/cli-tests
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mb02e5ecd[m Add CLI test for logging failed tests
+[1;34m|[m[1;34m/[m  
+* [33mdf48ce69[m Close #344 PR: Fix fail-fast mode.
+* [33mb669807a[m undocument `t.regexTest` assertion
+* [33ma6e21e29[m remove undocumented `t.assert` assertion
+*   [33ma9af1da4[m Merge pull request #338 from forresst/fix-typo-readme
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m9caa7da2[m Fix typo test.cb
+* [31m|[m [33me370f4f3[m Close #337 PR: Move test title prefixes test to API tests.
+* [31m|[m   [33m4513cba2[m Merge pull request #334 from ariporad/fix-bluebird-warnings
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m|[m [33m18f3afc3[m Fix bluebird warnings
+[32m|[m [31m|[m[31m/[m  
+* [31m|[m   [33m1827cb25[m Merge pull request #336 from twada/remove-old-empower
+[31m|[m[35m\[m [31m\[m  
+[31m|[m [35m|[m[31m/[m  
+[31m|[m[31m/[m[35m|[m   
+[31m|[m * [33md14a24b0[m remove `empower` from dependencies since it is replaced with `empower-core`
+[31m|[m[31m/[m  
+* [33mf03e4ba2[m Close #332 PR: Add more logger tests.
+*   [33ma58bfac3[m Merge pull request #327 from sindresorhus/contributing-guidelines
+[36m|[m[1;31m\[m  
+[36m|[m * [33m0f0cbe9b[m add contributing guidelines - fixes #167
+* [1;31m|[m [33mea6acff7[m 0.8.0
+* [1;31m|[m [33m072ab857[m Close #330 PR: use `empower-core` for better assertion tracking and performance.
+* [1;31m|[m   [33m2b6b2562[m Merge pull request #331 from sotojuan/tap-match
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33m7030c66c[m Use tap.match() instead of tap.true() in API tests
+[1;32m|[m[1;32m/[m [1;31m/[m  
+* [1;31m/[m [33mad7ae194[m Close #325 PR: Stop hiding source of syntax errors. Fixes #308
+[1;31m|[m[1;31m/[m  
+* [33m84e3028c[m improve maintaining.md
+*   [33m6b066b5d[m Merge pull request #321 from sindresorhus/babel-simplify
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33md0c370a1[m don't use local Babel directly
+* [1;35m|[m   [33m6f8e2c41[m Merge pull request #323 from sotojuan/master
+[1;36m|[m[31m\[m [1;35m\[m  
+[1;36m|[m * [1;35m|[m [33mda3c7a83[m Add default message to x.fail(), update related test
+[1;36m|[m[1;36m/[m [1;35m/[m  
+* [1;35m|[m   [33md5b25f29[m Merge pull request #296 from jokeyrhyme/pass-through-requires
+[32m|[m[33m\[m [1;35m\[m  
+[32m|[m * [1;35m|[m [33m6081389d[m Node.js-style --require CLI argument
+[32m|[m[32m/[m [1;35m/[m  
+* [1;35m|[m   [33m8aac20d1[m Merge pull request #312 from novemberborn/document-nyc-source-maps
+[1;35m|[m[35m\[m [1;35m\[m  
+[1;35m|[m [35m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[35m|[m   
+[1;35m|[m * [33m65d0cce2[m document nyc's source map support
+[1;35m|[m[1;35m/[m  
+* [33m3fdf44d1[m fix tests
+* [33mfb35a113[m Close #313 PR: Add API tests. Fixes #285
+*   [33m07dea761[m Merge pull request #319 from jokeyrhyme/pass-single-json-to-forks
+[36m|[m[1;31m\[m  
+[36m|[m * [33meeeec706[m process is forked with a single JSON argument
+[36m|[m[36m/[m  
+* [33m2d5ae12d[m lgtm - only require 2 approvals
+* [33mbeb740a4[m add file for https://lgtm.co
+*   [33m1d1ce43e[m Merge pull request #316 from novemberborn/source-map-improvements
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m38641684[m improve source-map tests
+[1;32m|[m * [33mbe8b9351[m source-map-support@0.4.0
+[1;32m|[m[1;32m/[m  
+* [33mff5b8dfa[m switch to `resolve-cwd` dep
+*   [33m8d7e3bb6[m Merge pull request #301 from jamestalmage/use-deeper
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m56cd6526[m Allow deepEqual comparison of values with circular references. Fixes #298.
+* [1;35m|[m [33m8a677042[m Close #303 PR: Adds filename to failed test title.. Fixes #272
+* [1;35m|[m   [33m94d2dc35[m Merge pull request #302 from jamestalmage/allow-destructuring-of-t
+[1;36m|[m[31m\[m [1;35m\[m  
+[1;36m|[m * [1;35m|[m [33me0f31e84[m allow destructuring of `t` parameter.
+[1;36m|[m[1;36m/[m [1;35m/[m  
+* [1;35m|[m   [33me7215681[m Merge pull request #258 from jamestalmage/skippable-assertions
+[32m|[m[33m\[m [1;35m\[m  
+[32m|[m * [1;35m|[m [33m357622c2[m Add ability to skip individual assertions. Fixes #9.
+[32m|[m[32m/[m [1;35m/[m  
+* [1;35m|[m   [33mb9ebced4[m Merge pull request #299 from sindresorhus/missing-skipped-tests
+[1;35m|[m[35m\[m [1;35m\[m  
+[1;35m|[m [35m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[35m|[m   
+[1;35m|[m * [33mcf471cb1[m display skipped tests
+[1;35m|[m[1;35m/[m  
+* [33m3f2e67a4[m Forward all child output to `stderr` on main process. Closes #291
+* [33meef3d883[m Unify how files with no tests are reported.
+* [33ma1764d7f[m Test for fake-timers was passing for the wrong reasons.
+*   [33m6b6247eb[m Merge pull request #293 from jamestalmage/fix-formatting-for-uncaught-errors
+[36m|[m[1;31m\[m  
+[36m|[m * [33md0d3387a[m Fix regression in uncaughtException formatting.
+[36m|[m[36m/[m  
+*   [33meaf3e0f8[m Merge pull request #286 from jamestalmage/hide-test-internals
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mc78c46fa[m Hide test internals. Fixes #252.
+* [1;33m|[m [33mb754456a[m add `api.js` to package.json
+[1;33m|[m[1;33m/[m  
+* [33mc424ceb3[m Close #279 PR: Add programmatic API. Fixes #83
+* [33m2f05aca5[m 0.7.0
+* [33m7ad7501d[m Force serial execution of forked processes, closes #282
+*   [33m8cde259e[m Merge pull request #281 from jamestalmage/async-to-cb
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m71703081[m test.async -> test.cb
+* [1;35m|[m   [33mbe946df8[m Merge pull request #280 from jamestalmage/pass-ava-appveyor-env-variable-in-tests
+[1;35m|[m[31m\[m [1;35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+[1;35m|[m * [33m9b770965[m Put back AVA_APPVEYOR environment variable when running tests.
+* [31m|[m   [33mf13ba2ec[m Merge pull request #277 from jamestalmage/prefer-local-over-global
+[31m|[m[33m\[m [31m\[m  
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33m2f7ac92d[m Prefer the locally installed version of AVA.
+* [33m|[m [33me2e45151[m fix flaky test
+[33m|[m[33m/[m  
+*   [33m306f28d2[m Merge pull request #275 from jamestalmage/pipe-forked-io-streams
+[34m|[m[35m\[m  
+[34m|[m * [33m0ef0ca14[m Pipe forked IO streams instead of forwarding `data` events.
+* [35m|[m   [33mb370458c[m Merge pull request #276 from jamestalmage/use-time-require
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33m5e927454[m Integrate time-require when `debug` is enabled.
+[36m|[m [35m|[m[35m/[m  
+* [35m|[m [33m76152ede[m readme cleanup
+* [35m|[m   [33m2a7a6398[m Merge pull request #253 from jamestalmage/disallow-end-callback-on-non-async
+[35m|[m[1;33m\[m [35m\[m  
+[35m|[m [1;33m|[m[35m/[m  
+[35m|[m[35m/[m[1;33m|[m   
+[35m|[m * [33m982a4515[m update documentation to reflect new behaviors
+[35m|[m * [33mf8168153[m Breaking: t.plan() will not auto-end tests.
+[35m|[m * [33m387c30a0[m Breaking: t.end requires test be declared async
+* [1;33m|[m [33mfa70351c[m minor code style tweaks
+* [1;33m|[m   [33m84fb575b[m Merge pull request #273 from novemberborn/stack-traces-for-input-sourcemaps
+[1;33m|[m[1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m   
+[1;33m|[m * [33mb3cee51d[m No need to tringify source maps before caching
+[1;33m|[m * [33ma423a779[m Support initial source maps for stack traces
+[1;33m|[m[1;33m/[m  
+*   [33m7764336a[m Merge pull request #270 from jamestalmage/support-fake-timers
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33mb88c2baf[m Guard against clock manipulation by fake timer libraries. Fixes #128.
+[1;36m|[m[1;36m/[m  
+*   [33m21cac95c[m Merge pull request #267 from jamestalmage/use-serialize-error
+[32m|[m[33m\[m  
+[32m|[m * [33m3e903856[m use serialize-error module
+[32m|[m[32m/[m  
+* [33md874ec96[m Close #243 PR: Make runner methods chainable.
+* [33m46860800[m cleanup #247
+* [33m81078fd4[m Close #247 PR: Document workaround for transpiling ES2015 module imports in tests.
+* [33m09a2140b[m 0.6.0
+* [33md2119f55[m ignore process.env when running CLI tests
+*   [33mfb98d5dc[m Merge pull request #262 from novemberborn/source-map-pragma
+[34m|[m[35m\[m  
+[34m|[m * [33m5b1e5b4c[m Support source map pragmas for stack traces
+[34m|[m * [33m8c5f6e3a[m Explicitly test stack trace mapping
+* [35m|[m [33ma4f8e241[m Close #260 PR: Ignore possible test files under node_modules folder. Fixes #226.. Fixes #226
+* [35m|[m   [33mffb750bc[m Merge pull request #265 from jamestalmage/fix-coverage-2
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33m1816f73b[m Fix failing coveralls script.
+[36m|[m[36m/[m [35m/[m  
+* [35m|[m [33m4852c92c[m Close #264 PR: Fix coverage.
+* [35m|[m [33m812589a9[m ✨Happy to welcome @jamestalmage to the project! ✨
+[35m|[m[35m/[m  
+* [33meb9b3390[m Close #259 PR: print the first assertion failure of each test, instead of the last. Fixes #121, #220. Fixes #121, Fixes #220
+*   [33m293acf26[m Merge pull request #251 from jamestalmage/remove-context-on-before-after-hooks
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mf0109e29[m context should not exist on before/after tests. (cherry picked from commit f298d72)
+* [1;33m|[m   [33m2185921f[m Merge pull request #254 from jamestalmage/source-map-support
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33m25a3cfd9[m Add source map support. Fixes: #223, #250
+[1;34m|[m[1;34m/[m [1;33m/[m  
+* [1;33m/[m [33m33b79182[m Close #257 PR: logger.js: fix beautifyStack on Windows. Fixes: #255.
+[1;33m|[m[1;33m/[m  
+* [33m60b23379[m add `debug` - fixes #242
+* [33m21885b8c[m use consistent and correct assert methods
+* [33m0caf0cf7[m modulify all the things
+* [33meb951fdc[m Close #240 PR: Clean up lib/test.js.
+* [33macbda42e[m minor tweaks
+* [33m505c708c[m drop Node.js 0.10 from AppVeyor
+* [33mc45c9c17[m minor CLI cleanup
+* [33m5b914882[m split tests into multiple files - fixes #201
+*   [33mbb53c327[m Merge pull request #239 from sindresorhus/cleanup-runner
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33md6699d1a[m clean up runner
+[1;36m|[m[1;36m/[m  
+* [33m305fcdb4[m fix typo
+*   [33m257b8721[m Merge pull request #236 from sindresorhus/cleanup-fork
+[32m|[m[33m\[m  
+[32m|[m * [33m33b5d2b4[m clean up forking and messages
+[32m|[m[32m/[m  
+*   [33m447b1be1[m Merge pull request #237 from sindresorhus/fix-tap-coverage
+[34m|[m[35m\[m  
+[34m|[m * [33m5cf24288[m fix coverage when using tap
+[34m|[m[34m/[m  
+*   [33m578173d1[m Merge pull request #234 from jamestalmage/use-tap
+[36m|[m[1;31m\[m  
+[36m|[m * [33m50251d09[m use tap test runner instead of tape.
+* [1;31m|[m [33maad2a260[m document `test.only()`
+* [1;31m|[m [33m6700a254[m add maintaining.md for the project maintainers
+* [1;31m|[m   [33mcd4c7c6f[m Merge pull request #227 from jamestalmage/simplify-context-sharing
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33mfb87cdfe[m simplify context sharing between beforeEach and test
+[1;32m|[m [1;31m|[m[1;31m/[m  
+* [1;31m/[m [33m93f733c4[m add test.only(), closes #204
+[1;31m|[m[1;31m/[m  
+* [33m2d36b514[m 0.5.0
+* [33m00342bec[m :arrow_up: globby@4
+* [33me57eff05[m document Observable support
+* [33m403a28c8[m Support use of t.end as callback, closes #180
+* [33m6b628846[m minor style tweaks
+* [33m1b60c7b8[m add support for *.spec.js file naming, closes #216
+* [33m05bee73b[m Close #165 PR: Support Observable. Fixes #84
+*   [33mb24b2eaa[m Merge pull request #206 from jamestalmage/use-loud-rejection
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m15bd7940[m extend exit delay on AppVeyor
+[1;34m|[m * [33mb3bc42a5[m make shure IO streams are flushed before exiting a process.
+[1;34m|[m * [33mc5d02f1f[m report uncaught exceptions
+[1;34m|[m * [33m862edb85[m report unhandled promise rejections
+[1;34m|[m * [33ma73374dc[m make AppVeyor retry failed runs.
+[1;34m|[m[1;34m/[m  
+* [33m78a6c56e[m tweaks
+*   [33m97409864[m Merge pull request #208 from jamestalmage/fix-198
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33ma3308d22[m  Handle empty results from test files. Fix #198
+[1;36m|[m[1;36m/[m  
+*   [33mfc9a1dca[m Merge pull request #205 from jamestalmage/regression-one-passing-one-failing
+[32m|[m[33m\[m  
+[32m|[m * [33md6fed1c7[m regression: logger throws on files with both passing and failing tests.
+[32m|[m[32m/[m  
+* [33m86459161[m Close #203 PR: More tests for runner.js (issue #161).
+* [33m23ac30db[m add some missing docs
+*   [33m186fd780[m Merge pull request #200 from jamestalmage/reject-with-error
+[34m|[m[35m\[m  
+[34m|[m * [33m732b4c23[m fork.js: Reject child-process completion promise with an error.
+[34m|[m[34m/[m  
+*   [33mc149db22[m Merge pull request #196 from sohamkamani/master
+[36m|[m[1;31m\[m  
+[36m|[m * [33m96121337[m Test coverage for runner.js
+[36m|[m[36m/[m  
+* [33mfc988e95[m Close #187 PR: Fix circular references on assertions before sending across the wire..
+*   [33mfa782a82[m Merge pull request #195 from jamestalmage/use-tap-spec
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mb28c0726[m use tap-spec reporter for tests. fixes #188
+[1;32m|[m[1;32m/[m  
+*   [33m96fc0da8[m Merge pull request #194 from sindresorhus/test-skip
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m41fd96f9[m add test.skip()
+[1;34m|[m[1;34m/[m  
+*   [33mb55a05a6[m Merge pull request #193 from sindresorhus/event-improvements
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33mac832d1a[m event data improvements
+* [31m|[m [33m79233c7c[m Merge pull request #191 from sindresorhus/run-without-ava-error
+[32m|[m[31m\[m[31m|[m 
+[32m|[m * [33m41b4746f[m fail when tests executed without cli
+[32m|[m[32m/[m  
+*   [33m3a75cb19[m Merge pull request #190 from sindresorhus/hook-titles
+[34m|[m[35m\[m  
+[34m|[m * [33m55d3613b[m display only failed hooks
+[34m|[m[34m/[m  
+* [33mfc201d20[m use custom Gitter badge until they get one that fits in
+* [33m7575ca82[m Close #174 PR: made "concurernvy vs. parallelism" section clearer.
+* [33m98f9253d[m Close #168 PR: Add a table of contents to readme.md.
+*   [33m11b97e74[m Merge pull request #158 from Qix-/patch-2
+[36m|[m[1;31m\[m  
+[36m|[m * [33m3aaf3ed1[m Minor readme fixes
+* [1;31m|[m [33m6a8f0e7a[m Close #169 PR: Fix Windows onExit failure..
+* [1;31m|[m   [33m4399e7b5[m Merge pull request #173 from jamestalmage/test-should-fail-without-cb
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33m0dad4552[m test() should throw if no callback is provided. Fixes #172
+[1;32m|[m[1;32m/[m [1;31m/[m  
+* [1;31m|[m [33mff8031fa[m 0.4.2
+* [1;31m|[m [33m560c6f89[m Close #166 PR: Fix issue with CLI throwing on Windows - fixes #164.
+* [1;31m|[m   [33mfcc7a6e8[m Merge pull request #163 from floatdrop/co-with-promise
+[1;34m|[m[1;35m\[m [1;31m\[m  
+[1;34m|[m * [1;31m|[m [33m1396fb88[m use co-with-promise instead of git url in package.json
+* [1;35m|[m [1;31m|[m [33m06fd25f1[m add support section to the readme
+* [1;35m|[m [1;31m|[m [33medf1169d[m add Appveyor to test on Windows
+[1;35m|[m[1;35m/[m [1;31m/[m  
+* [1;31m|[m [33mdf765295[m Close #159 PR: Add a Gitter chat badge to readme.md.
+* [1;31m|[m [33me8f51804[m 0.4.1
+* [1;31m|[m   [33m1e995fed[m Merge pull request #155 from floatdrop/set-kill-code-to-zero
+[1;31m|[m[31m\[m [1;31m\[m  
+[1;31m|[m [31m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[31m|[m   
+[1;31m|[m * [33m04c687bc[m Check for SIGTERM exit code
+* [31m|[m [33me57b99d8[m fix use of absolute paths
+[31m|[m[31m/[m  
+* [33m71c79e0d[m 0.4.0
+*   [33m5ec15740[m Merge pull request #151 from floatdrop/add-ava-modules-to-test-module-paths
+[32m|[m[33m\[m  
+[32m|[m * [33mde0955b0[m add ava modules to test module paths
+[32m|[m[32m/[m  
+* [33m08854a94[m FAQ clarification
+*   [33mcc2b33f9[m Merge pull request #146 from jamestalmage/bump-power-assert
+[34m|[m[35m\[m  
+[34m|[m * [33madcf5442[m bump power-assert dependencies.
+* [35m|[m   [33m5910c6bd[m Merge pull request #147 from uiureo/fix-espower-babel
+[35m|[m[1;31m\[m [35m\[m  
+[35m|[m [1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;31m|[m   
+[35m|[m * [33m18619fcc[m Use local babel in babel-plugin-espower
+[35m|[m[35m/[m  
+* [33m4f5597d6[m fix planned assertion docs - fixes #140
+* [33m68a51fbd[m Close #135 PR: add failing test demonstrating long running onExit() hook in child process. Fixes #134
+*   [33m6f55d8ec[m Merge pull request #136 from sindresorhus/wait-for-forks
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m1d01665f[m wait for fork to exit and then return results
+[1;32m|[m[1;32m/[m  
+*   [33m1d565e42[m Merge pull request #134 from sindresorhus/fork-cleanup
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mc81fb629[m kill forked processes after tests are done
+[1;34m|[m[1;34m/[m  
+*   [33m5a53900d[m Merge pull request #120 from jamestalmage/jt-kill-forked-processes
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m4d907aa8[m move `kill()` function to promise from result
+[1;36m|[m * [33m7087a08d[m forcibly kill every forked subprocess.
+* [31m|[m [33m10dccb9d[m Close #124 PR: Refactor promises in throws method.
+* [31m|[m [33m257c4148[m Close #125 PR: Add string support to throws.
+* [31m|[m   [33m8d84f398[m Merge pull request #127 from SamVerschueren/iss123
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m|[m [33ma6eb96db[m Throws returns the promise
+[32m|[m [31m|[m[31m/[m  
+* [31m|[m   [33mb65ff0b0[m Merge pull request #126 from SamVerschueren/long-running-promise
+[31m|[m[35m\[m [31m\[m  
+[31m|[m [35m|[m[31m/[m  
+[31m|[m[31m/[m[35m|[m   
+[31m|[m * [33mee7e7d80[m Add test
+[31m|[m[31m/[m  
+* [33mefde568e[m minor doc tweak
+* [33m66e74401[m fix tyop
+*   [33m458e7637[m Merge pull request #119 from sindresorhus/no-single-title
+[36m|[m[1;31m\[m  
+[36m|[m * [33mbb1304c5[m don't display test title, if there's only one anonymous test
+* [1;31m|[m [33m1d5ef4c5[m Close #103 PR: Replace babel require hook with transformFileSync.
+[1;31m|[m[1;31m/[m  
+* [33mc2f4c9f6[m add tip about code coverage - fixes #94
+* [33m7a3f4444[m remove test for more assertions than planned async
+*   [33m04b3db5d[m Merge pull request #110 from sindresorhus/improve-context-sharing
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m5fd57c18[m improve context sharing for beforeEach/afterEach
+* [1;33m|[m [33m730bf532[m :arrow_up: bluebird@3
+[1;33m|[m[1;33m/[m  
+* [33mc887a8ea[m use `serialize-error` module
+* [33m46d15ab8[m remove unused dependency
+* [33maa594ed9[m use `has-flag` module
+* [33m0b756602[m 🚀
+* [33m61d3089f[m add docs for #106
+*   [33m5ffc480b[m Merge pull request #106 from sindresorhus/shared-context
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33ma76ced62[m shared context between tests and beforeEach/afterEach hooks
+[1;34m|[m[1;34m/[m  
+* [33m83ebf671[m 0.3.0
+* [33m6ae46ce0[m code style tweaks
+* [33m981f7501[m doc improvements
+*   [33m18c5887c[m Merge pull request #59 from sindresorhus/babel-only
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m52b0ccb3[m use the test file path in the Babel whitelist instead of a pattern
+* [31m|[m   [33m99784e0e[m Merge pull request #101 from sindresorhus/serial-mode
+[31m|[m[33m\[m [31m\[m  
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33m3cf17e20[m add serial mode
+[31m|[m[31m/[m  
+*   [33m4d38be82[m Merge pull request #99 from sindresorhus/set-cwd
+[34m|[m[35m\[m  
+[34m|[m * [33m468fae6e[m set process.cwd() to a test's directory
+* [35m|[m [33m2e45aa76[m new tagline 🦄
+[35m|[m[35m/[m  
+* [33m4a0aa8ce[m remove mention of using `node test.js` #98
+*   [33m0f486d23[m Merge pull request #98 from sindresorhus/cli-only
+[36m|[m[1;31m\[m  
+[36m|[m * [33mc84c48a8[m support running the test file only via cli
+[36m|[m[36m/[m  
+* [33m2ee2a3de[m document `.throw`/`.doesNotThrow` promise support
+* [33m1f4d4457[m ES2015ify the readme
+* [33m91db66f1[m improve hooks docs
+* [33m89219ce6[m document the enhanced asserts
+* [33mc96622d6[m Close #46 PR: Less API using power-assert.
+*   [33m85bfb221[m Merge pull request #91 from sindresorhus/throws-fixes
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m593a6f9c[m fix throws behavior to avoid false-positives and support regex
+[1;32m|[m[1;32m/[m  
+*   [33mc628c6d7[m Merge pull request #90 from sindresorhus/hooks-only-around-tests
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mda58c623[m ensure that hooks run only around tests, fix #89
+[1;34m|[m[1;34m/[m  
+*   [33m0f901536[m Merge pull request #82 from sindresorhus/fail-fast
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33meb54eb65[m add fail-fast mode
+* [31m|[m [33m98a7402b[m work around Babel giving anonymous functions a name
+[31m|[m[31m/[m  
+*   [33m2b7c782b[m Merge pull request #81 from sindresorhus/plan-promise
+[32m|[m[33m\[m  
+[32m|[m * [33maaa00b90[m add support to t.plan() + promises
+[32m|[m[32m/[m  
+* [33m4e0d4906[m add some tests on fork.js
+*   [33m391b9b22[m Merge pull request #79 from sindresorhus/throws-promise
+[34m|[m[35m\[m  
+[34m|[m * [33md14c6e37[m handle promises in throws()
+* [35m|[m [33mb39b61c9[m enable long stack traces for bluebird
+[35m|[m[35m/[m  
+* [33m7cebc109[m add AVA name pronunciation
+*   [33m7d297f24[m Merge pull request #72 from sindresorhus/before-after-each
+[36m|[m[1;31m\[m  
+[36m|[m * [33mf6d3521e[m add beforeEach/afterEach hooks
+* [1;31m|[m [33m20a704ab[m add code coverage with coveralls
+* [1;31m|[m [33mcaf8f6b0[m docs - calling `t.end()` in async/generator functions is moot
+[1;31m|[m[1;31m/[m  
+*   [33m7240a022[m Merge pull request #69 from Hurtak/patch-1
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mdc3ec588[m missing semicolon
+[1;32m|[m[1;32m/[m  
+*   [33mc0bc3936[m Merge pull request #66 from vdemedes/prefix-test-title
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33me9b3e501[m prefix test title with test location
+[1;34m|[m[1;34m/[m  
+* [33m328ca3d2[m use strict deep assert checking - fixes #68
+*   [33mcafe2153[m Merge pull request #67 from vdemedes/pending-tests
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m4c6e2afc[m wait for pending tests
+[1;36m|[m[1;36m/[m  
+*   [33m5dc0873b[m Merge pull request #65 from vdemedes/error-when-no-tests
+[32m|[m[33m\[m  
+[32m|[m * [33mf72e654a[m display error message when there are no test files
+* [33m|[m   [33m81f5b08b[m Merge pull request #64 from vdemedes/async-to-generator
+[33m|[m[35m\[m [33m\[m  
+[33m|[m [35m|[m[33m/[m  
+[33m|[m[33m/[m[35m|[m   
+[33m|[m * [33m0da796f2[m use asyncToGenerator transform
+[33m|[m[33m/[m  
+*   [33m99467531[m Merge pull request #61 from vdemedes/co-generators
+[36m|[m[1;31m\[m  
+[36m|[m * [33ma0de2779[m blacklist regenerator to not transpile generator functions
+[36m|[m * [33m1a16b1b6[m use co() for running generator functions
+[36m|[m[36m/[m  
+* [33ma158f1a3[m readme tweaks
+* [33m879018bf[m Close #57 PR: Add support for generator and async functions. Fixes #37, Fixes #45
+*   [33m2bff236a[m Merge pull request #58 from vdemedes/fix-tests-counter
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mcc17f126[m fix passed/failed counters
+* [1;33m|[m   [33m740cb5b7[m Merge pull request #56 from vdemedes/babel-tests-only
+[1;33m|[m[1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m   
+[1;33m|[m * [33m3fe83cd4[m babelify only test files
+[1;33m|[m[1;33m/[m  
+* [33m7db52886[m ignore files starting with underscore
+* [33m88b15098[m Close #47 PR: Parallelism. Fixes #1
+*   [33m863e4203[m Merge pull request #51 from joakimbeng/master
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33mc87cbfd3[m Don't overwrite an already existing assertError
+[1;36m|[m[1;36m/[m  
+* [33m5309d694[m XO tweaks
+* [33mcf4718a0[m 0.2.0
+* [33m6a6b7570[m tweaks
+* [33mff5eebba[m move assertions into AVA core
+* [33m8eb69f45[m don't log individual test if it's a single passing test - fixes #10
+* [33mcef88df4[m readme improvements
+* [33m000c0626[m readme - add AVA feature display
+* [33m96dfc915[m test runner test event
+* [33m72af0170[m remove EventEmitter from Test
+* [33m8fc1e009[m Welcome @vdemedes to the team! 🎉
+* [33m60a6a134[m readme - add "Created by" section
+* [33m5662d9fc[m drop incorrect skip test implementation
+* [33mb370dd5d[m Show only useful lines of stack trace - fixes #22
+* [33mfbfe267f[m minor code style tweaks
+* [33mfa3ca81c[m Promisification
+* [33m853f69dc[m readme - add Related section
+* [33md377ef63[m Close #36 PR: Before/after hooks. Fixes #4
+* [33mb9401f7c[m add FAQ about concurrency vs parallelism
+* [33m8ed623c2[m globby@3.0.1
+* [33m5da9ead7[m cleanup #23
+* [33meb6343eb[m Close #23 PR: Add ES2015 support to CLI. Fixes #20
+* [33mfd700a26[m readme - add more FAQs
+* [33mef12c8e8[m add `--init` flag for adding AVA to your project
+* [33m65dd453c[m add setImmediate() shim via set-immediate-shim module
+* [33ma8d7c73e[m Close #30 PR: Output test execution time. Fixes #14
+* [33md29d202e[m ensure the CLI only globs JS files
+* [33me9580523[m temporarily workaround some stdout flush issue
+* [33m336f8b19[m Grammar fix
+* [33ma978330b[m readme - document using a custom assertion module
+* [33m216600dc[m 0.1.0
+* [33m35b7e5bd[m support running `ava` without arguments
+* [33mf3c12c1e[m add XO
+* [33m11f6080e[m bump deps
+* [33m4d2aa7c7[m use `plur`
+* [33m8687c97b[m simplify cli help creation
+* [33mdeed02d8[m we shouldn't catch thrown user errors
+* [33m96f57eb0[m Add test for `.skip()`
+* [33m06f91fca[m control the error output again
+* [33mb93d9198[m pass along the fn to the plan!==count assertion
+* [33me6e7e4ae[m throws methods are now implemented in `claim`
+* [33mb4c57142[m rewrite assert counter
+* [33mcdc9272f[m fix handling of plan() not matching assertions
+* [33m083c7d14[m fix assertion counting
+* [33m1c8e89dd[m revert part of 74d0d16c5a06ab504bca802843fdf272662f3955
+* [33m5169aab4[m minor package.json tweaks
+* [33m894674ef[m Tweaks
+* [33medcc883a[m Use `claim` as assertion library
+* [33m061a6704[m add test for #17
+* [33md9bdebe3[m Tweaks
+* [33mff0c5e8f[m bump deps
+* [33m6ca22cbe[m Update .travis.yml
+* [33m0d787ab7[m bump update-notifier
+* [33m31293189[m add another test
+* [33m2b52e5a6[m Wrap `assert` instead of manually creating errors
+* [33m63022ce8[m Show error stack for each failed test
+* [33maf2c09d7[m Add concurrent and serial tests for runner
+* [33m01896c35[m Add `t.serial()`
+* [33m4e84775c[m Various tweaks to `lib/runner.js`
+* [33mfe86cc44[m Rewrite `index.js` to be functional
+* [33md1708196[m Typo
+* [33m500d8964[m Remove unused dependency
+* [33m38ce5c38[m add failing test case
+* [33m05166898[m revert to using `tape` for testing
+* [33m6e7c30cb[m add a test for planned async assertion
+* [33m694b2687[m ensure there's an error before calling `err.toString`
+* [33mca3bb7d1[m Various improvements
+* [33ma503e9f4[m use `fn-name` module
+* [33m5853521e[m try reading the `fn.displayName` if no test title is supplied
+* [33m93228e94[m Add support for directories in CLI
+* [33m3c69b21e[m Add support for globbing in CLI
+* [33m5a60efa9[m Minor tweaks
+* [33md71bd670[m Add `.pass()` method for generating passing assertions
+* [33m8258c17d[m Add tests for running functions after last assertion
+* [33mfd649abf[m Add `.throws()` and `.doesNotThrow()` methods
+* [33m45e935f4[m Add `.notSame()` method for falsy deep testing
+* [33m352f392f[m Dogfood tests
+* [33m0757968d[m Add assertion methods and code comments
+* [33me7a6ab1d[m add kevva
+* [33m1089a87c[m init

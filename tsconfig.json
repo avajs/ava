@@ -1,13 +1,12 @@
 {
-	"extends": "@sindresorhus/tsconfig",
-	"compilerOptions": {
-		// See <https://github.com/microsoft/TypeScript/issues/50544>. This does not
-		// seem solved with 4.8.3.
-		"forceConsistentCasingInFileNames": false,
-	},
-	"include": [
-		"test",
-		"test-tap",
-		"test-types"
-	]
+        "extends": "@sindresorhus/tsconfig",
+        "compilerOptions": {
+                "forceConsistentCasingInFileNames": false,
+                "rootDir": "./test"
+        },
+        "include": [
+                "test",
+                "test-tap",
+                "test-types"
+        ]
 }
