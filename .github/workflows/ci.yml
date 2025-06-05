@@ -1,4 +1,5 @@
 name: Install and test AVA
+
 on:
   push:
     branches:
@@ -8,7 +9,7 @@ on:
       - "*.md"
       - "docs/**"
       - "media/**"
-  workflow_dispatch: # 🔥 Allows manual workflow execution
+  workflow_dispatch: # 🔥 Allows manual triggering
 
 jobs:
   nodejs:
@@ -69,13 +70,13 @@ jobs:
         run: npm install typescript@${{ matrix.ts-version }}
 
       - name: Verify TypeScript version
-        run: ./node_modules/typescript/bin/tsc --version
+        run: npx tsc --version
 
       - name: Check TypeScript compilation
-        run: ./node_modules/typescript/bin/tsc --noEmit
+        run: npx tsc --noEmit
 
   lockfile_churn:
-    name: Test package-lock for unexpected modifications
+    name: Verify package-lock integrity
     runs-on: ubuntu-latest
 
     steps:
