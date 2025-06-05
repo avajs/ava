@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import test from '@ava/test';
+import test from 'ava';
 import sinon from 'sinon';
 
 import {loadConfig} from '../../lib/load-config.js';

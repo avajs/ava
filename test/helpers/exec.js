@@ -3,7 +3,7 @@ import path from 'node:path';
 import {Writable} from 'node:stream';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 
-import test from '@ava/test';
+import test from 'ava';
 import {execaNode} from 'execa';
 
 const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));

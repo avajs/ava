@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import test from '@ava/test';
+import test from 'ava';
 import {mainSymbols, fallbackSymbols} from 'figures';
 
 import {cwd, fixture} from '../helpers/exec.js';

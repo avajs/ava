@@ -1,4 +1,4 @@
-import test from '@ava/test';
+import test from 'ava';
 
 import {cwd} from '../helpers/exec.js';
 

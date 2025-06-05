@@ -1,7 +1,7 @@
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
 
-import test from '@ava/test';
+import test from 'ava';
 
 import {set as setChalk} from '../../lib/chalk.js';
 import {load} from '../../lib/snapshot-manager.js';

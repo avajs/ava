@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {gunzipSync} from 'node:zlib';
 
-import test from '@ava/test';
+import test from 'ava';
 
 import {extractCompressedSnapshot} from '../../lib/snapshot-manager.js';
 import {cwd, fixture} from '../helpers/exec.js';

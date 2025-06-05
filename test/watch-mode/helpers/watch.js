@@ -3,7 +3,7 @@ import path from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
 
-import ava from '@ava/test';
+import ava from 'ava';
 import {temporaryDirectoryTask} from 'tempy';
 
 import {available} from '../../../lib/watcher.js';
