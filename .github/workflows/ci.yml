@@ -8,6 +8,7 @@ on:
       - "*.md"
       - "docs/**"
       - "media/**"
+  workflow_dispatch: # 🔥 Allows manual workflow execution
 
 jobs:
   nodejs:
