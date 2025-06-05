@@ -1,9 +1,8 @@
 {
-  "extends": "@sindresorhus/tsconfig",
+  "extends": "./configs/tsconfig.json",
   "compilerOptions": {
     "forceConsistentCasingInFileNames": false,
-    "rootDir": "./test",
-    "noUncheckedSideEffectImports": false
+    "rootDir": "./test"
   },
   "include": [
     "test",
