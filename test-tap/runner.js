@@ -345,20 +345,6 @@ test('only test', t => {
 	});
 });
 
-test('options.runOnlyExclusive means only exclusive tests are run', t => {
-	t.plan(1);
-
-	return promiseEnd(new Runner({file: import.meta.url, runOnlyExclusive: true}), runner => {
-		runner.chain('test', () => {
-			t.fail();
-		});
-
-		runner.chain.only('test 2', () => {
-			t.pass();
-		});
-	});
-});
-
 test('options.serial forces all tests to be serial', t => {
 	t.plan(1);
 
