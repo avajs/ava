@@ -1,5 +1,4 @@
-'use strict';
-const test = require('ava');
+import test from 'ava';
 
 test('foo will run', t => {
 	t.pass();

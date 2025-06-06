@@ -1,10 +1,10 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, {type TestFn} from 'ava';
 
-import {concat} from '.';
+import {concat} from './index.js';
 
-const test = anyTest as TestInterface<{sort: (a: string, b: string) => number}>;
+const test = anyTest as TestFn<{sort: (a: string, b: string) => number}>;
 
-test.beforeEach(t => {
+test.before(t => {
 	t.context = {
 		sort: (a: string, b: string) => a.localeCompare(b)
 	};

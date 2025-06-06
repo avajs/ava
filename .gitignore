@@ -5,3 +5,4 @@
 /test-tap/**/node_modules/
 /test/**/fixtures/**/node_modules/*/
 /examples/**/node_modules/
+/examples/**/package-lock.json
