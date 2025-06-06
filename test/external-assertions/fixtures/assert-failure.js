@@ -3,9 +3,9 @@ import assert from 'node:assert';
 import test from 'ava';
 
 test('test', () => {
-	assert(false);
+	assert.ok(false);
 });
 
 test('test async', async () => {
-	assert(await Promise.resolve(false));
+	assert.ok(await Promise.resolve(false));
 });

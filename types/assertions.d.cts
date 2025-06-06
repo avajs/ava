@@ -143,7 +143,7 @@ export type Assertions = {
 	truthy: TruthyAssertion;
 };
 
-type FalsyValue = false | 0 | 0n | '' | null | undefined; // eslint-disable-line @typescript-eslint/ban-types
+type FalsyValue = false | 0 | 0n | '' | undefined;
 type Falsy<T> = T extends Exclude<T, FalsyValue> ? (T extends number | string | bigint ? T & FalsyValue : never) : T;
 
 export type AssertAssertion = {

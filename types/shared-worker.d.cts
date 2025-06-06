@@ -2,7 +2,7 @@ export namespace SharedWorker {
 	export type ProtocolIdentifier = 'ava-4';
 
 	export type FactoryOptions = {
-		negotiateProtocol <Data = unknown>(supported: readonly ['ava-4']): Protocol<Data>;
+		negotiateProtocol<Data = unknown>(supported: readonly ['ava-4']): Protocol<Data>;
 		// Add overloads for additional protocols.
 	};
 
