@@ -8,8 +8,10 @@ test('prints results and instructions', withFixture('basic'), async (t, fixture)
 			process.send('abort-watcher');
 			const {stdout} = await process;
 			t.regex(stdout, /\d+ tests? passed/);
-			t.regex(stdout, /Type `r` and press enter to rerun tests/);
-			t.regex(stdout, /Type `u` and press enter to update snapshots/);
+			t.regex(stdout, /Type `g` followed by enter to filter test files by a glob pattern/);
+			t.regex(stdout, /Type `m` followed by enter to filter tests by their title/);
+			t.regex(stdout, /Type `r` followed by enter to rerun tests/);
+			t.regex(stdout, /Type `u` followed by enter to update snapshots/);
 			this.done();
 		},
 	});

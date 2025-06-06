@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^18.18, ^20.8, ^22, ^23]
+        node-version: [^18.18, ^20.8, ^22, ^24]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~5.2, ~5.3, ~5.4, ~5.5, ~5.6]
+        ts-version: [~5.2, ~5.3, ~5.4, ~5.5, ~5.6, ~5.7, ~5.8]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
