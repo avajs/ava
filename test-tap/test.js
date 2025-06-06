@@ -6,7 +6,7 @@ import ciInfo from 'ci-info';
 import sinon from 'sinon';
 import {test} from 'tap';
 
-import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-import
 import * as snapshotManager from '../lib/snapshot-manager.js';
 import Test from '../lib/test.js';
 import {set as setOptions} from '../lib/worker/options.cjs';
@@ -466,8 +466,7 @@ test('assertions are bound', t =>
 		(a.notRegex)('bar', /foo/);
 	}).run().then(result => {
 		t.ok(result.passed);
-	}),
-);
+	}));
 
 // Snapshots reused from test/assert.js
 test('snapshot assertion can be skipped', t => {

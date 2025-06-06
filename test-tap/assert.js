@@ -29,12 +29,12 @@ const AssertionsBase = class extends assert.Assertions {
 				return true;
 			},
 			pending(promise) {
-				promise.then(() => {
-					lastPassed = true;
-				}, error => {
+				promise.catch(error => {
 					if (error.name !== 'AssertionFailed') {
 						lastFailure = error;
 					}
+				}).then(() => {
+					lastPassed = true;
 				});
 			},
 			fail(error) {
@@ -287,8 +287,7 @@ test('.is()', t => {
 
 	fails(t, () =>
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), 'foo'),
-	);
+		assertions.is(new String('foo'), 'foo'));
 
 	fails(t, () => assertions.is(null, undefined));
 
@@ -298,8 +297,7 @@ test('.is()', t => {
 
 	fails(t, () =>
 		// eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins
-		assertions.is(new String('foo'), new String('foo')),
-	);
+		assertions.is(new String('foo'), new String('foo')));
 
 	fails(t, () => assertions.is(0, null));
 
@@ -514,16 +512,16 @@ test('.deepEqual()', t => {
 	fails(t, () => assertions.deepEqual(() => {}, () => {}));
 
 	passes(t, () => assertions.deepEqual(undefined, undefined)
-            && assertions.deepEqual({x: undefined}, {x: undefined})
-            && assertions.deepEqual({x: [undefined]}, {x: [undefined]}));
+		&& assertions.deepEqual({x: undefined}, {x: undefined})
+		&& assertions.deepEqual({x: [undefined]}, {x: [undefined]}));
 
 	passes(t, () => assertions.deepEqual(null, null)
-            && assertions.deepEqual({x: null}, {x: null})
-            && assertions.deepEqual({x: [null]}, {x: [null]}));
+		&& assertions.deepEqual({x: null}, {x: null})
+		&& assertions.deepEqual({x: [null]}, {x: [null]}));
 
 	passes(t, () => assertions.deepEqual(0, 0)
-            && assertions.deepEqual(1, 1)
-            && assertions.deepEqual(3.14, 3.14));
+		&& assertions.deepEqual(1, 1)
+		&& assertions.deepEqual(3.14, 3.14));
 
 	fails(t, () => assertions.deepEqual(0, 1));
 
@@ -1578,7 +1576,7 @@ test('.truthy()', t => {
 	});
 
 	passes(t, () => assertions.truthy(1)
-            && assertions.truthy(true));
+		&& assertions.truthy(true));
 
 	passes(t, () => assertions.truthy(1) && assertions.truthy(true));
 
@@ -1608,10 +1606,10 @@ test('.falsy()', t => {
 	});
 
 	passes(t, () => assertions.falsy(0)
-            && assertions.falsy(false));
+		&& assertions.falsy(false));
 
 	passes(t, () => assertions.falsy(0)
-            && assertions.falsy(false));
+		&& assertions.falsy(false));
 
 	failsWith(t, () => assertions.falsy(false, null), {
 		assertion: 't.falsy()',
@@ -1829,7 +1827,7 @@ test('.assert()', t => {
 	});
 
 	passes(t, () => assertions.assert(1)
-            && assertions.assert(true));
+		&& assertions.assert(true));
 
 	passes(t, () => assertions.assert(1) && assertions.assert(true));
 

@@ -1,1 +1,1 @@
-require('../../entrypoints/main.cjs'); // eslint-disable-line import/no-unassigned-import
+require('../../entrypoints/main.cjs'); // eslint-disable-line import-x/no-unassigned-import

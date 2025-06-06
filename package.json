@@ -138,7 +138,7 @@
 		"tempy": "^3.1.0",
 		"tsd": "^0.32.0",
 		"typescript": "~5.8.3",
-		"xo": "^0.60.0",
+		"xo": "^1.0.5",
 		"zen-observable": "^0.10.0"
 	},
 	"peerDependencies": {

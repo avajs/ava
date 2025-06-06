@@ -41,7 +41,8 @@ test('test title should be normalized in stdout', async t => {
 				.replaceAll(os.EOL, '\n')
 				.replaceAll(mainSymbols.info, fallbackSymbols.info)
 				.replaceAll(mainSymbols.tick, fallbackSymbols.tick),
-			'stdout');
+			'stdout',
+		);
 	});
 });
 

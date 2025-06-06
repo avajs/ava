@@ -1,1 +1,1 @@
-global.SETUP_CALLED = true;
+globalThis.SETUP_CALLED = true;
