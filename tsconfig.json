@@ -1,12 +1,8 @@
 {
 	"extends": "@sindresorhus/tsconfig",
-	"compilerOptions": {
-		"forceConsistentCasingInFileNames": true
-	},
 	"include": [
 		"test",
 		"test-tap",
 		"test-types"
 	]
 }
-
