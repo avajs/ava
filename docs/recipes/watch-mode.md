@@ -34,6 +34,34 @@ export default {
 
 If your tests write to disk they may trigger the watcher to rerun your tests. Configuring additional ignore patterns helps avoid this.
 
+### Filter tests while watching
+
+You may also filter tests while watching by using the CLI. For example, after running
+
+```console
+npx ava --watch
+```
+
+You will see a prompt like this:
+
+```console
+ Type `g` followed by enter to filter test files by a glob pattern
+ Type `m` followed by enter to filter tests by their title
+ Type `r` followed by enter to rerun tests
+ Type `u` followed by enter to update snapshots in selected tests
+> 
+```
+
+So, to run only tests numbered like
+
+- foo23434
+- foo4343
+- foo93823
+
+You can type `m` and press enter, then type `foo*` and press enter. This will then run all tests that match that glob.
+
+Afterwards you can use the `r` command to run the matched tests again, or `a` command to run **all** tests.
+
 ## Dependency tracking
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
@@ -41,10 +69,6 @@ AVA tracks which source files your test files depend on. If you change such a de
 Dependency tracking works for `require()` and `import` syntax, as supported by [@vercel/nft](https://github.com/vercel/nft). `import()` is supported but dynamic paths such as `import(myVariable)` are not.
 
 Files accessed using the `fs` module are not tracked.
-
-## Watch mode and the `.only` modifier
-
-The [`.only` modifier] disables watch mode's dependency tracking algorithm. When a change is made, all `.only` tests will be rerun, regardless of whether the test depends on the changed file.
 
 ## Watch mode and CI
 
@@ -66,7 +90,6 @@ Sometimes watch mode does something surprising like rerunning all tests when you
 $ DEBUG=ava:watcher npx ava --watch
 ```
 
-[`chokidar`]: https://github.com/paulmillr/chokidar
 [Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
 [`.only` modifier]: ../01-writing-tests.md#running-specific-tests

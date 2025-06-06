@@ -1,8 +1,5 @@
 
 ---tty-stream-chunk-separator
-(node:14159) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
   [32m✔[39m a [90m[2m›[22m[39m a passes
 ---tty-stream-chunk-separator
   [32m✔[39m a [90m[2m›[22m[39m a passes two
@@ -15,9 +12,6 @@
   ◌ a [90m[2m›[22m[39m a slow
   ◌ a [90m[2m›[22m[39m a slow two
 
----tty-stream-chunk-separator
-(node:14160) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
   [32m✔[39m b [90m[2m›[22m[39m b passes
 ---tty-stream-chunk-separator

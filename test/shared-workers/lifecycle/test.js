@@ -7,6 +7,6 @@ test('availability', async t => {
 });
 
 test('teardown', async t => {
-	const result = await fixture('teardown.js');
+	const result = await fixture(['teardown.js']);
 	t.true(result.stderr.includes('TEARDOWN CALLED'));
 });

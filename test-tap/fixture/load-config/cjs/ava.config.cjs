@@ -1,3 +1,5 @@
-module.exports = ({projectDir}) => ({
+const configFactory = ({projectDir}) => ({
 	files: projectDir,
 });
+
+module.exports = configFactory;

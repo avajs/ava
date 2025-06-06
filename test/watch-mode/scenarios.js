@@ -95,24 +95,6 @@ test('runs test file when source it depends on is deleted', withFixture('basic')
 	});
 });
 
-test('once test files containing .only() tests are encountered, always run those, but exclusively the .only tests', withFixture('exclusive'), async (t, fixture) => {
-	await fixture.watch({
-		async 1({stats}) {
-			t.is(stats.failed.length, 2);
-			t.is(stats.passed.length, 3);
-			const contents = await this.read('a.test.js');
-			await this.write('a.test.js', contents.replace('test(\'pass', 'test.only(\'pass'));
-			return stats.passed.filter(({file}) => file !== 'c.test.js');
-		},
-		async 2({stats}, passed) {
-			t.is(stats.failed.length, 0);
-			t.is(stats.passed.length, 2);
-			t.deepEqual(stats.passed, passed);
-			this.done();
-		},
-	});
-});
-
 test('filters test files', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1({stats}) {

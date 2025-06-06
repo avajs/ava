@@ -1,8 +1,5 @@
 TAP version 13
 ---tty-stream-chunk-separator
-(node:14113) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
 not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
@@ -11,9 +8,6 @@ not ok 1 - TypeError: test.serial.test is not a function
   ...
 ---tty-stream-chunk-separator
 not ok 2 - bad-test-chain.cjs exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-(node:14116) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
 not ok 3 - nested-objects › format with max depth 4
   ---
@@ -57,9 +51,6 @@ not ok 4 - nested-objects › format like with max depth 4
     at: 'ExecutionContext.like (/lib/assert.js:391:15)'
   ...
 ---tty-stream-chunk-separator
-(node:14118) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
 # output-in-hook › before hook
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
@@ -99,9 +90,6 @@ not ok 6 - output-in-hook › failing test
 # output-in-hook › cleanup
 ---tty-stream-chunk-separator
 #   afterAlways
----tty-stream-chunk-separator
-(node:14120) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
 ok 7 - test › skip # SKIP
 ---tty-stream-chunk-separator
@@ -158,9 +146,6 @@ not ok 15 - test › implementation throws non-error
     message: Error thrown in test
     at: 'Test.run (/lib/test.js:546:25)'
   ...
----tty-stream-chunk-separator
-(node:14123) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
 not ok 16 - traces-in-t-throws › throws
   ---
@@ -231,9 +216,6 @@ not ok 20 - traces-in-t-throws › throwsAsync different error
       (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)
   ...
 ---tty-stream-chunk-separator
-(node:14125) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
----tty-stream-chunk-separator
 ok 21 - uncaught-exception › passes
 ---tty-stream-chunk-separator
 not ok 22 - Error: Can’t catch me
@@ -246,9 +228,6 @@ not ok 22 - Error: Can’t catch me
   ...
 ---tty-stream-chunk-separator
 not ok 23 - uncaught-exception.cjs exited with a non-zero exit code: 1
----tty-stream-chunk-separator
-(node:14127) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 ---tty-stream-chunk-separator
 ok 24 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
