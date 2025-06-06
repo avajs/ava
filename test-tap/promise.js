@@ -1,6 +1,6 @@
 import {test} from 'tap';
 
-import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-import
 import Test from '../lib/test.js';
 import {set as setOptions} from '../lib/worker/options.cjs';
 
@@ -111,9 +111,9 @@ test('reject', t => ava(a => fail().then(() => {
 	t.match(result.error.formattedDetails[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
 }));
 
-test('reject with non-Error', t => ava(() =>
-	Promise.reject('failure'), // eslint-disable-line prefer-promise-reject-errors
-).run().then(result => {
+test('reject with non-Error', t => ava(async () => {
+	throw 'failure'; // eslint-disable-line no-throw-literal
+}).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
 	t.equal(result.error.message, 'Rejected promise returned by test');

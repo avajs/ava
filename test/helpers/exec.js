@@ -114,10 +114,10 @@ export async function * exec(args, options) {
 
 	let runCount = 0;
 	const statusEvents = execaProcess.getEachMessage();
-	const done = execaProcess.then(result => ({execa: true, result}), error => { // eslint-disable-line promise/prefer-await-to-then
+	const done = execaProcess.catch(error => { // eslint-disable-line promise/prefer-await-to-then
 		sortStats(stats);
 		throw Object.assign(error, {stats, runCount});
-	});
+	}).then(result => ({execa: true, result})); // eslint-disable-line promise/prefer-await-to-then
 
 	while (true) {
 		const item = await Promise.race([done, statusEvents.next()]); // eslint-disable-line no-await-in-loop

@@ -50,7 +50,7 @@ test('no test selected by line number', async t => {
 });
 
 test('parent call is not selected', async t => {
-	const result = await t.throwsAsync(fixture(['line-numbers.js:23']));
+	const result = await t.throwsAsync(fixture(['line-numbers.js:22']));
 
 	t.snapshot(cleanOutput(result.stdout), 'fails with message');
 });

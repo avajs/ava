@@ -75,7 +75,8 @@ test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 	t.true(conf.failFast);
 });
 
-test.serial('finds unsupported configs',
+test.serial(
+	'finds unsupported configs',
 	ok({
 		fixture: 'unsupported-configs',
 	}),

@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
 
-import './helper/chalk0.js'; // eslint-disable-line import/no-unassigned-import
+import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-import
 import ContextRef from '../lib/context-ref.js';
 import * as snapshotManager from '../lib/snapshot-manager.js';
 import Test from '../lib/test.js';

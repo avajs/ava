@@ -1,10 +1,10 @@
-import test, { registerCompletionHandler } from 'ava'
+import test, {registerCompletionHandler} from 'ava';
 
 registerCompletionHandler(() => {
-	console.error('one')
-})
+	console.error('one');
+});
 registerCompletionHandler(() => {
-	console.error('two')
-})
+	console.error('two');
+});
 
-test('pass', t => t.pass())
+test('pass', t => t.pass());
