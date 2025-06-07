@@ -3,6 +3,17 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g., v1.2.3)'
+        required: true
+        type: string
+      skip_ci_check:
+        description: 'Skip CI status check'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -17,17 +28,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
+
+      - name: Check CI status
+        if: ${{ !inputs.skip_ci_check }}
+        run: |
+          # Check if CI has completed successfully for this commit
+          RESULT=$(gh run list --commit ${{ github.sha }} --status success --json conclusion,workflowName | jq '.[]|select(.workflowName == "Install and test AVA")')
+          if [ -z "$RESULT" ]; then
+            echo "CI has not completed successfully for this commit"
+            exit 1
+          fi
+          echo "All CI checks have passed!"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify tag matches package.json version
         run: |
           PACKAGE_VERSION=$(jq -r '.version' package.json)
-          TAG_VERSION=${{ github.ref_name }}
-          TAG_VERSION=${TAG_VERSION#v}
+          TAG_VERSION=${RELEASE_TAG#v}
           if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
             echo "Package version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
             exit 1
           fi
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
 
       - name: Setup Node.js
@@ -37,20 +63,6 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
-        run: npm install --no-audit
-
-      - name: Run tests
-        run: ./scripts/ci.sh
-        shell: bash
-
-      - name: Upload code coverage
-        uses: codecov/codecov-action@v4
-        with:
-          files: coverage/lcov.info
-          name: release-${{ github.ref_name }}
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: Publish to npm with provenance
         run: npm publish --provenance
         env:
@@ -58,9 +70,10 @@ jobs:
 
       - name: Create GitHub Release
         run: |
-          gh release create ${{ github.ref_name }} \
-            --title "${{ github.ref_name }}" \
+          gh release create "$RELEASE_TAG" \
+            --title "$RELEASE_TAG" \
             --draft \
             --generate-notes
         env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

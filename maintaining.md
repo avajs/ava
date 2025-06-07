@@ -45,9 +45,9 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 
 ## Release process
 
-Use `npm version` with the correct increment and push the resulting tag and `main` branch.
-
-Approve the Release workflow within GitHub. The workflow includes npm provenance for enhanced security and supply chain transparency.
+* Use `npm version` with the correct increment and push the resulting tag and `main` branch.
+* CI will run against the tag. Wait for this to complete.
+* Approve the Release workflow within GitHub. The workflow includes npm provenance for enhanced security and supply chain transparency.
 
 ### Setup Requirements
 
