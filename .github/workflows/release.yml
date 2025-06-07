@@ -1,0 +1,79 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g., v1.2.3)'
+        required: true
+        type: string
+      skip_ci_check:
+        description: 'Skip CI status check'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - name: Check CI status
+        if: ${{ !inputs.skip_ci_check }}
+        run: |
+          # Check if CI has completed successfully for this commit
+          RESULT=$(gh run list --commit ${{ github.sha }} --status success --json conclusion,workflowName | jq '.[]|select(.workflowName == "Install and test AVA")')
+          if [ -z "$RESULT" ]; then
+            echo "CI has not completed successfully for this commit"
+            exit 1
+          fi
+          echo "All CI checks have passed!"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify tag matches package.json version
+        run: |
+          PACKAGE_VERSION=$(jq -r '.version' package.json)
+          TAG_VERSION=${RELEASE_TAG#v}
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "Package version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
+            exit 1
+          fi
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm with provenance
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "$RELEASE_TAG" \
+            --title "$RELEASE_TAG" \
+            --draft \
+            --generate-notes
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

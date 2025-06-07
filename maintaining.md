@@ -7,26 +7,28 @@
 ## Testing
 
 * `npm test`: Lint the code and run the entire test suite with coverage.
-* `npx tap test-tap/fork.js --bail`: Run a specific test file and bail on the first failure (useful when hunting bugs).
-* `npx test-ava test/{file}.js`: Run self-hosted tests.
+* `npx test-ava`: Run self-hosted tests from `test/`. Wraps a stable version of AVA.
+* `npx tap`: Run legacy tests from `test-tap/`.
+
+Note that in CI we only run linting with the Node.js version set in the `package.json` file under the `"volta"` key.
 
 ## CI
 
-* Tests sometimes fail on Windows. Review the errors carefully.
-* At least one Windows job must pass.
-* All other jobs must pass.
+We test across Linux, macOS and Windows, across all supported Node.js versions. The occasional failure in a specific environment is to be expected. If jobs fail, review carefully.
+
+TypeScript jobs should all pass.
 
 ## Updating dependencies
 
 * Make sure new dependency versions are compatible with our supported Node.js versions.
-* Leave the TypeScript dependency as it is, to avoid accidental breakage.
+* TypeScript dependency changes require CI changes to ensure backwards compatibility, see below.
 * Open a PR with the updates and only merge when CI passes (see the previous section).
 
 ## Updating TypeScript
 
 TypeScript itself does not follow SemVer. Consequently we may have to make changes to the type definition that, technically, are breaking changes for users with an older TypeScript version. That's OK, but we should be aware.
 
-Only update the TypeScript dependency when truly necessary. This helps avoid accidental breakage. For instance we won't accidentally rely on newer TypeScript features.
+When updating the TypeScript dependency, *also* add it to the CI workflow. This enables us to do typechecking with previous TypeScript versions and avoid unintentional breakage. For instance we won't accidentally rely on newer TypeScript features.
 
 Speaking of, using newer TypeScript features could be considered a breaking change. This needs to be assessed on a case-by-case basis.
 
@@ -34,7 +36,7 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 
 * New features should come with tests and documentation.
 * Ensure the [contributing guidelines](.github/CONTRIBUTING.md) are followed.
-* Squash commits when merging.
+* Usually we squash commits when merging. Rebases may sometimes be appropriate.
 
 ## Experiments
 
@@ -43,9 +45,12 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 
 ## Release process
 
-* Update dependencies (see the previous section).
-* If [necessary](docs/support-statement.md), update the `engines` field in `package.json`.
-	* Remove unsupported (or soon to be) Node.js versions.
-	* When doing a major version bump, make sure to require the latest releases of each supported Node.js version.
-* Publish a new version using [`np`](https://github.com/sindresorhus/np) with a version number according to [SemVer](https://semver.org).
-* Write a [release note](https://github.com/avajs/ava/releases/new) following the style of previous release notes.
+* Use `npm version` with the correct increment and push the resulting tag and `main` branch.
+* CI will run against the tag. Wait for this to complete.
+* Approve the Release workflow within GitHub. The workflow includes npm provenance for enhanced security and supply chain transparency.
+
+### Setup Requirements
+
+For the automated workflows to work, the following secrets must be configured in the repository:
+
+- `NPM_TOKEN`: An npm automation token with publish permissions to the AVA package, within the `npm` environment
