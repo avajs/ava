@@ -3,7 +3,10 @@
 	"version": "6.4.0",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
-	"repository": "avajs/ava",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/avajs/ava.git"
+	},
 	"homepage": "https://avajs.dev",
 	"bin": {
 		"ava": "entrypoints/cli.mjs"
