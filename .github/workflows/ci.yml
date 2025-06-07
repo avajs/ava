@@ -10,6 +10,9 @@ on:
       - "*.md"
       - "docs/**"
       - "media/**"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
   nodejs:
     name: Node.js
