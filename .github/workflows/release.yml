@@ -57,12 +57,12 @@ jobs:
 
       - name: Verify tag matches package.json version
         run: |
-          PACKAGE_VERSION=$(jq -r '.version' package.json)
-          TAG_VERSION=${RELEASE_TAG#v}
-          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-            echo "Package version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
-            exit 1
-          fi
+          jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
+            if (.version == ($tag | ltrimstr("v"))) then
+              "Package version (\(.version)) matches tag version (\($tag | ltrimstr("v")))"
+            else
+              "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
+            end' package.json
         env:
           RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
