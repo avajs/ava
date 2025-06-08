@@ -31,6 +31,17 @@ jobs:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
 
+      - name: Verify commit is in main branch
+        run: |
+          # Check if the tagged commit is included in the main branch
+          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+            echo "Tagged commit is properly included in main branch"
+          else
+            echo "Tagged commit is not included in the main branch"
+            echo "Please push the commit to main before releasing"
+            exit 1
+          fi
+
       - name: Check CI status
         if: ${{ !inputs.skip_ci_check }}
         run: |
