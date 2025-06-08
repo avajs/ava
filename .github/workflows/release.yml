@@ -31,6 +31,17 @@ jobs:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
 
+      - name: Verify tag matches package.json version
+        run: |
+          jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
+            if (.version == ($tag | ltrimstr("v"))) then
+              "Package version (\(.version)) matches tag version (\($tag | ltrimstr("v")))"
+            else
+              "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
+            end' package.json
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
       - name: Verify commit is in main branch
         run: |
           # Check if the tagged commit is included in the main branch
@@ -54,18 +65,6 @@ jobs:
             end'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Verify tag matches package.json version
-        run: |
-          jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
-            if (.version == ($tag | ltrimstr("v"))) then
-              "Package version (\(.version)) matches tag version (\($tag | ltrimstr("v")))"
-            else
-              "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
-            end' package.json
-        env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
