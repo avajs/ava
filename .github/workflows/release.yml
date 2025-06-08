@@ -31,30 +31,40 @@ jobs:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
 
+      - name: Verify tag matches package.json version
+        run: |
+          jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
+            if (.version == ($tag | ltrimstr("v"))) then
+              "Package version (\(.version)) matches tag version (\($tag | ltrimstr("v")))"
+            else
+              "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
+            end' package.json
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+      - name: Verify commit is in main branch
+        run: |
+          # Check if the tagged commit is included in the main branch
+          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+            echo "Tagged commit is properly included in main branch"
+          else
+            echo "Tagged commit is not included in the main branch"
+            echo "Please push the commit to main before releasing"
+            exit 1
+          fi
+
       - name: Check CI status
         if: ${{ !inputs.skip_ci_check }}
         run: |
           # Check if CI has completed successfully for this commit
-          RESULT=$(gh run list --commit ${{ github.sha }} --status success --json conclusion,workflowName | jq '.[]|select(.workflowName == "Install and test AVA")')
-          if [ -z "$RESULT" ]; then
-            echo "CI has not completed successfully for this commit"
-            exit 1
-          fi
-          echo "All CI checks have passed!"
+          gh run list --commit ${{ github.sha }} --status success --json workflowName | jq --raw-output --exit-status '
+            if any(.[]; .workflowName == "Install and test AVA") then
+              "All CI checks have passed!"
+            else
+              "CI has not completed successfully for this commit" | halt_error(1)
+            end'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Verify tag matches package.json version
-        run: |
-          PACKAGE_VERSION=$(jq -r '.version' package.json)
-          TAG_VERSION=${RELEASE_TAG#v}
-          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-            echo "Package version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
-            exit 1
-          fi
-        env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
