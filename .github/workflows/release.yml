@@ -20,27 +20,23 @@ permissions:
   id-token: write
 
 jobs:
-  release:
-    name: Release
+  check_release:
+    name: Check for release tag
     runs-on: ubuntu-latest
-    environment: npm
+    outputs:
+      proceed: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.check_tag.outputs.proceed }}
+      release_tag: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || steps.check_tag.outputs.release_tag }}
     steps:
       - name: Checkout
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
 
       - name: Check if release tag exists for this commit
+        if: github.event_name != 'workflow_dispatch'
         id: check_tag
         run: |
-          # For manual dispatch, we already know we should proceed
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "proceed=true" >> $GITHUB_OUTPUT
-            echo "release_tag=${{ inputs.tag }}" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
           # For push to main branch, check if a release tag points to this commit
           TAGS=$(git tag --points-at ${{ github.sha }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$' || true)
 
@@ -64,8 +60,20 @@ jobs:
           echo "proceed=true" >> $GITHUB_OUTPUT
           echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
 
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: check_release
+    if: needs.check_release.outputs.proceed == 'true'
+    environment: npm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          fetch-depth: 0
+
       - name: Verify tag matches package.json version
-        if: steps.check_tag.outputs.proceed == 'true'
         run: |
           jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
             if (.version == ($tag | ltrimstr("v"))) then
@@ -74,10 +82,10 @@ jobs:
               "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
             end' package.json
         env:
-          RELEASE_TAG: ${{ steps.check_tag.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.check_release.outputs.release_tag }}
 
       - name: Check CI status
-        if: ${{ steps.check_tag.outputs.proceed == 'true' && !inputs.skip_ci_check }}
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.skip_ci_check }}
         run: |
           # Check if CI has completed successfully for this commit
           gh run list --commit ${{ github.sha }} --status success --json workflowName | jq --raw-output --exit-status '
@@ -90,7 +98,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
-        if: steps.check_tag.outputs.proceed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
@@ -98,18 +105,16 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Publish to npm with provenance
-        if: steps.check_tag.outputs.proceed == 'true'
         run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
-        if: steps.check_tag.outputs.proceed == 'true'
         run: |
           gh release create "$RELEASE_TAG" \
             --title "$RELEASE_TAG" \
             --draft \
             --generate-notes
         env:
-          RELEASE_TAG: ${{ steps.check_tag.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.check_release.outputs.release_tag }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
