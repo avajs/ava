@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - 'main'
   workflow_dispatch:
     inputs:
       tag:
@@ -31,7 +31,41 @@ jobs:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
           fetch-depth: 0
 
+      - name: Check if release tag exists for this commit
+        id: check_tag
+        run: |
+          # For manual dispatch, we already know we should proceed
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "proceed=true" >> $GITHUB_OUTPUT
+            echo "release_tag=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # For push to main branch, check if a release tag points to this commit
+          TAGS=$(git tag --points-at ${{ github.sha }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$' || true)
+
+          if [[ -z "$TAGS" ]]; then
+            echo "No release tag found for commit ${{ github.sha }} on main branch"
+            echo "proceed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check for multiple tags and fail if found
+          TAG_COUNT=$(echo "$TAGS" | wc -l)
+          if [[ $TAG_COUNT -gt 1 ]]; then
+            echo "Multiple release tags found for this commit:"
+            echo "$TAGS"
+            echo "Please use workflow dispatch to specify which tag to release"
+            exit 1
+          fi
+
+          RELEASE_TAG="$TAGS"
+          echo "Found release tag: $RELEASE_TAG"
+          echo "proceed=true" >> $GITHUB_OUTPUT
+          echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+
       - name: Verify tag matches package.json version
+        if: steps.check_tag.outputs.proceed == 'true'
         run: |
           jq --raw-output --exit-status --arg tag "$RELEASE_TAG" '
             if (.version == ($tag | ltrimstr("v"))) then
@@ -40,21 +74,10 @@ jobs:
               "Package version (\(.version)) does not match tag version (\($tag | ltrimstr("v")))" | halt_error(1)
             end' package.json
         env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-
-      - name: Verify commit is in main branch
-        run: |
-          # Check if the tagged commit is included in the main branch
-          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
-            echo "Tagged commit is properly included in main branch"
-          else
-            echo "Tagged commit is not included in the main branch"
-            echo "Please push the commit to main before releasing"
-            exit 1
-          fi
+          RELEASE_TAG: ${{ steps.check_tag.outputs.release_tag }}
 
       - name: Check CI status
-        if: ${{ !inputs.skip_ci_check }}
+        if: ${{ steps.check_tag.outputs.proceed == 'true' && !inputs.skip_ci_check }}
         run: |
           # Check if CI has completed successfully for this commit
           gh run list --commit ${{ github.sha }} --status success --json workflowName | jq --raw-output --exit-status '
@@ -67,6 +90,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
+        if: steps.check_tag.outputs.proceed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
@@ -74,16 +98,18 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Publish to npm with provenance
+        if: steps.check_tag.outputs.proceed == 'true'
         run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
+        if: steps.check_tag.outputs.proceed == 'true'
         run: |
           gh release create "$RELEASE_TAG" \
             --title "$RELEASE_TAG" \
             --draft \
             --generate-notes
         env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          RELEASE_TAG: ${{ steps.check_tag.outputs.release_tag }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

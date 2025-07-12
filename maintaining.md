@@ -43,22 +43,22 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 
 ## Release process
 
-1. In the `main` branch, use `npm version` with the correct increment.
-1. Push the resulting tag (`git push --tags`).
-1. Wait for minimal CI checks to pass and push the `main` branch.
-1. Wait for full CI run to complete on the tag.
-1. The *Release* workflow will automatically run and publish to npm with provenance. It will also create a draft GitHub release.
+1. Create a release branch, then use `npm version` with the correct increment.
+1. Push the resulting tag (`git push --tags`) and create a pull request from the branch.
+1. Wait for full CI checks to pass on the pull request.
+1. Locally, merge the release branch into `main` using `git merge --ff-only`.
+1. Push `main`.
+1. The *Release* workflow will automatically run when the tagged commit is pushed to `main` and publish to npm with provenance. It will also create a draft GitHub release.
 1. Review and publish the [draft GitHub release](https://github.com/avajs/ava/releases).
 
 The *Release* workflow includes several safety checks:
 
 - Validates the tag version matches `package.json`
-- Verifies the tagged commit is included in the `main` branch
 - Confirms CI has passed for the commit
 
 ### Manual Release
 
-If CI fails for the tag and you're confident this is not due to a fault in the release, you can manually trigger the *Release* workflow:
+If CI fails and you're confident this is not due to a fault in the release, or if there are multiple tags pointing to the same commit, you can manually trigger the *Release* workflow:
 
 1. Go to the [*Release* workflow](https://github.com/avajs/ava/actions/workflows/release.yml)
 1. Click "Run workflow"
