@@ -90,7 +90,7 @@
 		"acorn": "^8.15.0",
 		"acorn-walk": "^8.3.4",
 		"ansi-styles": "^6.2.1",
-		"arrgv": "^1.0.2",
+		"args-tokenizer": "^0.3.0",
 		"arrify": "^3.0.0",
 		"callsites": "^4.2.0",
 		"cbor": "^10.0.9",
