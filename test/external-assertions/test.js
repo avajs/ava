@@ -8,6 +8,7 @@ const snapshotStdout = (t, stdout) => {
 	const normalized = stdout
 		.replaceAll('\r', '')
 		.replaceAll(/\/{3}/g, '//')
+    .replaceAll('×', '✘')
 		.replaceAll(/(\b)at.*\n/g, '$1at ---\n');
 
 	t.snapshot(normalized);
