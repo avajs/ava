@@ -1,7 +1,8 @@
 import childProcess from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath, stripVTControlCharacters} from 'node:url';
+import {fileURLToPath} from 'node:url';
+import {stripVTControlCharacters} from 'node:util';
 
 import ciInfo from 'ci-info';
 import {test} from 'tap';

@@ -1,5 +1,6 @@
 import path from 'node:path';
-import {fileURLToPath, stripVTControlCharacters} from 'node:url';
+import {fileURLToPath} from 'node:url';
+import {stripVTControlCharacters} from 'node:util';
 
 import {test} from 'tap';
 
