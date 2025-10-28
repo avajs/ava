@@ -8,7 +8,9 @@ const snapshotStdout = (t, stdout) => {
 	const normalized = stdout
 		.replaceAll('\r', '')
 		.replaceAll(/\/{3}/g, '//')
-    .replaceAll('×', '✘')
+		// Not sure how, but this Symbol may different on different system
+		// https://github.com/nodejs/node/blob/dec0213c834607e7721ee250d8c46ef9cd112efe/lib/internal/test_runner/reporter/utils.js#L21
+		.replaceAll('× ', '✘ ')
 		.replaceAll(/(\b)at.*\n/g, '$1at ---\n');
 
 	t.snapshot(normalized);
