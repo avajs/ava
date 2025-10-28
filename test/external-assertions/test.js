@@ -29,7 +29,7 @@ AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
 false == true
 
 AssertionError [ERR_ASSERTION]: false == true
-`.split('\n').map(line => line ? `  ${line}` : '').join('\n'),
+`.split('\n').map(line => line ? `  ${line}` : '').join('\n') + '\n',
 		);
 	}
 
