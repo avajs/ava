@@ -24,7 +24,8 @@ The expression evaluated to a falsy value:
 AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
 
   assert.ok(false)
-`.split('\n').map(line => line ? `  ${line}` : '').join('\n') + '\n',
+
+`.split('\n').map(line => line ? `  ${line}` : '').join('\n'),
 			`
 false == true
 
