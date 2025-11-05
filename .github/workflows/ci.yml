@@ -38,6 +38,7 @@ jobs:
         shell: bash
       - uses: codecov/codecov-action@v4
         with:
+          disable_search: true
           files: coverage/lcov.info
           name: ${{ matrix.os }}/${{ matrix.node-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
