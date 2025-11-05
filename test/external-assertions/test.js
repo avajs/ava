@@ -5,34 +5,10 @@ import test from '@ava/test';
 import {fixture} from '../helpers/exec.js';
 
 const snapshotStdout = (t, stdout) => {
-	let normalized = stdout
+	const normalized = stdout
 		.replaceAll('\r', '')
 		.replaceAll(/\/{3}/g, '//')
-		// Not sure how, but this Symbol may different on different system
-		// https://github.com/nodejs/node/blob/dec0213c834607e7721ee250d8c46ef9cd112efe/lib/internal/test_runner/reporter/utils.js#L21
-		.replaceAll('× ', '✘ ')
 		.replaceAll(/(\b)at.*\n/g, '$1at ---\n');
-
-	if (/^22\./.test(process.versions.node)) {
-		console.log({normalized});
-		normalized = normalized.replace(
-			`
-The expression evaluated to a falsy value:
-
-  assert.ok(false)
-
-AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
-
-  assert.ok(false)
-
-`.split('\n').map(line => line ? `  ${line}` : '').join('\n'),
-			`
-false == true
-
-AssertionError [ERR_ASSERTION]: false == true
-`.split('\n').map(line => line ? `  ${line}` : '').join('\n'),
-		);
-	}
 
 	t.snapshot(normalized);
 };
