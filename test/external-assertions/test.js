@@ -19,6 +19,7 @@ for (const [label, selector] of Object.entries({
 	'^20.11': /^20\.(1[1-9]\.|[2-9]\d\.)/,
 	'^22': /^22\./,
 	'^24': /^24\./,
+	'^25': /^25\./,
 })) {
 	// Tests need to be declared for all versions, so that snapshots can be
 	// updated by running `npx test-ava -u test/external-assertions/test.js` for
