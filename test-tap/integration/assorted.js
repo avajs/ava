@@ -2,9 +2,9 @@ import childProcess from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {stripVTControlCharacters} from 'node:util';
 
 import ciInfo from 'ci-info';
-import stripAnsi from 'strip-ansi';
 import {test} from 'tap';
 
 import {execCli} from '../helper/cli.js';
@@ -82,7 +82,7 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 test('--no-color disables formatting colors', t => {
 	execCli(['--no-color', 'formatting-color.cjs'], (error, stdout) => {
 		t.ok(error);
-		t.equal(stripAnsi(stdout), stdout);
+		t.equal(stripVTControlCharacters(stdout), stdout);
 		t.end();
 	});
 });
@@ -90,7 +90,7 @@ test('--no-color disables formatting colors', t => {
 test('--color enables formatting colors', t => {
 	execCli(['--color', 'formatting-color.cjs'], (error, stdout) => {
 		t.ok(error);
-		t.not(stripAnsi(stdout), stdout);
+		t.not(stripVTControlCharacters(stdout), stdout);
 		t.end();
 	});
 });

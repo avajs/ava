@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {stripVTControlCharacters} from 'node:util';
 
-import stripAnsi from 'strip-ansi';
 import {test} from 'tap';
 
 import * as assert from '../lib/assert.js';
@@ -70,8 +70,8 @@ function assertFailure(t, subset) {
 	if (subset.formattedDetails) {
 		t.equal(lastFailure.formattedDetails.length, subset.formattedDetails.length);
 		for (const [i, s] of lastFailure.formattedDetails.entries()) {
-			t.equal(stripAnsi(s.label), subset.formattedDetails[i].label);
-			t.match(stripAnsi(s.formatted), subset.formattedDetails[i].formatted);
+			t.equal(stripVTControlCharacters(s.label), subset.formattedDetails[i].label);
+			t.match(stripVTControlCharacters(s.formatted), subset.formattedDetails[i].formatted);
 		}
 	} else {
 		t.same(lastFailure.formattedDetails, []);
