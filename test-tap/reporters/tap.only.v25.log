@@ -1,0 +1,13 @@
+TAP version 13
+---tty-stream-chunk-separator
+ok 1 - a › only
+---tty-stream-chunk-separator
+ok 2 - b › passes
+---tty-stream-chunk-separator
+
+1..2
+# tests 2
+# pass 2
+# fail 0
+
+---tty-stream-chunk-separator

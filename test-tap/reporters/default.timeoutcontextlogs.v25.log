@@ -1,0 +1,38 @@
+
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a passes
+---tty-stream-chunk-separator
+  [32m✔[39m a [90m[2m›[22m[39m a passes two
+---tty-stream-chunk-separator
+  [31m[39m
+  [31m✘ Timed out while running tests[39m
+
+  2 tests were pending in a.cjs
+
+  ◌ a [90m[2m›[22m[39m a slow
+    [35mℹ[39m [90mthis slow test prints useful debug message just text[39m
+  ◌ a [90m[2m›[22m[39m a slow two
+    [35mℹ[39m [90manother useful debug message [90m{[39m[90m[39m
+      [90m  x: [33m5[39m[90m[90m,[39m[90m[39m
+      [90m[90m}[39m[90m[39m
+
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m a passes
+---tty-stream-chunk-separator
+  [32m✔[39m b [90m[2m›[22m[39m a passes two
+---tty-stream-chunk-separator
+  [31m[39m
+  [31m✘ Timed out while running tests[39m
+
+  2 tests were pending in b.cjs
+
+  ◌ b [90m[2m›[22m[39m a slow
+    [35mℹ[39m [90mhello world[39m
+  ◌ b [90m[2m›[22m[39m a slow two
+
+---tty-stream-chunk-separator
+  [90m─[39m
+
+  [32m4 tests passed[39m
+  [31m4 tests remained pending after a timeout[39m
+---tty-stream-chunk-separator
