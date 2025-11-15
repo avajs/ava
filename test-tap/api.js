@@ -33,6 +33,27 @@ const options = [
 ];
 
 for (const opt of options) {
+	test(`propagates glob errors - workerThreads: ${opt.workerThreads}`, async t => {
+		const invalidProjectDir = path.join(__dirname, 'fixture', 'fail-fast', 'single-file', 'test.cjs');
+		const api = await apiCreator({
+			...opt,
+			projectDir: invalidProjectDir,
+		});
+
+		const errors = [];
+		api.on('run', plan => {
+			plan.status.on('stateChange', event => {
+				if (event.type === 'internal-error') {
+					errors.push(event.err);
+				}
+			});
+		});
+
+		const runStatus = await api.run();
+		t.equal(runStatus.stats.internalErrors, 1);
+		t.equal(errors.length, 1);
+		t.match(errors[0].message, /cwd.*directory/);
+	});
 	test(`fail-fast mode - workerThreads: ${opt.workerThreads} - single file & serial`, async t => {
 		const api = await apiCreator({
 			...opt,
