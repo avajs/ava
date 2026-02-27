@@ -158,7 +158,7 @@ jobs:
                 input: {
                   branch: { repositoryNameWithOwner: $repo, branchName: "main" },
                   message: { headline: $headline },
-                  parentCommitId: $parentSha,
+                  expectedHeadOid: $parentSha,
                   fileChanges: {
                     additions: [
                       { path: "package.json", contents: ($pkgContent | @base64) },
