@@ -153,25 +153,23 @@ jobs:
             --rawfile pkgContent package.json \
             --rawfile lockContent package-lock.json \
             '{
-              branch: { repositoryNameWithOwner: $repo, branchName: "main" },
-              message: { headline: $headline },
-              parentCommitId: $parentSha,
-              fileChanges: {
-                additions: [
-                  { path: "package.json", contents: ($pkgContent | @base64) },
-                  { path: "package-lock.json", contents: ($lockContent | @base64) }
-                ]
-              }
-            }' > /tmp/commit-input.json
-
-          COMMIT_SHA=$(gh api graphql \
-            -f query='
-              mutation($input: CreateCommitOnBranchInput!) {
-                createCommitOnBranch(input: $input) {
-                  commit { oid }
+              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {
+                input: {
+                  branch: { repositoryNameWithOwner: $repo, branchName: "main" },
+                  message: { headline: $headline },
+                  parentCommitId: $parentSha,
+                  fileChanges: {
+                    additions: [
+                      { path: "package.json", contents: ($pkgContent | @base64) },
+                      { path: "package-lock.json", contents: ($lockContent | @base64) }
+                    ]
+                  }
                 }
-              }' \
-            --field input:json=@/tmp/commit-input.json \
+              }
+            }' > /tmp/request.json
+
+          COMMIT_SHA=$(gh api graphql --input /tmp/request.json \
             --jq '.data.createCommitOnBranch.commit.oid')
 
           echo "release_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
