@@ -143,6 +143,11 @@
 		"xo": "^1.2.3",
 		"zen-observable": "^0.10.0"
 	},
+	"overrides": {
+		"c8": {
+			"yargs": "^18.0.0"
+		}
+	},
 	"peerDependencies": {
 		"@ava/typescript": "*"
 	},
