@@ -122,7 +122,7 @@ jobs:
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{vars.LAUNCHBOT_ID}}
-          private-key: ${{secrets.LAUNCHBOT_PRIVATE_KEY_PRIVATE_KEY}}
+          private-key: ${{secrets.LAUNCHBOT_PRIVATE_KEY}}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -145,8 +145,24 @@ jobs:
         run: |
           RELEASE_TAG="v$(jq --raw-output .version package.json)"
           PARENT_SHA=$(git rev-parse HEAD)
-          PKG_CONTENT=$(base64 -w0 package.json)
-          LOCK_CONTENT=$(base64 -w0 package-lock.json)
+
+          jq --null-input \
+            --arg repo "$GITHUB_REPOSITORY" \
+            --arg parentSha "$PARENT_SHA" \
+            --arg headline "$RELEASE_TAG" \
+            --rawfile pkgContent package.json \
+            --rawfile lockContent package-lock.json \
+            '{
+              branch: { repositoryNameWithOwner: $repo, branchName: "main" },
+              message: { headline: $headline },
+              parentCommitId: $parentSha,
+              fileChanges: {
+                additions: [
+                  { path: "package.json", contents: ($pkgContent | @base64) },
+                  { path: "package-lock.json", contents: ($lockContent | @base64) }
+                ]
+              }
+            }' > /tmp/commit-input.json
 
           COMMIT_SHA=$(gh api graphql \
             -f query='
@@ -155,23 +171,7 @@ jobs:
                   commit { oid }
                 }
               }' \
-            --field input:json="$(jq --null-input \
-              --arg repo "$GITHUB_REPOSITORY" \
-              --arg parentSha "$PARENT_SHA" \
-              --arg headline "$RELEASE_TAG" \
-              --arg pkgContent "$PKG_CONTENT" \
-              --arg lockContent "$LOCK_CONTENT" \
-              '{
-                branch: { repositoryNameWithOwner: $repo, branchName: "main" },
-                message: { headline: $headline },
-                parentCommitId: $parentSha,
-                fileChanges: {
-                  additions: [
-                    { path: "package.json", contents: $pkgContent },
-                    { path: "package-lock.json", contents: $lockContent }
-                  ]
-                }
-              }')" \
+            --field input:json=@/tmp/commit-input.json \
             --jq '.data.createCommitOnBranch.commit.oid')
 
           echo "release_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
