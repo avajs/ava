@@ -90,8 +90,12 @@ export type TestFn<Context = unknown> = {
 	macro: MacroFn<Context>;
 	meta: Meta;
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
+	runIf: (condition: boolean) => TestFn<Context>;
 	serial: SerialFn<Context>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
+	skipIf: (condition: boolean) => TestFn<Context>;
 	todo: TodoFn;
 };
 
@@ -158,7 +162,11 @@ export type FailingFn<Context = unknown> = {
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
+	runIf: (condition: boolean) => FailingFn<Context>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
+	skipIf: (condition: boolean) => FailingFn<Context>;
 };
 
 export type HookSkipFn<Context = unknown> = {
@@ -198,7 +206,11 @@ export type SerialFn<Context = unknown> = {
 	beforeEach: BeforeFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
+	runIf: (condition: boolean) => SerialFn<Context>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
+	skipIf: (condition: boolean) => SerialFn<Context>;
 	todo: TodoFn;
 };
 

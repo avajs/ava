@@ -230,6 +230,64 @@ test('skip test', t => {
 	});
 });
 
+test('skipIf skips when condition is true, runs when false', t => {
+	t.plan(3);
+
+	const ran = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test' && evt.skip) {
+				t.pass(); // Skipped test emits selected-test with skip flag
+			}
+
+			if (evt.type === 'test-passed') {
+				t.pass(); // Non-skipped test passes
+			}
+		});
+
+		runner.chain.skipIf(true)('skipped', a => {
+			ran.push('skipped');
+			a.pass();
+		});
+
+		runner.chain.skipIf(false)('runs', a => {
+			ran.push('runs');
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(ran, ['runs']);
+	});
+});
+
+test('runIf runs when condition is true, skips when false', t => {
+	t.plan(3);
+
+	const ran = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.on('stateChange', evt => {
+			if (evt.type === 'selected-test' && evt.skip) {
+				t.pass();
+			}
+
+			if (evt.type === 'test-passed') {
+				t.pass();
+			}
+		});
+
+		runner.chain.runIf(false)('skipped', a => {
+			ran.push('skipped');
+			a.pass();
+		});
+
+		runner.chain.runIf(true)('runs', a => {
+			ran.push('runs');
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(ran, ['runs']);
+	});
+});
+
 test('tests must have a non-empty title)', t => {
 	t.plan(1);
 

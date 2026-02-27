@@ -117,6 +117,32 @@ You must specify the implementation function. You can use the `.skip` modifier w
 
 If the test is likely to be failing for a while, use `.failing()` instead.
 
+## Skipping tests conditionally
+
+Use `test.skipIf()` to skip a test based on a runtime condition. `test.runIf()` is the inverse: the test only runs when the condition is true.
+
+```js
+test.skipIf(process.platform === 'win32')('not on Windows', t => {
+	t.pass();
+});
+
+test.runIf(process.platform === 'linux')('Linux only', t => {
+	t.pass();
+});
+```
+
+These work with other modifiers like `.serial` and `.failing`:
+
+```js
+test.serial.skipIf(process.platform === 'win32')('serial, not on Windows', t => {
+	t.pass();
+});
+
+test.failing.skipIf(process.platform === 'win32')('expected failure, not on Windows', t => {
+	t.fail();
+});
+```
+
 ## Test placeholders ("todo")
 
 You can use the `.todo` modifier when you're planning to write a test. Like skipped tests these placeholders are shown in the output. They only require a title; you cannot specify the implementation function.
