@@ -355,7 +355,7 @@ test('fails if test ends while there are pending assertions', t => ava(a => {
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'Error');
-	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+	t.match(result.error.message, /Test finished, but an assertion is still pending\. Did you forget to await t\.throwsAsync\(\) or t\.notThrowsAsync\(\)\?/);
 }));
 
 test('fails if async test ends while there are pending assertions', t => ava(a => {
@@ -367,7 +367,7 @@ test('fails if async test ends while there are pending assertions', t => ava(a =
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'Error');
-	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+	t.match(result.error.message, /Test finished, but an assertion is still pending\. Did you forget to await t\.throwsAsync\(\) or t\.notThrowsAsync\(\)\?/);
 }));
 
 test('contextRef', t => {
