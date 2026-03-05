@@ -14,11 +14,9 @@ const snapshotStdout = (t, stdout) => {
 };
 
 for (const [label, selector] of Object.entries({
-	'^18': /^18\./,
-	'^20 < 20.11': /^20\.(\d\.|10\.)/,
-	'^20.11': /^20\.(1[1-9]\.|[2-9]\d\.)/,
-	'^22': /^22\./,
-	'^24': /^24\./,
+	'^20.19': /^20\.(19\.|[2-9]\d\.)/,
+	'^22.20': /^22\.(2\d\.|[3-9]\d\.)/,
+	'^24.12': /^24\.(1[2-9]\.|[2-9]\d\.)/,
 	'^25': /^25\./,
 })) {
 	// Tests need to be declared for all versions, so that snapshots can be

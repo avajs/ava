@@ -20,23 +20,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [^18.18, ^20.8, ^22, ^24, ^25]
+        node-version: [^20.19, ^22.20, ^24.12, ^25]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Enable symlinks
         if: matrix.os == 'windows-latest'
         run: |
           git config core.symlinks true
           git reset --hard
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm install --no-audit
       - run: ./scripts/ci.sh
         shell: bash
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           disable_search: true
           files: coverage/lcov.info
@@ -48,10 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts-version: [~5.2, ~5.3, ~5.4, ~5.5, ~5.6, ~5.7, ~5.8]
+        ts-version: [~5.9]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
           cache: npm
@@ -66,8 +66,8 @@ jobs:
     name: Test package-lock for unexpected modifications
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
           cache: npm
@@ -86,8 +86,8 @@ jobs:
     name: Install dependencies without using a lockfile
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
       - run: npm install --no-package-lock --no-audit
@@ -98,8 +98,8 @@ jobs:
     name: Lint source files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
           cache: npm

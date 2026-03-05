@@ -1,8 +1,11 @@
 {
 	"extends": "@sindresorhus/tsconfig",
+	"compilerOptions": {
+		"rootDir": "."
+	},
 	"include": [
 		"test",
 		"test-tap",
 		"test-types"
-	]
+	],
 }

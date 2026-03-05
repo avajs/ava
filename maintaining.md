@@ -43,30 +43,53 @@ Speaking of, using newer TypeScript features could be considered a breaking chan
 
 ## Release process
 
-1. Create a release branch, then use `npm version` with the correct increment.
-1. Push the resulting tag (`git push --tags`) and create a pull request from the branch.
-1. Wait for full CI checks to pass on the pull request.
-1. Locally, merge the release branch into `main` using `git merge --ff-only`.
-1. Push `main`.
-1. The *Release* workflow will automatically run when the tagged commit is pushed to `main` and publish to npm with provenance. It will also create a draft GitHub release.
-1. Review and publish the [draft GitHub release](https://github.com/avajs/ava/releases).
+Releases are triggered manually via the [*Release* workflow](https://github.com/avajs/ava/actions/workflows/release.yml).
 
-The *Release* workflow includes several safety checks:
+### Releasing a new version from `main`
 
-- Validates the tag version matches `package.json`
-- Confirms CI has passed for the commit
+1. Go to the [*Release* workflow](https://github.com/avajs/ava/actions/workflows/release.yml) and click "Run workflow".
+1. Set **ref** to the commit SHA that should be released (must be HEAD of `main`).
+1. Set **new version** to the desired `npm version` increment (e.g. `patch`, `minor`, `major`, or an explicit version like `1.2.3`).
+1. Leave **skip CI status check** unchecked unless you have a specific reason.
 
-### Manual Release
+The workflow will:
 
-If CI fails and you're confident this is not due to a fault in the release, or if there are multiple tags pointing to the same commit, you can manually trigger the *Release* workflow:
+- Validate that the commit is HEAD of `main` and that CI has passed for it.
+- Pause for manual approval in the [`npm` environment](https://github.com/avajs/ava/settings/environments).
+- After approval, re-verify the commit is still HEAD of `main`.
+- Then run `npm version` to update `package.json` and `package-lock.json`, commit the result, and push the commit and the resulting tag to `main`.
+- Publish to npm with provenance via OIDC, and create a draft GitHub release.
 
-1. Go to the [*Release* workflow](https://github.com/avajs/ava/actions/workflows/release.yml)
-1. Click "Run workflow"
-1. Enter the release tag (e.g., `v1.2.3`)
-1. Optionally check "Skip CI status check"
+### Releasing from an existing tag
 
-### Setup Requirements
+If a version tag already exists on `main` (e.g. `v1.2.3`):
 
-For the Release workflow to work, the `NPM_TOKEN` must be configured in the [`npm` environment](https://github.com/avajs/ava/settings/environments/7070437878/edit#environment-secrets).
+1. Go to the [*Release* workflow](https://github.com/avajs/ava/actions/workflows/release.yml) and click "Run workflow".
+1. Set **ref** to the existing tag (e.g. `v1.2.3`).
+1. Leave **new version** empty.
 
-This must be a granular automation token which can publish the AVA package. It must be set to expire after no more than 90 days.
+The workflow will verify that the tag matches the version in `package.json`, check CI, then publish and create a draft release after approval.
+
+### After the workflow completes
+
+Review and publish the [draft GitHub release](https://github.com/avajs/ava/releases).
+
+### Setup requirements
+
+The npm package must have [trusted publishing](https://docs.npmjs.com/generating-provenance-statements) configured for this repository and the `Release` workflow so that OIDC-based publishing works.
+
+The [`npm` environment](https://github.com/avajs/ava/settings/environments) must have at least one required reviewer configured to gate the publish step behind manual approval.
+
+#### GitHub App for bypassing branch rulesets
+
+The `main` branch has rulesets that prevent direct pushes, including from `GITHUB_TOKEN`. When releasing a new version from a commit ref, the workflow creates the version commit (updating `package.json` and `package-lock.json`) and the version tag via the GitHub API. The commit is created using a GitHub App token so that the App's identity can be granted a ruleset bypass, while the lightweight tag is created with `GITHUB_TOKEN`.
+
+The App must be configured with:
+
+- **Repository permissions:** Write access to the `package.json` and `package-lock.json` files
+- **Ruleset bypass** granted in the `main` branch ruleset settings
+
+Two repository configuration values are required:
+
+- **Variable** `LAUNCHBOT_ID` — the numeric App ID (found in the App's settings page)
+- **Secret** `LAUNCHBOT_PRIVATE_KEY` — the App's private key in PEM format
