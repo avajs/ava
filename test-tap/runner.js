@@ -775,3 +775,77 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 	});
 });
+
+test('options.seed shuffles concurrent tests deterministically', t => {
+	t.plan(1);
+
+	const order = [];
+	return promiseEnd(new Runner({file: import.meta.url, seed: 42}), runner => {
+		for (const name of ['alpha', 'bravo', 'charlie', 'delta', 'echo']) {
+			runner.chain(name, a => {
+				order.push(name);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		// With seed 42, the order should not be alphabetical (source order)
+		t.not(order.join(','), 'alpha,bravo,charlie,delta,echo', 'seed should shuffle concurrent tests');
+	});
+});
+
+test('options.seed produces reproducible order', t => {
+	t.plan(1);
+
+	const runs = [];
+	const runWithSeed = () => {
+		const order = [];
+		return promiseEnd(new Runner({file: import.meta.url, seed: 12_345}), runner => {
+			for (const name of ['one', 'two', 'three', 'four', 'five']) {
+				runner.chain(name, a => {
+					order.push(name);
+					a.pass();
+				});
+			}
+		}).then(() => order);
+	};
+
+	runWithSeed().then(first => {
+		runs.push(first);
+		return runWithSeed();
+	}).then(second => {
+		runs.push(second);
+		t.strictSame(runs[0], runs[1], 'same seed should produce same order');
+	});
+});
+
+test('options.seed does not shuffle serial tests', t => {
+	t.plan(1);
+
+	const order = [];
+	return promiseEnd(new Runner({file: import.meta.url, seed: 42}), runner => {
+		for (const name of ['first', 'second', 'third']) {
+			runner.chain.serial(name, a => {
+				order.push(name);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		t.strictSame(order, ['first', 'second', 'third'], 'serial tests should preserve source order');
+	});
+});
+
+test('without seed, concurrent tests run in source order', t => {
+	t.plan(1);
+
+	const order = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		for (const name of ['alpha', 'bravo', 'charlie']) {
+			runner.chain(name, a => {
+				order.push(name);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		t.strictSame(order, ['alpha', 'bravo', 'charlie'], 'without seed, tests should run in source order');
+	});
+});

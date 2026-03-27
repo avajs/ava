@@ -47,6 +47,28 @@ test('--match works', t => {
 	});
 });
 
+test('--seed randomizes test order and reports the seed', t => {
+	execCli(['--seed', '42'], {dirname: 'fixture/seed'}, (error, stdout) => {
+		t.error(error);
+		const output = stripVTControlCharacters(stdout);
+		t.match(output, /Randomized with --seed=42/);
+		t.match(output, /5 tests passed/);
+		t.end();
+	});
+});
+
+test('--seed produces same order on repeated runs', t => {
+	execCli(['--seed', '42', '--verbose'], {dirname: 'fixture/seed'}, (error1, stdout1) => {
+		t.error(error1);
+		execCli(['--seed', '42', '--verbose'], {dirname: 'fixture/seed'}, (error2, stdout2) => {
+			t.error(error2);
+			const clean = s => stripVTControlCharacters(s).split('\n').filter(l => l.match(/[√✔✓]\s/)).join('\n');
+			t.equal(clean(stdout1), clean(stdout2), 'same seed produces same test order');
+			t.end();
+		});
+	});
+});
+
 for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
 		execCli([tapFlag, 'test.cjs'], {dirname: 'fixture/tap'}, error => {

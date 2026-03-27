@@ -37,6 +37,8 @@ Options:
       --no-worker-threads  Don't use worker threads                    [boolean]
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
+      --seed               Seed for randomizing test order within files (use
+                           without value for random seed)               [number]
   -s, --serial             Run tests serially                          [boolean]
   -t, --tap                Generate TAP output                         [boolean]
   -T, --timeout            Set global timeout (milliseconds or human-readable,
@@ -145,6 +147,25 @@ test.only('boo will run but not exclusively', t => {
 	t.pass();
 });
 ```
+
+## Randomizing test order
+
+The `--seed` flag randomizes the execution order of concurrent tests within each file. This is useful for detecting hidden test dependencies — tests that accidentally rely on the side effects of other tests.
+
+Provide a specific seed for reproducible ordering:
+
+```console
+npx ava --seed=42
+```
+
+When a seed is used, AVA prints the seed value after the test run so you can reproduce the exact same order:
+
+```
+5 tests passed
+Randomized with --seed=42
+```
+
+Tests declared with `.serial` always run in source order regardless of the seed. Only concurrent tests are shuffled.
 
 ## Running tests at specific line numbers
 
