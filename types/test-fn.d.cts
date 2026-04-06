@@ -15,6 +15,7 @@ export type ExecutionContext<Context = unknown> = {
 
 	readonly log: LogFn;
 	readonly plan: PlanFn;
+	/** Declare a function to be run after the test has ended. */
 	readonly teardown: TeardownFn;
 	readonly timeout: TimeoutFn;
 	readonly try: TryFn<Context>;
@@ -90,10 +91,13 @@ export type TestFn<Context = unknown> = {
 	macro: MacroFn<Context>;
 	meta: Meta;
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
 	runIf: RunIfFn<TestFn<Context>>;
 	serial: SerialFn<Context>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
 	skipIf: SkipIfFn<TestFn<Context>>;
+	/** Declare a test that should be implemented later. */
 	todo: TodoFn;
 };
 
@@ -160,8 +164,10 @@ export type FailingFn<Context = unknown> = {
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
 	runIf: RunIfFn<FailingFn<Context>>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
 	skipIf: SkipIfFn<FailingFn<Context>>;
 };
 
@@ -205,9 +211,12 @@ export type SerialFn<Context = unknown> = {
 	beforeEach: BeforeFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
+	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
 	runIf: RunIfFn<SerialFn<Context>>;
 	skip: SkipFn<Context>;
+	/** Declare a test that is skipped when `condition` is true. */
 	skipIf: SkipIfFn<SerialFn<Context>>;
+	/** Declare a test that should be implemented later. */
 	todo: TodoFn;
 };
 
