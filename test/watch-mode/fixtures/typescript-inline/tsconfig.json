@@ -1,12 +1,12 @@
 {
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
+		"rootDir": "./src",
 		"outDir": "build",
+		"types": [
+			"@types/node",
+		],
 	},
-	"types": [
-		"node_modules/@types/node",
-		"../../../../node_modules/@types/node",
-	],
 	"include": [
 		"src"
 	],
