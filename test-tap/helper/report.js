@@ -101,7 +101,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		onlyFiles: true,
 		stats: false,
 		unique: true,
-	}).sort();
+	}).toSorted();
 	if (type !== 'watch') {
 		return api.run({files, filter}).then(() => {
 			reporter.endRun();
