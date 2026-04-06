@@ -146,6 +146,9 @@
 	"overrides": {
 		"c8": {
 			"yargs": "^18.0.0"
+		},
+		"test-exclude": {
+			"glob": ">=13"
 		}
 	},
 	"peerDependencies": {
