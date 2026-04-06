@@ -41,8 +41,8 @@ for (const opt of options) {
 
 		const tests = [];
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				if (evt.type === 'test-failed') {
 					tests.push({
 						ok: false,
@@ -83,8 +83,8 @@ for (const opt of options) {
 
 		const tests = [];
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				if (evt.type === 'test-failed') {
 					tests.push({
 						ok: false,
@@ -131,8 +131,8 @@ for (const opt of options) {
 
 		const tests = [];
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				if (evt.type === 'test-failed') {
 					tests.push({
 						ok: false,
@@ -189,8 +189,8 @@ for (const opt of options) {
 		const tests = [];
 		const workerFailures = [];
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				switch (evt.type) {
 					case 'test-failed': {
 						tests.push({
@@ -247,8 +247,8 @@ for (const opt of options) {
 		const tests = [];
 		const timeouts = [];
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				switch (evt.type) {
 					case 'test-failed': {
 						tests.push({
@@ -457,8 +457,8 @@ for (const opt of options) {
 			match: ['this test will match'],
 		});
 
-		api.on('run', plan => {
-			plan.status.on('stateChange', evt => {
+		api.on('run', ({data: plan}) => {
+			plan.status.on('stateChange', ({data: evt}) => {
 				if (evt.type === 'selected-test') {
 					t.match(evt.testFile, /match-no-match-2/);
 					t.equal(evt.title, 'this test will match');

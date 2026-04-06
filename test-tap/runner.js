@@ -45,7 +45,7 @@ test('tests must be declared synchronously', t => {
 test('runner emits "stateChange" events', t => {
 	const runner = new Runner({file: import.meta.url});
 
-	runner.on('stateChange', evt => {
+	runner.on('stateChange', ({data: evt}) => {
 		if (evt.type === 'declared-test') {
 			t.same(evt, {
 				type: 'declared-test',
@@ -65,7 +65,7 @@ test('runner emits "stateChange" events', t => {
 test('notifyTimeoutUpdate emits "stateChange" event', t => {
 	const runner = new Runner({file: import.meta.url});
 
-	runner.on('stateChange', evt => {
+	runner.on('stateChange', ({data: evt}) => {
 		if (evt.type === 'test-timeout-configured') {
 			t.same(evt, {
 				type: 'test-timeout-configured',
@@ -149,7 +149,7 @@ test('test types and titles', t => {
 
 	const check = (setup, expect) => {
 		const runner = new Runner({file: import.meta.url});
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed') {
 				const expected = expect.shift();
 				t.equal(evt.title, expected.title);
@@ -207,7 +207,7 @@ test('skip test', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test' && evt.skip) {
 				t.pass();
 			}
@@ -235,7 +235,7 @@ test('skipIf skips when condition is true, runs when false', t => {
 
 	const ran = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test' && evt.skip) {
 				t.pass(); // Skipped test emits selected-test with skip flag
 			}
@@ -264,7 +264,7 @@ test('runIf runs when condition is true, skips when false', t => {
 
 	const ran = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test' && evt.skip) {
 				t.pass();
 			}
@@ -325,7 +325,7 @@ test('todo test', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test' && evt.todo) {
 				t.pass();
 			}
@@ -383,7 +383,7 @@ test('only test', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test') {
 				t.pass();
 			}
@@ -453,7 +453,7 @@ test('options.failFast does not stop concurrent tests from running', t => {
 			a.pass();
 		});
 
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
 				t.equal(evt.title, expected.shift());
 			}
@@ -487,7 +487,7 @@ test('options.failFast && options.serial stops subsequent tests from running ', 
 			a.pass();
 		});
 
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
 				t.equal(evt.title, expected.shift());
 			}
@@ -525,7 +525,7 @@ test('options.failFast & failing serial test stops subsequent tests from running
 			a.pass();
 		});
 
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-failed' || evt.type === 'test-passed') {
 				t.equal(evt.title, expected.shift());
 			}
@@ -537,7 +537,7 @@ test('options.match will not run tests with non-matching titles', t => {
 	t.plan(4);
 
 	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo', '!foo']}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -569,7 +569,7 @@ test('options.match hold no effect on hooks with titles', t => {
 	t.plan(2);
 
 	return promiseEnd(new Runner({file: import.meta.url, match: ['!before*']}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -592,7 +592,7 @@ test('options.match overrides .only', t => {
 	t.plan(4);
 
 	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo']}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -614,7 +614,7 @@ test('options.match matches todo tests', t => {
 	t.plan(1);
 
 	return promiseEnd(new Runner({file: import.meta.url, match: ['*oo']}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'selected-test' && evt.todo) {
 				t.pass();
 			}
@@ -629,7 +629,7 @@ test('macros: Additional args will be spread as additional args on implementatio
 	t.plan(3);
 
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -670,7 +670,7 @@ test('macros: Customize test names attaching a `title` function', t => {
 	macroFn.title = (title = 'default', firstArg = undefined) => title + firstArg;
 
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'declared-test') {
 				t.equal(evt.title, expectedTitles.shift());
 			}
@@ -716,7 +716,7 @@ test('match applies to macros', t => {
 	macroFn.title = (title, firstArg) => `${firstArg}bar`;
 
 	return promiseEnd(new Runner({file: import.meta.url, match: ['foobar']}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.equal(evt.title, 'foobar');
 			}
@@ -730,7 +730,7 @@ test('match applies to macros', t => {
 test('silently skips other tests when .only is used', t => {
 	t.plan(1);
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
