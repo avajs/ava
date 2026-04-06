@@ -90,8 +90,10 @@ export type TestFn<Context = unknown> = {
 	macro: MacroFn<Context>;
 	meta: Meta;
 	only: OnlyFn<Context>;
+	runIf: RunIfFn<TestFn<Context>>;
 	serial: SerialFn<Context>;
 	skip: SkipFn<Context>;
+	skipIf: SkipIfFn<TestFn<Context>>;
 	todo: TodoFn;
 };
 
@@ -158,7 +160,9 @@ export type FailingFn<Context = unknown> = {
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 
 	only: OnlyFn<Context>;
+	runIf: RunIfFn<FailingFn<Context>>;
 	skip: SkipFn<Context>;
+	skipIf: SkipIfFn<FailingFn<Context>>;
 };
 
 export type HookSkipFn<Context = unknown> = {
@@ -183,6 +187,9 @@ export type OnlyFn<Context = unknown> = {
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 };
 
+/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
+export type RunIfFn<Chain> = (condition: boolean) => Chain;
+
 export type SerialFn<Context = unknown> = {
 	/** Declare a serial test. Additional arguments are passed to the implementation or macro. */
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
@@ -198,7 +205,9 @@ export type SerialFn<Context = unknown> = {
 	beforeEach: BeforeFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
+	runIf: RunIfFn<SerialFn<Context>>;
 	skip: SkipFn<Context>;
+	skipIf: SkipIfFn<SerialFn<Context>>;
 	todo: TodoFn;
 };
 
@@ -209,6 +218,9 @@ export type SkipFn<Context = unknown> = {
 	/** Skip this test. */
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
 };
+
+/** Declare a test that is skipped when `condition` is true. */
+export type SkipIfFn<Chain> = (condition: boolean) => Chain;
 
 /** Declare a test that should be implemented later. */
 export type TodoFn = (title: string) => void;
