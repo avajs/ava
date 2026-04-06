@@ -102,7 +102,7 @@ const xoConfig = [
 			'import-x/no-anonymous-default-export': 'off',
 			'max-lines': 'off',
 			'n/prefer-global/process': 'off',
-			'promise/prefer-await-to-then': 'off',
+			// 'promise/prefer-await-to-then': 'off',
 			'unicorn/error-message': 'off',
 		},
 	},
