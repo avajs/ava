@@ -210,3 +210,69 @@ test('accessing non-configurable accessor without getter on conditional chains r
 	t.equal(chain.runIf(true).noGetter, undefined);
 	t.end();
 });
+
+test('skipIf().skipIf() skips if either condition is true', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.skipIf(true).skipIf(false)('title', () => {});
+	chain.skipIf(false).skipIf(true)('title', () => {});
+
+	t.equal(calls.length, 2);
+	t.equal(calls[0].metadata.skipped, true);
+	t.equal(calls[1].metadata.skipped, true);
+	t.end();
+});
+
+test('skipIf().skipIf() does not skip if both conditions are false', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.skipIf(false).skipIf(false)('title', () => {});
+
+	t.equal(calls.length, 1);
+	t.equal(calls[0].metadata.skipped, undefined);
+	t.end();
+});
+
+test('runIf().runIf() skips if either condition is false', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.runIf(true).runIf(false)('title', () => {});
+	chain.runIf(false).runIf(true)('title', () => {});
+
+	t.equal(calls.length, 2);
+	t.equal(calls[0].metadata.skipped, true);
+	t.equal(calls[1].metadata.skipped, true);
+	t.end();
+});
+
+test('runIf().runIf() does not skip if both conditions are true', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.runIf(true).runIf(true)('title', () => {});
+
+	t.equal(calls.length, 1);
+	t.equal(calls[0].metadata.skipped, undefined);
+	t.end();
+});
+
+test('skipIf().runIf() skips if skipIf condition is true or runIf condition is false', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.skipIf(true).runIf(true)('title', () => {}); // `skipIf` wins
+	chain.skipIf(false).runIf(false)('title', () => {}); // `runIf` wins
+
+	t.equal(calls.length, 2);
+	t.equal(calls[0].metadata.skipped, true);
+	t.equal(calls[1].metadata.skipped, true);
+	t.end();
+});
+
+test('skipIf(false).runIf(true) does not skip', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.skipIf(false).runIf(true)('title', () => {});
+
+	t.equal(calls.length, 1);
+	t.equal(calls[0].metadata.skipped, undefined);
+	t.end();
+});
