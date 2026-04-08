@@ -218,7 +218,7 @@ test('findFiles finds non-ignored files (just .cjs)', async t => {
 		'tests/baz.cjs',
 		'tests/deep/deep.cjs',
 		'tests/_foo-help.cjs',
-	].map(file => path.join(fixtureDir, file)).sort();
+	].map(file => path.join(fixtureDir, file)).toSorted();
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
@@ -237,7 +237,7 @@ test('findFiles finds non-ignored files (.cjs, .jsx)', async t => {
 		'test/foo.jsx',
 		'test/sub/_helper.jsx',
 		'test/sub/bar.jsx',
-	].sort().map(file => path.join(fixtureDir, file));
+	].map(file => path.join(fixtureDir, file));
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,

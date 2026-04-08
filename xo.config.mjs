@@ -1,8 +1,8 @@
-import pluginAva from 'eslint-plugin-ava'; // eslint-disable-line import-x/no-extraneous-dependencies, n/no-extraneous-import
+import pluginAva from './node_modules/xo/node_modules/eslint-plugin-ava/index.js';
 
 // The AVA rules resolve the AVA config, however we have many fake AVA configs in the fixtures and so the rules must
 // be disabled for those files. This sets up a rules config that does so, based on the recommended rules.
-const disabledAvaRules = Object.fromEntries(Object.keys(pluginAva.configs['flat/recommended'].rules).map(rule => [rule, 'off']));
+const disabledAvaRules = Object.fromEntries(pluginAva.configs.recommended.flatMap(({rules}) => Object.keys(rules).map(rule => [rule, 'off'])));
 
 /** @type {import('xo').FlatXoConfig} */
 const xoConfig = [
@@ -18,6 +18,7 @@ const xoConfig = [
 	},
 	{
 		rules: {
+			'@stylistic/curly-newline': 'off',
 			'import-x/order': [
 				'error',
 				{
@@ -28,6 +29,7 @@ const xoConfig = [
 				},
 			],
 			'import-x/newline-after-import': 'error',
+			'require-unicode-regexp': 'off',
 			'unicorn/require-post-message-target-origin': 'off',
 			'unicorn/prefer-event-target': 'off',
 			'unicorn/prevent-abbreviations': 'off',
@@ -36,15 +38,17 @@ const xoConfig = [
 	{
 		files: '**/*.d.*(c|m)ts',
 		rules: {
+			'@stylistic/indent': 'off',
+			'@stylistic/operator-linebreak': 'off',
+			'@stylistic/type-generic-spacing': 'off',
 			'import-x/extensions': 'off',
 			'n/file-extension-in-import': 'off',
 		},
 	},
 	{
-		files: 'examples/**',
+		files: ['examples/**', 'media/**'],
 		rules: {
-			'ava/no-ignored-test-files': 'off',
-			'ava/no-only-test': 'off',
+			...disabledAvaRules,
 		},
 	},
 	{
@@ -54,6 +58,7 @@ const xoConfig = [
 		],
 		rules: {
 			...disabledAvaRules,
+			'@typescript-eslint/no-unsafe-type-assertion': 'off',
 			'import-x/no-extraneous-dependencies': 'off',
 			'n/no-extraneous-import': 'off',
 			'unicorn/no-empty-file': 'off',
@@ -97,7 +102,7 @@ const xoConfig = [
 			'import-x/no-anonymous-default-export': 'off',
 			'max-lines': 'off',
 			'n/prefer-global/process': 'off',
-			'promise/prefer-await-to-then': 'off',
+			// 'promise/prefer-await-to-then': 'off',
 			'unicorn/error-message': 'off',
 		},
 	},

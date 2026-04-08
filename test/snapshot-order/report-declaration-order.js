@@ -28,5 +28,5 @@ test('snapshot reports are sorted in declaration order', async t => {
 	const report = fs.readFileSync(reportPath, {encoding: 'utf8'});
 	const ids = getSnapshotIds(report);
 
-	t.deepEqual(ids, [...ids].sort((a, b) => a - b));
+	t.deepEqual(ids, ids.toSorted((a, b) => a - b));
 });

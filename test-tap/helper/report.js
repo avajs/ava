@@ -84,7 +84,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
 
 	const api = new Api(options);
-	api.on('run', plan => reporter.startRun(plan));
+	api.on('run', ({data: plan}) => reporter.startRun(plan));
 
 	const files = globbySync('*.cjs', {
 		absolute: true,
@@ -101,7 +101,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		onlyFiles: true,
 		stats: false,
 		unique: true,
-	}).sort();
+	}).toSorted();
 	if (type !== 'watch') {
 		return api.run({files, filter}).then(() => {
 			reporter.endRun();

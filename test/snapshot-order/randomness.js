@@ -33,5 +33,5 @@ test('deterministic and sorted over a large, random test case', async t => {
 	const report = fs.readFileSync(reportPath);
 	const ids = getSnapshotIds(report);
 
-	t.deepEqual(ids, [...ids].sort((a, b) => a - b));
+	t.deepEqual(ids, ids.toSorted((a, b) => a - b));
 });

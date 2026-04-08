@@ -99,7 +99,7 @@ export const withFixture = fixture => async (t, task) => {
 
 						t.timeout(30_000);
 
-						const promise = Promise.all([delay(5000, null, {ref: false}), next?.()]).finally(() => { // eslint-disable-line promise/prefer-await-to-then
+						const promise = Promise.all([delay(5000, null, {ref: false}), next?.()]).finally(() => {
 							if (idlePromise === promise) {
 								idlePromise = new Promise(() => {});
 								assertingIdle = false;
@@ -109,7 +109,7 @@ export const withFixture = fixture => async (t, task) => {
 									t.fail('Watcher performed a test run while it should have been idle');
 								}
 							}
-						}).then(() => ({})); // eslint-disable-line promise/prefer-await-to-then
+						}).then(() => ({}));
 						idlePromise = promise;
 
 						await promise;

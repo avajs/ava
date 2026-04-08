@@ -33,7 +33,7 @@ test('after', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-passed') {
 				t.pass();
 			}
@@ -57,7 +57,7 @@ test('after not run if test failed', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-failed') {
 				t.pass();
 			}
@@ -80,7 +80,7 @@ test('after.always run even if test failed', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'test-failed') {
 				t.pass();
 			}
@@ -202,7 +202,7 @@ test('fail if beforeEach hook fails', t => {
 
 	const array = [];
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'hook-failed') {
 				t.pass();
 			}
@@ -484,7 +484,7 @@ test('ensure hooks run only around tests', t => {
 });
 
 test('shared context', t => promiseEnd(new Runner({file: import.meta.url}), runner => {
-	runner.on('stateChange', evt => {
+	runner.on('stateChange', ({data: evt}) => {
 		if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
 			t.fail();
 		}
@@ -525,7 +525,7 @@ test('shared context', t => promiseEnd(new Runner({file: import.meta.url}), runn
 }));
 
 test('shared context of any type', t => promiseEnd(new Runner({file: import.meta.url}), runner => {
-	runner.on('stateChange', evt => {
+	runner.on('stateChange', ({data: evt}) => {
 		if (evt.type === 'hook-failed' || evt.type === 'test-failed') {
 			t.fail();
 		}
@@ -544,7 +544,7 @@ test('shared context of any type', t => promiseEnd(new Runner({file: import.meta
 test('teardowns cannot be used in hooks', async t => {
 	let hookFailure = null;
 	await promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', evt => {
+		runner.on('stateChange', ({data: evt}) => {
 			if (evt.type === 'hook-failed') {
 				hookFailure = evt;
 			}
