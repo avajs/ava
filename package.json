@@ -39,7 +39,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "^20.19 || ^22.20 || ^24.12 || >=25"
+		"node": "^22.20 || ^24.12 || >=25"
 	},
 	"scripts": {
 		"test": "./scripts/test.sh"
