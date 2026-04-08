@@ -5,7 +5,7 @@ not ok 1 - a › fails
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js:287:15)'
+    at: 'ExecutionContext.fail (/lib/assert.js:288:15)'
   ...
 ---tty-stream-chunk-separator
 # 1 test remaining in a.cjs
