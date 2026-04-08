@@ -5,7 +5,7 @@ import test from '@ava/test';
 
 import {set as setChalk} from '../../lib/chalk.js';
 import {load} from '../../lib/snapshot-manager.js';
-import {set as setOptions} from '../../lib/worker/options.cjs';
+import {set as setOptions} from '../../lib/worker/options.js';
 import {cwd, fixture} from '../helpers/exec.js';
 
 setChalk({level: 0});

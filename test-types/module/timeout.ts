@@ -1,4 +1,4 @@
-import test from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.js';
 
 test('test', t => {
 	t.timeout(100);

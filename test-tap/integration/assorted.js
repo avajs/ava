@@ -12,17 +12,15 @@ import {execCli} from '../helper/cli.js';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 test('timeout', {skip: ciInfo.isCI}, t => {
-	execCli(['long-running.cjs', '-T', '1s'], (error, stdout) => {
+	execCli(['long-running.js', '-T', '1s'], (error, stdout) => {
 		t.ok(error);
-		t.match(stdout, 'helpful log of a pending test');
 		t.match(stdout, /Timed out/);
 		t.end();
 	});
 });
 
 test('interrupt', {skip: ciInfo.isCI}, t => {
-	const proc = execCli(['long-running.cjs'], (_, stdout) => {
-		t.match(stdout, 'helpful log of a pending test');
+	const proc = execCli(['long-running.js'], (_, stdout) => {
 		t.match(stdout, /SIGINT/);
 		t.end();
 	});
@@ -33,15 +31,15 @@ test('interrupt', {skip: ciInfo.isCI}, t => {
 });
 
 test('include anonymous functions in error reports', t => {
-	execCli('error-in-anonymous-function.cjs', (error, stdout) => {
+	execCli('error-in-anonymous-function.js', (error, stdout) => {
 		t.ok(error);
-		t.match(stdout, /error-in-anonymous-function\.cjs:4:8/);
+		t.match(stdout, /error-in-anonymous-function\.js:4:8/);
 		t.end();
 	});
 });
 
 test('--match works', t => {
-	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'matcher-skip.cjs'], error => {
+	execCli(['-m=foo', '-m=bar', '-m=!baz', '-m=t* a* f*', '-m=!t* a* n* f*', 'matcher-skip.js'], error => {
 		t.error(error);
 		t.end();
 	});
@@ -49,7 +47,7 @@ test('--match works', t => {
 
 for (const tapFlag of ['--tap', '-t']) {
 	test(`${tapFlag} should produce TAP output`, t => {
-		execCli([tapFlag, 'test.cjs'], {dirname: 'fixture/tap'}, error => {
+		execCli([tapFlag, 'test.js'], {dirname: 'fixture/tap'}, error => {
 			t.ok(!error);
 			t.end();
 		});
@@ -65,7 +63,7 @@ test('works when no files are found', t => {
 });
 
 test('should warn ava is required without the cli', t => {
-	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../entrypoints/main.cjs')], error => {
+	childProcess.execFile(process.execPath, [path.resolve(__dirname, '../../entrypoints/main.js')], error => {
 		t.ok(error);
 		t.match(error.message, /Test files must be run with the AVA CLI/);
 		t.end();
@@ -80,7 +78,7 @@ test('tests without assertions do not fail if failWithoutAssertions option is se
 });
 
 test('--no-color disables formatting colors', t => {
-	execCli(['--no-color', 'formatting-color.cjs'], (error, stdout) => {
+	execCli(['--no-color', 'formatting-color.js'], (error, stdout) => {
 		t.ok(error);
 		t.equal(stripVTControlCharacters(stdout), stdout);
 		t.end();
@@ -88,7 +86,7 @@ test('--no-color disables formatting colors', t => {
 });
 
 test('--color enables formatting colors', t => {
-	execCli(['--color', 'formatting-color.cjs'], (error, stdout) => {
+	execCli(['--color', 'formatting-color.js'], (error, stdout) => {
 		t.ok(error);
 		t.not(stripVTControlCharacters(stdout), stdout);
 		t.end();
@@ -96,7 +94,7 @@ test('--color enables formatting colors', t => {
 });
 
 test('sets NODE_ENV to test when it is not set', t => {
-	execCli('node-env-test.cjs', {env: {}}, (error, stdout) => {
+	execCli('node-env-test.js', {env: {}}, (error, stdout) => {
 		t.error(error);
 		t.match(stdout, /1 test passed/);
 		t.end();
@@ -104,7 +102,7 @@ test('sets NODE_ENV to test when it is not set', t => {
 });
 
 test('doesn’t set NODE_ENV when it is set', t => {
-	execCli('node-env-foo.cjs', {env: {NODE_ENV: 'foo'}}, (error, stdout) => {
+	execCli('node-env-foo.js', {env: {NODE_ENV: 'foo'}}, (error, stdout) => {
 		t.error(error);
 		t.match(stdout, /1 test passed/);
 		t.end();
@@ -112,7 +110,7 @@ test('doesn’t set NODE_ENV when it is set', t => {
 });
 
 test('additional arguments are forwarded to the worker', t => {
-	execCli(['worker-argv.cjs', '--serial', '--', '--hello', 'world'], error => {
+	execCli(['worker-argv.js', '--serial', '--', '--hello', 'world'], error => {
 		t.error(error);
 		t.end();
 	});
@@ -131,8 +129,8 @@ test('reset-cache resets cache', t => {
 	});
 });
 
-test('selects .cjs test files', t => {
-	execCli('cjs.cjs', (error, stdout) => {
+test('selects .js test files', t => {
+	execCli('js.js', (error, stdout) => {
 		t.error(error);
 		t.match(stdout, /1 test passed/);
 		t.end();

@@ -1,4 +1,4 @@
-import test from '../../../../../../../entrypoints/main.cjs';
+import test from '../../../../../../../entrypoints/main.js';
 
 test('feature test title', t => {
 	t.snapshot({foo: 'bar'});

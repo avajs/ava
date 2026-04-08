@@ -67,10 +67,6 @@ test.serial('fails when .mjs config does not have a default export', notOk({
 	configFile: 'no-default-export.mjs',
 }));
 
-test.serial('loads .js config as CommonJS', ok('js-as-cjs'), (t, conf) => {
-	t.true(conf.failFast);
-});
-
 test.serial('loads .js config as ESM', ok('js-as-esm'), (t, conf) => {
 	t.true(conf.failFast);
 });
@@ -99,7 +95,7 @@ test.serial('fails when .js config does not have a default export', notOk({
 	configFile: 'no-default-export.js',
 }));
 
-test.serial('throws an error if .js, .cjs and .mjs configs are present', notOk('file-yes-cjs-yes-mjs-yes'));
+test.serial('throws an error if .js and .mjs configs are present', notOk('file-yes-js-yes-mjs-yes'));
 
 test.serial('config factory returns a promise', ok('factory-promise-return'), (t, conf) => {
 	t.true(conf.failFast);
@@ -108,4 +104,3 @@ test.serial('config factory returns a promise', ok('factory-promise-return'), (t
 test.serial('config exports a promise', ok('promise-config'), (t, conf) => {
 	t.true(conf.failFast);
 });
-

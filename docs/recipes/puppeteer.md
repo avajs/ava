@@ -15,7 +15,7 @@ The first step is setting up a helper to configure the environment:
 ```js
 import puppeteer from 'puppeteer';
 
-module.exports = async (t, run) => {
+export default async (t, run) => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 	try {
@@ -24,7 +24,7 @@ module.exports = async (t, run) => {
 		await page.close();
 		await browser.close();
 	}
-}
+};
 ```
 
 ## Usage example
@@ -33,7 +33,7 @@ module.exports = async (t, run) => {
 
 ```js
 import test from 'ava';
-import withPage from './_withPage';
+import withPage from './_withPage.js';
 
 const url = 'https://google.com';
 

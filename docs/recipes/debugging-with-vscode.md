@@ -26,7 +26,7 @@ Alternatively you can create a launch configuration, which makes it easier to de
     "type": "node",
     "request": "launch",
     "name": "Debug AVA test file",
-    "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+    "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.js",
     "args": [
       "${file}"
     ],
@@ -56,7 +56,7 @@ Assuming the names of your test files are unique you could try the following con
   "type": "node",
   "request": "launch",
   "name": "Debug AVA test file",
-  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.js",
   "args": [
     "build/**/${fileBasenameNoExtension}.*"
   ],
@@ -103,7 +103,7 @@ Or, if you're using a launch configuration, add the `--serial` argument:
   "type": "node",
   "request": "launch",
   "name": "Debug AVA test file",
-  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.mjs",
+  "program": "${workspaceFolder}/node_modules/ava/entrypoints/cli.js",
   "args": [
     "--serial",
     "${file}"

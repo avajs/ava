@@ -1,6 +1,6 @@
 import {expectType} from 'tsd';
 
-import test from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.js';
 
 type Expected = {foo: 'bar'};
 const expected: Expected = {foo: 'bar'};

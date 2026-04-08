@@ -1,8 +1,8 @@
 
 ---tty-stream-chunk-separator
-  [1mUncaught exception in bad-test-chain.cjs[22m
+  [1mUncaught exception in bad-test-chain.js[22m
 
-  [90mbad-test-chain.cjs:3[39m
+  [90mbad-test-chain.js:3[39m
 
    [90m2:[39m                                           
   [41m[1m 3: test.serial.test('passes', t => t.pass());[22m[49m
@@ -10,10 +10,10 @@
 
   TypeError: test.serial.test is not a function
 
-  [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)[39m
+  [90m› Object.<anonymous> (test-tap/fixture/report/regular/bad-test-chain.js:3:13)[39m
 
 ---tty-stream-chunk-separator
-  [31m✘ bad-test-chain.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ bad-test-chain.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format with max depth 4
 ---tty-stream-chunk-separator
@@ -77,9 +77,9 @@
   [32m✔[39m uncaught-exception [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
 
-  [1mUncaught exception in uncaught-exception.cjs[22m
+  [1mUncaught exception in uncaught-exception.js[22m
 
-  [90muncaught-exception.cjs:5[39m
+  [90muncaught-exception.js:5[39m
 
    [90m4:[39m   setImmediate(() => {                
   [41m[1m 5:     throw new Error('Can’t catch me');[22m[49m
@@ -87,19 +87,19 @@
 
   Error: Can’t catch me
 
-  [90m› Immediate.<anonymous> (test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)[39m
+  [90m› Immediate.<anonymous> (test-tap/fixture/report/regular/uncaught-exception.js:5:9)[39m
 
 ---tty-stream-chunk-separator
-  [31m✘ uncaught-exception.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ uncaught-exception.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m passes
 ---tty-stream-chunk-separator
   [32m✔[39m unhandled-rejection [90m[2m›[22m[39m unhandled non-error rejection
 ---tty-stream-chunk-separator
 
-  [1mUnhandled rejection in unhandled-rejection.cjs[22m
+  [1mUnhandled rejection in unhandled-rejection.js[22m
 
-  [90munhandled-rejection.cjs:4[39m
+  [90munhandled-rejection.js:4[39m
 
    [90m3:[39m const passes = t => {                         
   [41m[1m 4:   Promise.reject(new Error('Can’t catch me'));[22m[49m
@@ -107,21 +107,21 @@
 
   Error: Can’t catch me
 
-  [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)[39m
+  [90m› passes (test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
 
 ---tty-stream-chunk-separator
-  [1mUnhandled rejection in unhandled-rejection.cjs[22m
+  [1mUnhandled rejection in unhandled-rejection.js[22m
 
   [33mnull[39m
 
 ---tty-stream-chunk-separator
-  [31m✘ unhandled-rejection.cjs exited with a non-zero exit code: 1[39m
+  [31m✘ unhandled-rejection.js exited with a non-zero exit code: 1[39m
 ---tty-stream-chunk-separator
   [90m─[39m
 
   [1mnested-objects [90m[2m›[22m[1m[39m format with max depth 4[22m
 
-  [90mnested-objects.cjs:29[39m
+  [90mnested-objects.js:29[39m
 
    [90m28:[39m   };                    
   [41m[1m 29:   t.deepEqual(exp, act);[22m[49m
@@ -144,13 +144,13 @@
   [32m+[39m   [90m}[39m[90m,[39m
     [90m}[39m
 
-  [90m› test-tap/fixture/report/regular/nested-objects.cjs:29:4[39m
+  [90m› test-tap/fixture/report/regular/nested-objects.js:29:4[39m
 
 
 
   [1mnested-objects [90m[2m›[22m[1m[39m format like with max depth 4[22m
 
-  [90mnested-objects.cjs:55[39m
+  [90mnested-objects.js:55[39m
 
    [90m54:[39m   };                      
   [41m[1m 55:   t.like(actual, pattern);[22m[49m
@@ -167,13 +167,13 @@
       [90m}[39m[90m,[39m
     [90m}[39m
 
-  [90m› test-tap/fixture/report/regular/nested-objects.cjs:55:4[39m
+  [90m› test-tap/fixture/report/regular/nested-objects.js:55:4[39m
 
 
 
   [1moutput-in-hook [90m[2m›[22m[1m[39m failing test[22m
 
-  [90moutput-in-hook.cjs:34[39m
+  [90moutput-in-hook.js:34[39m
 
    [90m33:[39m test('failing test', t => {
   [41m[1m 34:   t.fail();                [22m[49m
@@ -181,13 +181,13 @@
 
   Test failed via `t.fail()`
 
-  [90m› test-tap/fixture/report/regular/output-in-hook.cjs:34:4[39m
+  [90m› test-tap/fixture/report/regular/output-in-hook.js:34:4[39m
 
 
 
   [1mtest [90m[2m›[22m[1m[39m fails[22m
 
-  [90mtest.cjs:9[39m
+  [90mtest.js:9[39m
 
    [90m8:[39m                              
   [41m[1m 9: test('fails', t => t.fail());[22m[49m
@@ -195,7 +195,7 @@
 
   Test failed via `t.fail()`
 
-  [90m› test-tap/fixture/report/regular/test.cjs:9:22[39m
+  [90m› test-tap/fixture/report/regular/test.js:9:22[39m
 
 
 
@@ -206,7 +206,7 @@
 
 
   [1mtest [90m[2m›[22m[1m[39m logs[22m
-  [90mtest.cjs:18[39m
+  [90mtest.js:18[39m
 
    [90m17:[39m   t.log('world');
   [41m[1m 18:   t.fail();      [22m[49m
@@ -214,13 +214,13 @@
 
   Test failed via `t.fail()`
 
-  [90m› test-tap/fixture/report/regular/test.cjs:18:4[39m
+  [90m› test-tap/fixture/report/regular/test.js:18:4[39m
 
 
 
   [1mtest [90m[2m›[22m[1m[39m formatted[22m
 
-  [90mtest.cjs:22[39m
+  [90mtest.js:22[39m
 
    [90m21:[39m test('formatted', t => {    
   [41m[1m 22:   t.deepEqual('foo', 'bar');[22m[49m
@@ -231,7 +231,7 @@
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
-  [90m› test-tap/fixture/report/regular/test.cjs:22:4[39m
+  [90m› test-tap/fixture/report/regular/test.js:22:4[39m
 
 
 
@@ -245,7 +245,7 @@
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throws[22m
 
-  [90mtraces-in-t-throws.cjs:12[39m
+  [90mtraces-in-t-throws.js:12[39m
 
    [90m11:[39m test('throws', t => {                                   
   [41m[1m 12:   t.throws(() => throwError(), {instanceOf: TypeError});[22m[49m
@@ -261,15 +261,15 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:17)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:12:4[39m
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throws.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:12:4[39m
 
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrows[22m
 
-  [90mtraces-in-t-throws.cjs:16[39m
+  [90mtraces-in-t-throws.js:16[39m
 
    [90m15:[39m test('notThrows', t => {          
   [41m[1m 16:   t.notThrows(() => throwError());[22m[49m
@@ -281,15 +281,15 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:20[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:16:4[39m
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:16:20[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:16:4[39m
 
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m notThrowsAsync[22m
 
-  [90mtraces-in-t-throws.cjs:20[39m
+  [90mtraces-in-t-throws.js:20[39m
 
    [90m19:[39m test('notThrowsAsync', async t => {          
   [41m[1m 20:   await t.notThrowsAsync(() => throwError());[22m[49m
@@ -301,15 +301,15 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:31[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:20:10[39m
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:20:31[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:20:10[39m
 
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync[22m
 
-  [90mtraces-in-t-throws.cjs:24[39m
+  [90mtraces-in-t-throws.js:24[39m
 
    [90m23:[39m test('throwsAsync', async t => {                                   
   [41m[1m 24:   await t.throwsAsync(() => throwError(), {instanceOf: TypeError});[22m[49m
@@ -321,15 +321,15 @@
     message: [34m'[39m[34muh-oh[39m[34m'[39m[90m,[39m
   [90m}[39m
 
-  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)[39m
-  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:28)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:24:10[39m
+  [90m› throwError (test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
+  [90m› t.throwsAsync.instanceOf (test-tap/fixture/report/regular/traces-in-t-throws.js:24:28)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:24:10[39m
 
 
 
   [1mtraces-in-t-throws [90m[2m›[22m[1m[39m throwsAsync different error[22m
 
-  [90mtraces-in-t-throws.cjs:28[39m
+  [90mtraces-in-t-throws.js:28[39m
 
    [90m27:[39m test('throwsAsync different error', async t => {                      
   [41m[1m 28:   await t.throwsAsync(returnRejectedPromise, {instanceOf: TypeError});[22m[49m
@@ -345,8 +345,8 @@
 
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
-  [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)[39m
-  [90m› test-tap/fixture/report/regular/traces-in-t-throws.cjs:28:10[39m
+  [90m› returnRejectedPromise (test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
+  [90m› test-tap/fixture/report/regular/traces-in-t-throws.js:28:10[39m
 
   [90m─[39m
 

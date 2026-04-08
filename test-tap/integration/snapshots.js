@@ -20,7 +20,7 @@ for (const object of [
 	{type: 'tests', rel: 'tests-dir', dir: 'tests/snapshots'},
 ]) {
 	test(`snapshots work (${object.type})`, t => {
-		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', object.rel, object.dir, 'test.cjs.snap');
+		const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', object.rel, object.dir, 'test.js.snap');
 		try {
 			fs.unlinkSync(snapPath);
 		} catch (error) {
@@ -45,23 +45,23 @@ for (const object of [
 }
 
 test('appends to existing snapshots', t => {
-	const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
-	const avaPath = fileURLToPath(new URL('../../entrypoints/main.cjs', import.meta.url));
+	const cliPath = fileURLToPath(new URL('../../entrypoints/cli.js', import.meta.url));
+	const avaPath = new URL('../../entrypoints/main.js', import.meta.url).toString();
 
 	const cwd = temporaryDirectory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');
 
-	const initial = `const test = require(${JSON.stringify(avaPath)})
+	const initial = `const {default: test} = await import(${JSON.stringify(avaPath)})
 test('one', t => {
 	t.snapshot({one: true})
 })`;
-	fs.writeFileSync(path.join(cwd, 'test.cjs'), initial);
+	fs.writeFileSync(path.join(cwd, 'test.js'), initial);
 
 	const run = () => execa(process.execPath, [cliPath, '--no-color'], {cwd, env: {AVA_FORCE_CI: 'not-ci'}, reject: false});
 	return run().then(result => {
 		t.match(result.stdout, /1 test passed/);
 
-		fs.writeFileSync(path.join(cwd, 'test.cjs'), `${initial}
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: true})
 })`);
@@ -69,7 +69,7 @@ test('two', t => {
 	}).then(result => {
 		t.match(result.stdout, /2 tests passed/);
 
-		fs.writeFileSync(path.join(cwd, 'test.cjs'), `${initial}
+		fs.writeFileSync(path.join(cwd, 'test.js'), `${initial}
 test('two', t => {
 	t.snapshot({two: false})
 })`);
@@ -81,10 +81,10 @@ test('two', t => {
 });
 
 test('outdated snapshot version is reported to the console', t => {
-	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
 
-	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
 		t.match(stdout, /The snapshot file is v0, but only v3 is supported\./);
 		t.match(stdout, /File path:/);
@@ -95,10 +95,10 @@ test('outdated snapshot version is reported to the console', t => {
 });
 
 test('outdated snapshot version can be updated', t => {
-	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x00, 0x00]));
 
-	execCli(['test.cjs', '--update-snapshots'], {dirname: 'fixture/snapshots', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
+	execCli(['test.js', '--update-snapshots'], {dirname: 'fixture/snapshots', env: {AVA_FORCE_CI: 'not-ci'}}, (error, stdout) => {
 		t.error(error);
 		t.match(stdout, /2 tests passed/);
 		t.end();
@@ -106,10 +106,10 @@ test('outdated snapshot version can be updated', t => {
 });
 
 test('newer snapshot version is reported to the console', t => {
-	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0xFF, 0xFF]));
 
-	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
 		t.match(stdout, /The snapshot file is v65535, but only v3 is supported\./);
 		t.match(stdout, /File path:/);
@@ -120,10 +120,10 @@ test('newer snapshot version is reported to the console', t => {
 });
 
 test('snapshot corruption is reported to the console', t => {
-	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from([0x0A, 0x03, 0x00]));
 
-	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
 		t.match(stdout, /The snapshot file is corrupted\./);
 		t.match(stdout, /File path:/);
@@ -134,10 +134,10 @@ test('snapshot corruption is reported to the console', t => {
 });
 
 test('legacy snapshot files are reported to the console', t => {
-	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.cjs.snap');
+	const snapPath = path.join(__dirname, '..', 'fixture', 'snapshots', 'test.js.snap');
 	fs.writeFileSync(snapPath, Buffer.from('// Jest Snapshot v1, https://goo.gl/fbAQLP\n'));
 
-	execCli(['test.cjs'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
+	execCli(['test.js'], {dirname: 'fixture/snapshots'}, (error, stdout) => {
 		t.ok(error);
 		t.match(stdout, /The snapshot file was created with AVA 0\.19\. It’s not supported by this AVA version\./);
 		t.match(stdout, /File path:/);
@@ -205,8 +205,8 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 		.flatMap(snapRelativeDir => {
 			const snapPath = path.join(__dirname, '..', relativeFixtureDir, snapDir, snapRelativeDir);
 			return [
-				path.join(snapPath, 'test.cjs.md'),
-				path.join(snapPath, 'test.cjs.snap'),
+				path.join(snapPath, 'test.js.md'),
+				path.join(snapPath, 'test.js.snap'),
 			];
 		});
 	const removeExistingSnapFixtureFiles = snapPath => {
@@ -240,10 +240,10 @@ test('snapshots resolved location from "snapshotDir" in AVA config', t => {
 
 test('snapshots are identical on different platforms', t => {
 	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
-	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.cjs.md');
-	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.cjs.snap');
-	const expectedReportPath = path.join(fixtureDir, 'test.cjs.md.expected');
-	const expectedSnapPath = path.join(fixtureDir, 'test.cjs.snap.expected');
+	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
+	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
+	const expectedReportPath = path.join(fixtureDir, 'test.js.md.expected');
+	const expectedSnapPath = path.join(fixtureDir, 'test.js.snap.expected');
 
 	const removeFile = filePath => {
 		try {
@@ -279,8 +279,8 @@ test('snapshots are identical on different platforms', t => {
 
 test('in CI, new snapshots are not recorded', t => {
 	const fixtureDir = path.join(__dirname, '..', 'fixture', 'snapshots', 'test-content');
-	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.cjs.md');
-	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.cjs.snap');
+	const reportPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.md');
+	const snapPath = path.join(fixtureDir, 'tests', 'snapshots', 'test.js.snap');
 
 	const removeFile = filePath => {
 		try {

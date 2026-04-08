@@ -7,7 +7,7 @@
   [31m[39m
   [31m✘ Timed out while running tests[39m
 
-  2 tests were pending in a.cjs
+  2 tests were pending in a.js
 
   ◌ a [90m[2m›[22m[39m a slow
     [35mℹ[39m [90mthis slow test prints useful debug message just text[39m
@@ -24,7 +24,7 @@
   [31m[39m
   [31m✘ Timed out while running tests[39m
 
-  2 tests were pending in b.cjs
+  2 tests were pending in b.js
 
   ◌ b [90m[2m›[22m[39m a slow
     [35mℹ[39m [90mhello world[39m

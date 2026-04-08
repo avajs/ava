@@ -6,11 +6,10 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import test from '@ava/test';
 import {execaNode} from 'execa';
 
-const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
-const ttySimulator = fileURLToPath(new URL('simulate-tty.cjs', import.meta.url));
+const cliPath = fileURLToPath(new URL('../../entrypoints/cli.js', import.meta.url));
+const ttySimulator = fileURLToPath(new URL('simulate-tty.js', import.meta.url));
 
-const TEST_AVA_IMPORT_FROM = pathToFileURL(path.join(process.cwd(), 'entrypoints/main.mjs'));
-const TEST_AVA_REQUIRE_FROM = path.join(process.cwd(), 'entrypoints/main.cjs');
+const TEST_AVA_IMPORT_FROM = pathToFileURL(path.join(process.cwd(), 'entrypoints/main.js'));
 
 const normalizePosixPath = string => string.replaceAll('\\', '/');
 const normalizePath = (root, file) => normalizePosixPath(path.posix.normalize(path.relative(root, file)));
@@ -87,10 +86,9 @@ export async function * exec(args, options) {
 			...options.env,
 			TEST_AVA: 'true',
 			TEST_AVA_IMPORT_FROM,
-			TEST_AVA_REQUIRE_FROM,
 		},
 		cwd: workingDir,
-		nodeOptions: ['--require', ttySimulator],
+		nodeOptions: ['--import', pathToFileURL(ttySimulator).toString()],
 		stdout: ['pipe', new Writable({
 			write(chunk, encoding, callback) {
 				stdout += chunk;

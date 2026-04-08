@@ -29,7 +29,7 @@ test(async t => {
 			],
 		});
 		const reporter = new Reporter({
-			extensions: ['cjs'],
+			extensions: ['js'],
 			projectDir: report.projectDir(type),
 			durationThreshold: 60_000,
 			reportStream: tty,

@@ -1,27 +1,31 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
 import {test} from 'tap';
 
 import Api from '../lib/api.js';
+import normalizeExtensions from '../lib/extensions.js';
 import {normalizeGlobs} from '../lib/globs.js';
+import normalizeModuleTypes from '../lib/module-types.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = path.join(__dirname, '..');
 
 async function apiCreator(options = {}) {
+	const providers = options.providers ?? [];
+
 	options.projectDir ??= ROOT_DIR;
 	options.chalkOptions = {level: 0};
 	options.concurrency = 2;
-	options.extensions ??= ['cjs'];
 	options.experiments = {};
+	options.extensions = normalizeExtensions(options.extensions, providers);
+	options.moduleTypes ??= normalizeModuleTypes(options.extensions, 'module');
 	options.globs = normalizeGlobs({
-		files: options.files, ignoredByWatcher: options.watchMode?.ignoreChanges, extensions: options.extensions, providers: [],
+		files: options.files, ignoredByWatcher: options.watchMode?.ignoreChanges, extensions: options.extensions, providers,
 	});
-	options.nodeArguments = process.execArgv;
+	options.nodeArguments = [];
 	const instance = new Api(options);
 
 	return instance;
@@ -57,7 +61,7 @@ for (const opt of options) {
 			});
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/fail-fast/single-file/test.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/fail-fast/single-file/test.js')]})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
@@ -103,19 +107,19 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
-				path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.cjs'),
+				path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
+				path.join(__dirname, 'fixture/fail-fast/multiple-files/passes.js'),
 			],
 		})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, [{
 					ok: true,
-					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 					title: 'first pass',
 				}, {
 					ok: false,
-					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+					testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 					title: 'second fail',
 				}]);
 				t.equal(runStatus.stats.passedTests, 1);
@@ -149,8 +153,8 @@ for (const opt of options) {
 			});
 		});
 
-		const fails = path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs');
-		const passesSlow = path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.cjs');
+		const fails = path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js');
+		const passesSlow = path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js');
 
 		const runStatus = await api.run({files: [fails, passesSlow]});
 		t.ok(api.options.failFast);
@@ -160,21 +164,21 @@ for (const opt of options) {
 
 		t.strictSame(tests.filter(({testFile}) => testFile === fails), [{
 			ok: true,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 			title: 'first pass',
 		}, {
 			ok: false,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 			title: 'second fail',
 		}, {
 			ok: true,
-			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.cjs'),
+			testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/fails.js'),
 			title: 'third pass',
 		}]);
 		if (runStatus.stats.passedTests === 3) {
 			t.strictSame(tests.filter(({testFile}) => testFile === passesSlow), [{
 				ok: true,
-				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.cjs'),
+				testFile: path.join(__dirname, 'fixture/fail-fast/multiple-files/passes-slow.js'),
 				title: 'first pass',
 			}]);
 		}
@@ -222,15 +226,15 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/fail-fast/crash/crashes.cjs'),
-				path.join(__dirname, 'fixture/fail-fast/crash/passes.cjs'),
+				path.join(__dirname, 'fixture/fail-fast/crash/crashes.js'),
+				path.join(__dirname, 'fixture/fail-fast/crash/passes.js'),
 			],
 		})
 			.then(runStatus => {
 				t.ok(api.options.failFast);
 				t.strictSame(tests, []);
 				t.equal(workerFailures.length, 1);
-				t.equal(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.cjs'));
+				t.equal(workerFailures[0].testFile, path.join(__dirname, 'fixture', 'fail-fast', 'crash', 'crashes.js'));
 				t.equal(runStatus.stats.passedTests, 0);
 				t.equal(runStatus.stats.failedTests, 0);
 			});
@@ -280,9 +284,9 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/fail-fast/timeout/fails.cjs'),
-				path.join(__dirname, 'fixture/fail-fast/timeout/passes.cjs'),
-				path.join(__dirname, 'fixture/fail-fast/timeout/passes-slow.cjs'),
+				path.join(__dirname, 'fixture/fail-fast/timeout/fails.js'),
+				path.join(__dirname, 'fixture/fail-fast/timeout/passes.js'),
+				path.join(__dirname, 'fixture/fail-fast/timeout/passes-slow.js'),
 			],
 		})
 			.then(runStatus => {
@@ -302,8 +306,8 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/fail-fast/without-error/a.cjs'),
-				path.join(__dirname, 'fixture/fail-fast/without-error/b.cjs'),
+				path.join(__dirname, 'fixture/fail-fast/without-error/a.js'),
+				path.join(__dirname, 'fixture/fail-fast/without-error/b.js'),
 			],
 		})
 			.then(runStatus => {
@@ -318,7 +322,7 @@ for (const opt of options) {
 			serial: true,
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/serial.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/serial.js')]})
 			.then(runStatus => {
 				t.ok(api.options.serial);
 				t.equal(runStatus.stats.passedTests, 3);
@@ -328,7 +332,7 @@ for (const opt of options) {
 	test(`run from package.json folder by default - workerThreads: ${opt.workerThreads}`, async t => {
 		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
@@ -337,14 +341,14 @@ for (const opt of options) {
 	test(`absolute paths - workerThreads:  ${opt.workerThreads}`, async t => {
 		const api = await apiCreator(opt);
 
-		return api.run({files: [path.resolve('test-tap/fixture/es2015.cjs')]})
+		return api.run({files: [path.resolve('test-tap/fixture/es2015.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
 	});
 
 	test(`symlink to directory containing test files - workerThreads: ${opt.workerThreads}`, async t => {
-		const api = await apiCreator({...opt, files: ['test-tap/fixture/symlink/*.cjs']});
+		const api = await apiCreator({...opt, files: ['test-tap/fixture/symlink/*.js']});
 
 		return api.run()
 			.then(runStatus => {
@@ -355,7 +359,7 @@ for (const opt of options) {
 	test(`symlink to test file directly - workerThreads: ${opt.workerThreads}`, async t => {
 		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/symlinkfile.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/symlinkfile.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.passedTests, 1);
 			});
@@ -365,7 +369,7 @@ for (const opt of options) {
 		t.plan(1);
 
 		const api = await apiCreator(opt);
-		return api.run({files: [path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/ignored-dirs/node_modules/test.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.declaredTests, 0);
 			});
@@ -379,7 +383,7 @@ for (const opt of options) {
 			projectDir: path.join(__dirname, 'fixture/caching'),
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
 			.then(() => {
 				const files = fs.readdirSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava'));
 				if (files.length === 1) {
@@ -400,7 +404,7 @@ for (const opt of options) {
 			cacheEnabled: false,
 		});
 
-		return api.run({files: [path.join(__dirname, 'fixture/caching/test.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/caching/test.js')]})
 			.then(() => {
 				t.notOk(fs.existsSync(path.join(__dirname, 'fixture/caching/node_modules/.cache/ava')));
 			});
@@ -409,7 +413,7 @@ for (const opt of options) {
 	test(`test file with only skipped tests does not create a failure - workerThreads: ${opt.workerThreads}`, async t => {
 		const api = await apiCreator();
 
-		return api.run({...opt, files: [path.join(__dirname, 'fixture/skip-only.cjs')]})
+		return api.run({...opt, files: [path.join(__dirname, 'fixture/skip-only.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.selectedTests, 1);
 				t.equal(runStatus.stats.skippedTests, 1);
@@ -420,7 +424,7 @@ for (const opt of options) {
 	test(`test file with only skipped tests does not run hooks - workerThreads:  ${opt.workerThreads}`, async t => {
 		const api = await apiCreator(opt);
 
-		return api.run({files: [path.join(__dirname, 'fixture/hooks-skipped.cjs')]})
+		return api.run({files: [path.join(__dirname, 'fixture/hooks-skipped.js')]})
 			.then(runStatus => {
 				t.equal(runStatus.stats.selectedTests, 1);
 				t.equal(runStatus.stats.skippedTests, 1);
@@ -437,9 +441,9 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/test-count.cjs'),
-				path.join(__dirname, 'fixture/test-count-2.cjs'),
-				path.join(__dirname, 'fixture/test-count-3.cjs'),
+				path.join(__dirname, 'fixture/test-count.js'),
+				path.join(__dirname, 'fixture/test-count-2.js'),
+				path.join(__dirname, 'fixture/test-count-3.js'),
 			],
 		}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 4, 'pass count');
@@ -468,9 +472,9 @@ for (const opt of options) {
 
 		return api.run({
 			files: [
-				path.join(__dirname, 'fixture/match-no-match.cjs'),
-				path.join(__dirname, 'fixture/match-no-match-2.cjs'),
-				path.join(__dirname, 'fixture/test-count.cjs'),
+				path.join(__dirname, 'fixture/match-no-match.js'),
+				path.join(__dirname, 'fixture/match-no-match-2.js'),
+				path.join(__dirname, 'fixture/test-count.js'),
 			],
 		}).then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 1);
@@ -483,7 +487,7 @@ test('run from package.json folder by default', async t => {
 		workerThreads: false,
 	});
 
-	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.cjs')]})
+	return api.run({files: [path.join(__dirname, 'fixture/process-cwd-default.js')]})
 		.then(runStatus => {
 			t.equal(runStatus.stats.passedTests, 1);
 		});

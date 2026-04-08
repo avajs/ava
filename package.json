@@ -9,32 +9,20 @@
 	},
 	"homepage": "https://avajs.dev",
 	"bin": {
-		"ava": "entrypoints/cli.mjs"
+		"ava": "entrypoints/cli.js"
 	},
 	"exports": {
 		".": {
-			"import": {
-				"types": "./entrypoints/main.d.mts",
-				"default": "./entrypoints/main.mjs"
-			},
-			"require": {
-				"types": "./entrypoints/main.d.cts",
-				"default": "./entrypoints/main.cjs"
-			}
+			"types": "./entrypoints/main.d.ts",
+			"default": "./entrypoints/main.js"
 		},
-		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
+		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.js",
 		"./plugin": {
-			"import": {
-				"types": "./entrypoints/plugin.d.mts",
-				"default": "./entrypoints/plugin.mjs"
-			},
-			"require": {
-				"types": "./entrypoints/plugin.d.cts",
-				"default": "./entrypoints/plugin.cjs"
-			}
+			"types": "./entrypoints/plugin.d.ts",
+			"default": "./entrypoints/plugin.js"
 		},
 		"./internal": {
-			"types": "./entrypoints/internal.d.mts"
+			"types": "./entrypoints/internal.d.ts"
 		}
 	},
 	"type": "module",

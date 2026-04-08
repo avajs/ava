@@ -21,7 +21,7 @@ test(async t => {
 			sanitizers: [...sanitizers, report.sanitizers.cwd, report.sanitizers.experimentalWarning, report.sanitizers.posix, report.sanitizers.tapLoaders, report.sanitizers.timers],
 		});
 		const reporter = new TapReporter({
-			extensions: ['cjs'],
+			extensions: ['js'],
 			projectDir: report.projectDir(type),
 			reportStream: tty,
 			stdStream: tty,

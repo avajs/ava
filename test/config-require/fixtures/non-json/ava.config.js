@@ -1,5 +1,5 @@
 export default {
 	require: [
-		['./required.mjs', new Map([['hello', 'world']])],
+		['./required.js', new Map([['hello', 'world']])],
 	],
 };

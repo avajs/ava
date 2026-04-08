@@ -1,11 +1,11 @@
 import test from 'ava';
 
-import cjs from './required.cjs';
-import {receivedArgs} from './required.mjs';
+import {receivedArgs} from './required-esm.js';
+import requiredModule from './required.js';
 
 test('receives arguments from config', t => {
 	t.deepEqual(receivedArgs, ['hello', 'world']);
-	t.deepEqual(cjs.receivedArgs, ['goodbye']);
+	t.deepEqual(requiredModule.receivedArgs, ['goodbye']);
 });
 
 test('side-effects are execute when tests loaded, before test code', async t => {

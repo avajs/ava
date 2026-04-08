@@ -42,7 +42,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 
 ## Options
 
-- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `cjs`, `mjs` & `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
+- `files`: an array of glob patterns to select test files. Files with an underscore prefix are ignored. By default only selects files with `mjs` & `js` extensions, even if the pattern matches other files. Specify `extensions` to allow other file extensions
 - `watchMode`: See the [watch mode recipe for details](https://github.com/avajs/ava/blob/main/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: defaults to `true` to cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
@@ -55,7 +55,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `tap`: if `true`, enables the [TAP reporter](./05-command-line.md#tap-reporter)
 - `verbose`: if `true`, enables verbose output (though there currently non-verbose output is not supported)
 - `snapshotDir`: specifies a fixed location for storing snapshot files. Use this if your snapshots are ending up in the wrong location
-- `extensions`: extensions of test files. Setting this overrides the default `["cjs", "mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
+- `extensions`: extensions of test files. Setting this overrides the default `["mjs", "js"]` value, so make sure to include those extensions in the list. [Experimentally you can configure how files are loaded](#configuring-module-formats)
 - `require`: [extra modules to load before test files](#requiring-extra-modules)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
@@ -68,18 +68,18 @@ Provide the `typescript` option (and install [`@ava/typescript`](https://github.
 
 ## Using `ava.config.*` files
 
-Rather than specifying the configuration in the `package.json` file you can use `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` files.
+Rather than specifying the configuration in the `package.json` file you can use an `ava.config.js` file. If your project does not already treat `.js` files as ES modules, use `ava.config.mjs` instead.
 
 To use these files:
 
 1. Your `package.json` must not contain an `ava` property (or, if it does, it must be an empty object)
-2. You must only have one `ava.config.*` file in any directory, so don't mix `ava.config.js` *and* `ava.config.cjs` files
+2. You must only have one `ava.config.*` file in any directory, so don't mix `ava.config.js` *and* `ava.config.mjs` files
 
 AVA searches your file system for `ava.config.*` files. First, when you run AVA, it finds the closest `package.json`. Starting in that directory it recursively checks the parent directories until it either reaches the file system root or encounters a `.git` file or directory. The first `ava.config.*` file found is selected. This allows you to use a single configuration file in a monorepo setup.
 
 ### `ava.config.js`
 
-AVA follows Node.js' behavior, so if you've set `"type": "module"` you must use ESM, and otherwise you must use CommonJS.
+Prefer `ava.config.js` when your project already treats `.js` files as ES modules, for example through `"type": "module"` in `package.json`.
 
 The default export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
 
@@ -113,43 +113,9 @@ export default ({projectDir}) => {
 };
 ```
 
-### `ava.config.cjs`
-
-For `ava.config.cjs` files you must assign `module.exports`. ["Module scope"](https://nodejs.org/docs/latest-v12.x/api/modules.html#modules_the_module_scope) is available. You can `require()` dependencies.
-
-The module export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
-
-```js
-module.exports = {
-	require: ['./_my-test-helper.js']
-};
-```
-
-```js
-module.exports = () => {
-	return {
-		require: ['./_my-test-helper.js']
-	};
-};
-```
-
-The factory function is called with an object containing a `projectDir` property, which you could use to change the returned configuration:
-
-```js
-module.exports = ({projectDir}) => {
-	if (projectDir === '/Users/username/projects/my-project') {
-		return {
-			// Config A
-		};
-	}
-
-	return {
-		// Config B
-	};
-};
-```
-
 ### `ava.config.mjs`
+
+Use `ava.config.mjs` when you need the filename itself to opt into ESM.
 
 The default export can either be a plain object or a factory function which returns a plain object. You can export or return a promise for a plain object:
 
@@ -185,32 +151,32 @@ export default ({projectDir}) => {
 
 ## Alternative configuration files
 
-The [CLI] lets you specify a specific configuration file, using the `--config` flag. This file must have either a `.js`, `.cjs` or `.mjs` extension and is processed like an `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` file would be.
+The [CLI] lets you specify a specific configuration file, using the `--config` flag. Prefer a `.js` file. Use `.mjs` only when your project does not already treat `.js` files as ESM.
 
-When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js`, `ava.config.cjs` or `ava.config.mjs` files. The configuration is not merged.
+When the `--config` flag is set, the provided file will override all configuration from the `package.json` and `ava.config.js` or `ava.config.mjs` files. The configuration is not merged.
 
 You can use this to customize configuration for a specific test run. For instance, you may want to run unit tests separately from integration tests:
 
-`ava.config.cjs`:
+`ava.config.js`:
 
 ```js
-module.exports = {
+export default {
 	files: ['unit-tests/**/*']
 };
 ```
 
-`integration-tests.config.cjs`:
+`integration-tests.config.js`:
 
 ```js
-const baseConfig = require('./ava.config.cjs');
+import baseConfig from './ava.config.js';
 
-module.exports = {
+export default {
 	...baseConfig,
 	files: ['integration-tests/**/*']
 };
 ```
 
-You can now run your unit tests through `npx ava` and the integration tests through `npx ava --config integration-tests.config.cjs`.
+You can now run your unit tests through `npx ava` and the integration tests through `npx ava --config integration-tests.config.js`.
 
 ## Object printing depth
 
@@ -247,7 +213,7 @@ export default {
 
 Node.js can only load non-standard extension as ES Modules when using [experimental loaders](https://nodejs.org/docs/latest/api/esm.html#esm_experimental_loaders). To use this you'll also have to configure AVA to `import()` your test file.
 
-As with the array form, you need to explicitly list `js`, `cjs`, and `mjs` extensions. These **must** be set using the `true` value; other extensions are configurable using either `'commonjs'` or `'module'`:
+As with the array form, you need to explicitly list `js` and `mjs` extensions. These **must** be set using the `true` value; other extensions are configurable using `'module'`:
 
 `ava.config.js`:
 ```js
@@ -283,21 +249,6 @@ If the module exports a function, it is called and awaited:
 ```js
 export default function () {
 	// Additional setup
-}
-```
-
-`_my-test-helper.cjs`:
-```js
-module.exports = function () {
-	// Additional setup
-}
-```
-
-In CJS files, a `default` export is also supported:
-
-```js
-exports.default = function () {
-	// Never called
 }
 ```
 

@@ -1,7 +1,7 @@
 import test from 'ava';
 
-import required from './required.cjs';
+import required from './required.js';
 
-test('exports.default is called', t => {
+test('default export is called', t => {
 	t.true(required.called);
 });

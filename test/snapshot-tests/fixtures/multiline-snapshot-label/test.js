@@ -1,4 +1,4 @@
-const test = require(process.env.TEST_AVA_REQUIRE_FROM);
+const {default: test} = await import(process.env.TEST_AVA_IMPORT_FROM);
 
 const f = () => [
 	'Hello',

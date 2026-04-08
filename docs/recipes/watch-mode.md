@@ -66,7 +66,7 @@ Afterwards you can use the `r` command to run the matched tests again, or `a` co
 
 AVA tracks which source files your test files depend on. If you change such a dependency only the test file that depends on it will be rerun. AVA will rerun all tests if it cannot determine which test file depends on the changed source file.
 
-Dependency tracking works for `require()` and `import` syntax, as supported by [@vercel/nft](https://github.com/vercel/nft). `import()` is supported but dynamic paths such as `import(myVariable)` are not.
+Dependency tracking works for static `import` syntax, as supported by [@vercel/nft](https://github.com/vercel/nft). `import()` is supported but dynamic paths such as `import(myVariable)` are not.
 
 Files accessed using the `fs` module are not tracked.
 

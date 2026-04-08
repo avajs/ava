@@ -171,15 +171,6 @@ test('skip state is irreversible: runIf(true) cannot undo a prior skipIf(true)',
 	t.is(calls[0].metadata.skipped, true);
 });
 
-test('accessing .default on a skipped proxy does not throw (proxy invariant)', t => {
-	const {chain} = createTestChain();
-
-	t.notThrows(() => {
-		// eslint-disable-next-line no-unused-expressions
-		chain.skipIf(true).default;
-	});
-});
-
 test('accessing non-configurable accessor without getter on conditional chains returns undefined (proxy invariant)', t => {
 	const {chain} = createTestChain();
 

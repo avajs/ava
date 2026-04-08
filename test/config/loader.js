@@ -97,10 +97,6 @@ test.serial('loads config from factory function', ok('package-no-file-yes-factor
 	t.assert(conf.files.startsWith(FIXTURE_ROOT));
 });
 
-test.serial('does not support require() inside config.js files', notOk('require'), (t, error) => {
-	t.true(error.message.startsWith('Error loading ava.config.js: require is not defined'));
-});
-
 test.serial('throws an error if a config factory does not return a plain object', notOk('factory-no-plain-return'));
 
 test.serial('throws an error if a config does not export a plain object', notOk('no-plain-config'));
@@ -122,9 +118,3 @@ test.serial('throws an error if a config file contains a non-function `filterNod
 test.serial('throws an error if a config file contains a non-object `nonSemVerExperiments` property', notOk('non-object-experiments'));
 
 test.serial('throws an error if a config file enables an unsupported experiment', notOk('unsupported-experiments'));
-
-test.serial('loads .cjs config', ok('cjs'), (t, conf) => {
-	t.assert(conf.files.startsWith(FIXTURE_ROOT));
-});
-
-test.serial('throws an error if both .js and .cjs configs are present', notOk('file-yes-cjs-yes'));

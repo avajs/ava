@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import anyTest from '../../entrypoints/main.mjs';
+import anyTest from '../../entrypoints/main.js';
 
 anyTest.skipIf(true).beforeEach(() => {});
 anyTest.runIf(false).afterEach(() => {});

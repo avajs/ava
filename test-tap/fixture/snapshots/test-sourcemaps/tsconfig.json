@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es6",
-		"module": "commonjs",
+		"module": "es2022",
 		"outDir": "build",
 		"sourceMap": true,
 		"strictNullChecks": true

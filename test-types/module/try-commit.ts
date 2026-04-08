@@ -1,7 +1,7 @@
 import {expectType} from 'tsd';
 
-import type {ExecutionContext} from '../../entrypoints/main.mjs';
-import test from '../../entrypoints/main.mjs';
+import type {ExecutionContext} from '../../entrypoints/main.js';
+import test from '../../entrypoints/main.js';
 
 test('attempt', async t => {
 	const attempt = await t.try(

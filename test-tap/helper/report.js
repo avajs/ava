@@ -7,7 +7,8 @@ import {globbySync} from 'globby';
 import Api from '../../lib/api.js';
 import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
-import pkg from '../../lib/pkg.cjs';
+import normalizeModuleTypes from '../../lib/module-types.js';
+import pkg from '../../lib/pkg.js';
 
 _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 
@@ -60,7 +61,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 	const providers = [];
 
 	const options = {
-		extensions: ['cjs'],
+		extensions: ['js'],
 		failFast: type === 'failFast' || type === 'failFast2',
 		failWithoutAssertions: false,
 		serial: type === 'failFast' || type === 'failFast2',
@@ -68,6 +69,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		cacheEnabled: false,
 		experiments: {},
 		match,
+		nodeArguments: [],
 		providers,
 		projectDir,
 		timeout: type.startsWith('timeout') ? '2.5s' : undefined,
@@ -76,17 +78,18 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		snapshotDir: false,
 		chalkOptions: {level: 1},
 		workerThreads: false,
-		env: {
+		environmentVariables: {
 			NODE_NO_WARNINGS: '1',
 		},
 	};
 
-	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers: []});
+	options.moduleTypes = normalizeModuleTypes(options.extensions, 'module');
+	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers});
 
 	const api = new Api(options);
 	api.on('run', ({data: plan}) => reporter.startRun(plan));
 
-	const files = globbySync('*.cjs', {
+	const files = globbySync('*.js', {
 		absolute: true,
 		brace: true,
 		case: false,
@@ -132,7 +135,7 @@ exports.watch = reporter => run('watch', reporter);
 exports.edgeCases = reporter => run('edgeCases', reporter, {
 	filter: [
 		{pattern: '**/*'},
-		{pattern: '**/test.cjs', lineNumbers: [2]},
-		{pattern: '**/ast-syntax-error.cjs', lineNumbers: [7]},
+		{pattern: '**/test.js', lineNumbers: [2]},
+		{pattern: '**/ast-syntax-error.js', lineNumbers: [7]},
 	],
 });

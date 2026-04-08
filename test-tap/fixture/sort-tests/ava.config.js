@@ -1,5 +1,5 @@
 export default {
-	files: ['*.cjs'],
+	files: ['[0-9]*.js'],
 	// Descending order
 	sortTestFiles: (a, b) => b.localeCompare(a, [], {numeric: true}),
 	concurrency: 1,
