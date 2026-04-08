@@ -95,7 +95,7 @@ jobs:
     needs: preflight
     environment: npm
     permissions:
-      contents: write
+      contents: read
       id-token: write
     steps:
       - name: Checkout
@@ -117,7 +117,6 @@ jobs:
           fi
 
       - name: Generate app token
-        if: needs.preflight.outputs.ref_is_tag == 'false'
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
@@ -182,7 +181,7 @@ jobs:
             -f ref="refs/tags/${{steps.push-commit.outputs.release_tag}}" \
             -f sha="${{steps.push-commit.outputs.version_commit_sha}}"
         env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{steps.app-token.outputs.token}}
 
       - name: Publish to npm with provenance
         run: npm publish --provenance
@@ -195,4 +194,4 @@ jobs:
             --draft \
             --generate-notes
         env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{steps.app-token.outputs.token}}
