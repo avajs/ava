@@ -20,7 +20,7 @@ AVA uses `fs.watch()`. Support for `recursive` mode is required. Note that this 
 
 ## Ignoring changes
 
-By default AVA watches for changes to all files, except for those with a `.snap.md` extension, `ava.config.*` and files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
+By default AVA watches for changes to all files, except for those with `.snap.md` or `.tsbuildinfo` extensions, `ava.config.*` and files in [certain directories](https://github.com/novemberborn/ignore-by-default/blob/master/index.js) as provided by the [`ignore-by-default`] package.
 
 You can configure additional patterns for files to ignore in the [`ava` section of your `package.json`, or `ava.config.*` file][config], using the `ignoreChanges` key within the `watchMode` object:
 
