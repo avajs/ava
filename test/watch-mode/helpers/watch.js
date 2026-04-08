@@ -32,7 +32,7 @@ export const withFixture = fixture => async (t, task) => {
 	let completedTask = false;
 	try {
 		await temporaryDirectoryTask(async dir => {
-			await fs.cp(cwd(fixture), dir, {recursive: true});
+			await fs.cp(cwd(fixture), dir, {recursive: true, filter: src => !src.includes('/node_modules/')});
 
 			async function * run(args = [], options = {}) {
 				yield * exec(['--watch', ...args], {...options, cwd: dir, env: {AVA_FORCE_CI: 'not-ci', ...options.env}});
