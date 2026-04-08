@@ -82,12 +82,12 @@ The [`npm` environment](https://github.com/avajs/ava/settings/environments) must
 
 #### GitHub App for bypassing branch rulesets
 
-The `main` branch has rulesets that prevent direct pushes, including from `GITHUB_TOKEN`. When releasing a new version from a commit ref, the workflow creates the version commit (updating `package.json` and `package-lock.json`) and the version tag via the GitHub API. The commit is created using a GitHub App token so that the App's identity can be granted a ruleset bypass, while the lightweight tag is created with `GITHUB_TOKEN`.
+The `main` branch has rulesets that prevent direct pushes, including from `GITHUB_TOKEN`. When releasing a new version from a commit ref, the workflow creates the version commit (updating `package.json` and `package-lock.json`) and the version tag via the GitHub API. The commit is created using a GitHub App token so that the App's identity can be granted a ruleset bypass. The App is also used for tagging and creating the release, but this isn't relevant for branch protections, it just looks pretty.
 
 The App must be configured with:
 
-- **Repository permissions:** Write access to the `package.json` and `package-lock.json` files
-- **Ruleset bypass** granted in the `main` branch ruleset settings
+- **Repository permissions:** Write access to contents
+- **Ruleset bypass** granted in the relevant rulesets
 
 Two repository configuration values are required:
 
