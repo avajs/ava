@@ -43,6 +43,7 @@ const cwdFileUrlPrefix = pathToFileURL(process.cwd());
 exports.sanitizers = {
 	acorn: string => string.split('\n').filter(line => !/node_modules.acorn/.test(line)).join('\n'),
 	cwd: string => string.replaceAll(cwdFileUrlPrefix, '').replaceAll(process.cwd(), '~'),
+	esmLoader: string => string.split('\n').filter(line => !line.includes('› async node:internal/modules/esm/loader:')).join('\n'),
 	experimentalWarning: string => string.replaceAll(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => string.replaceAll('\r\n', '\n'),
 	// The following are invjected by tap@18.

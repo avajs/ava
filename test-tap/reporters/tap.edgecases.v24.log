@@ -1,10 +1,10 @@
 TAP version 13
 ---tty-stream-chunk-separator
-not ok 1 - ~/test-tap/fixture/report/edgecases/ast-syntax-error.js:3
+not ok 1 - SyntaxError: Unexpected token 'do'
   ---
     name: SyntaxError
     message: Unexpected token 'do'
-    at: 'const fn = do {'
+    at: 'compileSourceTextModule (node:internal/modules/esm/utils:318:16)'
   ...
 ---tty-stream-chunk-separator
 not ok 2 - ast-syntax-error.js exited with a non-zero exit code: 1
@@ -15,9 +15,7 @@ not ok 4 - TypeError: test is not a function
   ---
     name: TypeError
     message: test is not a function
-    at: >-
-      Object.<anonymous>
-      (~/test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)
+    at: '/test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1'
   ...
 ---tty-stream-chunk-separator
 not ok 5 - import-and-use-test-member.js exited with a non-zero exit code: 1

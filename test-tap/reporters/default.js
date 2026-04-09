@@ -21,6 +21,7 @@ test(async t => {
 			sanitizers: [
 				...sanitizers,
 				report.sanitizers.cwd,
+				report.sanitizers.esmLoader,
 				report.sanitizers.experimentalWarning,
 				report.sanitizers.posix,
 				report.sanitizers.tapLoaders,

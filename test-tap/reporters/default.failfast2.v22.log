@@ -14,7 +14,7 @@
 
   Test failed via `t.fail()`
 
-  [90m› test-tap/fixture/report/failfast2/a.js:3:22[39m
+  [90m› file://test-tap/fixture/report/failfast2/a.js:3:22[39m
 
   [90m─[39m
 

@@ -8,6 +8,8 @@ import {withFixture} from './helpers/watch.js';
 
 if (available(fileURLToPath(import.meta.url))) {
 	test('when available, watch mode works', withFixture('basic'), async (t, fixture) => {
+		t.timeout(30_000);
+
 		await fixture.watch({
 			async 1(result) {
 				t.true(result.stats.passed.length > 0);

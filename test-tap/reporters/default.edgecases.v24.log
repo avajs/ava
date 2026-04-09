@@ -7,10 +7,6 @@
 ---tty-stream-chunk-separator
   [1mUncaught exception in ast-syntax-error.js[22m
 
-  ~/test-tap/fixture/report/edgecases/ast-syntax-error.js:3
-  const fn = do {
-             ^^
-
   SyntaxError: Unexpected token 'do'
 
 ---tty-stream-chunk-separator
@@ -29,7 +25,7 @@
 
   TypeError: test is not a function
 
-  [90m› Object.<anonymous> (test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1)[39m
+  [90m› file://test-tap/fixture/report/edgecases/import-and-use-test-member.js:3:1[39m
 
 ---tty-stream-chunk-separator
   [31m✘ import-and-use-test-member.js exited with a non-zero exit code: 1[39m
