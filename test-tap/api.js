@@ -8,7 +8,6 @@ import {test} from 'tap';
 import Api from '../lib/api.js';
 import normalizeExtensions from '../lib/extensions.js';
 import {normalizeGlobs} from '../lib/globs.js';
-import normalizeModuleTypes from '../lib/module-types.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = path.join(__dirname, '..');
@@ -21,7 +20,6 @@ async function apiCreator(options = {}) {
 	options.concurrency = 2;
 	options.experiments = {};
 	options.extensions = normalizeExtensions(options.extensions, providers);
-	options.moduleTypes ??= normalizeModuleTypes(options.extensions, 'module');
 	options.globs = normalizeGlobs({
 		files: options.files, ignoredByWatcher: options.watchMode?.ignoreChanges, extensions: options.extensions, providers,
 	});

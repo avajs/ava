@@ -7,7 +7,6 @@ import {globbySync} from 'globby';
 import Api from '../../lib/api.js';
 import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
-import normalizeModuleTypes from '../../lib/module-types.js';
 import pkg from '../../lib/pkg.js';
 
 _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
@@ -84,7 +83,6 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		},
 	};
 
-	options.moduleTypes = normalizeModuleTypes(options.extensions, 'module');
 	options.globs = normalizeGlobs({extensions: options.extensions, files: ['*'], providers});
 
 	const api = new Api(options);
