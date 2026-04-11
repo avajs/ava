@@ -7,6 +7,11 @@ test('cannot configure how js extensions should be loaded', async t => {
 	t.snapshot(cleanOutput(result.stderr));
 });
 
+test('cannot configure how cjs extensions should be loaded', async t => {
+	const result = await t.throwsAsync(fixture(['--config', 'change-cjs-loading.config.js']));
+	t.snapshot(cleanOutput(result.stderr));
+});
+
 test('cannot configure how mjs extensions should be loaded', async t => {
 	const result = await t.throwsAsync(fixture(['--config', 'change-mjs-loading.config.js']));
 	t.snapshot(cleanOutput(result.stderr));
