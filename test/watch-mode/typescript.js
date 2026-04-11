@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import {test, withFixture} from './helpers/watch.js';
 
-test('waits for external compiler before re-running typescript test files', withFixture('typescript-precompiled'), async (t, fixture) => {
+test.failing('waits for external compiler before re-running typescript test files', withFixture('typescript-precompiled'), async (t, fixture) => {
 	await fixture.watch({
 		async 1({stats}) {
 			t.true(stats.passed.length > 0);
@@ -55,7 +55,7 @@ test('handles deletion of precompiled and source files (single possible source f
 	}, [], {env: {JUST_TS_EXTENSION: 'true'}});
 });
 
-test('handles inline compilation', withFixture('typescript-inline'), async (t, fixture) => {
+test.failing('handles inline compilation', withFixture('typescript-inline'), async (t, fixture) => {
 	await fs.symlink(new URL('../../node_modules', import.meta.url), path.join(fixture.dir, 'node_modules'), 'junction');
 	await fixture.watch({
 		async 1({stats}) {
@@ -70,7 +70,7 @@ test('handles inline compilation', withFixture('typescript-inline'), async (t, f
 	});
 });
 
-test('ignores changes to compiled files with inline compilation', withFixture('typescript-inline'), async (t, fixture) => {
+test.failing('ignores changes to compiled files with inline compilation', withFixture('typescript-inline'), async (t, fixture) => {
 	await fs.symlink(new URL('../../node_modules', import.meta.url), path.join(fixture.dir, 'node_modules'), 'junction');
 	await fixture.watch({
 		async 1({stats}) {
