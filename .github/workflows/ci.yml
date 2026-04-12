@@ -10,7 +10,7 @@ on:
       - "media/**"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: true
 jobs:
   nodejs:
     name: Node.js
