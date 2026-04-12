@@ -16,3 +16,10 @@ for (const [where, which] of [
 		t.snapshot(cleanOutput(result.stderr), 'fails with message');
 	});
 }
+
+test('errors if extensions is not an array', async t => {
+	const result = await t.throwsAsync(fixture([], {
+		cwd: cwd('object-form'),
+	}));
+	t.snapshot(cleanOutput(result.stderr), 'fails with message');
+});
