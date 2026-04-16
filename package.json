@@ -117,7 +117,7 @@
 	},
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
-		"@ava/typescript": "^6.0.0",
+		"@ava/typescript": "^7.0.0",
 		"@sindresorhus/tsconfig": "^8.1.0",
 		"@types/node": "^24.12.2",
 		"ansi-escapes": "^7.3.0",

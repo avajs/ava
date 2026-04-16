@@ -31,7 +31,7 @@ test('files can be filtered by directory', async t => {
 	t.snapshot(result.stats.passed);
 });
 
-test.failing('additional files can be provided', async t => {
+test('additional files can be provided', async t => {
 	const options = {
 		cwd: cwd('treat-patterns-as-files'),
 	};
