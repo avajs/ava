@@ -6,7 +6,7 @@ import {test} from 'tap';
 
 import * as assert from '../lib/assert.js';
 import * as snapshotManager from '../lib/snapshot-manager.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
+import {set as setOptions} from '../lib/worker/options.js';
 
 setOptions({chalkOptions: {level: 0}});
 
@@ -1475,7 +1475,7 @@ test('.snapshot()', async t => {
 
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.cjs'),
+		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
 		recordNewSnapshots: updating,

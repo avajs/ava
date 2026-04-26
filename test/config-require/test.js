@@ -22,7 +22,7 @@ test('loads required modules, not as an array', async t => {
 	t.is(result.stats.passed.length, 1);
 });
 
-test('calls exports.default (CJS)', async t => {
+test('calls default export', async t => {
 	const result = await fixture([], {cwd: cwd('exports-default')});
 	t.is(result.stats.passed.length, 1);
 });

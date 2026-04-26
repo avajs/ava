@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {expectError, expectType} from 'tsd';
 
-import test from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.js';
 
 class CustomError extends Error {
 	foo: string;

@@ -18,7 +18,7 @@ test('`filterNodeArgumentsForWorkerThreads` configuration filters arguments for 
 		cwd: cwd('thread-arguments-filter'),
 	};
 
-	const result = await fixture(['--config=thread-arguments-filter.config.mjs', 'thread.js'], options);
+	const result = await fixture(['--config=thread-arguments-filter.config.js', 'thread.js'], options);
 
 	t.snapshot(result.stats.passed, 'tests pass');
 });
@@ -28,7 +28,7 @@ test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker pro
 		cwd: cwd('thread-arguments-filter'),
 	};
 
-	const result = await fixture(['--config=thread-arguments-filter.config.mjs', '--no-worker-threads', 'process.js'], options);
+	const result = await fixture(['--config=thread-arguments-filter.config.js', '--no-worker-threads', 'process.js'], options);
 
 	t.snapshot(result.stats.passed, 'tests pass');
 });

@@ -1,0 +1,15 @@
+import test from '../../entrypoints/main.js';
+
+test('passCount', t => {
+	t.pass();
+});
+
+test('failCount', t => {
+	t.fail();
+});
+
+test.skip('skipCount', t => {
+	t.pass();
+});
+
+test.todo('todoCount');

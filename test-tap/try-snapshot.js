@@ -7,7 +7,7 @@ import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-impor
 import ContextRef from '../lib/context-ref.js';
 import * as snapshotManager from '../lib/snapshot-manager.js';
 import Test from '../lib/test.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
+import {set as setOptions} from '../lib/worker/options.js';
 
 setOptions({});
 
@@ -33,7 +33,7 @@ test(async t => {
 
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'try-snapshot.cjs'),
+		file: path.join(projectDir, 'try-snapshot.js'),
 		projectDir,
 		fixedLocation: null,
 		updating,

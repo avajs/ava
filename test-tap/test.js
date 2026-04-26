@@ -9,7 +9,7 @@ import {test} from 'tap';
 import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-import
 import * as snapshotManager from '../lib/snapshot-manager.js';
 import Test from '../lib/test.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
+import {set as setOptions} from '../lib/worker/options.js';
 
 import {ava} from './helper/ava-test.js';
 
@@ -472,7 +472,7 @@ test('assertions are bound', t =>
 test('snapshot assertion can be skipped', t => {
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.cjs'),
+		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
 		recordNewSnapshots: true,
@@ -498,7 +498,7 @@ test('snapshot assertion can be skipped', t => {
 test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
-		file: path.join(projectDir, 'assert.cjs'),
+		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
 		updating: false,

@@ -1,6 +1,6 @@
 import {expectType} from 'tsd';
 
-import test from '../../entrypoints/main.mjs';
+import test from '../../entrypoints/main.js';
 
 test('actual extends expected', t => {
 	type Expected = {foo: [1, 2, 3]};

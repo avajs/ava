@@ -41,7 +41,7 @@ test.serial('scheduler disabled when cache disabled', async t => {
 	} catch {}
 
 	try {
-		await fixture(['--concurrency=1', '--config', 'disabled-cache.cjs', '1pass.js', '2fail.js'], options);
+		await fixture(['--concurrency=1', '--config', 'disabled-cache.js', '1pass.js', '2fail.js'], options);
 	} catch (error) {
 		const timestamps = getTimestamps(error.stats);
 		t.true(timestamps.passed < timestamps.failed);
@@ -54,7 +54,7 @@ test.serial('scheduler disabled in CI', async t => {
 	} catch {}
 
 	try {
-		await fixture(['--concurrency=1', '--config', 'disabled-cache.cjs', '1pass.js', '2fail.js'], options);
+		await fixture(['--concurrency=1', '--config', 'disabled-cache.js', '1pass.js', '2fail.js'], options);
 	} catch (error) {
 		const timestamps = getTimestamps(error.stats);
 		t.true(timestamps.passed < timestamps.failed);

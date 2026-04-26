@@ -21,6 +21,7 @@ test(async t => {
 			sanitizers: [
 				...sanitizers,
 				report.sanitizers.cwd,
+				report.sanitizers.esmLoader,
 				report.sanitizers.experimentalWarning,
 				report.sanitizers.posix,
 				report.sanitizers.tapLoaders,
@@ -29,7 +30,7 @@ test(async t => {
 			],
 		});
 		const reporter = new Reporter({
-			extensions: ['cjs'],
+			extensions: ['js'],
 			projectDir: report.projectDir(type),
 			durationThreshold: 60_000,
 			reportStream: tty,

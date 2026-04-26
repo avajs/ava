@@ -3,7 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const cliPath = fileURLToPath(new URL('../../entrypoints/cli.mjs', import.meta.url));
+const cliPath = fileURLToPath(new URL('../../entrypoints/cli.js', import.meta.url));
 
 export function execCli(args, options, cb) {
 	let dirname;

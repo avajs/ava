@@ -91,7 +91,7 @@ It is best practice to make sure your code exits cleanly. We've also seen occurr
 
 For these reasons we're not providing an option to disable this timeout behavior. However, it is possible to register a callback for when AVA has completed the test run without uncaught exceptions or unhandled rejections. From inside this callback you can do whatever you need to do, including calling `process.exit()`.
 
-Create a `_force-exit.mjs` file:
+Create a `_force-exit.js` file:
 
 ```js
 import process from 'node:process';
@@ -108,7 +108,7 @@ Load it for all test files through AVA's `require` option:
 
 ```js
 export default {
-	require: ['./_force-exit.mjs'],
+	require: ['./_force-exit.js'],
 };
 ```
 

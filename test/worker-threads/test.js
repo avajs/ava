@@ -13,6 +13,6 @@ test('--no-worker-threads causes tests to run in a child process', async t => {
 });
 
 test('`workerThreads: false` configuration causes tests to run in a child process', async t => {
-	const result = await t.throwsAsync(fixture(['--config=child-process.config.mjs']));
+	const result = await t.throwsAsync(fixture(['--config=child-process.config.js']));
 	t.is(result.stats.failed.length, 1);
 });

@@ -2,7 +2,7 @@ import {test} from 'tap';
 
 import './helper/chalk0.js'; // eslint-disable-line import-x/no-unassigned-import
 import Test from '../lib/test.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
+import {set as setOptions} from '../lib/worker/options.js';
 
 setOptions({});
 

@@ -4,10 +4,10 @@ not ok 1 - TypeError: test.serial.test is not a function
   ---
     name: TypeError
     message: test.serial.test is not a function
-    at: 'Object.<anonymous> (~/test-tap/fixture/report/regular/bad-test-chain.cjs:3:13)'
+    at: '/test-tap/fixture/report/regular/bad-test-chain.js:3:13'
   ...
 ---tty-stream-chunk-separator
-not ok 2 - bad-test-chain.cjs exited with a non-zero exit code: 1
+not ok 2 - bad-test-chain.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 not ok 3 - nested-objects › format with max depth 4
   ---
@@ -158,7 +158,7 @@ not ok 16 - traces-in-t-throws › throws
         }
       'Expected instance of:': 'Function TypeError {}'
     message: ''
-    at: 'throwError (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)'
+    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
   ...
 ---tty-stream-chunk-separator
 not ok 17 - traces-in-t-throws › notThrows
@@ -171,7 +171,7 @@ not ok 17 - traces-in-t-throws › notThrows
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)'
+    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
   ...
 ---tty-stream-chunk-separator
 not ok 18 - traces-in-t-throws › notThrowsAsync
@@ -184,7 +184,7 @@ not ok 18 - traces-in-t-throws › notThrowsAsync
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)'
+    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
   ...
 ---tty-stream-chunk-separator
 not ok 19 - traces-in-t-throws › throwsAsync
@@ -197,7 +197,7 @@ not ok 19 - traces-in-t-throws › throwsAsync
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:4:8)'
+    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
   ...
 ---tty-stream-chunk-separator
 not ok 20 - traces-in-t-throws › throwsAsync different error
@@ -213,7 +213,7 @@ not ok 20 - traces-in-t-throws › throwsAsync different error
     message: ''
     at: >-
       returnRejectedPromise
-      (~/test-tap/fixture/report/regular/traces-in-t-throws.cjs:8:24)
+      (/test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)
   ...
 ---tty-stream-chunk-separator
 ok 21 - uncaught-exception › passes
@@ -224,10 +224,10 @@ not ok 22 - Error: Can’t catch me
     message: Can’t catch me
     at: >-
       Immediate.<anonymous>
-      (~/test-tap/fixture/report/regular/uncaught-exception.cjs:5:9)
+      (/test-tap/fixture/report/regular/uncaught-exception.js:5:9)
   ...
 ---tty-stream-chunk-separator
-not ok 23 - uncaught-exception.cjs exited with a non-zero exit code: 1
+not ok 23 - uncaught-exception.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 ok 24 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
@@ -237,7 +237,7 @@ not ok 26 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
-    at: 'passes (~/test-tap/fixture/report/regular/unhandled-rejection.cjs:4:17)'
+    at: 'passes (/test-tap/fixture/report/regular/unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
 not ok 27 - unhandled-rejection
@@ -246,7 +246,7 @@ not ok 27 - unhandled-rejection
     formatted: 'null'
   ...
 ---tty-stream-chunk-separator
-not ok 28 - unhandled-rejection.cjs exited with a non-zero exit code: 1
+not ok 28 - unhandled-rejection.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
 1..21

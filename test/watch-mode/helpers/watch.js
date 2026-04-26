@@ -129,7 +129,7 @@ export const withFixture = fixture => async (t, task) => {
 						// <https://github.com/nodejs/node/issues/48437> but there seem to be
 						// other isues.
 						setTimeout(() => {
-							process.kill('SIGKILL');
+							process?.kill('SIGKILL');
 						}, 1000).unref();
 
 						try {

@@ -43,9 +43,9 @@ test('resolves tests from the package.json dir if none are specified on cli', as
 	t.snapshot(result.stats.passed, 'resolves test files from configuration');
 });
 
-test('resolves tests from an .mjs config file', async t => {
+test('resolves tests from a .js config file', async t => {
 	const options = {
-		cwd: cwd('mjs-with-tests/dir-a-wrapper'),
+		cwd: cwd('js-with-tests/dir-a-wrapper'),
 	};
 
 	const result = await fixture([], options);
@@ -67,7 +67,7 @@ test('use current working directory if `package.json` is not found', async t => 
 	const cwd = temporaryDirectory();
 	const testFilePath = path.join(cwd, 'test.js');
 
-	fs.writeFileSync(testFilePath, 'const test = require(process.env.TEST_AVA_REQUIRE_FROM);\ntest(\'test name\', t => { t.pass(); });');
+	fs.writeFileSync(testFilePath, 'const {default: test} = await import(process.env.TEST_AVA_IMPORT_FROM);\ntest(\'test name\', t => { t.pass(); });');
 
 	const options = {
 		cwd,

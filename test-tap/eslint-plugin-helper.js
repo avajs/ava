@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
 
-import {load} from '../entrypoints/eslint-plugin-helper.cjs';
+import {load} from '../entrypoints/eslint-plugin-helper.js';
 
 const projectDir = fileURLToPath(new URL('fixture/eslint-plugin-helper', import.meta.url));
 const overrideDir = fileURLToPath(new URL('fixture/eslint-plugin-helper/for-overriding', import.meta.url));
@@ -41,7 +41,7 @@ test('classifies files according to the configuration', t => {
 		isHelper: false,
 		isTest: false,
 	});
-	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.cjs')), {
+	t.same(helper.classifyFile(path.join(projectDir, 'tests/test.js')), {
 		isHelper: false,
 		isTest: false,
 	});
@@ -74,7 +74,7 @@ test('classifies files according to configuration override', t => {
 		isHelper: false,
 		isTest: false,
 	});
-	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.cjs')), {
+	t.same(helper.classifyFile(path.join(overrideDir, 'tests/test.js')), {
 		isHelper: false,
 		isTest: false,
 	});

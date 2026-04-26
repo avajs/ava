@@ -1,6 +1,6 @@
-import {test, withFixture} from './helpers/watch.js';
+import {serial, withFixture} from './helpers/watch.js';
 
-test('waits for changes', withFixture('basic'), async (t, fixture) => {
+serial('waits for changes', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.assertIdle();
@@ -9,7 +9,7 @@ test('waits for changes', withFixture('basic'), async (t, fixture) => {
 	});
 });
 
-test('watcher can be configured to ignore files', withFixture('basic'), async (t, fixture) => {
+serial('watcher can be configured to ignore files', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.assertIdle(async () => {
@@ -20,7 +20,7 @@ test('watcher can be configured to ignore files', withFixture('basic'), async (t
 	});
 });
 
-test('new, empty directories are ignored', withFixture('basic'), async (t, fixture) => {
+serial('new, empty directories are ignored', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.assertIdle(async () => {
@@ -31,7 +31,7 @@ test('new, empty directories are ignored', withFixture('basic'), async (t, fixtu
 	});
 });
 
-test('runs test files that depend on the changed file', withFixture('basic'), async (t, fixture) => {
+serial('runs test files that depend on the changed file', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.touch('source.js');
@@ -43,7 +43,7 @@ test('runs test files that depend on the changed file', withFixture('basic'), as
 	});
 });
 
-test('runs all test files if a file is changed that is not depended on', withFixture('basic'), async (t, fixture) => {
+serial('runs all test files if a file is changed that is not depended on', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1({stats}) {
 			await this.touch('not-depended-on.js');
@@ -56,7 +56,7 @@ test('runs all test files if a file is changed that is not depended on', withFix
 	});
 });
 
-test('runs all test files if a new file is added', withFixture('basic'), async (t, fixture) => {
+serial('runs all test files if a new file is added', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1({stats}) {
 			await this.write('new-file.js');
@@ -69,7 +69,7 @@ test('runs all test files if a new file is added', withFixture('basic'), async (
 	});
 });
 
-test('does not run deleted test file, even if source it previously depended on is changed', withFixture('basic'), async (t, fixture) => {
+serial('does not run deleted test file, even if source it previously depended on is changed', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.assertIdle(async () => {
@@ -81,7 +81,7 @@ test('does not run deleted test file, even if source it previously depended on i
 	});
 });
 
-test('runs test file when source it depends on is deleted', withFixture('basic'), async (t, fixture) => {
+serial('runs test file when source it depends on is deleted', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1() {
 			await this.rm('source.js');
@@ -95,7 +95,7 @@ test('runs test file when source it depends on is deleted', withFixture('basic')
 	});
 });
 
-test('filters test files', withFixture('basic'), async (t, fixture) => {
+serial('filters test files', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async 1({stats}) {
 			t.false(stats.passed.some(({file}) => file === 'test.js'));

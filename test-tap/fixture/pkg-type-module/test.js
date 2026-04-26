@@ -1,4 +1,4 @@
-import test from '../../../entrypoints/main.mjs';
+import test from '../../../entrypoints/main.js';
 
 test('pass', t => {
 	t.pass();

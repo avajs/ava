@@ -1,7 +1,7 @@
 export default {
 	require: [
-		['./required.mjs', 'hello', 'world'],
-		['./required.cjs', 'goodbye'],
+		['./required-esm.js', 'hello', 'world'],
+		['./required.js', 'goodbye'],
 		'./side-effect.js',
 	],
 };

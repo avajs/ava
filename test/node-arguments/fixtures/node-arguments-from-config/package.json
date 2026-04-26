@@ -5,8 +5,8 @@
 			"*.js"
 		],
 		"nodeArguments": [
-			"--require",
-			"./setup.cjs"
+			"--import",
+			"./setup.js"
 		]
 	}
 }

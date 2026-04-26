@@ -3,7 +3,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {test} from 'tap';
 
 import ContextRef from '../lib/context-ref.js';
-import {set as setOptions} from '../lib/worker/options.cjs';
+import {set as setOptions} from '../lib/worker/options.js';
 
 import {newAva} from './helper/ava-test.js';
 

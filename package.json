@@ -9,32 +9,20 @@
 	},
 	"homepage": "https://avajs.dev",
 	"bin": {
-		"ava": "entrypoints/cli.mjs"
+		"ava": "entrypoints/cli.js"
 	},
 	"exports": {
 		".": {
-			"import": {
-				"types": "./entrypoints/main.d.mts",
-				"default": "./entrypoints/main.mjs"
-			},
-			"require": {
-				"types": "./entrypoints/main.d.cts",
-				"default": "./entrypoints/main.cjs"
-			}
+			"types": "./entrypoints/main.d.ts",
+			"default": "./entrypoints/main.js"
 		},
-		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.cjs",
+		"./eslint-plugin-helper": "./entrypoints/eslint-plugin-helper.js",
 		"./plugin": {
-			"import": {
-				"types": "./entrypoints/plugin.d.mts",
-				"default": "./entrypoints/plugin.mjs"
-			},
-			"require": {
-				"types": "./entrypoints/plugin.d.cts",
-				"default": "./entrypoints/plugin.cjs"
-			}
+			"types": "./entrypoints/plugin.d.ts",
+			"default": "./entrypoints/plugin.js"
 		},
 		"./internal": {
-			"types": "./entrypoints/internal.d.mts"
+			"types": "./entrypoints/internal.d.ts"
 		}
 	},
 	"type": "module",
@@ -120,6 +108,7 @@
 		"plur": "^6.0.0",
 		"pretty-ms": "^9.3.0",
 		"resolve-cwd": "^3.0.0",
+		"slash": "^5.1.0",
 		"stack-utils": "^2.0.6",
 		"supertap": "^3.0.1",
 		"temp-dir": "^3.0.0",
@@ -128,7 +117,7 @@
 	},
 	"devDependencies": {
 		"@ava/test": "github:avajs/test",
-		"@ava/typescript": "^6.0.0",
+		"@ava/typescript": "^7.0.0",
 		"@sindresorhus/tsconfig": "^8.1.0",
 		"@types/node": "^24.12.2",
 		"ansi-escapes": "^7.3.0",
