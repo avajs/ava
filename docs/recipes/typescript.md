@@ -37,9 +37,7 @@ There are two components to a setup like this:
 
 ```json
 "ava": {
-	"extensions": {
-		"ts": "module"
-	},
+	"extensions": ["ts"],
 	"nodeArguments": [
 		"--import=tsimp"
 	]
