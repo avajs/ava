@@ -354,8 +354,9 @@ test('fails if test ends while there are pending assertions', t => ava(a => {
 	a.throwsAsync(Promise.reject(new Error()));
 }).run().then(result => {
 	t.equal(result.passed, false);
-	t.equal(result.error.name, 'Error');
-	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+	t.equal(result.error.name, 'AssertionError');
+	t.match(result.error.message, /Test finished, but an assertion was not awaited/);
+	t.ok(result.error.assertionStack.includes('test-tap/test.js'));
 }));
 
 test('fails if async test ends while there are pending assertions', t => ava(a => {
@@ -366,8 +367,18 @@ test('fails if async test ends while there are pending assertions', t => ava(a =
 	return Promise.resolve();
 }).run().then(result => {
 	t.equal(result.passed, false);
-	t.equal(result.error.name, 'Error');
-	t.match(result.error.message, /Test finished, but an assertion is still pending/);
+	t.equal(result.error.name, 'AssertionError');
+	t.match(result.error.message, /Test finished, but an assertion was not awaited/);
+	t.ok(result.error.assertionStack.includes('test-tap/test.js'));
+}));
+
+test('fails if notThrowsAsync is not awaited', t => ava(a => {
+	a.notThrowsAsync(Promise.resolve());
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.name, 'AssertionError');
+	t.match(result.error.message, /Test finished, but an assertion was not awaited/);
+	t.ok(result.error.assertionStack.includes('test-tap/test.js'));
 }));
 
 test('contextRef', t => {
