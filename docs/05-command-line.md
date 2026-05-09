@@ -35,6 +35,8 @@ Options:
   -m, --match              Only run tests with matching title (can be repeated)
                                                                         [string]
       --no-worker-threads  Don't use worker threads                    [boolean]
+      --related            Treat provided paths as changed source files and run
+                           related tests                               [boolean]
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
   -s, --serial             Run tests serially                          [boolean]
@@ -79,6 +81,16 @@ Files inside `node_modules` are *always* ignored. So are files starting with `_`
 * `**/tests/**/fixtures/**/*`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+## Running tests related to changed files
+
+Use the `--related` flag to treat positional arguments as changed source files instead of test file filters. AVA traces the configured test files and runs the tests that depend on the provided files:
+
+```console
+npx ava --related src/index.js src/api.js
+```
+
+If AVA cannot determine which tests depend on a changed file it runs all configured tests. This matches watch mode's conservative behavior.
 
 ## Running tests with matching titles
 
