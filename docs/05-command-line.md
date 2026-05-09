@@ -38,6 +38,9 @@ Options:
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
   -s, --serial             Run tests serially                          [boolean]
+      --seed               Randomize test order using a reproducible seed
+                                                                        [number]
+      --shuffle            Randomize test order using a random seed     [boolean]
   -t, --tap                Generate TAP output                         [boolean]
   -T, --timeout            Set global timeout (milliseconds or human-readable,
                            e.g. 10s, 2m)                                [string]
@@ -145,6 +148,22 @@ test.only('boo will run but not exclusively', t => {
 	t.pass();
 });
 ```
+
+## Randomizing test order
+
+Use `--shuffle` to randomize the order in which test files and concurrent tests within each file are started. AVA reports the seed at the start of the run.
+
+```console
+npx ava --shuffle
+```
+
+Use `--seed` to reproduce a particular randomized order:
+
+```console
+npx ava --seed=12345
+```
+
+Serial tests still run in declaration order before concurrent tests.
 
 ## Running tests at specific line numbers
 
