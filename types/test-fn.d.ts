@@ -87,6 +87,7 @@ export type TestFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	cleanup: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	macro: MacroFn<Context>;
 	meta: Meta;
@@ -209,6 +210,7 @@ export type SerialFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	cleanup: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
 	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
@@ -226,6 +228,22 @@ export type SkipFn<Context = unknown> = {
 
 	/** Skip this test. */
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+};
+
+export type CleanupFn<Context = unknown> = {
+	/**
+	 * Declare a hook that is run once before all tests and once again after all tests are done.
+	 * Additional arguments are passed to the implementation or macro.
+	 */
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	/**
+	 * Declare a hook that is run once before all tests and once again after all tests are done.
+	 * Additional arguments are passed to the implementation or macro.
+	 */
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	skip: HookSkipFn<Context>;
 };
 
 /** Declare a test that is skipped when `condition` is true. */

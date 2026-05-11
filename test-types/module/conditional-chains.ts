@@ -3,8 +3,12 @@ import anyTest from '../../entrypoints/main.js';
 
 anyTest.skipIf(true).beforeEach(() => {});
 anyTest.runIf(false).afterEach(() => {});
+anyTest.cleanup(() => {});
+anyTest.cleanup.skip(() => {});
 anyTest.skipIf(true).serial.before(() => {});
 anyTest.serial.runIf(true).after(() => {});
+anyTest.serial.cleanup(() => {});
+anyTest.serial.cleanup.skip(() => {});
 
 anyTest.skipIf(true).todo('skipIf todo should be allowed');
 anyTest.runIf(false).todo('runIf todo should be allowed');
