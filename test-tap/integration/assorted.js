@@ -160,3 +160,21 @@ test('uses sortTestFiles to sort test files', t => {
 		t.end();
 	});
 });
+
+test('randomizes tests with a reproducible seed', async t => {
+	const run = seed => new Promise(resolve => {
+		execCli([`--seed=${seed}`, '--no-color'], {dirname: 'fixture/sort-tests'}, (error, stdout) => {
+			resolve({error, stdout});
+		});
+	});
+
+	const [first, second, different] = await Promise.all([run(1), run(1), run(100)]);
+
+	t.error(first.error);
+	t.error(second.error);
+	t.error(different.error);
+	t.match(first.stdout, /Randomized test order with seed 1/);
+	t.match(first.stdout, /should run second[\s\S]+?should run third[\s\S]+?should run first/);
+	t.equal(first.stdout, second.stdout);
+	t.not(first.stdout, different.stdout);
+});

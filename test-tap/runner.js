@@ -99,6 +99,66 @@ test('run serial tests before concurrent ones', t => {
 	});
 });
 
+test('randomSeed shuffles non-serial tests', async t => {
+	const run = async seed => {
+		const array = [];
+		await promiseEnd(new Runner({file: import.meta.url, randomSeed: seed, serial: true}), runner => {
+			runner.chain('one', a => {
+				array.push('one');
+				a.pass();
+			});
+
+			runner.chain('two', a => {
+				array.push('two');
+				a.pass();
+			});
+
+			runner.chain('three', a => {
+				array.push('three');
+				a.pass();
+			});
+
+			runner.chain('four', a => {
+				array.push('four');
+				a.pass();
+			});
+		});
+
+		return array;
+	};
+
+	t.strictSame(await run(1), await run(1));
+	t.notSame(await run(1), await run(100));
+});
+
+test('randomSeed preserves test.serial declaration order', t => {
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url, randomSeed: 42, serial: true}), runner => {
+		runner.chain('one', a => {
+			array.push('one');
+			a.pass();
+		});
+
+		runner.chain.serial('serial one', a => {
+			array.push('serial one');
+			a.pass();
+		});
+
+		runner.chain('two', a => {
+			array.push('two');
+			a.pass();
+		});
+
+		runner.chain.serial('serial two', a => {
+			array.push('serial two');
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(array.slice(0, 2), ['serial one', 'serial two']);
+		t.strictSame(new Set(array), new Set(['serial one', 'serial two', 'one', 'two']));
+	});
+});
+
 test('anything can be skipped', t => {
 	const array = [];
 	function pusher(title) {
