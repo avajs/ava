@@ -117,6 +117,42 @@ test('after.always run even if before failed', t => {
 	});
 });
 
+test('cleanup runs before tests and after.always', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanup(() => {
+			array.push('cleanup');
+		});
+
+		runner.chain('test', a => {
+			a.pass();
+			array.push('test');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanup', 'test', 'cleanup']);
+	});
+});
+
+test('cleanup runs after a failed test', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanup(() => {
+			array.push('cleanup');
+		});
+
+		runner.chain('test', () => {
+			array.push('test');
+			throw new Error('something went wrong');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanup', 'test', 'cleanup']);
+	});
+});
+
 test('stop if before hooks failed', t => {
 	t.plan(1);
 
@@ -219,6 +255,42 @@ test('fail if beforeEach hook fails', t => {
 		});
 	}).then(() => {
 		t.strictSame(array, ['a']);
+	});
+});
+
+test('cleanupEach runs before and after a passing test', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanupEach(() => {
+			array.push('cleanupEach');
+		});
+
+		runner.chain('test', a => {
+			a.pass();
+			array.push('test');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanupEach', 'test', 'cleanupEach']);
+	});
+});
+
+test('cleanupEach runs after a failed test', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanupEach(() => {
+			array.push('cleanupEach');
+		});
+
+		runner.chain('test', () => {
+			array.push('test');
+			throw new Error('something went wrong');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanupEach', 'test', 'cleanupEach']);
 	});
 });
 
