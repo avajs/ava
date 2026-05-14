@@ -45,7 +45,8 @@ exports.sanitizers = {
 	esmLoader: string => string.split('\n').filter(line => !line.includes('› async node:internal/modules/esm/loader:')).join('\n'),
 	experimentalWarning: string => string.replaceAll(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => string.replaceAll('\r\n', '\n'),
-	// The following are invjected by tap@18.
+	libLineNumbers: string => string.replaceAll(/\((\/lib\/.+\.js):\d+:\d+\)/g, '($1)'),
+	// The following are injected by tap@18.
 	posix: string => string.replaceAll('\\', '/'),
 	tapLoaders: string => string.replaceAll(/.+(Module\._compile|node_modules.pirates|require\.extensions).+\r?\n/g, ''),
 	timers: string => string.replaceAll(/timers\.js:\d+:\d+/g, 'timers.js'),
