@@ -23,6 +23,7 @@ test(async t => {
 				report.sanitizers.cwd,
 				report.sanitizers.esmLoader,
 				report.sanitizers.experimentalWarning,
+				report.sanitizers.libLineNumbers,
 				report.sanitizers.posix,
 				report.sanitizers.tapLoaders,
 				report.sanitizers.timers,

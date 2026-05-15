@@ -327,6 +327,19 @@ export type SnapshotAssertion = {
 	 */
 	(expected: any, message?: string): true;
 
+	/**
+	 * Assert that the `expected` string is equal to a previously recorded
+	 * [snapshot](https://github.com/concordancejs/concordance#serialization-details), or if necessary record a new
+	 * snapshot.
+	 *
+	 * The snapshot will be formatted as a code block with the given language identifier, or a generic code block if
+	 * `formatAsCodeBlock` is `true`. The language identifier must be non-empty. This is useful for snapshots that are
+	 * primarily strings, such as code snippets, which are more readable as a code block.
+	 *
+	 * Returns `true` if the assertion passed and throws otherwise.
+	 */
+	(expected: string, options: {formatAsCodeBlock: true | string}, message?: string): true;
+
 	/** Skip this assertion. */
 	skip(expected: any, message?: string): void;
 };

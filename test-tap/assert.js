@@ -1541,7 +1541,7 @@ test('.snapshot()', async t => {
 		const assertions = setup('bad message');
 		failsWith(t, () => assertions.snapshot(null, null), {
 			assertion: 't.snapshot()',
-			message: 'The assertion message must be a string',
+			message: 'The options argument must be a plain object',
 			formattedDetails: [{
 				label: 'Called with:',
 				formatted: /null/,
@@ -1559,6 +1559,110 @@ test('.snapshot()', async t => {
 	}
 
 	await manager.save();
+	t.end();
+});
+
+test('.snapshot() with formatAsCodeBlock option', t => {
+	// Validation: non-string expected value when options are provided
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot(42, {formatAsCodeBlock: true}), {
+			assertion: 't.snapshot()',
+			message: 'The first argument must be a string when options are provided',
+			formattedDetails: [{label: 'Called with:', formatted: /42/}],
+		});
+	}
+
+	// Validation: options object missing formatAsCodeBlock
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {}), {
+			assertion: 't.snapshot()',
+			message: 'The options object must contain the `formatAsCodeBlock` property',
+			formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		});
+	}
+
+	// Validation: formatAsCodeBlock is not true or string
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: false}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` option must be `true` or a string',
+			formattedDetails: [{label: 'Called with:', formatted: /false/}],
+		});
+	}
+
+	// Validation: formatAsCodeBlock is an empty string
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: ''}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` option must be a non-empty string when it is not `true`',
+			formattedDetails: [{label: 'Called with:', formatted: '\'\''}],
+		});
+	}
+
+	// CompareWithSnapshot is called with the correct formatAsCodeBlock value
+	{
+		let capturedOptions;
+		const a = new AssertionsBase({
+			compareWithSnapshot(options) {
+				capturedOptions = options;
+				return {pass: true};
+			},
+		});
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+		t.equal(capturedOptions.expected, 'hello');
+		t.equal(capturedOptions.formatAsCodeBlock, true);
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: 'javascript'}));
+		t.equal(capturedOptions.expected, 'hello');
+		t.equal(capturedOptions.formatAsCodeBlock, 'javascript');
+
+		// Without options, formatAsCodeBlock defaults to false
+		passes(t, () => a.snapshot('hello'));
+		t.equal(capturedOptions.formatAsCodeBlock, false);
+	}
+
+	// Mismatch detection: rawValue comparison returns concordance descriptors for the diff
+	{
+		const manager = snapshotManager.load({
+			recordNewSnapshots: true,
+			updating: true,
+		});
+		let callIndex = 0;
+		const a = new AssertionsBase({
+			compareWithSnapshot(assertionOptions) {
+				const {record, ...result} = manager.compare({
+					belongsTo: 'test',
+					expected: assertionOptions.expected,
+					formatAsCodeBlock: assertionOptions.formatAsCodeBlock,
+					index: callIndex++,
+					label: `Snapshot ${callIndex}`,
+				});
+				if (record) {
+					record();
+				}
+
+				return result;
+			},
+		});
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+
+		callIndex = 0;
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+
+		callIndex = 0;
+		failsWith(t, () => a.snapshot('world', {formatAsCodeBlock: true}), {
+			assertion: 't.snapshot()',
+			message: 'Did not match snapshot',
+			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /.+/}],
+		});
+	}
+
 	t.end();
 });
 
