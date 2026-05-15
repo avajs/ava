@@ -8,8 +8,6 @@ AVA supports the latest release of any major version that [is supported by Node.
 
 When we drop support for an LTS-covered major version we will bump AVA's major version number.
 
-We will drop support for odd-numbered Node.js versions (e.g. `21` or `23`) *without* bumping AVA's major version number.
-
 We try to avoid *accidentally* dropping support for non-latest Node.js releases. If such breakage does occur we'll accept pull requests to restore functionality. We might decide to deprecate the offending AVA release and bump AVA's major version number instead.
 
 Whenever we bump AVA's major version number, we *will* explicitly drop support for non-latest Node.js releases. This ensures we can rely on backported APIs or the availability of newer V8 releases in later Node.js versions, either in AVA itself or one of our dependencies.
