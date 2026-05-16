@@ -1,8 +1,11 @@
+import process from 'node:process';
+
 import test from '@ava/test';
 
 import {fixture} from '../helpers/exec.js';
 
-test('node assertion failures are reported to the console when running in a terminal', async t => {
+// FIXME: Unskip when https://github.com/nodejs/node/issues/63169 is resolved.
+test.skipIf(process.versions.node.startsWith('26.'))('node assertion failures are reported to the console when running in a terminal', async t => {
 	const options = {
 		env: {
 			// The AssertionError constructor in Node.js 10 depends on the TTY interface, so opt-in
@@ -18,7 +21,8 @@ test('node assertion failures are reported to the console when running in a term
 	t.true(error.formattedDetails.every(value => value.label.includes('Assertion failed')));
 });
 
-test('node assertion failures are reported to the console when not running in a terminal', async t => {
+// FIXME: Unskip when https://github.com/nodejs/node/issues/63169 is resolved.
+test.skipIf(process.versions.node.startsWith('26.'))('node assertion failures are reported to the console when not running in a terminal', async t => {
 	const result = await t.throwsAsync(fixture(['assert-failure.js']));
 	const error = result.stats.getError(result.stats.failed[0]);
 
