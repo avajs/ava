@@ -16,7 +16,8 @@ const snapshotStdout = (t, stdout) => {
 for (const [label, selector] of Object.entries({
 	'^22.20': /^22\.(2\d\.|[3-9]\d\.)/,
 	'^24.12': /^24\.(1[2-9]\.|[2-9]\d\.)/,
-	// '^26': /^26\./, // FIXME
+	// FIXME: Unskip when https://github.com/nodejs/node/issues/63169 is resolved.
+	// '^26': /^26\./,
 })) {
 	// Tests need to be declared for all versions, so that snapshots can be
 	// updated by running `npx test-ava -u test/external-assertions/test.js` for
