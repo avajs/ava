@@ -178,6 +178,10 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` registers a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
+Use `test.cleanup()` to register the same hook before all tests and after all tests have completed. This is shorthand for pairing `test.before()` with `test.after.always()`. Use `test.cleanupEach()` to run cleanup before each test and after each test has completed, equivalent to pairing `test.beforeEach()` with `test.afterEach.always()`.
+
+These helpers are also available as `test.serial.cleanup()` and `test.serial.cleanupEach()` when the paired hooks should run serially.
+
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
 *You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test. Or use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run cleanup code after AVA has completed its work.
@@ -211,6 +215,10 @@ test.after.always('guaranteed cleanup', t => {
 	// This will always run, regardless of earlier failures
 });
 
+test.cleanup('reset global state', t => {
+	// This runs before all tests and again after tests and other hooks complete
+});
+
 test.beforeEach(t => {
 	// This runs before each test
 });
@@ -221,6 +229,10 @@ test.afterEach(t => {
 
 test.afterEach.always(t => {
 	// This runs after each test and other test hooks, even if they failed
+});
+
+test.cleanupEach(t => {
+	// This runs before each test and again after that test and its hooks complete
 });
 
 test('title', t => {
