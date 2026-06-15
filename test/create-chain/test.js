@@ -245,3 +245,50 @@ test('skipIf(false).runIf(true) does not skip', t => {
 	t.is(calls.length, 1);
 	t.is(calls[0].metadata.skipped, undefined);
 });
+
+test('cleanup() registers before and after.always hooks', t => {
+	const {calls, chain} = createTestChain();
+	const implementation = () => {};
+
+	chain.cleanup('reset state', implementation, 'argument');
+
+	t.is(calls.length, 2);
+	t.is(calls[0].metadata.type, 'before');
+	t.is(calls[0].metadata.always, undefined);
+	t.deepEqual(calls[0].arguments_, ['reset state', implementation, 'argument']);
+	t.is(calls[1].metadata.type, 'after');
+	t.true(calls[1].metadata.always);
+	t.deepEqual(calls[1].arguments_, ['reset state', implementation, 'argument']);
+});
+
+test('cleanupEach() registers beforeEach and afterEach.always hooks', t => {
+	const {calls, chain} = createTestChain();
+	const implementation = () => {};
+
+	chain.cleanupEach(implementation, 'argument');
+
+	t.is(calls.length, 2);
+	t.is(calls[0].metadata.type, 'beforeEach');
+	t.is(calls[0].metadata.always, undefined);
+	t.deepEqual(calls[0].arguments_, [implementation, 'argument']);
+	t.is(calls[1].metadata.type, 'afterEach');
+	t.true(calls[1].metadata.always);
+	t.deepEqual(calls[1].arguments_, [implementation, 'argument']);
+});
+
+test('serial cleanup helpers preserve serial metadata', t => {
+	const {calls, chain} = createTestChain();
+	const implementation = () => {};
+
+	chain.serial.cleanup('reset state', implementation);
+	chain.serial.cleanupEach('reset state per test', implementation);
+
+	t.is(calls.length, 4);
+	t.true(calls.every(({metadata}) => metadata.serial));
+	t.deepEqual(calls.map(({metadata}) => [metadata.type, metadata.always]), [
+		['before', undefined],
+		['after', true],
+		['beforeEach', undefined],
+		['afterEach', true],
+	]);
+});
