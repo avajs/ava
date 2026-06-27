@@ -162,6 +162,41 @@ test('uses sortTestFiles to sort test files', t => {
 	});
 });
 
+test('--seed reproduces file order even when failed-test cache changes', t => {
+	const fixtureDir = path.join(__dirname, '..', 'fixture', 'sort-tests');
+	const cacheDir = path.join(fixtureDir, 'node_modules', '.cache', 'ava');
+	const cacheFile = path.join(cacheDir, 'failing-tests.json');
+	const file0 = path.join(fixtureDir, '0.js');
+	const file1 = path.join(fixtureDir, '1.js');
+
+	const runWithCache = failedFile => new Promise((resolve, reject) => {
+		fs.mkdirSync(cacheDir, {recursive: true});
+		fs.writeFileSync(cacheFile, JSON.stringify([failedFile]));
+
+		execCli(['--tap', '--seed=ava-seed'], {
+			dirname: 'fixture/sort-tests',
+			env: {AVA_FORCE_CI: 'not-ci'},
+		}, (error, stdout) => {
+			if (error) {
+				reject(error);
+				return;
+			}
+
+			resolve([...stdout.matchAll(/^ok \d+ - (\d+) ›/gm)].map(([, file]) => file));
+		});
+	});
+
+	runWithCache(file0)
+		.then(firstOrder => runWithCache(file1).then(secondOrder => [firstOrder, secondOrder]))
+		.then(([firstOrder, secondOrder]) => {
+			t.strictSame(firstOrder, secondOrder);
+			t.end();
+		}, error => {
+			t.error(error);
+			t.end();
+		});
+});
+
 test('--seed randomizes test order and reports the seed', t => {
 	const seed = 'ava-seed';
 	const testFile = path.join(__dirname, '..', 'fixture', 'randomize-tests', 'test.js');
