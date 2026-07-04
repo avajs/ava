@@ -127,7 +127,10 @@
   [41m[1m 29:   t.deepEqual(exp, act);[22m[49m
    [90m30:[39m });                     
 
-  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+  Difference:
+
+  [31m-[39m [31mReceived[39m
+  [32m+[39m [32mExpected[39m
 
     [90m{[39m
       a: [90m{[39m
@@ -156,7 +159,10 @@
   [41m[1m 55:   t.like(actual, pattern);[22m[49m
    [90m56:[39m });                       
 
-  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+  Difference:
+
+  [31m-[39m [31mReceived[39m
+  [32m+[39m [32mExpected[39m
 
     [90m{[39m
       a: [90m{[39m
@@ -226,7 +232,10 @@
   [41m[1m 22:   t.deepEqual('foo', 'bar');[22m[49m
    [90m23:[39m });                         
 
-  Difference ([31m-[39m [31mactual[39m, [32m+[39m [32mexpected[39m):
+  Difference:
+
+  [31m-[39m [31mReceived[39m
+  [32m+[39m [32mExpected[39m
 
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m

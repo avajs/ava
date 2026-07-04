@@ -14,7 +14,9 @@ not ok 3 - nested-objects › format with max depth 4
     name: AssertionError
     assertion: t.deepEqual()
     details:
-      'Difference (- actual, + expected):': |2-
+      'Difference:': |2-
+          - Received
+          + Expected
           {
             a: {
               b: {
@@ -38,7 +40,9 @@ not ok 4 - nested-objects › format like with max depth 4
     name: AssertionError
     assertion: t.like()
     details:
-      'Difference (- actual, + expected):': |2-
+      'Difference:': |2-
+          - Received
+          + Expected
           {
             a: {
               b: {
@@ -131,7 +135,9 @@ not ok 14 - test › formatted
     name: AssertionError
     assertion: t.deepEqual()
     details:
-      'Difference (- actual, + expected):': |-
+      'Difference:': |-
+        - Received
+        + Expected
         - 'foo'
         + 'bar'
     message: ''

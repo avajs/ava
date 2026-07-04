@@ -320,7 +320,7 @@ test('.is()', t => {
 		assertion: 't.is()',
 		message: '',
 		formattedDetails: [
-			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/},
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/},
 		],
 	});
 
@@ -330,7 +330,7 @@ test('.is()', t => {
 		expected: 42,
 		message: '',
 		formattedDetails: [
-			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
@@ -338,7 +338,7 @@ test('.is()', t => {
 		assertion: 't.is()',
 		message: 'my message',
 		formattedDetails: [
-			{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/},
+			{label: 'Difference:', formatted: /- 'foo'\n\+ 42/},
 		],
 	});
 
@@ -346,7 +346,7 @@ test('.is()', t => {
 		assertion: 't.is()',
 		message: 'my message',
 		formattedDetails: [
-			{label: 'Difference (- actual, + expected):', formatted: /- 0\n\+ -0/},
+			{label: 'Difference:', formatted: /- 0\n\+ -0/},
 		],
 	});
 
@@ -354,7 +354,7 @@ test('.is()', t => {
 		assertion: 't.is()',
 		message: 'my message',
 		formattedDetails: [
-			{label: 'Difference (- actual, + expected):', formatted: /- -0\n\+ 0/},
+			{label: 'Difference:', formatted: /- -0\n\+ 0/},
 		],
 	});
 
@@ -580,19 +580,19 @@ test('.deepEqual()', t => {
 	failsWith(t, () => assertions.deepEqual('foo', 'bar'), {
 		assertion: 't.deepEqual()',
 		message: '',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 'bar'/}],
+		formattedDetails: [{label: 'Difference:', formatted: /- 'foo'\n\+ 'bar'/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42), {
 		assertion: 't.deepEqual()',
 		message: '',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
+		formattedDetails: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual('foo', 42, 'my message'), {
 		assertion: 't.deepEqual()',
 		message: 'my message',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /- 'foo'\n\+ 42/}],
+		formattedDetails: [{label: 'Difference:', formatted: /- 'foo'\n\+ 42/}],
 	});
 
 	failsWith(t, () => assertions.deepEqual({}, {}, null), {
@@ -814,7 +814,7 @@ test('.like()', t => {
 	failsWith(t, () => assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'}), {
 		assertion: 't.like()',
 		message: '',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
+		formattedDetails: [{label: 'Difference:', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
 	});
 
 	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
@@ -1520,7 +1520,7 @@ test('.snapshot()', async t => {
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
 			assertion: 't.snapshot()',
 			message: 'Did not match snapshot',
-			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			formattedDetails: [{label: 'Difference:', formatted: '- Received\n+ Snapshot\n\n  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 
@@ -1533,7 +1533,7 @@ test('.snapshot()', async t => {
 		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
 			assertion: 't.snapshot()',
 			message: 'my message',
-			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
+			formattedDetails: [{label: 'Difference:', formatted: '- Received\n+ Snapshot\n\n  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
 		});
 	}
 

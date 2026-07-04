@@ -213,7 +213,7 @@ test('fails with the first assertError', t => ava(a => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
 	t.equal(result.error.formattedDetails.length, 1);
-	t.equal(result.error.formattedDetails[0].label, 'Difference (- actual, + expected):');
+	t.equal(result.error.formattedDetails[0].label, 'Difference:');
 	t.match(result.error.formattedDetails[0].formatted, /- 1\n\+ 2/);
 }));
 
