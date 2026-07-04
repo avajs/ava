@@ -15,8 +15,8 @@ not ok 3 - nested-objects › format with max depth 4
     assertion: t.deepEqual()
     details:
       'Difference:': |-
-          - Received
-          + Expected
+        - Received
+        + Expected
 
           {
             a: {
@@ -42,8 +42,8 @@ not ok 4 - nested-objects › format like with max depth 4
     assertion: t.like()
     details:
       'Difference:': |-
-          - Received
-          + Expected
+        - Received
+        + Expected
 
           {
             a: {
