@@ -111,7 +111,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		});
 	}
 
-	// Mimick watch mode
+	// Mimic watch mode
 	return api.run({files, filter, runtimeOptions: {countPreviousFailures: () => 0, firstRun: true}}).then(() => {
 		reporter.endRun();
 		return api.run({files, filter, runtimeOptions: {countPreviousFailures: () => 2, firstRun: false}});
