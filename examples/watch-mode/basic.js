@@ -1,4 +1,4 @@
-import test from "ava";
+import test from 'ava';
 
 // Run this example with: `npx ava --watch examples/watch-mode/basic.js`
 
