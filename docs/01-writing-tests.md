@@ -244,6 +244,38 @@ Keep in mind that the `.beforeEach()` and `.afterEach()` hooks run just before a
 
 Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `.after()`-hook since that's only called right before the process exits.
 
+## Cleanup hooks
+
+It's common to run idempotent cleanup code both before *and* after your tests: before, to remove state left behind by an interrupted or crashed previous run, and after, to remove state created by the current run. `test.cleanup()` and `test.cleanupEach()` let you declare this with a single function.
+
+`test.cleanup()` registers the same implementation as both a `test.before()` hook and a `test.after.always()` hook. It therefore always runs—even when tests fail, or when `--fail-fast` is used. `test.cleanupEach()` does the same, but as a `test.beforeEach()` hook and a `test.afterEach.always()` hook, so the implementation runs around *each* test:
+
+```js
+test.cleanup(() => {
+	if (tempDirExists()) {
+		removeTempDir();
+	}
+});
+
+test.cleanupEach(t => {
+	t.context.db.reset();
+});
+```
+
+Both support the `.skip` modifier, and can be combined with `test.serial`:
+
+```js
+test.serial.cleanup(() => {
+	// Runs as a serial `before` hook and a serial `after.always` hook.
+});
+
+test.cleanup.skip(() => {
+	// Never runs.
+});
+```
+
+
+
 ## Test context
 
 Hooks can share context with the test:
