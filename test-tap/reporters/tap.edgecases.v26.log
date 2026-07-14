@@ -4,7 +4,7 @@ not ok 1 - SyntaxError: Unexpected token 'do'
   ---
     name: SyntaxError
     message: Unexpected token 'do'
-    at: 'compileSourceTextModule (node:internal/modules/esm/utils:354:16)'
+    at: 'compileSourceTextModule (node:internal/modules/esm/utils:355:16)'
   ...
 ---tty-stream-chunk-separator
 not ok 2 - ast-syntax-error.js exited with a non-zero exit code: 1
