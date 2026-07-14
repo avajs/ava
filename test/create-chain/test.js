@@ -276,6 +276,20 @@ test('cleanupEach() registers beforeEach and afterEach.always hooks', t => {
 	t.deepEqual(calls[1].arguments_, [implementation, 'argument']);
 });
 
+test('cleanup.skip() skips both hooks', t => {
+	const {calls, chain} = createTestChain();
+	const implementation = () => {};
+
+	chain.cleanup.skip('reset state', implementation);
+
+	t.is(calls.length, 2);
+	t.true(calls.every(({metadata}) => metadata.skipped));
+	t.deepEqual(calls.map(({metadata}) => [metadata.type, metadata.always]), [
+		['before', undefined],
+		['after', true],
+	]);
+});
+
 test('serial cleanup helpers preserve serial metadata', t => {
 	const {calls, chain} = createTestChain();
 	const implementation = () => {};
@@ -289,6 +303,22 @@ test('serial cleanup helpers preserve serial metadata', t => {
 		['before', undefined],
 		['after', true],
 		['beforeEach', undefined],
+		['afterEach', true],
+	]);
+});
+
+test('conditional chains preserve cleanup helper access', t => {
+	const {calls, chain} = createTestChain();
+	const implementation = () => {};
+
+	chain.skipIf(true).cleanup(implementation);
+	chain.serial.runIf(false).cleanupEach(implementation);
+
+	t.is(calls.length, 4);
+	t.deepEqual(calls.map(({metadata}) => [metadata.type, metadata.serial]), [
+		['before', undefined],
+		['after', undefined],
+		['beforeEach', true],
 		['afterEach', true],
 	]);
 });

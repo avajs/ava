@@ -180,7 +180,7 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 Use `test.cleanup()` to register the same hook before all tests and after all tests have completed. This is shorthand for pairing `test.before()` with `test.after.always()`. Use `test.cleanupEach()` to run cleanup before each test and after each test has completed, equivalent to pairing `test.beforeEach()` with `test.afterEach.always()`.
 
-These helpers are also available as `test.serial.cleanup()` and `test.serial.cleanupEach()` when the paired hooks should run serially.
+These helpers are also available as `test.serial.cleanup()` and `test.serial.cleanupEach()` when the paired hooks should run serially. Use `test.cleanup.skip()` or `test.cleanupEach.skip()` to declare a skipped cleanup pair.
 
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 

@@ -164,6 +164,8 @@ export type CleanupFn<Context = unknown> = {
 	 * Declare a cleanup hook pair. Additional arguments are passed to the implementation or macro.
 	 */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	skip: HookSkipFn<Context>;
 };
 
 export type FailingFn<Context = unknown> = {
