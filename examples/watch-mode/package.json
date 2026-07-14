@@ -1,0 +1,11 @@
+{
+	'name': 'ava-watch-mode',
+	'description': 'Example for ava watch mode',
+	'type': 'module',
+	'scripts': {
+		'test': 'ava test.js --watch --config=false'
+	},
+	'devDependencies': {
+		'ava': '^6.0.0'
+	}
+}
