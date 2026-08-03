@@ -1,0 +1,11 @@
+{
+	"name": "ava-truthy-falsy",
+	"description": "Example for test truthy-falsy",
+	"type": "module",
+	"scripts": {
+		"test": "ava test.js --no-config test.js"
+	},
+	"devDependencies": {
+		"ava": "^6.0.0"
+	}
+}
