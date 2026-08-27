@@ -13,6 +13,30 @@ test('passed node arguments to workers', async t => {
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
+test('invalid worker arguments fail once with an actionable message', async t => {
+	const options = {
+		cwd: cwd('invalid-worker-arguments'),
+	};
+
+	const result = await t.throwsAsync(fixture(['--node-arguments="--title=ava-repro"'], options));
+
+	t.is(result.stats.internalErrors.length, 1);
+	const error = result.stats.getError(result.stats.internalErrors[0]);
+	t.is(error.type, 'native');
+	t.regex(error.message, /--title=ava-repro/);
+	t.regex(error.message, /Remove the incompatible Node\.js arguments or disable worker threads/);
+});
+
+test('invalid worker arguments can be used when worker threads are disabled', async t => {
+	const options = {
+		cwd: cwd('invalid-worker-arguments'),
+	};
+
+	const result = await fixture(['--no-worker-threads', '--node-arguments="--title=ava-repro"'], options);
+
+	t.is(result.stats.passed.length, 2);
+});
+
 test('`filterNodeArgumentsForWorkerThreads` configuration filters arguments for worker thread', async t => {
 	const options = {
 		cwd: cwd('thread-arguments-filter'),
