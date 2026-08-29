@@ -59,6 +59,8 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `require`: [extra modules to load before test files](#requiring-extra-modules)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
+- `randomize`: if `true`, runs test files in a random order. See [randomizing the test file order](./05-command-line.md#randomizing-the-test-file-order)
+- `seed`: an integer between 0 and 4294967295 seeding the random test file order, so it can be reproduced. Implies `randomize`
 - `sortTestFiles`: A comparator function to sort test files with. Available only when using a `ava.config.*` file. See an example use case [here](recipes/splitting-tests-ci.md).
 - `utilizeParallelBuilds`: If `false`, disable [parallel builds](/docs/recipes/splitting-tests-ci.md) (default: true)
 

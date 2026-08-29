@@ -37,6 +37,9 @@ Options:
       --no-worker-threads  Don't use worker threads                    [boolean]
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
+      --randomize          Run test files in a random order            [boolean]
+      --seed               Seed the random order of test files, so it can be
+                           reproduced (implies --randomize)             [number]
   -s, --serial             Run tests serially                          [boolean]
   -t, --tap                Generate TAP output                         [boolean]
   -T, --timeout            Set global timeout (milliseconds or human-readable,
@@ -207,6 +210,24 @@ npx ava test.js:3 test2.js:4,7-9
 ```
 
 When running a file with and without line numbers, line numbers take precedence.
+
+## Randomizing the test file order
+
+Test files can be run in a random order, which helps expose accidental dependencies between them:
+
+```console
+npx ava --randomize
+```
+
+AVA prints the seed it used, so the same order can be replayed:
+
+```console
+npx ava --seed=1234567890
+```
+
+`--seed` implies `--randomize`. Tests within a file are not randomized, and the `sortTestFiles` configuration must not be used together with randomization. AVA also does not reorder previously failing test files first when randomizing.
+
+When [parallel builds](./recipes/splitting-tests-ci.md) are utilized, all builds must agree on the test file order, so an explicit `--seed` is required.
 
 ## Resetting AVA's cache
 
