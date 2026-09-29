@@ -697,6 +697,41 @@ test('teardowns cannot be registered by teardowns', async t => {
 	t.match(result.error.message, /cannot be used during teardown/);
 });
 
+test('teardown runs once when timeout finishes before promise settles', async t => {
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.timeout(20);
+		a.pass();
+		await delay(150);
+	});
+	const result = await instance.run();
+	t.equal(result.passed, false);
+	t.match(result.error.message, /timeout/);
+	// Allow the original test promise to settle and attempt a second finish().
+	await delay(200);
+	t.equal(teardown.callCount, 1);
+});
+
+test('teardown runs once when inactivity finishes before promise settles', async t => {
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.pass();
+		await delay(150);
+	});
+	const runPromise = instance.run();
+	// Force the inactivity path used when a returned promise never settles promptly.
+	await delay(10);
+	t.ok(typeof instance.finishDueToInactivity === 'function');
+	instance.finishDueToInactivity();
+	const result = await runPromise;
+	t.equal(result.passed, false);
+	t.match(result.error.message, /never resolved/);
+	await delay(200);
+	t.equal(teardown.callCount, 1);
+});
+
 test('.log() is bound', t => ava(a => {
 	const {log} = a;
 	for (const value of [1, 2, 3]) {
