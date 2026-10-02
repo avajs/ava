@@ -33,9 +33,9 @@ As of Node.js 22.18, TypeScript files can be [natively executed](https://nodejs.
 
 When importing TypeScript files in your tests, make sure to use the `.ts` extension in the import statements, as Node.js requires explicit file extensions for ESM modules.
 
-### Non-eraseable syntax
+### Non-erasable syntax
 
-If you're using TypeScript features that aren't eraseable, you'll have to fall back to one of two approaches:
+If you're using TypeScript features that aren't erasable, you'll have to fall back to one of two approaches:
 
 1. Build first, then test against the build output
 2. Configure [Node.js module loaders](https://nodejs.org/api/module.html#customization-hooks) which build test files as they're loaded
