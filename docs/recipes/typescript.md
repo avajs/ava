@@ -8,6 +8,8 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 ## Enabling AVA's support for TypeScript test files
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-native?file=source%2Ftest.ts&terminal=test&view=editor)
+
 As of Node.js 22.18, TypeScript files can be [natively executed](https://nodejs.org/learn/typescript/run-natively) (with some limitations). Configure AVA's [`extensions` option](../06-configuration.md#options) to match your project, and configure TypeScript to match Node.js behavior:
 
 `package.json`:
@@ -40,10 +42,14 @@ If you're using TypeScript features that aren't eraseable, you'll have to fall b
 
 **The first option is the most reliable since it doesn't rely on experimental Node.js features.** You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions. **This package also sets up the various TypeScript file extensions for you.**
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-build?file=source%2Ftest.ts&terminal=test&view=editor)
+
 **You can use loaders, but you're largely on your own. [Please post questions to our Discussions forum if you're stuck](https://github.com/avajs/ava/discussions/categories/q-a).**
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-loader?file=source%2Ftest.ts&terminal=test&view=editor)
+
 <details>
-<summary>Some examples</summary>
+<summary>Some popular loaders</summary>
 <br/>
 
 - [`tsimp`](https://github.com/tapjs/tsimp) - previously recommended in a prior version of this recipe
@@ -71,7 +77,7 @@ Install the loader [through `require`](../06-configuration.md#requiring-extra-mo
 
 ## Writing tests
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-basic?file=source%2Ftest.ts&terminal=test&view=editor)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-build?file=source%2Ftest.ts&terminal=test&view=editor)
 
 Create a `test.ts` file using ESM syntax.
 

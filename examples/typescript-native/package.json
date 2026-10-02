@@ -1,6 +1,6 @@
 {
-	"name": "ava-typescript-context",
-	"description": "TypeScript example for typing t.context",
+	"name": "ava-typescript-native",
+	"description": "Native Node.js example for AVA with TypeScript",
 	"type": "module",
 	"engines": {
 		"node": "^22.20 || ^24.12 || >=26"
@@ -9,7 +9,6 @@
 		"test": "ava"
 	},
 	"devDependencies": {
-		"@ava/typescript": "^7",
 		"@sindresorhus/tsconfig": "^8",
 		"ava": "^8",
 		"typescript": "~6"
