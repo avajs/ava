@@ -9,6 +9,8 @@ import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
 import pkg from '../../lib/pkg.js';
 
+import normalizeNodeInternalLocations from './normalize-node-internal-locations.js';
+
 _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 
 const exports = {};
@@ -25,8 +27,8 @@ exports.assert = (t, logFile, buffer) => {
 		existing = buffer;
 	}
 
-	const expected = existing.toString('utf8');
-	const actual = buffer.toString('utf8');
+	const expected = normalizeNodeInternalLocations(existing.toString('utf8'));
+	const actual = normalizeNodeInternalLocations(buffer.toString('utf8'));
 	if (actual === expected) {
 		t.pass();
 	} else {
