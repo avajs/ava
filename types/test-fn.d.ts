@@ -87,6 +87,8 @@ export type TestFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	cleanup: CleanupFn<Context>;
+	cleanupEach: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	macro: MacroFn<Context>;
 	meta: Meta;
@@ -150,6 +152,12 @@ export type BeforeFn<Context = unknown> = {
 	skip: HookSkipFn<Context>;
 };
 
+export type CleanupFn<Context = unknown> = {
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+	skip: HookSkipFn<Context>;
+};
+
 export type FailingFn<Context = unknown> = {
 	/**
 	 * Declare a concurrent test that is expected to fail.
@@ -209,6 +217,8 @@ export type SerialFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	cleanup: CleanupFn<Context>;
+	cleanupEach: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
 	/** Declare a test that only runs when `condition` is true; otherwise the test is skipped. */
