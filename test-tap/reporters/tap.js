@@ -50,4 +50,5 @@ test(async t => {
 	t.test('tap reporter - second failFast run', run('failFast2'));
 	t.test('tap reporter - only run', run('only'));
 	t.test('tap reporter - edge cases', run('edgeCases'));
+	t.test('tap reporter - timeout', run('timeoutInSingleFile'));
 });
