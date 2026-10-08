@@ -127,7 +127,7 @@ export const withFixture = fixture => async (t, task) => {
 						// Sending the `abort-watcher` message should suffice, but on Linux
 						// the recursive watch handle does not close properly. See
 						// <https://github.com/nodejs/node/issues/48437> but there seem to be
-						// other isues.
+						// other issues.
 						setTimeout(() => {
 							process?.kill('SIGKILL');
 						}, 1000).unref();
