@@ -60,3 +60,24 @@ test.serial('scheduler disabled in CI', async t => {
 		t.true(timestamps.passed < timestamps.failed);
 	}
 });
+
+test('reports the seed when --randomize is combined with --seed', async t => {
+	const results = await fixture(['--randomize', '--seed=abc123', 'random-1.js', 'random-2.js', 'random-3.js']);
+	t.true(results.stdout.includes('Randomized test order with seed abc123'));
+});
+
+test('reports a generated seed when --randomize is used without --seed', async t => {
+	const results = await fixture(['--randomize', 'random-1.js', 'random-2.js', 'random-3.js']);
+	t.regex(results.stdout, /Randomized test order with seed [0-9a-f]{16}/);
+});
+
+test('does not report a seed when --randomize is omitted', async t => {
+	const results = await fixture(['random-1.js', 'random-2.js', 'random-3.js']);
+	t.false(results.stdout.includes('Randomized test order'));
+});
+
+test('errors when --seed is provided with an empty value', async t => {
+	const error = await t.throwsAsync(fixture(['--randomize', '--seed=', 'random-1.js']));
+	const output = `${error.stdout}${error.stderr}`;
+	t.true(output.includes('The --seed flag must be provided with a non-empty value'));
+});
