@@ -13,7 +13,7 @@ const xoConfig = [
 			'test-tap/fixture/report/edgecases/ast-syntax-error.js',
 			'test-tap/fixture/**/*.ts',
 			'test-types',
-			'examples/typescript-*/**/*.ts',
+			'examples/typescript-*',
 		],
 	},
 	{
