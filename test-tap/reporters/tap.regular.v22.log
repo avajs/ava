@@ -30,7 +30,7 @@ not ok 3 - nested-objects › format with max depth 4
         +   },
           }
     message: ''
-    at: 'ExecutionContext.deepEqual (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/nested-objects.js:29'
   ...
 ---tty-stream-chunk-separator
 not ok 4 - nested-objects › format like with max depth 4
@@ -48,7 +48,7 @@ not ok 4 - nested-objects › format like with max depth 4
             },
           }
     message: ''
-    at: 'ExecutionContext.like (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/nested-objects.js:55'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › before hook
@@ -72,7 +72,7 @@ not ok 6 - output-in-hook › failing test
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/output-in-hook.js:34'
   ...
 ---tty-stream-chunk-separator
 # output-in-hook › afterEach hook for passing test
@@ -102,7 +102,7 @@ not ok 10 - test › fails
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/test.js:9'
   ...
 ---tty-stream-chunk-separator
 ok 11 - test › known failure
@@ -123,7 +123,7 @@ not ok 13 - test › logs
     name: AssertionError
     assertion: t.fail()
     message: Test failed via `t.fail()`
-    at: 'ExecutionContext.fail (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/test.js:18'
   ...
 ---tty-stream-chunk-separator
 not ok 14 - test › formatted
@@ -135,7 +135,7 @@ not ok 14 - test › formatted
         - 'foo'
         + 'bar'
     message: ''
-    at: 'ExecutionContext.deepEqual (/lib/assert.js)'
+    at: '/test-tap/fixture/report/regular/test.js:22'
   ...
 ---tty-stream-chunk-separator
 not ok 15 - test › implementation throws non-error
@@ -158,7 +158,7 @@ not ok 16 - traces-in-t-throws › throws
         }
       'Expected instance of:': 'Function TypeError {}'
     message: ''
-    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
+    at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:12'
   ...
 ---tty-stream-chunk-separator
 not ok 17 - traces-in-t-throws › notThrows
@@ -171,7 +171,7 @@ not ok 17 - traces-in-t-throws › notThrows
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
+    at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:16'
   ...
 ---tty-stream-chunk-separator
 not ok 18 - traces-in-t-throws › notThrowsAsync
@@ -184,7 +184,7 @@ not ok 18 - traces-in-t-throws › notThrowsAsync
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
+    at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:20'
   ...
 ---tty-stream-chunk-separator
 not ok 19 - traces-in-t-throws › throwsAsync
@@ -197,7 +197,7 @@ not ok 19 - traces-in-t-throws › throwsAsync
           message: 'uh-oh',
         }
     message: ''
-    at: 'throwError (/test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)'
+    at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:24'
   ...
 ---tty-stream-chunk-separator
 not ok 20 - traces-in-t-throws › throwsAsync different error
@@ -211,9 +211,7 @@ not ok 20 - traces-in-t-throws › throwsAsync different error
         }
       'Expected instance of:': 'Function TypeError {}'
     message: ''
-    at: >-
-      returnRejectedPromise
-      (/test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)
+    at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:28'
   ...
 ---tty-stream-chunk-separator
 ok 21 - uncaught-exception › passes
