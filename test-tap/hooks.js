@@ -117,6 +117,47 @@ test('after.always run even if before failed', t => {
 	});
 });
 
+test('cleanup runs before and after even if the test fails', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanup(() => {
+			array.push('cleanup');
+		});
+
+		runner.chain('test', () => {
+			array.push('test');
+			throw new Error('something went wrong');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanup', 'test', 'cleanup']);
+	});
+});
+
+test('cleanupEach runs before each test and once after the file', t => {
+	t.plan(1);
+
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.cleanupEach(() => {
+			array.push('cleanup');
+		});
+
+		runner.chain.serial('first', a => {
+			a.pass();
+			array.push('first');
+		});
+
+		runner.chain.serial('second', a => {
+			a.pass();
+			array.push('second');
+		});
+	}).then(() => {
+		t.strictSame(array, ['cleanup', 'first', 'cleanup', 'second', 'cleanup']);
+	});
+});
+
 test('stop if before hooks failed', t => {
 	t.plan(1);
 

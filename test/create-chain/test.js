@@ -245,3 +245,24 @@ test('skipIf(false).runIf(true) does not skip', t => {
 	t.is(calls.length, 1);
 	t.is(calls[0].metadata.skipped, undefined);
 });
+
+test('cleanup pairs before with final after hook', t => {
+	const {calls, chain} = createTestChain();
+	chain.cleanup('reset state', () => {});
+
+	t.deepEqual(
+		calls.map(({metadata}) => [metadata.type, metadata.always === true]),
+		[['before', false], ['after', true]],
+	);
+});
+
+test('cleanupEach pairs beforeEach with one final after hook', t => {
+	const {calls, chain} = createTestChain();
+	chain.cleanupEach('reset state', () => {});
+
+	t.deepEqual(
+		calls.map(({metadata}) => [metadata.type, metadata.always === true]),
+		[['beforeEach', false], ['after', true]],
+	);
+});
+

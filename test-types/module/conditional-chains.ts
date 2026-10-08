@@ -5,6 +5,14 @@ anyTest.skipIf(true).beforeEach(() => {});
 anyTest.runIf(false).afterEach(() => {});
 anyTest.skipIf(true).serial.before(() => {});
 anyTest.serial.runIf(true).after(() => {});
+anyTest.cleanup(() => {});
+anyTest.cleanupEach(() => {});
+anyTest.cleanup.skip(() => {});
+anyTest.cleanupEach.skip(() => {});
+anyTest.serial.cleanup(() => {});
+anyTest.serial.cleanupEach(() => {});
+anyTest.skipIf(true).cleanup(() => {});
+anyTest.serial.runIf(false).cleanupEach(() => {});
 
 anyTest.skipIf(true).todo('skipIf todo should be allowed');
 anyTest.runIf(false).todo('runIf todo should be allowed');
