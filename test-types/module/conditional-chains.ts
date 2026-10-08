@@ -10,5 +10,14 @@ anyTest.skipIf(true).todo('skipIf todo should be allowed');
 anyTest.runIf(false).todo('runIf todo should be allowed');
 anyTest.skipIf(true).serial.todo('skipIf serial todo should be allowed');
 anyTest.runIf(false).serial.todo('runIf serial todo should be allowed');
+
+anyTest.cleanup(() => {});
+anyTest.cleanupEach(() => {});
+anyTest.cleanup.skip(() => {});
+anyTest.cleanupEach.skip(() => {});
+anyTest.serial.cleanup(() => {});
+anyTest.serial.cleanupEach(() => {});
+anyTest.skipIf(true).cleanup(() => {});
+anyTest.runIf(false).cleanupEach(() => {});
 anyTest.serial.skipIf(true).todo('serial skipIf todo should be allowed');
 anyTest.serial.runIf(false).todo('serial runIf todo should be allowed');
