@@ -7,6 +7,7 @@ import {stripVTControlCharacters} from 'node:util';
 import ciInfo from 'ci-info';
 import {test} from 'tap';
 
+import {shuffle, testOrderSeed} from '../../lib/test-order.js';
 import {execCli} from '../helper/cli.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -157,6 +158,30 @@ test('uses sortTestFiles to sort test files', t => {
 	execCli([], {dirname: 'fixture/sort-tests'}, (error, stdout) => {
 		t.error(error);
 		t.match(stdout, /should run first[\s\S]+?should run second[\s\S]+?should run third/);
+		t.end();
+	});
+});
+
+test('--seed randomizes test order and reports the seed', t => {
+	const seed = 'ava-seed';
+	const testFile = path.join(__dirname, '..', 'fixture', 'randomize-tests', 'test.js');
+	const titles = ['alpha', 'bravo', 'charlie', 'delta', 'echo'];
+	const expectedTitles = shuffle(titles, testOrderSeed(seed, testFile));
+
+	t.notSame(expectedTitles, titles);
+
+	execCli(['--seed=ava-seed', 'randomize-tests/test.js'], (error, stdout) => {
+		t.error(error);
+		t.match(stdout, /Random seed: ava-seed/);
+		t.match(stdout, new RegExp(expectedTitles.join(String.raw`[\s\S]+?`)));
+		t.end();
+	});
+});
+
+test('--randomize reports a generated seed', t => {
+	execCli(['--randomize', 'randomize-tests/test.js'], (error, stdout) => {
+		t.error(error);
+		t.match(stdout, /Random seed: [\da-f]{16}/);
 		t.end();
 	});
 });

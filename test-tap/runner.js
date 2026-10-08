@@ -3,6 +3,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {test} from 'tap';
 
 import Runner from '../lib/runner.js';
+import {shuffle, testOrderSeed} from '../lib/test-order.js';
 import {set as setOptions} from '../lib/worker/options.js';
 
 setOptions({});
@@ -96,6 +97,33 @@ test('run serial tests before concurrent ones', t => {
 		});
 	}).then(() => {
 		t.strictSame(array, ['a', 'b', 'c']);
+	});
+});
+
+test('options.randomSeed randomizes concurrent tests but preserves serial tests', t => {
+	const array = [];
+	const serialTitles = ['serial 1', 'serial 2'];
+	const concurrentTitles = ['alpha', 'bravo', 'charlie', 'delta', 'echo'];
+	const expectedConcurrentTitles = shuffle(concurrentTitles, testOrderSeed('ava-seed', import.meta.url));
+
+	t.notSame(expectedConcurrentTitles, concurrentTitles);
+
+	return promiseEnd(new Runner({file: import.meta.url, randomSeed: 'ava-seed'}), runner => {
+		for (const title of serialTitles) {
+			runner.chain.serial(title, a => {
+				array.push(title);
+				a.pass();
+			});
+		}
+
+		for (const title of concurrentTitles) {
+			runner.chain(title, a => {
+				array.push(title);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		t.strictSame(array, [...serialTitles, ...expectedConcurrentTitles]);
 	});
 });
 

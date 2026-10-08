@@ -37,6 +37,8 @@ Options:
       --no-worker-threads  Don't use worker threads                    [boolean]
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
+      --randomize          Randomize test file and test order          [boolean]
+      --seed               Seed for randomized test order               [string]
   -s, --serial             Run tests serially                          [boolean]
   -t, --tap                Generate TAP output                         [boolean]
   -T, --timeout            Set global timeout (milliseconds or human-readable,
@@ -79,6 +81,22 @@ Files inside `node_modules` are *always* ignored. So are files starting with `_`
 * `**/tests/**/fixtures/**/*`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+## Randomizing test order
+
+Use the `--randomize` flag to run test files, and concurrent tests within each file, in a random order. AVA reports the seed used for each run:
+
+```console
+npx ava --randomize
+```
+
+Use `--seed` to reproduce the same order:
+
+```console
+npx ava --seed=4f7a2c91
+```
+
+Serial tests still run in declaration order.
 
 ## Running tests with matching titles
 
