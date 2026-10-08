@@ -13,6 +13,13 @@ test('throws requires native errors', async t => {
 	t.snapshot(result.stats.failed.map(({title}) => title), 'failed tests');
 });
 
+test('throws explains when the function did not throw', async t => {
+	const result = await t.throwsAsync(fixture(['throws-no-error.js']));
+	const [failed] = result.stats.failed;
+	const error = result.stats.getError(failed);
+	t.is(error.formattedDetails[0].label, 'Function did not throw, instead returned:');
+});
+
 test('throwsAsync requires native errors', async t => {
 	const result = await t.throwsAsync(fixture(['throws-async.js']));
 	t.snapshot(result.stats.passed.map(({title}) => title), 'passed tests');

@@ -839,13 +839,13 @@ test('.throws()', gather(t => {
 	failsWith(t, () => assertions.throws(() => {}), {
 		assertion: 't.throws()',
 		message: '',
-		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function did not throw, instead returned:', formatted: /undefined/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}), {
 		assertion: 't.throws()',
 		message: '',
-		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function did not throw, instead returned:', formatted: /undefined/}],
 	});
 
 	// Fails because function doesn't throw. Asserts that 'my message' is used
@@ -853,7 +853,7 @@ test('.throws()', gather(t => {
 	failsWith(t, () => assertions.throws(() => {}, undefined, 'my message'), {
 		assertion: 't.throws()',
 		message: 'my message',
-		formattedDetails: [{label: 'Function returned:', formatted: /undefined/}],
+		formattedDetails: [{label: 'Function did not throw, instead returned:', formatted: /undefined/}],
 	});
 
 	// Fails because the function returned a promise.
