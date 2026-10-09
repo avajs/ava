@@ -60,6 +60,12 @@ test('removes test- from file', t => {
 	t.end();
 });
 
+test('retains test- elsewhere in file', t => {
+	t.equal(prefixTitle(extensions, path.sep, path.normalize('backend/normalize-test-case.js'), 'title'), `backend${sep}normalize-test-case${sep}title`);
+	t.equal(prefixTitle(extensions, path.sep, path.normalize('backend/test-normalize-test-case.js'), 'title'), `backend${sep}normalize-test-case${sep}title`);
+	t.end();
+});
+
 test('retains test- elsewhere in path', t => {
 	t.equal(prefixTitle(extensions, path.sep, path.normalize('backend-test/run-status.js'), 'title'), `backend-test${sep}run-status${sep}title`);
 	t.end();
