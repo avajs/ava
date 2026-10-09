@@ -46,7 +46,6 @@ exports.sanitizers = {
 	experimentalWarning: string => string.replaceAll(/^\(node:\d+\) ExperimentalWarning.+\n/g, ''),
 	lineEndings: string => string.replaceAll('\r\n', '\n'),
 	libLineNumbers: string => string.replaceAll(/\((\/lib\/.+\.js):\d+:\d+\)/g, '($1)'),
-	nodeInternalLineNumbers: string => string.replaceAll(/\((node:internal\/[^)]+):\d+:\d+\)/g, '($1)'),
 	// The following are injected by tap@18.
 	posix: string => string.replaceAll('\\', '/'),
 	tapLoaders: string => string.replaceAll(/.+(Module\._compile|node_modules.pirates|require\.extensions).+\r?\n/g, ''),

@@ -24,7 +24,6 @@ test(async t => {
 				report.sanitizers.esmLoader,
 				report.sanitizers.experimentalWarning,
 				report.sanitizers.libLineNumbers,
-				report.sanitizers.nodeInternalLineNumbers,
 				report.sanitizers.posix,
 				report.sanitizers.tapLoaders,
 				report.sanitizers.timers,
