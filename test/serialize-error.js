@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 
-import {test} from 'tap';
+import test from '@ava/test';
 
 import serializeError from '../lib/serialize-error.js';
 
@@ -16,14 +16,13 @@ test('extractSource skips stack frames without a file path', t => {
     at Object.<anonymous> (${testFilePath}:10:5)`;
 
 	const result = serializeError(error, {testFile});
-	t.equal(result.type, 'native');
-	t.same(result.source, {
+	t.is(result.type, 'native');
+	t.deepEqual(result.source, {
 		isDependency: false,
 		isWithinProject: true,
 		file: testFile,
 		line: 10,
 	});
-	t.end();
 });
 
 test('extractSource skips anonymous file paths that are not the test file', t => {
@@ -35,12 +34,11 @@ test('extractSource skips anonymous file paths that are not the test file', t =>
     at Object.<anonymous> (${testFilePath}:4:1)`;
 
 	const result = serializeError(error, {testFile});
-	t.equal(result.type, 'native');
-	t.same(result.source, {
+	t.is(result.type, 'native');
+	t.deepEqual(result.source, {
 		isDependency: false,
 		isWithinProject: true,
 		file: testFile,
 		line: 4,
 	});
-	t.end();
 });

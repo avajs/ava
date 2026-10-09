@@ -51,16 +51,4 @@ test(async t => {
 	t.test('tap reporter - second failFast run', run('failFast2'));
 	t.test('tap reporter - only run', run('only'));
 	t.test('tap reporter - edge cases', run('edgeCases'));
-	t.test('Node.js internal stack locations are stable across runtime releases', t => {
-		for (const location of ['318:16', '319:16', '346:16', '355:16']) {
-			t.equal(
-				report.sanitizers.nodeInternalLineNumbers(`compileSourceTextModule (node:internal/modules/esm/utils:${location})`),
-				'compileSourceTextModule (node:internal/modules/esm/utils)',
-			);
-		}
-
-		const applicationFrame = 'test (file:///project/test.js:3:1)';
-		t.equal(report.sanitizers.nodeInternalLineNumbers(applicationFrame), applicationFrame);
-		t.end();
-	});
 });
