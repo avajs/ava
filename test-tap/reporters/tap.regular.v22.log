@@ -113,7 +113,7 @@ not ok 12 - test › no longer failing
     message: >-
       Test was expected to fail, but succeeded, you should stop marking the test as
       failing
-    at: 'Test.completeFinish (/lib/test.js)'
+    at: 'Test.finish (/lib/test.js)'
   ...
 ---tty-stream-chunk-separator
 not ok 13 - test › logs
