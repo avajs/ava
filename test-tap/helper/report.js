@@ -14,7 +14,7 @@ _testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
 const exports = {};
 export default exports;
 
-exports.assert = (t, logFile, buffer) => {
+exports.assert = (t, logFile, buffer, sanitizer) => {
 	let existing = null;
 	try {
 		existing = fs.readFileSync(logFile);
@@ -25,8 +25,8 @@ exports.assert = (t, logFile, buffer) => {
 		existing = buffer;
 	}
 
-	const expected = existing.toString('utf8');
-	const actual = buffer.toString('utf8');
+	const expected = sanitizer ? sanitizer(existing.toString('utf8')) : existing.toString('utf8');
+	const actual = sanitizer ? sanitizer(buffer.toString('utf8')) : buffer.toString('utf8');
 	if (actual === expected) {
 		t.pass();
 	} else {
@@ -48,6 +48,7 @@ exports.sanitizers = {
 	libLineNumbers: string => string.replaceAll(/\((\/lib\/.+\.js):\d+:\d+\)/g, '($1)'),
 	// The following are injected by tap@18.
 	posix: string => string.replaceAll('\\', '/'),
+	esmCompilationLineNumbers: string => string.replaceAll(/(compileSourceTextModule \(node:internal\/modules\/esm\/utils):\d+:\d+(?=\))/g, '$1'),
 	tapLoaders: string => string.replaceAll(/.+(Module\._compile|node_modules.pirates|require\.extensions).+\r?\n/g, ''),
 	timers: string => string.replaceAll(/timers\.js:\d+:\d+/g, 'timers.js'),
 	version: string => string.replaceAll(`v${pkg.version}`, 'VERSION'),

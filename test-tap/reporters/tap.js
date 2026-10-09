@@ -11,7 +11,7 @@ fixReporterEnv();
 test(async t => {
 	const {default: TapReporter} = await import('../../lib/reporters/tap.js');
 
-	const run = (type, sanitizers = []) => t => {
+	const run = (type, sanitizers = [], assertSanitizer) => t => {
 		t.plan(1);
 
 		const logFile = fileURLToPath(new URL(`tap.${type.toLowerCase()}.${process.version.split('.')[0]}.log`, import.meta.url));
@@ -41,7 +41,7 @@ test(async t => {
 				tty.end();
 				return tty.asBuffer();
 			})
-			.then(buffer => report.assert(t, logFile, buffer))
+			.then(buffer => report.assert(t, logFile, buffer, assertSanitizer))
 			.catch(t.threw);
 	};
 
@@ -49,5 +49,5 @@ test(async t => {
 	t.test('tap reporter - failFast run', run('failFast'));
 	t.test('tap reporter - second failFast run', run('failFast2'));
 	t.test('tap reporter - only run', run('only'));
-	t.test('tap reporter - edge cases', run('edgeCases'));
+	t.test('tap reporter - edge cases', run('edgeCases', [], report.sanitizers.esmCompilationLineNumbers));
 });
