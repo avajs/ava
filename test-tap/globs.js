@@ -218,13 +218,13 @@ test('findFiles finds non-ignored files (just .js)', async t => {
 		'tests/baz.js',
 		'tests/deep/deep.js',
 		'tests/_foo-help.js',
-	].map(file => path.join(fixtureDir, file)).toSorted();
+	].map(file => path.join(fixtureDir, file)).toSorted(); // eslint-disable-line unicorn/require-array-sort-compare
 
 	const actual = await globs.findFiles({
 		cwd: fixtureDir,
 		...globs.normalizeGlobs({files: ['!**/fixtures/*.*', '!**/helpers/*.*'], extensions: ['js'], providers: []}),
 	});
-	actual.sort();
+	actual.sort(); // eslint-disable-line unicorn/require-array-sort-compare
 	t.same(actual, expected);
 });
 
@@ -243,6 +243,6 @@ test('findFiles finds non-ignored files (.js, .jsx)', async t => {
 		cwd: fixtureDir,
 		...globs.normalizeGlobs({files: ['!**/fixtures/*', '!**/helpers/*'], extensions: ['js', 'jsx'], providers: []}),
 	});
-	actual.sort();
+	actual.sort(); // eslint-disable-line unicorn/require-array-sort-compare
 	t.same(actual, expected);
 });

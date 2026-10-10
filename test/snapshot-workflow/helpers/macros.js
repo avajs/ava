@@ -26,7 +26,7 @@ function cleanStringDiff(before, after) {
 }
 
 export async function beforeAndAfter(t, {
-	cwd,
+	cwd: fixtureDirectory,
 	expectChanged,
 	env = {},
 	cli = [],
@@ -36,7 +36,7 @@ export async function beforeAndAfter(t, {
 	if (updating) {
 		// Run template
 		await fixture(['--update-snapshots'], {
-			cwd,
+			cwd: fixtureDirectory,
 			env: {
 				TEMPLATE: 'true',
 				AVA_FORCE_CI: 'not-ci',
@@ -44,10 +44,10 @@ export async function beforeAndAfter(t, {
 		});
 	}
 
-	const before = await readSnapshots(cwd);
+	const before = await readSnapshots(fixtureDirectory);
 
 	// Copy fixture to a temporary directory
-	await withTemporaryFixture(cwd, async cwd => {
+	await withTemporaryFixture(fixtureDirectory, async cwd => {
 		// Run fixture
 		await fixture(cli, {cwd, env: {AVA_FORCE_CI: 'not-ci', ...env}});
 

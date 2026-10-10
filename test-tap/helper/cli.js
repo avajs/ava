@@ -50,8 +50,8 @@ export function execCli(args, options, cb) {
 		stderr = child.stderr.toArray().then(chunks => chunks.join(''));
 	});
 
-	Promise.all([processPromise, stdout, stderr]).then(args => {
-		cb(...args);
+	Promise.all([processPromise, stdout, stderr]).then(values => {
+		cb(...values);
 	});
 
 	return child;

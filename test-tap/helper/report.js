@@ -9,7 +9,7 @@ import {_testOnlyReplaceWorkerPath} from '../../lib/fork.js';
 import {normalizeGlobs} from '../../lib/globs.js';
 import pkg from '../../lib/pkg.js';
 
-_testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url));
+_testOnlyReplaceWorkerPath(new URL('report-worker.js', import.meta.url)); // eslint-disable-line unicorn/no-top-level-side-effects
 
 const exports = {};
 export default exports;
@@ -104,7 +104,7 @@ const run = async (type, reporter, {match = [], filter} = {}) => {
 		onlyFiles: true,
 		stats: false,
 		unique: true,
-	}).toSorted();
+	}).toSorted(); // eslint-disable-line unicorn/require-array-sort-compare
 	if (type !== 'watch') {
 		return api.run({files, filter}).then(() => {
 			reporter.endRun();

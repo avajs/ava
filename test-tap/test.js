@@ -245,7 +245,7 @@ test('fails with thrown non-error object', t => {
 		t.equal(result.error.name, 'AssertionError');
 		t.equal(result.error.formattedDetails.length, 1);
 		t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
-		t.match(result.error.formattedDetails[0].formatted, /.*{.*\n.*foo: 'bar'/);
+		t.match(result.error.formattedDetails[0].formatted, /[^\n\r{\u{2028}\u{2029}]*\{.*\n.*foo: 'bar'/u);
 	});
 });
 
@@ -308,7 +308,7 @@ test('assertion.skip() is bound', t => {
 });
 
 test('throws and notThrows work with promises', t => {
-	let asyncCalled = false;
+	let isAsyncCalled = false;
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
@@ -316,7 +316,7 @@ test('throws and notThrows work with promises', t => {
 				throw new Error('foo');
 			}), {message: 'foo'}),
 			a.notThrowsAsync(delay(20).then(() => {
-				asyncCalled = true;
+				isAsyncCalled = true;
 			})),
 		]);
 	});
@@ -324,7 +324,7 @@ test('throws and notThrows work with promises', t => {
 		t.equal(result.passed, true);
 		t.equal(instance.planCount, 2);
 		t.equal(instance.assertCount, 2);
-		t.equal(asyncCalled, true);
+		t.equal(isAsyncCalled, true);
 	});
 });
 
@@ -413,7 +413,9 @@ test('failing tests must not pass', t => ava.failing(a => {
 	t.equal(result.error.message, failingTestHint);
 }));
 
-test('failing tests must not return a fulfilled promise', t => ava.failing(a => Promise.resolve().then(() => a.pass())).run().then(result => {
+test('failing tests must not return a fulfilled promise', t => ava.failing(a => new Promise(resolve => { // eslint-disable-line unicorn/prefer-promise-try
+	resolve(a.pass());
+})).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.message, failingTestHint);
 }));
@@ -517,7 +519,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 
 	const skipSnapshot = sinon.spy();
 
-	const test = new Test({
+	const avaTestInstance = new Test({
 		compareTestSnapshot: options => manager.compare(options),
 		skipSnapshot,
 		updateSnapshots: false,
@@ -530,7 +532,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		},
 	});
 
-	await test.run();
+	await avaTestInstance.run();
 
 	t.ok(skipSnapshot.calledTwice);
 	for (const [index, call] of skipSnapshot.getCalls().entries()) {
@@ -610,24 +612,22 @@ test('teardown failing test', t => {
 });
 
 test('teardown awaits promise', t => {
-	let tornDown = false;
+	let isTornDown = false;
 	const teardownPromise = delay(200).then(() => {
-		tornDown = true;
+		isTornDown = true;
 	});
 	return ava(a => {
 		a.teardown(() => teardownPromise);
 		a.pass();
 	}).run().then(result => {
 		t.equal(result.passed, true);
-		t.ok(tornDown);
+		t.ok(isTornDown);
 	});
 });
 
 test('teardowns run in reverse order', t => {
-	let resolveA;
-	const teardownA = sinon.stub().returns(new Promise(resolve => {
-		resolveA = resolve;
-	}));
+	const {promise: promiseA, resolve: resolveA} = Promise.withResolvers();
+	const teardownA = sinon.stub().returns(promiseA);
 	const teardownB = sinon.stub().resolves(delay(200));
 
 	return ava(a => {

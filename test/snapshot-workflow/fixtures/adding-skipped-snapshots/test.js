@@ -3,8 +3,10 @@ const {default: test} = await import(process.env.TEST_AVA_IMPORT_FROM); // This 
 test('foo', t => {
 	t.snapshot({foo: 'one'});
 
-	if (!process.env.TEMPLATE) {
-		t.snapshot.skip({foo: 'two'});
-		t.snapshot({foo: 'three'});
+	if (process.env.TEMPLATE) {
+		return;
 	}
+
+	t.snapshot.skip({foo: 'two'});
+	t.snapshot({foo: 'three'});
 });

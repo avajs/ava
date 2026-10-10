@@ -2,18 +2,9 @@ import test from 'ava';
 
 const reverse = process.env.INTERTEST_ORDER_REVERSE;
 
-// Functions which resolve the corresponding promise to undefined
-let resolveOne;
-let resolveTwo;
-
 // Promises with triggerable resolution
-const one = new Promise(resolve => {
-	resolveOne = resolve;
-});
-
-const two = new Promise(resolve => {
-	resolveTwo = resolve;
-});
+const {promise: one, resolve: resolveOne} = Promise.withResolvers();
+const {promise: two, resolve: resolveTwo} = Promise.withResolvers();
 
 // Test cases which await the triggerable promises
 test('one', async t => {

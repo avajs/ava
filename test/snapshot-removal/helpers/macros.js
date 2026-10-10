@@ -5,7 +5,7 @@ import {fixture} from '../../helpers/exec.js';
 import {withTemporaryFixture} from '../../helpers/with-temporary-fixture.js';
 
 export async function testSnapshotPruning(t, {
-	cwd,
+	cwd: fixtureDirectory,
 	env,
 	cli,
 	remove,
@@ -20,7 +20,7 @@ export async function testSnapshotPruning(t, {
 	if (updating) {
 		// Execute fixture as template to generate snapshots
 		const templateResult = fixture(['--update-snapshots'], {
-			cwd,
+			cwd: fixtureDirectory,
 			env: {
 				AVA_FORCE_CI: 'not-ci',
 				TEMPLATE: 'true',
@@ -30,8 +30,8 @@ export async function testSnapshotPruning(t, {
 		await t.notThrowsAsync(templateResult, 'Template crashed - there\'s a bug in the test');
 
 		// Check that the snapshots were created
-		const snapshotPath = path.join(cwd, snapshotFile);
-		const reportPath = path.join(cwd, reportFile);
+		const snapshotPath = path.join(fixtureDirectory, snapshotFile);
+		const reportPath = path.join(fixtureDirectory, reportFile);
 		await Promise.all([
 			t.notThrowsAsync(fs.access(snapshotPath), 'Template didn\'t create a snapshot - there\'s a bug in the test'),
 			t.notThrowsAsync(fs.access(reportPath), 'Template didn\'t create a report - there\'s a bug in the test'),
@@ -39,7 +39,7 @@ export async function testSnapshotPruning(t, {
 	}
 
 	// Make a temporary copy of the fixture
-	await withTemporaryFixture(cwd, async cwd => {
+	await withTemporaryFixture(fixtureDirectory, async cwd => {
 		// Execute fixture as run
 		const run = fixture(cli, {
 			cwd,

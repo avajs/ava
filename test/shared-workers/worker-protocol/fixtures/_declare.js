@@ -23,12 +23,14 @@ export default testFile => {
 
 	test('broadcasts', async t => {
 		for await (const message of plugin.subscribe()) {
-			if (message.data.broadcast === testFile) {
-				const expected = new Uint8Array(crypto.randomBytes(16));
-				for await (const reply of message.reply(expected).replies()) { // eslint-disable-line no-unreachable-loop
-					t.deepEqual(reply.data, expected);
-					return;
-				}
+			if (message.data.broadcast !== testFile) {
+				continue;
+			}
+
+			const expected = new Uint8Array(crypto.randomBytes(16));
+			for await (const reply of message.reply(expected).replies()) { // eslint-disable-line no-unreachable-loop
+				t.deepEqual(reply.data, expected);
+				return;
 			}
 		}
 	});
@@ -40,7 +42,7 @@ export default testFile => {
 				const expected = new Uint8Array(crypto.randomBytes(16));
 				for await (const reply of plugin.publish(expected).replies()) { // eslint-disable-line no-unreachable-loop
 					t.deepEqual(reply.data, expected);
-					break;
+					break; // eslint-disable-line unicorn/no-break-in-nested-loop
 				}
 
 				plugin.publish('👋');

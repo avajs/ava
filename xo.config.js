@@ -4,10 +4,16 @@ import pluginAva from 'eslint-plugin-ava';
 // be disabled for those files. This sets up a rules config that does so, based on the recommended rules.
 const disabledAvaRules = Object.fromEntries(pluginAva.configs.recommended.flatMap(({rules}) => Object.keys(rules).map(rule => [rule, 'off'])));
 
-/** @type {import('xo').FlatXoConfig} */
+/**
+@type {import('xo').FlatXoConfig}
+*/
 const xoConfig = [
 	{
 		ignores: [
+			'**/fixtures/**/package.json',
+			'examples/**/package.json',
+			'media/**/package.json',
+			'test-tap/fixture/**/package.json',
 			'test/line-numbers/fixtures/line-numbers.js',
 			'test-tap/fixture/snapshots/test-sourcemaps/build/**',
 			'test-tap/fixture/report/edgecases/ast-syntax-error.js',
@@ -29,6 +35,7 @@ const xoConfig = [
 				},
 			],
 			'import-x/newline-after-import': 'error',
+			'no-labels': 'off',
 			'require-unicode-regexp': 'off',
 			'unicorn/require-post-message-target-origin': 'off',
 			'unicorn/prefer-event-target': 'off',
@@ -61,8 +68,28 @@ const xoConfig = [
 			'@typescript-eslint/no-unsafe-type-assertion': 'off',
 			'import-x/no-extraneous-dependencies': 'off',
 			'n/no-extraneous-import': 'off',
+			'unicorn/filename-case': 'off',
 			'unicorn/no-empty-file': 'off',
 			'unicorn/no-anonymous-default-export': 'off',
+		},
+	},
+	{
+		files: ['test/**', 'test-tap/**'],
+		rules: {
+			'node-test/no-import-test-files': 'off',
+			'no-shadow': ['error', {allow: ['t']}],
+			'regexp/no-super-linear-move': 'off',
+			'regexp/no-super-linear-backtracking': 'off',
+			'regexp/prefer-named-capture-group': 'off',
+		},
+	},
+	{
+		files: 'package.json',
+		rules: {
+			'package-json/prefer-side-effects-field': 'off',
+			'package-json/require-types-in-exports': 'off',
+			'package-json/require-default-condition': 'off',
+			'package-json/dependency-version-range': 'off',
 		},
 	},
 	{

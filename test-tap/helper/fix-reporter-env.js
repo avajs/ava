@@ -11,7 +11,7 @@ const fixColors = () => {
 	Object.defineProperty(process, 'platform', {value: 'darwin', enumerable: true, configurable: true});
 };
 
-const fixReporterEnv = () => {
+export default function fixReporterEnv() {
 	// Fix timestamps.
 	const clock = sinon.useFakeTimers({
 		now: new Date(2014, 11, 19, 17, 19, 12, 200).getTime(),
@@ -31,7 +31,6 @@ const fixReporterEnv = () => {
 			clock.uninstall();
 		},
 	};
-};
+}
 
-export default fixReporterEnv;
 export {fixColors as onlyColors};

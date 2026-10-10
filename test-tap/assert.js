@@ -11,7 +11,7 @@ import {set as setOptions} from '../lib/worker/options.js';
 setOptions({chalkOptions: {level: 0}});
 
 let lastFailure = null;
-let lastPassed = false;
+let isLastPassed = false;
 
 class AssertionFailed extends Error {
 	constructor() {
@@ -24,7 +24,7 @@ const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
 			pass() {
-				lastPassed = true;
+				isLastPassed = true;
 				// Match behavior in lib/test.js, not great for this test suite but refactoring is a much larger task.
 				return true;
 			},
@@ -34,7 +34,7 @@ const AssertionsBase = class extends assert.Assertions {
 						lastFailure = error;
 					}
 				}).then(() => {
-					lastPassed = true;
+					isLastPassed = true;
 				});
 			},
 			fail(error) {
@@ -78,27 +78,27 @@ function assertFailure(t, subset) {
 	}
 }
 
-let gathering = false;
+let isGathering = false;
 let gatheringPromise = Promise.resolve();
 function gather(run) {
 	return t => {
-		if (gathering) {
+		if (isGathering) {
 			throw new Error('Cannot nest gather()');
 		}
 
-		gathering = true;
+		isGathering = true;
 		try {
 			run(t);
 			return gatheringPromise;
 		} finally {
-			gathering = false;
+			isGathering = false;
 			gatheringPromise = Promise.resolve();
 		}
 	};
 }
 
 function add(fn) {
-	if (!gathering) {
+	if (!isGathering) {
 		throw new Error('Cannot add promise, must be called from gather() callback');
 	}
 
@@ -177,10 +177,10 @@ function fails(t, fn) {
 }
 
 function passes(t, fn, {expectBoolean = true} = {}) {
-	lastPassed = false;
+	isLastPassed = false;
 	lastFailure = null;
 	const retval = fn();
-	if (lastPassed) {
+	if (isLastPassed) {
 		if (expectBoolean) {
 			t.equal(retval, true);
 		} else {
@@ -193,10 +193,10 @@ function passes(t, fn, {expectBoolean = true} = {}) {
 
 function throwsAsyncPasses(t, fn) {
 	return add(() => {
-		lastPassed = false;
+		isLastPassed = false;
 		lastFailure = null;
 		return fn().then(() => {
-			if (lastPassed) {
+			if (isLastPassed) {
 				t.pass();
 			} else {
 				t.error(lastFailure, 'Expected assertion to pass');
@@ -264,9 +264,7 @@ test('.is()', t => {
 
 	passes(t, () => assertions.is(-0, -0));
 
-	passes(t, () => assertions.is(Number.NaN, Number.NaN));
-
-	passes(t, () => assertions.is(0 / 0, Number.NaN));
+	passes(t, () => assertions.is(NaN, NaN));
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
@@ -301,9 +299,9 @@ test('.is()', t => {
 
 	fails(t, () => assertions.is(0, null));
 
-	fails(t, () => assertions.is(0, Number.NaN));
+	fails(t, () => assertions.is(0, NaN));
 
-	fails(t, () => assertions.is('foo', Number.NaN));
+	fails(t, () => assertions.is('foo', NaN));
 
 	failsWith(t, () => assertions.is({foo: 'bar'}, {foo: 'bar'}), {
 		assertion: 't.is()',
@@ -375,9 +373,7 @@ test('.not()', t => {
 
 	passes(t, () => assertions.not('foo', 'bar'));
 
-	fails(t, () => assertions.not(Number.NaN, Number.NaN));
-
-	fails(t, () => assertions.not(0 / 0, Number.NaN));
+	fails(t, () => assertions.not(NaN, NaN));
 
 	failsWith(t, () => assertions.not('foo', 'foo'), {
 		assertion: 't.not()',
@@ -521,13 +517,13 @@ test('.deepEqual()', t => {
 
 	passes(t, () => assertions.deepEqual(0, 0)
 		&& assertions.deepEqual(1, 1)
-		&& assertions.deepEqual(3.14, 3.14));
+		&& assertions.deepEqual(1.34, 1.34));
 
 	fails(t, () => assertions.deepEqual(0, 1));
 
 	fails(t, () => assertions.deepEqual(1, -1));
 
-	fails(t, () => assertions.deepEqual(3.14, 2.72));
+	fails(t, () => assertions.deepEqual(1.34, 2.72));
 
 	fails(t, () => assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']));
 
@@ -621,13 +617,13 @@ test('.notDeepEqual()', t => {
 		assertion: 't.notDeepEqual()',
 		expected,
 		message: '',
-		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /[^\n\r{\u{2028}\u{2029}]*\{.*\n.*a: 'a'/u}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message'), {
 		assertion: 't.notDeepEqual()',
 		message: 'my message',
-		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /[^\n\r[\u{2028}\u{2029}]*\[.*\n.*'a',\n.*'b',/u}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual({}, [], null), {
@@ -814,7 +810,7 @@ test('.like()', t => {
 	failsWith(t, () => assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'}), {
 		assertion: 't.like()',
 		message: '',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /\{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*\}/}],
 	});
 
 	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
@@ -1204,25 +1200,25 @@ test('.throws() fails if passed a bad expectation', t => {
 	failsWith(t, () => assertions.throws(() => {}, {}), {
 		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, []), {
 		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[\]/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {any: {}}), {
 		assertion: 't.throws()',
 		message: 'The `any` property of the second argument to `t.throws()` must be a boolean',
-		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /any: \{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {code: {}}), {
 		assertion: 't.throws()',
 		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
-		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: \{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {instanceOf: null}), {
@@ -1282,25 +1278,25 @@ test('.throwsAsync() fails if passed a bad expectation', async t => {
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, []), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[\]/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
-		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /any: \{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string or number',
-		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: \{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {instanceOf: null}), {
@@ -1471,15 +1467,15 @@ test('.snapshot()', async t => {
 	// npx tap test-tap/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
-	const updating = false;
+	const isUpdating = false;
 
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
-		recordNewSnapshots: updating,
-		updating,
+		recordNewSnapshots: isUpdating,
+		updating: isUpdating,
 	});
 	const setup = _title => new class extends assertions.constructor {
 		constructor(title) {
@@ -1504,20 +1500,20 @@ test('.snapshot()', async t => {
 	}(_title);
 
 	{
-		const assertions = setup('passes');
+		const passingAssertions = setup('passes');
 
-		passes(t, () => assertions.snapshot({foo: 'bar'}));
+		passes(t, () => passingAssertions.snapshot({foo: 'bar'}));
 
-		passes(t, () => assertions.snapshot({foo: 'bar'}));
+		passes(t, () => passingAssertions.snapshot({foo: 'bar'}));
 	}
 
 	{
-		const assertions = setup('fails');
-		if (updating) {
-			return assertions.snapshot({foo: 'bar'});
+		const failingAssertions = setup('fails');
+		if (isUpdating) {
+			return failingAssertions.snapshot({foo: 'bar'});
 		}
 
-		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
+		failsWith(t, () => failingAssertions.snapshot({foo: 'not bar'}), {
 			assertion: 't.snapshot()',
 			message: 'Did not match snapshot',
 			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
@@ -1525,12 +1521,12 @@ test('.snapshot()', async t => {
 	}
 
 	{
-		const assertions = setup('fails');
-		if (updating) {
-			return assertions.snapshot({foo: 'bar'}, 'my message');
+		const failingAssertions = setup('fails');
+		if (isUpdating) {
+			return failingAssertions.snapshot({foo: 'bar'}, 'my message');
 		}
 
-		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
+		failsWith(t, () => failingAssertions.snapshot({foo: 'not bar'}, 'my message'), {
 			assertion: 't.snapshot()',
 			message: 'my message',
 			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
@@ -1538,8 +1534,8 @@ test('.snapshot()', async t => {
 	}
 
 	{
-		const assertions = setup('bad message');
-		failsWith(t, () => assertions.snapshot(null, null), {
+		const badMessageAssertions = setup('bad message');
+		failsWith(t, () => badMessageAssertions.snapshot(null, null), {
 			assertion: 't.snapshot()',
 			message: 'The assertion message must be a string',
 			formattedDetails: [{
@@ -1548,7 +1544,7 @@ test('.snapshot()', async t => {
 			}],
 		});
 
-		failsWith(t, () => assertions.snapshot(null, ''), {
+		failsWith(t, () => badMessageAssertions.snapshot(null, ''), {
 			assertion: 't.snapshot()',
 			message: 'The snapshot assertion message must be a non-empty string',
 			formattedDetails: [{
@@ -1756,7 +1752,7 @@ test('.regex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.regex('42', {}), {
 		assertion: 't.regex()',
 		message: '`t.regex()` must be called with a regular expression',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	t.end();
@@ -1807,7 +1803,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notRegex('42', {}), {
 		assertion: 't.notRegex()',
 		message: '`t.notRegex()` must be called with a regular expression',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	t.end();

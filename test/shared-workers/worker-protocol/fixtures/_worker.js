@@ -14,10 +14,12 @@ const handled = new WeakSet();
 
 async function echo(messages) {
 	for await (const message of messages) {
-		if (!handled.has(message)) {
-			handled.add(message);
-			echo(message.reply(message.data).replies());
+		if (handled.has(message)) {
+			continue;
 		}
+
+		handled.add(message);
+		echo(message.reply(message.data).replies());
 	}
 }
 
@@ -43,7 +45,7 @@ async function handleWorkers(protocol) {
 			if (message.data === '👋') {
 				bye();
 				bye(); // Second call is a no-op.
-				break;
+				break; // eslint-disable-line unicorn/no-break-in-nested-loop
 			}
 		}
 	}

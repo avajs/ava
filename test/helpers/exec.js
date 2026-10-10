@@ -23,15 +23,11 @@ const compareStatObjects = (a, b) => {
 		return 1;
 	}
 
-	if (a.title < b.title) {
-		return -1;
-	}
-
-	return 1;
+	return a.title < b.title ? -1 : 1;
 };
 
-export const cwd = (...paths) => path.join(path.dirname(fileURLToPath(test.meta.file)), 'fixtures', ...paths);
-export const cleanOutput = string => string.replace(/^\W+/, '').replaceAll(/\W+\n+$/g, '').trim();
+export const resolveFixtureDirectory = (...paths) => path.join(path.dirname(fileURLToPath(test.meta.file)), 'fixtures', ...paths);
+export const cleanOutput = string => string.replace(/^\W+/, '').replaceAll(/\W+\n$/g, '').trim();
 
 const NO_FORWARD_PREFIX = Buffer.from('🤗', 'utf8');
 
@@ -79,7 +75,7 @@ const sortStats = stats => {
 export async function * exec(args, options) {
 	let {errors, logs, stats, stdout, stderr} = initState();
 
-	const workingDir = options.cwd ?? cwd();
+	const workingDir = options.cwd ?? resolveFixtureDirectory();
 	const execaProcess = execaNode(cliPath, args, {
 		...options,
 		env: {
@@ -117,7 +113,7 @@ export async function * exec(args, options) {
 		throw Object.assign(error, {stats, runCount});
 	}).then(result => ({execa: true, result}));
 
-	while (true) {
+	loop: while (true) {
 		const item = await Promise.race([done, statusEvents.next()]); // eslint-disable-line no-await-in-loop
 		if (item.execa) {
 			sortStats(stats);
@@ -140,7 +136,7 @@ export async function * exec(args, options) {
 					process: execaProcess, stats, stdout, stderr, runCount,
 				};
 				({errors, logs, stats, stdout, stderr} = initState());
-				break;
+				continue loop;
 			}
 
 			case 'hook-failed': {
@@ -148,7 +144,7 @@ export async function * exec(args, options) {
 				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				errors.set(statObject, statusEvent.err);
 				stats.failedHooks.push(statObject);
-				break;
+				continue loop;
 			}
 
 			case 'internal-error': {
@@ -156,14 +152,14 @@ export async function * exec(args, options) {
 				const statObject = {file: normalizePath(workingDir, testFile ?? '')};
 				errors.set(statObject, statusEvent.err);
 				stats.internalErrors.push(statObject);
-				break;
+				continue loop;
 			}
 
 			case 'process-exit': {
 				const {testFile} = statusEvent;
 				const statObject = {file: normalizePath(workingDir, testFile)};
 				stats.processExits.push(statObject);
-				break;
+				continue loop;
 			}
 
 			case 'selected-test': {
@@ -178,13 +174,13 @@ export async function * exec(args, options) {
 					stats.todo.push({title, file: normalizePath(workingDir, testFile)});
 				}
 
-				break;
+				continue loop;
 			}
 
 			case 'shared-worker-error': {
 				const {message, name, stack} = statusEvent.err;
 				stats.sharedWorkerErrors.push({message, name, stack});
-				break;
+				continue loop;
 			}
 
 			case 'test-passed': {
@@ -192,7 +188,7 @@ export async function * exec(args, options) {
 				const statObject = {title, file: normalizePath(workingDir, testFile)};
 				stats.passed.push(statObject);
 				logs.set(statObject, statusEvent.logs);
-				break;
+				continue loop;
 			}
 
 			case 'test-failed': {
@@ -201,17 +197,17 @@ export async function * exec(args, options) {
 				errors.set(statObject, statusEvent.err);
 				stats.failed.push(statObject);
 				logs.set(statObject, statusEvent.logs);
-				break;
+				continue loop;
 			}
 
 			case 'uncaught-exception': {
 				const {message, name, stack} = statusEvent.err;
 				stats.uncaughtExceptions.push({message, name, stack});
-				break;
+				continue loop;
 			}
 
 			default: {
-				break;
+				continue loop;
 			}
 		}
 	}

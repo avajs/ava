@@ -25,50 +25,50 @@ test('try-commit works', async t => {
 
 test('try-commit is bound', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const {try: tryFn} = a;
 		const result = await tryFn(b => b.pass());
 		await result.commit();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit discards failed attempt', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.fail());
 		await result.discard();
 		await a.pass();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit can discard produced result', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.pass());
 		result.discard();
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /without running any assertions/);
-	t.equal(result.error.name, 'Error');
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /without running any assertions/);
+	t.equal(avaResult.error.name, 'Error');
 });
 
 test('try-commit fails when not all assertions were committed/discarded', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		a.pass();
 		await a.try(b => b.pass());
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /not all attempts were committed/);
-	t.equal(result.error.name, 'Error');
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /not all attempts were committed/);
+	t.equal(avaResult.error.name, 'Error');
 });
 
 test('try-commit works with values', async t => {
@@ -76,7 +76,7 @@ test('try-commit works with values', async t => {
 	const testValue2 = 123;
 
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try((b, value1, value2) => {
 			b.is(value1, value2);
 		}, testValue1, testValue2);
@@ -84,7 +84,7 @@ test('try-commit works with values', async t => {
 		result.commit();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit is properly counted', async t => {
@@ -102,9 +102,9 @@ test('try-commit is properly counted', async t => {
 		t.equal(instance.pendingAttemptCount, 0);
 	});
 
-	const result = await instance.run();
+	const avaResult = await instance.run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 	t.equal(instance.assertCount, 1);
 });
 
@@ -124,9 +124,9 @@ test('try-commit is properly counted multiple', async t => {
 		t.equal(instance.pendingAttemptCount, 0);
 	});
 
-	const result = await instance.run();
+	const avaResult = await instance.run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 	t.equal(instance.assertCount, 2);
 });
 
@@ -135,39 +135,39 @@ test('try-commit goes as many levels', async t => {
 	const ava = newAva();
 	const instance = ava(async a => {
 		t.ok(a.try);
-		const result = await a.try(async b => {
+		const firstResult = await a.try(async b => {
 			t.ok(b.try);
-			const result = await b.try(c => {
+			const secondResult = await b.try(c => {
 				t.ok(c.try);
 				c.pass();
 			});
-			result.commit();
+			secondResult.commit();
 		});
-		result.commit();
+		firstResult.commit();
 	});
 
-	const result = await instance.run();
+	const avaResult = await instance.run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 	t.equal(instance.assertCount, 1);
 });
 
 test('try-commit fails when not committed', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.pass());
 		t.ok(result.passed);
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /not all attempts were committed/);
-	t.equal(result.error.name, 'Error');
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /not all attempts were committed/);
+	t.equal(avaResult.error.name, 'Error');
 });
 
 test('try-commit fails when no assertions inside try', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(() => {});
 		t.notOk(result.passed);
 		t.ok(result.errors);
@@ -178,12 +178,12 @@ test('try-commit fails when no assertions inside try', async t => {
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
+	t.notOk(avaResult.passed);
 });
 
 test('try-commit fails when no assertions inside multiple try', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const [result1, result2] = await Promise.all([
 			a.try(b => b.pass()),
 			a.try(() => {}),
@@ -201,18 +201,18 @@ test('try-commit fails when no assertions inside multiple try', async t => {
 		result2.commit();
 	}).run();
 
-	t.notOk(result.passed);
+	t.notOk(avaResult.passed);
 });
 
 test('test fails when try-commit committed to failed state', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.fail());
 		t.notOk(result.passed);
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
+	t.notOk(avaResult.passed);
 });
 
 test('try-commit has proper titles, when going in depth and width', async t => {
@@ -238,33 +238,33 @@ test('try-commit has proper titles, when going in depth and width', async t => {
 
 test('try-commit does not fail when calling commit twice', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.pass());
 		result.commit();
 		result.commit();
 	}).run();
 
-	t.ok(result.passed);
-	t.notOk(result.error);
+	t.ok(avaResult.passed);
+	t.notOk(avaResult.error);
 });
 
 test('try-commit does not fail when calling discard twice', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => b.pass());
 		result.discard();
 		result.discard();
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Test finished without running any assertions/);
-	t.equal(result.error.name, 'Error');
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /Test finished without running any assertions/);
+	t.equal(avaResult.error.name, 'Error');
 });
 
 test('try-commit allows planning inside the try', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => {
 			b.plan(3);
 
@@ -276,12 +276,12 @@ test('try-commit allows planning inside the try', async t => {
 		result.commit();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit fails when plan is not reached inside the try', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => {
 			b.plan(3);
 
@@ -292,12 +292,12 @@ test('try-commit fails when plan is not reached inside the try', async t => {
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
+	t.notOk(avaResult.passed);
 });
 
 test('plan within try-commit is not affected by assertions outside', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		a.is(1, 1);
 		a.is(2, 2);
 
@@ -310,14 +310,14 @@ test('plan within try-commit is not affected by assertions outside', async t => 
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Planned for 3 assertions, but got 0/);
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /Planned for 3 assertions, but got 0/);
 });
 
 test('assertions within try-commit do not affect plan in the parent test', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		a.plan(2);
 
 		const result = await a.try(b => {
@@ -331,14 +331,14 @@ test('assertions within try-commit do not affect plan in the parent test', async
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Planned for 2 assertions, but got 1/);
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /Planned for 2 assertions, but got 1/);
 });
 
 test('test expected to fail will pass with failing try-commit within the test', async t => {
 	const ava = newAva();
-	const result = await ava.failing(async a => {
+	const avaResult = await ava.failing(async a => {
 		const result = await a.try(b => b.fail());
 		t.notOk(result.passed);
 		t.ok(result.errors);
@@ -349,7 +349,7 @@ test('test expected to fail will pass with failing try-commit within the test', 
 		result.commit();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit accepts macros', async t => {
@@ -361,13 +361,13 @@ test('try-commit accepts macros', async t => {
 	macro.title = (providedTitle = '') => `${providedTitle} Title`.trim();
 
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(macro);
 		t.ok(result.passed);
 		result.commit();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit abides timeout', async t => {
@@ -387,7 +387,7 @@ test('try-commit abides timeout', async t => {
 
 test('try-commit fails when it exceeds its own timeout', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		a.timeout(200);
 		const result = await a.try(async b => {
 			b.timeout(50);
@@ -406,7 +406,7 @@ test('try-commit fails when it exceeds its own timeout', async t => {
 		a.pass();
 	}).run();
 
-	t.ok(result.passed);
+	t.ok(avaResult.passed);
 });
 
 test('try-commit refreshes the timeout on commit/discard', async t => {
@@ -428,7 +428,7 @@ test('try-commit refreshes the timeout on commit/discard', async t => {
 
 test('assertions within try-commit do not refresh the timeout', async t => {
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		a.timeout(15);
 		a.pass();
 
@@ -445,10 +445,10 @@ test('assertions within try-commit do not refresh the timeout', async t => {
 		result.commit();
 	}).run();
 
-	t.notOk(result.passed);
-	t.ok(result.error);
-	t.match(result.error.message, /Test timeout exceeded/);
-	t.equal(result.error.name, 'Error');
+	t.notOk(avaResult.passed);
+	t.ok(avaResult.error);
+	t.match(avaResult.error.message, /Test timeout exceeded/);
+	t.equal(avaResult.error.name, 'Error');
 });
 
 test('try-commit inherits the test context', async t => {
@@ -456,7 +456,7 @@ test('try-commit inherits the test context', async t => {
 	const data = {foo: 'bar'};
 	context.set(data);
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		const result = await a.try(b => {
 			b.pass();
 			t.strictSame(b.context, data);
@@ -464,7 +464,7 @@ test('try-commit inherits the test context', async t => {
 		await result.commit();
 	}, context).run();
 
-	t.equal(result.passed, true);
+	t.equal(avaResult.passed, true);
 });
 
 test('assigning context in try-commit does not affect parent', async t => {
@@ -472,7 +472,7 @@ test('assigning context in try-commit does not affect parent', async t => {
 	const data = {foo: 'bar'};
 	context.set(data);
 	const ava = newAva();
-	const result = await ava(async a => {
+	const avaResult = await ava(async a => {
 		t.strictSame(a.context, data);
 		const result = await a.try(b => {
 			b.pass();
@@ -482,7 +482,7 @@ test('assigning context in try-commit does not affect parent', async t => {
 		t.strictSame(a.context, data);
 	}, context).run();
 
-	t.equal(result.passed, true);
+	t.equal(avaResult.passed, true);
 });
 
 test('do not run assertions outside of an active attempt', async t => {
