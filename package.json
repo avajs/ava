@@ -3,14 +3,9 @@
 	"version": "8.0.1",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/avajs/ava.git"
-	},
+	"repository": "github:avajs/ava",
 	"homepage": "https://avajs.dev",
-	"bin": {
-		"ava": "entrypoints/cli.js"
-	},
+	"type": "module",
 	"exports": {
 		".": {
 			"types": "./entrypoints/main.d.ts",
@@ -25,7 +20,9 @@
 			"types": "./entrypoints/internal.d.ts"
 		}
 	},
-	"type": "module",
+	"bin": {
+		"ava": "./entrypoints/cli.js"
+	},
 	"engines": {
 		"node": "^22.20 || ^24.12 || >=26"
 	},
@@ -45,10 +42,10 @@
 		"test": "./scripts/test.sh"
 	},
 	"files": [
+		"*.d.ts",
 		"entrypoints",
 		"lib",
-		"types",
-		"*.d.ts"
+		"types"
 	],
 	"keywords": [
 		"🦄",
@@ -144,14 +141,6 @@
 		"typescript": "~6.0.3",
 		"xo": "^5.0.1",
 		"zen-observable": "^0.10.0"
-	},
-	"overrides": {
-		"c8": {
-			"yargs": "^18.0.0"
-		},
-		"test-exclude": {
-			"glob": ">=13"
-		}
 	},
 	"peerDependencies": {
 		"@ava/typescript": "*"
