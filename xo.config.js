@@ -1,4 +1,4 @@
-import pluginAva from './node_modules/xo/node_modules/eslint-plugin-ava/index.js';
+import pluginAva from 'eslint-plugin-ava';
 
 // The AVA rules resolve the AVA config, however we have many fake AVA configs in the fixtures and so the rules must
 // be disabled for those files. This sets up a rules config that does so, based on the recommended rules.
