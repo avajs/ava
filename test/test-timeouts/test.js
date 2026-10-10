@@ -14,3 +14,9 @@ test('timeout messages must be strings', async t => {
 	t.snapshot(error.message, 'error message');
 	t.snapshot(error.formattedDetails, 'formatted details');
 });
+
+test('timeout for a synchronous test', async t => {
+	const result = await t.throwsAsync(fixture(['synchronous.js']));
+	const error = result.stats.getError(result.stats.failed[0]);
+	t.snapshot(error.message, 'error message');
+});
