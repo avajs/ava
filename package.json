@@ -29,6 +29,13 @@
 	"engines": {
 		"node": "^22.20 || ^24.12 || >=26"
 	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "^24.21.0",
+			"onFail": "download"
+		}
+	},
 	"scripts": {
 		"test": "./scripts/test.sh"
 	},
@@ -147,9 +154,5 @@
 		"@ava/typescript": {
 			"optional": true
 		}
-	},
-	"volta": {
-		"node": "24.15.0",
-		"npm": "11.14.1"
 	}
 }
