@@ -1,4 +1,5 @@
 import os from 'node:os';
+import process from 'node:process';
 
 import sinon from 'sinon';
 

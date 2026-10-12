@@ -1,5 +1,6 @@
 import {Buffer} from 'node:buffer';
 import path from 'node:path';
+import process from 'node:process';
 import {Writable} from 'node:stream';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 
@@ -214,10 +215,10 @@ export async function * exec(args, options) {
 }
 
 export async function fixture(args, options = {}) {
-	for await (const {process, ...result} of exec(args, options))	{ // eslint-disable-line no-unreachable-loop
+	for await (const {process: execaProcess, ...result} of exec(args, options))	{ // eslint-disable-line no-unreachable-loop
 		return {
 			...result,
-			...await process,
+			...await execaProcess,
 		};
 	}
 }

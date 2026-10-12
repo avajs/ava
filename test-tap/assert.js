@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This is a legacy test file. */
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {stripVTControlCharacters} from 'node:util';
@@ -912,7 +913,7 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		throw new TypeError();
+		throw new TypeError('🙈');
 	}, {name: 'TypeError'}), {expectBoolean: false});
 
 	// Fails because the thrown value is not an error
@@ -928,27 +929,27 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 'ERR_TEST';
 		throw error;
 	}, {code: 'ERR_TEST'}), {expectBoolean: false});
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 42;
 		throw error;
 	}, {code: 42}), {expectBoolean: false});
 
 	// Fails because the thrown value is not the right one
 	fails(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 'ERR_NOPE';
 		throw error;
 	}, {code: 'ERR_TEST'}));
 
 	fails(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 1;
 		throw error;
 	}, {code: 42}));
@@ -1049,7 +1050,7 @@ test('.throws()', gather(t => {
 }));
 
 test('.throws() returns the thrown error', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 	const actual = assertions.throws(() => {
 		throw expected;
 	});
@@ -1074,7 +1075,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the promise is resolved with an Error
-	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(new Error())), {
+	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(new Error('🙈'))), {
 		assertion: 't.throwsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Promise resolved with:', formatted: /Error/}],
@@ -1095,7 +1096,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Passes because the promise was rejected with an error.
-	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error('🙈'))));
 
 	// Passes because the promise was rejected with a non-error reason and `expectation.any` is true.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true})); // eslint-disable-line prefer-promise-reject-errors
@@ -1104,7 +1105,7 @@ test('.throwsAsync()', gather(t => {
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(), {any: true}));
 
 	// Passes because the function returned a promise rejected with an error.
-	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
+	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error('🙈'))));
 
 	// Fails because the function throws synchronously
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => {
@@ -1137,7 +1138,7 @@ test('.throwsAsync()', gather(t => {
 }));
 
 test('.throwsAsync() returns the rejection reason of promise', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 
 	return assertions.throwsAsync(Promise.reject(expected)).then(actual => {
 		t.equal(actual, expected);
@@ -1146,7 +1147,7 @@ test('.throwsAsync() returns the rejection reason of promise', t => {
 });
 
 test('.throwsAsync() returns the rejection reason of a promise returned by the function', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 
 	return assertions.throwsAsync(() => Promise.reject(expected)).then(actual => {
 		t.equal(actual, expected);
@@ -1396,7 +1397,7 @@ test('.notThrowsAsync()', gather(t => {
 	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
 
 	// Fails because the promise is rejected
-	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error('🙈'))), {
 		assertion: 't.notThrowsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Promise rejected with:', formatted: /Error/}],
@@ -1406,7 +1407,7 @@ test('.notThrowsAsync()', gather(t => {
 	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
 
 	// Fails because the function returned a rejected promise
-	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error('🙈'))), {
 		assertion: 't.notThrowsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Returned promise rejected with:', formatted: /Error/}],

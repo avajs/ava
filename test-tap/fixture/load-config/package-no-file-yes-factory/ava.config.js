@@ -1,3 +1,5 @@
-export default ({projectDir}) => ({
-	files: projectDir,
-});
+export default function factory({projectDir}) {
+	return {
+		files: projectDir,
+	};
+}

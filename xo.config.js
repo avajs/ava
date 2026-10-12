@@ -101,38 +101,6 @@ const xoConfig = [
 			'ava/use-t': 'off',
 		},
 	},
-	{
-		// TODO: Update tests.
-		files: 'test/**',
-		rules: {
-			'import-x/no-anonymous-default-export': 'off',
-			'n/prefer-global/process': 'off',
-		},
-	},
-	{
-		files: 'test/**/fixtures/**',
-		rules: {
-			'n/file-extension-in-import': 'off',
-		},
-	},
-	{
-		// TODO: Update tests.
-		files: 'test/snapshot-*/fixtures/**',
-		rules: {
-			'unicorn/prefer-module': 'off',
-		},
-	},
-	{
-		// TODO: Update tests.
-		files: 'test-tap/**',
-		rules: {
-			'import-x/no-anonymous-default-export': 'off',
-			'max-lines': 'off',
-			'n/prefer-global/process': 'off',
-			// 'promise/prefer-await-to-then': 'off',
-			'unicorn/error-message': 'off',
-		},
-	},
 ];
 
 export default xoConfig;

@@ -1,3 +1,4 @@
+import process from 'node:process';
 import tty from 'node:tty';
 
 // Call original method to ensure the correct errors are thrown.

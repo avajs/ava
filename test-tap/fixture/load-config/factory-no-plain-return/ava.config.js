@@ -1,3 +1,5 @@
 class Config {}
 
-export default () => new Config();
+export default function factory() {
+	return new Config();
+}

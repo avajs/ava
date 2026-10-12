@@ -497,7 +497,7 @@ test('do not run assertions outside of an active attempt', async t => {
 
 	const pending = await ava(async a => {
 		await a.try(() => {});
-		await a.throwsAsync(Promise.reject(new Error('')));
+		await a.throwsAsync(Promise.reject(new Error('🙈')));
 	}, undefined, 'pending').run();
 	t.notOk(pending.passed);
 	t.match(pending.error.message, /Assertion started, but an attempt is pending. Use the attempt’s assertions instead/);

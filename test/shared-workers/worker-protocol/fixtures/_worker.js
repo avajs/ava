@@ -1,4 +1,4 @@
-export default async ({negotiateProtocol}) => {
+const factory = async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['ava-4']);
 
 	// When we're ready to receive workers or messages.
@@ -50,3 +50,5 @@ async function handleWorkers(protocol) {
 		}
 	}
 }
+
+export default factory;

@@ -4,7 +4,7 @@ import test from 'ava';
 
 import plugin from './_plugin.js';
 
-export default testFile => {
+export default function factory(testFile) {
 	test('becomes available', async t => {
 		await t.notThrowsAsync(plugin.available);
 	});
@@ -54,4 +54,4 @@ export default testFile => {
 			}
 		}
 	});
-};
+}

@@ -1,5 +1,6 @@
 import childProcess from 'node:child_process';
 import path from 'node:path';
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));

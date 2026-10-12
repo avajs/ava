@@ -1,6 +1,7 @@
 
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import {gunzipSync} from 'node:zlib';
 
 import concordance from 'concordance';

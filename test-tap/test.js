@@ -98,7 +98,7 @@ test('fails if no assertions are run, unless so planned', t => ava(a => a.plan(0
 }));
 
 test('wrap non-assertion errors', t => {
-	const error = new Error();
+	const error = new Error('🙈');
 	return ava(() => {
 		throw error;
 	}).run().then(result => {
@@ -260,7 +260,7 @@ test('skipped assertions count towards the plan', t => {
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
 		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		a.notThrows.skip(() => {});
 		a.snapshot.skip({});
@@ -289,7 +289,7 @@ test('assertion.skip() is bound', t => {
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
 		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		(a.notThrows.skip)(() => {});
 		(a.snapshot.skip)({});
@@ -351,7 +351,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 });
 
 test('fails if test ends while there are pending assertions', t => ava(a => {
-	a.throwsAsync(Promise.reject(new Error()));
+	a.throwsAsync(Promise.reject(new Error('🙈')));
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
@@ -362,7 +362,7 @@ test('fails if test ends while there are pending assertions', t => ava(a => {
 test('fails if async test ends while there are pending assertions', t => ava(a => {
 	a.throwsAsync(async () => {
 		await delay(100);
-		throw new Error();
+		throw new Error('🙈');
 	});
 	return Promise.resolve();
 }).run().then(result => {
@@ -468,7 +468,7 @@ test('assertions are bound', t =>
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
 		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		(a.notThrows)(() => {});
 		(a.truthy)(true);
