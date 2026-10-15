@@ -1,6 +1,7 @@
 import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 import {gunzipSync} from 'node:zlib';
 
@@ -31,13 +32,13 @@ for (const object of [
 
 		const dirname = path.join('fixture/snapshots', object.rel);
 		// Test should pass, and a snapshot gets written
-		execCli(['--update-snapshots'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, error => {
-			t.error(error);
+		execCli(['--update-snapshots'], {dirname, env: {AVA_FORCE_CI: 'not-ci'}}, firstError => {
+			t.error(firstError);
 			t.ok(fs.existsSync(snapPath));
 
 			// Test should pass, and the snapshot gets used
-			execCli([], {dirname}, error => {
-				t.error(error);
+			execCli([], {dirname}, secondError => {
+				t.error(secondError);
 				t.end();
 			});
 		});
@@ -46,7 +47,7 @@ for (const object of [
 
 test('appends to existing snapshots', t => {
 	const cliPath = fileURLToPath(new URL('../../entrypoints/cli.js', import.meta.url));
-	const avaPath = new URL('../../entrypoints/main.js', import.meta.url).toString();
+	const avaPath = new URL('../../entrypoints/main.js', import.meta.url).href;
 
 	const cwd = temporaryDirectory();
 	fs.writeFileSync(path.join(cwd, 'package.json'), '{}');

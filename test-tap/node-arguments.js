@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import {test} from 'tap';
 
 import normalizeNodeArguments from '../lib/node-arguments.js';

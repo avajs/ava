@@ -5,11 +5,11 @@ import path from 'node:path';
 import test from '@ava/test';
 import {mainSymbols, fallbackSymbols} from 'figures';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
 
 test('multiline snapshot label should be formatted correctly in the report', async t => {
-	await withTemporaryFixture(cwd('multiline-snapshot-label'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('multiline-snapshot-label'), async cwd => {
 		// Run test fixture
 		await fixture(['--update-snapshots'], {
 			cwd,
@@ -26,7 +26,7 @@ test('multiline snapshot label should be formatted correctly in the report', asy
 });
 
 test('test title should be normalized in stdout', async t => {
-	await withTemporaryFixture(cwd('normalized-title-in-stdout'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('normalized-title-in-stdout'), async cwd => {
 		// Run test fixture
 		const result = await fixture(['--update-snapshots'], {
 			cwd,
@@ -39,15 +39,15 @@ test('test title should be normalized in stdout', async t => {
 		t.snapshot(
 			result.stdout
 				.replaceAll(os.EOL, '\n')
-				.replaceAll(mainSymbols.info, fallbackSymbols.info)
-				.replaceAll(mainSymbols.tick, fallbackSymbols.tick),
+				.replaceAll(mainSymbols.info, fallbackSymbols.info) // eslint-disable-line unicorn/no-unsafe-string-replacement
+				.replaceAll(mainSymbols.tick, fallbackSymbols.tick), // eslint-disable-line unicorn/no-unsafe-string-replacement
 			'stdout',
 		);
 	});
 });
 
 test('test title should be normalized in snapshot', async t => {
-	await withTemporaryFixture(cwd('normalized-title-in-snapshots'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('normalized-title-in-snapshots'), async cwd => {
 		// Run test fixture
 		await fixture(['--update-snapshots'], {
 			cwd,

@@ -1,10 +1,10 @@
 import test from '@ava/test';
 
-import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
+import {cleanOutput, resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 test('passed node arguments to workers', async t => {
 	const options = {
-		cwd: cwd('node-arguments'),
+		cwd: resolveFixtureDirectory('node-arguments'),
 	};
 
 	// Removed --fill-zero-buffer because not supported in worker_threads
@@ -15,7 +15,7 @@ test('passed node arguments to workers', async t => {
 
 test('`filterNodeArgumentsForWorkerThreads` configuration filters arguments for worker thread', async t => {
 	const options = {
-		cwd: cwd('thread-arguments-filter'),
+		cwd: resolveFixtureDirectory('thread-arguments-filter'),
 	};
 
 	const result = await fixture(['--config=thread-arguments-filter.config.js', 'thread.js'], options);
@@ -25,7 +25,7 @@ test('`filterNodeArgumentsForWorkerThreads` configuration filters arguments for 
 
 test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker process', async t => {
 	const options = {
-		cwd: cwd('thread-arguments-filter'),
+		cwd: resolveFixtureDirectory('thread-arguments-filter'),
 	};
 
 	const result = await fixture(['--config=thread-arguments-filter.config.js', '--no-worker-threads', 'process.js'], options);
@@ -35,7 +35,7 @@ test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker pro
 
 test('detects incomplete --node-arguments', async t => {
 	const options = {
-		cwd: cwd('node-arguments'),
+		cwd: resolveFixtureDirectory('node-arguments'),
 	};
 
 	const result = await t.throwsAsync(fixture(['--node-arguments="--foo=\'bar"', 'node-arguments.js'], options));
@@ -45,7 +45,7 @@ test('detects incomplete --node-arguments', async t => {
 
 test('reads node arguments from config', async t => {
 	const options = {
-		cwd: cwd('node-arguments-from-config'),
+		cwd: resolveFixtureDirectory('node-arguments-from-config'),
 	};
 
 	const result = await fixture(['node-arguments-from-config.js'], options);

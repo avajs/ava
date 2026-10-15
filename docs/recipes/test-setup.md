@@ -4,7 +4,7 @@ Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs
 
 Tests can be set up using the `beforeEach()` hook. Often though you could use a plain setup function instead. This recipe helps you decide what's best for your use case.
 
-# The `beforeEach()` hook versus setup functions
+## The `beforeEach()` hook versus setup functions
 
 The `beforeEach()` hook has some downsides. For example, you cannot turn it off for specific tests, nor can you apply it to specific tests. As an alternative, you can use simple functions. This allows you to use multiple setup functions for different setup requirements and call different parts of setup from different tests. You can even have setup functions with parameters so tests can customize their own setup.
 

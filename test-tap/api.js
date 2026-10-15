@@ -461,10 +461,12 @@ for (const opt of options) {
 
 		api.on('run', ({data: plan}) => {
 			plan.status.on('stateChange', ({data: evt}) => {
-				if (evt.type === 'selected-test') {
-					t.match(evt.testFile, /match-no-match-2/);
-					t.equal(evt.title, 'this test will match');
+				if (evt.type !== 'selected-test') {
+					return;
 				}
+
+				t.match(evt.testFile, /match-no-match-2/);
+				t.equal(evt.title, 'this test will match');
 			});
 		});
 

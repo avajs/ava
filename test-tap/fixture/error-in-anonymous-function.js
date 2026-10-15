@@ -1,7 +1,7 @@
 import test from '../../entrypoints/main.js';
 
 const getAnonymousFn = () => () => {
-	throw new Error();
+	throw new Error('🙈');
 };
 
 test('test', t => {

@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import test from '../../entrypoints/main.js';
 
 test('NODE_ENV is test', t => {

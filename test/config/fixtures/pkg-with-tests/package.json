@@ -1,7 +1,7 @@
 {
-	"type": "module",
 	"name": "application-name",
 	"version": "0.0.1",
+	"type": "module",
 	"ava": {
 		"files": [
 			"dir-a/*.js"

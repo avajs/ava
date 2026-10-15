@@ -1,3 +1,5 @@
-export default {
+const config = {
 	failFast: true,
 };
+
+export default config;
