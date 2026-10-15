@@ -180,7 +180,7 @@ jobs:
           GH_TOKEN: ${{steps.app-token.outputs.token}}
 
       - name: Stage publish to npm with provenance
-        run: pnpm stage publish --provenance
+        run: pnpm stage publish --provenance --no-git-checks
 
       - name: Create GitHub Release
         run: |
