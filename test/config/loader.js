@@ -1,9 +1,11 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import test from '@ava/test';
 import sinon from 'sinon';
+import {temporaryDirectory} from 'tempy';
 
 import {loadConfig} from '../../lib/load-config.js';
 
@@ -119,3 +121,18 @@ test.serial('throws an error if a config file contains a non-function `filterNod
 test.serial('throws an error if a config file contains a non-object `nonSemVerExperiments` property', notOk('non-object-experiments'));
 
 test.serial('throws an error if a config file enables an unsupported experiment', notOk('unsupported-experiments'));
+
+for (const [explicit, extension] of [[false, 'js'], [true, 'js'], [false, 'mjs'], [true, 'mjs']]) {
+	test(`does not ignore ENOENT thrown while evaluating ${explicit ? 'an explicit' : 'a discovered'} ${extension} config`, async t => {
+		const directory = temporaryDirectory();
+		t.teardown(() => fs.rm(directory, {recursive: true, force: true}));
+		await fs.writeFile(path.join(directory, '.git'), '');
+		await fs.writeFile(path.join(directory, 'package.json'), '{"type":"module"}');
+		const configFile = path.join(directory, `ava.config.${extension}`);
+		await fs.writeFile(configFile, 'import fs from \'node:fs\';\nfs.readFileSync(new URL(\'./missing-data.json\', import.meta.url));\nexport default {};\n');
+
+		const error = await t.throwsAsync(loadConfig({resolveFrom: directory, ...explicit && {configFile}}));
+		t.is(error.cause.code, 'ENOENT');
+		t.regex(error.message, /^Error loading ava\.config\.(?:mjs|js):/);
+	});
+}
