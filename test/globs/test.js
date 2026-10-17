@@ -1,10 +1,10 @@
 import test from '@ava/test';
 
-import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
+import {cleanOutput, resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 test('errors if top-level files is an empty array', async t => {
 	const options = {
-		cwd: cwd('files'),
+		cwd: resolveFixtureDirectory('files'),
 	};
 
 	const result = await t.throwsAsync(fixture([], options));
@@ -14,7 +14,7 @@ test('errors if top-level files is an empty array', async t => {
 
 test('errors if watchMode.ignoreChanges is an empty array', async t => {
 	const options = {
-		cwd: cwd('ignored-by-watcher'),
+		cwd: resolveFixtureDirectory('ignored-by-watcher'),
 	};
 
 	const result = await t.throwsAsync(fixture([], options));
@@ -24,7 +24,7 @@ test('errors if watchMode.ignoreChanges is an empty array', async t => {
 
 test('files can be filtered by directory', async t => {
 	const options = {
-		cwd: cwd('filter-by-directory'),
+		cwd: resolveFixtureDirectory('filter-by-directory'),
 	};
 
 	const result = await fixture(['directory'], options);
@@ -33,7 +33,7 @@ test('files can be filtered by directory', async t => {
 
 test('additional files can be provided', async t => {
 	const options = {
-		cwd: cwd('treat-patterns-as-files'),
+		cwd: resolveFixtureDirectory('treat-patterns-as-files'),
 	};
 
 	const result = await fixture(['foo.js', 'foo.ts', 'missing.js', '_helper.js', 'node_modules/test.js'], options);

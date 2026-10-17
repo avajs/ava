@@ -1,4 +1,5 @@
-/* eslint-disable unicorn/filename-case */
+import process from 'node:process';
+
 import test from '../../../../entrypoints/main.js';
 
 test('at expected index', t => {

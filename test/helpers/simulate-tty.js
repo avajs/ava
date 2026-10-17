@@ -1,3 +1,4 @@
+import process from 'node:process';
 import tty from 'node:tty';
 
 // Call original method to ensure the correct errors are thrown.
@@ -35,7 +36,7 @@ const simulateTTY = (stream, colorDepth) => {
 // typical testing conditions and tricks AVA into using its fake TTY logic.
 if (process.env.AVA_SIMULATE_TTY) {
 	const colorDepth = process.env.AVA_TTY_COLOR_DEPTH
-		? Number.parseInt(process.env.AVA_TTY_COLOR_DEPTH, 10)
+		? Number(process.env.AVA_TTY_COLOR_DEPTH)
 		: undefined;
 
 	simulateTTY(process.stderr, colorDepth);

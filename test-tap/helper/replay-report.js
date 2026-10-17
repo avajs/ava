@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import process from 'node:process';
 import {setTimeout as delay} from 'node:timers/promises';
 
 import TTYStream from './tty-stream.js';

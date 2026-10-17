@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       new_version:
-        description: 'New version for npm version (e.g., patch, minor, major, 1.2.3). Must be empty when providing an existing tag.'
+        description: 'New version for pnpm version (e.g., patch, minor, major, 1.2.3). Must be empty when providing an existing tag.'
         required: false
         type: string
       skip_ci_check:
@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{inputs.ref}}
           fetch-depth: 0
@@ -99,7 +99,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{inputs.ref}}
           fetch-depth: 0
@@ -118,23 +118,21 @@ jobs:
 
       - name: Generate app token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{vars.LAUNCHBOT_ID}}
           private-key: ${{secrets.LAUNCHBOT_PRIVATE_KEY}}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: pnpm/setup@v3
         with:
-          node-version-file: package.json
-          cache: npm
-          registry-url: https://registry.npmjs.org
+          install: false
 
       - name: Bump version
         if: needs.preflight.outputs.ref_is_tag == 'false'
         env:
           NEW_VERSION: ${{inputs.new_version}}
-        run: npm version "$NEW_VERSION" --no-git-tag-version
+        run: pnpm version "$NEW_VERSION" --no-git-tag-version
 
       - name: Push version commit
         if: needs.preflight.outputs.ref_is_tag == 'false'
@@ -150,7 +148,6 @@ jobs:
             --arg parentSha "$PARENT_SHA" \
             --arg headline "$RELEASE_TAG" \
             --rawfile pkgContent package.json \
-            --rawfile lockContent package-lock.json \
             '{
               query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
               variables: {
@@ -160,8 +157,7 @@ jobs:
                   expectedHeadOid: $parentSha,
                   fileChanges: {
                     additions: [
-                      { path: "package.json", contents: ($pkgContent | @base64) },
-                      { path: "package-lock.json", contents: ($lockContent | @base64) }
+                      { path: "package.json", contents: ($pkgContent | @base64) }
                     ]
                   }
                 }
@@ -183,8 +179,8 @@ jobs:
         env:
           GH_TOKEN: ${{steps.app-token.outputs.token}}
 
-      - name: Publish to npm with provenance
-        run: npm publish --provenance
+      - name: Stage publish to npm with provenance
+        run: pnpm stage publish --provenance --no-git-checks
 
       - name: Create GitHub Release
         run: |

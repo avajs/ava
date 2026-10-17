@@ -3,12 +3,12 @@ import assert from 'node:assert';
 import test from 'ava';
 import * as plugin from 'ava/plugin';
 
-let calledLast = false;
+let isCalledLast = false;
 plugin.registerSharedWorker({
 	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['ava-4'],
 	teardown() {
-		assert.ok(calledLast);
+		assert.ok(isCalledLast);
 		console.log('🤗TEARDOWN CALLED');
 	},
 });
@@ -17,7 +17,7 @@ plugin.registerSharedWorker({
 	filename: new URL('_worker.js', import.meta.url),
 	supportedProtocols: ['ava-4'],
 	teardown() {
-		calledLast = true;
+		isCalledLast = true;
 	},
 });
 

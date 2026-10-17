@@ -5,7 +5,7 @@ import {test, withFixture} from './helpers/watch.js';
 test('prints results and instructions', withFixture('basic'), async (t, fixture) => {
 	await fixture.watch({
 		async else({process}) {
-			process.send('abort-watcher');
+			process.nodeChildProcess.send('abort-watcher');
 			const {stdout} = await process;
 			t.regex(stdout, /\d+ tests? passed/);
 			t.regex(stdout, /Type `g` followed by enter to filter test files by a glob pattern/);
@@ -22,7 +22,7 @@ test('ctrl+c interrupts', withFixture('basic'), async (t, fixture) => {
 		async else({process}) {
 			this.done();
 
-			process.kill('SIGINT');
+			process.nodeChildProcess.kill('SIGINT');
 			const {stdout} = await t.throwsAsync(process);
 			const result = await t.try(tt => {
 				tt.regex(stdout, /Exiting due to SIGINT/);

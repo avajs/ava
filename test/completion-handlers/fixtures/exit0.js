@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import test, {registerCompletionHandler} from 'ava';
 
 registerCompletionHandler(() => {

@@ -1,5 +1,5 @@
-const configFactory = ({projectDir}) => ({
-	files: projectDir,
-});
-
-export default configFactory;
+export default function factory({projectDir}) {
+	return {
+		files: projectDir,
+	};
+}

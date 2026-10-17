@@ -1,5 +1,5 @@
-export let required = false; // eslint-disable-line import-x/no-mutable-exports
+export let wasRequired = false; // eslint-disable-line import-x/no-mutable-exports
 
-export default function () {
-	required = true;
+export default function factory() {
+	wasRequired = true;
 }

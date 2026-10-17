@@ -1,3 +1,5 @@
-export default {
+const config = {
 	nonSemVerExperiments: [],
 };
+
+export default config;
