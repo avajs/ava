@@ -8,8 +8,6 @@ not ok 1 - a › fails
     at: 'ExecutionContext.fail (/lib/assert.js)'
   ...
 ---tty-stream-chunk-separator
-# 1 test remaining in a.js
----tty-stream-chunk-separator
 
 1..2
 # tests 2

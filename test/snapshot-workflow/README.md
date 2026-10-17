@@ -8,7 +8,7 @@ Most of these tests consist of a fixture containing test files that can be run i
 
 When changes are made to the snapshot file format or to the fixtures themselves, it may be necessary to update the fixtures' initial states. To do this, pass `--update-fixture-snapshots` to the tests:
 
-```
+```sh
 npx test-ava test/snapshot-workflow/** -- --update-fixture-snapshots
 ```
 

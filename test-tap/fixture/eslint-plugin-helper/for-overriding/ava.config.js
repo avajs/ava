@@ -1,4 +1,4 @@
-export default {
+const config = {
 	extensions: [],
 	typescript: {
 		rewritePaths: {
@@ -9,3 +9,5 @@ export default {
 	},
 	files: ['build/tests/**/*'],
 };
+
+export default config;

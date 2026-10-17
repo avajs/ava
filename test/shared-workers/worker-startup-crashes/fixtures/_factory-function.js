@@ -1,3 +1,3 @@
-export default () => {
+export default function factory() {
 	throw new Error('🙈');
-};
+}
