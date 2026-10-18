@@ -1600,6 +1600,26 @@ test('.snapshot() with formatAsCodeBlock option', t => {
 		});
 	}
 
+	// Validation: unexpected properties in the options object
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: true, message: 'label'}), {
+			assertion: 't.snapshot()',
+			message: 'The options object must only contain the `formatAsCodeBlock` property',
+			formattedDetails: [{label: 'Called with:', formatted: /message/}],
+		});
+	}
+
+	// Validation: language identifier with backticks or line breaks
+	for (const language of ['`', 'java`script', 'js\n', 'js\r']) {
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: language}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` language identifier must not contain backticks or line breaks',
+			formattedDetails: [{label: 'Called with:', formatted: /.+/s}],
+		});
+	}
+
 	// CompareWithSnapshot is called with the correct formatAsCodeBlock value
 	{
 		let capturedOptions;
