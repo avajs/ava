@@ -1,3 +1,3 @@
-export default async ({negotiateProtocol}) => {
+export default async function factory({negotiateProtocol}) {
 	negotiateProtocol(['🙈']).ready();
-};
+}

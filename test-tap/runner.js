@@ -46,15 +46,17 @@ test('runner emits "stateChange" events', t => {
 	const runner = new Runner({file: import.meta.url});
 
 	runner.on('stateChange', ({data: evt}) => {
-		if (evt.type === 'declared-test') {
-			t.same(evt, {
-				type: 'declared-test',
-				title: 'foo',
-				knownFailing: false,
-				todo: false,
-			});
-			t.end();
+		if (evt.type !== 'declared-test') {
+			return;
 		}
+
+		t.same(evt, {
+			type: 'declared-test',
+			title: 'foo',
+			knownFailing: false,
+			todo: false,
+		});
+		t.end();
 	});
 
 	runner.chain('foo', a => {
@@ -66,13 +68,15 @@ test('notifyTimeoutUpdate emits "stateChange" event', t => {
 	const runner = new Runner({file: import.meta.url});
 
 	runner.on('stateChange', ({data: evt}) => {
-		if (evt.type === 'test-timeout-configured') {
-			t.same(evt, {
-				type: 'test-timeout-configured',
-				period: 120,
-			});
-			t.end();
+		if (evt.type !== 'test-timeout-configured') {
+			return;
 		}
+
+		t.same(evt, {
+			type: 'test-timeout-configured',
+			period: 120,
+		});
+		t.end();
 	});
 	runner.notifyTimeoutUpdate(120);
 });
@@ -150,10 +154,12 @@ test('test types and titles', t => {
 	const check = (setup, expect) => {
 		const runner = new Runner({file: import.meta.url});
 		runner.on('stateChange', ({data: evt}) => {
-			if (evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed') {
-				const expected = expect.shift();
-				t.equal(evt.title, expected.title);
+			if (!(evt.type === 'hook-failed' || evt.type === 'test-failed' || evt.type === 'test-passed')) { // eslint-disable-line unicorn/prefer-includes-over-repeated-comparisons
+				return;
 			}
+
+			const expected = expect.shift();
+			t.equal(evt.title, expected.title);
 		});
 		return promiseEnd(runner, () => setup(runner.chain));
 	};
@@ -439,9 +445,7 @@ test('options.failFast does not stop concurrent tests from running', t => {
 				return block;
 			}
 
-			block = new Promise(resolve => {
-				resume = resolve;
-			});
+			({promise: block, resolve: resume} = Promise.withResolvers());
 		});
 
 		runner.chain('first', a => {
@@ -473,9 +477,7 @@ test('options.failFast && options.serial stops subsequent tests from running ', 
 				return block;
 			}
 
-			block = new Promise(resolve => {
-				resume = resolve;
-			});
+			({promise: block, resolve: resume} = Promise.withResolvers());
 		});
 
 		runner.chain('first', a => {
@@ -507,9 +509,7 @@ test('options.failFast & failing serial test stops subsequent tests from running
 				return block;
 			}
 
-			block = new Promise(resolve => {
-				resume = resolve;
-			});
+			({promise: block, resolve: resume} = Promise.withResolvers());
 		});
 
 		runner.chain.serial('first', a => {

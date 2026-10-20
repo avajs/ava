@@ -6,8 +6,8 @@
 		"test": "ava test.js"
 	},
 	"devDependencies": {
+		"async-listen": "^3.0.1",
 		"ava": "^6",
-		"ky": "^1.4.0",
-		"async-listen": "^3.0.1"
+		"ky": "^1.4.0"
 	}
 }

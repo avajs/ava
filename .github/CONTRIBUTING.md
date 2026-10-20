@@ -59,7 +59,7 @@ Try and avoid making breaking changes. Those take more time to ship. Instead mak
 
 Non-experimental features should be accompanied with tests and documentation.
 
-Don't include unrelated changes in your pull request. Make sure tests pass on your machine by running `npm test`. You can run specific test files as well using `npx tap test-tap/{file}.js` or `npx test-ava test/{file}.js`.
+Don't include unrelated changes in your pull request. Make sure tests pass on your machine by running `pnpm test`. You can run specific test files as well using `pnpm exec tap test-tap/{file}.js` or `pnpm exec test-ava test/{file}.js`.
 
 When you make a pull request please use a clear and descriptive title. Be specific about what's changed and why.
 
@@ -67,6 +67,6 @@ Please make sure the *Allow edits from maintainers* box is checked. That way we 
 
 You might be asked to make changes to your pull request. There's never a need to open another pull request. Push more commits to your existing branch. We'll squash them when we merge the PR.
 
-Dependencies are managed using `npm`. Only update dependencies when needed for your pull request. Don't rebuild the lockfile.
+Dependencies are managed using `pnpm`. Only update dependencies when needed for your pull request. Don't rebuild the lockfile.
 
 And finally, have fun!

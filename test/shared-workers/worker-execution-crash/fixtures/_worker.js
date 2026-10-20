@@ -1,4 +1,4 @@
-export default async ({negotiateProtocol}) => {
+const factory = async ({negotiateProtocol}) => {
 	const protocol = negotiateProtocol(['ava-4']);
 	protocol.ready();
 
@@ -10,3 +10,5 @@ async function crash(messages) {
 		throw new Error(message.data);
 	}
 }
+
+export default factory;

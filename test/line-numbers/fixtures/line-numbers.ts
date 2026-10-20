@@ -19,8 +19,8 @@ test('sun', t => t.pass()); test('moon', t => {
 	t.pass();
 });
 
-(() => {
+{ // eslint-disable-line no-lone-blocks
 	test('nested call', t => {
 		t.pass();
 	});
-})();
+}

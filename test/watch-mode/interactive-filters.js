@@ -42,7 +42,7 @@ test('can filter test files by glob pattern and have no tests run', withFixture(
 			process.stdin.write('g\n');
 			process.stdin.write('kangarookanbankentuckykendoll\n');
 
-			process.send('abort-watcher');
+			process.nodeChildProcess.send('abort-watcher');
 			const {stdout} = await process;
 			t.regex(stdout, /2 test files were found, but did not match the filters/);
 			t.regex(stdout, /\* kangarookanbankentuckykendoll/);
@@ -119,7 +119,7 @@ test('can filter tests title and have no tests run', withFixture('filter-files')
 			// No tests should run
 			t.is(stats.selectedTestCount, 0);
 
-			process.send('abort-watcher');
+			process.nodeChildProcess.send('abort-watcher');
 			const {stdout} = await process;
 			t.regex(stdout, /Couldn’t find any matching tests/);
 

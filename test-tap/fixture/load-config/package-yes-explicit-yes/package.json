@@ -1,9 +1,9 @@
 {
+	"type": "module",
 	"ava": {
 		"files": [
 			"abc",
 			"!xyz"
 		]
-	},
-	"type": "module"
+	}
 }

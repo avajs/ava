@@ -1,3 +1,5 @@
-export default {
+const config = {
 	files: ['*.js'],
 };
+
+export default config;
