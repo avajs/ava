@@ -178,6 +178,8 @@ AVA lets you register hooks that are run before and after your tests. This allow
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` registers a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
+Use `test.cleanup()` when the same cleanup should run before the test file and again after it. Use `test.cleanupEach()` when cleanup should run before each test and once again after the test file. `cleanupEach()` does not register an `afterEach` hook. Both helpers support `.skip` and `test.serial`.
+
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
 *You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test. Or use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run cleanup code after AVA has completed its work.
