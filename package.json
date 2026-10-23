@@ -3,7 +3,10 @@
 	"version": "8.1.1",
 	"description": "Node.js test runner that lets you develop with confidence.",
 	"license": "MIT",
-	"repository": "github:avajs/ava",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/avajs/ava.git"
+	},
 	"homepage": "https://avajs.dev",
 	"type": "module",
 	"exports": {
