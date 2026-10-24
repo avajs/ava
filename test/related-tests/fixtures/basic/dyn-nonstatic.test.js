@@ -1,4 +1,5 @@
 import test from 'ava';
+
 import {load} from './dyn-nonstatic.js';
 
 test('loads dynamically', async t => {

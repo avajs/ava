@@ -16,7 +16,7 @@ test('selects test files that transitively import the given files', async t => {
 		files: [fixturePath('source.js')],
 	});
 	t.deepEqual(missing, []);
-	t.deepEqual(related.sort(), [
+	t.deepEqual(related.toSorted((a, b) => a.localeCompare(b)), [
 		'a.test.js',
 		'b.test.js',
 		'dyn-nonstatic.test.js',
@@ -31,7 +31,7 @@ test('selects test files that import one of several given files', async t => {
 		filePatterns: ['**/*.test.js'],
 		files: [fixturePath('importing.js'), fixturePath('sub/nested.js')],
 	});
-	t.deepEqual(related.sort(), [
+	t.deepEqual(related.toSorted((a, b) => a.localeCompare(b)), [
 		'a.test.js',
 		'b.test.js',
 	]);
@@ -45,7 +45,7 @@ test('reports provided files that do not exist', async t => {
 		files: [fixturePath('nonexistent.js'), fixturePath('source.js')],
 	});
 	t.deepEqual(missing, [fixturePath('nonexistent.js')]);
-	t.deepEqual(related.sort(), [
+	t.deepEqual(related.toSorted((a, b) => a.localeCompare(b)), [
 		'a.test.js',
 		'b.test.js',
 		'dyn-nonstatic.test.js',
@@ -60,5 +60,5 @@ test('can filter the selection down to nothing', async t => {
 		filePatterns: ['a.test.js'],
 		files: [fixturePath('source.js')],
 	});
-	t.deepEqual(related.sort(), ['a.test.js']);
+	t.deepEqual(related.toSorted((a, b) => a.localeCompare(b)), ['a.test.js']);
 });
