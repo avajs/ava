@@ -15,6 +15,8 @@ Broadly speaking, there are two ways to run tests written in TypeScript:
 
 **The first option is the most reliable since it doesn't rely on experimental Node.js features.** You can use our [`@ava/typescript`] package, which is designed to work for projects that precompile TypeScript using the `tsc` command. Please see [`@ava/typescript`] for setup instructions. **This package also sets up the various TypeScript file extensions for you.**
 
+To [select tests by line number](../05-command-line.md#running-tests-at-specific-line-numbers), use a compatible version of `@ava/typescript` and enable the TypeScript `sourceMap` option. Pass the original TypeScript file and line number, for example `npx ava src/test.ts:14`.
+
 **You can use loaders, but you're largely on your own. [Please post questions to our Discussions forum if you're stuck](https://github.com/avajs/ava/discussions/categories/q-a).**
 
 > [!NOTE]
