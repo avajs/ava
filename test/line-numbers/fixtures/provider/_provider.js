@@ -13,7 +13,10 @@ export default function makeProvider({negotiateProtocol}) {
 		main() {
 			return {
 				extensions: ['ts'],
+				changeInterpretations: {ignoreCompiled: 1, waitForOutOfBandCompilation: 2},
 				compile: async () => ({identifier: protocol.identifier}),
+				interpretChange: () => 0,
+				resolvePossibleOutOfBandCompilationSources: () => null,
 				updateGlobs: globs => globs,
 			};
 		},
