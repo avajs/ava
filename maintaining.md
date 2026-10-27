@@ -55,10 +55,8 @@ Releases are triggered manually via the [*Release* workflow](https://github.com/
 The workflow will:
 
 - Validate that the commit is HEAD of `main` and that CI has passed for it.
-- Pause for manual approval in the [`npm` environment](https://github.com/avajs/ava/settings/environments).
-- After approval, re-verify the commit is still HEAD of `main`.
-- Then run `npm version` to update `package.json` and `package-lock.json`, commit the result, and push the commit and the resulting tag to `main`.
-- Publish to npm with provenance via OIDC, and create a draft GitHub release.
+- Run `npm version` to update `package.json` and `package-lock.json`, commit the result, and push the commit and the resulting tag to `main`.
+- Stage a publish to npm with provenance via OIDC, and create a draft GitHub release.
 
 ### Releasing from an existing tag
 
@@ -71,6 +69,8 @@ If a version tag already exists on `main` (e.g. `v1.2.3`):
 The workflow will verify that the tag matches the version in `package.json`, check CI, then publish and create a draft release after approval.
 
 ### After the workflow completes
+
+Sign in to [npm](https://www.npmjs.com). Then from your account menu select `Staged Packages` and approve the new version.
 
 Review and publish the [draft GitHub release](https://github.com/avajs/ava/releases).
 

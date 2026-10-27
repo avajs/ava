@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import test from 'ava';
 
 test('exec arguments includes --throw-deprecation', t => {

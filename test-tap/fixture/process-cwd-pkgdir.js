@@ -1,3 +1,4 @@
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import test from '../../entrypoints/main.js';

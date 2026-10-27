@@ -8,7 +8,7 @@ declare(import.meta.url);
 test('test workers are released when they exit', async t => {
 	for await (const message of plugin.subscribe()) {
 		if ('cleanup' in message.data) {
-			t.is(message.data.cleanup, new URL('other.test.js', import.meta.url).toString());
+			t.is(message.data.cleanup, new URL('other.test.js', import.meta.url).href);
 			return;
 		}
 	}

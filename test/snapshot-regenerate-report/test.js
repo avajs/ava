@@ -6,13 +6,13 @@ import test from '@ava/test';
 import {set as setChalk} from '../../lib/chalk.js';
 import {load} from '../../lib/snapshot-manager.js';
 import {set as setOptions} from '../../lib/worker/options.js';
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 setChalk({level: 0});
 setOptions({});
 
 test('snapshot report can be regenerated from .snap file', async t => {
-	const workingDir = cwd();
+	const workingDir = resolveFixtureDirectory();
 	const env = {
 		AVA_FORCE_CI: 'not-ci',
 	};

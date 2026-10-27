@@ -1,4 +1,4 @@
-export default async ({negotiateProtocol}) => {
+export default async function factory({negotiateProtocol}) {
 	const protocol = negotiateProtocol(['ava-4']);
 
 	await protocol.ready();
@@ -6,4 +6,4 @@ export default async ({negotiateProtocol}) => {
 	for await (const testWorker of protocol.testWorkers()) {
 		testWorker.publish(protocol.initialData);
 	}
-};
+}

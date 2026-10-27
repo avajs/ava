@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 
 const internalEvents = [];
 
-export default {
+const config = {
 	files: [
 		'test.js',
 	],
@@ -17,3 +17,5 @@ export default {
 		await fs.writeFile('internal-events.json', JSON.stringify(internalEvents));
 	},
 };
+
+export default config;
