@@ -245,3 +245,66 @@ test('skipIf(false).runIf(true) does not skip', t => {
 	t.is(calls.length, 1);
 	t.is(calls[0].metadata.skipped, undefined);
 });
+
+test('cleanup() registers a cleanup task', t => {
+	const {calls, chain} = createTestChain();
+
+	t.notThrows(() => {
+		chain.cleanup('title', () => {});
+		chain.cleanup(() => {});
+	});
+
+	t.is(calls.length, 2);
+	t.is(calls[0].metadata.type, 'cleanup');
+	t.is(calls[1].metadata.type, 'cleanup');
+});
+
+test('cleanup.skip() skips the cleanup task', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.cleanup.skip('title', () => {});
+
+	t.is(calls.length, 1);
+	t.is(calls[0].metadata.type, 'cleanup');
+	t.is(calls[0].metadata.skipped, true);
+});
+
+test('cleanupEach() registers a cleanupEach task', t => {
+	const {calls, chain} = createTestChain();
+
+	t.notThrows(() => {
+		chain.cleanupEach('title', () => {});
+		chain.cleanupEach(() => {});
+	});
+
+	t.is(calls.length, 2);
+	t.is(calls[0].metadata.type, 'cleanupEach');
+	t.is(calls[1].metadata.type, 'cleanupEach');
+});
+
+test('serial.cleanup() preserves the serial flag', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.serial.cleanup('title', () => {});
+
+	t.is(calls.length, 1);
+	t.is(calls[0].metadata.type, 'cleanup');
+	t.is(calls[0].metadata.serial, true);
+});
+
+test('serial.cleanupEach() preserves the serial flag', t => {
+	const {calls, chain} = createTestChain();
+
+	chain.serial.cleanupEach('title', () => {});
+
+	t.is(calls.length, 1);
+	t.is(calls[0].metadata.type, 'cleanupEach');
+	t.is(calls[0].metadata.serial, true);
+});
+
+test('cleanup() and cleanupEach() are reachable from conditional chains', t => {
+	const {chain} = createTestChain();
+
+	t.is(typeof chain.skipIf(false).cleanup, 'function');
+	t.is(typeof chain.runIf(true).cleanupEach, 'function');
+});
