@@ -271,6 +271,17 @@ Assert that `contents` does not match `regex`.
 
 Compares the `expected` value with a previously recorded snapshot. Snapshots are stored for each test, so ensure you give your tests unique titles.
 
+### `.snapshot(expected, {formatAsCodeBlock}, message?)`
+
+Only accepted when `expected` is a string. The string is stored verbatim and rendered as a fenced code block in the resulting `.snap.md` file. Set `formatAsCodeBlock` to `true` for a generic code block, or a non-empty language identifier string for syntax highlighting:
+
+```js
+test('generates code', t => {
+	const code = generate();
+	t.snapshot(code, {formatAsCodeBlock: 'js'});
+});
+```
+
 ### `.try(title?, implementation | macro, ...args?)`
 
 `.try()` allows you to *try* assertions without causing the test to fail.
