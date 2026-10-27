@@ -7,15 +7,16 @@ import ava from '@ava/test';
 import {temporaryDirectoryTask} from 'tempy';
 
 import {available} from '../../../lib/watcher.js';
-import {cwd, exec} from '../../helpers/exec.js';
+import {resolveFixtureDirectory, exec} from '../../helpers/exec.js';
 
 export const test = available(fileURLToPath(import.meta.url)) ? ava : ava.skip;
 export const serial = available(fileURLToPath(import.meta.url)) ? ava.serial : ava.serial.skip;
 
 /**
- * Races between `promises` and returns the result, unless `possiblyErroring` rejects first.
- *
- * `possiblyErroring` may be any value and is ignored, unless it rejects.
+ Races between `promises` and returns the result, unless `possiblyErroring` rejects first.
+
+ @param {unknown} possiblyErroring Any value that may reject.
+ @param {...Promise<unknown>} promises Promises to race against `possiblyErroring`.
  */
 const raceUnlessError = async (possiblyErroring, ...promises) => {
 	const race = Promise.race(promises);
@@ -29,10 +30,10 @@ const didNotError = async possiblyErroring => {
 };
 
 export const withFixture = fixture => async (t, task) => {
-	let completedTask = false;
+	let isCompletedTask = false;
 	try {
 		await temporaryDirectoryTask(async dir => {
-			await fs.cp(cwd(fixture), dir, {recursive: true, filter: src => !src.includes('/node_modules/')});
+			await fs.cp(resolveFixtureDirectory(fixture), dir, {recursive: true, filter: src => !src.includes('/node_modules/')});
 
 			async function * run(args = [], options = {}) {
 				yield * exec(['--watch', ...args], {...options, cwd: dir, env: {AVA_FORCE_CI: 'not-ci', ...options.env}});
@@ -80,10 +81,7 @@ export const withFixture = fixture => async (t, task) => {
 				async watch(handlers, args = [], options = {}) {
 					activeWatchCount++;
 
-					let signalDone;
-					const donePromise = new Promise(resolve => {
-						signalDone = resolve;
-					});
+					const {promise: donePromise, resolve: signalDone} = Promise.withResolvers();
 					let isDone = false;
 					const done = () => {
 						activeWatchCount--;
@@ -92,23 +90,27 @@ export const withFixture = fixture => async (t, task) => {
 					};
 
 					let idlePromise = new Promise(() => {});
-					let assertingIdle = false;
-					let failedIdleAssertion = false;
+					let isAssertingIdle = false;
+					let isFailedIdleAssertion = false;
 					const assertIdle = async next => {
-						assertingIdle = true;
+						isAssertingIdle = true;
 
 						t.timeout(30_000);
 
 						const promise = Promise.all([delay(5000, null, {ref: false}), next?.()]).finally(() => {
-							if (idlePromise === promise) {
-								idlePromise = new Promise(() => {});
-								assertingIdle = false;
-								t.timeout.clear();
-								if (failedIdleAssertion) {
-									failedIdleAssertion = false;
-									t.fail('Watcher performed a test run while it should have been idle');
-								}
+							if (idlePromise !== promise) {
+								return;
 							}
+
+							idlePromise = new Promise(() => {});
+							isAssertingIdle = false;
+							t.timeout.clear();
+							if (!isFailedIdleAssertion) {
+								return;
+							}
+
+							isFailedIdleAssertion = false;
+							t.fail('Watcher performed a test run while it should have been idle');
 						}).then(() => ({}));
 						idlePromise = promise;
 
@@ -120,8 +122,8 @@ export const withFixture = fixture => async (t, task) => {
 					let process;
 
 					t.teardown(async () => {
-						if (process?.connected) {
-							process.send('abort-watcher');
+						if (process?.nodeChildProcess.connected) {
+							process.nodeChildProcess.send('abort-watcher');
 						}
 
 						// Sending the `abort-watcher` message should suffice, but on Linux
@@ -129,7 +131,7 @@ export const withFixture = fixture => async (t, task) => {
 						// <https://github.com/nodejs/node/issues/48437> but there seem to be
 						// other isues.
 						setTimeout(() => {
-							process?.kill('SIGKILL');
+							process?.nodeChildProcess.kill('SIGKILL');
 						}, 1000).unref();
 
 						try {
@@ -145,14 +147,14 @@ export const withFixture = fixture => async (t, task) => {
 							process ??= item.value?.process;
 
 							if (item.value) {
-								failedIdleAssertion ||= assertingIdle;
+								isFailedIdleAssertion ||= isAssertingIdle;
 
 								state = (await pendingState) ?? state; // eslint-disable-line no-await-in-loop
 								const result = item.value;
-								const {[result.runCount]: handler = handlers.else} = handlers;
+								const {[result.runCount]: handler = handlers.else} = handlers; // eslint-disable-line unicorn/no-unreadable-object-destructuring
 								pendingState = handler?.call({assertIdle, done, ...operations}, result, state);
 
-								if (!item.done && !isDone) {
+								if (!isDone && !item.done) {
 									nextResult = results.next();
 								}
 							}
@@ -166,7 +168,7 @@ export const withFixture = fixture => async (t, task) => {
 						results.return();
 
 						// Handle outstanding promises in case they reject.
-						if (assertingIdle) {
+						if (isAssertingIdle) {
 							await idlePromise;
 						}
 
@@ -176,10 +178,10 @@ export const withFixture = fixture => async (t, task) => {
 			});
 
 			t.is(activeWatchCount, 0, 'Handlers for all watch() calls should have invoked `this.done()` to end their tests');
-			completedTask = true;
+			isCompletedTask = true;
 		});
 	} catch (error) {
-		if (!completedTask) {
+		if (!isCompletedTask) {
 			throw error;
 		}
 

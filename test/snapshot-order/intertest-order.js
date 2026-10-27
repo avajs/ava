@@ -3,11 +3,11 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 test('snapshot files are independent of test resolution order', async t => {
 	const options = {
-		cwd: cwd('intertest-order'),
+		cwd: resolveFixtureDirectory('intertest-order'),
 		env: {
 			AVA_FORCE_CI: 'not-ci',
 		},

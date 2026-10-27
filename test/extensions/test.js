@@ -1,6 +1,6 @@
 import test from '@ava/test';
 
-import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
+import {cleanOutput, resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 for (const [where, which] of [
 	['top-level', 'top-level-duplicates'],
@@ -8,7 +8,7 @@ for (const [where, which] of [
 ]) {
 	test(`errors if ${where} extensions include duplicates`, async t => {
 		const options = {
-			cwd: cwd(which),
+			cwd: resolveFixtureDirectory(which),
 		};
 
 		const result = await t.throwsAsync(fixture([], options));
@@ -19,7 +19,7 @@ for (const [where, which] of [
 
 test('errors if extensions is not an array', async t => {
 	const result = await t.throwsAsync(fixture([], {
-		cwd: cwd('object-form'),
+		cwd: resolveFixtureDirectory('object-form'),
 	}));
 	t.snapshot(cleanOutput(result.stderr), 'fails with message');
 });

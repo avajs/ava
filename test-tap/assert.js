@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This is a legacy test file. */
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {stripVTControlCharacters} from 'node:util';
@@ -11,7 +12,7 @@ import {set as setOptions} from '../lib/worker/options.js';
 setOptions({chalkOptions: {level: 0}});
 
 let lastFailure = null;
-let lastPassed = false;
+let isLastPassed = false;
 
 class AssertionFailed extends Error {
 	constructor() {
@@ -24,7 +25,7 @@ const AssertionsBase = class extends assert.Assertions {
 	constructor(overwrites = {}) {
 		super({
 			pass() {
-				lastPassed = true;
+				isLastPassed = true;
 				// Match behavior in lib/test.js, not great for this test suite but refactoring is a much larger task.
 				return true;
 			},
@@ -34,7 +35,7 @@ const AssertionsBase = class extends assert.Assertions {
 						lastFailure = error;
 					}
 				}).then(() => {
-					lastPassed = true;
+					isLastPassed = true;
 				});
 			},
 			fail(error) {
@@ -78,27 +79,27 @@ function assertFailure(t, subset) {
 	}
 }
 
-let gathering = false;
+let isGathering = false;
 let gatheringPromise = Promise.resolve();
 function gather(run) {
 	return t => {
-		if (gathering) {
+		if (isGathering) {
 			throw new Error('Cannot nest gather()');
 		}
 
-		gathering = true;
+		isGathering = true;
 		try {
 			run(t);
 			return gatheringPromise;
 		} finally {
-			gathering = false;
+			isGathering = false;
 			gatheringPromise = Promise.resolve();
 		}
 	};
 }
 
 function add(fn) {
-	if (!gathering) {
+	if (!isGathering) {
 		throw new Error('Cannot add promise, must be called from gather() callback');
 	}
 
@@ -177,10 +178,10 @@ function fails(t, fn) {
 }
 
 function passes(t, fn, {expectBoolean = true} = {}) {
-	lastPassed = false;
+	isLastPassed = false;
 	lastFailure = null;
 	const retval = fn();
-	if (lastPassed) {
+	if (isLastPassed) {
 		if (expectBoolean) {
 			t.equal(retval, true);
 		} else {
@@ -193,10 +194,10 @@ function passes(t, fn, {expectBoolean = true} = {}) {
 
 function throwsAsyncPasses(t, fn) {
 	return add(() => {
-		lastPassed = false;
+		isLastPassed = false;
 		lastFailure = null;
 		return fn().then(() => {
-			if (lastPassed) {
+			if (isLastPassed) {
 				t.pass();
 			} else {
 				t.error(lastFailure, 'Expected assertion to pass');
@@ -264,9 +265,7 @@ test('.is()', t => {
 
 	passes(t, () => assertions.is(-0, -0));
 
-	passes(t, () => assertions.is(Number.NaN, Number.NaN));
-
-	passes(t, () => assertions.is(0 / 0, Number.NaN));
+	passes(t, () => assertions.is(NaN, NaN));
 
 	passes(t, () => {
 		const someRef = {foo: 'bar'};
@@ -301,9 +300,9 @@ test('.is()', t => {
 
 	fails(t, () => assertions.is(0, null));
 
-	fails(t, () => assertions.is(0, Number.NaN));
+	fails(t, () => assertions.is(0, NaN));
 
-	fails(t, () => assertions.is('foo', Number.NaN));
+	fails(t, () => assertions.is('foo', NaN));
 
 	failsWith(t, () => assertions.is({foo: 'bar'}, {foo: 'bar'}), {
 		assertion: 't.is()',
@@ -375,9 +374,7 @@ test('.not()', t => {
 
 	passes(t, () => assertions.not('foo', 'bar'));
 
-	fails(t, () => assertions.not(Number.NaN, Number.NaN));
-
-	fails(t, () => assertions.not(0 / 0, Number.NaN));
+	fails(t, () => assertions.not(NaN, NaN));
 
 	failsWith(t, () => assertions.not('foo', 'foo'), {
 		assertion: 't.not()',
@@ -521,13 +518,13 @@ test('.deepEqual()', t => {
 
 	passes(t, () => assertions.deepEqual(0, 0)
 		&& assertions.deepEqual(1, 1)
-		&& assertions.deepEqual(3.14, 3.14));
+		&& assertions.deepEqual(1.34, 1.34));
 
 	fails(t, () => assertions.deepEqual(0, 1));
 
 	fails(t, () => assertions.deepEqual(1, -1));
 
-	fails(t, () => assertions.deepEqual(3.14, 2.72));
+	fails(t, () => assertions.deepEqual(1.34, 2.72));
 
 	fails(t, () => assertions.deepEqual({0: 'a', 1: 'b'}, ['a', 'b']));
 
@@ -621,13 +618,13 @@ test('.notDeepEqual()', t => {
 		assertion: 't.notDeepEqual()',
 		expected,
 		message: '',
-		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*{.*\n.*a: 'a'/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /[^\n\r{\u{2028}\u{2029}]*\{.*\n.*a: 'a'/u}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual(['a', 'b'], ['a', 'b'], 'my message'), {
 		assertion: 't.notDeepEqual()',
 		message: 'my message',
-		formattedDetails: [{label: 'Value is deeply equal:', formatted: /.*\[.*\n.*'a',\n.*'b',/}],
+		formattedDetails: [{label: 'Value is deeply equal:', formatted: /[^\n\r[\u{2028}\u{2029}]*\[.*\n.*'a',\n.*'b',/u}],
 	});
 
 	failsWith(t, () => assertions.notDeepEqual({}, [], null), {
@@ -814,7 +811,7 @@ test('.like()', t => {
 	failsWith(t, () => assertions.like({a: 'foo', b: 'irrelevant'}, {a: 'bar'}), {
 		assertion: 't.like()',
 		message: '',
-		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*}/}],
+		formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /\{\n-\s*a: 'foo',\n\+\s*a: 'bar',\n\s*\}/}],
 	});
 
 	passes(t, () => assertions.like({a: [{a: 1, b: 2}]}, {a: [{a: 1}]}));
@@ -916,7 +913,7 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		throw new TypeError();
+		throw new TypeError('🙈');
 	}, {name: 'TypeError'}), {expectBoolean: false});
 
 	// Fails because the thrown value is not an error
@@ -932,27 +929,27 @@ test('.throws()', gather(t => {
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 'ERR_TEST';
 		throw error;
 	}, {code: 'ERR_TEST'}), {expectBoolean: false});
 
 	// Passes because the correct error is thrown.
 	passes(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 42;
 		throw error;
 	}, {code: 42}), {expectBoolean: false});
 
 	// Fails because the thrown value is not the right one
 	fails(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 'ERR_NOPE';
 		throw error;
 	}, {code: 'ERR_TEST'}));
 
 	fails(t, () => assertions.throws(() => {
-		const error = new TypeError();
+		const error = new TypeError('🙈');
 		error.code = 1;
 		throw error;
 	}, {code: 42}));
@@ -1053,7 +1050,7 @@ test('.throws()', gather(t => {
 }));
 
 test('.throws() returns the thrown error', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 	const actual = assertions.throws(() => {
 		throw expected;
 	});
@@ -1078,7 +1075,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Fails because the promise is resolved with an Error
-	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(new Error())), {
+	throwsAsyncFails(t, () => assertions.throwsAsync(Promise.resolve(new Error('🙈'))), {
 		assertion: 't.throwsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Promise resolved with:', formatted: /Error/}],
@@ -1099,7 +1096,7 @@ test('.throwsAsync()', gather(t => {
 	});
 
 	// Passes because the promise was rejected with an error.
-	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error())));
+	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(new Error('🙈'))));
 
 	// Passes because the promise was rejected with a non-error reason and `expectation.any` is true.
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject('foo'), {any: true})); // eslint-disable-line prefer-promise-reject-errors
@@ -1108,7 +1105,7 @@ test('.throwsAsync()', gather(t => {
 	throwsAsyncPasses(t, () => assertions.throwsAsync(Promise.reject(), {any: true}));
 
 	// Passes because the function returned a promise rejected with an error.
-	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error())));
+	throwsAsyncPasses(t, () => assertions.throwsAsync(() => Promise.reject(new Error('🙈'))));
 
 	// Fails because the function throws synchronously
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => {
@@ -1141,7 +1138,7 @@ test('.throwsAsync()', gather(t => {
 }));
 
 test('.throwsAsync() returns the rejection reason of promise', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 
 	return assertions.throwsAsync(Promise.reject(expected)).then(actual => {
 		t.equal(actual, expected);
@@ -1150,7 +1147,7 @@ test('.throwsAsync() returns the rejection reason of promise', t => {
 });
 
 test('.throwsAsync() returns the rejection reason of a promise returned by the function', t => {
-	const expected = new Error();
+	const expected = new Error('🙈');
 
 	return assertions.throwsAsync(() => Promise.reject(expected)).then(actual => {
 		t.equal(actual, expected);
@@ -1204,25 +1201,25 @@ test('.throws() fails if passed a bad expectation', t => {
 	failsWith(t, () => assertions.throws(() => {}, {}), {
 		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, []), {
 		assertion: 't.throws()',
 		message: 'The second argument to `t.throws()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[\]/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {any: {}}), {
 		assertion: 't.throws()',
 		message: 'The `any` property of the second argument to `t.throws()` must be a boolean',
-		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /any: \{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {code: {}}), {
 		assertion: 't.throws()',
 		message: 'The `code` property of the second argument to `t.throws()` must be a string or number',
-		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: \{\}/}],
 	});
 
 	failsWith(t, () => assertions.throws(() => {}, {instanceOf: null}), {
@@ -1282,25 +1279,25 @@ test('.throwsAsync() fails if passed a bad expectation', async t => {
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {}), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, []), {
 		assertion: 't.throwsAsync()',
 		message: 'The second argument to `t.throwsAsync()` must be an expectation object, `null` or `undefined`',
-		formattedDetails: [{label: 'Called with:', formatted: /\[]/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\[\]/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {any: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `any` property of the second argument to `t.throwsAsync()` must be a boolean',
-		formattedDetails: [{label: 'Called with:', formatted: /any: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /any: \{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {code: {}}), {
 		assertion: 't.throwsAsync()',
 		message: 'The `code` property of the second argument to `t.throwsAsync()` must be a string or number',
-		formattedDetails: [{label: 'Called with:', formatted: /code: {}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /code: \{\}/}],
 	});
 
 	await failsWithAsync(t, () => assertions.throwsAsync(() => {}, {instanceOf: null}), {
@@ -1400,7 +1397,7 @@ test('.notThrowsAsync()', gather(t => {
 	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(Promise.resolve()));
 
 	// Fails because the promise is rejected
-	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(Promise.reject(new Error('🙈'))), {
 		assertion: 't.notThrowsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Promise rejected with:', formatted: /Error/}],
@@ -1410,7 +1407,7 @@ test('.notThrowsAsync()', gather(t => {
 	notThrowsAsyncPasses(t, () => assertions.notThrowsAsync(() => Promise.resolve()));
 
 	// Fails because the function returned a rejected promise
-	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error())), {
+	notThrowsAsyncFails(t, () => assertions.notThrowsAsync(() => Promise.reject(new Error('🙈'))), {
 		assertion: 't.notThrowsAsync()',
 		message: '',
 		formattedDetails: [{label: 'Returned promise rejected with:', formatted: /Error/}],
@@ -1471,15 +1468,15 @@ test('.snapshot()', async t => {
 	// npx tap test-tap/assert.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
-	const updating = false;
+	const isUpdating = false;
 
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
 		file: path.join(projectDir, 'assert.js'),
 		projectDir,
 		fixedLocation: null,
-		recordNewSnapshots: updating,
-		updating,
+		recordNewSnapshots: isUpdating,
+		updating: isUpdating,
 	});
 	const setup = _title => new class extends assertions.constructor {
 		constructor(title) {
@@ -1504,20 +1501,20 @@ test('.snapshot()', async t => {
 	}(_title);
 
 	{
-		const assertions = setup('passes');
+		const passingAssertions = setup('passes');
 
-		passes(t, () => assertions.snapshot({foo: 'bar'}));
+		passes(t, () => passingAssertions.snapshot({foo: 'bar'}));
 
-		passes(t, () => assertions.snapshot({foo: 'bar'}));
+		passes(t, () => passingAssertions.snapshot({foo: 'bar'}));
 	}
 
 	{
-		const assertions = setup('fails');
-		if (updating) {
-			return assertions.snapshot({foo: 'bar'});
+		const failingAssertions = setup('fails');
+		if (isUpdating) {
+			return failingAssertions.snapshot({foo: 'bar'});
 		}
 
-		failsWith(t, () => assertions.snapshot({foo: 'not bar'}), {
+		failsWith(t, () => failingAssertions.snapshot({foo: 'not bar'}), {
 			assertion: 't.snapshot()',
 			message: 'Did not match snapshot',
 			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
@@ -1525,12 +1522,12 @@ test('.snapshot()', async t => {
 	}
 
 	{
-		const assertions = setup('fails');
-		if (updating) {
-			return assertions.snapshot({foo: 'bar'}, 'my message');
+		const failingAssertions = setup('fails');
+		if (isUpdating) {
+			return failingAssertions.snapshot({foo: 'bar'}, 'my message');
 		}
 
-		failsWith(t, () => assertions.snapshot({foo: 'not bar'}, 'my message'), {
+		failsWith(t, () => failingAssertions.snapshot({foo: 'not bar'}, 'my message'), {
 			assertion: 't.snapshot()',
 			message: 'my message',
 			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: '  {\n-   foo: \'not bar\',\n+   foo: \'bar\',\n  }'}],
@@ -1538,17 +1535,17 @@ test('.snapshot()', async t => {
 	}
 
 	{
-		const assertions = setup('bad message');
-		failsWith(t, () => assertions.snapshot(null, null), {
+		const badMessageAssertions = setup('bad message');
+		failsWith(t, () => badMessageAssertions.snapshot(null, null), {
 			assertion: 't.snapshot()',
-			message: 'The assertion message must be a string',
+			message: 'The options argument must be a plain object',
 			formattedDetails: [{
 				label: 'Called with:',
 				formatted: /null/,
 			}],
 		});
 
-		failsWith(t, () => assertions.snapshot(null, ''), {
+		failsWith(t, () => badMessageAssertions.snapshot(null, ''), {
 			assertion: 't.snapshot()',
 			message: 'The snapshot assertion message must be a non-empty string',
 			formattedDetails: [{
@@ -1559,6 +1556,130 @@ test('.snapshot()', async t => {
 	}
 
 	await manager.save();
+	t.end();
+});
+
+test('.snapshot() with formatAsCodeBlock option', t => {
+	// Validation: non-string expected value when options are provided
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot(42, {formatAsCodeBlock: true}), {
+			assertion: 't.snapshot()',
+			message: 'The first argument must be a string when options are provided',
+			formattedDetails: [{label: 'Called with:', formatted: /42/}],
+		});
+	}
+
+	// Validation: options object missing formatAsCodeBlock
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {}), {
+			assertion: 't.snapshot()',
+			message: 'The options object must contain the `formatAsCodeBlock` property',
+			formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
+		});
+	}
+
+	// Validation: formatAsCodeBlock is not true or string
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: false}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` option must be `true` or a string',
+			formattedDetails: [{label: 'Called with:', formatted: /false/}],
+		});
+	}
+
+	// Validation: formatAsCodeBlock is an empty string
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: ''}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` option must be a non-empty string when it is not `true`',
+			formattedDetails: [{label: 'Called with:', formatted: '\'\''}],
+		});
+	}
+
+	// Validation: unexpected properties in the options object
+	{
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: true, message: 'label'}), {
+			assertion: 't.snapshot()',
+			message: 'The options object must only contain the `formatAsCodeBlock` property',
+			formattedDetails: [{label: 'Called with:', formatted: /message/}],
+		});
+	}
+
+	// Validation: language identifier with backticks or line breaks
+	for (const language of ['`', 'java`script', 'js\n', 'js\r']) {
+		const a = new AssertionsBase();
+		failsWith(t, () => a.snapshot('str', {formatAsCodeBlock: language}), {
+			assertion: 't.snapshot()',
+			message: 'The `formatAsCodeBlock` language identifier must not contain backticks or line breaks',
+			formattedDetails: [{label: 'Called with:', formatted: /.+/s}],
+		});
+	}
+
+	// CompareWithSnapshot is called with the correct formatAsCodeBlock value
+	{
+		let capturedOptions;
+		const a = new AssertionsBase({
+			compareWithSnapshot(options) {
+				capturedOptions = options;
+				return {pass: true};
+			},
+		});
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+		t.equal(capturedOptions.expected, 'hello');
+		t.equal(capturedOptions.formatAsCodeBlock, true);
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: 'javascript'}));
+		t.equal(capturedOptions.expected, 'hello');
+		t.equal(capturedOptions.formatAsCodeBlock, 'javascript');
+
+		// Without options, formatAsCodeBlock defaults to false
+		passes(t, () => a.snapshot('hello'));
+		t.equal(capturedOptions.formatAsCodeBlock, false);
+	}
+
+	// Mismatch detection: rawValue comparison returns concordance descriptors for the diff
+	{
+		const manager = snapshotManager.load({
+			recordNewSnapshots: true,
+			updating: true,
+		});
+		let callIndex = 0;
+		const a = new AssertionsBase({
+			compareWithSnapshot(assertionOptions) {
+				const {record, ...result} = manager.compare({
+					belongsTo: 'test',
+					expected: assertionOptions.expected,
+					formatAsCodeBlock: assertionOptions.formatAsCodeBlock,
+					index: callIndex++,
+					label: `Snapshot ${callIndex}`,
+				});
+				if (record) {
+					record();
+				}
+
+				return result;
+			},
+		});
+
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+
+		callIndex = 0;
+		passes(t, () => a.snapshot('hello', {formatAsCodeBlock: true}));
+
+		callIndex = 0;
+		failsWith(t, () => a.snapshot('world', {formatAsCodeBlock: true}), {
+			assertion: 't.snapshot()',
+			message: 'Did not match snapshot',
+			formattedDetails: [{label: 'Difference (- actual, + expected):', formatted: /.+/}],
+		});
+	}
+
 	t.end();
 });
 
@@ -1756,7 +1877,7 @@ test('.regex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.regex('42', {}), {
 		assertion: 't.regex()',
 		message: '`t.regex()` must be called with a regular expression',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	t.end();
@@ -1807,7 +1928,7 @@ test('.notRegex() fails if passed a bad value', t => {
 	failsWith(t, () => assertions.notRegex('42', {}), {
 		assertion: 't.notRegex()',
 		message: '`t.notRegex()` must be called with a regular expression',
-		formattedDetails: [{label: 'Called with:', formatted: /{}/}],
+		formattedDetails: [{label: 'Called with:', formatted: /\{\}/}],
 	});
 
 	t.end();

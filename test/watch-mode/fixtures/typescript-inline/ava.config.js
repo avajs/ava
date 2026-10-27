@@ -1,4 +1,4 @@
-export default {
+const config = {
 	typescript: {
 		rewritePaths: {
 			'src/': 'build/',
@@ -6,3 +6,5 @@ export default {
 		compile: 'tsc',
 	},
 };
+
+export default config;

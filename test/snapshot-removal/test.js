@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
 
 import {testSnapshotPruning} from './helpers/macros.js';
@@ -15,13 +15,13 @@ import {testSnapshotPruning} from './helpers/macros.js';
 // Serial execution is used here solely to reduce the burden on CI machines.
 
 test.serial('snapshots are removed when tests stop using them', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['--update-snapshots'],
 	remove: true,
 });
 
 test.serial('snapshots are removed from a snapshot directory', testSnapshotPruning, {
-	cwd: cwd('snapshot-dir'),
+	cwd: resolveFixtureDirectory('snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
 	snapshotFile: path.join('test', 'snapshots', 'test.js.snap'),
@@ -29,7 +29,7 @@ test.serial('snapshots are removed from a snapshot directory', testSnapshotPruni
 });
 
 test.serial('snapshots are removed from a custom snapshotDir', testSnapshotPruning, {
-	cwd: cwd('fixed-snapshot-dir'),
+	cwd: resolveFixtureDirectory('fixed-snapshot-dir'),
 	cli: ['--update-snapshots'],
 	remove: true,
 	snapshotFile: path.join('fixedSnapshotDir', 'test.js.snap'),
@@ -37,7 +37,7 @@ test.serial('snapshots are removed from a custom snapshotDir', testSnapshotPruni
 });
 
 test.serial('removing non-existent snapshots doesn\'t throw', async t => {
-	await withTemporaryFixture(cwd('no-snapshots'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('no-snapshots'), async cwd => {
 		// Execute fixture; this should try to unlink the nonexistent snapshots, and
 		// should not throw
 		const run = fixture(['--update-snapshots'], {
@@ -52,7 +52,7 @@ test.serial('removing non-existent snapshots doesn\'t throw', async t => {
 });
 
 test.serial('without --update-snapshots, invalid .snaps are retained', async t => {
-	await withTemporaryFixture(cwd('no-snapshots'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);
 		await fs.writeFile(snapPath, invalid);
@@ -65,7 +65,7 @@ test.serial('without --update-snapshots, invalid .snaps are retained', async t =
 });
 
 test.serial('with --update-snapshots, invalid .snaps are removed', async t => {
-	await withTemporaryFixture(cwd('no-snapshots'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('no-snapshots'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const invalid = Buffer.of(0x0A, 0x00, 0x00);
 		await fs.writeFile(snapPath, invalid);
@@ -77,13 +77,13 @@ test.serial('with --update-snapshots, invalid .snaps are removed', async t => {
 });
 
 test.serial('snapshots remain if not updating', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: [],
 	remove: false,
 });
 
 test.serial('snapshots remain if they are still used', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['--update-snapshots'],
 	remove: false,
 	env: {
@@ -97,7 +97,7 @@ test.serial('snapshots remain if they are still used', testSnapshotPruning, {
 });
 
 test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['--update-snapshots', '--match=\'*another*\''],
 	remove: false,
 	async checkRun(t, run) {
@@ -108,7 +108,7 @@ test.serial('snapshots remain if tests run with --match', testSnapshotPruning, {
 });
 
 test.serial('snapshots removed if --match selects all tests', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['--update-snapshots', '--match=\'*snapshot*\''],
 	remove: true,
 	async checkRun(t, run) {
@@ -119,7 +119,7 @@ test.serial('snapshots removed if --match selects all tests', testSnapshotPrunin
 });
 
 test.serial('snapshots remain if tests selected by line numbers', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['test.js:10-17', '--update-snapshots'],
 	remove: false,
 	async checkRun(t, run) {
@@ -130,7 +130,7 @@ test.serial('snapshots remain if tests selected by line numbers', testSnapshotPr
 });
 
 test.serial('snapshots removed if line numbers select all tests', testSnapshotPruning, {
-	cwd: cwd('removal'),
+	cwd: resolveFixtureDirectory('removal'),
 	cli: ['test.js:0-100', '--update-snapshots'],
 	remove: true,
 	async checkRun(t, run) {
@@ -141,7 +141,7 @@ test.serial('snapshots removed if line numbers select all tests', testSnapshotPr
 });
 
 test.serial('snapshots remain if using test.only', testSnapshotPruning, {
-	cwd: cwd('only-test'),
+	cwd: resolveFixtureDirectory('only-test'),
 	cli: ['--update-snapshots'],
 	remove: false,
 	async checkRun(t, run) {
@@ -150,7 +150,7 @@ test.serial('snapshots remain if using test.only', testSnapshotPruning, {
 });
 
 test.serial('snapshots remain if tests are skipped', testSnapshotPruning, {
-	cwd: cwd('skipped-tests'),
+	cwd: resolveFixtureDirectory('skipped-tests'),
 	cli: ['--update-snapshots'],
 	remove: false,
 	async checkRun(t, run) {
@@ -159,7 +159,7 @@ test.serial('snapshots remain if tests are skipped', testSnapshotPruning, {
 });
 
 test.serial('snapshots remain if snapshot assertions are skipped', testSnapshotPruning, {
-	cwd: cwd('skipped-snapshots'),
+	cwd: resolveFixtureDirectory('skipped-snapshots'),
 	cli: ['--update-snapshots'],
 	remove: false,
 	async checkRun(t, run) {
@@ -170,7 +170,7 @@ test.serial('snapshots remain if snapshot assertions are skipped', testSnapshotP
 // This behavior is consistent with the expectation that discarded attempts
 // should have no effect.
 test.serial('snapshots removed if used in a discarded try()', testSnapshotPruning, {
-	cwd: cwd('try'),
+	cwd: resolveFixtureDirectory('try'),
 	cli: ['--update-snapshots'],
 	remove: true,
 });
@@ -178,7 +178,7 @@ test.serial('snapshots removed if used in a discarded try()', testSnapshotPrunin
 // This behavior is consistent with the expectation that discarded attempts
 // should have no effect.
 test.serial('snapshots removed if skipped in a discarded try()', testSnapshotPruning, {
-	cwd: cwd('skipped-snapshots-in-try'),
+	cwd: resolveFixtureDirectory('skipped-snapshots-in-try'),
 	cli: ['--update-snapshots'],
 	remove: true,
 	async checkRun(t, run) {

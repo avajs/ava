@@ -1,4 +1,5 @@
 import events from 'node:events';
+import process from 'node:process';
 import {parentPort} from 'node:worker_threads';
 
 import test from '../../../../entrypoints/main.js';

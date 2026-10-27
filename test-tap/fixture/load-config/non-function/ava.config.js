@@ -1,3 +1,5 @@
-export default {
+const config = {
 	filterNodeArgumentsForWorkerThreads: [],
 };
+
+export default config;

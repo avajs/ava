@@ -1,3 +1,5 @@
-export default async () => ({
-	failFast: true,
-});
+export default async function factory() {
+	return {
+		failFast: true,
+	};
+}

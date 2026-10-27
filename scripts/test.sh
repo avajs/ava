@@ -1,8 +1,8 @@
 #!/bin/bash
 set -ex
 
-npx xo
-npx tsc --noEmit
-npx c8 --report=none test-ava
-npx c8 --report=none --no-clean tap
-npx c8 report
+pnpm exec xo
+pnpm exec tsc --noEmit
+pnpm exec c8 --report=none test-ava
+pnpm exec c8 --report=none --no-clean tap
+pnpm exec c8 report

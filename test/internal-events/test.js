@@ -8,7 +8,8 @@ import {fixture} from '../helpers/exec.js';
 test('internal events are emitted', async t => {
 	await fixture();
 
-	const result = JSON.parse(await fs.readFile(fileURLToPath(new URL('fixtures/internal-events.json', import.meta.url))));
+	const filePath = fileURLToPath(new URL('fixtures/internal-events.json', import.meta.url));
+	const result = JSON.parse(await fs.readFile(filePath, 'utf8'));
 
 	t.like(result[0], {
 		type: 'starting',

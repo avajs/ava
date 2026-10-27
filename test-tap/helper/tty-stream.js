@@ -15,7 +15,7 @@ export default class TTYStream extends stream.Writable {
 		this.spinnerActivity = [];
 	}
 
-	_write(chunk, encoding, callback) {
+	_write(chunk, encoding, callback) { // eslint-disable-line unicorn/prefer-private-class-fields
 		if (this.spinnerActivity.length > 0) {
 			this.chunks.push(Buffer.concat(this.spinnerActivity), TTYStream.SEPARATOR);
 			this.spinnerActivity = [];
@@ -34,14 +34,15 @@ export default class TTYStream extends stream.Writable {
 		callback();
 	}
 
-	_writev(chunks, callback) {
+	_writev(chunks, callback) { // eslint-disable-line unicorn/prefer-private-class-fields
 		if (this.spinnerActivity.length > 0) {
 			this.chunks.push(Buffer.concat(this.spinnerActivity), TTYStream.SEPARATOR);
 			this.spinnerActivity = [];
 		}
 
 		for (const object of chunks) {
-			this.chunks.push(Buffer.from(this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')), 'utf8')); // eslint-disable-line unicorn/no-array-reduce
+			const sanitized = this.sanitizers.reduce((string, sanitizer) => sanitizer(string), object.chunk.toString('utf8')); // eslint-disable-line unicorn/no-array-reduce
+			this.chunks.push(Buffer.from(sanitized, 'utf8'));
 		}
 
 		this.chunks.push(TTYStream.SEPARATOR);

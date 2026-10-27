@@ -3,13 +3,13 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 import getSnapshotIds from './helpers/get-snapshot-ids.js';
 
 test('snapshot reports are sorted in declaration order', async t => {
 	const options = {
-		cwd: cwd('report-declaration-order'),
+		cwd: resolveFixtureDirectory('report-declaration-order'),
 		env: {
 			AVA_FORCE_CI: 'not-ci',
 		},
