@@ -1,0 +1,27 @@
+TAP version 13
+---tty-stream-chunk-separator
+ok 1 - passes
+---tty-stream-chunk-separator
+ok 2 - passes two
+---tty-stream-chunk-separator
+not ok 3 - slow
+  ---
+    name: Error
+    message: Exited because no new tests completed within the last 2500ms of inactivity
+    at: 'TapReporter.writeTimeout (/lib/reporters/tap.js)'
+  ...
+---tty-stream-chunk-separator
+not ok 4 - slow two
+  ---
+    name: Error
+    message: Exited because no new tests completed within the last 2500ms of inactivity
+    at: 'TapReporter.writeTimeout (/lib/reporters/tap.js)'
+  ...
+---tty-stream-chunk-separator
+
+1..4
+# tests 4
+# pass 2
+# fail 2
+
+---tty-stream-chunk-separator
