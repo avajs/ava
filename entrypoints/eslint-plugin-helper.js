@@ -68,7 +68,7 @@ export function load(projectDir, overrides) {
 	let helperPatterns = [];
 	if (overrides && overrides.helpers !== undefined) {
 		if (!Array.isArray(overrides.helpers) || overrides.helpers.length === 0) {
-			throw new Error('The \u2018helpers\u2019 override must be an array containing glob patterns.');
+			throw new Error('The \u{2018}helpers\u{2019} override must be an array containing glob patterns.');
 		}
 
 		helperPatterns = normalizePatterns(overrides.helpers);
@@ -90,15 +90,15 @@ export function load(projectDir, overrides) {
 	const helper = Object.freeze({
 		classifyFile: classifyForESLint,
 		classifyImport(importPath) {
-			if (hasExtension(globs.extensions, importPath)) {
+			const withExtension = hasExtension(globs.extensions, importPath)
 				// The importPath has one of the test file extensions: we can classify
 				// it directly.
-				return classifyForESLint(importPath);
-			}
+				? importPath
+				// Add the first extension. If multiple extensions are available, assume
+				// patterns are not biased to any particular extension.
+				: `${importPath}.${globs.extensions[0]}`;
 
-			// Add the first extension. If multiple extensions are available, assume
-			// patterns are not biased to any particular extension.
-			return classifyForESLint(`${importPath}.${globs.extensions[0]}`);
+			return classifyForESLint(withExtension);
 		},
 	});
 	helperCache.set(cacheKey, helper);

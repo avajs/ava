@@ -4,11 +4,11 @@ import path from 'node:path';
 import test from '@ava/test';
 import {temporaryDirectory} from 'tempy';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 test('formats errors from ava.config.js', async t => {
 	const options = {
-		cwd: cwd('config-errors'),
+		cwd: resolveFixtureDirectory('config-errors'),
 	};
 
 	const result = await t.throwsAsync(fixture(['test.js'], options));
@@ -25,7 +25,7 @@ test('formats errors from ava.config.js', async t => {
 
 test('works as expected when run from the package.json directory', async t => {
 	const options = {
-		cwd: cwd('pkg-with-tests'),
+		cwd: resolveFixtureDirectory('pkg-with-tests'),
 	};
 
 	const result = await fixture([], options);
@@ -35,7 +35,7 @@ test('works as expected when run from the package.json directory', async t => {
 
 test('resolves tests from the package.json dir if none are specified on cli', async t => {
 	const options = {
-		cwd: cwd('pkg-with-tests/dir-a-wrapper'),
+		cwd: resolveFixtureDirectory('pkg-with-tests/dir-a-wrapper'),
 	};
 
 	const result = await fixture([], options);
@@ -45,7 +45,7 @@ test('resolves tests from the package.json dir if none are specified on cli', as
 
 test('resolves tests from a .js config file', async t => {
 	const options = {
-		cwd: cwd('js-with-tests/dir-a-wrapper'),
+		cwd: resolveFixtureDirectory('js-with-tests/dir-a-wrapper'),
 	};
 
 	const result = await fixture([], options);
@@ -55,7 +55,7 @@ test('resolves tests from a .js config file', async t => {
 
 test('looks for config files outside of project directory', async t => {
 	const options = {
-		cwd: cwd('monorepo/package'),
+		cwd: resolveFixtureDirectory('monorepo/package'),
 	};
 
 	const result = await fixture([], options);

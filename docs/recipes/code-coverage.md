@@ -6,7 +6,7 @@ Use [`c8`] to compute the code coverage of your tests.
 
 First install [`c8`]:
 
-```
+```sh
 $ npm install --save-dev c8
 ```
 
@@ -22,7 +22,7 @@ At its simplest run AVA through [`c8`]. In your `package.json` file:
 
 You may want to exclude the `coverage` directory from source control. Assuming you're using Git, add the following to your `.gitignore` file:
 
-```
+```text
 coverage
 ```
 

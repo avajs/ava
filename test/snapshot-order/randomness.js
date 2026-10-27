@@ -5,13 +5,13 @@ import {gunzipSync} from 'node:zlib';
 import test from '@ava/test';
 
 import {extractCompressedSnapshot} from '../../lib/snapshot-manager.js';
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 import getSnapshotIds from './helpers/get-snapshot-ids.js';
 
 test('deterministic and sorted over a large, random test case', async t => {
 	const options = {
-		cwd: cwd('randomness'),
+		cwd: resolveFixtureDirectory('randomness'),
 		env: {
 			AVA_FORCE_CI: 'not-ci',
 		},

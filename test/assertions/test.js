@@ -25,3 +25,8 @@ test('throwsAsync requires native errors', async t => {
 	t.snapshot(result.stats.passed.map(({title}) => title), 'passed tests');
 	t.snapshot(result.stats.failed.map(({title}) => title), 'failed tests');
 });
+
+test('global regexes are not stateful across calls', async t => {
+	const result = await fixture(['global-regex.js']);
+	t.is(result.stats.failed.length, 0, 'Every call has to give the same verdict');
+});

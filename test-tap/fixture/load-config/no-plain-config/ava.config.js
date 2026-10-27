@@ -1,1 +1,3 @@
-export default 'should not work!';
+const config = 'should not work!';
+
+export default config;

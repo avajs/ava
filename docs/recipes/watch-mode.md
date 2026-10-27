@@ -49,7 +49,7 @@ You will see a prompt like this:
  Type `m` followed by enter to filter tests by their title
  Type `r` followed by enter to rerun tests
  Type `u` followed by enter to update snapshots in selected tests
-> 
+>
 ```
 
 So, to run only tests numbered like
@@ -90,7 +90,5 @@ Sometimes watch mode does something surprising like rerunning all tests when you
 $ DEBUG=ava:watcher npx ava --watch
 ```
 
-[Install Troubleshooting]: https://github.com/paulmillr/chokidar#install-troubleshooting
 [`ignore-by-default`]: https://github.com/novemberborn/ignore-by-default
-[`.only` modifier]: ../01-writing-tests.md#running-specific-tests
 [config]: ../06-configuration.md

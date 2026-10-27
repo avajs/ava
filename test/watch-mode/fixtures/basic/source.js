@@ -1,1 +1,3 @@
-export default 'source';
+const source = 'source';
+
+export default source;
