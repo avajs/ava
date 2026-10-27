@@ -15,6 +15,7 @@ const xoConfig = [
 			'media/**/package.json',
 			'test-tap/fixture/**/package.json',
 			'test/line-numbers/fixtures/line-numbers.js',
+			'test/line-numbers/fixtures/provider/compiled/**',
 			'test-tap/fixture/snapshots/test-sourcemaps/build/**',
 			'test-tap/fixture/report/edgecases/ast-syntax-error.js',
 			'test-tap/fixture/**/*.ts',
