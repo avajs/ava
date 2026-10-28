@@ -25,6 +25,9 @@ test(async t => {
 				report.sanitizers.esmLoader,
 				report.sanitizers.experimentalWarning,
 				report.sanitizers.libLineNumbers,
+				// Private #doFinish appears as the frame name on some platforms;
+				// keep reporter logs stable against the public finish() entrypoint.
+				string => string.replaceAll('#doFinish', 'Test.finish'),
 				report.sanitizers.posix,
 				report.sanitizers.tapLoaders,
 				report.sanitizers.timers,
