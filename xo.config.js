@@ -86,6 +86,7 @@ const xoConfig = [
 	{
 		files: 'package.json',
 		rules: {
+			'package-json/prefer-shorthand': 'off',
 			'package-json/prefer-side-effects-field': 'off',
 			'package-json/require-types-in-exports': 'off',
 			'package-json/require-default-condition': 'off',
