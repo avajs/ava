@@ -1,6 +1,6 @@
 import process from 'node:process';
 
-export default {
+const config = {
 	typescript: {
 		extensions: process.env.JUST_TS_EXTENSION ? ['ts'] : ['ts', 'js'],
 		rewritePaths: {
@@ -9,3 +9,5 @@ export default {
 		compile: false,
 	},
 };
+
+export default config;

@@ -1,10 +1,10 @@
 import test from '@ava/test';
 
-import {cleanOutput, cwd, fixture} from '../helpers/exec.js';
+import {cleanOutput, resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 
 test('sets default environment variables from the config', async t => {
 	const options = {
-		cwd: cwd('environment-variables'),
+		cwd: resolveFixtureDirectory('environment-variables'),
 	};
 
 	const results = await fixture(['environment-variables.js'], options);
@@ -14,7 +14,7 @@ test('sets default environment variables from the config', async t => {
 
 test('overrides environment variables provided through the CLI', async t => {
 	const options = {
-		cwd: cwd('environment-variables'),
+		cwd: resolveFixtureDirectory('environment-variables'),
 		env: {
 			MY_ENVIRONMENT_VARIABLE: 'some value (updated)',
 		},
@@ -27,7 +27,7 @@ test('overrides environment variables provided through the CLI', async t => {
 
 test('errors if environment variables are not string values', async t => {
 	const options = {
-		cwd: cwd('invalid-environment-variables'),
+		cwd: resolveFixtureDirectory('invalid-environment-variables'),
 	};
 
 	const result = await t.throwsAsync(fixture(['environment-variables.js'], options));

@@ -4,11 +4,11 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
 
 test.serial('With invalid .snap file and --update-snapshots, skipped snaps are omitted', async t => {
-	await withTemporaryFixture(cwd('invalid-snapfile'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('invalid-snapfile'), async cwd => {
 		const env = {AVA_FORCE_CI: 'not-ci'};
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const reportPath = path.join(cwd, 'test.js.md');

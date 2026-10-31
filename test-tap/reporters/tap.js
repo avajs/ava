@@ -1,3 +1,4 @@
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import {test} from 'tap';
@@ -14,7 +15,7 @@ test(async t => {
 	const run = (type, sanitizers = []) => t => {
 		t.plan(1);
 
-		const logFile = fileURLToPath(new URL(`tap.${type.toLowerCase()}.${process.version.split('.')[0]}.log`, import.meta.url));
+		const logFile = fileURLToPath(new URL(`tap.${type.toLowerCase()}.${process.version.split('.', 1)[0]}.log`, import.meta.url));
 
 		const tty = new TTYStream({
 			columns: 200,
@@ -50,4 +51,5 @@ test(async t => {
 	t.test('tap reporter - second failFast run', run('failFast2'));
 	t.test('tap reporter - only run', run('only'));
 	t.test('tap reporter - edge cases', run('edgeCases'));
+	t.test('tap reporter - timeout', run('timeoutInSingleFile'));
 });

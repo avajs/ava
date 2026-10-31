@@ -1,4 +1,4 @@
-export default {
+const config = {
 	extensions: [],
 	files: ['tests/**/*'],
 	typescript: {
@@ -9,3 +9,5 @@ export default {
 		extensions: ['foo'],
 	},
 };
+
+export default config;

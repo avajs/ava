@@ -1,5 +1,5 @@
 import path from 'node:path';
-import {setTimeout as delay} from 'node:timers/promises';
+import {setImmediate as immediate, setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
@@ -98,7 +98,7 @@ test('fails if no assertions are run, unless so planned', t => ava(a => a.plan(0
 }));
 
 test('wrap non-assertion errors', t => {
-	const error = new Error();
+	const error = new Error('🙈');
 	return ava(() => {
 		throw error;
 	}).run().then(result => {
@@ -245,7 +245,7 @@ test('fails with thrown non-error object', t => {
 		t.equal(result.error.name, 'AssertionError');
 		t.equal(result.error.formattedDetails.length, 1);
 		t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
-		t.match(result.error.formattedDetails[0].formatted, /.*{.*\n.*foo: 'bar'/);
+		t.match(result.error.formattedDetails[0].formatted, /[^\n\r{\u{2028}\u{2029}]*\{.*\n.*foo: 'bar'/u);
 	});
 });
 
@@ -260,7 +260,7 @@ test('skipped assertions count towards the plan', t => {
 		a.notDeepEqual.skip({foo: 'bar'}, {baz: 'thud'});
 		a.like.skip({foo: 'bar'}, {foo: 'bar'});
 		a.throws.skip(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		a.notThrows.skip(() => {});
 		a.snapshot.skip({});
@@ -289,7 +289,7 @@ test('assertion.skip() is bound', t => {
 		(a.notDeepEqual.skip)({foo: 'bar'}, {baz: 'thud'});
 		(a.like.skip)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws.skip)(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		(a.notThrows.skip)(() => {});
 		(a.snapshot.skip)({});
@@ -308,7 +308,7 @@ test('assertion.skip() is bound', t => {
 });
 
 test('throws and notThrows work with promises', t => {
-	let asyncCalled = false;
+	let isAsyncCalled = false;
 	const instance = ava(a => {
 		a.plan(2);
 		return Promise.all([
@@ -316,7 +316,7 @@ test('throws and notThrows work with promises', t => {
 				throw new Error('foo');
 			}), {message: 'foo'}),
 			a.notThrowsAsync(delay(20).then(() => {
-				asyncCalled = true;
+				isAsyncCalled = true;
 			})),
 		]);
 	});
@@ -324,7 +324,7 @@ test('throws and notThrows work with promises', t => {
 		t.equal(result.passed, true);
 		t.equal(instance.planCount, 2);
 		t.equal(instance.assertCount, 2);
-		t.equal(asyncCalled, true);
+		t.equal(isAsyncCalled, true);
 	});
 });
 
@@ -351,7 +351,7 @@ test('multiple resolving and rejecting promises passed to t.throws/t.notThrows',
 });
 
 test('fails if test ends while there are pending assertions', t => ava(a => {
-	a.throwsAsync(Promise.reject(new Error()));
+	a.throwsAsync(Promise.reject(new Error('🙈')));
 }).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.name, 'AssertionError');
@@ -362,7 +362,7 @@ test('fails if test ends while there are pending assertions', t => ava(a => {
 test('fails if async test ends while there are pending assertions', t => ava(a => {
 	a.throwsAsync(async () => {
 		await delay(100);
-		throw new Error();
+		throw new Error('🙈');
 	});
 	return Promise.resolve();
 }).run().then(result => {
@@ -413,7 +413,9 @@ test('failing tests must not pass', t => ava.failing(a => {
 	t.equal(result.error.message, failingTestHint);
 }));
 
-test('failing tests must not return a fulfilled promise', t => ava.failing(a => Promise.resolve().then(() => a.pass())).run().then(result => {
+test('failing tests must not return a fulfilled promise', t => ava.failing(a => new Promise(resolve => { // eslint-disable-line unicorn/prefer-promise-try
+	resolve(a.pass());
+})).run().then(result => {
 	t.equal(result.passed, false);
 	t.equal(result.error.message, failingTestHint);
 }));
@@ -466,7 +468,7 @@ test('assertions are bound', t =>
 		(a.notDeepEqual)({foo: 'bar'}, {baz: 'thud'});
 		(a.like)({foo: 'bar'}, {foo: 'bar'});
 		(a.throws)(() => {
-			throw new Error();
+			throw new Error('🙈');
 		});
 		(a.notThrows)(() => {});
 		(a.truthy)(true);
@@ -517,7 +519,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 
 	const skipSnapshot = sinon.spy();
 
-	const test = new Test({
+	const avaTestInstance = new Test({
 		compareTestSnapshot: options => manager.compare(options),
 		skipSnapshot,
 		updateSnapshots: false,
@@ -530,7 +532,7 @@ test('snapshot assertions call options.skipSnapshot when skipped', async t => {
 		},
 	});
 
-	await test.run();
+	await avaTestInstance.run();
 
 	t.ok(skipSnapshot.calledTwice);
 	for (const [index, call] of skipSnapshot.getCalls().entries()) {
@@ -610,24 +612,22 @@ test('teardown failing test', t => {
 });
 
 test('teardown awaits promise', t => {
-	let tornDown = false;
+	let isTornDown = false;
 	const teardownPromise = delay(200).then(() => {
-		tornDown = true;
+		isTornDown = true;
 	});
 	return ava(a => {
 		a.teardown(() => teardownPromise);
 		a.pass();
 	}).run().then(result => {
 		t.equal(result.passed, true);
-		t.ok(tornDown);
+		t.ok(isTornDown);
 	});
 });
 
 test('teardowns run in reverse order', t => {
-	let resolveA;
-	const teardownA = sinon.stub().returns(new Promise(resolve => {
-		resolveA = resolve;
-	}));
+	const {promise: promiseA, resolve: resolveA} = Promise.withResolvers();
+	const teardownA = sinon.stub().returns(promiseA);
 	const teardownB = sinon.stub().resolves(delay(200));
 
 	return ava(a => {
@@ -775,4 +775,80 @@ test('t.passed value is false when teardown callback is executed for failing tes
 		onResult() {},
 		title: 'foo',
 	}).run();
+});
+
+test('teardown runs once when timeout finishes before promise settles', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.timeout(20);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const result = await instance.run();
+	t.equal(result.passed, false);
+	t.match(result.error.message, /timeout/);
+	// Allow the original test promise to settle and attempt a second finish().
+	testCompletion.resolve();
+	await immediate();
+	t.equal(teardown.callCount, 1);
+});
+
+test('teardown runs once when inactivity finishes before promise settles', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const runPromise = instance.run();
+	// Force the inactivity path used when a returned promise never settles promptly.
+	t.equal(typeof instance.finishDueToInactivity, 'function');
+	instance.finishDueToInactivity();
+	const result = await runPromise;
+	t.equal(result.passed, false);
+	t.match(result.error.message, /never resolved/);
+	testCompletion.resolve();
+	await immediate();
+	t.equal(teardown.callCount, 1);
+});
+
+test('finishing again waits for an in-progress teardown', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardownCompletion = Promise.withResolvers();
+	const teardownStarted = Promise.withResolvers();
+	const teardown = sinon.spy(async () => {
+		teardownStarted.resolve();
+		await teardownCompletion.promise;
+	});
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const runPromise = instance.run();
+	instance.finishDueToInactivity();
+	await teardownStarted.promise;
+
+	const finishPromise = instance.finish();
+	const shared = instance.finished;
+	t.ok(shared);
+	instance.finish();
+	t.equal(instance.finished, shared);
+	const finishedSpy = sinon.spy();
+	shared.then(finishedSpy);
+	testCompletion.resolve();
+	await immediate();
+	t.notOk(finishedSpy.called);
+	t.equal(teardown.callCount, 1);
+
+	teardownCompletion.resolve();
+	const result = await runPromise;
+	t.equal(await finishPromise, result);
+	t.equal(await shared, result);
+	t.notOk(result.passed);
+	t.match(result.error.message, /never resolved/);
+	t.equal(teardown.callCount, 1);
 });

@@ -75,7 +75,7 @@ AVA [can't trace uncaught exceptions](https://github.com/avajs/ava/issues/214) b
 
 By default AVA runs test files in worker threads. However, not all Node.js command line options (those that end up in [`process.execArgv`](https://nodejs.org/api/process.html#processexecargv)) are compatible with worker threads. You may get an error like this:
 
-```
+```text
 Error [ERR_WORKER_INVALID_EXEC_ARGV]: Initiated Worker with invalid execArgv flags: --title
 ```
 

@@ -3,11 +3,11 @@ import path from 'node:path';
 
 import test from '@ava/test';
 
-import {cwd, fixture} from '../helpers/exec.js';
+import {resolveFixtureDirectory, fixture} from '../helpers/exec.js';
 import {withTemporaryFixture} from '../helpers/with-temporary-fixture.js';
 
 function countMatches(string, regex) {
-	return [...string.matchAll(regex)].length;
+	return string.matchAll(regex).toArray().length;
 }
 
 function countStringMatches(string, patternString) {
@@ -26,7 +26,7 @@ function countStringMatches(string, patternString) {
 }
 
 test('snapshot corruption is reported to the console', async t => {
-	await withTemporaryFixture(cwd('corrupt'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('corrupt'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		await fs.writeFile(snapPath, Uint8Array.of(0x00));
 		const result = await t.throwsAsync(fixture([], {cwd}));
@@ -45,7 +45,7 @@ test('snapshot corruption is reported to the console', async t => {
 });
 
 test('with --update-snapshots, corrupt snapshot files are overwritten', async t => {
-	await withTemporaryFixture(cwd('corrupt'), async cwd => {
+	await withTemporaryFixture(resolveFixtureDirectory('corrupt'), async cwd => {
 		const snapPath = path.join(cwd, 'test.js.snap');
 		const env = {
 			AVA_FORCE_CI: 'not-ci',

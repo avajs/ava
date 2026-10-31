@@ -50,7 +50,7 @@ export namespace SharedWorker {
 			readonly teardown?: () => void;
 		};
 
-		export type Protocol<Data = unknown> = {
+		export type Protocol<Data = unknown> = { // eslint-disable-line @typescript-eslint/no-shadow
 			readonly available: Promise<void>;
 			readonly currentlyAvailable: boolean;
 			readonly protocol: 'ava-4';
@@ -58,12 +58,12 @@ export namespace SharedWorker {
 			subscribe: () => AsyncIterableIterator<ReceivedMessage<Data>>;
 		};
 
-		export type PublishedMessage<Data = unknown> = {
+		export type PublishedMessage<Data = unknown> = { // eslint-disable-line @typescript-eslint/no-shadow
 			readonly id: string;
 			replies: () => AsyncIterableIterator<ReceivedMessage<Data>>;
 		};
 
-		export type ReceivedMessage<Data = unknown> = {
+		export type ReceivedMessage<Data = unknown> = { // eslint-disable-line @typescript-eslint/no-shadow
 			readonly data: Data;
 			readonly id: string;
 			reply: (data: Data) => PublishedMessage<Data>;

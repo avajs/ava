@@ -29,15 +29,15 @@ test(async t => {
 	// npx tap -R spec test-tap/try-snapshot.js
 	//
 	// Ignore errors and make sure not to run tests with the `-b` (bail) option.
-	const updating = false;
+	const isUpdating = false;
 
 	const projectDir = fileURLToPath(new URL('fixture', import.meta.url));
 	const manager = snapshotManager.load({
 		file: path.join(projectDir, 'try-snapshot.js'),
 		projectDir,
 		fixedLocation: null,
-		updating,
-		recordNewSnapshots: updating,
+		updating: isUpdating,
+		recordNewSnapshots: isUpdating,
 	});
 
 	await t.test('try-commit snapshots serially', async t => {

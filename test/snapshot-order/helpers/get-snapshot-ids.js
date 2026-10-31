@@ -6,7 +6,7 @@ export default function getSnapshotIds(report) {
 		}
 	}
 
-	const ids = [...matchAll(report, /'index: ([-.\d]+)'/g)].map(match => Number(match[1]));
+	const ids = [...matchAll(report, /'index: ([\d\-.]+)'/g)].map(match => Number(match[1]));
 
 	return ids;
 }

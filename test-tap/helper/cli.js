@@ -1,5 +1,6 @@
 import childProcess from 'node:child_process';
 import path from 'node:path';
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -50,8 +51,8 @@ export function execCli(args, options, cb) {
 		stderr = child.stderr.toArray().then(chunks => chunks.join(''));
 	});
 
-	Promise.all([processPromise, stdout, stderr]).then(args => {
-		cb(...args);
+	Promise.all([processPromise, stdout, stderr]).then(values => {
+		cb(...values);
 	});
 
 	return child;
