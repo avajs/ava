@@ -1,5 +1,5 @@
 import path from 'node:path';
-import {setTimeout as delay} from 'node:timers/promises';
+import {setImmediate as immediate, setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
 
 import ciInfo from 'ci-info';
@@ -775,4 +775,80 @@ test('t.passed value is false when teardown callback is executed for failing tes
 		onResult() {},
 		title: 'foo',
 	}).run();
+});
+
+test('teardown runs once when timeout finishes before promise settles', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.timeout(20);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const result = await instance.run();
+	t.equal(result.passed, false);
+	t.match(result.error.message, /timeout/);
+	// Allow the original test promise to settle and attempt a second finish().
+	testCompletion.resolve();
+	await immediate();
+	t.equal(teardown.callCount, 1);
+});
+
+test('teardown runs once when inactivity finishes before promise settles', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardown = sinon.spy();
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const runPromise = instance.run();
+	// Force the inactivity path used when a returned promise never settles promptly.
+	t.equal(typeof instance.finishDueToInactivity, 'function');
+	instance.finishDueToInactivity();
+	const result = await runPromise;
+	t.equal(result.passed, false);
+	t.match(result.error.message, /never resolved/);
+	testCompletion.resolve();
+	await immediate();
+	t.equal(teardown.callCount, 1);
+});
+
+test('finishing again waits for an in-progress teardown', async t => {
+	const testCompletion = Promise.withResolvers();
+	const teardownCompletion = Promise.withResolvers();
+	const teardownStarted = Promise.withResolvers();
+	const teardown = sinon.spy(async () => {
+		teardownStarted.resolve();
+		await teardownCompletion.promise;
+	});
+	const instance = ava(async a => {
+		a.teardown(teardown);
+		a.pass();
+		await testCompletion.promise;
+	});
+	const runPromise = instance.run();
+	instance.finishDueToInactivity();
+	await teardownStarted.promise;
+
+	const finishPromise = instance.finish();
+	const shared = instance.finished;
+	t.ok(shared);
+	instance.finish();
+	t.equal(instance.finished, shared);
+	const finishedSpy = sinon.spy();
+	shared.then(finishedSpy);
+	testCompletion.resolve();
+	await immediate();
+	t.notOk(finishedSpy.called);
+	t.equal(teardown.callCount, 1);
+
+	teardownCompletion.resolve();
+	const result = await runPromise;
+	t.equal(await finishPromise, result);
+	t.equal(await shared, result);
+	t.notOk(result.passed);
+	t.match(result.error.message, /never resolved/);
+	t.equal(teardown.callCount, 1);
 });
