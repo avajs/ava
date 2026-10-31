@@ -10,13 +10,15 @@ This guide assumes you've already set up TypeScript for your project. Note that 
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/typescript-native?file=source%2Ftest.ts&terminal=test&view=editor)
 
-As of Node.js 22.18, TypeScript files can be [natively executed](https://nodejs.org/learn/typescript/run-natively) (with some limitations). Configure AVA's [`extensions` option](../06-configuration.md#options) to match your project, and configure TypeScript to match Node.js behavior:
+As of Node.js 22.18, TypeScript files can be [natively executed](https://nodejs.org/learn/typescript/run-natively) (with some limitations). Configure AVA's [`extensions` option](../06-configuration.md#options) to match your project, and ensure TypeScript is configured to match Node.js behavior:
 
 `package.json`:
 
 ```json
-"ava": {
-	"extensions": ["ts"]
+{
+	"ava": {
+		"extensions": ["ts"]
+	}
 }
 ```
 
@@ -50,13 +52,14 @@ If you're using TypeScript features that aren't erasable, you'll have to fall ba
 
 <details>
 <summary>Some popular loaders</summary>
-<br/>
+<br>
+In no particular order:
 
-- [`tsimp`](https://github.com/tapjs/tsimp) - previously recommended in a prior version of this recipe
-- [`ts-node`](https://github.com/TypeStrong/ts-node) - either `ts-node/esm` or `ts-node/register`
+- [`tsimp`](https://github.com/tapjs/tsimp)
+- [`ts-node`](https://github.com/TypeStrong/ts-node)
 - [`tsx`](https://github.com/privatenumber/tsx)
-- [`@septh/ts-run`](https://github.com/Septh/ts-run) - suggested in #3303
-- [`@nodejs-loaders/tsx`](https://github.com/nodejs-loaders/nodejs-loaders/tree/main/packages/tsx) - supports `.tsx` files
+- [`@septh/ts-run`](https://github.com/Septh/ts-run)
+- [`@nodejs-loaders/tsx`](https://github.com/nodejs-loaders/nodejs-loaders/tree/main/packages/tsx) — supports `.tsx` files
 - [`@swc-node/register`](https://github.com/swc-project/swc-node/tree/master/packages/register)
 - [`jiti/register`](https://github.com/unjs/jiti)
 
@@ -67,13 +70,13 @@ Install the loader [through `require`](../06-configuration.md#requiring-extra-mo
 `package.json`:
 
 ```json
-"ava": {
-	"extensions": ["ts"],
-	"require": ["[loader]"]
+{
+	"ava": {
+		"extensions": ["ts"],
+		"require": ["[loader]"]
+	}
 }
 ```
-
-*Previous versions of this recipe used the `nodeArguments` option with `--import=[loader]`. This is no longer necessary as Node.js now supports [loading ES modules using `require()`](https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require).*
 
 ## Writing tests
 
