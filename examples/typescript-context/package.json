@@ -2,21 +2,16 @@
 	"name": "ava-typescript-context",
 	"description": "TypeScript example for typing t.context",
 	"type": "module",
+	"engines": {
+		"node": "^22.20 || ^24.12 || >=26"
+	},
 	"scripts": {
 		"test": "ava"
 	},
 	"devDependencies": {
-		"@ava/typescript": "^5.0.0",
-		"@sindresorhus/tsconfig": "^6.0.0",
-		"ava": "^6",
-		"typescript": "~5.5.3"
-	},
-	"ava": {
-		"typescript": {
-			"compile": "tsc",
-			"rewritePaths": {
-				"source/": "build/"
-			}
-		}
+		"@ava/typescript": "^7",
+		"@sindresorhus/tsconfig": "^8",
+		"ava": "^8",
+		"typescript": "~6"
 	}
 }

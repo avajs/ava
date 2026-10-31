@@ -1,0 +1,17 @@
+{
+	"name": "ava-typescript-loader",
+	"description": "Module loader example for AVA with TypeScript",
+	"type": "module",
+	"engines": {
+		"node": "^22.20 || ^24.12 || >=26"
+	},
+	"scripts": {
+		"test": "ava"
+	},
+	"devDependencies": {
+		"@septh/ts-run": "^2.2.1",
+		"@sindresorhus/tsconfig": "^8",
+		"ava": "^8",
+		"typescript": "~6"
+	}
+}
