@@ -49,6 +49,8 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `concurrency`: max number of test files running at the same time (default: CPU cores)
 - `workerThreads`: use worker threads to run tests (enabled by default). If `false`, tests will run in child processes
 - `failFast`: stop running further tests once a test fails
+- `randomize`: opt in to randomized test start order within each file. Defaults to `false`. A seed is generated and reported when none is configured.
+- `seed`: a non-empty string of letters, digits, underscores, dots or hyphens. Providing a seed enables randomization and replays that order. Also available as `--randomize` and `--seed=<value>` on the command line. Explicit `test.serial()` declarations and hooks retain their order; `--serial` executes ordinary tests one at a time in seeded order. File scheduling is unchanged. The seed reproduces start order, not asynchronous completion or external timing. Filtering tests retains the relative seeded order; the same seed is retained across watch reruns.
 - `failWithoutAssertions`: if `false`, does not fail a test if it doesn't run [assertions](./03-assertions.md)
 - `environmentVariables`: specifies environment variables to be made available to the tests. The environment variables defined here override the ones from `process.env`
 - `serial`: if `true`, prevents parallel execution of tests within a file
