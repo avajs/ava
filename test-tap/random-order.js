@@ -1,3 +1,5 @@
+import {readFile, rm} from 'node:fs/promises';
+
 import {test} from 'tap';
 
 import {normalizeSeed} from '../lib/random-order.js';
@@ -64,8 +66,8 @@ test('seed generation and validation', t => {
 	t.end();
 });
 
-const cli = args => new Promise(resolve => {
-	execCli(args, {dirname: 'fixture/random-order'}, (error, stdout, stderr) => {
+const cli = (args, file = 'test.js', env = {}) => new Promise(resolve => {
+	execCli([file, ...args], {dirname: 'fixture/random-order', env}, (error, stdout, stderr) => {
 		resolve({
 			error, stdout, stderr, order: `${stdout}\n${stderr}`.matchAll(/ORDER:([^\n\r]+)/gu).map(match => match[1]).toArray(),
 		});
@@ -92,4 +94,24 @@ test('CLI replay works in threads and processes, including TAP output', async t 
 	const replay = await cli([`--seed=${seed}`, '--serial']);
 	t.error(replay.error, replay.stderr);
 	t.same(replay.order, generated.order);
+});
+
+test('seeded CLI preserves snapshot identity, hooks, skipped tests and todos', async t => {
+	const snapshot = new URL('fixture/random-order/snapshots.js.snap', import.meta.url);
+	const report = new URL('fixture/random-order/snapshots.js.md', import.meta.url);
+	t.teardown(async () => {
+		await rm(snapshot, {force: true});
+		await rm(report, {force: true});
+	});
+	const env = {AVA_FORCE_CI: 'not-ci'};
+	const first = await cli(['--seed=first', '--update-snapshots'], 'snapshots.js', env);
+	t.error(first.error, first.stderr);
+	const before = await readFile(snapshot);
+	const reportBefore = await readFile(report, 'utf8');
+	const second = await cli(['--seed=second', '--update-snapshots'], 'snapshots.js', env);
+	t.error(second.error, second.stderr);
+	t.same(await readFile(snapshot), before);
+	t.equal(await readFile(report, 'utf8'), reportBefore);
+	const replay = await cli(['--seed=third', '--no-worker-threads'], 'snapshots.js', env);
+	t.error(replay.error, replay.stderr);
 });
