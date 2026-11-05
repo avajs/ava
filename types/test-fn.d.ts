@@ -326,4 +326,10 @@ export type Meta = {
 	Directory where snapshots are stored.
 	*/
 	snapshotDirectory: string;
+
+	/**
+	Whether AVA is running with a debugger attached (or via the `debug` command).
+	When `true`, the timeout option has been disabled to help with debugging.
+	*/
+	debugMode: boolean;
 };

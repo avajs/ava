@@ -14,7 +14,7 @@ Now run a specific test file:
 npx ava debug test.js
 ```
 
-The DevTools should connect automatically and your tests will run. Use DevTools to set breakpoints, or use the `debugger` keyword.
+The DevTools should connect automatically and your tests will run. Use DevTools to set breakpoints, or use the `debugger` keyword. AVA disables the timeout option while debugging; `test.meta.debugMode` is `true` so your own timers can follow suit.
 
 Run with the `--break` option to ensure the DevTools hit a breakpoint right before the test file is loaded:
 

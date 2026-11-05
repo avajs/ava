@@ -10,3 +10,7 @@ test('meta.snapshotDirectory', t => {
 	t.regex(meta.snapshotDirectory, /snapshot-fixture/);
 });
 
+test('meta.debugMode is false outside of debugging', t => {
+	t.false(test.meta.debugMode);
+});
+

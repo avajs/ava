@@ -14,6 +14,18 @@ const promiseEnd = (runner, next) => new Promise(resolve => {
 	next(runner);
 }).then(() => runner);
 
+test('test.meta.debugMode defaults to false', t => {
+	const runner = new Runner({file: import.meta.url});
+	t.equal(runner.chain.meta.debugMode, false);
+	t.end();
+});
+
+test('test.meta.debugMode is true when Runner is constructed with debugMode', t => {
+	const runner = new Runner({file: import.meta.url, debugMode: true});
+	t.equal(runner.chain.meta.debugMode, true);
+	t.end();
+});
+
 test('nested tests and hooks aren’t allowed', t => {
 	t.plan(1);
 

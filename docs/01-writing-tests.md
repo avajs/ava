@@ -282,11 +282,16 @@ Available properties:
 
 * `file`: path to the test file, as a file URL string
 * `snapshotDirectory`: directory where snapshots are stored, as a file URL string
+* `debugMode`: `true` when AVA is running with a debugger attached (or via the `debug` command). The timeout option is disabled in that mode; use this flag to adjust your own timers or waits accordingly.
 
 ```js
 import test from 'ava';
 
 console.log('Test file currently being run:', test.meta.file);
+
+if (test.meta.debugMode) {
+	// Skip short timeouts while debugging
+}
 ```
 
 ## Reusing test logic through macros
