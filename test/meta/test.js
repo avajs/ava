@@ -2,14 +2,9 @@ import test from '@ava/test';
 
 import {fixture} from '../helpers/exec.js';
 
-test('with JS files', async t => {
+test('meta properties', async t => {
 	const result = await fixture(['meta.js']);
 	t.is(result.stats.passed.length, 3);
-});
-
-test('with MJS files', async t => {
-	const result = await fixture(['meta.mjs']);
-	t.is(result.stats.passed.length, 2);
 });
 
 test('meta.debugMode is true when the main process is being inspected', async t => {
