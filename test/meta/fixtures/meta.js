@@ -9,3 +9,7 @@ test('meta.snapshotDirectory', t => {
 	t.true(meta.snapshotDirectory.startsWith('file://'));
 	t.regex(meta.snapshotDirectory, /snapshot-fixture/);
 });
+
+test('meta.debugMode is false outside of debugging', t => {
+	t.false(test.meta.debugMode);
+});
