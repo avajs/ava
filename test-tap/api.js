@@ -492,23 +492,3 @@ test('run from package.json folder by default', async t => {
 			t.equal(runStatus.stats.passedTests, 1);
 		});
 });
-
-test('exposes test.meta.debugMode when debugging', async t => {
-	const api = await apiCreator({
-		workerThreads: false,
-		// Mimic CLI debug mode without opening an inspector (no host/port).
-		debug: {
-			active: true,
-			break: false,
-			files: [],
-			host: undefined,
-			port: undefined,
-		},
-	});
-
-	return api.run({files: [path.join(__dirname, 'fixture/meta-debug-mode.js')]})
-		.then(runStatus => {
-			t.equal(runStatus.stats.passedTests, 1);
-			t.equal(runStatus.stats.failedTests, 0);
-		});
-});

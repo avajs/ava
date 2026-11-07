@@ -9,5 +9,12 @@ test('with JS files', async t => {
 
 test('with MJS files', async t => {
 	const result = await fixture(['meta.mjs']);
-	t.is(result.stats.passed.length, 3);
+	t.is(result.stats.passed.length, 2);
+});
+
+test('meta.debugMode is true when the main process is being inspected', async t => {
+	const result = await fixture(['debug-mode.js'], {
+		env: {AVA_FORCE_CI: 'not-ci', NODE_OPTIONS: '--inspect=0'},
+	});
+	t.is(result.stats.passed.length, 1);
 });
