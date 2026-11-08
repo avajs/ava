@@ -186,20 +186,32 @@ export type BeforeFn<Context = unknown> = {
 	skip: HookSkipFn<Context>;
 };
 
+/**
+Explain why a test is failing, skipped, or still to-do. Must be a non-empty string.
+*/
+export type BecauseFn = (reason: string) => void;
+
+/**
+Returned by irregular tests so you can chain `.because(reason)`.
+*/
+export type BecauseTrailer = {
+	because: BecauseFn;
+};
+
 export type FailingFn<Context = unknown> = {
 	/**
 	Declare a concurrent test that is expected to fail.
 	Additional arguments are passed to the implementation or macro.
 	*/
-	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): BecauseTrailer;
 
 	/**
 	Declare a concurrent test, using a macro, that is expected to fail.
 	Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	*/
-	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): BecauseTrailer;
 
-	only: OnlyFn<Context>;
+	only: FailingOnlyFn<Context>;
 	/**
 	Declare a test that only runs when `shouldRun` is true; otherwise the test is skipped.
 	*/
@@ -235,6 +247,20 @@ export type OnlyFn<Context = unknown> = {
 	Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
 	*/
 	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+};
+
+export type FailingOnlyFn<Context = unknown> = {
+	/**
+	Declare a test that is expected to fail. Only this test and others declared with `.only()` are run.
+	Additional arguments are passed to the implementation or macro.
+	*/
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): BecauseTrailer;
+
+	/**
+	Declare a test that uses a macro and is expected to fail. Only this test and others declared with `.only()` are run.
+	Additional arguments are passed to the macro. The macro is responsible for generating a unique test title.
+	*/
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): BecauseTrailer;
 };
 
 /**
@@ -278,12 +304,12 @@ export type SkipFn<Context = unknown> = {
 	/**
 	Skip this test.
 	*/
-	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): BecauseTrailer;
 
 	/**
 	Skip this test.
 	*/
-	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): void;
+	<Args extends unknown[]>(macro: Macro<Args, Context>, ...args: Args): BecauseTrailer;
 };
 
 /**
@@ -294,7 +320,7 @@ export type SkipIfFn<Chain> = (shouldSkip: boolean) => Chain;
 /**
 Declare a test that should be implemented later.
 */
-export type TodoFn = (title: string) => void;
+export type TodoFn = (title: string) => BecauseTrailer;
 
 export type MacroDeclarationOptions<Args extends unknown[], Context = unknown> = {
 	/**
