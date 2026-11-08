@@ -192,7 +192,7 @@ test.failing('does foo', t => {
 }).because('waiting on some/repo#123');
 ```
 
-```
+```console
 ✔ [expected fail] does foo
   - waiting on some/repo#123
 ```
