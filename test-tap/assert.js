@@ -1118,6 +1118,27 @@ test('.throwsAsync()', gather(t => {
 		],
 	});
 
+	// Fails because the function throws a falsy value synchronously
+	throwsAsyncFails(t, () => assertions.throwsAsync(() => {
+		throw null; // eslint-disable-line no-throw-literal
+	}, {any: true}, 'message'), {
+		assertion: 't.throwsAsync()',
+		message: 'message',
+		formattedDetails: [
+			{label: 'Function threw synchronously. Use `t.throws()` instead:', formatted: /null/},
+		],
+	});
+
+	throwsAsyncFails(t, () => assertions.throwsAsync(() => {
+		throw undefined; // eslint-disable-line no-throw-literal
+	}, {any: true}, 'message'), {
+		assertion: 't.throwsAsync()',
+		message: 'message',
+		formattedDetails: [
+			{label: 'Function threw synchronously. Use `t.throws()` instead:', formatted: /undefined/},
+		],
+	});
+
 	// Fails because the function did not return a promise
 	throwsAsyncFails(t, () => assertions.throwsAsync(() => {}, undefined, 'message'), {
 		assertion: 't.throwsAsync()',
