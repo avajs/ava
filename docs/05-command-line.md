@@ -32,6 +32,9 @@ Options:
   -c, --concurrency        Max number of test files running at the same time
                            (default: CPU cores)                         [number]
       --fail-fast          Stop after first test failure               [boolean]
+      --find-related-tests Treat positional arguments as changed source files and
+                           run only the test files that depend on them
+                                                                        [boolean]
   -m, --match              Only run tests with matching title (can be repeated)
                                                                         [string]
       --no-worker-threads  Don't use worker threads                    [boolean]
@@ -79,6 +82,24 @@ Files inside `node_modules` are *always* ignored. So are files starting with `_`
 * `**/tests/**/fixtures/**/*`
 
 When using `npm test`, you can pass positional arguments directly `npm test test2.js`, but flags needs to be passed like `npm test -- --verbose`.
+
+## Running tests related to changed files
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/avajs/ava/tree/main/examples/related-tests?file=package.json&terminal=test&view=editor)
+
+The `--find-related-tests` flag treats the positional arguments as *changed source files*, like `--findRelatedTests` in Jest. AVA analyzes the dependencies of your test files and runs only the test files that depend on the provided files, directly or transitively. This is useful in monorepos and pre-commit workflows, for instance with [`lint-staged`](https://github.com/lint-staged/lint-staged):
+
+```json
+{
+  "lint-staged": {
+    "*.js": "ava --find-related-tests"
+  }
+}
+```
+
+The provided files must be plain file paths (relative to the current working directory, or absolute), not glob patterns. Files that do not exist or are directories cause an error. If no test file depends on the provided files, AVA warns and runs *all* test files as configured, so that a change AVA could not statically trace still gets tested.
+
+The dependency analysis follows exact imports only, as resolved by Node.js. Fully dynamic imports (for instance `` await import(variable) ``) create no dependency link, so their dependent tests are not selected. The `--match`, `--concurrency`, `--serial` and other run options keep working as usual, but this flag is not available in [watch mode](./recipes/watch-mode.md) or while debugging.
 
 ## Running tests with matching titles
 

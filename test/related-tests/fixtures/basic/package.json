@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "ava": {
+    "files": ["**/*.test.js"]
+  }
+}
