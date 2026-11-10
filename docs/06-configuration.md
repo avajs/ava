@@ -46,6 +46,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `watchMode`: See the [watch mode recipe for details](https://github.com/avajs/ava/blob/main/docs/recipes/watch-mode.md)
 - `match`: not typically useful in the `package.json` configuration, but equivalent to [specifying `--match` on the CLI](./05-command-line.md#running-tests-with-matching-titles)
 - `cache`: defaults to `true` to cache compiled files under `node_modules/.cache/ava`. If `false`, files are cached in a temporary directory instead
+- `tempDir`: where AVA stores its temporary state, relative to the project directory. The only allowed value is `'.ava'`; any other value is a configuration error. Defaults to `node_modules/.cache/ava`. Set this if you'd rather AVA did not create a `node_modules` directory, for instance when using Yarn's Plug'n'Play, and add `.ava` to your `.gitignore`
 - `concurrency`: max number of test files running at the same time (default: CPU cores)
 - `workerThreads`: use worker threads to run tests (enabled by default). If `false`, tests will run in child processes
 - `failFast`: stop running further tests once a test fails
