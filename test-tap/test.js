@@ -111,6 +111,21 @@ test('wrap non-assertion errors', t => {
 	});
 });
 
+test('wrap DOMException with useful details instead of empty concordance output', t => {
+	const error = new DOMException('Invalid selector', 'SyntaxError');
+	return ava(() => {
+		throw error;
+	}).run().then(result => {
+		t.equal(result.passed, false);
+		t.equal(result.error.message, 'Error thrown in test');
+		t.equal(result.error.formattedDetails.length, 1);
+		t.equal(result.error.formattedDetails[0].label, 'Error thrown in test:');
+		t.match(result.error.formattedDetails[0].formatted, /Invalid selector/);
+		t.notMatch(result.error.formattedDetails[0].formatted, /^\S+ \{\}$/);
+		t.match(result.error.cause.stack, /Invalid selector/);
+	});
+});
+
 test('title returns the test title', t => {
 	t.plan(1);
 	return new Test({
