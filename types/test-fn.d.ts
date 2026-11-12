@@ -117,6 +117,10 @@ export type TestFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	/** Declare a cleanup hook that runs before and after all tests. */
+	cleanup: CleanupFn<Context>;
+	/** Declare a cleanup hook that runs before and after each test. */
+	cleanupEach: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	macro: MacroFn<Context>;
 	meta: Meta;
@@ -181,6 +185,20 @@ export type BeforeFn<Context = unknown> = {
 	Declare a hook that is run once, before all tests.
 	Additional arguments are passed to the implementation or macro.
 	*/
+	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	skip: HookSkipFn<Context>;
+};
+
+export type CleanupFn<Context = unknown> = {
+	/**
+	 * Declare a cleanup hook pair. Additional arguments are passed to the implementation or macro.
+	 */
+	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
+
+	/**
+	 * Declare a cleanup hook pair. Additional arguments are passed to the implementation or macro.
+	 */
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	skip: HookSkipFn<Context>;
@@ -257,6 +275,10 @@ export type SerialFn<Context = unknown> = {
 	afterEach: AfterFn<Context>;
 	before: BeforeFn<Context>;
 	beforeEach: BeforeFn<Context>;
+	/** Declare a cleanup hook that runs before and after all tests. */
+	cleanup: CleanupFn<Context>;
+	/** Declare a cleanup hook that runs before and after each test. */
+	cleanupEach: CleanupFn<Context>;
 	failing: FailingFn<Context>;
 	only: OnlyFn<Context>;
 	/**
