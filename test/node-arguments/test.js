@@ -66,6 +66,9 @@ test('reports a single actionable error when worker threads cannot be created du
 	const {internalErrors, getError} = error.stats;
 	t.is(internalErrors.length, 1);
 	t.regex(getError(internalErrors[0]).message, /^Worker threads cannot be used with the arguments passed to Node\.js\..+`workerThreads`.+`explicitlyForwardNodeArguments`/s);
+
+	// The reporter should not repeat the message when printing the stack.
+	t.is(error.stdout.split('Worker threads cannot be used').length - 1, 1);
 });
 
 test('detects incomplete --node-arguments', async t => {
