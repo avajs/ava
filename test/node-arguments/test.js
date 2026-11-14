@@ -33,6 +33,29 @@ test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker pro
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
+// The test helper starts AVA with `--import`, which is how these tests observe whether `process.execArgv` is forwarded.
+for (const [workerType, flags] of [['thread', []], ['process', ['--no-worker-threads']]]) {
+	test(`arguments passed to node are forwarded to worker ${workerType} by default`, async t => {
+		const options = {
+			cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+		};
+
+		const result = await fixture([...flags, 'forwarded.js'], options);
+
+		t.is(result.stats.passed.length, 1);
+	});
+
+	test(`\`explicitlyForwardNodeArguments: false\` prevents forwarding arguments passed to node to worker ${workerType}`, async t => {
+		const options = {
+			cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+		};
+
+		const result = await fixture(['--config=disabled.config.js', ...flags, 'not-forwarded.js'], options);
+
+		t.is(result.stats.passed.length, 1);
+	});
+}
+
 test('detects incomplete --node-arguments', async t => {
 	const options = {
 		cwd: resolveFixtureDirectory('node-arguments'),

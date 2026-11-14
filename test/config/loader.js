@@ -118,6 +118,8 @@ test.serial('throws an error if a config file contains `ava` property', notOk('c
 
 test.serial('throws an error if a config file contains a non-function `filterNodeArgumentsForWorkerThreads` property', notOk('non-function'));
 
+test.serial('throws an error if a config file contains a non-boolean `explicitlyForwardNodeArguments` property', notOk('non-boolean-explicit-forward'));
+
 test.serial('throws an error if a config file contains a non-object `nonSemVerExperiments` property', notOk('non-object-experiments'));
 
 test.serial('throws an error if a config file enables an unsupported experiment', notOk('unsupported-experiments'));
