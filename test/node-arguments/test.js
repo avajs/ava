@@ -56,6 +56,18 @@ for (const [workerType, flags] of [['thread', []], ['process', ['--no-worker-thr
 	});
 }
 
+test('reports a single actionable error when worker threads cannot be created due to node arguments', async t => {
+	const options = {
+		cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+	};
+
+	const error = await t.throwsAsync(fixture(['--node-arguments=--title=x', 'forwarded.js', 'not-forwarded.js'], options));
+
+	const {internalErrors, getError} = error.stats;
+	t.is(internalErrors.length, 1);
+	t.regex(getError(internalErrors[0]).message, /^Worker threads cannot be used with the arguments passed to Node\.js\..+`workerThreads`.+`explicitlyForwardNodeArguments`/s);
+});
+
 test('detects incomplete --node-arguments', async t => {
 	const options = {
 		cwd: resolveFixtureDirectory('node-arguments'),
