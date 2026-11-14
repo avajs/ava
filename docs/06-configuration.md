@@ -59,6 +59,7 @@ Arguments passed to the CLI will always take precedence over the CLI options con
 - `require`: [extra modules to load before test files](#requiring-extra-modules)
 - `timeout`: Timeouts in AVA behave differently than in other test frameworks. AVA resets a timer after each test, forcing tests to quit if no new test results were received within the specified timeout. This can be used to handle stalled tests. See our [timeout documentation](./07-test-timeouts.md) for more options.
 - `nodeArguments`: Configure Node.js arguments used to launch worker processes.
+- `explicitlyForwardNodeArguments`: if `false`, [arguments passed to `node`](#forwarding-arguments-passed-to-node) when starting AVA are not forwarded to workers (default: true). This option will be removed in the next major release
 - `sortTestFiles`: A comparator function to sort test files with. Available only when using a `ava.config.*` file. See an example use case [here](recipes/splitting-tests-ci.md).
 - `utilizeParallelBuilds`: If `false`, disable [parallel builds](/docs/recipes/splitting-tests-ci.md) (default: true)
 
@@ -272,6 +273,22 @@ These may also export a function which is then invoked, and can receive argument
 The `nodeArguments` configuration may be used to specify additional arguments for launching worker processes. These are combined with `--node-arguments` passed on the CLI and any arguments passed to the `node` binary when starting AVA.
 
 [CLI]: ./05-command-line.md
+
+## Forwarding arguments passed to `node`
+
+By default, arguments passed to the `node` binary when starting AVA (`process.execArgv`) are explicitly forwarded to the workers. Worker threads reject certain arguments, such as `--title` and `--max-old-space-size`, so forwarding them causes an `ERR_WORKER_INVALID_EXEC_ARGV` error.
+
+In a config file or `package.json`, set `explicitlyForwardNodeArguments` to `false` to stop forwarding them. Only `nodeArguments` and `--node-arguments` are then passed to the workers (along with arguments AVA adds itself). Arguments you provide this way are still validated by Node.js, and may still cause that error.
+
+```js
+export default {
+	explicitlyForwardNodeArguments: false
+}
+```
+
+This also applies to worker processes. Be aware that Node.js no longer applies arguments such as `--import`, `--require` and `--experimental-vm-modules` to the workers when you set this to `false`.
+
+**This option is temporary.** In the next major release AVA will stop forwarding `process.execArgv` and the option will be removed.
 
 ## Node arguments filter for worker threads
 

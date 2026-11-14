@@ -11,3 +11,11 @@ test('combines arguments', async t => {
 	);
 	t.end();
 });
+
+test('does not include process.execArgv unless explicitly forwarded', async t => {
+	t.same(
+		await normalizeNodeArguments(['--import setup.js'], '--throw-deprecation', false),
+		['--import setup.js', '--throw-deprecation'],
+	);
+	t.end();
+});
