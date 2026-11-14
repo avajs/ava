@@ -288,9 +288,13 @@ export default {
 
 This also applies to worker processes. Be aware that Node.js no longer applies arguments such as `--import`, `--require` and `--experimental-vm-modules` to the workers when you set this to `false`.
 
+In a config file you can access `process.execArgv` yourself and compute `nodeArguments` from it, if you want to forward only some of the arguments. See [replacing the filter](#replacing-the-filter) for an example.
+
 **This option is temporary.** In the next major release AVA will stop forwarding `process.execArgv` and the option will be removed.
 
 ## Node arguments filter for worker threads
+
+**This option is deprecated** and will be removed in the next major release. Set `explicitlyForwardNodeArguments` to `false` and compute `nodeArguments` instead, as described below.
 
 In a config file only, `filterNodeArgumentsForWorkerThreads` may provide a function used for filtering `nodeArguments` sent to worker threads. This enables excluding arguments that throw if sent to a thread. The filter is ignored by worker processes.
 
@@ -305,3 +309,24 @@ export default {
 	filterNodeArgumentsForWorkerThreads: argument => !processOnly.has(argument)
 }
 ```
+
+### Replacing the filter
+
+In a config file, set `explicitlyForwardNodeArguments` to `false` and compute `nodeArguments` yourself. `process.execArgv` contains the arguments passed to the `node` binary when starting AVA, so you can filter it and add other arguments. This lets you decide exactly which arguments reach the workers.
+
+`ava.config.js`:
+```js
+import process from 'node:process';
+
+const processOnly = new Set([
+	'--allow-natives-syntax',
+	'--expose-gc'
+]);
+
+export default {
+	explicitlyForwardNodeArguments: false,
+	nodeArguments: process.execArgv.filter(argument => !processOnly.has(argument))
+}
+```
+
+Unlike `filterNodeArgumentsForWorkerThreads`, this also applies to worker processes. Arguments passed using `--node-arguments` are not filtered.
