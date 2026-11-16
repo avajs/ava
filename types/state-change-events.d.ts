@@ -84,6 +84,10 @@ export type StateChangeEvent = {
 	todo: boolean;
 	testFile: string;
 } | {
+	type: 'randomize-seed';
+	seed: number;
+	testFile: string;
+} | {
 	type: 'selected-test';
 	title: string;
 	knownFailing: boolean;
