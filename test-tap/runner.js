@@ -833,3 +833,103 @@ test('hooks run concurrently, but can be serialized', t => {
 		});
 	});
 });
+
+test('randomize: concurrent tests run in the shuffled order for the given seed', t => {
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url, randomize: true, randomSeed: 42}), runner => {
+		for (const title of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) {
+			runner.chain(title, a => {
+				array.push(title);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		// Shuffled using seed 42, see lib/shuffle.js.
+		t.strictSame(array, ['c', 'h', 'b', 'a', 'g', 'f', 'd', 'e']);
+	});
+});
+
+test('randomize: serial tests run first and keep their source order', t => {
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url, randomize: true, randomSeed: 42}), runner => {
+		runner.chain('concurrent 1', a => {
+			array.push('concurrent 1');
+			a.pass();
+		});
+		runner.chain.serial('serial 1', a => {
+			array.push('serial 1');
+			a.pass();
+		});
+		runner.chain('concurrent 2', a => {
+			array.push('concurrent 2');
+			a.pass();
+		});
+		runner.chain.serial('serial 2', a => {
+			array.push('serial 2');
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(array.slice(0, 2), ['serial 1', 'serial 2']);
+		t.strictSame(new Set(array.slice(2)), new Set(['concurrent 1', 'concurrent 2']));
+	});
+});
+
+test('randomize: in serial mode the concurrent tests are shuffled, declared serial tests are not', t => {
+	const array = [];
+	return promiseEnd(new Runner({
+		file: import.meta.url,
+		randomize: true,
+		randomSeed: 42,
+		serial: true,
+	}), runner => {
+		runner.chain.serial('serial 1', a => {
+			array.push('serial 1');
+			a.pass();
+		});
+		for (const title of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) {
+			runner.chain(title, a => {
+				array.push(title);
+				a.pass();
+			});
+		}
+
+		runner.chain.serial('serial 2', a => {
+			array.push('serial 2');
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(array, ['serial 1', 'serial 2', 'c', 'h', 'b', 'a', 'g', 'f', 'd', 'e']);
+	});
+});
+
+test('randomize: emits the seed as a state change event', t => {
+	const events = [];
+	const runner = new Runner({file: import.meta.url, randomize: true, randomSeed: 42});
+	runner.on('stateChange', ({data: evt}) => {
+		if (evt.type === 'randomize-seed') {
+			events.push(evt);
+		}
+	});
+
+	return promiseEnd(runner, r => {
+		r.chain('test', a => {
+			a.pass();
+		});
+	}).then(() => {
+		t.strictSame(events, [{type: 'randomize-seed', seed: 42}]);
+	});
+});
+
+test('randomize: without the option, concurrent tests run in source order', t => {
+	const array = [];
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		for (const title of ['a', 'b', 'c']) {
+			runner.chain(title, a => {
+				array.push(title);
+				a.pass();
+			});
+		}
+	}).then(() => {
+		t.strictSame(array, ['a', 'b', 'c']);
+	});
+});
