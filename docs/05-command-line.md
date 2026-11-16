@@ -37,6 +37,7 @@ Options:
       --no-worker-threads  Don't use worker threads                    [boolean]
       --node-arguments     Additional Node.js arguments for launching worker
                            processes (specify as a single string)       [string]
+      --randomize          Run tests in a random order                 [boolean]
   -s, --serial             Run tests serially                          [boolean]
   -t, --tap                Generate TAP output                         [boolean]
   -T, --timeout            Set global timeout (milliseconds or human-readable,
