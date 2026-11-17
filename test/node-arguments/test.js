@@ -33,6 +33,44 @@ test('`filterNodeArgumentsForWorkerThreads` configuration ignored for worker pro
 	t.snapshot(result.stats.passed, 'tests pass');
 });
 
+// The test helper starts AVA with `--import`, which is how these tests observe whether `process.execArgv` is forwarded.
+for (const [workerType, flags] of [['thread', []], ['process', ['--no-worker-threads']]]) {
+	test(`arguments passed to node are forwarded to worker ${workerType} by default`, async t => {
+		const options = {
+			cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+		};
+
+		const result = await fixture([...flags, 'forwarded.js'], options);
+
+		t.is(result.stats.passed.length, 1);
+	});
+
+	test(`\`explicitlyForwardNodeArguments: false\` prevents forwarding arguments passed to node to worker ${workerType}`, async t => {
+		const options = {
+			cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+		};
+
+		const result = await fixture(['--config=disabled.config.js', ...flags, 'not-forwarded.js'], options);
+
+		t.is(result.stats.passed.length, 1);
+	});
+}
+
+test('reports a single actionable error when worker threads cannot be created due to node arguments', async t => {
+	const options = {
+		cwd: resolveFixtureDirectory('explicitly-forward-node-arguments'),
+	};
+
+	const error = await t.throwsAsync(fixture(['--node-arguments=--title=x', 'forwarded.js', 'not-forwarded.js'], options));
+
+	const {internalErrors, getError} = error.stats;
+	t.is(internalErrors.length, 1);
+	t.regex(getError(internalErrors[0]).message, /^Worker threads cannot be used with the arguments passed to Node\.js\..+`workerThreads`.+`explicitlyForwardNodeArguments`/s);
+
+	// The reporter should not repeat the message when printing the stack.
+	t.is(error.stdout.split('Worker threads cannot be used').length - 1, 1);
+});
+
 test('detects incomplete --node-arguments', async t => {
 	const options = {
 		cwd: resolveFixtureDirectory('node-arguments'),
