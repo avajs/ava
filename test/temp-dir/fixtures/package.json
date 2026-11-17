@@ -1,0 +1,9 @@
+{
+	"type": "module",
+	"ava": {
+		"files": [
+			"fails.js"
+		],
+		"tempDir": ".ava"
+	}
+}

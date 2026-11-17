@@ -216,7 +216,7 @@ AVA maintains some temporary state. You can clear this state by running:
 npx ava reset-cache
 ```
 
-This deletes all files in the `node_modules/.cache/ava` directory.
+This deletes all files in the `node_modules/.cache/ava` directory, or in the directory set through the [`tempDir` option](./06-configuration.md#options).
 
 ## Reporters
 
