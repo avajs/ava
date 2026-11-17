@@ -1,4 +1,4 @@
-// DRAFT: internal to AVA, not for plugin authors and not exported from any entrypoint. The messages that the host and
+// Internal to AVA, not for plugin authors and not exported from any entrypoint. The messages that the host and
 // the plugin loader exchange over one MessagePort per plugin. The loader implements `negotiateProtocol()` and
 // `observe()` on top of them. See worklog/plugin-protocol.md.
 import type {Plugin} from './plugin-protocol.js';
@@ -16,6 +16,29 @@ export type HostMessage = {
 	What the plugin needs to know to configure itself.
 	*/
 	readonly context: Plugin.ConfigureContext;
+} | {
+	/**
+	Configuration and stdout claims have been validated for every plugin. Allows an active plugin's
+	negotiateProtocol() call to resolve.
+	*/
+	readonly type: 'activate';
+} | {
+	/**
+	Confirms an inactive configure result. The loader rejects negotiation only after the host has recorded
+	inactivity, so a quiet thread exit cannot race ahead of its configuration reply.
+	*/
+	readonly type: 'deactivate';
+} | {
+	/**
+	Rejects pending negotiation after a host-side startup failure, allowing the plugin's finally cleanup
+	to run before its thread is terminated.
+	*/
+	readonly type: 'reject';
+	readonly error: {
+		readonly message: string;
+		readonly name: string;
+		readonly stack: string;
+	};
 } | {
 	/**
 	Asks the plugin to stop immediately, e.g. after an acknowledgement timeout.

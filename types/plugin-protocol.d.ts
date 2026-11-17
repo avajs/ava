@@ -1,4 +1,4 @@
-// DRAFT: not exported from any entrypoint yet.
+// Experimental and internal: not exported from any entrypoint.
 import type {SerializedError} from './state-change-events.js';
 
 export namespace Plugin {
