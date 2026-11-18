@@ -245,3 +245,14 @@ test('skipIf(false).runIf(true) does not skip', t => {
 	t.is(calls.length, 1);
 	t.is(calls[0].metadata.skipped, undefined);
 });
+
+test('chain calls return the value from the handler', t => {
+	const trailer = {because() {}};
+	const chain = createChain(() => trailer, {}, {});
+
+	t.is(chain.failing('title', () => {}), trailer);
+	t.is(chain.skip('title', () => {}), trailer);
+	t.is(chain.todo('title'), trailer);
+	t.is(chain.serial.failing.only('title', () => {}), trailer);
+	t.is(chain.skipIf(true)('title', () => {}), trailer);
+});

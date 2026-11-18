@@ -352,6 +352,65 @@ test('todo test', t => {
 	});
 });
 
+test('because trailer attaches reason to failing, skip and todo tests', t => {
+	t.plan(4);
+
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.on('stateChange', ({data: evt}) => {
+			if (evt.type === 'selected-test' && evt.skip) {
+				t.equal(evt.because, 'skip reason');
+			}
+
+			if (evt.type === 'selected-test' && evt.todo) {
+				t.equal(evt.because, 'todo reason');
+			}
+
+			if (evt.type === 'test-passed' && evt.knownFailing) {
+				t.equal(evt.because, 'failing reason');
+			}
+		});
+
+		runner.chain.failing('failing', a => {
+			a.fail();
+		}).because('failing reason');
+
+		runner.chain.skip('skip', () => {
+			throw new Error('unreachable');
+		}).because('skip reason');
+
+		runner.chain.todo('todo').because('todo reason');
+	}).then(() => {
+		t.pass();
+	});
+});
+
+test('because requires a non-empty string and can only be used once', t => {
+	t.plan(4);
+
+	return promiseEnd(new Runner({file: import.meta.url}), runner => {
+		const trailer = runner.chain.failing('failing', a => {
+			a.fail();
+		});
+
+		t.throws(() => {
+			trailer.because('');
+		}, {message: '`.because()` expects a non-empty string'});
+
+		t.throws(() => {
+			trailer.because(' '.repeat(3));
+		}, {message: '`.because()` expects a non-empty string'});
+
+		t.throws(() => {
+			trailer.because(42);
+		}, {message: '`.because()` expects a non-empty string'});
+
+		trailer.because('once');
+		t.throws(() => {
+			trailer.because('twice');
+		}, {message: '`.because()` can only be used once per test'});
+	});
+});
+
 test('todo tests must not have an implementation', t => {
 	t.plan(1);
 

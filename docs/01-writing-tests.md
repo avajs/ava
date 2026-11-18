@@ -115,6 +115,14 @@ test.skip('will not be run', t => {
 
 You must specify the implementation function. You can use the `.skip` modifier with all tests and hooks, but not with `.todo()`. You can not apply further modifiers to `.skip`.
 
+You can explain why the test is skipped by chaining `.because()`:
+
+```js
+test.skip('will not be run', t => {
+	t.fail();
+}).because('waiting on some/repo#123');
+```
+
 If the test is likely to be failing for a while, use `.failing()` instead.
 
 ## Skipping tests conditionally
@@ -157,6 +165,12 @@ You can signal that you need to write a serial test:
 test.serial.todo('will think about writing this later');
 ```
 
+You can explain the placeholder by chaining `.because()`:
+
+```js
+test.todo('will think about writing this later').because('waiting on some/repo#123');
+```
+
 ## Failing tests
 
 You can use the `.failing` modifier to document issues with your code that need to be fixed. Failing tests are run just like normal ones, but they are expected to fail, and will not break your build when they do. If a test marked as failing actually passes, it will be reported as an error and fail the build with a helpful message instructing you to remove the `.failing` modifier.
@@ -169,6 +183,21 @@ test.failing('demonstrate some bug', t => {
 	t.fail(); // Test will count as passed
 });
 ```
+
+You can explain why the test is expected to fail by chaining `.because()`. The reason is printed beneath the test title:
+
+```js
+test.failing('does foo', t => {
+	t.fail();
+}).because('waiting on some/repo#123');
+```
+
+```console
+✔ [expected fail] does foo
+  - waiting on some/repo#123
+```
+
+`.because()` must be called with a non-empty string. It is available on `.failing()`, `.skip()` and `.todo()` tests (including when combined with `.serial` / `.only`).
 
 ## Before & after hooks
 

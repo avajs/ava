@@ -86,6 +86,7 @@ export type StateChangeEvent = {
 } | {
 	type: 'selected-test';
 	title: string;
+	because?: string;
 	knownFailing: boolean;
 	skip: boolean;
 	todo: boolean;
@@ -99,6 +100,7 @@ export type StateChangeEvent = {
 	type: 'test-passed';
 	title: string;
 	duration: number;
+	because?: string;
 	knownFailing: boolean;
 	logs: string[];
 	testFile: string;
@@ -107,6 +109,7 @@ export type StateChangeEvent = {
 	title: string;
 	err: SerializedError;
 	duration: number;
+	because?: string;
 	knownFailing: boolean;
 	logs: string[];
 	testFile: string;
