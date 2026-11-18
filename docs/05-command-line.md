@@ -43,6 +43,10 @@ Options:
                            e.g. 10s, 2m)                                [string]
   -u, --update-snapshots   Update snapshots                            [boolean]
   -v, --verbose            Enable verbose output (default)             [boolean]
+      --related-to         Only run tests that import (transitively) the given
+                           source files. Accepts file paths or globs, and can be
+                           repeated. Intended for pre-commit hooks to run only
+                           the tests affected by changed files          [string]
   -w, --watch              Re-run tests when files change              [boolean]
 
 Examples:
@@ -207,6 +211,26 @@ npx ava test.js:3 test2.js:4,7-9
 ```
 
 When running a file with and without line numbers, line numbers take precedence.
+
+## Running only tests affected by changed files
+
+AVA can run only the test files that (transitively) import a given set of source files. This mirrors the behaviour of `jest --findRelatedTests` and is handy for pre-commit hooks (for example with [`lint-staged`](https://github.com/okonet/lint-staged)), where you want to run just the tests that could be affected by the files that were changed.
+
+Pass one or more source files via `--related-to`:
+
+```console
+npx ava --related-to src/foo.js
+npx ava --related-to src/foo.js src/bar.js
+npx ava --related-to 'src/**/*.js'
+```
+
+AVA builds an import graph for the discovered test files and selects those that import (directly or transitively) any of the files given to `--related-to`. A test that imports `src/foo.js`, and `src/foo.js` in turn imports `src/bar.js`, is therefore considered related to changes in either file.
+
+Notes:
+
+* Only relative and absolute specifiers are followed. Bare (package) imports are treated as external dependencies and do not connect a test to a project source file.
+* The selection respects any other patterns or filters you pass, so you can combine `--related-to` with a glob or `--match`.
+* When no test imports the given files, no tests are selected.
 
 ## Resetting AVA's cache
 
