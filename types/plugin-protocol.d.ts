@@ -239,6 +239,11 @@ export namespace Plugin {
 	};
 
 	/**
+	Hooks that were started but had not finished, by absolute test file path and then title.
+	*/
+	export type PendingHooks = ReadonlyMap<string, ReadonlySet<string>>;
+
+	/**
 	Tests that were started but had not finished, by absolute test file path and then title.
 	*/
 	export type PendingTests = ReadonlyMap<string, ReadonlySet<string>>;
@@ -439,6 +444,10 @@ export namespace Plugin {
 		/**
 		Across all files, not just the one that exited.
 		*/
+		readonly pendingHooks: PendingHooks;
+		/**
+		Across all files, not just the one that exited.
+		*/
 		readonly pendingTests: PendingTests;
 	} | {
 		/**
@@ -449,6 +458,10 @@ export namespace Plugin {
 		The period of inactivity, in milliseconds, after which AVA gave up.
 		*/
 		readonly period: number;
+		/**
+		Across all files.
+		*/
+		readonly pendingHooks: PendingHooks;
 		/**
 		Across all files.
 		*/
