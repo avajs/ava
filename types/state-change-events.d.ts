@@ -71,6 +71,7 @@ export type StateChangeEvent = {
 		selectedTests: number;
 		sharedWorkerErrors: number;
 		skippedTests: number;
+		timedOutHooks: number;
 		timedOutTests: number;
 		timeouts: number;
 		todoTests: number;
@@ -134,8 +135,18 @@ export type StateChangeEvent = {
 	chunk: Uint8Array;
 	testFile: string;
 } | {
+	type: 'hook-started';
+	title: string;
+	logs: string[];
+	testFile: string;
+} | {
+	type: 'hook-ended';
+	title: string;
+	testFile: string;
+} | {
 	type: 'timeout';
 	period: number;
+	pendingHooks: Map<string, Set<string>>;
 	pendingTests: Map<string, Set<string>>;
 }
 | {
