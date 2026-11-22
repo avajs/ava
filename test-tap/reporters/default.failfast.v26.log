@@ -14,7 +14,13 @@
 
   Test failed via `t.fail()`
 
+  [90m› ExecutionContext.fail (file://lib/assert.js:268:15)[39m
   [90m› file://test-tap/fixture/report/failfast/a.js:3:22[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
   [90m─[39m
 

@@ -11,6 +11,8 @@
   TypeError: test.serial.test is not a function
 
   [90m› file://test-tap/fixture/report/regular/bad-test-chain.js:3:13[39m
+  [90m› async run (file://lib/worker/base.js:235:3)[39m
+  [90m› async file://lib/worker/base.js:272:2[39m
 
 ---tty-stream-chunk-separator
   [31m✘ bad-test-chain.js exited with a non-zero exit code: 1[39m
@@ -108,6 +110,12 @@
   Error: Can’t catch me
 
   [90m› passes (file://test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 ---tty-stream-chunk-separator
   [1mUnhandled rejection in unhandled-rejection.js[22m
@@ -144,7 +152,14 @@
   [32m+[39m   [90m}[39m[90m,[39m
     [90m}[39m
 
+  [90m› ExecutionContext.deepEqual (file://lib/assert.js:320:15)[39m
   [90m› file://test-tap/fixture/report/regular/nested-objects.js:29:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -167,7 +182,14 @@
       [90m}[39m[90m,[39m
     [90m}[39m
 
+  [90m› ExecutionContext.like (file://lib/assert.js:372:15)[39m
   [90m› file://test-tap/fixture/report/regular/nested-objects.js:55:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -181,7 +203,14 @@
 
   Test failed via `t.fail()`
 
+  [90m› ExecutionContext.fail (file://lib/assert.js:268:15)[39m
   [90m› file://test-tap/fixture/report/regular/output-in-hook.js:34:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -195,7 +224,14 @@
 
   Test failed via `t.fail()`
 
+  [90m› ExecutionContext.fail (file://lib/assert.js:268:15)[39m
   [90m› file://test-tap/fixture/report/regular/test.js:9:22[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -214,7 +250,14 @@
 
   Test failed via `t.fail()`
 
+  [90m› ExecutionContext.fail (file://lib/assert.js:268:15)[39m
   [90m› file://test-tap/fixture/report/regular/test.js:18:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -231,7 +274,14 @@
   [31m-[39m [34m'[39m[31mfoo[39m[34m'[39m
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
+  [90m› ExecutionContext.deepEqual (file://lib/assert.js:320:15)[39m
   [90m› file://test-tap/fixture/report/regular/test.js:22:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
+  [90m› async Runner.start (file://lib/runner.js:514:15)[39m
 
 
 
@@ -263,7 +313,12 @@
 
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throws.instanceOf (file://test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
+  [90m› ExecutionContext.throws (file://lib/assert.js:404:14)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:12:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
 
 
 
@@ -283,7 +338,12 @@
 
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:16:20[39m
+  [90m› ExecutionContext.notThrows (file://lib/assert.js:542:5)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:16:4[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
 
 
 
@@ -303,7 +363,12 @@
 
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:20:31[39m
+  [90m› ExecutionContext.notThrowsAsync (file://lib/assert.js:595:14)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:20:10[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
 
 
 
@@ -323,7 +388,12 @@
 
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throwsAsync.instanceOf (file://test-tap/fixture/report/regular/traces-in-t-throws.js:24:28)[39m
+  [90m› ExecutionContext.throwsAsync (file://lib/assert.js:507:14)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:24:10[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
 
 
 
@@ -346,7 +416,13 @@
   [35mFunction[39m [34mTypeError[39m [90m{[39m[90m}[39m
 
   [90m› returnRejectedPromise (file://test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
+  [90m› ExecutionContext.throwsAsync (file://lib/assert.js:507:14)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:28:10[39m
+  [90m› Test.callFn (file://lib/test.js:613:26)[39m
+  [90m› Test.run (file://lib/test.js:631:33)[39m
+  [90m› Runner.runSingle (file://lib/runner.js:275:33)[39m
+  [90m› Runner.runTest (file://lib/runner.js:357:30)[39m
+  [90m› async file://lib/runner.js:506:21[39m
 
   [90m─[39m
 
