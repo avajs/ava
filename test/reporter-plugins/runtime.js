@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {once} from 'node:events';
 import process from 'node:process';
 import {PassThrough, Writable} from 'node:stream';
-import {setImmediate} from 'node:timers/promises';
+import {setImmediate, setTimeout} from 'node:timers/promises';
 import {BroadcastChannel} from 'node:worker_threads';
 
 import test from '@ava/test';
@@ -130,6 +130,14 @@ test('resolves stdout claims before activating plugins', async t => {
 	t.is(output(), '');
 });
 
+test('rejects stdout claims in watch mode', async t => {
+	const {host} = setup(t, 'normal');
+	await host.negotiate();
+	await t.throwsAsync(host.configure({flags: {sample: true}, mode: {watch: true, debug: false}}), {
+		message: /cannot claim stdout in watch mode/,
+	});
+});
+
 test('inactive plugins finish quietly without observing', async t => {
 	const {host, output, errors} = setup(t, 'inactive');
 	await start(host);
@@ -143,6 +151,11 @@ test('inactive negotiation allows asynchronous finally cleanup to finish', async
 	const {host, errors} = setup(t, 'inactive-cleanup');
 	await start(host);
 	t.is(errors(), 'cleanup finished\n');
+});
+
+test('nonzero exit during inactive cleanup is a failure', async t => {
+	const {host} = setup(t, 'inactive-exit-one');
+	await t.throwsAsync(start(host), {message: /thread exited unexpectedly \(code 1\)/});
 });
 
 for (const scenario of ['unsupported-cleanup', 'diagnostic-cleanup']) {
@@ -242,6 +255,39 @@ test('unexpected thread exit is a failure even with exit code zero', async t => 
 	await start(host);
 	host.publish({type: 'run-start', runId: 1, plan: {}});
 	await t.throwsAsync(host.failure, {message: /thread exited unexpectedly \(code 0\)/});
+});
+
+test('nonzero thread exit is a failure after final acknowledgement', async t => {
+	const {host} = setup(t, 'exit-one');
+	await start(host);
+	host.publish({type: 'run-start', runId: 1, plan: {}});
+	await t.throwsAsync(host.finish(end), {message: /thread exited unexpectedly \(code 1\)/});
+});
+
+test('interrupt changes an in-flight flush deadline', async t => {
+	const {host, errors} = setup(t, 'flush-hang', {flushTimeout: 10_000, interruptTimeout: 100});
+	await start(host);
+	t.timeout(3000);
+	const finishing = host.finish(end);
+	host.interruptFlush();
+	await finishing;
+	t.true(host.flushTimedOut);
+	t.regex(errors(), /flush timed out/);
+});
+
+test('interrupt does not impose a flush timeout in debug mode', async t => {
+	const {host, waitFor, release} = setup(t, 'multiple', {debug: true, interruptTimeout: 50});
+	await start(host);
+	const finishing = host.finish(end);
+	await waitFor('"index":1,"type":"run-end"');
+	host.interruptFlush();
+	await setTimeout(100);
+	t.false(host.flushTimedOut);
+	release();
+	await waitFor('"index":1,"type":"end-of-stream"');
+	release();
+	await finishing;
+	t.false(host.flushTimedOut);
 });
 
 test('a crash without a stdout claim rejects an outstanding acknowledgement', async t => {

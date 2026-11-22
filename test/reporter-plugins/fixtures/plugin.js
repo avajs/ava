@@ -34,7 +34,7 @@ export default async function plugin({negotiateProtocol}) {
 			}
 
 			return {
-				active: scenario !== 'inactive' && scenario !== 'inactive-cleanup',
+				active: scenario !== 'inactive' && scenario !== 'inactive-cleanup' && scenario !== 'inactive-exit-one',
 				claims: scenario === 'no-stdout' ? [] : ['stdout'],
 				diagnostics: scenario.startsWith('diagnostic') ? [{level: 'error', message: 'invalid options'}] : [],
 			};
@@ -47,6 +47,10 @@ export default async function plugin({negotiateProtocol}) {
 		if (scenario.endsWith('cleanup')) {
 			await setTimeout(20);
 			process.stderr.write('cleanup finished\n');
+		}
+
+		if (scenario === 'inactive-exit-one') {
+			process.exit(1);
 		}
 	}
 
@@ -79,6 +83,10 @@ export default async function plugin({negotiateProtocol}) {
 				throw new Error('observation failed');
 			}
 
+			if (scenario === 'fail-fast-crash' && message.type === 'event' && message.event.type === 'test-failed') {
+				throw new Error('observation failed after test failure');
+			}
+
 			if (scenario === 'exit-zero') {
 				process.exit(0);
 			}
@@ -106,6 +114,10 @@ export default async function plugin({negotiateProtocol}) {
 			await Promise.all([first, protocol.observe(messages => observe(messages, 1))]);
 		} else {
 			await first;
+		}
+
+		if (scenario === 'exit-one') {
+			process.exit(1);
 		}
 	} finally {
 		control?.close();

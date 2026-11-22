@@ -65,7 +65,7 @@ for (const [title, args, setting, enabled] of [
 		const {exitCode, stdout, stderr} = await run(args, {TAP_SETTING: setting});
 		t.is(exitCode, 0, stderr);
 		t.is(stderr.includes('reporter-plugin-thread'), enabled);
-		t.is(stdout.startsWith('TAP version 13\n'), enabled);
+		t.is(/^TAP version 13\r?\n/.test(stdout), enabled);
 		if (!enabled) {
 			return;
 		}
@@ -82,7 +82,7 @@ for (const [title, args, setting, enabled] of [
 test('forced-color logs are stripped and notices never precede TAP on stdout', async t => {
 	const {stdout, stderr, exitCode} = await run(['--tap', '--color'], {FORCE_COLOR: '1', PLUGIN_TEST_NOTICES: '1'});
 	t.is(exitCode, 0, stderr);
-	t.true(stdout.startsWith('TAP version 13\n'));
+	t.true(/^TAP version 13\r?\n/.test(stdout));
 	t.regex(stdout, /red log/);
 	t.false(stdout.includes('\u{1B}'));
 	t.regex(stderr, /Experiments are enabled/);
@@ -145,7 +145,7 @@ for (const [args, mode] of [[['--watch'], 'when using watch mode'], [['debug', '
 	});
 }
 
-test('SIGINT flushes the TAP plan before exiting', async t => {
+test.skipIf(process.platform === 'win32')('SIGINT flushes the TAP plan before exiting', async t => {
 	const child = spawnFixture(['--tap', 'pending.js'], runOptions());
 	t.teardown(() => {
 		if (child.exitCode === null) {
@@ -161,7 +161,7 @@ test('SIGINT flushes the TAP plan before exiting', async t => {
 	child.kill('SIGINT');
 	const {exitCode, stdout, stderr} = await child;
 	t.is(exitCode, 1, stderr);
-	t.true(stdout.startsWith('TAP version 13\n'));
+	t.true(/^TAP version 13\r?\n/.test(stdout));
 	t.regex(stdout, /1\.\.1/);
 	t.regex(stdout, /# fail 1/);
 	t.false(stderr.includes('flush timed out'));
