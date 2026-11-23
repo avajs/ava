@@ -73,19 +73,26 @@ const sortStats = stats => {
 	stats.todo.sort(compareStatObjects);
 };
 
-export async function * exec(args, options) {
-	let {errors, logs, stats, stdout, stderr} = initState();
-
-	const workingDir = options.cwd ?? resolveFixtureDirectory();
-	const execaProcess = execaNode(cliPath, args, {
+export function spawnFixture(args, options = {}) {
+	return execaNode(cliPath, args, {
 		...options,
 		env: {
 			...options.env,
 			TEST_AVA: 'true',
 			TEST_AVA_IMPORT_FROM,
 		},
+		cwd: options.cwd ?? resolveFixtureDirectory(),
+		nodeOptions: ['--import', pathToFileURL(ttySimulator).toString(), ...(options.nodeOptions ?? [])],
+	});
+}
+
+export async function * exec(args, options) {
+	let {errors, logs, stats, stdout, stderr} = initState();
+
+	const workingDir = options.cwd ?? resolveFixtureDirectory();
+	const execaProcess = spawnFixture(args, {
+		...options,
 		cwd: workingDir,
-		nodeOptions: ['--import', pathToFileURL(ttySimulator).toString()],
 		stdout: ['pipe', new Writable({
 			write(chunk, encoding, callback) {
 				stdout += chunk;
@@ -116,15 +123,12 @@ export async function * exec(args, options) {
 
 	loop: while (true) {
 		const item = await Promise.race([done, statusEvents.next()]); // eslint-disable-line no-await-in-loop
-		if (item.execa) {
+		if (item.execa || (item.done && !item.value)) {
+			await done; // eslint-disable-line no-await-in-loop
 			sortStats(stats);
 			yield {
 				process: execaProcess, stats, stdout, stderr, runCount,
 			};
-			break;
-		}
-
-		if (item.done && !item.value) {
 			break;
 		}
 

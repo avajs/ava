@@ -8,14 +8,12 @@ not ok 3 - slow
   ---
     name: Error
     message: Exited because no new tests completed within the last 2500ms of inactivity
-    at: 'TapReporter.writeTimeout (/lib/reporters/tap.js)'
   ...
 ---tty-stream-chunk-separator
 not ok 4 - slow two
   ---
     name: Error
     message: Exited because no new tests completed within the last 2500ms of inactivity
-    at: 'TapReporter.writeTimeout (/lib/reporters/tap.js)'
   ...
 ---tty-stream-chunk-separator
 

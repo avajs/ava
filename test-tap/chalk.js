@@ -1,9 +1,11 @@
 import {test} from 'tap';
 
-import {set} from '../lib/chalk.js';
+import {chalk, set} from '../lib/chalk.js';
 
-test('throws an error when trying to set chalk config and chalk config is configured', t => {
-	set({});
-	t.throws(set, 'Chalk has already been configured');
+test('allows chalk config to be replaced', t => {
+	set({level: 1});
+	t.equal(chalk.level, 1);
+	set({level: 2});
+	t.equal(chalk.level, 2);
 	t.end();
 });
