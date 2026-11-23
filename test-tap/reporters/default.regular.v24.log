@@ -108,6 +108,7 @@
   Error: Can’t catch me
 
   [90m› passes (file://test-tap/fixture/report/regular/unhandled-rejection.js:4:17)[39m
+  [90m› async Promise.all (index 0)[39m
 
 ---tty-stream-chunk-separator
   [1mUnhandled rejection in unhandled-rejection.js[22m
@@ -145,6 +146,7 @@
     [90m}[39m
 
   [90m› file://test-tap/fixture/report/regular/nested-objects.js:29:4[39m
+  [90m› async Promise.all (index 0)[39m
 
 
 
@@ -168,6 +170,7 @@
     [90m}[39m
 
   [90m› file://test-tap/fixture/report/regular/nested-objects.js:55:4[39m
+  [90m› async Promise.all (index 1)[39m
 
 
 
@@ -182,6 +185,7 @@
   Test failed via `t.fail()`
 
   [90m› file://test-tap/fixture/report/regular/output-in-hook.js:34:4[39m
+  [90m› async Promise.all (index 1)[39m
 
 
 
@@ -196,6 +200,7 @@
   Test failed via `t.fail()`
 
   [90m› file://test-tap/fixture/report/regular/test.js:9:22[39m
+  [90m› async Promise.all (index 1)[39m
 
 
 
@@ -215,6 +220,7 @@
   Test failed via `t.fail()`
 
   [90m› file://test-tap/fixture/report/regular/test.js:18:4[39m
+  [90m› async Promise.all (index 4)[39m
 
 
 
@@ -232,6 +238,7 @@
   [32m+[39m [34m'[39m[32mbar[39m[34m'[39m
 
   [90m› file://test-tap/fixture/report/regular/test.js:22:4[39m
+  [90m› async Promise.all (index 5)[39m
 
 
 
@@ -264,6 +271,7 @@
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throws.instanceOf (file://test-tap/fixture/report/regular/traces-in-t-throws.js:12:17)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:12:4[39m
+  [90m› async Promise.all (index 0)[39m
 
 
 
@@ -284,6 +292,7 @@
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:16:20[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:16:4[39m
+  [90m› async Promise.all (index 1)[39m
 
 
 
@@ -304,6 +313,7 @@
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:20:31[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:20:10[39m
+  [90m› async Promise.all (index 2)[39m
 
 
 
@@ -324,6 +334,7 @@
   [90m› throwError (file://test-tap/fixture/report/regular/traces-in-t-throws.js:4:8)[39m
   [90m› t.throwsAsync.instanceOf (file://test-tap/fixture/report/regular/traces-in-t-throws.js:24:28)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:24:10[39m
+  [90m› async Promise.all (index 3)[39m
 
 
 
@@ -347,6 +358,7 @@
 
   [90m› returnRejectedPromise (file://test-tap/fixture/report/regular/traces-in-t-throws.js:8:24)[39m
   [90m› file://test-tap/fixture/report/regular/traces-in-t-throws.js:28:10[39m
+  [90m› async Promise.all (index 4)[39m
 
   [90m─[39m
 
