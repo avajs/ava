@@ -35,6 +35,16 @@ test('worker-finished carries current per-file counts without changing internal 
 	t.deepEqual(event, {type: 'worker-finished', testFile: 'file', forcedExit: false});
 });
 
+test('hook failure phases are optional and preserved without changing titles or event types', t => {
+	for (const failurePhase of [undefined, 'post-test', 'post-test-file']) {
+		const event = {
+			type: 'hook-failed', title: 'custom hook', testFile: 'file', err: {}, duration: 1, logs: [],
+			...(failurePhase && {failurePhase}),
+		};
+		t.deepEqual(runEvent({...event, internal: true}, {}), event);
+	}
+});
+
 test('run-end includes totals and exit information without per-file stats', t => {
 	const totals = {
 		files: 2, failedTests: 1, remainingTests: 0, passedTests: 2, passedKnownFailingTests: 1, skippedTests: 1, todoTests: 1,

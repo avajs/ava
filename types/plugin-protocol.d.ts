@@ -368,6 +368,11 @@ export namespace Plugin {
 		*/
 		readonly type: 'hook-failed';
 		/**
+		Identifies failures in `afterEach` or `after` postconditions, including `.always` hooks.
+		Absent for setup and teardown failures.
+		*/
+		readonly failurePhase?: 'post-test' | 'post-test-file';
+		/**
 		Absolute path of the test file.
 		*/
 		readonly testFile: string;

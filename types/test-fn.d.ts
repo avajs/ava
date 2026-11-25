@@ -70,9 +70,13 @@ export type TimeoutFn = {
 };
 
 /**
-Declare a function to be run after the test has ended.
+Register cleanup for a test or setup hook. Callbacks and disposable objects are
+run serially in reverse registration order. Async disposal takes precedence.
+
+In tests cleanup runs before afterEach hooks. In beforeEach hooks it runs after
+the test's postconditions. In before hooks it runs after the file's postconditions.
 */
-export type TeardownFn = (fn: (() => Promise<void>) | (() => void)) => void;
+export type TeardownFn = (fn: (() => Promise<void>) | (() => void) | Disposable | AsyncDisposable) => void;
 
 export type ImplementationFn<Args extends unknown[], Context = unknown> =
 	((t: ExecutionContext<Context>, ...args: Args) => PromiseLike<void>) |

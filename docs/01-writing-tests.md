@@ -172,15 +172,19 @@ test.failing('demonstrate some bug', t => {
 
 ## Before & after hooks
 
-AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
+AVA lets you register hooks that are run before and after your tests. Use `before` and `beforeEach` hooks for setup and preconditions, and `after` and `afterEach` hooks for postconditions. Use [`t.teardown()`](./02-execution-context.md#tteardownfn) for cleanup.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. Note however that uncaught exceptions, unhandled rejections or timeouts will crash your tests, possibly preventing `.always()` hooks from running.
+`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test, provided setup and tests passed. Use `test.after.always()` to opt into checking postconditions even after earlier failures. Note however that uncaught exceptions, unhandled rejections, timeouts and forced termination can prevent hooks and teardowns from running.
 
 `test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` registers a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
 
 If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
 
-*You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test. Or use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run cleanup code after AVA has completed its work.
+Register cleanup with `t.teardown()` in the test or setup hook that acquires a resource. To migrate cleanup from an `.afterEach.always()` hook, register it in `beforeEach` instead; for file-wide cleanup, register it in `before`. Already registered cleanup runs even if subsequent setup or postconditions fail. Setup resources remain available until postconditions finish. Existing teardowns registered inside tests still run **before** `afterEach` hooks. Teardowns registered in `beforeEach` run afterwards, and those registered in `before` run after file postconditions.
+
+Failures in `afterEach` hooks are labeled **post-test failures**, and failures in `after` hooks are labeled **post-test-file failures**. They remain hook failures and do not change the test's own result. `.always` changes when postconditions run, not how failures are handled.
+
+You can also use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run code after AVA has completed its work.
 
 Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
 
@@ -203,12 +207,12 @@ test.serial.before(t => {
 	// This too runs after the above, and before tests
 });
 
-test.after('cleanup', t => {
-	// This runs after all tests
+test.after('postconditions', t => {
+	// This runs after all tests if setup and tests passed
 });
 
-test.after.always('guaranteed cleanup', t => {
-	// This will always run, regardless of earlier failures
+test.after.always('postconditions after failure', t => {
+	// This runs regardless of earlier failures, unless the worker is terminated
 });
 
 test.beforeEach(t => {
