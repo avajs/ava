@@ -293,10 +293,10 @@ not ok 34 - unhandled-rejection
 not ok 35 - unhandled-rejection.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
-1..24
-# tests 23
+1..35
+# tests 34
 # pass 8
 # skip 1
-# fail 22
+# fail 26
 
 ---tty-stream-chunk-separator

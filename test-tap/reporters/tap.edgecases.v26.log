@@ -32,8 +32,8 @@ not ok 7 - Error: throws
 not ok 8 - throws.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
-1..0
-# tests 0
+1..8
+# tests 8
 # pass 0
 # fail 8
 
