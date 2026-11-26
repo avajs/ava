@@ -9,9 +9,9 @@ not ok 1 - a › fails
   ...
 ---tty-stream-chunk-separator
 
-1..2
-# tests 2
+1..1
+# tests 1
 # pass 0
-# fail 2
+# fail 1
 
 ---tty-stream-chunk-separator

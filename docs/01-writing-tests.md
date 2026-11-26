@@ -38,7 +38,7 @@ test.serial('passes serially', t => {
 
 Note that this only applies to tests within a particular test file. AVA will still run multiple tests files at the same time unless you pass the [`--serial` CLI flag](./05-command-line.md).
 
-You can use the `.serial` modifier with all tests, hooks and even `.todo()`, but it's only available on the `test` function.
+You can use the `.serial` modifier with all tests, setup and postcondition functions, and even `.todo()`, but it's only available on the `test` function.
 
 ## Promise support
 
@@ -99,7 +99,7 @@ test.only('will be run', t => {
 });
 ```
 
-You can use the `.only` modifier with all tests. It cannot be used with hooks or `.todo()`.
+You can use the `.only` modifier with all tests. It cannot be used with setup or postcondition functions or `.todo()`.
 
 *Note:* The `.only` modifier applies to the test file it's defined in, so if you run multiple test files, tests in other files will still run. If you want to only run the `test.only` test, provide just that test file to AVA.
 
@@ -113,7 +113,7 @@ test.skip('will not be run', t => {
 });
 ```
 
-You must specify the implementation function. You can use the `.skip` modifier with all tests and hooks, but not with `.todo()`. You can not apply further modifiers to `.skip`.
+You must specify the implementation function. You can use the `.skip` modifier with all tests and setup or postcondition functions, but not with `.todo()`. You can not apply further modifiers to `.skip`.
 
 If the test is likely to be failing for a while, use `.failing()` instead.
 
@@ -170,21 +170,25 @@ test.failing('demonstrate some bug', t => {
 });
 ```
 
-## Before & after hooks
+## Setup, preconditions, and postconditions
 
-AVA lets you register hooks that are run before and after your tests. This allows you to run setup and/or teardown code.
+AVA lets you register functions that run at different points in a test's lifecycle. Use `before` and `beforeEach` for setup and preconditions, and `after` and `afterEach` to check postconditions. Use [`t.teardown()`](./02-execution-context.md#tteardownfn) for cleanup.
 
-`test.before()` registers a hook to be run before the first test in your test file. Similarly `test.after()` registers a hook to be run after the last test. Use `test.after.always()` to register a hook that will **always** run once your tests and other hooks complete. `.always()` hooks run regardless of whether there were earlier failures, so they are ideal for cleanup tasks. Note however that uncaught exceptions, unhandled rejections or timeouts will crash your tests, possibly preventing `.always()` hooks from running.
+`test.before()` registers a function to run before the first test in your test file. `test.after()` registers a postcondition to run after the last test, provided setup and tests passed. Use `test.after.always()` to check postconditions even after earlier failures. Note, however, that uncaught exceptions, unhandled rejections, timeouts, and forced termination can prevent these functions and teardowns from running.
 
-`test.beforeEach()` registers a hook to be run before each test in your test file. Similarly `test.afterEach()` registers a hook to be run after each test. Use `test.afterEach.always()` to register an after hook that is called even if other test hooks, or the test itself, fail.
+`test.beforeEach()` registers a function to run before each test in your test file. `test.afterEach()` registers a postcondition to run after each test. Use `test.afterEach.always()` to check postconditions even if setup functions or the test itself fail.
 
-If a test is skipped with the `.skip` modifier, the respective `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks are not run. Likewise, if all tests in a test file are skipped `.before()`, `.after()` and `.after.always()` hooks for the file are not run.
+If a test is skipped with the `.skip` modifier, its `.beforeEach()`, `.afterEach()`, and `.afterEach.always()` functions are not run. Likewise, if all tests in a test file are skipped, the file's `.before()`, `.after()`, and `.after.always()` functions are not run.
 
-*You may not need to use `.afterEach.always()` hooks to clean up after a test.* You can use [`t.teardown()`](./02-execution-context.md#tteardownfn) to undo side-effects *within* a particular test. Or use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run cleanup code after AVA has completed its work.
+Register cleanup with `t.teardown()` in the test or setup function that acquires a resource. To migrate cleanup from an `.afterEach.always()` function, register it in `beforeEach` instead; for file-wide cleanup, register it in `before`. Already registered cleanup runs even if subsequent setup or postconditions fail. Setup resources remain available until postconditions finish. Teardowns registered inside tests still run **before** `afterEach` postconditions. Teardowns registered in `beforeEach` run afterwards, and those registered in `before` run after file postconditions.
 
-Like `test()` these methods take an optional title and an implementation function. The title is shown if your hook fails to execute. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in your hooks. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
+Failures in `afterEach` postconditions are labeled **postcondition failures**, as are failures in `after` postconditions. They do not change the test's own result. `.always` changes when postconditions run, not how failures are handled.
 
-`.before()` hooks execute before `.beforeEach()` hooks. `.afterEach()` hooks execute before `.after()` hooks. Within their category the hooks execute in the order they were defined. By default hooks execute concurrently, but you can use `test.serial` to ensure only that single hook is run at a time. Unlike with tests, serial hooks are *not* run before other hooks:
+You can also use [`registerCompletionHandler()`](./08-common-pitfalls.md#timeouts-because-a-file-failed-to-exit) to run code after AVA has completed its work.
+
+Like `test()`, these methods take an optional title and an implementation function. The title is shown if the function fails. The implementation is called with an [execution object](./02-execution-context.md). You can use assertions in setup functions and postconditions. You can also pass a [macro function](#reusing-test-logic-through-macros) and additional arguments.
+
+`.before()` functions execute before `.beforeEach()` functions. `.afterEach()` postconditions execute before `.after()` postconditions. Within each phase, functions execute in the order they were defined. By default they execute concurrently, but you can use `test.serial` to ensure only that function is run at a time. Unlike with tests, serial functions are *not* run before other functions:
 
 ```js
 test.before(t => {
@@ -203,12 +207,12 @@ test.serial.before(t => {
 	// This too runs after the above, and before tests
 });
 
-test.after('cleanup', t => {
-	// This runs after all tests
+test.after('postconditions', t => {
+	// This runs after all tests if setup and tests passed
 });
 
-test.after.always('guaranteed cleanup', t => {
-	// This will always run, regardless of earlier failures
+test.after.always('postconditions after failure', t => {
+	// This runs regardless of earlier failures, unless the worker is terminated
 });
 
 test.beforeEach(t => {
@@ -220,7 +224,7 @@ test.afterEach(t => {
 });
 
 test.afterEach.always(t => {
-	// This runs after each test and other test hooks, even if they failed
+	// This runs after each test and other setup or postcondition functions, even if they failed
 });
 
 test('title', t => {
@@ -228,7 +232,7 @@ test('title', t => {
 });
 ```
 
-Hooks can be synchronous or asynchronous, just like tests. To make a hook asynchronous return a promise or observable, or use an async function.
+Setup functions and postconditions can be synchronous or asynchronous, just like tests. To make one asynchronous, return a promise or observable, or use an async function.
 
 ```js
 test.before(async t => {
@@ -240,13 +244,13 @@ test.after(t => {
 });
 ```
 
-Keep in mind that the `.beforeEach()` and `.afterEach()` hooks run just before and after a test is run, and that by default tests run concurrently. This means each multiple `.beforeEach()` hooks may run concurrently. Using `test.serial.beforeEach()` does not change this. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests themselves are [run serially](#running-tests-serially).
+Keep in mind that `.beforeEach()` functions and `.afterEach()` postconditions run just before and after a test, and that tests run concurrently by default. Multiple `.beforeEach()` functions may therefore run concurrently. Using `test.serial.beforeEach()` does not change this. If you need to set up global state for each test (like spying on `console.log` [for example](https://github.com/avajs/ava/issues/560)), you'll need to make sure the tests themselves are [run serially](#running-tests-serially).
 
-Remember that AVA runs each test file in its own process. You may not have to clean up global state in a `.after()`-hook since that's only called right before the process exits.
+Remember that AVA runs each test file in its own process. You may not need an `.after()` postcondition to clean up global state, since it runs right before the process exits.
 
 ## Test context
 
-Hooks can share context with the test:
+Setup functions and postconditions can share context with the test:
 
 ```js
 test.beforeEach(t => {
@@ -258,9 +262,9 @@ test('context data is foo', t => {
 });
 ```
 
-If `.before()` hooks treat `t.context` as an object, a shallow copy is made and passed to `.beforeEach()` hooks and / or tests. Other types of values are passed as-is. The `.after()` and `.after.always()` hooks receive the original context value.
+If `.before()` functions treat `t.context` as an object, a shallow copy is made and passed to `.beforeEach()` functions and/or tests. Other types of values are passed as-is. The `.after()` and `.after.always()` postconditions receive the original context value.
 
-For `.beforeEach()`, `.afterEach()` and `.afterEach.always()` hooks the context is *not* shared between different tests, allowing you to set up data such that it will not leak to other tests.
+For `.beforeEach()`, `.afterEach()`, and `.afterEach.always()` functions, the context is *not* shared between different tests, allowing you to set up data that will not leak to other tests.
 
 By default `t.context` is an object but you can reassign it:
 

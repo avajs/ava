@@ -6,7 +6,7 @@ Translations: [Español](https://github.com/avajs/ava-docs/blob/main/es_ES/docs/
 
 AVA doesn't have a built-in method for testing endpoints, but you can use any HTTP client of your choosing, for example [`ky`](https://github.com/sindresorhus/ky). You'll also need to start an HTTP server, preferably on a unique port so that you can run tests in parallel. For that we recommend [`async-listen`](https://github.com/vercel/async-listen).
 
-Since tests run concurrently, it's best to create a fresh server instance at least for each test file, but perhaps even for each test. This can be accomplished with `test.before()` and `test.beforeEach()` hooks and `t.context`. If you start your server using a `test.before()` hook you should make sure to execute your tests serially.
+Since tests run concurrently, it's best to create a fresh server instance at least for each test file, but perhaps even for each test. This can be accomplished with `test.before()` and `test.beforeEach()` setup functions and `t.context`. If you start your server using a `test.before()` function you should make sure to execute your tests serially.
 
 Check out the example below:
 
@@ -22,10 +22,9 @@ import app from './app.js';
 test.before(async t => {
 	t.context.server = createServer(app);
 	t.context.prefixUrl = await listen(t.context.server);
-});
-
-test.after.always(t => {
-	t.context.server.close();
+	t.teardown(() => {
+		t.context.server.close();
+	});
 });
 
 test.serial('get /user', async t => {

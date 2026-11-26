@@ -46,16 +46,14 @@ test('Bing Search', async t => {
 
 In the `googletest.js` file, instead of a single test, lets add two tests, one each for the terms 'webdriver' and 'avajs'.
 
-Since we would like to initialize the webdriver before each test, we use the [`beforeEach` and `afterEach`](../01-writing-tests.md#before--after-hooks) hooks to setup and teardown the driver respectively. Using these hooks, helps reduce the amount of code we would write in each `test()`.
+Since we would like to initialize the webdriver before each test, we use `beforeEach` for setup and register cleanup with [`t.teardown()`](../02-execution-context.md#tteardownfn). This keeps the driver available to postconditions and ensures it is closed if setup or the test fails.
 
 ```js
 test.beforeEach(async t => {
-	t.context.driver = new Builder().forBrowser('chrome').build();
-	await t.context.driver.get('https://www.google.com');
-});
-
-test.afterEach('cleanup', async t => {
-	await t.context.driver.close();
+	const driver = new Builder().forBrowser('chrome').build();
+	t.context.driver = driver;
+	t.teardown(() => driver.close());
+	await driver.get('https://www.google.com');
 });
 ```
 

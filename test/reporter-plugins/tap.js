@@ -89,6 +89,18 @@ test('forced-color logs are stripped and notices never precede TAP on stdout', a
 });
 
 for (const workerArgs of [[], ['--no-worker-threads']]) {
+	test(`counts setup teardown failures in the TAP plan (${workerArgs.length === 0 ? 'thread' : 'process'} workers)`, async t => {
+		const {exitCode, stdout, stderr} = await run(['--tap', ...workerArgs, 'teardown-failure.js']);
+		t.is(exitCode, 1, stderr);
+		t.regex(stdout, /ok 1 - passes/);
+		t.regex(stdout, /not ok 2 - beforeEach function teardown for passes/);
+		t.regex(stdout, /cleanup failed/);
+		t.regex(stdout, /^1\.\.2$/m);
+		t.regex(stdout, /^# tests 2$/m);
+		t.regex(stdout, /^# pass 1$/m);
+		t.regex(stdout, /^# fail 1$/m);
+	});
+
 	test(`reports failures through the plugin (${workerArgs.length === 0 ? 'thread' : 'process'} workers)`, async t => {
 		const {exitCode, stdout, stderr} = await run(['--tap', ...workerArgs, 'failure.js']);
 		t.is(exitCode, 1, stderr);
@@ -162,6 +174,7 @@ test.skipIf(process.platform === 'win32')('SIGINT flushes the TAP plan before ex
 	const {exitCode, stdout, stderr} = await child;
 	t.is(exitCode, 1, stderr);
 	t.true(/^TAP version 13\r?\n/.test(stdout));
+	t.regex(stdout, /not ok 1 - Test run interrupted/);
 	t.regex(stdout, /1\.\.1/);
 	t.regex(stdout, /# fail 1/);
 	t.false(stderr.includes('flush timed out'));

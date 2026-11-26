@@ -2,11 +2,11 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/recipes/test-setup.md)
 
-Tests can be set up using the `beforeEach()` hook. Often though you could use a plain setup function instead. This recipe helps you decide what's best for your use case.
+Tests can be set up using the `beforeEach()` setup function. Often though you could use a plain setup function instead. This recipe helps you decide what's best for your use case.
 
-## The `beforeEach()` hook versus setup functions
+## The `beforeEach()` function versus setup functions
 
-The `beforeEach()` hook has some downsides. For example, you cannot turn it off for specific tests, nor can you apply it to specific tests. As an alternative, you can use simple functions. This allows you to use multiple setup functions for different setup requirements and call different parts of setup from different tests. You can even have setup functions with parameters so tests can customize their own setup.
+The `beforeEach()` function has some downsides. For example, you cannot turn it off for specific tests, nor can you apply it to specific tests. As an alternative, you can use simple functions. This allows you to use multiple setup functions for different setup requirements and call different parts of setup from different tests. You can even have setup functions with parameters so tests can customize their own setup.
 
 Let's say you have a function that interacts with the file system. Perhaps you run a few tests using `mock-fs`, and then a few that use the real file system and a temporary directory. Or you have a setup function that you run with valid data for some tests and invalid data for other tests, all within the same test file.
 
@@ -18,11 +18,11 @@ You could do all these things using plain setup functions, but there are tradeof
 | ⛔️ &nbsp; more overhead for beginners, "some magic"| ✅ &nbsp; easier for beginners, "no magic"
 | ✅ &nbsp; built-in support for observables| ⛔️ &nbsp; must use promises for asynchronous behavior
 | ✅ &nbsp; failure has friendly output| ⛔️ &nbsp; errors are attributed to the test
-| ✅ &nbsp; corresponding `afterEach` and `afterEach.always` for cleanup| ⛔️ &nbsp; cannot easily clean up
+| ✅ &nbsp; cleanup with `t.teardown()`| ✅ &nbsp; cleanup with `t.teardown()` when passed `t`
 
 ## Complex test setup
 
-In this example, we have both a `beforeEach()` hook, and then more modifications within each test.
+In this example, we have both a `beforeEach()` setup function and more modifications within each test.
 
 ```js
 test.beforeEach(t => {
@@ -44,7 +44,7 @@ test('second scenario', t => {
 });
 ```
 
-If too many variables need changing for each test, consider omitting the `beforeEach()` hook and performing setup steps within the tests themselves.
+If too many variables need changing for each test, consider omitting the `beforeEach()` function and performing setup steps within the tests themselves.
 
 ```js
 test('first scenario', t => {
@@ -123,7 +123,7 @@ test('authenticating with an invalid password', async t => {
 });
 ```
 
-## Combining hooks and setup functions
+## Combining `beforeEach()` and setup functions
 
 Of course `beforeEach()` and plain setup functions can be used together:
 

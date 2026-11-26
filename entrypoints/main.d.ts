@@ -6,12 +6,12 @@ export type * from '../types/test-fn.js';
 export type * from '../types/subscribable.js';
 
 /**
-Call to declare a test, or chain to declare hooks or test modifiers
+Call to declare a test, or chain to declare setup or postcondition functions, or test modifiers
 */
 declare const test: TestFn;
 
 /**
-Call to declare a test, or chain to declare hooks or test modifiers
+Call to declare a test, or chain to declare setup or postcondition functions, or test modifiers
 */
 export default test;
 

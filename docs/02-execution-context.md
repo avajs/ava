@@ -2,7 +2,7 @@
 
 Translations: [Français](https://github.com/avajs/ava-docs/blob/main/fr_FR/docs/02-execution-context.md)
 
-Each test or hook is called with an execution context. By convention it's named `t`.
+Each test, setup function, and postcondition is called with an execution context. By convention it's named `t`.
 
 ```js
 import test from 'ava';
@@ -12,7 +12,7 @@ test('my passing test', t => {
 });
 ```
 
-Each test or hook receives a different object. It contains the [assertions](./03-assertions.md) as well as the methods and properties listed below.
+Each function receives a different object. It contains the [assertions](./03-assertions.md) as well as the methods and properties listed below.
 
 ## `t.title`
 
@@ -20,11 +20,11 @@ The test title.
 
 ## `t.context`
 
-Contains shared state from hooks.
+Contains shared state from setup functions and postconditions.
 
 ## `t.passed`
 
-When used in `test.afterEach()` or `test.afterEach.always()` hooks this tells you whether the test has passed. When used in a test itself (including teardown functions) this remains `true` until an assertion fails, the test has ended with an error, or a teardown function caused an error. This value has no meaning in other hooks.
+When used in `test.afterEach()` or `test.afterEach.always()` postconditions, this tells you whether the test has passed. When used in a test itself (including teardown functions), this remains `true` until an assertion fails, the test has ended with an error, or a teardown function caused an error. This value has no meaning in other setup functions.
 
 ## `t.log(...values)`
 
@@ -36,11 +36,34 @@ Plan how many assertions there are in the test. The test will fail if the actual
 
 ## `t.teardown(fn)`
 
-Registers the `fn` function to be run after the test has finished. You can register multiple functions. They'll run in reverse order, so the last registered function is run first. You can use asynchronous functions: only one will run at a time.
+Registers cleanup for a test or setup function. Pass a function, or a disposable object implementing `Symbol.asyncDispose` or `Symbol.dispose`. Async disposal is preferred when both methods exist. Disposal methods are called with the object as `this`, and asynchronous cleanup is awaited.
 
-You cannot perform assertions using the `t` object or register additional functions from inside `fn`.
+The lifetime depends on where you register the teardown:
 
-You cannot use `t.teardown()` in hooks either.
+* In a test (including a `t.try()` attempt), it runs when that test finishes, **before** `afterEach` postconditions. This ordering is unchanged.
+* In a `beforeEach` function, it runs after that test's `afterEach` and `afterEach.always` postconditions.
+* In a `before` function, it runs after the file's `after` and `after.always` postconditions.
+
+Within each lifetime, teardowns run serially in reverse registration order. Register cleanup as soon as a resource is acquired: already registered teardowns run even if a later setup step, test, or postcondition fails. Cleanup continues if a teardown throws or rejects. Test teardown failures fail the test; setup teardown failures are reported under the setup function's title.
+
+You cannot perform assertions using the `t` object or register additional teardowns from inside cleanup. `t.teardown()` is not supported in `after` or `afterEach` postconditions, including their `.always` variants. Returning a disposable from a setup or postcondition function does not register it for cleanup.
+
+```js
+test.beforeEach(async t => {
+	const resource = await createResource();
+	t.teardown(() => resource.close());
+	t.context.resource = resource;
+});
+
+test.afterEach(t => {
+	// The setup resource is still available for postconditions.
+	t.true(t.context.resource.isHealthy());
+});
+```
+
+For resources that implement the disposal protocol, use `t.teardown(resource)` instead of a callback.
+
+Crashes and forced termination can still prevent cleanup. Teardowns cannot guarantee cleanup after uncaught exceptions, unhandled rejections, timeouts, or worker termination (including fail-fast or interruption).
 
 ## `t.timeout(ms)`
 

@@ -541,22 +541,209 @@ test('shared context of any type', t => promiseEnd(new Runner({file: import.meta
 	});
 }));
 
-test('teardowns cannot be used in hooks', async t => {
-	let hookFailure = null;
+test('teardowns cannot be used in postcondition hooks', async t => {
+	for (const hook of ['after', 'afterEach']) {
+		const failures = [];
+		await promiseEnd(new Runner({file: import.meta.url}), runner => { // eslint-disable-line no-await-in-loop
+			runner.on('stateChange', ({data: event}) => {
+				if (event.type === 'hook-failed') {
+					failures.push(event);
+				}
+			});
+			runner.chain[hook](a => a.teardown(() => {}));
+			runner.chain('test', a => a.pass());
+		});
+		t.equal(failures.length, 1);
+		t.match(failures[0].err.message, /only allowed in tests and setup functions/);
+		t.equal(failures[0].failurePhase, hook === 'after' ? 'post-test-file' : 'post-test');
+	}
+});
+
+test('setup teardowns preserve resources through postconditions and run in reverse order', async t => {
+	const calls = [];
 	await promiseEnd(new Runner({file: import.meta.url}), runner => {
-		runner.on('stateChange', ({data: evt}) => {
-			if (evt.type === 'hook-failed') {
-				hookFailure = evt;
+		runner.chain.before(a => {
+			a.teardown(() => {
+				calls.push('file teardown 1');
+			});
+			a.teardown(() => {
+				calls.push('file teardown 2');
+			});
+		});
+		runner.chain.beforeEach(a => {
+			a.teardown(() => {
+				calls.push('setup teardown 1');
+			});
+			a.teardown({
+				async [Symbol.asyncDispose]() {
+					await Promise.resolve();
+					calls.push('setup teardown 2');
+				},
+			});
+		});
+		runner.chain.afterEach(() => {
+			calls.push('afterEach');
+		});
+		runner.chain.afterEach.always(() => {
+			calls.push('afterEach.always');
+		});
+		runner.chain.after(() => {
+			calls.push('after');
+		});
+		runner.chain.after.always(() => {
+			calls.push('after.always');
+		});
+		runner.chain('test', a => {
+			calls.push('test');
+			a.teardown(() => {
+				calls.push('test teardown');
+			});
+			a.pass();
+		});
+	});
+	t.same(calls, [
+		'test',
+		'test teardown',
+		'afterEach',
+		'afterEach.always',
+		'setup teardown 2',
+		'setup teardown 1',
+		'after',
+		'after.always',
+		'file teardown 2',
+		'file teardown 1',
+	]);
+});
+
+test('setup teardowns run despite failures in every lifecycle phase', async t => {
+	for (const phase of ['before', 'beforeEach', 'test', 'afterEach', 'afterEach.always', 'after', 'after.always']) {
+		const calls = [];
+		const failures = [];
+		await promiseEnd(new Runner({file: import.meta.url}), runner => { // eslint-disable-line no-await-in-loop
+			runner.on('stateChange', ({data: event}) => {
+				if (event.type === 'hook-failed' || event.type === 'test-failed') {
+					failures.push(event);
+				}
+			});
+			runner.chain.serial.before(a => a.teardown(() => {
+				calls.push('file');
+			}));
+			runner.chain.serial.beforeEach(a => a.teardown(() => {
+				calls.push('test');
+			}));
+			const fail = a => a.fail(`failure in ${phase}`);
+			if (phase !== 'test') {
+				const [hook, modifier] = phase.split('.', 2);
+				const chain = modifier ? runner.chain.serial[hook][modifier] : runner.chain.serial[hook];
+				chain(fail);
+			}
+
+			runner.chain('test', phase === 'test' ? fail : a => a.pass());
+		});
+		t.same(calls, phase === 'before' ? ['file'] : ['test', 'file'], phase);
+		t.equal(failures.length, 1, phase);
+	}
+});
+
+test('setup teardown failures are reported and do not prevent remaining cleanup', async t => {
+	const calls = [];
+	const failures = [];
+	await promiseEnd(new Runner({file: import.meta.url, failFast: true}), runner => {
+		runner.on('stateChange', ({data: event}) => {
+			if (event.type === 'hook-failed') {
+				failures.push(event);
 			}
 		});
+		for (const hook of ['before', 'beforeEach']) {
+			runner.chain[hook](hook, a => {
+				a.teardown(() => {
+					calls.push(hook);
+				});
+				a.teardown(async () => {
+					throw new Error(`${hook} cleanup failed`);
+				});
+			});
+		}
 
-		runner.chain.beforeEach(a => {
-			a.teardown(() => {});
+		runner.chain.serial('first', a => a.pass());
+		runner.chain.serial('skipped by fail-fast', () => t.fail('must not run'));
+	});
+	t.same(calls, ['beforeEach', 'before']);
+	t.same(failures.map(event => event.title), ['beforeEach teardown for first', 'before teardown']);
+	t.ok(failures.every(event => event.failurePhase === undefined));
+});
+
+test('partially completed async setup still releases resources', async t => {
+	await Promise.all(['before', 'beforeEach'].map(async hook => {
+		const calls = [];
+		const failures = [];
+		await promiseEnd(new Runner({file: import.meta.url}), runner => {
+			runner.on('stateChange', ({data: event}) => {
+				if (event.type === 'hook-failed') {
+					failures.push(event);
+				}
+			});
+			runner.chain.serial[hook]('partial setup', async a => {
+				a.teardown({
+					[Symbol.dispose]() {
+						calls.push('dispose');
+					},
+				});
+				await Promise.resolve();
+				throw new Error('setup failed');
+			});
+			runner.chain.serial[hook](() => t.fail('later setup must not run'));
+			runner.chain('test', () => t.fail('test must not run'));
 		});
+		t.same(calls, ['dispose'], hook);
+		t.equal(failures.length, 1, hook);
+		t.match(failures[0].title, 'partial setup');
+	}));
+});
 
+test('setup teardowns cannot register more teardowns', async t => {
+	const failures = [];
+	await promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.on('stateChange', ({data: event}) => {
+			if (event.type === 'hook-failed') {
+				failures.push(event);
+			}
+		});
+		runner.chain.before(a => {
+			const registerMore = () => a.teardown(() => {});
+			a.teardown(registerMore);
+		});
 		runner.chain('test', a => a.pass());
 	});
+	t.equal(failures.length, 1);
+	t.match(failures[0].err.formattedCause, /cannot be used during teardown/);
+});
 
-	t.ok(hookFailure);
-	t.match(hookFailure.err.message, /not allowed in hooks/);
+test('beforeEach teardowns are isolated between concurrent tests', async t => {
+	const resources = new Set();
+	const allStarted = Promise.withResolvers();
+	let started = 0;
+	await promiseEnd(new Runner({file: import.meta.url}), runner => {
+		runner.chain.beforeEach(a => {
+			const resource = {};
+			resources.add(resource);
+			a.context.resource = resource;
+			a.teardown(() => {
+				t.ok(resources.delete(resource));
+			});
+		});
+		runner.chain.afterEach(a => a.true(resources.has(a.context.resource)));
+		for (const title of ['one', 'two', 'three']) {
+			runner.chain(title, async a => {
+				if (++started === 3) {
+					allStarted.resolve();
+				}
+
+				await allStarted.promise;
+				a.true(resources.has(a.context.resource));
+			});
+		}
+	});
+	t.equal(started, 3);
+	t.equal(resources.size, 0);
 });

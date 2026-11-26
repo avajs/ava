@@ -642,9 +642,68 @@ test('teardowns run in reverse order', t => {
 
 test('teardown without function callback fails', t => ava(a => a.throwsAsync(async () => {
 	a.teardown(false);
-}, {message: 'Expected a function'})).run().then(result => {
+}, {message: 'Expected a function or disposable object'})).run().then(result => {
 	t.equal(result.passed, true);
 }));
+
+test('teardown accepts disposables and prefers async disposal', async t => {
+	const calls = [];
+	const sync = {
+		[Symbol.dispose]() {
+			t.equal(this, sync);
+			calls.push('sync');
+		},
+	};
+	const async = {
+		[Symbol.dispose]() {
+			t.fail('sync disposal must not be used when async disposal exists');
+		},
+		async [Symbol.asyncDispose]() {
+			t.equal(this, async);
+			await immediate();
+			calls.push('async');
+		},
+	};
+	const result = await ava(a => {
+		a.teardown(sync);
+		a.teardown(async);
+		a.teardown(() => {
+			calls.push('callback');
+		});
+		a.pass();
+	}).run();
+	t.equal(result.passed, true);
+	t.same(calls, ['callback', 'async', 'sync']);
+});
+
+test('invalid disposable objects are rejected', async t => {
+	const result = await ava(a => {
+		for (const value of [null, undefined, {}, {[Symbol.dispose]: true}, {[Symbol.asyncDispose]: true, [Symbol.dispose]() {}}]) {
+			a.throws(() => a.teardown(value), {message: 'Expected a function or disposable object'});
+		}
+	}).run();
+	t.equal(result.passed, true);
+});
+
+test('disposal failures fail the test and do not prevent other teardowns', async t => {
+	const calls = [];
+	const error = new Error('disposal failed');
+	const result = await ava(a => {
+		a.teardown(() => {
+			calls.push('callback');
+		});
+		a.teardown({
+			async [Symbol.asyncDispose]() {
+				await immediate();
+				throw error;
+			},
+		});
+		a.pass();
+	}).run();
+	t.equal(result.passed, false);
+	t.equal(result.error, error);
+	t.same(calls, ['callback']);
+});
 
 test('teardown errors fail the test', t => {
 	const teardown = sinon.stub().throws('TeardownError');
@@ -695,6 +754,15 @@ test('teardowns cannot be registered by teardowns', async t => {
 	}).run();
 	t.equal(result.passed, false);
 	t.match(result.error.message, /cannot be used during teardown/);
+});
+
+test('teardowns cannot be registered after the test has finished', async t => {
+	let context;
+	await ava(a => {
+		context = a;
+		a.pass();
+	}).run();
+	t.throws(() => context.teardown(() => {}), {message: '`t.teardown()` cannot be used during teardown'});
 });
 
 test('.log() is bound', t => ava(a => {

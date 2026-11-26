@@ -342,49 +342,54 @@ export namespace Plugin {
 		readonly logs: readonly string[];
 	} | {
 		/**
-		A hook finished without failing.
+		A setup function, postcondition, or setup teardown finished without failing.
 		*/
-		readonly type: 'hook-finished';
+		readonly type: 'lifecycle-function-finished';
 		/**
 		Absolute path of the test file.
 		*/
 		readonly testFile: string;
 		/**
-		The hook's title.
+		The function's title.
 		*/
 		readonly title: string;
 		/**
-		How long the hook took, in milliseconds.
+		How long the function took, in milliseconds.
 		*/
 		readonly duration: number;
 		/**
-		Messages the hook logged using `t.log()`. Values that aren't strings are formatted, which may include ANSI styling
+		Messages the function logged using `t.log()`. Values that aren't strings are formatted, which may include ANSI styling
 		(see `Event`).
 		*/
 		readonly logs: readonly string[];
 	} | {
 		/**
-		A hook failed.
+		A setup function, postcondition, or setup teardown failed.
 		*/
-		readonly type: 'hook-failed';
+		readonly type: 'lifecycle-function-failed';
+		/**
+		Identifies failures in `afterEach` or `after` postconditions, including their `.always` variants.
+		Absent for setup and teardown failures.
+		*/
+		readonly failurePhase?: 'post-test' | 'post-test-file';
 		/**
 		Absolute path of the test file.
 		*/
 		readonly testFile: string;
 		/**
-		The hook's title.
+		The function's title.
 		*/
 		readonly title: string;
 		/**
-		Why the hook failed.
+		Why the function failed.
 		*/
 		readonly err: SerializedError;
 		/**
-		How long the hook took, in milliseconds.
+		How long the function took, in milliseconds.
 		*/
 		readonly duration: number;
 		/**
-		Messages the hook logged using `t.log()`. Values that aren't strings are formatted, which may include ANSI styling
+		Messages the function logged using `t.log()`. Values that aren't strings are formatted, which may include ANSI styling
 		(see `Event`).
 		*/
 		readonly logs: readonly string[];
