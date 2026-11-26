@@ -65,19 +65,14 @@ When you run your first test, MongoDB downloads the latest MongoDB binaries. The
 You'll want to populate your database with dummy data. Here's an example:
 
 ```js
-test.beforeEach(async () => {
+test.beforeEach(async t => {
 	const user = new User({
 		email: 'one@example.com',
 		name: 'One'
 	});
 	await user.save();
+	t.teardown(() => User.remove());
 });
-```
-
-Dummy data should be cleared after each test:
-
-```js
-test.afterEach.always(() => User.remove());
 ```
 
 Now you can use SuperTest to send off a request for your app endpoint. Use AVA for your assertions:
@@ -126,7 +121,7 @@ And you're done!
 
 ## Reusing the configuration across files
 
-You may choose to extract the code for the `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` hooks into a separate file. Have a look at https://github.com/zellwk/ava-mdb-test for an example.
+You may choose to extract the functions registered with `test.before`, `test.beforeEach`, `test.afterEach.always` and `test.after.always` into a separate file. Have a look at https://github.com/zellwk/ava-mdb-test for an example.
 
 ## Using `test.serial` instead of `test`
 

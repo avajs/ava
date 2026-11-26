@@ -3,28 +3,28 @@ import type {Subscribable} from './subscribable.js';
 import type {TryFn} from './try-fn.js';
 
 /**
-The `t` value passed to test & hook implementations.
+The `t` value passed to tests, setup functions, and postconditions.
 */
 export type ExecutionContext<Context = unknown> = {
 	/**
-	Test context, shared with hooks.
+	Test context, shared with setup functions and postconditions.
 	*/
 	context: Context;
 
 	/**
-	Title of the test or hook.
+	Title of the test, setup function, or postcondition.
 	*/
 	readonly title: string;
 
 	/**
-	Whether the test has passed. Only accurate in afterEach hooks.
+	Whether the test has passed. In postconditions, only meaningful in `afterEach` and `afterEach.always`.
 	*/
 	readonly passed: boolean;
 
 	readonly log: LogFn;
 	readonly plan: PlanFn;
 	/**
-	Declare a function to be run after the test has ended.
+	Register cleanup for a test or setup function.
 	*/
 	readonly teardown: TeardownFn;
 	readonly timeout: TimeoutFn;
@@ -70,11 +70,11 @@ export type TimeoutFn = {
 };
 
 /**
-Register cleanup for a test or setup hook. Callbacks and disposable objects are
+Register cleanup for a test or setup function. Callbacks and disposable objects are
 run serially in reverse registration order. Async disposal takes precedence.
 
-In tests cleanup runs before afterEach hooks. In beforeEach hooks it runs after
-the test's postconditions. In before hooks it runs after the file's postconditions.
+In tests cleanup runs before `afterEach` postconditions. In `beforeEach` functions it runs after
+the test's postconditions. In `before` functions it runs after the file's postconditions.
 */
 export type TeardownFn = (fn: (() => Promise<void>) | (() => void) | Disposable | AsyncDisposable) => void;
 
@@ -86,7 +86,7 @@ export type ImplementationFn<Args extends unknown[], Context = unknown> =
 export type TitleFn<Args extends unknown[]> = (providedTitle: string | undefined, ...args: Args) => string;
 
 /**
-A reusable test or hook implementation.
+A reusable test, setup function, or postcondition.
 */
 export type Macro<Args extends unknown[], Context = unknown> = {
 	/**
@@ -101,7 +101,7 @@ export type Macro<Args extends unknown[], Context = unknown> = {
 };
 
 /**
-A test or hook implementation.
+A test, setup function, or postcondition implementation.
 */
 export type Implementation<Args extends unknown[], Context = unknown> = ImplementationFn<Args, Context> | Macro<Args, Context>;
 
@@ -143,51 +143,51 @@ export type TestFn<Context = unknown> = {
 
 export type AfterFn<Context = unknown> = {
 	/**
-	Declare a hook that is run once, after all tests have passed.
+	Declare a postcondition that runs after the associated test or test file passes.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
-	Declare a hook that is run once, after all tests have passed.
+	Declare a postcondition that runs after the associated test or test file passes.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	always: AlwaysInterface<Context>;
-	skip: HookSkipFn<Context>;
+	skip: LifecycleSkipFn<Context>;
 };
 
 export type AlwaysInterface<Context = unknown> = {
 	/**
-	Declare a hook that is run once, after all tests are done.
+	Declare a postcondition that runs after the associated test or test file, even after earlier failures.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
-	Declare a hook that is run once, after all tests are done.
+	Declare a postcondition that runs after the associated test or test file, even after earlier failures.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
-	skip: HookSkipFn<Context>;
+	skip: LifecycleSkipFn<Context>;
 };
 
 export type BeforeFn<Context = unknown> = {
 	/**
-	Declare a hook that is run once, before all tests.
+	Declare a setup function or precondition that runs before the associated test or test file.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
-	Declare a hook that is run once, before all tests.
+	Declare a setup function or precondition that runs before the associated test or test file.
 	Additional arguments are passed to the implementation or macro.
 	*/
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 
-	skip: HookSkipFn<Context>;
+	skip: LifecycleSkipFn<Context>;
 };
 
 export type FailingFn<Context = unknown> = {
@@ -215,17 +215,23 @@ export type FailingFn<Context = unknown> = {
 	skipIf: SkipIfFn<FailingFn<Context>>;
 };
 
-export type HookSkipFn<Context = unknown> = {
+export type LifecycleSkipFn<Context = unknown> = {
 	/**
-	Skip this hook.
+	Skip this setup function or postcondition.
 	*/
 	<Args extends unknown[]>(title: string, implementation: Implementation<Args, Context>, ...args: Args): void;
 
 	/**
-	Skip this hook.
+	Skip this setup function or postcondition.
 	*/
 	<Args extends unknown[]>(implementation: Implementation<Args, Context>, ...args: Args): void;
 };
+
+// TODO: Remove `HookSkipFn` in a future major release.
+/**
+@deprecated Use `LifecycleSkipFn` instead.
+*/
+export type HookSkipFn<Context = unknown> = LifecycleSkipFn<Context>;
 
 export type OnlyFn<Context = unknown> = {
 	/**

@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import anyTest from '../../entrypoints/main.js';
+import type {HookSkipFn, LifecycleSkipFn} from '../../entrypoints/main.js';
+
+const lifecycleSkip: LifecycleSkipFn = anyTest.before.skip;
+const legacySkip: HookSkipFn = lifecycleSkip;
+const compatibleSkip: LifecycleSkipFn = legacySkip;
+compatibleSkip('skipped setup', () => {});
 
 anyTest.skipIf(true).beforeEach(() => {});
 anyTest.runIf(false).afterEach(() => {});
