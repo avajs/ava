@@ -19,30 +19,46 @@
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m nested-objects [90m[2m›[22m[39m format like with max depth 4
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m before hook
+    output-in-hook [90m[2m›[22m[39m before function
     [35mℹ[39m [90mbefore[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for passing test
+    output-in-hook [90m[2m›[22m[39m beforeEach function for passing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m beforeEach hook for failing test
+    output-in-hook [90m[2m›[22m[39m beforeEach function for failing test
     [35mℹ[39m [90mbeforeEach[39m
 ---tty-stream-chunk-separator
   [32m✔[39m output-in-hook [90m[2m›[22m[39m passing test
 ---tty-stream-chunk-separator
   [31m✘ [fail]:[39m output-in-hook [90m[2m›[22m[39m failing test [3m[31mTest failed via `t.fail()`[39m[23m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach hook for passing test
+    output-in-hook [90m[2m›[22m[39m afterEach postcondition for passing test
     [35mℹ[39m [90mafterEach[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for failing test
+    output-in-hook [90m[2m›[22m[39m afterEach.always postcondition for failing test
     [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
-    output-in-hook [90m[2m›[22m[39m afterEach.always hook for passing test
+    output-in-hook [90m[2m›[22m[39m afterEach.always postcondition for passing test
     [35mℹ[39m [90mafterEachAlways[39m
 ---tty-stream-chunk-separator
     output-in-hook [90m[2m›[22m[39m cleanup
     [35mℹ[39m [90mafterAlways[39m
+---tty-stream-chunk-separator
+  [32m✔[39m postconditions-after-each [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+  [31m✘ [postcondition failure after a test]:[39m postconditions-after-each [90m[2m›[22m[39m check each test for passing test [3m[31mafterEach failed[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ [postcondition failure after a test]:[39m postconditions-after-each [90m[2m›[22m[39m check each test after failure for passing test [3m[31mafterEach.always failed[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ [postcondition failure after the test file]:[39m postconditions-after-each [90m[2m›[22m[39m check file after failure [3m[31mafter.always failed[39m[23m
+---tty-stream-chunk-separator
+  [32m✔[39m postconditions-after [90m[2m›[22m[39m passing test
+---tty-stream-chunk-separator
+  [31m✘ [postcondition failure after the test file]:[39m postconditions-after [90m[2m›[22m[39m check file [3m[31mafter failed[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ [fail]:[39m postconditions-setup [90m[2m›[22m[39m prepare file [3m[31msetup failed[39m[23m
+---tty-stream-chunk-separator
+  [31m✘ 1 test remaining in postconditions-setup.js[39m
 ---tty-stream-chunk-separator
   [33m- [skip] test [90m[2m›[22m[39m[33m skip[39m
 ---tty-stream-chunk-separator
@@ -185,6 +201,83 @@
   Test failed via `t.fail()`
 
   [90m› file://test-tap/fixture/report/regular/output-in-hook.js:34:4[39m
+  [90m› async Promise.all (index 1)[39m
+
+
+
+  [1mpostconditions-after-each [90m[2m›[22m[1m[39m check each test for passing test (postcondition failure after a test)[22m
+
+  [90mpostconditions-after-each.js:4[39m
+
+   [90m3:[39m test.afterEach('check each test', t => {
+  [41m[1m 4:   t.fail('afterEach failed');           [22m[49m
+   [90m5:[39m });                                     
+
+  afterEach failed
+
+  [90m› file://test-tap/fixture/report/regular/postconditions-after-each.js:4:4[39m
+  [90m› async Promise.all (index 1)[39m
+  [90m› async Promise.all (index 0)[39m
+
+
+
+  [1mpostconditions-after-each [90m[2m›[22m[1m[39m check each test after failure for passing test (postcondition failure after a test)[22m
+
+  [90mpostconditions-after-each.js:8[39m
+
+   [90m7:[39m test.afterEach.always('check each test after failure', t => {
+  [41m[1m 8:   t.fail('afterEach.always failed');                         [22m[49m
+   [90m9:[39m });                                                          
+
+  afterEach.always failed
+
+  [90m› file://test-tap/fixture/report/regular/postconditions-after-each.js:8:4[39m
+  [90m› async Promise.all (index 1)[39m
+  [90m› async Promise.all (index 0)[39m
+
+
+
+  [1mpostconditions-after-each [90m[2m›[22m[1m[39m check file after failure (postcondition failure after the test file)[22m
+
+  [90mpostconditions-after-each.js:12[39m
+
+   [90m11:[39m test.after.always('check file after failure', t => {
+  [41m[1m 12:   t.fail('after.always failed');                    [22m[49m
+   [90m13:[39m });                                                 
+
+  after.always failed
+
+  [90m› file://test-tap/fixture/report/regular/postconditions-after-each.js:12:4[39m
+  [90m› async Promise.all (index 1)[39m
+
+
+
+  [1mpostconditions-after [90m[2m›[22m[1m[39m check file (postcondition failure after the test file)[22m
+
+  [90mpostconditions-after.js:4[39m
+
+   [90m3:[39m test.after('check file', t => {
+  [41m[1m 4:   t.fail('after failed');      [22m[49m
+   [90m5:[39m });                            
+
+  after failed
+
+  [90m› file://test-tap/fixture/report/regular/postconditions-after.js:4:4[39m
+  [90m› async Promise.all (index 1)[39m
+
+
+
+  [1mpostconditions-setup [90m[2m›[22m[1m[39m prepare file[22m
+
+  [90mpostconditions-setup.js:4[39m
+
+   [90m3:[39m test.before('prepare file', t => {
+  [41m[1m 4:   t.fail('setup failed');         [22m[49m
+   [90m5:[39m });                               
+
+  setup failed
+
+  [90m› file://test-tap/fixture/report/regular/postconditions-setup.js:4:4[39m
   [90m› async Promise.all (index 1)[39m
 
 
@@ -362,6 +455,7 @@
 
   [90m─[39m
 
+  [31m5 lifecycle functions failed[39m
   [31m13 tests failed[39m
   [31m1 known failure[39m
   [33m1 test skipped[39m

@@ -14,14 +14,14 @@ const promiseEnd = (runner, next) => new Promise(resolve => {
 	next(runner);
 }).then(() => runner);
 
-test('nested tests and hooks aren’t allowed', t => {
+test('nested tests and lifecycle functions aren’t allowed', t => {
 	t.plan(1);
 
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
 		runner.chain('test', a => {
 			t.throws(() => {
 				runner.chain(noop);
-			}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
+			}, {message: 'All tests, setup functions, and postconditions must be declared synchronously in your test file, and cannot be nested within each other.'});
 			a.pass();
 		});
 	});
@@ -38,7 +38,7 @@ test('tests must be declared synchronously', t => {
 	}).then(runner => {
 		t.throws(() => {
 			runner.chain(noop);
-		}, {message: 'All tests and hooks must be declared synchronously in your test file, and cannot be nested within other tests or hooks.'});
+		}, {message: 'All tests, setup functions, and postconditions must be declared synchronously in your test file, and cannot be nested within each other.'});
 	});
 });
 
@@ -169,41 +169,41 @@ test('test types and titles', t => {
 			chain.before(fail);
 			chain('test', pass);
 		}, [
-			{type: 'before', title: 'before hook'},
+			{type: 'before', title: 'before function'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.after(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'after', title: 'after hook'},
+			{type: 'after', title: 'after postcondition'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.after.always(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'after', title: 'after.always hook'},
+			{type: 'after', title: 'after.always postcondition'},
 		]),
 		check(chain => {
 			chain.beforeEach(fail);
 			chain('test', fail);
 		}, [
-			{type: 'beforeEach', title: 'beforeEach hook for test'},
+			{type: 'beforeEach', title: 'beforeEach function for test'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.afterEach(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'afterEach', title: 'afterEach hook for test'},
+			{type: 'afterEach', title: 'afterEach postcondition for test'},
 		]),
 		check(chain => {
 			chain('test', pass);
 			chain.afterEach.always(fail);
 		}, [
 			{type: 'test', title: 'test'},
-			{type: 'afterEach', title: 'afterEach.always hook for test'},
+			{type: 'afterEach', title: 'afterEach.always postcondition for test'},
 		]),
 	]);
 });
@@ -690,11 +690,11 @@ test('macros: test titles must be strings', t => {
 			const macro = t => t.pass();
 			macro.title = () => [];
 			runner.chain(macro);
-		}, new TypeError('Test & hook titles must be strings'));
+		}, new TypeError('Test, setup, and postcondition titles must be strings'));
 	});
 });
 
-test('macros: hook titles must be strings', t => {
+test('macros: setup and postcondition titles must be strings', t => {
 	t.plan(1);
 
 	return promiseEnd(new Runner({file: import.meta.url}), runner => {
@@ -702,7 +702,7 @@ test('macros: hook titles must be strings', t => {
 			const macro = t => t.pass();
 			macro.title = () => [];
 			runner.chain.before(macro);
-		}, new TypeError('Test & hook titles must be strings'));
+		}, new TypeError('Test, setup, and postcondition titles must be strings'));
 	});
 });
 

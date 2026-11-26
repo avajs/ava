@@ -51,17 +51,17 @@ not ok 4 - nested-objects › format like with max depth 4
     at: '/test-tap/fixture/report/regular/nested-objects.js:55'
   ...
 ---tty-stream-chunk-separator
-# output-in-hook › before hook
+# output-in-hook › before function
 ---tty-stream-chunk-separator
-# output-in-hook › before hook
+# output-in-hook › before function
 ---tty-stream-chunk-separator
 #   before
 ---tty-stream-chunk-separator
-# output-in-hook › beforeEach hook for passing test
+# output-in-hook › beforeEach function for passing test
 ---tty-stream-chunk-separator
 #   beforeEach
 ---tty-stream-chunk-separator
-# output-in-hook › beforeEach hook for failing test
+# output-in-hook › beforeEach function for failing test
 ---tty-stream-chunk-separator
 #   beforeEach
 ---tty-stream-chunk-separator
@@ -75,15 +75,15 @@ not ok 6 - output-in-hook › failing test
     at: '/test-tap/fixture/report/regular/output-in-hook.js:34'
   ...
 ---tty-stream-chunk-separator
-# output-in-hook › afterEach hook for passing test
+# output-in-hook › afterEach postcondition for passing test
 ---tty-stream-chunk-separator
 #   afterEach
 ---tty-stream-chunk-separator
-# output-in-hook › afterEach.always hook for failing test
+# output-in-hook › afterEach.always postcondition for failing test
 ---tty-stream-chunk-separator
 #   afterEachAlways
 ---tty-stream-chunk-separator
-# output-in-hook › afterEach.always hook for passing test
+# output-in-hook › afterEach.always postcondition for passing test
 ---tty-stream-chunk-separator
 #   afterEachAlways
 ---tty-stream-chunk-separator
@@ -91,13 +91,59 @@ not ok 6 - output-in-hook › failing test
 ---tty-stream-chunk-separator
 #   afterAlways
 ---tty-stream-chunk-separator
-ok 7 - test › skip # SKIP
+ok 7 - postconditions-after-each › passing test
 ---tty-stream-chunk-separator
-not ok 8 - test › todo # TODO
+not ok 8 - postconditions-after-each › check each test for passing test (postcondition failure after a test)
+  ---
+    name: AssertionError
+    assertion: t.fail()
+    message: afterEach failed
+    at: '/test-tap/fixture/report/regular/postconditions-after-each.js:4'
+  ...
 ---tty-stream-chunk-separator
-ok 9 - test › passes
+not ok 9 - postconditions-after-each › check each test after failure for passing test (postcondition failure after a test)
+  ---
+    name: AssertionError
+    assertion: t.fail()
+    message: afterEach.always failed
+    at: '/test-tap/fixture/report/regular/postconditions-after-each.js:8'
+  ...
 ---tty-stream-chunk-separator
-not ok 10 - test › fails
+not ok 10 - postconditions-after-each › check file after failure (postcondition failure after the test file)
+  ---
+    name: AssertionError
+    assertion: t.fail()
+    message: after.always failed
+    at: '/test-tap/fixture/report/regular/postconditions-after-each.js:12'
+  ...
+---tty-stream-chunk-separator
+ok 11 - postconditions-after › passing test
+---tty-stream-chunk-separator
+not ok 12 - postconditions-after › check file (postcondition failure after the test file)
+  ---
+    name: AssertionError
+    assertion: t.fail()
+    message: after failed
+    at: '/test-tap/fixture/report/regular/postconditions-after.js:4'
+  ...
+---tty-stream-chunk-separator
+not ok 13 - postconditions-setup › prepare file
+  ---
+    name: AssertionError
+    assertion: t.fail()
+    message: setup failed
+    at: '/test-tap/fixture/report/regular/postconditions-setup.js:4'
+  ...
+---tty-stream-chunk-separator
+# 1 test remaining in postconditions-setup.js
+---tty-stream-chunk-separator
+ok 14 - test › skip # SKIP
+---tty-stream-chunk-separator
+not ok 15 - test › todo # TODO
+---tty-stream-chunk-separator
+ok 16 - test › passes
+---tty-stream-chunk-separator
+not ok 17 - test › fails
   ---
     name: AssertionError
     assertion: t.fail()
@@ -105,9 +151,9 @@ not ok 10 - test › fails
     at: '/test-tap/fixture/report/regular/test.js:9'
   ...
 ---tty-stream-chunk-separator
-ok 11 - test › known failure
+ok 18 - test › known failure
 ---tty-stream-chunk-separator
-not ok 12 - test › no longer failing
+not ok 19 - test › no longer failing
   ---
     name: AssertionError
     message: >-
@@ -116,7 +162,7 @@ not ok 12 - test › no longer failing
     at: '#doFinish (/lib/test.js)'
   ...
 ---tty-stream-chunk-separator
-not ok 13 - test › logs
+not ok 20 - test › logs
 #   hello
 #   world
   ---
@@ -126,7 +172,7 @@ not ok 13 - test › logs
     at: '/test-tap/fixture/report/regular/test.js:18'
   ...
 ---tty-stream-chunk-separator
-not ok 14 - test › formatted
+not ok 21 - test › formatted
   ---
     name: AssertionError
     assertion: t.deepEqual()
@@ -138,7 +184,7 @@ not ok 14 - test › formatted
     at: '/test-tap/fixture/report/regular/test.js:22'
   ...
 ---tty-stream-chunk-separator
-not ok 15 - test › implementation throws non-error
+not ok 22 - test › implementation throws non-error
   ---
     name: AssertionError
     details:
@@ -147,7 +193,7 @@ not ok 15 - test › implementation throws non-error
     at: 'Test.run (/lib/test.js)'
   ...
 ---tty-stream-chunk-separator
-not ok 16 - traces-in-t-throws › throws
+not ok 23 - traces-in-t-throws › throws
   ---
     name: AssertionError
     assertion: t.throws()
@@ -161,7 +207,7 @@ not ok 16 - traces-in-t-throws › throws
     at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:12'
   ...
 ---tty-stream-chunk-separator
-not ok 17 - traces-in-t-throws › notThrows
+not ok 24 - traces-in-t-throws › notThrows
   ---
     name: AssertionError
     assertion: t.notThrows()
@@ -174,7 +220,7 @@ not ok 17 - traces-in-t-throws › notThrows
     at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:16'
   ...
 ---tty-stream-chunk-separator
-not ok 18 - traces-in-t-throws › notThrowsAsync
+not ok 25 - traces-in-t-throws › notThrowsAsync
   ---
     name: AssertionError
     assertion: t.notThrowsAsync()
@@ -187,7 +233,7 @@ not ok 18 - traces-in-t-throws › notThrowsAsync
     at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:20'
   ...
 ---tty-stream-chunk-separator
-not ok 19 - traces-in-t-throws › throwsAsync
+not ok 26 - traces-in-t-throws › throwsAsync
   ---
     name: AssertionError
     assertion: t.throwsAsync()
@@ -200,7 +246,7 @@ not ok 19 - traces-in-t-throws › throwsAsync
     at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:24'
   ...
 ---tty-stream-chunk-separator
-not ok 20 - traces-in-t-throws › throwsAsync different error
+not ok 27 - traces-in-t-throws › throwsAsync different error
   ---
     name: AssertionError
     assertion: t.throwsAsync()
@@ -214,9 +260,9 @@ not ok 20 - traces-in-t-throws › throwsAsync different error
     at: '/test-tap/fixture/report/regular/traces-in-t-throws.js:28'
   ...
 ---tty-stream-chunk-separator
-ok 21 - uncaught-exception › passes
+ok 28 - uncaught-exception › passes
 ---tty-stream-chunk-separator
-not ok 22 - Error: Can’t catch me
+not ok 29 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
@@ -225,32 +271,32 @@ not ok 22 - Error: Can’t catch me
       (/test-tap/fixture/report/regular/uncaught-exception.js:5:9)
   ...
 ---tty-stream-chunk-separator
-not ok 23 - uncaught-exception.js exited with a non-zero exit code: 1
+not ok 30 - uncaught-exception.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
-ok 24 - unhandled-rejection › passes
+ok 31 - unhandled-rejection › passes
 ---tty-stream-chunk-separator
-ok 25 - unhandled-rejection › unhandled non-error rejection
+ok 32 - unhandled-rejection › unhandled non-error rejection
 ---tty-stream-chunk-separator
-not ok 26 - Error: Can’t catch me
+not ok 33 - Error: Can’t catch me
   ---
     name: Error
     message: Can’t catch me
     at: 'passes (/test-tap/fixture/report/regular/unhandled-rejection.js:4:17)'
   ...
 ---tty-stream-chunk-separator
-not ok 27 - unhandled-rejection
+not ok 34 - unhandled-rejection
   ---
     message: Non-native error
     formatted: 'null'
   ...
 ---tty-stream-chunk-separator
-not ok 28 - unhandled-rejection.js exited with a non-zero exit code: 1
+not ok 35 - unhandled-rejection.js exited with a non-zero exit code: 1
 ---tty-stream-chunk-separator
 
-1..21
-# tests 20
-# pass 6
+1..24
+# tests 23
+# pass 8
 # skip 1
-# fail 21
+# fail 22
 
 ---tty-stream-chunk-separator
