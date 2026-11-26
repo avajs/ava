@@ -756,6 +756,15 @@ test('teardowns cannot be registered by teardowns', async t => {
 	t.match(result.error.message, /cannot be used during teardown/);
 });
 
+test('teardowns cannot be registered after the test has finished', async t => {
+	let context;
+	await ava(a => {
+		context = a;
+		a.pass();
+	}).run();
+	t.throws(() => context.teardown(() => {}), {message: '`t.teardown()` cannot be used during teardown'});
+});
+
 test('.log() is bound', t => ava(a => {
 	const {log} = a;
 	for (const value of [1, 2, 3]) {

@@ -554,7 +554,7 @@ test('teardowns cannot be used in postcondition hooks', async t => {
 			runner.chain('test', a => a.pass());
 		});
 		t.equal(failures.length, 1);
-		t.match(failures[0].err.message, /only allowed in tests and setup hooks/);
+		t.match(failures[0].err.message, /only allowed in tests and setup functions/);
 		t.equal(failures[0].failurePhase, hook === 'after' ? 'post-test-file' : 'post-test');
 	}
 });
