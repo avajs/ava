@@ -111,6 +111,16 @@ test('reject', t => ava(a => fail().then(() => {
 	t.match(result.error.formattedDetails[0].formatted, /.*Error.*\n.*message: 'unicorn'/);
 }));
 
+test('reject with DOMException', t => ava(async () => {
+	throw new DOMException('Invalid selector', 'SyntaxError');
+}).run().then(result => {
+	t.equal(result.passed, false);
+	t.equal(result.error.message, 'Rejected promise returned by test');
+	t.equal(result.error.formattedDetails[0].label, 'Rejected promise returned by test. Reason:');
+	t.match(result.error.formattedDetails[0].formatted, /Invalid selector/);
+	t.notMatch(result.error.formattedDetails[0].formatted, /^\S+ \{\}$/);
+}));
+
 test('reject with non-Error', t => ava(async () => {
 	throw 'failure'; // eslint-disable-line no-throw-literal
 }).run().then(result => {
